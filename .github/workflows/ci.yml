@@ -1,0 +1,95 @@
+name: rust
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  manifest-sync:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/review/public-core-media-ncrl-h1'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: true
+          ref: review/public-core-media-ncrl-h1
+      - name: Canonicalize complete source SHA-256 manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${RUNNER_TEMP}/SOURCE-SHA256SUMS.expected.txt"
+          git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do
+            sha256sum "$file"
+          done > "$expected"
+          if cmp -s SOURCE-SHA256SUMS.txt "$expected"; then
+            echo "SOURCE_MANIFEST_ALREADY_CANONICAL=YES"
+            exit 0
+          fi
+          cp "$expected" SOURCE-SHA256SUMS.txt
+          git config user.name "RR — GEL RAM Project"
+          git config user.email "324499237+gelramlicensing-wq@users.noreply.github.com"
+          git add SOURCE-SHA256SUMS.txt
+          git commit -m "Integrity: canonicalize publication source manifest"
+          git push origin HEAD:review/public-core-media-ncrl-h1
+
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+      - run: rustup default 1.85.0
+      - run: cargo fetch --locked
+      - name: Verify complete source SHA-256 manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${RUNNER_TEMP}/SOURCE-SHA256SUMS.expected.txt"
+          git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do
+            sha256sum "$file"
+          done > "$expected"
+          diff -u SOURCE-SHA256SUMS.txt "$expected"
+      - run: cargo run --locked --offline -p xtask -- verify
+      - name: Independent byte, numeric and ranking audit
+        run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"
+
+  portable-build:
+    # Keep this job ID stable for existing required-check configurations.
+    # These jobs EXECUTE tests, not merely cross-compile them.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.85.0 --profile minimal
+      - run: rustup default 1.85.0
+      - run: cargo fetch --locked
+      - name: Record exact tested revision
+        run: git rev-parse HEAD
+      - name: Record toolchain and host target
+        run: rustc -Vv
+      - name: Check operative licensing
+        run: cargo run --locked --offline -p xtask -- licensing
+      - run: cargo test --locked --offline --workspace --all-targets
+      - name: Multipart source readout runtime demo
+        run: cargo run --locked --offline -p gel-source --example source_parts
+      - name: Real-source offline readout runtime demo
+        run: cargo run --locked --offline -p gel-source --example source_real
+      - name: Independent byte, numeric and ranking audit
+        run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"
