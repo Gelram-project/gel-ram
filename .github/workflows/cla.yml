@@ -1,0 +1,33 @@
+name: cla
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  cla-acknowledgement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require the exact CLA acknowledgement
+        env:
+          PR_AUTHOR_ASSOCIATION: ${{ github.event.pull_request.author_association }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if [ "$PR_AUTHOR_ASSOCIATION" = 'OWNER' ]; then
+            printf '%s\n' 'CLA_ACK_GATE=PASS: repository owner is the Project Licensor.'
+            exit 0
+          fi
+          required_lower='- [x] I have completed the GEL RAM CLA privately with the project before opening this pull request.'
+          required_upper='- [X] I have completed the GEL RAM CLA privately with the project before opening this pull request.'
+          if printf '%s\n' "$PR_BODY" | grep -Fqx -e "$required_lower" -e "$required_upper"; then
+            printf '%s\n' 'CLA_ACK_GATE=PASS'
+          else
+            printf '%s\n' 'CLA_ACK_GATE=FAIL: completed private CLA acknowledgement is missing.' >&2
+            exit 1
+          fi
