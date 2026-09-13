@@ -1,6 +1,12 @@
-> **Publication candidate approved by the owner; activation occurs on merge to `main` after exact-revision CI passes.** [Publication status](CANDIDATE-STATUS.md) · [Two English terminal films](media/FILMS-GUIDE.md). The films preview a separate private application; its chat implementation is not included.
-
 # GEL RAM
+
+**Native Rust memory/readout research: exact source-bound readout, experimental Q8 coordinate views, reproducible verification, and explicit UNKNOWN when evidence is insufficient.**
+
+[![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
+
+▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
+
+The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** ship the private chat engine, private bank, encoder or speaker and do not prove unrestricted AI capability.
 
 A Rust memory core for an AI knowledge bank: exact binary ORB readout,
 experimental Q8 coordinate views, and source-bound quotations.
@@ -22,9 +28,8 @@ cargo fetch --locked
 cargo run --locked --offline -p xtask -- verify
 ```
 
-Expected: `GEL_VERIFY_ALL=PASS`. The commands below describe this publication
-candidate and become the public `main` instructions when the approved tree is merged.
-No model or private bank is needed.
+Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
+instructions for the current v0.3.0 line. No model or private bank is needed.
 
 ### Change the numeric input
 
@@ -181,12 +186,11 @@ results and failures — not only the fastest measurement.
 GEL RAM is an independent hobby project by RR, developed with AI assistance
 including OpenAI Codex. Evidence and explicit limitations matter more than labels.
 
-On merge of this exact approved tree to `main`, the active public license for GEL
-RAM-owned material in that distribution is **GEL RAM Noncommercial Reciprocal
-License 1.0**. Noncommercial use, modification, sharing and free non-production
-Evaluation are permitted on its terms. Any Monetized Use requires a separate
-written Commercial Agreement. [License](LICENSE) · [Licensing details](LICENSING.md) ·
-[Commercial licensing](COMMERCIAL-LICENSE.md).
+The active public license for GEL RAM-owned material in this distribution is
+**GEL RAM Noncommercial Reciprocal License 1.0**. Noncommercial use, modification,
+sharing and free non-production Evaluation are permitted on its terms. Any
+Monetized Use requires a separate written Commercial Agreement. [License](LICENSE) ·
+[Licensing details](LICENSING.md) · [Commercial licensing](COMMERCIAL-LICENSE.md).
 
 The included Rust Book excerpt remains MIT-licensed; third-party rights remain
 separate. Project-owned films and screenshots follow [media/RIGHTS.md](media/RIGHTS.md).
@@ -196,5 +200,6 @@ Public attribution remains RR — GEL RAM Project, a pseudonym. Contractual and
 CLA matters use the project email privately; completed personal records do not
 belong in this repository. See [publication status](CANDIDATE-STATUS.md).
 
-Historical release tags, including v0.2.1, are unchanged and retain the licenses
-under which they were originally distributed.
+Historical v0.2.x grants remain historical grants and are not rewritten by the
+v0.3.0 public baseline. Private archival copies preserve that history without
+making the old Git history part of the current public repository.
