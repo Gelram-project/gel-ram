@@ -1,0 +1,32 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/gel-core",
+  "crates/gel-phase-quad",
+  "crates/gel-orb",
+  "crates/gel-kernel",
+  "crates/gel-reader",
+  "crates/gel-structural",
+  "crates/gel-store",
+  "crates/gel-source",
+  "crates/gel-physics",
+  "crates/gel-bench",
+  "crates/gel-cli",
+  "xtask",
+]
+
+[workspace.package]
+version = "0.3.0"
+edition = "2021"
+rust-version = "1.85"
+publish = false
+license-file = "LICENSE"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

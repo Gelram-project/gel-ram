@@ -1,0 +1,6 @@
+[alias]
+xtask = "run --package xtask --"
+
+# Normal builds deliberately use rustc's portable target defaults. Hardware
+# measurement profiles are selected explicitly with RUSTFLAGS and recorded
+# with their results; see docs/PERFORMANCE.md.

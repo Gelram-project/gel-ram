@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+<title id="title">Q8 R2 measured ratios: all eight canonical-baseline cells</title><desc id="desc">Median ratios of three runs. FourViews over Shared ranges from 2.150 to 4.555. Single over Shared is below one for both 32-record cells. Above one favors Shared. Complete minimum and maximum ranges are in the linked R2 summary.</desc>
+<rect width="1200" height="660" rx="24" fill="#0c1427"/>
+<g font-family="sans-serif" fill="#edf5ff">
+<text x="36" y="47" font-size="27" font-weight="bold">Q8 R2 · measured readout, including slowdowns</text>
+<text x="36" y="76" font-size="16" fill="#a9bed9">MINISFORUM AI X1 Pro · 128 GB installed (owner-reported) · 93.91 GiB OS-visible</text>
+<text x="36" y="99" font-size="15" fill="#a9bed9">Ryzen AI 9 HX 370 · Linux · Rust 1.85 · shared host · median of 3 run-level ratios</text>
+<text x="315" y="124" font-size="20" fill="#66e1d1">FourViews / Shared</text><text x="785" y="124" font-size="20" fill="#d0bcff">Single / Shared</text>
+<text x="36" y="156" font-size="16" fill="#a9bed9">Input / policy</text>
+<g stroke="#41516a" stroke-width="1" fill="none"><line x1="300" y1="170" x2="300" y2="553"/><line x1="730" y1="170" x2="730" y2="553"/><line x1="770" y1="170" x2="770" y2="553"/><line x1="1120" y1="170" x2="1120" y2="553"/><line x1="386" y1="170" x2="386" y2="553" stroke="#f5c46a" stroke-dasharray="6 6"/><line x1="945" y1="170" x2="945" y2="553" stroke="#f5c46a" stroke-dasharray="6 6"/></g>
+<g font-size="17">
+<text x="36" y="200">Real 768 · active</text><text x="36" y="247">Real 768 · archive</text><text x="36" y="294">Synthetic 32 · active</text><text x="36" y="341">Synthetic 32 · archive</text><text x="36" y="388">Synthetic 512 · active</text><text x="36" y="435">Synthetic 512 · archive</text><text x="36" y="482">Synthetic 8192 · active</text><text x="36" y="529">Synthetic 8192 · archive</text>
+</g>
+<g fill="#35baad"><rect x="300" y="182" width="311.922" height="25"/><rect x="300" y="229" width="339.958" height="25"/><rect x="300" y="276" width="205.196" height="25"/><rect x="300" y="323" width="184.900" height="25"/><rect x="300" y="370" width="328.864" height="25"/><rect x="300" y="417" width="326.026" height="25"/><rect x="300" y="464" width="380.292" height="25"/><rect x="300" y="511" width="391.730" height="25"/></g>
+<g fill="#a28adb"><rect x="770" y="182" width="200.375" height="25"/><rect x="770" y="229" width="205.450" height="25"/><rect x="770" y="276" width="118.300" height="25"/><rect x="770" y="323" width="119.350" height="25"/><rect x="770" y="370" width="192.325" height="25"/><rect x="770" y="417" width="207.200" height="25"/><rect x="770" y="464" width="209.825" height="25"/><rect x="770" y="511" width="213.675" height="25"/></g>
+<g font-size="16"><text x="618" y="201">3.627</text><text x="646" y="248">3.953</text><text x="512" y="295">2.386</text><text x="491" y="342">2.150</text><text x="635" y="389">3.824</text><text x="632" y="436">3.791</text><text x="686" y="483">4.422</text><text x="698" y="530">4.555</text>
+<text x="977" y="201">1.145</text><text x="982" y="248">1.174</text><text x="895" y="295">0.676</text><text x="896" y="342">0.682</text><text x="969" y="389">1.099</text><text x="984" y="436">1.184</text><text x="987" y="483">1.199</text><text x="991" y="530">1.221</text></g>
+<g font-size="15" fill="#a9bed9"><text x="297" y="575">0</text><text x="378" y="575">1×</text><text x="718" y="575">5×</text><text x="767" y="575">0</text><text x="934" y="575">1×</text><text x="1109" y="575">2×</text></g>
+<text x="36" y="609" font-size="16" fill="#f5c46a">Above 1 favors Shared. Below 1 favors the reference. Different panel scales are labelled.</text>
+<text x="36" y="639" font-size="15" fill="#a9bed9">Real active Single/Shared range: 0.993–1.420. No universal speedup. All ranges: docs/evidence-q8-r2/summary.txt</text>
+</g></svg>

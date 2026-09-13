@@ -1,0 +1,3026 @@
+[
+  {
+    "file": "n512-s0-archive-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.814155947846421,
+    "one_over_shared": 0.9546485013479904,
+    "median_ns": [
+      643901,
+      2540719,
+      669920
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 1/2150 3939072",
+      "cpu_ticks": [
+        734546828,
+        264351442,
+        99239332,
+        3722665106,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.66241876
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 9/2150 3939073",
+      "cpu_ticks": [
+        734546851,
+        264351442,
+        99239333,
+        3722665215,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.718666519
+    },
+    "host_cpu_busy_fraction": 0.18045112781954886,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-archive-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.2595674771089038,
+    "one_over_shared": 0.81333607085842,
+    "median_ns": [
+      507304,
+      764719,
+      579119
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 11/2150 3939073",
+      "cpu_ticks": [
+        734546852,
+        264351442,
+        99239333,
+        3722665216,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.719542737
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 6/2152 3939767",
+      "cpu_ticks": [
+        734546886,
+        264351442,
+        99239341,
+        3722665263,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.756557464
+    },
+    "host_cpu_busy_fraction": 0.4719101123595506,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.570223602303106,
+    "one_over_shared": 0.8674831889089446,
+    "median_ns": [
+      679979,
+      2908159,
+      757394
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 9/2152 3939767",
+      "cpu_ticks": [
+        734546887,
+        264351442,
+        99239342,
+        3722665264,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.757194933
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 2/2161 3939803",
+      "cpu_ticks": [
+        734546902,
+        264351442,
+        99239349,
+        3722665378,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.814639202
+    },
+    "host_cpu_busy_fraction": 0.16176470588235292,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.2143008607583723,
+    "one_over_shared": 0.7575074797460323,
+    "median_ns": [
+      391466,
+      635215,
+      505942
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 3/2161 3939803",
+      "cpu_ticks": [
+        734546902,
+        264351442,
+        99239349,
+        3722665379,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.815135937
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 2/2161 3940506",
+      "cpu_ticks": [
+        734546912,
+        264351442,
+        99239356,
+        3722665440,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.848798629
+    },
+    "host_cpu_busy_fraction": 0.21794871794871795,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.4158868773591027,
+    "one_over_shared": 0.8566169170612832,
+    "median_ns": [
+      196780,
+      779657,
+      224361
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 2/2161 3940506",
+      "cpu_ticks": [
+        734546912,
+        264351442,
+        99239356,
+        3722665442,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.849556063
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 2/2151 3940509",
+      "cpu_ticks": [
+        734546917,
+        264351442,
+        99239358,
+        3722665498,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.876375154
+    },
+    "host_cpu_busy_fraction": 0.11111111111111116,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.4825362900780474,
+    "one_over_shared": 0.8981090628868752,
+    "median_ns": [
+      317227,
+      533443,
+      364636
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 4/2150 3940509",
+      "cpu_ticks": [
+        734546917,
+        264351442,
+        99239358,
+        3722665500,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.876961527
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 3/2150 3941200",
+      "cpu_ticks": [
+        734546926,
+        264351442,
+        99239363,
+        3722665561,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.908213785
+    },
+    "host_cpu_busy_fraction": 0.18666666666666665,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.547421683508766,
+    "one_over_shared": 0.8486090539307483,
+    "median_ns": [
+      483840,
+      2033144,
+      573228
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 2/2150 3941200",
+      "cpu_ticks": [
+        734546926,
+        264351442,
+        99239363,
+        3722665562,
+        3316807,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.908767627
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 2/2159 3941210",
+      "cpu_ticks": [
+        734546934,
+        264351442,
+        99239363,
+        3722665671,
+        3316808,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.958927697
+    },
+    "host_cpu_busy_fraction": 0.06779661016949157,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.3757532501372354,
+    "one_over_shared": 0.730514110276541,
+    "median_ns": [
+      296618,
+      566435,
+      409100
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 2/2159 3941210",
+      "cpu_ticks": [
+        734546934,
+        264351442,
+        99239363,
+        3722665673,
+        3316808,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.959693848
+    },
+    "host_after": {
+      "loadavg": "2.92 3.33 2.27 4/2159 3941901",
+      "cpu_ticks": [
+        734546946,
+        264351442,
+        99239368,
+        3722665739,
+        3316808,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.994068559
+    },
+    "host_cpu_busy_fraction": 0.20481927710843373,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.40983651188262,
+    "one_over_shared": 1.3034816297779934,
+    "median_ns": [
+      6145889,
+      20695954,
+      4562501
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "2.92 3.33 2.27 5/2159 3941901",
+      "cpu_ticks": [
+        734546946,
+        264351442,
+        99239368,
+        3722665741,
+        3316808,
+        0,
+        3647326,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019598.99494136
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 3/2149 3941963",
+      "cpu_ticks": [
+        734547031,
+        264351442,
+        99239390,
+        3722666883,
+        3316808,
+        0,
+        3647328,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019599.516804458
+    },
+    "host_cpu_busy_fraction": 0.08713029576338926,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 3.4577893829187283,
+    "one_over_shared": 0.9633576850109993,
+    "median_ns": [
+      1156044,
+      3783426,
+      1257404
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 6/2149 3941963",
+      "cpu_ticks": [
+        734547031,
+        264351442,
+        99239390,
+        3722666884,
+        3316808,
+        0,
+        3647328,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019599.517366365
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 3/2149 3942658",
+      "cpu_ticks": [
+        734547155,
+        264351442,
+        99239398,
+        3722667262,
+        3316808,
+        0,
+        3647329,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019599.733110431
+    },
+    "host_cpu_busy_fraction": 0.26027397260273977,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.8321945551670615,
+    "one_over_shared": 1.177285267413576,
+    "median_ns": [
+      6975810,
+      22884110,
+      5766085
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 1/2149 3942658",
+      "cpu_ticks": [
+        734547155,
+        264351442,
+        99239398,
+        3722667263,
+        3316808,
+        0,
+        3647329,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019599.7337161
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 1/2148 3942728",
+      "cpu_ticks": [
+        734547235,
+        264351442,
+        99239421,
+        3722668365,
+        3316808,
+        0,
+        3647330,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.23649803
+    },
+    "host_cpu_busy_fraction": 0.0862354892205639,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.9901919984351526,
+    "one_over_shared": 0.8295074418433133,
+    "median_ns": [
+      1214445,
+      4501897,
+      1759138
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 4/2148 3942728",
+      "cpu_ticks": [
+        734547236,
+        264351442,
+        99239421,
+        3722668367,
+        3316808,
+        0,
+        3647330,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.237068423
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 1/2148 3943426",
+      "cpu_ticks": [
+        734547384,
+        264351442,
+        99239434,
+        3722668748,
+        3316808,
+        0,
+        3647331,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.464517154
+    },
+    "host_cpu_busy_fraction": 0.2983425414364641,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 5.610188731196837,
+    "one_over_shared": 1.7515034906706177,
+    "median_ns": [
+      4188638,
+      13928447,
+      2511493
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 1/2148 3943426",
+      "cpu_ticks": [
+        734547384,
+        264351442,
+        99239434,
+        3722668750,
+        3316808,
+        0,
+        3647331,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.465176514
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 3/2148 3943484",
+      "cpu_ticks": [
+        734547448,
+        264351442,
+        99239456,
+        3722669578,
+        3316808,
+        0,
+        3647333,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.847222487
+    },
+    "host_cpu_busy_fraction": 0.09606986899563319,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 3.112780769043695,
+    "one_over_shared": 0.9292232644783527,
+    "median_ns": [
+      712009,
+      2760973,
+      835321
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 3/2148 3943484",
+      "cpu_ticks": [
+        734547448,
+        264351442,
+        99239456,
+        3722669580,
+        3316808,
+        0,
+        3647333,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019600.847834939
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 2/2156 3944184",
+      "cpu_ticks": [
+        734547525,
+        264351442,
+        99239467,
+        3722669984,
+        3316808,
+        0,
+        3647333,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.055921032
+    },
+    "host_cpu_busy_fraction": 0.17886178861788615,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w1-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.0393671101602635,
+    "one_over_shared": 1.1237627344051853,
+    "median_ns": [
+      6645679,
+      24099296,
+      5922368
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 2/2156 3944184",
+      "cpu_ticks": [
+        734547525,
+        264351442,
+        99239467,
+        3722669986,
+        3316808,
+        0,
+        3647333,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.056620969
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 2/2149 3944247",
+      "cpu_ticks": [
+        734547614,
+        264351442,
+        99239492,
+        3722671100,
+        3316808,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.569231134
+    },
+    "host_cpu_busy_fraction": 0.09430894308943094,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w24-t1.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 1,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 3.0687995027492594,
+    "one_over_shared": 0.855685744343489,
+    "median_ns": [
+      1008677,
+      3601854,
+      1117472
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 2/2149 3944247",
+      "cpu_ticks": [
+        734547614,
+        264351442,
+        99239492,
+        3722671102,
+        3316808,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.570399342
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 1/2149 3944952",
+      "cpu_ticks": [
+        734547724,
+        264351442,
+        99239504,
+        3722671487,
+        3316809,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.783723848
+    },
+    "host_cpu_busy_fraction": 0.24015748031496065,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.6643434460499655,
+    "one_over_shared": 1.0791148898206098,
+    "median_ns": [
+      1466388,
+      2993550,
+      1173758
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 2/2149 3944952",
+      "cpu_ticks": [
+        734547724,
+        264351442,
+        99239504,
+        3722671489,
+        3316809,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019601.784430006
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 2/2151 3945697",
+      "cpu_ticks": [
+        734547838,
+        264351442,
+        99239527,
+        3722671896,
+        3316809,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.011134567
+    },
+    "host_cpu_busy_fraction": 0.25183823529411764,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.040144395331461,
+    "one_over_shared": 1.1227399915963512,
+    "median_ns": [
+      6587439,
+      23723889,
+      5864479
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 3/2151 3945697",
+      "cpu_ticks": [
+        734547838,
+        264351442,
+        99239527,
+        3722671899,
+        3316809,
+        0,
+        3647335,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.012339793
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 2/2161 3945719",
+      "cpu_ticks": [
+        734547916,
+        264351442,
+        99239542,
+        3722673095,
+        3316809,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.548443445
+    },
+    "host_cpu_busy_fraction": 0.0728682170542636,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.9415214032957704,
+    "one_over_shared": 1.0613847535317915,
+    "median_ns": [
+      899222,
+      2527294,
+      829540
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 2/2161 3945719",
+      "cpu_ticks": [
+        734547916,
+        264351442,
+        99239542,
+        3722673096,
+        3316809,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.54908393
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 1/2150 3946453",
+      "cpu_ticks": [
+        734547996,
+        264351442,
+        99239563,
+        3722673451,
+        3316809,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.740893491
+    },
+    "host_cpu_busy_fraction": 0.2214912280701754,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 5.158463338540563,
+    "one_over_shared": 1.4819164141517345,
+    "median_ns": [
+      4141178,
+      13172574,
+      2692384
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 1/2150 3946453",
+      "cpu_ticks": [
+        734547996,
+        264351442,
+        99239563,
+        3722673454,
+        3316809,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019602.742189599
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 2/2160 3946464",
+      "cpu_ticks": [
+        734548051,
+        264351442,
+        99239570,
+        3722674317,
+        3316810,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.128557251
+    },
+    "host_cpu_busy_fraction": 0.06695464362850967,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.9744459695862586,
+    "one_over_shared": 0.8519327493032118,
+    "median_ns": [
+      1122441,
+      3843369,
+      1299614
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 2/2160 3946464",
+      "cpu_ticks": [
+        734548051,
+        264351442,
+        99239570,
+        3722674318,
+        3316810,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.129235567
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 4/2159 3947214",
+      "cpu_ticks": [
+        734548211,
+        264351442,
+        99239593,
+        3722674664,
+        3316810,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.347666367
+    },
+    "host_cpu_busy_fraction": 0.34593572778827975,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.166852125890578,
+    "one_over_shared": 1.2424872026417122,
+    "median_ns": [
+      7174373,
+      24119513,
+      5853108
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 1/2159 3947214",
+      "cpu_ticks": [
+        734548211,
+        264351442,
+        99239593,
+        3722674667,
+        3316810,
+        0,
+        3647336,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.348652983
+    },
+    "host_after": {
+      "loadavg": "3.01 3.34 2.28 1/2150 3947272",
+      "cpu_ticks": [
+        734548295,
+        264351442,
+        99239616,
+        3722675813,
+        3316810,
+        0,
+        3647338,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.871854158
+    },
+    "host_cpu_busy_fraction": 0.08685258964143427,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 3.430203203187685,
+    "one_over_shared": 1.0571972378360939,
+    "median_ns": [
+      1199145,
+      3683578,
+      1190860
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "3.01 3.34 2.28 1/2150 3947272",
+      "cpu_ticks": [
+        734548295,
+        264351442,
+        99239616,
+        3722675815,
+        3316810,
+        0,
+        3647338,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019603.872682316
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 5/2150 3947963",
+      "cpu_ticks": [
+        734548424,
+        264351442,
+        99239627,
+        3722676143,
+        3316810,
+        0,
+        3647339,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.069169275
+    },
+    "host_cpu_busy_fraction": 0.3006396588486141,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.438498473032832,
+    "one_over_shared": 1.3382675249059075,
+    "median_ns": [
+      6367385,
+      21303107,
+      4820176
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 6/2150 3947963",
+      "cpu_ticks": [
+        734548424,
+        264351442,
+        99239627,
+        3722676145,
+        3316810,
+        0,
+        3647339,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.070208169
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3948023",
+      "cpu_ticks": [
+        734548524,
+        264351442,
+        99239650,
+        3722677143,
+        3316810,
+        0,
+        3647339,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.536302179
+    },
+    "host_cpu_busy_fraction": 0.10972346119536125,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.3902361860239174,
+    "one_over_shared": 0.9253616019711257,
+    "median_ns": [
+      480423,
+      737086,
+      537641
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 6/2150 3948023",
+      "cpu_ticks": [
+        734548524,
+        264351442,
+        99239650,
+        3722677146,
+        3316810,
+        0,
+        3647339,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.537490524
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3948718",
+      "cpu_ticks": [
+        734548534,
+        264351442,
+        99239657,
+        3722677207,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.570536416
+    },
+    "host_cpu_busy_fraction": 0.22784810126582278,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.6208944211099308,
+    "one_over_shared": 0.8631975352813669,
+    "median_ns": [
+      341132,
+      1433896,
+      389593
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3948718",
+      "cpu_ticks": [
+        734548534,
+        264351442,
+        99239657,
+        3722677209,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.571347802
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3948719",
+      "cpu_ticks": [
+        734548539,
+        264351442,
+        99239659,
+        3722677282,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.604270593
+    },
+    "host_cpu_busy_fraction": 0.08750000000000002,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.6147305273308852,
+    "one_over_shared": 0.973988979213718,
+    "median_ns": [
+      319831,
+      615337,
+      362642
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3948719",
+      "cpu_ticks": [
+        734548539,
+        264351442,
+        99239659,
+        3722677284,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.605069555
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 4/2150 3949412",
+      "cpu_ticks": [
+        734548548,
+        264351442,
+        99239667,
+        3722677349,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.638628993
+    },
+    "host_cpu_busy_fraction": 0.20731707317073167,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.654075706781406,
+    "one_over_shared": 0.8874297178153789,
+    "median_ns": [
+      144352,
+      611440,
+      164209
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 5/2150 3949413",
+      "cpu_ticks": [
+        734548549,
+        264351442,
+        99239667,
+        3722677351,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.639721127
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3949416",
+      "cpu_ticks": [
+        734548553,
+        264351442,
+        99239667,
+        3722677396,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.660529503
+    },
+    "host_cpu_busy_fraction": 0.08163265306122447,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.0714141966853707,
+    "one_over_shared": 0.6757338341838763,
+    "median_ns": [
+      453032,
+      723671,
+      558681
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3949416",
+      "cpu_ticks": [
+        734548553,
+        264351442,
+        99239667,
+        3722677398,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.661443422
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3950107",
+      "cpu_ticks": [
+        734548563,
+        264351442,
+        99239675,
+        3722677445,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.688925249
+    },
+    "host_cpu_busy_fraction": 0.27692307692307694,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.547640558208708,
+    "one_over_shared": 0.8089370184509039,
+    "median_ns": [
+      307248,
+      1336594,
+      369695
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3950107",
+      "cpu_ticks": [
+        734548563,
+        264351442,
+        99239675,
+        3722677448,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.689899121
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3950108",
+      "cpu_ticks": [
+        734548568,
+        264351442,
+        99239676,
+        3722677523,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.723651502
+    },
+    "host_cpu_busy_fraction": 0.07407407407407407,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-archive-w24-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.5302051426946175,
+    "one_over_shared": 0.8747306333647741,
+    "median_ns": [
+      414439,
+      710316,
+      482217
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3950108",
+      "cpu_ticks": [
+        734548568,
+        264351442,
+        99239676,
+        3722677525,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.724568707
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 3/2150 3950799",
+      "cpu_ticks": [
+        734548580,
+        264351442,
+        99239682,
+        3722677588,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.758093099
+    },
+    "host_cpu_busy_fraction": 0.2222222222222222,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-archive-w1-t2.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 2,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.8344618055555557,
+    "one_over_shared": 0.9406780478395061,
+    "median_ns": [
+      301567,
+      1210467,
+      314130
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 4/2150 3950799",
+      "cpu_ticks": [
+        734548580,
+        264351442,
+        99239682,
+        3722677590,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.759040541
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2150 3950800",
+      "cpu_ticks": [
+        734548585,
+        264351442,
+        99239682,
+        3722677657,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.789336481
+    },
+    "host_cpu_busy_fraction": 0.06944444444444442,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 4.560898240938584,
+    "one_over_shared": 1.2767507077222193,
+    "median_ns": [
+      6292185,
+      21947428,
+      4877373
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2150 3950800",
+      "cpu_ticks": [
+        734548585,
+        264351442,
+        99239682,
+        3722677659,
+        3316810,
+        0,
+        3647340,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019604.79034119
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 4/2160 3950863",
+      "cpu_ticks": [
+        734548708,
+        264351442,
+        99239706,
+        3722678638,
+        3316810,
+        0,
+        3647341,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.258351034
+    },
+    "host_cpu_busy_fraction": 0.13132209405501327,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-archive-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 3.2807630960380334,
+    "one_over_shared": 0.9580691919474172,
+    "median_ns": [
+      1009399,
+      3313712,
+      1051167
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 5/2160 3950863",
+      "cpu_ticks": [
+        734548709,
+        264351442,
+        99239706,
+        3722678640,
+        3316810,
+        0,
+        3647341,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.259439591
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2154 3951561",
+      "cpu_ticks": [
+        734548848,
+        264351442,
+        99239716,
+        3722678957,
+        3316811,
+        0,
+        3647341,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.452993824
+    },
+    "host_cpu_busy_fraction": 0.3190578158458244,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.7826071729362947,
+    "one_over_shared": 1.138010225846194,
+    "median_ns": [
+      7119951,
+      23524003,
+      6043436
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 3/2151 3951561",
+      "cpu_ticks": [
+        734548848,
+        264351442,
+        99239716,
+        3722678960,
+        3316811,
+        0,
+        3647341,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.454181869
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3951619",
+      "cpu_ticks": [
+        734548945,
+        264351442,
+        99239741,
+        3722680079,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.969660872
+    },
+    "host_cpu_busy_fraction": 0.09903381642512077,
+    "exact": true
+  },
+  {
+    "file": "n8192-s0-active-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.9068285342017015,
+    "one_over_shared": 0.8213178145552623,
+    "median_ns": [
+      1053852,
+      3762266,
+      1358255
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2151 3951619",
+      "cpu_ticks": [
+        734548945,
+        264351442,
+        99239741,
+        3722680081,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019605.970573739
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3952310",
+      "cpu_ticks": [
+        734549083,
+        264351442,
+        99239752,
+        3722680412,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.17218728
+    },
+    "host_cpu_busy_fraction": 0.3104166666666667,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 5.307927601149034,
+    "one_over_shared": 1.6104934514825453,
+    "median_ns": [
+      3949368,
+      12827526,
+      2416154
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3952310",
+      "cpu_ticks": [
+        734549083,
+        264351442,
+        99239752,
+        3722680415,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.173305062
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3952370",
+      "cpu_ticks": [
+        734549134,
+        264351442,
+        99239767,
+        3722681208,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.531656663
+    },
+    "host_cpu_busy_fraction": 0.07683352735739235,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-archive-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.7849097377018803,
+    "one_over_shared": 1.0011293251730962,
+    "median_ns": [
+      726917,
+      1890185,
+      686531
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3952370",
+      "cpu_ticks": [
+        734549135,
+        264351442,
+        99239767,
+        3722681211,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.532644752
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3953066",
+      "cpu_ticks": [
+        734549210,
+        264351442,
+        99239779,
+        3722681565,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.716407489
+    },
+    "host_cpu_busy_fraction": 0.19727891156462585,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.8795528606946457,
+    "one_over_shared": 1.0989142447903577,
+    "median_ns": [
+      6617686,
+      23582734,
+      5991148
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2151 3953066",
+      "cpu_ticks": [
+        734549211,
+        264351442,
+        99239779,
+        3722681568,
+        3316811,
+        0,
+        3647342,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019606.717747399
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2160 3953128",
+      "cpu_ticks": [
+        734549289,
+        264351442,
+        99239799,
+        3722682713,
+        3316812,
+        0,
+        3647343,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.23648428
+    },
+    "host_cpu_busy_fraction": 0.07951807228915664,
+    "exact": true
+  },
+  {
+    "file": "n8192-s1-active-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "8192",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 8192,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 2.7858899774212027,
+    "one_over_shared": 0.9643503738901381,
+    "median_ns": [
+      1009168,
+      2907769,
+      1063650
+    ],
+    "comparisons": 327680,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2160 3953128",
+      "cpu_ticks": [
+        734549289,
+        264351442,
+        99239799,
+        3722682716,
+        3316812,
+        0,
+        3647343,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.237603225
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2171 3953840",
+      "cpu_ticks": [
+        734549394,
+        264351442,
+        99239810,
+        3722683067,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.435492642
+    },
+    "host_cpu_busy_fraction": 0.25,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-archive-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.741222451837688,
+    "one_over_shared": 0.9788569810604845,
+    "median_ns": [
+      329210,
+      1303212,
+      348565
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2171 3953840",
+      "cpu_ticks": [
+        734549394,
+        264351442,
+        99239810,
+        3722683070,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.436677009
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 7/2162 3953865",
+      "cpu_ticks": [
+        734549401,
+        264351442,
+        99239814,
+        3722683133,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.467374505
+    },
+    "host_cpu_busy_fraction": 0.14864864864864868,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-archive-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.4333135927805978,
+    "one_over_shared": 0.8807165820642978,
+    "median_ns": [
+      303762,
+      561466,
+      381267
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 4/2162 3953865",
+      "cpu_ticks": [
+        734549401,
+        264351442,
+        99239814,
+        3722683136,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.468677896
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2152 3954569",
+      "cpu_ticks": [
+        734549407,
+        264351442,
+        99239821,
+        3722683194,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.499435164
+    },
+    "host_cpu_busy_fraction": 0.18309859154929575,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.683264121568583,
+    "one_over_shared": 0.9003972519892388,
+    "median_ns": [
+      326574,
+      1406735,
+      385414
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2152 3954570",
+      "cpu_ticks": [
+        734549407,
+        264351442,
+        99239821,
+        3722683198,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.501270626
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3954571",
+      "cpu_ticks": [
+        734549412,
+        264351442,
+        99239822,
+        3722683272,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.534723593
+    },
+    "host_cpu_busy_fraction": 0.07499999999999996,
+    "exact": true
+  },
+  {
+    "file": "n512-s0-active-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "0",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 0,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.393631490998354,
+    "one_over_shared": 0.8862227663300477,
+    "median_ns": [
+      394191,
+      605098,
+      427323
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3954571",
+      "cpu_ticks": [
+        734549412,
+        264351442,
+        99239822,
+        3722683275,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.535905076
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2151 3955262",
+      "cpu_ticks": [
+        734549420,
+        264351442,
+        99239828,
+        3722683331,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.565317444
+    },
+    "host_cpu_busy_fraction": 0.19999999999999996,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.4770875548242715,
+    "one_over_shared": 0.8825900863961738,
+    "median_ns": [
+      149350,
+      581063,
+      166223
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 4/2151 3955262",
+      "cpu_ticks": [
+        734549420,
+        264351442,
+        99239828,
+        3722683334,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.566443812
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3955263",
+      "cpu_ticks": [
+        734549423,
+        264351442,
+        99239829,
+        3722683378,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.586303063
+    },
+    "host_cpu_busy_fraction": 0.08333333333333337,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-archive-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "archive"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "archive",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.289235371125343,
+    "one_over_shared": 0.8228760252423795,
+    "median_ns": [
+      267723,
+      397958,
+      327246
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3955263",
+      "cpu_ticks": [
+        734549423,
+        264351442,
+        99239829,
+        3722683381,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.587537084
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3955954",
+      "cpu_ticks": [
+        734549428,
+        264351442,
+        99239832,
+        3722683446,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.618111238
+    },
+    "host_cpu_busy_fraction": 0.1095890410958904,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w1-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "1",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 1,
+    "effective_workers": 1,
+    "four_over_shared": 3.4270616189050864,
+    "one_over_shared": 0.8980162962141788,
+    "median_ns": [
+      707841,
+      2924220,
+      812619
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3955954",
+      "cpu_ticks": [
+        734549428,
+        264351442,
+        99239832,
+        3722683450,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.619880575
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 1/2151 3955955",
+      "cpu_ticks": [
+        734549435,
+        264351442,
+        99239833,
+        3722683567,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.671838376
+    },
+    "host_cpu_busy_fraction": 0.06399999999999995,
+    "exact": true
+  },
+  {
+    "file": "n512-s1-active-w24-t3.txt",
+    "args": [
+      "--orbs",
+      "512",
+      "--rounds",
+      "9",
+      "--workers",
+      "24",
+      "--sparse",
+      "1",
+      "--policy",
+      "active"
+    ],
+    "trial": 3,
+    "orbs": 512,
+    "sparse": 1,
+    "policy": "active",
+    "requested_workers": 24,
+    "effective_workers": 24,
+    "four_over_shared": 1.530390287010052,
+    "one_over_shared": 0.7904440435819972,
+    "median_ns": [
+      342925,
+      746824,
+      467630
+    ],
+    "comparisons": 20480,
+    "host_before": {
+      "loadavg": "4.93 3.74 2.42 2/2151 3955955",
+      "cpu_ticks": [
+        734549435,
+        264351442,
+        99239833,
+        3722683570,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.673005482
+    },
+    "host_after": {
+      "loadavg": "4.93 3.74 2.42 2/2151 3956648",
+      "cpu_ticks": [
+        734549446,
+        264351442,
+        99239839,
+        3722683628,
+        3316812,
+        0,
+        3647344,
+        0,
+        0,
+        0
+      ],
+      "monotonic": 2019607.703581408
+    },
+    "host_cpu_busy_fraction": 0.22666666666666668,
+    "exact": true
+  }
+]

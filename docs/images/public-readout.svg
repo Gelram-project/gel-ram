@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+<title id="title">GEL RAM public readout</title><desc id="desc">Two separate demonstrations. A canonical Q8 record has four equivalent views with a shared score. A source catalog returns a pinned quotation and rejects changed bytes. No private encoder or connection between the demonstrations is implied.</desc>
+<rect width="1200" height="440" rx="24" fill="#0c1427"/>
+<g font-family="sans-serif" fill="#edf5ff">
+<text x="42" y="54" font-size="30" font-weight="bold">GEL RAM</text><text x="42" y="87" font-size="18" fill="#a9bed9">Public Rust preview · inspect the data, run the checks</text>
+<rect x="42" y="116" width="335" height="168" rx="16" fill="#17364b"/>
+<text x="62" y="154" font-size="22" font-weight="bold">ONE Q8 CARRIER</text><text x="62" y="189" font-size="18">1024 phase bytes + 128 mask bytes</text><text x="62" y="219" font-size="18">1152 bytes of record payload</text><text x="62" y="253" font-size="16" fill="#8ce5dc">Change phase, activity mask and noise</text>
+<path d="M389 199 H470 M457 186 L470 199 L457 212" stroke="#64dbd0" stroke-width="4" fill="none"/>
+<rect x="489" y="116" width="665" height="168" rx="16" fill="#252747"/>
+<text x="513" y="154" font-size="22" font-weight="bold">FOUR EQUIVALENT VIEWS · ONE SHARED SCORE</text>
+<text x="513" y="195" font-size="26" fill="#c6b2ff">P0          P1          P2          P3</text>
+<text x="513" y="233" font-size="18">Independent reference checks + exact inverse checks</text><text x="513" y="263" font-size="16" fill="#bec6de">Not four unrelated files, answers or confidence votes</text>
+<rect x="42" y="310" width="1112" height="82" rx="14" fill="#18342f"/>
+<text x="63" y="342" font-size="19" font-weight="bold">SEPARATE SOURCE DEMO: title → quote → source → integrity gate</text>
+<text x="63" y="374" font-size="17" fill="#b2e5cd">Changed bytes + original trusted pins → REJECTED. Integrity is not a proof of factual truth.</text>
+<text x="42" y="422" font-size="15" fill="#a9bed9">Architecture illustration, not a screenshot or physical RAM circuit. No private data.</text>
+</g></svg>

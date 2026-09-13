@@ -1,0 +1,185 @@
+{
+  "utc": "2026-09-08T17:20:50.961081+00:00",
+  "rust": "rustc 1.85.0 (4d91de4e4 2025-02-17)\nbinary: rustc\ncommit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688\ncommit-date: 2025-02-17\nhost: x86_64-unknown-linux-gnu\nrelease: 1.85.0\nLLVM version: 19.1.7",
+  "old_source_sha256": "a057bad107072e029aec29a13ab4f418f2bb4f48200cd337f91f014fbc385766",
+  "fixed_source_sha256": "f726edce1cf607dd6f6246e7a630d78d6dde98ceabcd2857e2784fc71e13234a",
+  "cpu_only": true,
+  "isolated_host": false,
+  "purpose": "correctness regression, timings are diagnostic, not a new speedup claim"
+}
+
+arguments=--orbs 512 --rounds 3 --workers 1 --sparse 0 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=1 effective_workers=1 sparse=false policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,796789,3846677,1248198
+2,782222,3049587,802500
+3,889083,3015603,815734
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.457911 reference_one_over_shared_total=0.861034 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 24 --sparse 0 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=24 effective_workers=24 sparse=false policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,564192,966699,596933
+2,582666,809083,718592
+3,597664,753027,574060
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.338288 reference_one_over_shared_total=0.923230 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 1 --sparse 0 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=1 effective_workers=1 sparse=false policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,709154,2626501,709074
+2,795727,2696623,699606
+3,767203,2527976,750291
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.636501 reference_one_over_shared_total=1.052392 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 24 --sparse 0 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=24 effective_workers=24 sparse=false policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,469563,758296,513006
+2,510270,750692,662015
+3,436501,672235,605389
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.225124 reference_one_over_shared_total=0.795510 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 1 --sparse 1 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=1 effective_workers=1 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,377210,1497086,407557
+2,368693,1480566,405844
+3,389352,1582377,422164
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.690643 reference_one_over_shared_total=0.918814 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 24 --sparse 1 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=24 effective_workers=24 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,434628,839279,627310
+2,419470,685229,546238
+3,492256,655393,564773
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.254027 reference_one_over_shared_total=0.774514 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 1 --sparse 1 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=1 effective_workers=1 sparse=true policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,143780,590130,164269
+2,150032,558671,160773
+3,147768,591182,184918
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.411999 reference_one_over_shared_total=0.865911 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 512 --rounds 3 --workers 24 --sparse 1 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=512 rounds=3 requested_workers=24 effective_workers=24 sparse=true policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,517334,555545,617502
+2,372470,528544,525819
+3,389693,631618,471216
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.062662 reference_one_over_shared_total=0.792485 score_view_comparisons=8192
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 1 --sparse 0 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=1 effective_workers=1 sparse=false policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,9872774,34160258,9649163
+2,9867915,33920337,8821045
+3,10076057,34563046,8902288
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.749882 reference_one_over_shared_total=1.089296 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 24 --sparse 0 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=24 effective_workers=24 sparse=false policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,1782353,5439563,2943958
+2,2042613,8244271,2411247
+3,1835042,6039042,1767455
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=2.769032 reference_one_over_shared_total=0.794648 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 1 --sparse 0 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=1 effective_workers=1 sparse=false policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,6379773,21641195,4860244
+2,6559642,22640074,4874761
+3,6596530,21759387,4766157
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=4.554163 reference_one_over_shared_total=1.347199 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 24 --sparse 0 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=24 effective_workers=24 sparse=false policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,1447433,6965986,1444508
+2,1924340,6193542,1632161
+3,1985766,5729098,1782183
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.887467 reference_one_over_shared_total=1.102635 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 1 --sparse 1 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=1 effective_workers=1 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,7633120,26429023,6328747
+2,7462670,26272478,6356459
+3,7818149,27631495,6853293
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=4.111523 reference_one_over_shared_total=1.172758 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 24 --sparse 1 --policy active
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=24 effective_workers=24 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,1007645,3904636,1162528
+2,1493700,3374158,1107093
+3,1359357,3007308,1092655
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=3.059268 reference_one_over_shared_total=1.148241 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 1 --sparse 1 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=1 effective_workers=1 sparse=true policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,4510987,14085430,2482581
+2,4024472,14190888,2536311
+3,4716373,14140924,2613997
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=5.557167 reference_one_over_shared_total=1.736149 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+
+arguments=--orbs 8192 --rounds 3 --workers 24 --sparse 1 --policy archive
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=8192 rounds=3 requested_workers=24 effective_workers=24 sparse=true policy=archive
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,807108,2704408,846612
+2,1364648,2429902,866821
+3,935860,2259270,812639
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=2.926908 reference_one_over_shared_total=1.230217 score_view_comparisons=131072
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED

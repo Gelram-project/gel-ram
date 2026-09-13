@@ -1,0 +1,6 @@
+fifo exit=2 Q8_EVIDENCE=ERROR fixture must be a regular file, not a symlink or special file
+link exit=2 Q8_EVIDENCE=ERROR fixture must be a regular file, not a symlink or special file
+. exit=2 Q8_EVIDENCE=ERROR fixture must be a regular file, not a symlink or special file
+empty_campaign rejected_exit=101 no_table=true
+missing_repetition rejected_exit=101 no_table=true
+CLI_ADVERSARIAL=PASS

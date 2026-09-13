@@ -1,0 +1,17 @@
+GEL RAM — licensing notice
+
+Copyright (C) 2026 RR — GEL RAM Project
+
+Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
+
+This distribution uses GEL RAM Noncommercial Reciprocal License 1.0 for GEL RAM-owned material. Noncommercial use, modification, sharing and Evaluation are permitted on the terms of the root LICENSE. Monetized Use requires a separate written Commercial Agreement with the Project Licensor.
+
+Commercial agreements may use reciprocal improvement-sharing terms or expressly negotiated closed-modification terms. Payment by itself does not grant commercial rights.
+
+Project-owned demonstration films and screenshots under media/ are covered for noncommercial use and sharing as described in media/RIGHTS.md. Monetized media reuse requires commercial permission.
+
+External contributions intended for merge require GEL RAM CLA 2.0. Completed CLA and contracting records remain private.
+
+Identified third-party material remains subject to its own license terms. The Rust Book excerpt is distributed under MIT with its full licence and attribution in crates/gel-source/fixtures/rust-book/LICENSE.txt. See docs/REAL-SOURCE-DEMO.md and THIRD-PARTY-NOTICES.md.
+
+Historical release tags retain the licenses under which they were distributed. Historical staged proposals in docs/licensing-next/ are not additional current grants.

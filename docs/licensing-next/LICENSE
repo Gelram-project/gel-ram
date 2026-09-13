@@ -1,0 +1,157 @@
+GEL RAM Noncommercial Reciprocal License 1.0
+
+STAGED FOR THE NEXT RELEASE. NOT CURRENTLY IN FORCE.
+
+Copyright (C) 2026 RR — GEL RAM Project.
+
+1. Acceptance
+
+You receive rights under this license only if you accept and comply with all of its terms. Exercising any right granted by this license constitutes acceptance.
+
+2. Definitions
+
+"Licensor" means RR — GEL RAM Project, or the person or legal entity that validly succeeds to the relevant rights.
+
+"You" means the individual or legal entity exercising rights under this license.
+
+"Control" means direct or indirect ownership of more than fifty percent of the voting interests of an entity, ownership of substantially all of its assets, or the contractual or practical power to direct its management or policies.
+
+"Affiliate" means any legal entity that Controls, is Controlled by, or is under common Control with You. "Your Group" means You and all of Your Affiliates collectively.
+
+"Software" means the GEL RAM source code, documentation, build material and other files to which a release expressly applies this license, excluding Third-Party Material.
+
+"Third-Party Material" means separately identified material supplied under independent license terms, not portions of a Modification required to be licensed under section 6. Third-Party Material remains subject to its own license terms and is not relicensed by this license. Another person's authorship of a GEL RAM-derived Modification does not by itself make that Modification exempt Third-Party Material.
+
+"Modification Author" means a person or entity that owns or is authorized to license copyright or patent rights in portions it adds to a Modification. A Modification Author does not thereby become the Project Licensor or acquire authority over another person's rights.
+
+"Modification" means any change to, adaptation of, derivative work based on, or work containing modified portions of the Software.
+
+"User Content" means independently supplied or created conversations, notes, documents, images, audio, video, personal knowledge, ORB payloads, and other input or output data that do not incorporate the Software or a Modification. Merely processing, encoding, quantizing, storing, or retrieving User Content with the Software does not make it a Modification. Code or executable instructions incorporating the Software or a Modification do not become User Content merely because they are encoded in an ORB or another data container.
+
+"Corresponding Source" means the preferred form for making changes to a Modification, including all source code, interface definitions, build scripts, dependency manifests, configuration required to build and run the Modification, and scripts or source inputs necessary to reproduce generated source that forms part of the Modification. Corresponding Source does not require disclosure of passwords, private keys, personal data, unrelated datasets, or third-party material that the recipient is not legally permitted to redistribute, provided those exclusions are not used to conceal source necessary to understand, build, modify, or run the Modification.
+
+For separately licensed, unmodified external dependencies, Corresponding Source may identify their exact versions, applicable licenses and lawful acquisition and build instructions instead of redistributing them, to the extent their own licenses permit. This exception does not excuse withholding GEL RAM-derived source. If necessary rights or required source cannot lawfully be supplied, this license does not authorize distributing or providing that Modification in violation of those requirements.
+
+"Public Source Location" means an Internet location from which any person can obtain the complete Corresponding Source without payment, invitation, discriminatory access restriction, or proprietary client software beyond an ordinary web browser or generally available version-control client.
+
+"Commercial Purpose" means use by or for You or Your Group that directly or indirectly supports, enables, improves, protects, markets, sells, delivers, or reduces the cost of a commercial activity or a profit-seeking organization. It includes, without limitation: use in or for a paid product or service; SaaS or hosted services; advertising-supported services; paid consulting; contract work; internal business operations; production infrastructure; customer support; commercial research and development; model, data, or system development intended for commercial deployment; and use that creates measurable operational, competitive, or economic advantage for a for-profit entity.
+
+"Noncommercial Purpose" means a purpose that is not a Commercial Purpose. Personal study, hobby use, independent noncommercial research, education, charitable activity, and public-interest research are Noncommercial Purposes only when they are not performed for, funded primarily for the benefit of, or intended to deliver a commercial advantage to a for-profit entity.
+
+An individual's employment by, or affiliation with, a for-profit entity does not by itself make that individual's separate personal activity a Commercial Purpose. Activity performed for that entity or its business benefit remains subject to the Commercial Purpose definition.
+
+"Evaluation" means temporary internal examination of an unmodified copy of the Software solely to decide whether to seek a commercial license. Evaluation does not include production use, customer-facing use, deployment into business operations, training or tuning a production system, generation of commercial research output, or use to obtain operational, competitive, or economic advantage.
+
+Internal test measurements used solely for that licensing decision are permitted Evaluation, not permission to use the Software or its outputs in the business activities excluded above.
+
+3. Copyright License
+
+Subject to this license, the Licensor grants You a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and distribute the Software solely for Noncommercial Purposes and solely in compliance with the reciprocity obligations below.
+
+4. Limited Commercial Evaluation
+
+The Licensor grants Your Group a limited, worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce and run an unmodified copy of the Software internally solely for Evaluation for one period of no more than 30 consecutive days.
+
+That single Evaluation period begins when any member of Your Group first runs the Software on behalf of Your Group for Evaluation under this license. Merely viewing source or documentation or downloading an unexecuted copy does not start the period. Access to a newer release, version, branch, fork, mirror, copy, or build does not restart or create another Evaluation period for Your Group. The Licensor may extend or renew Evaluation only by express written permission.
+
+Any other use by or for a for-profit entity requires a separate written commercial agreement from the Licensor.
+
+5. Reciprocity for Modifications
+
+You may create, run, study, and retain a Modification solely for Your own Noncommercial Purposes privately without a time limit, provided You do not distribute it, provide another person access to it, or use it to provide functionality to another person. Such private use alone does not require publication of Corresponding Source. It does not authorize a Commercial Purpose.
+
+If You distribute a Modification, provide another person access to it, or use it to provide functionality to another person, You must make its complete Corresponding Source available at a Public Source Location under this same license no later than the first such distribution, access, or provision of functionality. This includes functionality supplied through a network, a hosted service, or a peer-to-peer node, whether access is public, invitation-only, or limited to friends. An intermediary or wrapper does not remove this obligation when You supply functionality of a Modification through it.
+
+For a Modification whose publication obligation has been triggered, the Public Source Location must remain available throughout its distribution or availability or provision of functionality to another person, and for at least three years after Your last such act. Subsequent solely private use does not extend that period. Later versions distributed or made available in these ways must have their corresponding source available on the same terms.
+
+You must provide a prominent source notice identifying the Public Source Location in the Modification's documentation and, where reasonably practical, in the user-facing interface or command-line help.
+
+This section does not require You to submit a pull request, transfer ownership of Your changes to the Licensor, or sign a contributor agreement merely to use or publish a Modification. Acceptance of an upstream contribution is a separate process.
+
+User Content is not Corresponding Source and need not be published under this section. This license grants no rights in another person's User Content and does not change its ownership or confidentiality. Configuration or source needed to build and run a Modification must be supplied with secrets and User Content removed and documented placeholders or synthetic fixtures where needed; this does not permit concealing necessary Software source as data. Privacy and access control must also be implemented technically; this license does not encrypt data.
+
+6. Same-License Requirement
+
+You may distribute or publish a Modification only under this license for the portions derived from or containing the Software. You may not impose additional terms that restrict exercise of the rights granted by this license for those portions.
+
+When You distribute a Modification or trigger its source-publication obligation, You must have authority to license its newly added covered portions and grant each recipient directly, as their Modification Author, the copyright permissions described in section 3 and the patent permissions described in section 9 for rights You can license in those portions. Each such grant is subject to this license's restrictions, termination and other conditions, and is limited to that grantor's rights. Recipients receive permissions directly from the respective rights holders, not by an unauthorized sublicense from the Project Licensor. Preserve notices identifying those rights holders and the portions they supply. No person grants rights it does not have.
+
+Publication under this section does not grant the Project Licensor commercial relicensing rights in another author's portions. Such additional rights require a separate valid grant, such as an applicable contributor agreement. The Project Licensor's commercial permission alone does not replace missing permissions from other rights holders.
+
+Separate, independently developed components may remain under their own licenses if they are clearly identified and do not incorporate or derive from the Software. Mere communication through an API or protocol does not by itself make a component a Modification, even if the component is designed to work with GEL RAM. Incorporating or adapting GEL RAM code remains subject to this license; calling it a plugin, adapter, process or wrapper does not create an exception. Classification depends on the actual material and applicable law, not its name or deployment topology.
+
+7. Distribution of Unmodified Copies
+
+You may distribute unmodified copies of the Software for Noncommercial Purposes if each recipient receives this license, all copyright notices, all `Required Notice:` lines supplied by the Licensor, and a clear statement that commercial use requires a separate written agreement.
+
+8. Commercial Use
+
+No Commercial Purpose is licensed under these public terms, except the limited Evaluation in section 4. Commercial rights arise only from a separate written agreement signed by the Licensor and the commercial licensee.
+
+That agreement must specify the applicable fees or royalties and payment conditions. Unless that agreement expressly permits closed Modifications or otherwise varies section 5, its source-publication obligations remain applicable when Modifications are distributed or their functionality is provided to another person. Payment or source publication alone, without a signed agreement, does not grant commercial rights or permission to keep such Modifications closed.
+
+Publishing source code, satisfying the reciprocity obligations, or making a Modification publicly available does not grant or convert any Commercial Purpose into a permitted use.
+
+Payment, pricing, support, service levels, warranty, indemnity, deployment scope, affiliates, sublicensing, term, audit rights, and other commercial terms are governed only by that separate agreement.
+
+9. Patent License
+
+Subject to this license, the Licensor grants You a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free patent license under patent claims the Licensor can license that would necessarily be infringed by Your permitted use of the Software.
+
+If You, an Affiliate, or an entity under common Control with You initiates patent litigation alleging that the Software or a Modification infringes a patent controlled by that party, the patent license granted to You and Your Group under this section terminates immediately.
+
+10. Notices and Attribution
+
+You must preserve all copyright, licensing, authorship, provenance, and `Required Notice:` notices supplied with the Software. You may add Your own accurate notices for Your Modification, but You may not remove or obscure the Licensor's notices.
+
+11. Names and Trademarks
+
+This license grants no right to use the names, logos, trademarks, service marks, or branding of GEL RAM or GEL RAM Project except as reasonably necessary for truthful identification of the origin of the Software and compliance with notice obligations. You may not imply endorsement, sponsorship, certification, or affiliation without written permission.
+
+12. No Relicensing by Recipients
+
+Except for the same-license distribution expressly allowed above, this license does not permit You to sublicense, transfer, sell, or relicense the Licensor's rights. The Licensor remains free to grant different licenses, including commercial licenses, to other parties.
+
+That freedom extends only to rights the Licensor owns or has valid authority to license on those terms. It does not override the rights of Modification Authors or owners of Third-Party Material.
+
+13. Fair Use and Mandatory Rights
+
+Nothing in this license restricts rights that applicable law gives You without permission from the Licensor, including fair use, fair dealing, or other mandatory exceptions.
+
+14. Compliance Records
+
+If You distribute or publicly operate a Modification, You must keep sufficient records to identify the corresponding Public Source Location and the release or commit of GEL RAM from which the Modification was derived. You are not required to disclose personal information beyond what is reasonably necessary to establish compliance.
+
+15. Termination and Cure
+
+Your rights under this license terminate automatically when You materially violate its terms.
+
+For Your first material violation that does not involve a Commercial Purpose, rights terminated under this section are reinstated automatically upon full cure if You fully cure the violation within 30 days after receiving written notice from the Licensor and take reasonable steps to correct the consequences of the violation. If these conditions are not met, reinstatement requires written confirmation from the Licensor. This cure provision does not reinstate a patent license terminated under section 9.
+
+Intentional Commercial Purpose without a separate written commercial agreement is not automatically cured merely by stopping use. Reinstatement after such use requires written confirmation from the Licensor.
+
+16. No Warranty
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OR CONDITION OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+17. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE LICENSOR WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR FOR LOSS OF DATA, PROFITS, REVENUE, BUSINESS, OR GOODWILL, ARISING FROM OR RELATED TO THE SOFTWARE OR THIS LICENSE, UNDER ANY THEORY OF LIABILITY.
+
+18. Severability
+
+If a provision of this license is held unenforceable, it will be enforced to the maximum extent permitted and the remaining provisions will remain in effect, unless doing so would materially expand the scope of rights granted beyond the Licensor's intent.
+
+19. Entire Public License
+
+This document is the complete public license grant for a release that expressly adopts GEL RAM Noncommercial Reciprocal License 1.0. No statement in documentation, issue discussions, source comments, or marketing material grants additional rights unless it expressly amends this license and is issued by the Licensor.
+
+20. Governing Law and Forum
+
+This public license does not designate a governing law or exclusive forum. Applicable law, including applicable conflict-of-law rules and mandatory statutory rights, determines those matters unless You and the Licensor separately agree otherwise in writing. A separate commercial agreement may specify its own governing law and dispute-resolution terms.
+
+21. Contact
+
+Commercial licensing and licensing questions: gelram.licensing@gmail.com
+
+Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)

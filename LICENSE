@@ -1,0 +1,135 @@
+GEL RAM Noncommercial Reciprocal License 1.0
+
+Copyright (C) 2026 RR — GEL RAM Project.
+
+1. Acceptance
+
+You receive rights under this license only if You accept and comply with all of its terms. Exercising any right granted by this license constitutes acceptance.
+
+2. Definitions
+
+"Licensor" means RR — GEL RAM Project, or the person or legal entity that validly succeeds to the relevant rights.
+
+"You" means any individual, sole trader, partnership, company, organization, or other legal entity exercising rights under this license.
+
+"Software" means the GEL RAM source code, documentation, demonstration media, build material and other files to which a distribution expressly applies this license, excluding Third-Party Material.
+
+"Third-Party Material" means material identified as owned or licensed by another party. Third-Party Material remains subject to its own license terms and is not relicensed by this license.
+
+"Modification" means any change to, adaptation of, derivative work based on, or work containing modified portions of the Software.
+
+"Noncommercial Purpose" means use that does not generate, enable, support, or form part of a Monetized Use.
+
+"Monetized Use" means use of the Software or a Modification, other than permitted Evaluation, that directly or indirectly receives, earns, enables, supports, protects, or is intended to produce money or other material financial benefit for You or another person. It includes, without limitation: sale or licensing of a product; paid subscriptions; SaaS or hosted services; advertising-supported services; sponsorship tied to access or operation; paid consulting or contract work; customer-facing production systems; deployment in revenue-generating infrastructure; and production use that materially reduces the operating cost of a commercial activity.
+
+Donations, tips, crowdfunding, sponsorships, or similar payments received specifically because of a GEL RAM-based activity are Monetized Use when they fund, reward, or support that activity. An unrelated personal gift that is not connected to GEL RAM use is outside this definition.
+
+"Evaluation" means testing, benchmarking, studying, prototyping, modifying, or integrating the Software or a Modification in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights. Evaluation may be performed by any person or organization, including a for-profit entity, and has no fixed time limit under this public license. Evaluation does not include customer-facing deployment, production operation, paid service delivery, sale, subscription use, advertising-supported operation, billable work, use of GEL RAM to train or tune a production system, generation of deliverables for a paying customer, or use of the Software or a Modification to operate or materially improve a revenue-generating service or product. Evaluating GEL RAM solely to decide whether to obtain commercial rights is permitted even when the evaluator is a for-profit entity.
+
+"Commercial Agreement" means a separate written agreement signed by the Licensor and the person or entity receiving commercial rights.
+
+"Commercial Improvement" means a Modification, extension, optimization, integration layer, or other GEL RAM-derived improvement created or used for a Monetized Use, excluding independent components that merely communicate with GEL RAM through a documented interface without incorporating or adapting GEL RAM code.
+
+3. Noncommercial License
+
+Subject to this license, the Licensor grants You a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.
+
+You may keep Noncommercial Modifications private without a time limit. You are not required to publish private Noncommercial Modifications merely because You created, ran, maintained, or improved them.
+
+You may share the Software or a Modification with other people for Noncommercial Purposes, including private sharing, research collaboration, teaching, hobby work, community experimentation, and noncommercial redistribution of demonstration media, provided You preserve this license and the notices required by section 8.
+
+4. Free Evaluation
+
+Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.
+
+Evaluation may use ordinary rented or owned computing infrastructure, but the Software or a Modification may not be deployed as part of a paid plan, customer-facing production environment, revenue-generating service, or other Monetized Use under this section.
+
+Evaluation does not grant commercial rights. If Evaluation becomes a Monetized Use, commercial rights are required before that Monetized Use begins.
+
+5. Monetized and Commercial Use
+
+No Monetized Use is licensed by these public terms.
+
+Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor. This rule applies regardless of whether You are an individual, freelancer, sole trader, nonprofit, company, or other organization.
+
+Creating Your own Modification does not remove this requirement when that Modification incorporates, adapts, derives from, or materially uses the Software.
+
+Publishing source code, giving away a copy, paying infrastructure costs, or calling a deployment an experiment does not convert a Monetized Use into a Noncommercial Purpose.
+
+6. Commercial Reciprocity and Closed Modifications
+
+A Commercial Agreement must define the applicable payment model, which may include a subscription, fixed fee, usage fee, revenue share, royalty, or another written arrangement.
+
+The Licensor may offer a reciprocal commercial option in which the commercial user pays the agreed amount and provides agreed Commercial Improvements or their Corresponding Source to the Licensor and, where the Commercial Agreement requires it, to the GEL RAM community.
+
+The Licensor may also offer a closed-modification commercial option under which agreed Commercial Improvements may remain private. Closed commercial rights exist only when the Commercial Agreement expressly grants them and may require a higher fee, subscription tier, royalty, revenue share, or other compensation.
+
+No person obtains a right to keep Monetized GEL RAM-derived Modifications closed merely by paying an unsolicited amount, publishing some source, or using the Software privately before commercialization.
+
+A Commercial Agreement may condition access to future releases, extensions, modules, updates, support, or closed-modification rights on an active subscription or other continuing payment. Rights to previously supplied versions and post-termination obligations are governed only by that Commercial Agreement.
+
+7. Independent Components
+
+Separate, independently developed components may remain under their own terms if they do not incorporate or adapt protected GEL RAM code. Mere communication with GEL RAM through an API, file format, process boundary, or protocol does not by itself make an independent component a Modification.
+
+Moving GEL RAM-derived code into a plugin, wrapper, service, generated file, encoded payload, or separate process does not by itself make that code independent.
+
+8. Distribution and Notices
+
+You may distribute unmodified copies of the Software for Noncommercial Purposes if each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.
+
+If You distribute a Modification for a Noncommercial Purpose, the GEL RAM-derived portions remain subject to this license. You must not represent the Modification as granting commercial rights that You do not have.
+
+Each recipient obtains any GEL RAM rights directly from the Licensor under this license upon acceptance of its terms. Distribution permitted by this section is not a sublicense of the Licensor's rights.
+
+9. Patent License
+
+Subject to this license, the Licensor grants You a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free patent license under patent claims the Licensor can license that would necessarily be infringed by Your permitted use of the Software.
+
+If You initiate patent litigation alleging that the Software or a Modification infringes a patent controlled by You, the patent license granted to You under this section terminates immediately.
+
+10. Names and Trademarks
+
+This license grants no right to use the names, logos, trademarks, service marks, or branding of GEL RAM or GEL RAM Project except as reasonably necessary for truthful identification of the Software and compliance with notice obligations. You may not imply endorsement, sponsorship, certification, or affiliation without written permission.
+
+11. Fair Use and Mandatory Rights
+
+Nothing in this license restricts rights that applicable law gives You without permission from the Licensor, including fair use, fair dealing, or other mandatory exceptions.
+
+12. Termination and Cure
+
+Your rights under this license terminate automatically when You materially violate its terms.
+
+For a first material Noncommercial violation, rights terminated under this section are reinstated automatically if You fully cure the violation within 30 days after receiving written notice from the Licensor and take reasonable steps to correct the consequences of the violation.
+
+A Monetized Use conducted without a required Commercial Agreement is not automatically cured by stopping use, publishing source, or sending payment. Reinstatement or authorization for commercial use requires written confirmation or a Commercial Agreement from the Licensor.
+
+13. Historical Rights
+
+This license does not revoke or rewrite rights already validly granted under an earlier GEL RAM release or another applicable license. Historical releases remain governed by the terms under which they were distributed.
+
+14. No Warranty
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OR CONDITION OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+15. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE LICENSOR WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR FOR LOSS OF DATA, PROFITS, REVENUE, BUSINESS, OR GOODWILL, ARISING FROM OR RELATED TO THE SOFTWARE OR THIS LICENSE, UNDER ANY THEORY OF LIABILITY.
+
+16. Severability
+
+If a provision of this license is held unenforceable, it will be enforced to the maximum extent permitted and the remaining provisions will remain in effect, unless doing so would materially expand the scope of rights granted beyond the Licensor's intent.
+
+17. Entire Public License
+
+This document is the complete public license grant for a distribution that expressly adopts GEL RAM Noncommercial Reciprocal License 1.0. No statement in documentation, issue discussions, source comments, or marketing material grants additional rights unless it expressly amends this license and is issued by the Licensor.
+
+18. Governing Law and Forum
+
+This public license does not designate a governing law or exclusive forum. Applicable law, including applicable conflict-of-law rules and mandatory statutory rights, determines those matters unless You and the Licensor separately agree otherwise in writing. A Commercial Agreement may specify its own governing law and dispute-resolution terms.
+
+19. Contact
+
+Commercial licensing and licensing questions: gelram.licensing@gmail.com
+
+Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)

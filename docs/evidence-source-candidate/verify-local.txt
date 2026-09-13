@@ -1,0 +1,564 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/xtask verify`
+RUST_ONLY_GATE=PASS
+PROJECT_CONTACT_GATE=PASS
+LICENSING_GATE=PASS
+LICENSE_MODE=PolyForm-Noncommercial-1.0.0 + Commercial + CLA
+CI_POLICY_GATE=PASS
+DOCS_REFS_GATE=PASS
+DOCS_REFS_CHECKED=69
+    Checking xtask v0.2.1 (<SOURCE_ROOT>/xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.41s
+   Compiling xtask v0.2.1 (<SOURCE_ROOT>/xtask)
+    Finished `release` profile [optimized] target(s) in 4.29s
+ Documenting xtask v0.2.1 (<SOURCE_ROOT>/xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s
+   Generated <SOURCE_ROOT>/target/doc/gel_bench/index.html and 11 other files
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/main.rs (target/debug/deps/gel_bench-9794346e25e50ff1)
+
+running 4 tests
+test tests::telemetry_never_labels_fallback_as_parallel_execution ... ok
+test tests::processor_field_survives_spaces_and_parentheses_in_comm ... ok
+test tests::timed_gate_rejects_one_wrong_hit_and_missing_results ... ok
+test tests::top8_gate_checks_every_index_score_order_and_length ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/gel_cli-e365beb05527a7f5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/data_integrity.rs (target/debug/examples/data_integrity-27f584dd35961dcc)
+
+running 4 tests
+test tests::external_dump_is_shape_checked_without_using_labels ... ok
+test tests::external_dump_rejects_bad_shapes_nonfinite_values_and_scale_underflow ... ok
+test tests::q8_reference_has_exact_integer_endpoints_and_accounts_for_scale ... ok
+test tests::fp16_reference_is_exact_for_all_finite_codes_and_midpoints ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_core-70c58eb68174d414)
+
+running 5 tests
+test tests::constants_are_exact ... ok
+test tests::crc64_detects_single_bit_change ... ok
+test tests::crc64_ecma_has_canonical_check_value ... ok
+test tests::legacy_checksum_contract_is_preserved ... ok
+test tests::incremental_crc_matches_one_shot ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_kernel-12e0baa094c8b22a)
+
+running 5 tests
+test tests::backend_describes_compile_time_features ... ok
+test tests::contingency_partitions_all_1024_bits ... ok
+test tests::subspaces_sum_to_global_matches ... ok
+test tests::progressive_bound_never_excludes_exact_score ... ok
+test tests::kernel_matches_reference ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_orb-5f9ad1c83253d566)
+
+running 4 tests
+test tests::bit_access_is_checked_and_reversible ... ok
+test tests::exact_byte_roundtrip ... ok
+test tests::wrong_byte_lengths_are_rejected ... ok
+test tests::similarity_endpoints ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_phase_quad-3b28529894ed72c5)
+
+running 29 tests
+test evidence_summary_regressions::tests::campaign_shape ... ok
+test bound_view::tests::compatibility_metadata_is_not_authentication ... ok
+test evidence_summary_regressions::tests::invalid_metrics_rejected ... ok
+test evidence_summary_regressions::tests::invalid_status_rejected ... ok
+test evidence_summary_regressions::tests::fallback_rejected ... ok
+test evidence_summary_regressions::tests::ratios_recomputed_and_tampering_rejected ... ok
+test grid::tests::unknown_and_invalid_inputs ... ok
+test bound_view::tests::unsupported_descriptors_and_poles_rejected ... ok
+test bound_view::tests::different_seed_rejected_even_for_unmasked_poles ... ok
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test grid::tests::four_views_and_inverse_both_grids ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test grid::tests::z5_matches_historical_equations ... ok
+test tests::worker_budget_extremes_are_bounded_without_spawning ... ok
+test tests::invalid_budget_clears_stale_scores_and_recovers ... ok
+test tests::silence_not_active_zero_and_denominator_is_query_support ... ok
+test tests::unknown_clears_previous_result ... ok
+test evidence_summary_regressions::tests::swapped_logs_and_configuration_rejected ... ok
+test grid::tests::every_q8_symbol_and_offset_invert ... ok
+test tests::all_views_and_masks_match_reference ... ok
+test bound_view::tests::exact_phase_and_mask_for_every_pole ... ok
+test tests::threads_buffers_and_empty_bank_are_stable ... ok
+test grid::tests::quantization_error_bound_and_boundaries ... ok
+test tests::large_worker_requests_partial_chunks_and_masks_match_scalar ... ok
+test tests::score_matches_four_independent_reads ... ok
+test tests::storage_is_1152_bytes_and_every_bit_survives ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+test grid::tests::same_pole_preserves_geometry_and_support ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests examples/quad_compare.rs (target/debug/examples/quad_compare-2c10b94bfd79dea8)
+
+running 11 tests
+test argument_tests::bounds_are_checked_before_allocating ... ok
+test argument_tests::serial_and_empty_bank_do_not_spawn ... ok
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test argument_tests::reference_one_recovers_from_first_spawn_failure ... ok
+test argument_tests::reference_four_recovers_from_first_spawn_failure ... ok
+test argument_tests::reference_one_recovers_after_partial_launch ... ok
+test argument_tests::reference_four_recovers_after_partial_launch ... ok
+test argument_tests::reference_parallel_matches_serial_without_failure ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests examples/quad_evidence.rs (target/debug/examples/quad_evidence-46a722f14ea7a9de)
+
+running 11 tests
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test tests::active_mask_bit_order ... ok
+test tests::every_header_bit_and_every_truncation_rejected ... ok
+test tests::fixture_bounds_and_trailing_bytes ... ok
+test tests::malformed_cli_is_rejected_before_io ... ok
+test tests::generator_refuses_to_overwrite ... ok
+test tests::single_oracle_and_empty_masks ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+test tests::upper_bound_and_payload_bits_roundtrip ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+     Running unittests examples/quad_playground.rs (target/debug/examples/quad_playground-011e0457bf8c12a1)
+
+running 6 tests
+test reference::tests::no_query_activity_is_unknown ... ok
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test tests::invalid_commands_preserve_state ... ok
+test tests::phase_and_mask_behaviour ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/main.rs (target/debug/deps/gel_physics-1c3abcd14653f59b)
+
+running 5 tests
+test tests::lane_reduce_matches_lane_model ... ok
+test tests::percentile_uses_sorted_upper_rank ... ok
+test tests::probe_buffers_are_64_byte_aligned ... ok
+test tests::processor_field_survives_spaces_and_parentheses_in_comm ... ok
+test tests::tiny_physics_probes_produce_finite_positive_values ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_reader-f231d4e94a0b252f)
+
+running 20 tests
+test tests::chunk_bounds_partition_the_bank_in_order ... ok
+test tests::all_public_geometries_are_exactly_invertible ... ok
+test tests::insertion_boundary_respects_index_even_out_of_order ... ok
+test tests::coordinate_geometries_preserve_xnor_when_applied_to_both_sides ... ok
+test tests::caller_and_child_scans_overlap_before_join ... ok
+test tests::reader16_exposes_local_and_asymmetric_judgments ... ok
+test tests::progressive_strict_boundary_and_all_pruning_stages ... ok
+test tests::execution_report_distinguishes_empty_serial_and_guarded_calls ... ok
+test tests::top1_finds_exact_query ... ok
+test tests::thread_counts_above_machine_budget_fall_back_to_top1 ... ok
+test tests::top_k_is_deterministic_on_ties ... ok
+test tests::start_refusal_joins_partial_work_before_complete_retry ... ok
+test tests::worker_panic_retries_only_in_unwinding_builds ... ok
+test tests::progressive_top_k_is_exactly_equal_to_full_top_k ... ok
+test tests::oversized_thread_counts_equal_top1_without_spawning ... ok
+test tests::top1_threads_equals_top1_for_random_banks ... ok
+test tests::raw_rotation_fields_roundtrip_for_every_u16 ... ok
+test tests::top_k_matches_independent_bits_at_all_k_boundaries ... ok
+test tests::top1_threads_finds_winner_exactly_at_chunk_boundaries ... ok
+test tests::top1_threads_tie_resolves_to_lowest_index ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+     Running unittests examples/topk_compare.rs (target/debug/examples/topk_compare-3ba38dd9c5c5a3f0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_source-e1aa6d04b63df7a7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/parts.rs (target/debug/deps/parts-a0a1cc40601144ce)
+
+running 11 tests
+test exact_unicode_not_accent_stripping_or_normalization ... ok
+test missing_tail_needs_independent_expected_count ... ok
+test arbitrary_other_sections_do_not_enter_the_lead ... ok
+test detects_initial_and_internal_gaps ... ok
+test missing_and_ambiguous_titles_are_not_guessed ... ok
+test refuses_changed_pins_and_cross_generation_passages ... ok
+test single_and_numbered_one_are_supported ... ok
+test orders_by_number_not_catalog_role_or_offset ... ok
+test rejects_duplicate_and_mixed_families_or_layouts ... ok
+test rejects_noncanonical_and_overflow_numbering ... ok
+test overlapping_ranges_cannot_amplify_total_quotes_beyond_text_budget ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.25s
+
+     Running tests/source.rs (target/debug/deps/source-196255e1b927d7c6)
+
+running 12 tests
+test approved_content_is_returned_as_data_not_interpreted ... ok
+test duplicate_titles_stay_ambiguous_and_missing_role_fails ... ok
+test payload_and_catalog_pins_are_both_required ... ok
+test root_binds_metadata_even_for_identical_text ... ok
+test roundtrip_source_bytes_and_lowercased_title ... ok
+test trusting_new_document_hash_does_not_hide_wrong_fragment_hash ... ok
+test rejects_duplicate_address_and_node_source_disagreement ... ok
+test strict_header_suffix_hash_and_empty_catalog ... ok
+test utf8_boundaries_range_and_canonical_numbers_are_checked ... ok
+test large_ambiguous_title_preserves_order_without_duplicate_ids ... ok
+test limits_and_control_labels ... ok
+test record_limit_is_enforced_and_labels_cannot_inject_controls ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.17s
+
+     Running unittests examples/source_parts.rs (target/debug/examples/source_parts-7cee89dd8e617643)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_readout.rs (target/debug/examples/source_readout-58b1363f7109b35b)
+
+running 3 tests
+test tests::absent_title_is_unknown ... ok
+test tests::exact_unicode_quote ... ok
+test tests::source_and_tamper_e2e ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_real.rs (target/debug/examples/source_real-b5eec69c4d999770)
+
+running 5 tests
+test tests::missing_tail_and_invalid_utf8_rejected ... ok
+test tests::shuffled_catalog_returns_exact_ordered_paragraphs ... ok
+test tests::unknown_title_does_not_return_unrelated_text ... ok
+test tests::reviewed_fixture_pins_and_complete_demo ... ok
+test tests::every_single_byte_mutation_rejected_with_original_pins ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_store-6ca683c5fd2c3402)
+
+running 22 tests
+test tests::v2_header_is_exactly_64_bytes_and_self_protected ... ok
+test tests::default_budget_rejects_oversized_sparse_file_before_read_or_allocation ... ok
+test tests::oversized_record_count_is_rejected_before_allocation ... ok
+test tests::v2_nonzero_flags_are_rejected_before_crc ... ok
+test tests::legacy_v1_nonzero_reserved_bytes_are_rejected ... ok
+test tests::every_single_header_bit_flip_is_rejected ... ok
+test tests::verify_file_reports_legacy_v1_while_providing_upgrade_header ... ok
+test tests::corrupt_v2_cannot_supply_generation_or_be_silently_overwritten ... ok
+test tests::verify_file_agrees_with_open_verified_and_rejects_corruption ... ok
+test tests::every_truncation_length_is_rejected ... ok
+test tests::configured_open_limits_fail_before_large_allocation ... ok
+test tests::record_budget_boundary_and_explicit_unbounded_are_preserved ... ok
+test tests::malformed_lengths_and_trailing_bytes_are_rejected ... ok
+test tests::persistence_roundtrip_and_payload_corruption_rejection ... ok
+test tests::legacy_v1_store_is_verified_and_migrates_to_v2_on_write ... ok
+test tests::legacy_v1_header_single_bit_sweep_freezes_detection_boundary ... ok
+test tests::legacy_generation_is_discarded_and_never_authorizes_publication ... ok
+test tests::generation_rollback_and_equal_generation_are_rejected ... ok
+test tests::atomic_write_is_private_by_default_and_preserves_existing_mode ... ok
+test tests::random_headers_are_rejected_and_never_panic ... ok
+test tests::every_payload_byte_flip_is_rejected ... ok
+test tests::every_double_header_bit_flip_is_rejected ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_structural-02f4871c1218b24a)
+
+running 12 tests
+test tests::delta_depth_is_hard_bounded ... ok
+test tests::best_prototype_selects_correlated_parent_and_decodes_exactly ... ok
+test tests::full_record_break_even_includes_parent_metadata ... ok
+test tests::measured_sparse_dense_break_even_is_100_bits ... ok
+test tests::random_data_falls_back_to_literal_when_delta_is_not_smaller ... ok
+test tests::sparse_count_and_packed_length_mismatch_is_rejected ... ok
+test tests::sparse_padding_bit_set_is_rejected ... ok
+test tests::sparse_position_at_or_above_1024_is_rejected ... ok
+test tests::sparse_truncated_packed_positions_are_rejected ... ok
+test tests::sparse_positions_must_be_strictly_increasing ... ok
+test tests::exact_xor_roundtrip_is_bit_identical ... ok
+test tests::sparse_popcount_and_apply_reject_the_same_invalid_encodings ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/main.rs (target/debug/deps/xtask-a9e0098479adaad0)
+
+running 20 tests
+test reproduce::tests::status_and_fallback_must_pass_on_both_streams ... ok
+test licensing_scope_tests::root_third_party_scope_and_notices ... ok
+test source_bundle::tests::only_portable_relative_paths ... ok
+test source_bundle::tests::strict_manifest_format_and_duplicates ... ok
+test tests::cla_ack_needles_match_the_template_line ... ok
+test reproduce::tests::archive_requires_independent_pin ... ok
+test source_bundle::tests::bounded_read_rejects_oversize_file ... ok
+test reproduce::tests::archive_mutation_and_extra_files_are_not_approved ... ok
+test tests::fenced_blocks_are_not_scanned ... ok
+test tests::contact_gate_distinguishes_source_suffix_from_an_address ... ok
+test tests::code_spans_follow_backtick_run_width ... ok
+test tests::reference_shape_matches_repository_paths_only ... ok
+test licensing_scope_tests::appended_overbroad_claim_is_rejected ... ok
+test source_bundle::tests::symlink_file_and_directory_rejected ... ok
+test source_bundle::tests::changed_missing_extra_files_and_wrong_pin_fail ... ok
+test tests::rust_only_gate_rejects_symlinks_and_executable_files ... ok
+test tests::canonical_license_rejects_changed_or_appended_bytes ... ok
+test source_bundle::tests::build_and_git_metadata_never_copied ... ok
+test reproduce::tests::broken_git_does_not_fall_back_to_archive ... ok
+test tests::documentation_png_gate_requires_exact_reviewed_bytes_and_path ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/staged_licensing.rs (target/debug/deps/staged_licensing-fa397f22a8419d67)
+
+running 5 tests
+test guide_and_commercial_notice_explain_selected_boundaries ... ok
+test keeps_contributor_ownership_bilateral_acceptance_and_no_retroactivity ... ok
+test draft_keeps_selected_policy_boundaries ... ok
+test rejects_reintroduced_private_deadline_and_page_view_clock ... ok
+test each_required_clause_omission_is_detected ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-cli selftest`
+GEL_SELFTEST_V2=PASS
+ORB_BITS=1024
+ORB_BYTES=128
+VIEW_ROUNDTRIPS=6/6
+READER16=PASS
+PROGRESSIVE_EXACT=PASS
+STRUCTURAL_EXACT=PASS
+STRUCTURAL_DER_LOCAL=5.120000
+PERSISTENCE_V2_CRC64=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-bench 8192 3 2`
+GEL_BENCH_V4
+generator=splitmix64_with_unique_word0
+generator_seed=5135594514081467971
+bank_crc64_ecma=6f038d6db5b8839f
+orbs=8192
+bank_bytes=1048576
+orb_bytes=128
+rounds=3
+warmup_rounds=1
+query_schedule=varying-exact-self-stride-65537
+requested_workers=2
+worker_budget=96
+effective_workers_min=2
+effective_workers_max=2
+spawned_workers_total=5
+execution_reported_scans=5
+execution_scope=warmup+timed+threaded_null_check_if_requested
+execution_reports=[Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }]
+fallback_scans=0
+fallback_bank_too_small=0
+fallback_budget_exceeded=0
+fallback_thread_start_failed=0
+fallback_worker_panicked=0
+thread_scan=exact_merge_lowest_index_tie
+thread_scan_exact=PASS
+backend=count_ones(popcnt=false,avx2=false)
+target_arch=x86_64
+observed_cpu_start=18
+scanned_orbs=24576
+elapsed_ns=313209
+query_p50_ns=108154
+query_p95_ns=115447
+query_p99_ns=115447
+orbs_per_sec=78465178.204
+effective_gib_per_sec=9.353778
+top1_exact=3/3
+progressive_top8_exact=PASS
+progressive_candidates=8192
+progressive_reject_32b=0
+progressive_reject_64b=0
+progressive_full_128b=8192
+quality_flips_1=target:4096,hit:4096,score:1023,survived:true
+quality_flips_8=target:4096,hit:4096,score:1016,survived:true
+quality_flips_32=target:4096,hit:4096,score:992,survived:true
+quality_flips_64=target:4096,hit:4096,score:960,survived:true
+quality_flips_128=target:4096,hit:4096,score:896,survived:true
+quality_flips_256=target:4096,hit:4096,score:768,survived:true
+quality_flips_384=target:4096,hit:4096,score:640,survived:true
+null_top1_index=3916
+null_top1_score=565
+observed_cpu_end=2
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-bench 8192 3 1`
+GEL_BENCH_V4
+generator=splitmix64_with_unique_word0
+generator_seed=5135594514081467971
+bank_crc64_ecma=6f038d6db5b8839f
+orbs=8192
+bank_bytes=1048576
+orb_bytes=128
+rounds=3
+warmup_rounds=1
+query_schedule=varying-exact-self-stride-65537
+requested_workers=1
+worker_budget=96
+effective_workers_min=1
+effective_workers_max=1
+spawned_workers_total=0
+execution_reported_scans=4
+execution_scope=warmup+timed+threaded_null_check_if_requested
+execution_reports=[Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }]
+fallback_scans=0
+fallback_bank_too_small=0
+fallback_budget_exceeded=0
+fallback_thread_start_failed=0
+fallback_worker_panicked=0
+thread_scan=single
+thread_scan_exact=SINGLE
+backend=count_ones(popcnt=false,avx2=false)
+target_arch=x86_64
+observed_cpu_start=17
+scanned_orbs=24576
+elapsed_ns=299623
+query_p50_ns=97684
+query_p95_ns=104637
+query_p99_ns=104637
+orbs_per_sec=82023075.665
+effective_gib_per_sec=9.777913
+top1_exact=3/3
+progressive_top8_exact=PASS
+progressive_candidates=8192
+progressive_reject_32b=0
+progressive_reject_64b=0
+progressive_full_128b=8192
+quality_flips_1=target:4096,hit:4096,score:1023,survived:true
+quality_flips_8=target:4096,hit:4096,score:1016,survived:true
+quality_flips_32=target:4096,hit:4096,score:992,survived:true
+quality_flips_64=target:4096,hit:4096,score:960,survived:true
+quality_flips_128=target:4096,hit:4096,score:896,survived:true
+quality_flips_256=target:4096,hit:4096,score:768,survived:true
+quality_flips_384=target:4096,hit:4096,score:640,survived:true
+null_top1_index=3916
+null_top1_score=565
+observed_cpu_end=17
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/quad_compare --orbs 32 --rounds 3 --workers 2 --sparse 1`
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=32 rounds=3 requested_workers=2 effective_workers=2 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,62307,115738,86493
+2,38232,93666,101972
+3,35677,93355,60674
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.215221 reference_one_over_shared_total=0.546747 score_view_comparisons=512
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+    Finished `release` profile [optimized] target(s) in 0.00s
+     Running `target/release/examples/quad_evidence --demo`
+Q8_EVIDENCE_V1 records=32 rounds=9 policy=active workers=1 view_inverses=128 timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED
+record_bytes=1152 materialized_four_bytes=8192 simultaneous_banks=true query_preparation_timed=false
+round,canonical_single_ns,four_materialized_ns,shared_ns
+1,47159,195638,79880
+2,53912,119805,91512
+3,47038,188715,90480
+4,46377,125005,61946
+5,50866,195888,91633
+6,48280,124073,71415
+7,49022,183906,79029
+8,44554,123251,112070
+9,32632,121218,57418
+canonical_over_shared=0.570913 four_over_shared=1.873172 view_comparisons=1408
+Q8_EVIDENCE=PASS
+    Finished `release` profile [optimized] target(s) in 0.00s
+     Running `target/release/examples/quad_playground --demo`
+phase=0 mask_stride=1 noise_dimensions=0 policy=BodyActivity
+P0: reference=1.000000000 shared=1.000000000 inverse=PASS
+P1: reference=1.000000000 shared=1.000000000 inverse=PASS
+P2: reference=1.000000000 shared=1.000000000 inverse=PASS
+P3: reference=1.000000000 shared=1.000000000 inverse=PASS
+single_shared_read_ns=1453 (one observation, NOT a benchmark)
+canonical_pair_bytes=2304 materialized_pair_bytes=16384 (payload only, NOT total RAM)
+process_VmRSS:	    2744 kB (includes runtime and demo buffers)
+QUAD_PLAYGROUND=PASS; four equivalent views, not four independent facts
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_readout`
+TITLE: Demo vessel
+QUOTE: Demo vessel pressure is 2 bar. This is synthetic test data. Łódź — próba Unicode.
+SOURCE: built-in synthetic fixture / entry=1 / section=Lead / byte_range=0..87
+CATALOG_SHA256: 392161ff9eb66ef8fd5545d9fd9ba398dc5f45c6350c8e7faf789f678da8ec8b
+TEXT_SHA256: 53d430befc80486cb18a3c0fa0778244245dec55870fd2dfe3341c3c85c224b1
+TAMPER: 2 bar -> 9 bar; original pins retained; REJECTED
+SOURCE_E2E=PASS
+Integrity proves approved bytes, NOT factual truth or semantic relevance.
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_parts`
+TITLE="Demo light"
+PART="Lead (1)" QUOTE="This is a synthetic lamp, not a measured device." SOURCE=0:2 ENTRY=0 BYTES=51..99 SHA256=31a3c2e1f4c276bf3258e8de8d90ed34c264ac8c2070ce0039d4aa5940773d3b GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+PART="Lead (2)" QUOTE="The lamp is switched off in this fictional example." SOURCE=0:9 ENTRY=0 BYTES=0..51 SHA256=7feb15351c9d92605e90c79487d6db5823e87578b5551c2b3aa9ccf512d021b4 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+TITLE="Żółta latarnia"
+PART="WSTĘP (1)" QUOTE="To autorski przykład testowy, nie opis rzeczywistego urządzenia." SOURCE=1:8 ENTRY=1 BYTES=162..228 SHA256=6fe983e3d4d5ed5b84286773c64d2b284b1de3256f98cc5675f6e771375acfe8 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+PART="WSTĘP (2)" QUOTE="Druga część: zażółć gęślą jaźń — dokładny cytat." SOURCE=1:4 ENTRY=1 BYTES=99..162 SHA256=52a21f754c97598ed950ea7add01d48b56135e2cca4593be63322ad130fc9f88 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+EXPECTED_PART_COUNT_MISMATCH=REJECTED
+MODIFIED_TEXT_WITH_ORIGINAL_PINS=REJECTED
+SOURCE_PARTS_E2E=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_real`
+TITLE=Rust ownership
+SOURCE_URL=https://github.com/rust-lang/book/blob/1500248d8f230566e4ec9f27fcbb8fe9e2898ab1/src/ch04-01-what-is-ownership.md
+SOURCE_LICENSE=MIT
+TEXT_PIN=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+CATALOG_PIN=f5e81e25d4f6f5c4ae1f01c7516ed8313a46c2821bf33731cb540ccd06d5a3a8
+SCOPE=exact excerpt readout, not truth certification or semantic retrieval
+PART=Lead (1) ADDRESS=0:1 ENTRY=0 EXCERPT_BYTES=0..615 UPSTREAM_BYTES=23..638 SHA256=852a602c2b750c1fc23e0cc8826359ba0ef133ff0a775b85b47e2501e22b634d GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+_Ownership_ is a set of rules that govern how a Rust program manages memory.
+All programs have to manage the way they use a computer’s memory while running.
+Some languages have garbage collection that regularly looks for no-longer-used
+memory as the program runs; in other languages, the programmer must explicitly
+allocate and free the memory. Rust uses a third approach: Memory is managed
+through a system of ownership with a set of rules that the compiler checks. If
+any of the rules are violated, the program won’t compile. None of the features
+of ownership will slow down your program while it’s running.
+QUOTE_END
+PART=Lead (2) ADDRESS=0:2 ENTRY=0 EXCERPT_BYTES=617..909 UPSTREAM_BYTES=640..932 SHA256=1fec1fe19017d2a7a6b3a8e54bdd25bcfa86f991cc12d475d9e3a1ee7d07ab4c GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+Because ownership is a new concept for many programmers, it does take some time
+to get used to. The good news is that the more experienced you become with Rust
+and the rules of the ownership system, the easier you’ll find it to naturally
+develop code that is safe and efficient. Keep at it!
+QUOTE_END
+PART=Lead (3) ADDRESS=0:3 ENTRY=0 EXCERPT_BYTES=911..1157 UPSTREAM_BYTES=934..1180 SHA256=1412eaacb003f9137314b6003dd0cb8620c54f79bdce8a7ef326f43f6cb4c986 GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+When you understand ownership, you’ll have a solid foundation for understanding
+the features that make Rust unique. In this chapter, you’ll learn ownership by
+working through some examples that focus on a very common data structure:
+strings.
+
+QUOTE_END
+MODIFIED_TEXT=REJECTED
+MODIFIED_CATALOG=REJECTED
+EXPECTED_COUNT_MISMATCH=REJECTED
+SOURCE_REAL_E2E=PASS
+GEL_VERIFY_ALL=PASS

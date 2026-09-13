@@ -1,0 +1,14 @@
+Q8_EVIDENCE_V1 records=32 rounds=9 policy=archive workers=1 view_inverses=128 timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED
+record_bytes=1152 materialized_four_bytes=8192 simultaneous_banks=true query_preparation_timed=false
+round,canonical_single_ns,four_materialized_ns,shared_ns
+1,29295,95870,41758
+2,28153,59111,35397
+3,29325,96922,43081
+4,27321,59632,33283
+5,31569,77235,31880
+6,18735,46718,24566
+7,19627,71925,30487
+8,18575,47670,24807
+9,19466,72185,30457
+canonical_over_shared=0.750943 four_over_shared=2.121184 view_comparisons=1408
+Q8_EVIDENCE=PASS

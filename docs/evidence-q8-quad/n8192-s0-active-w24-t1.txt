@@ -1,0 +1,14 @@
+Q8_QUAD_COMPARE_V1 seed=510051 arch=x86_64 orbs=8192 rounds=9 requested_workers=24 effective_workers=24 sparse=false policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,1897028,7712356,1941001
+2,1805545,5964437,2267905
+3,1901476,8530384,2016813
+4,1716429,5276374,1759138
+5,1125637,3366021,2171284
+6,1052109,3576708,1317818
+7,1214445,3559755,1425421
+8,1068770,4501897,1338107
+9,1152718,4136861,1355088
+four_over_shared_total=2.990192 reference_one_over_shared_total=0.829507 score_view_comparisons=327680
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED

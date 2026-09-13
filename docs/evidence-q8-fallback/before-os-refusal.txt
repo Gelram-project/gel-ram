@@ -1,0 +1,19 @@
+{
+  "utc": "2026-09-08T17:20:50.961081+00:00",
+  "rust": "rustc 1.85.0 (4d91de4e4 2025-02-17)\nbinary: rustc\ncommit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688\ncommit-date: 2025-02-17\nhost: x86_64-unknown-linux-gnu\nrelease: 1.85.0\nLLVM version: 19.1.7",
+  "old_source_sha256": "a057bad107072e029aec29a13ab4f418f2bb4f48200cd337f91f014fbc385766",
+  "fixed_source_sha256": "f726edce1cf607dd6f6246e7a630d78d6dde98ceabcd2857e2784fc71e13234a",
+  "cpu_only": true,
+  "isolated_host": false,
+  "purpose": "correctness regression, timings are diagnostic, not a new speedup claim"
+}
+Linux child-only RLIMIT_NPROC=1, RLIMIT_CORE=0
+arguments=--orbs 32 --rounds 1 --workers 24 --sparse 1 --policy active
+subprocess_returncode=-6
+Q8_QUAD_COMPARE_V1 seed=510051 arch=x86_64 orbs=32 rounds=1 requested_workers=24 effective_workers=24 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+
+thread 'main' panicked at /rustc/4d91de4e48198da2e33413efdcd9cd2cc0c46688/library/std/src/thread/scoped.rs:200:46:
+failed to spawn thread: Os { code: 11, kind: WouldBlock, message: "Resource temporarily unavailable" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
