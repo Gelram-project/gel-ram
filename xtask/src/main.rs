@@ -236,7 +236,30 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
                 continue;
             }
         }
-        let allowed = documentation_image
+        // Only these reviewed text evidence paths, not a general CSV/sha256 exception.
+        // Their exact bytes are pinned by the enclosing source manifest.
+        let collection_evidence = [
+            "docs/evidence-collection/MEASURED-SOURCES.sha256",
+            "docs/evidence-collection/r1/raw.csv",
+            "docs/evidence-collection/r1/summary.csv",
+        ]
+        .iter()
+        .any(|p| path == root.join(p));
+        if collection_evidence {
+            let bytes = fs::read(&path).map_err(|e| e.to_string())?;
+            if bytes.len() > 1024 * 1024
+                || std::str::from_utf8(&bytes).is_err()
+                || bytes.iter().any(|b| *b == 0 || *b == 27)
+            {
+                bad.push(format!(
+                    "invalid collection text evidence: {}",
+                    path.display()
+                ));
+                continue;
+            }
+        }
+        let allowed = collection_evidence
+            || documentation_image
             || approved_png.is_some()
             || path
                 .extension()
@@ -842,6 +865,28 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn collection_evidence_exception_is_exact_and_text_only() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root =
+            std::env::temp_dir().join(format!("gel-evidence-gate-{}-{nonce}", std::process::id()));
+        fs::create_dir_all(root.join("docs/evidence-collection/r1")).unwrap();
+        let raw = root.join("docs/evidence-collection/r1/raw.csv");
+        fs::write(&raw, b"rep,documents\n0,8\n").unwrap();
+        assert!(rust_only_at(&root).is_ok());
+        for bad in [b"\xff".as_slice(), b"\x1b[2J", b"binary\0"] {
+            fs::write(&raw, bad).unwrap();
+            assert!(rust_only_at(&root).is_err());
+        }
+        fs::write(&raw, b"rep,documents\n0,8\n").unwrap();
+        fs::write(root.join("unreviewed.csv"), b"text\n").unwrap();
+        assert!(rust_only_at(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
 
     #[test]
     fn documentation_png_gate_requires_exact_reviewed_bytes_and_path() {

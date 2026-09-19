@@ -1,4 +1,5 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+   Compiling xtask v0.3.0 (<CHECKOUT>/xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s
      Running `target/debug/xtask verify`
 RUST_ONLY_GATE=PASS
 PUBLICATION_APPROVED=NO
@@ -9,11 +10,15 @@ LICENSE_CHECK_SCOPE=ACTIVE_LICENSE_CONSISTENCY_NOT_LEGAL_CERTIFICATION
 CI_POLICY_GATE=PASS
 DOCS_REFS_GATE=PASS
 DOCS_REFS_CHECKED=47
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
-    Finished `release` profile [optimized] target(s) in 0.03s
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+    Checking xtask v0.3.0 (<CHECKOUT>/xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.24s
+   Compiling xtask v0.3.0 (<CHECKOUT>/xtask)
+    Finished `release` profile [optimized] target(s) in 3.12s
+ Documenting xtask v0.3.0 (<CHECKOUT>/xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.23s
    Generated <CHECKOUT>/target/doc/gel_bench/index.html and 13 other files
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+   Compiling xtask v0.3.0 (<CHECKOUT>/xtask)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
      Running unittests src/main.rs (target/debug/deps/gel_bench-230133dad365f9b3)
 
 running 4 tests
@@ -33,12 +38,12 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running unittests examples/data_integrity.rs (target/debug/examples/data_integrity-f21fa7f2c154da03)
 
 running 4 tests
-test tests::q8_reference_has_exact_integer_endpoints_and_accounts_for_scale ... ok
 test tests::external_dump_is_shape_checked_without_using_labels ... ok
 test tests::external_dump_rejects_bad_shapes_nonfinite_values_and_scale_underflow ... ok
+test tests::q8_reference_has_exact_integer_endpoints_and_accounts_for_scale ... ok
 test tests::fp16_reference_is_exact_for_all_finite_codes_and_midpoints ... ok
 
-test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
      Running unittests examples/quantization_matrix.rs (target/debug/examples/quantization_matrix-865e4ac3d0879f06)
 
@@ -47,11 +52,11 @@ test tests::extremes_are_finite ... ok
 test tests::halfway_ties_are_even ... ok
 test tests::exact_endpoints_and_constant_all_q ... ok
 test tests::invalid_inputs_and_ranges_rejected ... ok
-test tests::weak_signal_is_lost_not_just_noise ... ok
 test tests::packed_codes_are_independently_known ... ok
+test tests::weak_signal_is_lost_not_just_noise ... ok
 test tests::reconstruction_bound_all_datasets ... ok
 
-test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
 
      Running unittests src/lib.rs (target/debug/deps/gel_core-9361d97554f9277c)
 
@@ -104,33 +109,33 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests/evidence.rs (target/debug/deps/evidence-ab4c7fa3676f59bf)
 
 running 7 tests
-test corrupt_load_refusal_retains_current_collection ... ok
 test controls_in_document_never_become_terminal_escape ... ok
+test corrupt_load_refusal_retains_current_collection ... ok
 test demo_really_executes_the_collection ... ok
 test update_delete_clear_results_and_old_snapshot_stays ... ok
 test sigkill_after_save_ack_keeps_a_readable_snapshot ... ok
 test own_documents_save_restart_find_and_refuse_cross_source ... ok
 test sigkill_at_observable_publication_never_installs_a_partial_snapshot ... ok
 
-test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.16s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
 
      Running tests/session.rs (target/debug/deps/session-091250aa79092d44)
 
 running 12 tests
-test multi_node_catalog_search_cannot_join_unrelated_documents ... ok
 test malformed_input_does_not_replace_demo ... ok
-test find_miss_never_displays_previous_quote_as_a_result ... ok
 test failed_load_preserves_session ... ok
-test matching_lines_and_cr_boundaries_survive_import_and_reopen ... ok
-test save_never_replaces_existing_file ... ok
-test long_command_is_rejected ... ok
 test skipped_lines_and_search_limits_are_not_reported_as_absence ... ok
+test find_miss_never_displays_previous_quote_as_a_result ... ok
+test multi_node_catalog_search_cannot_join_unrelated_documents ... ok
+test save_never_replaces_existing_file ... ok
+test matching_lines_and_cr_boundaries_survive_import_and_reopen ... ok
+test long_command_is_rejected ... ok
 test scripted_demo_and_no_terminal_controls ... ok
 test fresh_process_reopens_own_saved_document ... ok
 test paging_cannot_hide_unreachable_unicode ... ok
 test find_after_restart_uses_exact_text_across_storage_parts ... ok
 
-test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
 
      Running unittests src/lib.rs (target/debug/deps/gel_orb-b969af0bb47d1b3e)
 
@@ -150,32 +155,32 @@ test bound_view::tests::compatibility_metadata_is_not_authentication ... ok
 test evidence_summary_regressions::tests::invalid_metrics_rejected ... ok
 test evidence_summary_regressions::tests::invalid_status_rejected ... ok
 test evidence_summary_regressions::tests::ratios_recomputed_and_tampering_rejected ... ok
+test grid::tests::unknown_and_invalid_inputs ... ok
+test grid::tests::z5_matches_historical_equations ... ok
 test bound_view::tests::different_seed_rejected_even_for_unmasked_poles ... ok
 test bound_view::tests::unsupported_descriptors_and_poles_rejected ... ok
-test evidence_summary_regressions::tests::fallback_rejected ... ok
-test evidence_summary_regressions::tests::swapped_logs_and_configuration_rejected ... ok
-test grid::tests::unknown_and_invalid_inputs ... ok
 test reference::tests::unequal_views_have_predeclared_mean ... ok
 test reference::tests::no_query_activity_is_unknown ... ok
-test grid::tests::z5_matches_historical_equations ... ok
-test grid::tests::every_q8_symbol_and_offset_invert ... ok
+test evidence_summary_regressions::tests::fallback_rejected ... ok
 test reference::tests::zero_phase_is_not_silence ... ok
-test grid::tests::four_views_and_inverse_both_grids ... ok
-test tests::silence_not_active_zero_and_denominator_is_query_support ... ok
 test tests::worker_budget_extremes_are_bounded_without_spawning ... ok
-test tests::invalid_budget_clears_stale_scores_and_recovers ... ok
-test bound_view::tests::exact_phase_and_mask_for_every_pole ... ok
+test tests::silence_not_active_zero_and_denominator_is_query_support ... ok
 test tests::unknown_clears_previous_result ... ok
+test tests::invalid_budget_clears_stale_scores_and_recovers ... ok
+test grid::tests::four_views_and_inverse_both_grids ... ok
+test evidence_summary_regressions::tests::swapped_logs_and_configuration_rejected ... ok
+test grid::tests::every_q8_symbol_and_offset_invert ... ok
+test bound_view::tests::exact_phase_and_mask_for_every_pole ... ok
 test tests::all_views_and_masks_match_reference ... ok
 test tests::threads_buffers_and_empty_bank_are_stable ... ok
 test grid::tests::quantization_error_bound_and_boundaries ... ok
 test tests::large_worker_requests_partial_chunks_and_masks_match_scalar ... ok
 test tests::score_matches_four_independent_reads ... ok
-test tests::storage_is_1152_bytes_and_every_bit_survives ... ok
-test grid::tests::same_pole_preserves_geometry_and_support ... ok
 test reference::tests::four_views_preserve_scores_and_inverse ... ok
+test grid::tests::same_pole_preserves_geometry_and_support ... ok
+test tests::storage_is_1152_bytes_and_every_bit_survives ... ok
 
-test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
 
      Running unittests examples/quad_compare.rs (target/debug/examples/quad_compare-700c44008f3349ce)
 
@@ -192,18 +197,18 @@ test argument_tests::reference_parallel_matches_serial_without_failure ... ok
 test argument_tests::reference_four_recovers_after_partial_launch ... ok
 test reference::tests::four_views_preserve_scores_and_inverse ... ok
 
-test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
 
      Running unittests examples/quad_evidence.rs (target/debug/examples/quad_evidence-f36e0cae4e4b907d)
 
 running 11 tests
-test reference::tests::no_query_activity_is_unknown ... ok
 test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
 test reference::tests::zero_phase_is_not_silence ... ok
 test tests::active_mask_bit_order ... ok
 test tests::malformed_cli_is_rejected_before_io ... ok
-test tests::every_header_bit_and_every_truncation_rejected ... ok
 test tests::fixture_bounds_and_trailing_bytes ... ok
+test tests::every_header_bit_and_every_truncation_rejected ... ok
 test tests::generator_refuses_to_overwrite ... ok
 test tests::single_oracle_and_empty_masks ... ok
 test reference::tests::four_views_preserve_scores_and_inverse ... ok
@@ -221,18 +226,18 @@ test reference::tests::zero_phase_is_not_silence ... ok
 test tests::phase_and_mask_behaviour ... ok
 test reference::tests::four_views_preserve_scores_and_inverse ... ok
 
-test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
 
      Running unittests src/main.rs (target/debug/deps/gel_physics-229859e5ede87393)
 
 running 5 tests
-test tests::percentile_uses_sorted_upper_rank ... ok
 test tests::lane_reduce_matches_lane_model ... ok
+test tests::percentile_uses_sorted_upper_rank ... ok
 test tests::probe_buffers_are_64_byte_aligned ... ok
 test tests::processor_field_survives_spaces_and_parentheses_in_comm ... ok
 test tests::tiny_physics_probes_produce_finite_positive_values ... ok
 
-test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
 
      Running unittests src/lib.rs (target/debug/deps/gel_reader-1d1d2837ccbcd5d6)
 
@@ -240,16 +245,16 @@ running 20 tests
 test tests::chunk_bounds_partition_the_bank_in_order ... ok
 test tests::all_public_geometries_are_exactly_invertible ... ok
 test tests::coordinate_geometries_preserve_xnor_when_applied_to_both_sides ... ok
-test tests::caller_and_child_scans_overlap_before_join ... ok
 test tests::insertion_boundary_respects_index_even_out_of_order ... ok
-test tests::reader16_exposes_local_and_asymmetric_judgments ... ok
 test tests::progressive_strict_boundary_and_all_pruning_stages ... ok
+test tests::reader16_exposes_local_and_asymmetric_judgments ... ok
 test tests::execution_report_distinguishes_empty_serial_and_guarded_calls ... ok
 test tests::top1_finds_exact_query ... ok
 test tests::top_k_is_deterministic_on_ties ... ok
 test tests::thread_counts_above_machine_budget_fall_back_to_top1 ... ok
 test tests::worker_panic_retries_only_in_unwinding_builds ... ok
 test tests::start_refusal_joins_partial_work_before_complete_retry ... ok
+test tests::caller_and_child_scans_overlap_before_join ... ok
 test tests::progressive_top_k_is_exactly_equal_to_full_top_k ... ok
 test tests::oversized_thread_counts_equal_top1_without_spawning ... ok
 test tests::top1_threads_equals_top1_for_random_banks ... ok
@@ -258,7 +263,7 @@ test tests::top_k_matches_independent_bits_at_all_k_boundaries ... ok
 test tests::top1_threads_finds_winner_exactly_at_chunk_boundaries ... ok
 test tests::top1_threads_tie_resolves_to_lowest_index ... ok
 
-test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
 
      Running unittests examples/topk_compare.rs (target/debug/examples/topk_compare-dd493ba597bb57db)
 
@@ -275,31 +280,31 @@ test builder::tests::invalid_labels_rejected ... ok
 test builder::tests::changed_text_and_catalog_rejected ... ok
 test builder::tests::duplicate_is_transactional ... ok
 test bundle::tests::empty_and_invalid_utf8_rejected ... ok
-test builder::tests::conflicting_node_is_transactional ... ok
 test builder::tests::output_is_deterministic ... ok
 test builder::tests::same_title_different_nodes_remains_ambiguous ... ok
-test bundle::tests::envelope_roundtrip ... ok
-test builder::tests::unicode_multipart_roundtrip ... ok
+test builder::tests::conflicting_node_is_transactional ... ok
 test builder::tests::old_passage_not_valid_in_new_generation ... ok
+test builder::tests::unicode_multipart_roundtrip ... ok
+test bundle::tests::envelope_roundtrip ... ok
+test document::tests::bounded_results_do_not_hide_additional_matches ... ok
+test bundle::tests::every_truncation_fails_with_original_pin ... ok
+test builder::tests::unicode_label_limit_is_bytes ... ok
 test document::tests::mixed_line_endings_preserve_original_byte_ranges ... ok
 test document::tests::quote_is_not_execution_or_conflict_resolution ... ok
-test document::tests::standalone_carriage_returns_separate_phrases ... ok
+test document::tests::sigma_variants_match_without_rewriting_source ... ok
 test document::tests::whole_tokens_not_substrings_and_no_cross_line_inference ... ok
 test document::tests::original_unicode_offsets_survive_normalization ... ok
-test document::tests::sigma_variants_match_without_rewriting_source ... ok
-test document::tests::bounded_results_do_not_hide_additional_matches ... ok
-test document::tests::limits_are_explicit_not_silent_no_match ... ok
-test builder::tests::unicode_label_limit_is_bytes ... ok
-test document::tests::reads_beyond_preview_and_preserves_negation_and_order ... ok
+test document::tests::standalone_carriage_returns_separate_phrases ... ok
 test bundle::tests::malformed_even_with_matching_pin_fails ... ok
-test bundle::tests::every_truncation_fails_with_original_pin ... ok
+test document::tests::limits_are_explicit_not_silent_no_match ... ok
+test document::tests::reads_beyond_preview_and_preserves_negation_and_order ... ok
 test bundle::tests::every_byte_mutation_fails_with_original_pin ... ok
-test document::tests::admission_and_exact_line_boundaries ... ok
 test builder::tests::maximum_passage_accepted ... ok
 test bundle::tests::utf8_boundary_split_preserves_every_byte ... ok
+test document::tests::admission_and_exact_line_boundaries ... ok
 test document::tests::optimized_token_windows_match_reference ... ok
 
-test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
 
      Running unittests src/bin/gel-source.rs (target/debug/deps/gel_source-6de8b1b0de595034)
 
@@ -310,49 +315,49 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests/collection.rs (target/debug/deps/collection-f1b281a615f3bcd3)
 
 running 14 tests
-test rejected_mutations_are_transactional ... ok
+test every_byte_mutation_and_truncation_rejected_with_original_pin ... ok
 test exact_canonical_roundtrip_and_citation ... ok
-test ids_and_revision_survive_empty_bank_roundtrip ... ok
-test malformed_structure_rejected_even_with_matching_pin ... ok
 test no_cross_document_phrase ... ok
-test replace_delete_and_unrelated_add_invalidate_hits ... ok
 test no_replace_and_successful_load ... ok
+test rejected_mutations_are_transactional ... ok
+test replace_delete_and_unrelated_add_invalidate_hits ... ok
+test malformed_structure_rejected_even_with_matching_pin ... ok
+test ids_and_revision_survive_empty_bank_roundtrip ... ok
 test unicode_offsets_and_duplicate_titles_keep_identity ... ok
-test skipped_lines_are_incomplete_and_empty_bank_validates_query ... ok
 test search_caps_do_not_hide_total_counts ... ok
 test concurrent_publish_has_one_winner ... ok
-test every_byte_mutation_and_truncation_rejected_with_original_pin ... ok
+test skipped_lines_are_incomplete_and_empty_bank_validates_query ... ok
 test arbitrary_short_inputs_never_panic ... ok
 test document_and_collection_limits_fail_before_mutating ... ok
 
-test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
 
      Running tests/parts.rs (target/debug/deps/parts-7c3d40975877e230)
 
 running 11 tests
 test exact_unicode_not_accent_stripping_or_normalization ... ok
+test arbitrary_other_sections_do_not_enter_the_lead ... ok
 test missing_tail_needs_independent_expected_count ... ok
 test detects_initial_and_internal_gaps ... ok
-test arbitrary_other_sections_do_not_enter_the_lead ... ok
 test missing_and_ambiguous_titles_are_not_guessed ... ok
-test rejects_duplicate_and_mixed_families_or_layouts ... ok
-test refuses_changed_pins_and_cross_generation_passages ... ok
 test orders_by_number_not_catalog_role_or_offset ... ok
+test refuses_changed_pins_and_cross_generation_passages ... ok
 test single_and_numbered_one_are_supported ... ok
+test rejects_duplicate_and_mixed_families_or_layouts ... ok
 test rejects_noncanonical_and_overflow_numbering ... ok
 test overlapping_ranges_cannot_amplify_total_quotes_beyond_text_budget ... ok
 
-test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.61s
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.57s
 
      Running tests/persistence.rs (target/debug/deps/persistence-073e1fbc40858f5e)
 
 running 9 tests
 test bounded_read_and_non_file_rejected ... ok
-test existing_directory_is_not_replaced ... ok
-test corrupt_or_other_generation_rejected ... ok
 test existing_file_is_never_overwritten ... ok
-test persisted_roundtrip_and_no_temporary_files ... ok
+test corrupt_or_other_generation_rejected ... ok
+test existing_directory_is_not_replaced ... ok
 test symlink_input_and_output_rejected ... ok
+test persisted_roundtrip_and_no_temporary_files ... ok
 test competing_writers_have_exactly_one_winner ... ok
 test cli_does_not_emit_terminal_escape_from_text ... ok
 test cli_fresh_process_roundtrip_and_unknown_title ... ok
@@ -363,19 +368,19 @@ test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 running 12 tests
 test approved_content_is_returned_as_data_not_interpreted ... ok
-test duplicate_titles_stay_ambiguous_and_missing_role_fails ... ok
 test payload_and_catalog_pins_are_both_required ... ok
+test duplicate_titles_stay_ambiguous_and_missing_role_fails ... ok
 test roundtrip_source_bytes_and_lowercased_title ... ok
-test trusting_new_document_hash_does_not_hide_wrong_fragment_hash ... ok
-test rejects_duplicate_address_and_node_source_disagreement ... ok
 test strict_header_suffix_hash_and_empty_catalog ... ok
 test root_binds_metadata_even_for_identical_text ... ok
 test utf8_boundaries_range_and_canonical_numbers_are_checked ... ok
+test rejects_duplicate_address_and_node_source_disagreement ... ok
+test trusting_new_document_hash_does_not_hide_wrong_fragment_hash ... ok
 test large_ambiguous_title_preserves_order_without_duplicate_ids ... ok
 test limits_and_control_labels ... ok
 test record_limit_is_enforced_and_labels_cannot_inject_controls ... ok
 
-test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.37s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s
 
      Running unittests examples/collection_campaign.rs (target/debug/examples/collection_campaign-df750a8ea6540650)
 
@@ -432,8 +437,8 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running unittests examples/source_readout.rs (target/debug/examples/source_readout-7e52ba9ba3261283)
 
 running 3 tests
-test tests::absent_title_is_unknown ... ok
 test tests::exact_unicode_quote ... ok
+test tests::absent_title_is_unknown ... ok
 test tests::source_and_tamper_e2e ... ok
 
 test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
@@ -447,27 +452,27 @@ test tests::shuffled_catalog_returns_exact_ordered_paragraphs ... ok
 test tests::reviewed_fixture_pins_and_complete_demo ... ok
 test tests::every_single_byte_mutation_rejected_with_original_pins ... ok
 
-test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
 
      Running unittests src/lib.rs (target/debug/deps/gel_store-3310c31c2139f009)
 
 running 22 tests
 test tests::default_budget_rejects_oversized_sparse_file_before_read_or_allocation ... ok
 test tests::configured_open_limits_fail_before_large_allocation ... ok
-test tests::corrupt_v2_cannot_supply_generation_or_be_silently_overwritten ... ok
 test tests::atomic_write_is_private_by_default_and_preserves_existing_mode ... ok
-test tests::oversized_record_count_is_rejected_before_allocation ... ok
-test tests::v2_header_is_exactly_64_bytes_and_self_protected ... ok
-test tests::record_budget_boundary_and_explicit_unbounded_are_preserved ... ok
-test tests::legacy_v1_store_is_verified_and_migrates_to_v2_on_write ... ok
-test tests::malformed_lengths_and_trailing_bytes_are_rejected ... ok
-test tests::v2_nonzero_flags_are_rejected_before_crc ... ok
-test tests::generation_rollback_and_equal_generation_are_rejected ... ok
-test tests::verify_file_agrees_with_open_verified_and_rejects_corruption ... ok
-test tests::legacy_v1_nonzero_reserved_bytes_are_rejected ... ok
+test tests::corrupt_v2_cannot_supply_generation_or_be_silently_overwritten ... ok
 test tests::persistence_roundtrip_and_payload_corruption_rejection ... ok
-test tests::legacy_generation_is_discarded_and_never_authorizes_publication ... ok
+test tests::v2_nonzero_flags_are_rejected_before_crc ... ok
+test tests::v2_header_is_exactly_64_bytes_and_self_protected ... ok
+test tests::oversized_record_count_is_rejected_before_allocation ... ok
+test tests::generation_rollback_and_equal_generation_are_rejected ... ok
 test tests::verify_file_reports_legacy_v1_while_providing_upgrade_header ... ok
+test tests::malformed_lengths_and_trailing_bytes_are_rejected ... ok
+test tests::legacy_v1_store_is_verified_and_migrates_to_v2_on_write ... ok
+test tests::record_budget_boundary_and_explicit_unbounded_are_preserved ... ok
+test tests::legacy_v1_nonzero_reserved_bytes_are_rejected ... ok
+test tests::legacy_generation_is_discarded_and_never_authorizes_publication ... ok
+test tests::verify_file_agrees_with_open_verified_and_rejects_corruption ... ok
 test tests::every_single_header_bit_flip_is_rejected ... ok
 test tests::every_truncation_length_is_rejected ... ok
 test tests::legacy_v1_header_single_bit_sweep_freezes_detection_boundary ... ok
@@ -475,18 +480,18 @@ test tests::random_headers_are_rejected_and_never_panic ... ok
 test tests::every_payload_byte_flip_is_rejected ... ok
 test tests::every_double_header_bit_flip_is_rejected ... ok
 
-test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
 
      Running unittests src/lib.rs (target/debug/deps/gel_structural-24dfd58240b600d3)
 
 running 12 tests
 test tests::delta_depth_is_hard_bounded ... ok
 test tests::best_prototype_selects_correlated_parent_and_decodes_exactly ... ok
-test tests::full_record_break_even_includes_parent_metadata ... ok
-test tests::measured_sparse_dense_break_even_is_100_bits ... ok
-test tests::sparse_count_and_packed_length_mismatch_is_rejected ... ok
 test tests::random_data_falls_back_to_literal_when_delta_is_not_smaller ... ok
+test tests::measured_sparse_dense_break_even_is_100_bits ... ok
+test tests::full_record_break_even_includes_parent_metadata ... ok
 test tests::sparse_padding_bit_set_is_rejected ... ok
+test tests::sparse_count_and_packed_length_mismatch_is_rejected ... ok
 test tests::sparse_position_at_or_above_1024_is_rejected ... ok
 test tests::sparse_positions_must_be_strictly_increasing ... ok
 test tests::sparse_truncated_packed_positions_are_rejected ... ok
@@ -497,39 +502,40 @@ test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
 
      Running unittests src/main.rs (target/debug/deps/xtask-a74cc52cccb628ab)
 
-running 30 tests
+running 31 tests
 test license_metadata::tests::comments_are_not_permissions ... ok
 test license_metadata::tests::additional_license_is_rejected ... ok
 test license_metadata::tests::duplicate_is_rejected ... ok
-test license_metadata::tests::old_identifier_is_rejected ... ok
-test license_metadata::tests::root_license_file ... ok
 test license_metadata::tests::member_inherits_license_file ... ok
-test license_metadata::tests::wrong_location_is_rejected ... ok
+test license_metadata::tests::root_license_file ... ok
+test license_metadata::tests::old_identifier_is_rejected ... ok
 test license_metadata::tests::wrong_section_is_rejected ... ok
+test license_metadata::tests::wrong_location_is_rejected ... ok
 test publication_status_tests::ambiguous_or_missing_status_is_rejected ... ok
 test publication_status_tests::unapproved_candidate_can_be_tested_but_remains_unapproved ... ok
 test reproduce::tests::status_and_fallback_must_pass_on_both_streams ... ok
 test source_bundle::tests::bounded_read_rejects_oversize_file ... ok
-test source_bundle::tests::only_portable_relative_paths ... ok
 test reproduce::tests::archive_requires_independent_pin ... ok
-test source_bundle::tests::strict_manifest_format_and_duplicates ... ok
-test reproduce::tests::archive_mutation_and_extra_files_are_not_approved ... ok
-test tests::code_spans_follow_backtick_run_width ... ok
-test tests::fenced_blocks_are_not_scanned ... ok
-test tests::contact_gate_distinguishes_source_suffix_from_an_address ... ok
-test source_bundle::tests::symlink_file_and_directory_rejected ... ok
 test source_bundle::tests::build_and_git_metadata_never_copied ... ok
-test tests::reference_shape_matches_repository_paths_only ... ok
-test source_bundle::tests::changed_missing_extra_files_and_wrong_pin_fail ... ok
+test source_bundle::tests::only_portable_relative_paths ... ok
+test reproduce::tests::archive_mutation_and_extra_files_are_not_approved ... ok
+test source_bundle::tests::symlink_file_and_directory_rejected ... ok
+test source_bundle::tests::strict_manifest_format_and_duplicates ... ok
 test tests::cla_ack_needles_match_the_template_line ... ok
-test licensing_scope_tests::root_third_party_scope_and_notices ... ok
+test source_bundle::tests::changed_missing_extra_files_and_wrong_pin_fail ... ok
+test tests::code_spans_follow_backtick_run_width ... ok
+test tests::contact_gate_distinguishes_source_suffix_from_an_address ... ok
+test tests::fenced_blocks_are_not_scanned ... ok
+test tests::reference_shape_matches_repository_paths_only ... ok
 test tests::rust_only_gate_rejects_symlinks_and_executable_files ... ok
-test tests::canonical_license_rejects_changed_or_appended_bytes ... ok
-test reproduce::tests::broken_git_does_not_fall_back_to_archive ... ok
+test tests::collection_evidence_exception_is_exact_and_text_only ... ok
+test licensing_scope_tests::root_third_party_scope_and_notices ... ok
 test licensing_scope_tests::appended_overbroad_claim_is_rejected ... ok
+test reproduce::tests::broken_git_does_not_fall_back_to_archive ... ok
+test tests::canonical_license_rejects_changed_or_appended_bytes ... ok
 test tests::documentation_png_gate_requires_exact_reviewed_bytes_and_path ... ok
 
-test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.38s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.42s
 
      Running tests/dependency_inventory.rs (target/debug/deps/dependency_inventory-9ff1c38a5ce781f9)
 
@@ -562,7 +568,7 @@ PROGRESSIVE_EXACT=PASS
 STRUCTURAL_EXACT=PASS
 STRUCTURAL_DER_LOCAL=5.120000
 PERSISTENCE_V2_CRC64=PASS
-    Finished `release` profile [optimized] target(s) in 0.00s
+    Finished `release` profile [optimized] target(s) in 0.01s
      Running `target/release/gel-bench 8192 3 2`
 GEL_BENCH_V4
 generator=splitmix64_with_unique_word0
@@ -593,12 +599,12 @@ backend=count_ones(popcnt=false,avx2=false)
 target_arch=x86_64
 observed_cpu_start=19
 scanned_orbs=24576
-elapsed_ns=399611
-query_p50_ns=130255
-query_p95_ns=139763
-query_p99_ns=139763
-orbs_per_sec=61499808.564
-effective_gib_per_sec=7.331348
+elapsed_ns=305304
+query_p50_ns=101661
+query_p95_ns=107292
+query_p99_ns=107292
+orbs_per_sec=80496816.288
+effective_gib_per_sec=9.595968
 top1_exact=3/3
 progressive_top8_exact=PASS
 progressive_candidates=8192
@@ -614,7 +620,7 @@ quality_flips_256=target:4096,hit:4096,score:768,survived:true
 quality_flips_384=target:4096,hit:4096,score:640,survived:true
 null_top1_index=3916
 null_top1_score=565
-observed_cpu_end=19
+observed_cpu_end=3
     Finished `release` profile [optimized] target(s) in 0.01s
      Running `target/release/gel-bench 8192 3 1`
 GEL_BENCH_V4
@@ -644,14 +650,14 @@ thread_scan=single
 thread_scan_exact=SINGLE
 backend=count_ones(popcnt=false,avx2=false)
 target_arch=x86_64
-observed_cpu_start=9
+observed_cpu_start=5
 scanned_orbs=24576
-elapsed_ns=422434
-query_p50_ns=139372
-query_p95_ns=145394
-query_p99_ns=145394
-orbs_per_sec=58177135.363
-effective_gib_per_sec=6.935255
+elapsed_ns=190077
+query_p50_ns=62508
+query_p95_ns=65263
+query_p99_ns=65263
+orbs_per_sec=129294969.933
+effective_gib_per_sec=15.413162
 top1_exact=3/3
 progressive_top8_exact=PASS
 progressive_candidates=8192
@@ -667,33 +673,33 @@ quality_flips_256=target:4096,hit:4096,score:768,survived:true
 quality_flips_384=target:4096,hit:4096,score:640,survived:true
 null_top1_index=3916
 null_top1_score=565
-observed_cpu_end=9
+observed_cpu_end=1
     Finished `release` profile [optimized] target(s) in 0.00s
      Running `target/release/examples/quad_compare --orbs 32 --rounds 3 --workers 2 --sparse 1`
 Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=32 rounds=3 requested_workers=2 effective_workers=2 sparse=true policy=active
 canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
 round,reference_one_ns,four_views_ns,shared_ns
-1,63479,154250,109225
-2,51376,129824,91122
-3,49944,134934,86262
+1,71715,159590,92204
+2,69992,129714,94698
+3,47199,127199,80852
 reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
-four_over_shared_total=1.461950 reference_one_over_shared_total=0.574996 score_view_comparisons=512
+four_over_shared_total=1.555544 reference_one_over_shared_total=0.705521 score_view_comparisons=512
 Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
-    Finished `release` profile [optimized] target(s) in 0.01s
+    Finished `release` profile [optimized] target(s) in 0.00s
      Running `target/release/examples/quad_evidence --demo`
 Q8_EVIDENCE_V1 records=32 rounds=9 policy=active workers=1 view_inverses=128 timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED
 record_bytes=1152 materialized_four_bytes=8192 simultaneous_banks=true query_preparation_timed=false
 round,canonical_single_ns,four_materialized_ns,shared_ns
-1,45746,177824,72576
-2,41378,118262,59532
-3,45596,174708,71775
-4,41678,120727,59502
-5,48461,179397,72526
-6,41298,120536,58911
-7,45285,172915,71825
-8,41007,119986,60073
-9,45145,177644,71705
-canonical_over_shared=0.661059 four_over_shared=2.275973 view_comparisons=1408
+1,45896,186811,74881
+2,41848,119935,60334
+3,45976,179487,74170
+4,42269,124544,60613
+5,48892,222208,74561
+6,41538,120376,61045
+7,45666,176853,73488
+8,42340,125276,74610
+9,53100,178195,76534
+canonical_over_shared=0.646623 four_over_shared=2.274838 view_comparisons=1408
 Q8_EVIDENCE=PASS
     Finished `release` profile [optimized] target(s) in 0.01s
      Running `target/release/examples/quad_playground --demo`
@@ -702,9 +708,9 @@ P0: reference=1.000000000 shared=1.000000000 inverse=PASS
 P1: reference=1.000000000 shared=1.000000000 inverse=PASS
 P2: reference=1.000000000 shared=1.000000000 inverse=PASS
 P3: reference=1.000000000 shared=1.000000000 inverse=PASS
-single_shared_read_ns=2755 (one observation, NOT a benchmark)
+single_shared_read_ns=1953 (one observation, NOT a benchmark)
 canonical_pair_bytes=2304 materialized_pair_bytes=16384 (payload only, NOT total RAM)
-process_VmRSS:	    2680 kB (includes runtime and demo buffers)
+process_VmRSS:	    2744 kB (includes runtime and demo buffers)
 QUAD_PLAYGROUND=PASS; four equivalent views, not four independent facts
     Finished `release` profile [optimized] target(s) in 0.01s
      Running `target/release/examples/source_readout`
@@ -727,7 +733,7 @@ PART="WSTĘP (2)" QUOTE="Druga część: zażółć gęślą jaźń — dokładn
 EXPECTED_PART_COUNT_MISMATCH=REJECTED
 MODIFIED_TEXT_WITH_ORIGINAL_PINS=REJECTED
 SOURCE_PARTS_E2E=PASS
-    Finished `release` profile [optimized] target(s) in 0.00s
+    Finished `release` profile [optimized] target(s) in 0.01s
      Running `target/release/examples/source_real`
 TITLE=Rust ownership
 SOURCE_URL=https://github.com/rust-lang/book/blob/1500248d8f230566e4ec9f27fcbb8fe9e2898ab1/src/ch04-01-what-is-ownership.md
@@ -780,7 +786,7 @@ UTF8 553..615 | SOURCE_BOUND_QUOTE
 of ownership will slow down your program while it’s running.
 UTF8 617..696 | SOURCE_BOUND_QUOTE
 Because ownership is a new concept for many programmers, it does take some time
-search_ns=37430 verified_search_ns=69821
+search_ns=23063 verified_search_ns=42981
 TIMING_SCOPE=source validation plus search; excludes startup and printing; not a benchmark
 MODIFIED_SOURCE=REJECTED
 SOURCE_FIND_E2E=PASS
@@ -801,59 +807,59 @@ SCOPE=synthetic decoded sample quality; not semantic accuracy, media container c
 TIMING=encode_and_decode_with_allocations warm_buffers not cold_DRAM; no ORB/s claim
 dataset,q,values,payload_bytes,metadata_bytes,total_bytes,rmse,max_abs_error,bit_exact,median_ns,p95_ns
 silence,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=silence q=Q1 values=[235673, 207340, 173496, 181181, 172855, 172745, 173216, 172905, 172695, 184828, 172945, 172835, 172765, 172625, 175710, 172845, 172645, 172805, 172655, 284936, 173276]
-silence,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,172905,235673
-RAW_NS dataset=silence q=Q2 values=[215456, 193223, 187262, 186791, 187082, 186701, 186661, 190949, 172945, 172915, 173026, 172775, 176802, 173156, 173005, 173046, 172845, 173156, 176351, 173145, 173046]
-silence,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,173156,193223
-RAW_NS dataset=silence q=Q4 values=[189797, 177845, 173626, 173487, 173636, 173486, 173426, 177384, 173426, 173627, 173226, 174217, 174118, 177644, 174208, 174147, 174468, 173706, 176602, 172975, 172765]
-silence,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,173706,177845
-RAW_NS dataset=silence q=Q8 values=[204755, 179758, 175880, 175771, 175640, 175720, 176121, 180770, 175781, 194226, 176602, 176101, 183155, 175660, 175029, 175309, 175120, 175099, 179678, 174939, 174918]
-silence,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,175781,194226
+RAW_NS dataset=silence q=Q1 values=[237436, 183535, 138070, 80752, 85821, 81143, 81092, 81103, 81102, 81083, 81092, 81102, 81133, 81102, 81103, 81122, 98345, 80392, 80180, 80170, 80291]
+silence,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,81102,183535
+RAW_NS dataset=silence q=Q2 values=[99046, 81544, 81052, 81013, 81112, 94798, 80912, 79750, 79690, 79609, 79630, 79369, 89228, 84720, 79449, 79460, 79479, 79530, 83427, 79589, 92424]
+silence,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,80912,94798
+RAW_NS dataset=silence q=Q4 values=[94237, 80000, 79850, 79841, 79850, 80031, 79760, 82775, 79670, 79730, 79670, 79670, 79760, 79660, 79730, 79680, 79740, 79820, 79790, 79670, 82455]
+silence,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,79760,82775
+RAW_NS dataset=silence q=Q8 values=[96511, 80612, 80521, 80422, 80381, 80642, 80361, 80441, 80412, 84058, 80451, 80482, 80481, 80361, 80271, 80261, 80271, 80381, 80462, 80451, 80421]
+silence,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,80441,84058
 constant,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=constant q=Q1 values=[175961, 180550, 175740, 175610, 175480, 175700, 175540, 180499, 175540, 175650, 175660, 175340, 175671, 191840, 189396, 189536, 189477, 189887, 166644, 82906, 80011]
-constant,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,175671,189887
-RAW_NS dataset=constant q=Q2 values=[89348, 80332, 80371, 80351, 80171, 80551, 81504, 85851, 80231, 80311, 80351, 80271, 80321, 80301, 80421, 80311, 80351, 80401, 80171, 84359, 80301]
-constant,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,80351,85851
-RAW_NS dataset=constant q=Q4 values=[81784, 80291, 80291, 80421, 80351, 80551, 80412, 87504, 81263, 82545, 80512, 80421, 80472, 80521, 80411, 80442, 80361, 80912, 80441, 80382, 80401]
-constant,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,80441,82545
-RAW_NS dataset=constant q=Q8 values=[81543, 80762, 80562, 80481, 80461, 80912, 80631, 80582, 80642, 80521, 80522, 83917, 80442, 80461, 80492, 80501, 80461, 80682, 80993, 80381, 80171]
-constant,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,80522,81543
+RAW_NS dataset=constant q=Q1 values=[80902, 80301, 80321, 80371, 80221, 80392, 80361, 80271, 80391, 80371, 80281, 95871, 80411, 80251, 106941, 106300, 80922, 80471, 80331, 80391, 80301]
+constant,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,80371,106300
+RAW_NS dataset=constant q=Q2 values=[84809, 80502, 80491, 80532, 80531, 80442, 80411, 80351, 80411, 80531, 80491, 80332, 83717, 80522, 80421, 80431, 80391, 80441, 80591, 80412, 80541]
+constant,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,80491,83717
+RAW_NS dataset=constant q=Q4 values=[80772, 80571, 84780, 80571, 80452, 80642, 80581, 80331, 80442, 80441, 80441, 80462, 80451, 80391, 83988, 80462, 80511, 80502, 80551, 80642, 80541]
+constant,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,80511,83988
+RAW_NS dataset=constant q=Q8 values=[80912, 80571, 80471, 80402, 82976, 80632, 80531, 93115, 80432, 80461, 80491, 80481, 80652, 80471, 80371, 80492, 83246, 80862, 80611, 80532, 80371]
+constant,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,80531,83246
 image_gradient,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=image_gradient q=Q1 values=[144512, 144001, 144241, 144231, 143891, 144452, 147126, 147637, 148129, 144271, 147287, 147448, 144351, 147898, 144252, 166613, 144792, 144281, 144281, 146165, 148138]
-image_gradient,Q1,32768,4096,8192,12288,3.452316843e-2,5.882352963e-2,2048,144512,148138
-RAW_NS dataset=image_gradient q=Q2 values=[157096, 144922, 145083, 145494, 266982, 435008, 461628, 367661, 151114, 151105, 151384, 153028, 144341, 144742, 144471, 144031, 143971, 144682, 149622, 144792, 145013]
-image_gradient,Q2,32768,8192,8192,16384,1.150772280e-2,1.960784383e-2,2048,145494,435008
-RAW_NS dataset=image_gradient q=Q4 values=[144562, 144532, 144993, 152286, 144412, 144141, 144642, 144762, 144372, 145053, 148108, 144231, 144311, 144332, 144321, 144021, 147908, 144332, 144371, 144211, 144282]
-image_gradient,Q4,32768,16384,8192,24576,2.301545295e-3,3.921568859e-3,2048,144372,148108
-RAW_NS dataset=image_gradient q=Q8 values=[151184, 153980, 144872, 144081, 143670, 151204, 144712, 144792, 147428, 144872, 144482, 145113, 144021, 143830, 144873, 145534, 143700, 143941, 145774, 155182, 144712]
-image_gradient,Q8,32768,32768,8192,40960,1.353803701e-4,2.306848764e-4,2048,144872,153980
+RAW_NS dataset=image_gradient q=Q1 values=[149812, 144371, 144040, 147638, 144241, 144351, 144051, 144462, 144251, 146797, 144551, 143930, 143981, 144081, 144582, 144342, 145674, 144401, 144242, 144061, 144201]
+image_gradient,Q1,32768,4096,8192,12288,3.452316843e-2,5.882352963e-2,2048,144342,147638
+RAW_NS dataset=image_gradient q=Q2 values=[145153, 147247, 153058, 171372, 144993, 144632, 144973, 145063, 148489, 144301, 144832, 144652, 144512, 144772, 174448, 203603, 194325, 145103, 144482, 145915, 209764]
+image_gradient,Q2,32768,8192,8192,16384,1.150772280e-2,1.960784383e-2,2048,145103,203603
+RAW_NS dataset=image_gradient q=Q4 values=[194165, 144441, 154410, 150643, 154080, 186100, 193003, 195197, 174318, 144752, 149030, 144482, 144282, 144211, 144251, 161985, 150934, 152757, 144402, 144031, 144511]
+image_gradient,Q4,32768,16384,8192,24576,2.301545295e-3,3.921568859e-3,2048,150643,194165
+RAW_NS dataset=image_gradient q=Q8 values=[144061, 148309, 144411, 143681, 144672, 143360, 144562, 143419, 153769, 143941, 143740, 144061, 144412, 144582, 144301, 146636, 143780, 143861, 144502, 144081, 144291]
+image_gradient,Q8,32768,32768,8192,40960,1.353803701e-4,2.306848764e-4,2048,144291,148309
 audio_tones,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=audio_tones q=Q1 values=[150864, 150032, 149782, 149872, 149742, 149862, 153198, 150162, 149772, 150012, 149852, 149962, 152757, 149942, 149942, 149882, 149662, 149912, 149741, 153128, 149712]
-audio_tones,Q1,32768,4096,8192,12288,1.773959113e-1,4.747211635e-1,2048,149912,153128
-RAW_NS dataset=audio_tones q=Q2 values=[153859, 153088, 153028, 156033, 152898, 153028, 152737, 152637, 152787, 152947, 156645, 152687, 152607, 152687, 152617, 152467, 155563, 152837, 152807, 152658, 152797]
-audio_tones,Q2,32768,8192,8192,16384,6.328337530e-2,1.600412279e-1,2048,152807,156033
-RAW_NS dataset=audio_tones q=Q4 values=[154290, 150172, 149722, 149732, 149621, 149672, 149641, 152276, 149542, 149471, 149611, 149561, 149542, 149761, 153068, 149521, 149531, 154481, 149791, 149481, 152767]
-audio_tones,Q4,32768,16384,8192,24576,1.278285612e-2,3.174974024e-2,2048,149672,154290
-RAW_NS dataset=audio_tones q=Q8 values=[150644, 150152, 150022, 150062, 149992, 153248, 149631, 149742, 149621, 149722, 149631, 152637, 149982, 149972, 149721, 149982, 149902, 150033, 153067, 150082, 149972]
-audio_tones,Q8,32768,32768,8192,40960,7.672565664e-4,1.873880625e-3,2048,149982,153067
+RAW_NS dataset=audio_tones q=Q1 values=[151355, 150202, 189968, 196910, 162426, 154641, 149992, 149732, 150212, 150383, 150433, 150423, 162385, 150043, 150092, 150132, 150373, 150834, 156044, 150312, 150213]
+audio_tones,Q1,32768,4096,8192,12288,1.773959113e-1,4.747211635e-1,2048,150383,189968
+RAW_NS dataset=audio_tones q=Q2 values=[153469, 152306, 167706, 152477, 152266, 152166, 152147, 152246, 152407, 162916, 152166, 157856, 152167, 152066, 152166, 163718, 152066, 152046, 152146, 151866, 151405]
+audio_tones,Q2,32768,8192,8192,16384,6.328337530e-2,1.600412279e-1,2048,152167,163718
+RAW_NS dataset=audio_tones q=Q4 values=[165862, 149852, 149421, 149852, 149451, 149711, 155483, 149511, 149421, 149822, 149672, 149391, 149681, 155052, 149411, 149371, 149451, 149441, 149451, 154922, 149581]
+audio_tones,Q4,32768,16384,8192,24576,1.278285612e-2,3.174974024e-2,2048,149581,155483
+RAW_NS dataset=audio_tones q=Q8 values=[157386, 149872, 150062, 162185, 152898, 149832, 149782, 149551, 149531, 149712, 159149, 149892, 149682, 150032, 149571, 149602, 149501, 161123, 149651, 149481, 149771]
+audio_tones,Q8,32768,32768,8192,40960,7.672565664e-4,1.873880625e-3,2048,149782,161123
 small_signal_outliers,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=small_signal_outliers q=Q1 values=[144552, 144321, 149632, 144562, 144602, 144251, 144111, 144422, 144181, 150863, 144171, 144051, 144020, 144521, 144883, 144091, 148860, 144331, 144432, 144231, 144241]
-small_signal_outliers,Q1,32768,4096,8192,12288,1.718920447e-3,3.000000026e-3,2048,144331,149632
-RAW_NS dataset=small_signal_outliers q=Q2 values=[144171, 148069, 144341, 144642, 144743, 144612, 144511, 144723, 147597, 144322, 144652, 144251, 144462, 144241, 148649, 144462, 143740, 144060, 149611, 144111, 143840]
-small_signal_outliers,Q2,32768,8192,8192,16384,1.718920447e-3,3.000000026e-3,2048,144462,148649
-RAW_NS dataset=small_signal_outliers q=Q4 values=[144121, 144031, 144632, 144382, 144101, 144181, 148098, 143820, 143830, 143900, 144181, 143961, 144191, 147929, 143940, 143971, 144151, 144512, 143840, 144252, 148669]
-small_signal_outliers,Q4,32768,16384,8192,24576,1.718920447e-3,3.000000026e-3,2048,144151,148098
-RAW_NS dataset=small_signal_outliers q=Q8 values=[144872, 144412, 144041, 144502, 148890, 144472, 144642, 144481, 144010, 143540, 143811, 149962, 144552, 143750, 144151, 143470, 144542, 143961, 149882, 144802, 144692]
-small_signal_outliers,Q8,32768,32768,8192,40960,1.718920447e-3,3.000000026e-3,2048,144481,149882
+RAW_NS dataset=small_signal_outliers q=Q1 values=[144592, 147527, 144212, 144281, 144151, 144161, 143701, 144251, 146025, 150543, 144171, 144001, 144812, 144262, 144071, 147127, 144241, 144642, 144251, 144402, 144091]
+small_signal_outliers,Q1,32768,4096,8192,12288,1.718920447e-3,3.000000026e-3,2048,144251,147527
+RAW_NS dataset=small_signal_outliers q=Q2 values=[144211, 143700, 144582, 144662, 143740, 143931, 146044, 144182, 144582, 143980, 143810, 143941, 144081, 145974, 143691, 144051, 144321, 144742, 144592, 143891, 146195]
+small_signal_outliers,Q2,32768,8192,8192,16384,1.718920447e-3,3.000000026e-3,2048,144182,146044
+RAW_NS dataset=small_signal_outliers q=Q4 values=[143921, 190889, 152827, 144070, 148168, 144442, 145414, 151845, 143901, 144552, 144011, 147056, 144222, 144271, 152457, 144211, 144191, 143911, 148179, 144121, 144321]
+small_signal_outliers,Q4,32768,16384,8192,24576,1.718920447e-3,3.000000026e-3,2048,144321,152827
+RAW_NS dataset=small_signal_outliers q=Q8 values=[143870, 144302, 147707, 143580, 144061, 144081, 144001, 143189, 143520, 146476, 143339, 153589, 144031, 143580, 144241, 143781, 148028, 143610, 144111, 143259, 143530]
+small_signal_outliers,Q8,32768,32768,8192,40960,1.718920447e-3,3.000000026e-3,2048,144001,148028
 alternating_extremes,F32,32768, 131072,0,131072,0,0,32768,NA,NA
-RAW_NS dataset=alternating_extremes q=Q1 values=[144222, 144051, 144281, 149000, 144191, 144141, 144141, 144121, 144522, 148319, 143840, 143720, 143770, 143770, 144332, 144341, 148770, 144332, 144141, 144201, 150322]
-alternating_extremes,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,144201,149000
-RAW_NS dataset=alternating_extremes q=Q2 values=[144402, 148940, 144652, 143810, 144171, 143810, 144161, 144182, 148188, 143600, 144452, 144342, 143740, 144351, 143780, 148028, 143901, 144241, 144222, 144461, 144362]
-alternating_extremes,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,144241,148188
-RAW_NS dataset=alternating_extremes q=Q4 values=[144311, 143881, 144191, 144351, 144110, 143870, 148890, 143991, 144081, 143720, 144101, 144031, 143711, 150112, 144191, 143580, 144021, 144191, 144151, 143570, 147648]
-alternating_extremes,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,144101,148890
-RAW_NS dataset=alternating_extremes q=Q8 values=[144271, 143109, 143369, 143901, 143660, 147287, 143751, 143089, 143289, 143560, 144051, 147718, 144151, 143570, 143129, 143811, 143540, 143931, 148309, 143530, 143429]
-alternating_extremes,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,143660,147718
+RAW_NS dataset=alternating_extremes q=Q1 values=[143870, 147057, 143880, 143970, 143831, 143951, 143500, 144201, 149531, 143660, 143730, 144261, 143470, 143750, 147597, 158639, 143690, 144111, 143510, 143750, 143891]
+alternating_extremes,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,143880,149531
+RAW_NS dataset=alternating_extremes q=Q2 values=[208943, 155893, 150373, 150813, 150373, 159880, 144322, 144782, 144873, 144792, 188665, 153910, 234130, 217199, 168226, 148720, 148169, 158638, 144312, 144442, 146094]
+alternating_extremes,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,150373,217199
+RAW_NS dataset=alternating_extremes q=Q4 values=[144612, 143901, 148710, 146946, 144282, 144402, 143830, 144071, 143901, 148179, 151174, 146145, 143810, 143951, 144191, 152878, 151054, 143670, 146025, 148419, 148129]
+alternating_extremes,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,144612,151174
+RAW_NS dataset=alternating_extremes q=Q8 values=[153078, 147818, 147277, 147558, 147066, 142919, 143911, 147607, 143680, 143820, 143320, 142999, 143480, 143420, 159289, 143260, 142989, 144401, 143920, 143570, 147748]
+alternating_extremes,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,143911,153078
 QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     Finished `release` profile [optimized] target(s) in 0.00s
      Running `target/release/gel-live-lab --demo`
@@ -861,7 +867,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  part 1/4 | address 1:1 | bytes 0..205 | quote + validation: 0.002 ms
+  part 1/4 | address 1:1 | bytes 0..205 | quote + validation: 0.001 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > RAM holds working data while a program runs. Volatile memory alone does 
   > not preserve that data across a power loss. This laboratory can save an 
@@ -875,7 +881,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
     P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
     P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
-  Shared score: +1.000000 | one read: 1683 ns (not a benchmark)
+  Shared score: +1.000000 | one read: 992 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   open PATH | find PHRASE | match N | read N | page N | save NEW_PATH | load
@@ -886,7 +892,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  part 2/4 | address 1:2 | bytes 205..435 | quote + validation: 0.001 ms
+  part 2/4 | address 1:2 | bytes 205..435 | quote + validation: 0.000 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > A cryptographic digest detects a change relative to independently truste
   > d bytes. It does not prove that a statement is true. Changing the file a
@@ -901,7 +907,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
     P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
     P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
-  Shared score: +1.000000 | one read: 2214 ns (not a benchmark)
+  Shared score: +1.000000 | one read: 1002 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   open PATH | find PHRASE | match N | read N | page N | save NEW_PATH | load
@@ -912,7 +918,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.022 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > A cryptographic digest detects a change relative to independently truste
   > d bytes. It does not prove that a statement is true. Changing the file a
@@ -927,7 +933,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
     P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
     P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
-  Shared score: +1.000000 | one read: 2194 ns (not a benchmark)
+  Shared score: +1.000000 | one read: 1012 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
@@ -938,7 +944,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.022 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > A cryptographic digest detects a change relative to independently truste
   > d bytes. It does not prove that a statement is true. Changing the file a
@@ -953,7 +959,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
     P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
     P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
-  Shared score: -0.000000 | one read: 1473 ns (not a benchmark)
+  Shared score: -0.000000 | one read: 662 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
@@ -964,7 +970,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.022 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > A cryptographic digest detects a change relative to independently truste
   > d bytes. It does not prove that a statement is true. Changing the file a
@@ -979,7 +985,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
     P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
   > P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
-  Shared score: -0.000000 | one read: 1443 ns (not a benchmark)
+  Shared score: -0.000000 | one read: 661 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
@@ -990,7 +996,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
   ========================================================================
   SOURCE | Built-in authored demonstration (4 parts)
   Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
-  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.022 ms
   Quote page 1/1 (controls escaped; exact bytes remain in source):
   > A cryptographic digest detects a change relative to independently truste
   > d bytes. It does not prove that a statement is true. Changing the file a
@@ -1005,7 +1011,7 @@ QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
     P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
     P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
   > P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
-  Shared score: -0.000000 | one read: 1443 ns (not a benchmark)
+  Shared score: -0.000000 | one read: 1132 ns (not a benchmark)
   4 reversible views = 1 evidence item, not 4x independent capacity
   ------------------------------------------------------------------------
   TAMPER=REJECTED | changed 1 byte in a RAM COPY; original untouched
@@ -1019,22 +1025,22 @@ gel> list
 id=1 title=Memory notes bytes=57 sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377
 id=2 title=Polish notes bytes=51 sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d
 gel> find ram is volatile
-FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=27973
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=29045
 RESULT 1 doc=1 title=Memory notes bytes=0..16
 QUOTE RAM is volatile.
 gel> proof 1
 CITATION=PASS document_sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377 collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
 gel> find zażółć gęślą
-FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=9849
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=10159
 RESULT 1 doc=2 title=Polish notes bytes=0..27
 QUOTE Zażółć gęślą jaźń.
 gel> proof 1
 CITATION=PASS document_sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
 gel> find invented answer
-FIND=UNKNOWN documents=2 matching_lines=0 shown=0 skipped_lines=0 search_ns=5601
+FIND=UNKNOWN documents=2 matching_lines=0 shown=0 skipped_lines=0 search_ns=5761
 gel> drop 1
 REMOVED id=1; old snapshots remain on disk
 gel> find ram is volatile
-FIND=UNKNOWN documents=1 matching_lines=0 shown=0 skipped_lines=0 search_ns=3707
+FIND=UNKNOWN documents=1 matching_lines=0 shown=0 skipped_lines=0 search_ns=3737
 GEL_EVIDENCE_DEMO=PASS
 GEL_VERIFY_ALL=PASS

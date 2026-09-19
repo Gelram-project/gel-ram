@@ -11,9 +11,10 @@ the previously published application, not this new multi-document terminal.
   93.9 GiB total usable RAM; this is not a measurement of installed DIMM capacity.
 - Execution with a separate network namespace (`bwrap --unshare-net`), read-only
   source and writable build/test directories. No LLM or remote service.
-- Full workspace verification: **303 passed, zero failed**. Includes 14 collection
+- Full workspace verification: **304 passed, zero failed**. Includes 14 collection
   tests, 7 terminal/process tests, 3 independent reducer tests and 7 Q reference
-  tests. The retained log replaces the checkout path with `<CHECKOUT>` only.
+  tests and the scoped evidence allow-list regression. The retained log replaces
+  the checkout path with `<CHECKOUT>` only.
 - Windows/macOS: **not executed for this candidate**. Prepared CI is not evidence.
 - Process termination tests check acknowledged reopen and old-or-complete-new
   publication. They do not simulate controller failure or sudden power loss.
