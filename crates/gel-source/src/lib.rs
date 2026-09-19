@@ -2,6 +2,7 @@
 //! Integrity proves correspondence to approved bytes, NOT truth, encoder correctness,
 //! semantic relevance or authenticity of an untrusted catalog's claimed ORB addresses.
 #![forbid(unsafe_code)]
+pub mod document;
 mod parts;
 pub use parts::LeadPartsError;
 use sha2::{Digest, Sha256};

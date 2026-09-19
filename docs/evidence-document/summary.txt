@@ -1,0 +1,7 @@
+CSV_VALIDATION=PASS; expected diagnostic counts, not authenticated measurements
+PERCENTILE_METHOD=nearest-rank; units=ns; class,N,min,p50,p95,p99,max,mean
+CONFLICTING_QUOTES,250,24166,24226,52859,54402,66415,27033
+HIT,250,23754,23815,51958,54192,82495,26866
+MISS,250,23694,23755,51868,54613,113534,27112
+UNICODE,250,24446,24506,53480,54122,63920,27235
+Known repeated phrases; not semantic recall or evidence for extreme tail stability.

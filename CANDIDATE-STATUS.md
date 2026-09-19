@@ -1,11 +1,20 @@
-# GEL RAM release status
+# GEL RAM document-readout publication scope
 
-2026-09-13. The project owner has authorized the current public source and media line under the public pseudonym **RR — GEL RAM Project**.
+2026-09-19. The project owner authorized publication of the reviewed public
+document-readout addition based on commit
+`d0c9b67110e43bb9e72c463a55f1c084175bc3df`, conditional on successful checks.
+This authorization excludes the private application and its newer experiments.
+Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
 REVIEW_PUBLICATION_APPROVED=YES
 PUBLICATION_APPROVED=YES
-ACTIVE_PUBLIC_BRANCH=main
+SNAPSHOT_KIND=PUBLIC_CORE_UPDATE
+LOCAL_VALIDATION_WINDOWS_TESTED=NO
+LOCAL_VALIDATION_MACOS_TESTED=NO
+EXACT_REVISION_PLATFORM_RESULTS=SEE_GITHUB_ACTIONS
+CURRENT_LINUX_WORKSPACE_TESTS=222_PASS
+CURRENT_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
 VERSION_LINE=0.3.0
@@ -17,13 +26,24 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-`REVIEW_PUBLICATION_APPROVED=YES` is retained as a compatibility marker for the repository verification gate. The publication review was completed for the public line; it does not mean the already-active root license has reverted to a staged state.
+Technical checks accept a pending candidate and report its approval status
+without changing it. Here the owner supplied publication permission separately;
+a successful verification alone never supplies that permission.
+The active root license is unchanged; no new licensing policy is activated.
+Linux, Windows and macOS CI results belong to their exact tested SHA and are
+available in [GitHub Actions](https://github.com/Gelram-project/gel-ram/actions).
+The local validation fields above are not claims about subsequent CI runs.
+
+New scope: bounded phrase extraction in gel-source, Unicode tests, a pinned
+real-document demo and reproduction instructions. No private application code,
+encrypted vault, speaker, encoder, private corpus or user data was exported.
+Current results: [local package validation](docs/PACKAGE-VALIDATION.md).
 
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. It does not withdraw the project owner's publication authorization.
 
-## Included public scope
+## Previously published base
 
 The owner additionally authorized the bounded Ocean Scale source/evidence
 snapshot described in [the Ocean guide](docs/OCEAN-SCALE.md). Its exact archive
