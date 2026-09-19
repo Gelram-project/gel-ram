@@ -12,6 +12,20 @@ A Rust memory core for an AI knowledge bank: exact binary ORB readout,
 experimental Q8 coordinate views, and source-bound quotations.
 **A verifiable public system — not a complete AI model or the private research system.**
 
+## New: reproducible Ocean Scale research bundle
+
+[Download the Rust source + raw evidence bundle](research/ocean-scale-r2.tar.gz)
+or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
+It includes the experimental reader, incremental snapshot/journal recovery,
+sealed-copy mapping, vendored dependencies and a verifier that runs **108 tests**.
+
+On the measured Ryzen AI 9 HX 370 host, full **10M-record scan + top10 + decision**
+had EXACT p50 **615–705 ms** in two longer 24-worker runs (100 observations each).
+All raw runs, including slower ones, are included. This is synthetic numerical
+readout, **not semantic AI accuracy** or microsecond search across the Ocean.
+The research code is separate from the stable public workspace; it does not
+replace the v0.3.0 reader or claim a new tagged release.
+
 ![GEL public readout: one carrier, four equivalent views and a separate source integrity gate](docs/images/public-readout.svg)
 
 ## Run it yourself
@@ -21,7 +35,7 @@ dependency fetching need internet. Subsequent commands use locked offline builds
 The repository pins Rust 1.85.0.
 
 ```text
-git clone https://github.com/gelramlicensing-wq/gel-ram.git
+git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
