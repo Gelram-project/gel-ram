@@ -2,7 +2,11 @@
 //! Integrity proves correspondence to approved bytes, NOT truth, encoder correctness,
 //! semantic relevance or authenticity of an untrusted catalog's claimed ORB addresses.
 #![forbid(unsafe_code)]
+mod builder;
+mod bundle;
 pub mod document;
+pub use builder::{CorpusBuilder, EncodedCorpus};
+pub use bundle::{import_text, load_bundle, read_regular, write_bundle_new, BundleError};
 mod parts;
 pub use parts::LeadPartsError;
 use sha2::{Digest, Sha256};
@@ -107,6 +111,12 @@ fn label(s: &str) -> Result<String, Error> {
     Ok(v)
 }
 impl Corpus {
+    /// Exact immutable source payload after catalogue/pin validation.
+    /// Adjacent records may belong to different documents; this accessor does
+    /// not insert boundaries or establish semantic continuity between them.
+    pub fn source_text(&self) -> &str {
+        &self.text
+    }
     /// Both pins must come from the caller's trusted local manifest, not the remote payload.
     /// Catalog: GELCORPUS082\n then node,role,entry,start,len,sha256,titleHex,sectionHex (TSV).
     pub fn load(

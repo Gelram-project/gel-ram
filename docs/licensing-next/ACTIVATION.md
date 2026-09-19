@@ -1,5 +1,9 @@
 # Next-license activation procedure
 
+**Historical procedure, not an outstanding instruction.** The active terms are
+the root LICENSE and LICENSING.md. This older proposal must not be copied over
+them as part of a code update; any future policy change requires separate review.
+
 > STAGED FOR THE NEXT RELEASE. NOT CURRENTLY IN FORCE.
 
 The next licensing model must be activated atomically on one reviewed release tree. Do not partially activate it.

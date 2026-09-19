@@ -1,4 +1,13 @@
-# GEL RAM next licensing package
+# Historical, inactive licensing proposal
+
+This directory preserves an earlier proposal, not a pending policy change.
+Its original wording and proposed Evaluation limits below are historical.
+Only the [root LICENSE](../../LICENSE) and [current licensing guide](../../LICENSING.md)
+describe the operative public terms. Do not activate this directory merely
+because an older heading says "next release". No license terms are changed
+by this clarification.
+
+## Original proposal (historical text)
 
 > STAGED FOR THE NEXT RELEASE. NOT CURRENTLY IN FORCE.
 >

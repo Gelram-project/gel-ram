@@ -1,0 +1,14 @@
+[package]
+name = "gel-live-lab"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license-file.workspace = true
+publish = false
+
+[dependencies]
+gel-source = { path = "../gel-source" }
+gel-phase-quad = { path = "../gel-phase-quad" }
+
+[lints]
+workspace = true

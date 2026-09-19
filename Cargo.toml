@@ -9,6 +9,7 @@ members = [
   "crates/gel-structural",
   "crates/gel-store",
   "crates/gel-source",
+  "crates/gel-live-lab",
   "crates/gel-physics",
   "crates/gel-bench",
   "crates/gel-cli",

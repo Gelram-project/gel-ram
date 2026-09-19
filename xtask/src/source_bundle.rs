@@ -179,7 +179,9 @@ pub fn audit(args: &[String]) -> Result<(), String> {
         files.values().map(Vec::len).sum::<usize>(),
         args[0]
     );
-    println!("PUBLICATION_APPROVED=NO; source integrity is not legal or security approval");
+    println!(
+        "AUDIT_GRANTS_PUBLICATION_APPROVAL=NO; source integrity is not legal or security approval"
+    );
     Ok(())
 }
 

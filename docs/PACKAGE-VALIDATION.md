@@ -16,7 +16,13 @@ itself grant that permission. No new version or tag is introduced.
 | New synthetic probe | 1000 raw observations, independently checked and recomputed, no extreme-tail claim |
 | Dependencies | 12 locked external packages; cached archive SHA256 and recorded license-file bytes verified |
 | Root LICENSE and two films | Unchanged SHA256; both films decoded completely on CPU without reported decoder errors |
-| New Windows/macOS execution | NOT TESTED; CI configuration includes new tests/demo but execution is not claimed |
+| Windows/macOS during this local pre-publication check | Not run locally; see the subsequent exact-revision CI below |
+
+Subsequent [CI for published commit c0058a1](https://github.com/Gelram-project/gel-ram/actions/runs/35467294385)
+executed 225 workspace tests on Linux/macOS and 222 on Windows, all passing,
+plus 111 Ocean tests on Linux. Three existing Unix-only tests explain the
+Windows count difference. This remains historical document-update evidence,
+not the test count of future additions such as Live Lab.
 
 The 225 workspace tests and 111 separate Ocean tests are different suites.
 Neither is the private application's regression count or a semantic recall

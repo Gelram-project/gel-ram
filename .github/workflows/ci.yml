@@ -108,5 +108,9 @@ jobs:
         run: cargo run --locked --offline -p gel-source --example source_real
       - name: Pinned document phrase readout runtime demo
         run: cargo run --locked --offline -p gel-source --example source_find
+      - name: Source writer and interactive laboratory runtime demos
+        run: |
+          cargo run --locked --offline -p gel-source --example source_build
+          cargo run --locked --offline -p gel-live-lab -- --demo
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"

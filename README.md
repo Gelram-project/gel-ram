@@ -2,8 +2,25 @@
 
 **Native Rust memory/readout research: exact source-bound readout, experimental Q8 coordinate views, reproducible verification, and explicit UNKNOWN when evidence is insufficient.**
 
-> New public document-readout update, not a new tagged release. Start with
-> [what changed and what remains private](RELEASE-NOTES-DOCUMENT-CANDIDATE.md).
+> New public Live Lab integration, not a new tagged release.
+> [Update scope and verification](RELEASE-NOTES-LIVE-LAB.md).
+
+## Try GEL Live Lab on your own text
+
+```text
+cargo run --locked --offline --release -p gel-live-lab
+```
+
+Start with `find cryptographic digest`, then change `phase 128` or `view 3`.
+Import your UTF-8 file with `open PATH`, use `find PHRASE` and `match N`,
+save to a **new** path with `save PATH`, retain the displayed bundle SHA256,
+exit and reopen with `load SHA256 PATH`. [Full guide](docs/LIVE-LAB.md).
+Install the toolchain and fetch dependencies first using the instructions below.
+
+This public Rust program runs offline without an LLM. The source panel and
+synthetic Q8 panel are explicitly separate; the text is not encoded by those
+four views. Saved source bundles are plaintext, not an encrypted private vault.
+The films below still preview a different, private application.
 
 ## Try the new document readout
 
