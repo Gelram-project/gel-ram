@@ -3,7 +3,9 @@
 The public API `gel_source::document::search(text, phrase)` returns ranges in
 the exact input text. It searches a sequence of alphanumeric tokens within
 one line; punctuation/whitespace delimit tokens. NFC and lowercase matching
-do not rewrite source bytes. It is neither byte-substring matching nor semantic
+do not rewrite source bytes. Final/non-final Greek sigma are normalized alike;
+this is not full Unicode case folding (for example, no `ß` → `ss` expansion).
+It is neither byte-substring matching nor semantic
 question answering. Negation and role order remain in the returned quote;
 conflicting source lines are not resolved into a single true statement.
 
@@ -11,7 +13,8 @@ Limits: 16 MiB text, 512 query bytes, 1–32 query words, 4096 bytes per line,
 four returned lines in source order. All matching eligible lines are counted.
 Overlong lines are counted as skipped. No match with skipped lines is an
 incomplete search, not an exhaustive absence claim. Empty/punctuation-only or
-control-containing queries are rejected. Phrases do not cross line breaks.
+control-containing queries are rejected. Phrases do not cross LF, CRLF or
+standalone CR line breaks. Original quotation byte offsets are preserved.
 
 ## Reproduce
 

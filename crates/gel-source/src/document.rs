@@ -13,10 +13,15 @@ pub struct Search {
     pub matching_lines: usize,
     pub skipped_long_lines: usize,
 }
+fn normalized_words_text(s: &str) -> String {
+    // Lowercasing is context-sensitive for Greek sigma. Treat its final and
+    // non-final forms alike on both sides; this is not full Unicode casefold.
+    s.nfc().collect::<String>().to_lowercase().replace('ς', "σ")
+}
 fn words(s: &str) -> impl Iterator<Item = String> + '_ {
     // Normalize before splitting: combining marks must stay with their letters.
     // A line/query is bounded before reaching this function.
-    let normalized: String = s.nfc().collect::<String>().to_lowercase();
+    let normalized = normalized_words_text(s);
     normalized
         .split(|c: char| !c.is_alphanumeric())
         .filter(|w| !w.is_empty())
@@ -67,7 +72,9 @@ pub fn search(text: &str, phrase: &str) -> Result<Search, &'static str> {
         skipped_long_lines: 0,
     };
     let mut offset = 0;
-    for raw in text.split_inclusive('\n') {
+    // CRLF contributes an empty LF segment, which cannot match a nonempty
+    // query. Keeping every separator in raw preserves exact byte offsets.
+    for raw in text.split_inclusive(['\r', '\n']) {
         let line = raw.trim_end_matches(['\r', '\n']);
         if line.len() > MAX_LINE {
             result.skipped_long_lines += 1;
@@ -80,7 +87,7 @@ pub fn search(text: &str, phrase: &str) -> Result<Search, &'static str> {
                     true,
                 )
             } else {
-                let normalized = line.nfc().collect::<String>().to_lowercase();
+                let normalized = normalized_words_text(line);
                 phrase_in_tokens(
                     normalized
                         .split(|c: char| !c.is_alphanumeric())
@@ -104,6 +111,52 @@ pub fn search(text: &str, phrase: &str) -> Result<Search, &'static str> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn standalone_carriage_returns_separate_phrases() {
+        assert_eq!(
+            search("not\rapproved", "not approved")
+                .unwrap()
+                .matching_lines,
+            0
+        );
+        assert_eq!(
+            search("not\r\napproved", "not approved")
+                .unwrap()
+                .matching_lines,
+            0
+        );
+        assert_eq!(
+            search("not\napproved", "not approved")
+                .unwrap()
+                .matching_lines,
+            0
+        );
+    }
+    #[test]
+    fn mixed_line_endings_preserve_original_byte_ranges() {
+        let text = "α\rŁÓDŹ\r\nŁÓDŹ\nŁÓDŹ\r";
+        let found = search(text, "łódź").unwrap();
+        let starts: Vec<_> = text.match_indices("ŁÓDŹ").map(|(i, _)| i).collect();
+        assert_eq!(
+            found.passages,
+            starts
+                .iter()
+                .map(|i| *i..*i + "ŁÓDŹ".len())
+                .collect::<Vec<_>>()
+        );
+        assert_eq!(found.matching_lines, 3);
+        assert_eq!(found.skipped_long_lines, 0);
+    }
+    #[test]
+    fn sigma_variants_match_without_rewriting_source() {
+        for source in ["ΟΣ", "ος", "οσ"] {
+            for query in ["ΟΣ", "ος", "οσ"] {
+                let found = search(source, query).unwrap();
+                assert_eq!(found.passages, vec![0..source.len()], "{source} / {query}");
+                assert_eq!(&source[found.passages[0].clone()], source);
+            }
+        }
+    }
     #[test]
     fn optimized_token_windows_match_reference() {
         let vocabulary = [

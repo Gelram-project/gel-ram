@@ -22,12 +22,17 @@ encryption and startup are outside that timer. The separate demo uses the
 real MIT Rust Book fixture and reports its own validation/search timing.
 These metrics are not interchangeable with encrypted readout or Ocean scan.
 
-Probe source SHA256:
+Historical probe source SHA256 (before the CR and sigma review fixes):
 
 ```text
 4b4c5fd794796a6d65edc464b798e9e2524e06db82cd07b8b32c90441012966b  crates/gel-source/src/document.rs
 0246c4df1508c98b5de2b09df86f3983520fd6ba78339d3198ad2399f97ccac2  crates/gel-source/examples/document_bench.rs
 ```
+
+These source bytes are retained in Git commit
+`1d9dc4880dde2c648969d49ffe36b9fa92ba436b`. The raw measurements have not been
+rerun or relabelled as performance of the corrected reader. Use the current
+generator to measure the current implementation on your own machine.
 
 Recompute with `cargo run --locked --offline -p gel-source --example document_stats -- docs/evidence-document/latency.txt`.
 Nearest-rank percentiles use actual per-class N. At N=250 p99 describes only
