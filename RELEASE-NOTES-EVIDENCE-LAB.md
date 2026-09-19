@@ -16,7 +16,9 @@ and external dependency versions are unchanged. No private implementation import
 
 The already published Ocean 1M/10M and single-document Live Lab are retained as
 the base, not presented as new measurements. The two existing films do not show
-this new application. `gel-evidence --demo` is the reproducible current demonstration.
+this new application. A [separate new terminal recording](media/EVIDENCE-LAB-GUIDE.md)
+now shows the candidate with a real process restart. `gel-evidence --demo` remains
+a reproducible quick demonstration.
 
 ## Gates
 
@@ -42,3 +44,7 @@ OS crash tests do not establish physical power-failure durability.
 [Contract](docs/EVIDENCE-LAB.md) · [benchmark method](docs/EVIDENCE-CAMPAIGN.md).
 
 Measured local results and raw evidence: [Linux review](docs/evidence-collection/README.md).
+
+Follow-up preparation adds [24 post-freeze contract cases](docs/ASSESSMENT-REVIEW.md)
+without runtime tuning and [native platform handoff](docs/PLATFORM-REVIEW.md).
+This is developer-authored assessment, not independent blind validation.

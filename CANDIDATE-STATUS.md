@@ -12,7 +12,7 @@ SNAPSHOT_KIND=LOCAL_REVIEW_ONLY
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=LOCAL_LINUX_ONLY
-CURRENT_LINUX_WORKSPACE_TESTS=304_PASS
+CURRENT_LINUX_WORKSPACE_TESTS=305_PASS
 BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
@@ -35,6 +35,7 @@ New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 encrypted vault, speaker, encoder, private corpus or user data was exported.
 Current scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
+Follow-up recording, assessment and pending external gates: [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md).
 Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 

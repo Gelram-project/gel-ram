@@ -18,6 +18,18 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel"];
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
+        "media/GEL-EVIDENCE-LAB-EN.mp4",
+        "a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835",
+    ),
+    (
+        "media/evidence-lab/01-source-17s.png",
+        "9c73954fe6b732f56140d7d541e2ba4e04768ced5f3f4ea90036de93b2e240c0",
+    ),
+    (
+        "media/evidence-lab/02-reopened-56s.png",
+        "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
+    ),
+    (
         "research/ocean-scale-r3.tar.gz",
         "b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48",
     ),
@@ -774,6 +786,7 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_real", vec![]),
         ("gel-source", "source_find", vec![]),
         ("gel-source", "source_build", vec![]),
+        ("gel-source", "collection_review", vec![]),
         ("gel-cli", "quantization_matrix", vec![]),
     ] {
         let mut command = vec![
