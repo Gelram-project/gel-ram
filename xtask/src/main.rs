@@ -12,9 +12,17 @@ use std::process::{Command, ExitCode};
 use std::os::unix::fs::PermissionsExt;
 
 const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel"];
-// Exact reviewed artwork and demonstration media only; no general binary exception.
+// Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
-const REVIEWED_PNGS: &[(&str, &str)] = &[
+const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    (
+        "research/ocean-scale-r3.tar.gz",
+        "b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48",
+    ),
+    (
+        "research/ocean-scale-r2.tar.gz",
+        "f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde",
+    ),
     (
         "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
         "3b568bebdef34d34931970ce1f86ae0c521dba9e9ef6f7d050c5363357b63064",
@@ -206,13 +214,13 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
         ]
         .iter()
         .any(|p| path == root.join(p));
-        let approved_png = REVIEWED_PNGS
+        let approved_png = REVIEWED_ASSETS
             .iter()
             .find(|(name, _)| path == root.join(name));
         if let Some((_, expected)) = approved_png {
             if !metadata.is_file() || metadata.len() > 4 * 1024 * 1024 {
                 bad.push(format!(
-                    "invalid documentation image size/type: {}",
+                    "invalid reviewed asset size/type: {}",
                     path.display()
                 ));
                 continue;
@@ -220,7 +228,7 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
             let bytes = fs::read(&path).map_err(|e| e.to_string())?;
             if gel_source::hex(&gel_source::digest(&bytes)) != *expected {
                 bad.push(format!(
-                    "documentation image fingerprint mismatch: {}",
+                    "reviewed asset fingerprint mismatch: {}",
                     path.display()
                 ));
                 continue;
@@ -788,7 +796,7 @@ mod tests {
         let root =
             std::env::temp_dir().join(format!("gel-image-gate-{}-{nonce}", std::process::id()));
         fs::create_dir_all(root.join("docs/images")).unwrap();
-        for (name, _) in REVIEWED_PNGS {
+        for (name, _) in REVIEWED_ASSETS {
             let bytes = fs::read(workspace_root().unwrap().join(name)).unwrap();
             let path = root.join(name);
             fs::create_dir_all(path.parent().unwrap()).unwrap();

@@ -25,6 +25,13 @@ PAID_SERVICES_AUTHORIZED=NO
 
 ## Included public scope
 
+The owner additionally authorized the bounded Ocean Scale source/evidence
+snapshot described in [the Ocean guide](docs/OCEAN-SCALE.md). Its exact archive
+pin is checked by the repository gate and Linux CI before extraction.
+This is an experimental research addition, not a v0.4.0 release or replacement
+of the v0.3.0 stable workspace. Archive-internal pre-publication status remains
+historical; this document records the subsequent owner authorization.
+
 1. Rust public core, multipart source readout, integrity and reproduction tools, pinned source fixtures and dependency/third-party inventory.
 2. GEL RAM NCRL 1.0 as the operative root public license for GEL RAM-owned material, plus the commercial licensing path and CLA 2.0.
 3. Two English terminal demonstration films, previews and six extracted screenshots, with scope and timing limitations in [the film guide](media/FILMS-GUIDE.md).
@@ -32,7 +39,11 @@ PAID_SERVICES_AUTHORIZED=NO
 
 ## Excluded private scope
 
-The private application, speaker, private banks of knowledge, private encoder and Ocean/P2P internals; user conversations, signed agreements, keys, personal identity records and local diagnostic logs are not part of the public distribution.
+The private application, speaker, private banks of knowledge, private encoder
+and private Ocean/P2P application internals remain excluded. Only the selected
+numerical reader, persistence/mapping and test modules described in the Ocean
+guide are additionally authorized. User conversations, signed agreements, keys,
+personal identity records and private local diagnostic logs are not included.
 
 The films are bounded native Rust source-frame demonstrations. They do not prove general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, P2P operation or physical DRAM-refresh synchronization.
 

@@ -63,6 +63,21 @@ jobs:
       - run: cargo run --locked --offline -p xtask -- verify
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Verify pinned Ocean archive and run its offline tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48  research/ocean-scale-r3.tar.gz' | sha256sum --check -
+          ocean_run="$(mktemp -d "${RUNNER_TEMP}/gel-ocean.XXXXXX")"
+          tar -xzf research/ocean-scale-r3.tar.gz -C "$ocean_run"
+          package="$ocean_run/p2-m1-c1-review-r3"
+          rustc +1.85.0 --edition=2021 "$package/tools/verify_review.rs" -o "$ocean_run/verify-ocean"
+          if ! "$ocean_run/verify-ocean" "$package" "$ocean_run/evidence"; then
+            find "$ocean_run/evidence" -maxdepth 1 -name '*.log' -type f -exec tail -n 30 {} \;
+            exit 1
+          fi
+          cat "$ocean_run/evidence/COMPLETE"
+          grep 'test result:' "$ocean_run/evidence/"*-test.log "$ocean_run/evidence/inventory-tests.log" "$ocean_run/evidence/storage-tests.log"
 
   portable-build:
     # Keep this job ID stable for existing required-check configurations.
