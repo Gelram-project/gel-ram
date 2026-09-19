@@ -750,6 +750,7 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_parts", vec![]),
         ("gel-source", "source_real", vec![]),
         ("gel-source", "source_find", vec![]),
+        ("gel-source", "source_build", vec![]),
     ] {
         let mut command = vec![
             "run",
@@ -765,6 +766,19 @@ fn verify() -> Result<(), String> {
         command.extend(args);
         run("cargo", &command)?;
     }
+    run(
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--",
+            "--demo",
+        ],
+    )?;
     println!("GEL_VERIFY_ALL=PASS");
     Ok(())
 }

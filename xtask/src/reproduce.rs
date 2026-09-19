@@ -176,6 +176,22 @@ pub fn report(args: &[String]) -> Result<(), String> {
         ],
         "GEL_VERIFY_ALL=PASS",
     )?;
+    capture(
+        &output,
+        "live-lab.txt",
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--",
+            "--demo",
+        ],
+        "GEL_LIVE_LAB_DEMO=PASS",
+    )?;
     let mut budgets = vec![1, workers];
     budgets.sort();
     budgets.dedup();

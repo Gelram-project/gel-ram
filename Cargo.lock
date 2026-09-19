@@ -80,6 +80,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "gel-live-lab"
+version = "0.3.0"
+dependencies = [
+ "gel-phase-quad",
+ "gel-source",
+]
+
+[[package]]
 name = "gel-orb"
 version = "0.3.0"
 dependencies = [

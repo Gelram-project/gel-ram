@@ -1,8 +1,8 @@
-# GEL RAM document-readout publication scope
+# GEL RAM Live Lab publication scope
 
 2026-09-19. The project owner authorized publication of the reviewed public
-document-readout addition based on commit
-`d0c9b67110e43bb9e72c463a55f1c084175bc3df`, conditional on successful checks.
+Live Lab/source-writer integration based on commit
+`c0058a1ed5df758f2cd118ad15db81845d4cbd46`, conditional on successful checks.
 This authorization excludes the private application and its newer experiments.
 Public pseudonym: **RR — GEL RAM Project**.
 
@@ -13,7 +13,7 @@ SNAPSHOT_KIND=PUBLIC_CORE_UPDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_GITHUB_ACTIONS
-CURRENT_LINUX_WORKSPACE_TESTS=225_PASS
+CURRENT_LINUX_WORKSPACE_TESTS=272_PASS
 CURRENT_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
@@ -34,10 +34,11 @@ Linux, Windows and macOS CI results belong to their exact tested SHA and are
 available in [GitHub Actions](https://github.com/Gelram-project/gel-ram/actions).
 The local validation fields above are not claims about subsequent CI runs.
 
-New scope: bounded phrase extraction in gel-source, Unicode tests, a pinned
-real-document demo and reproduction instructions. No private application code,
+New scope: Rust Live Lab, source import/writer, no-replace save/reopen and
+integration of the public phrase-search API. No private application code,
 encrypted vault, speaker, encoder, private corpus or user data was exported.
-Current results: [local package validation](docs/PACKAGE-VALIDATION.md).
+Current scope and results: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
+Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
 
