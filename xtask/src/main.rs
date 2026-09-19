@@ -1,5 +1,7 @@
 #![forbid(unsafe_code)]
 mod license_metadata;
+#[cfg(test)]
+mod publication_status_tests;
 mod reproduce;
 mod source_bundle;
 
@@ -276,6 +278,30 @@ fn require(text: &str, needle: &str, file: &str) -> Result<(), String> {
     }
 }
 
+// Technical tests must run before publication approval; PASS is not permission.
+fn publication_status(text: &str) -> Result<bool, String> {
+    let flag = |key: &str| -> Result<bool, String> {
+        let values: Vec<_> = text
+            .lines()
+            .filter_map(|line| {
+                let (name, value) = line.trim().split_once('=')?;
+                (name == key).then_some(value)
+            })
+            .collect();
+        match values.as_slice() {
+            ["YES"] => Ok(true),
+            ["NO"] => Ok(false),
+            _ => Err(format!("missing, duplicated or invalid {key}")),
+        }
+    };
+    let review = flag("REVIEW_PUBLICATION_APPROVED")?;
+    let publication = flag("PUBLICATION_APPROVED")?;
+    if publication && !review {
+        return Err("publication cannot precede scope review".into());
+    }
+    Ok(publication)
+}
+
 fn licensing() -> Result<(), String> {
     let root = workspace_root()?;
     let read = |name: &str| fs::read_to_string(root.join(name)).map_err(|e| format!("{name}: {e}"));
@@ -335,11 +361,11 @@ fn licensing() -> Result<(), String> {
         "RR is a public pseudonym",
         "CLA-PRIVACY.md",
     )?;
-    require(
-        &read("CANDIDATE-STATUS.md")?,
-        "REVIEW_PUBLICATION_APPROVED=YES",
-        "CANDIDATE-STATUS.md",
-    )?;
+    let publication = publication_status(&read("CANDIDATE-STATUS.md")?)?;
+    println!(
+        "PUBLICATION_APPROVED={}",
+        if publication { "YES" } else { "NO" }
+    );
     require(
         &read("CANDIDATE-STATUS.md")?,
         "LEGAL_APPROVED=NO",
@@ -723,6 +749,7 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_readout", vec![]),
         ("gel-source", "source_parts", vec![]),
         ("gel-source", "source_real", vec![]),
+        ("gel-source", "source_find", vec![]),
     ] {
         let mut command = vec![
             "run",

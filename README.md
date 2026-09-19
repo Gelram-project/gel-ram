@@ -2,6 +2,21 @@
 
 **Native Rust memory/readout research: exact source-bound readout, experimental Q8 coordinate views, reproducible verification, and explicit UNKNOWN when evidence is insufficient.**
 
+> New public document-readout update, not a new tagged release. Start with
+> [what changed and what remains private](RELEASE-NOTES-DOCUMENT-CANDIDATE.md).
+
+## Try the new document readout
+
+```text
+cargo run --locked --offline -p gel-source --example source_find -- "garbage collection"
+```
+
+An actual pinned Rust Book excerpt → original UTF-8 quote and source SHA256
+→ measured validation/search time → rejection of modified source bytes.
+Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN.
+This is bounded token-phrase extraction, not a conversational model, semantic
+search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
+
 [![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
 
 ▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)

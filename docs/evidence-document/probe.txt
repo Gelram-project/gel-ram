@@ -1,0 +1,1 @@
+SYNTHETIC_TEXT_KERNEL source_bytes=16097 source_sha256=b621ad1c734b4642d8c3cd4eef4db76f5c46db814349b469562e2401d3ef5c2c N=1000; no storage, LLM, P2P or semantic accuracy

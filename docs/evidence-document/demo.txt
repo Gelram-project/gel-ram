@@ -1,0 +1,11 @@
+SOURCE=Rust Book ownership excerpt
+SOURCE_LICENSE=MIT
+SOURCE_SHA256=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+SOURCE_EXTRACT_ONLY; phrase lookup, not semantic truth or an ORB search
+matching_lines=1 shown=1 skipped_long_lines=0
+UTF8 159..237 | SOURCE_BOUND_QUOTE
+Some languages have garbage collection that regularly looks for no-longer-used
+search_ns=43392 verified_search_ns=77606
+TIMING_SCOPE=source validation plus search; excludes startup and printing; not a benchmark
+MODIFIED_SOURCE=REJECTED
+SOURCE_FIND_E2E=PASS

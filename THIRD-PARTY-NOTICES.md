@@ -1,6 +1,7 @@
 # Third-party notices for the next GEL RAM release
 
-> STAGED FOR THE NEXT RELEASE. NOT CURRENTLY IN FORCE.
+> Inventory for the local candidate. Upstream terms continue to govern their
+> material; this document does not grant publication approval or change LICENSE.
 
 ## 1. Boundary
 
@@ -22,7 +23,9 @@ The current source tree records the following external crates in `Cargo.lock`:
 | generic-array | 0.14.7 |
 | libc | 0.2.189 |
 | sha2 | 0.10.9 |
+| tinyvec | 1.13.3 |
 | typenum | 1.20.1 |
+| unicode-normalization | 0.1.25 |
 | version_check | 0.9.5 |
 
 These packages are dependency references fetched from their upstream distribution sources; they are not relicensed under GEL RAM NCRL 1.0 by this repository.
@@ -56,7 +59,7 @@ The real-source demo includes an unmodified excerpt of *The Rust Programming
 Language*, Copyright (c) 2010 The Rust Project Developers, under its MIT license.
 The full license accompanies the fixture. The pinned revision, original byte
 ranges and hashes are documented in [real-source provenance](docs/REAL-SOURCE-DEMO.md).
-This documentation excerpt remains MIT-licensed, independently of the staged GEL
+This documentation excerpt remains MIT-licensed, independently of the active GEL
 terms. The generated GEL catalog and example code are separate project material.
 
 ## 7. Project contact
