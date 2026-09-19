@@ -2,8 +2,23 @@
 
 **Native Rust memory/readout research: exact source-bound readout, experimental Q8 coordinate views, reproducible verification, and explicit UNKNOWN when evidence is insufficient.**
 
-> New public Live Lab integration, not a new tagged release.
-> [Update scope and verification](RELEASE-NOTES-LIVE-LAB.md).
+> LOCAL REVIEW CANDIDATE — not published or approved for publication.
+> [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
+
+## New candidate: your documents, exact citations, a real restart
+
+```sh
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
+```
+
+Type `add PATH` for each UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
+Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
+`load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate previous results.
+No text crosses document boundaries. Nothing is uploaded or automatically saved.
+
+[Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
+[Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
+This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
 
 ## Try GEL Live Lab on your own text
 

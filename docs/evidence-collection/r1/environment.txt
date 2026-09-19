@@ -1,0 +1,24 @@
+os=linux arch=x86_64 threads=1 available_parallelism=24
+RUNTIME=CPU_ONLY_OFFLINE
+SCOPE=generated UTF-8 phrase matching, warm process; NOT semantic recall, Q8 ORB/s or cold DRAM
+TIMERS=search includes returned quote allocation; mutations include root serialization/hash; save includes filesystem sync; load includes validation
+QUERIES=EXACT NEAR MISS UNICODE; no statistical p99.9 claims
+MEMORY=Linux VmRSS and VmHWM are process-wide snapshots, HWM cumulative, not per-bank peak
+rep=0 documents=8 VmHWM:	    2532 kB
+rep=0 documents=8 VmRSS:	    2532 kB
+rep=0 documents=64 VmHWM:	    3584 kB
+rep=0 documents=64 VmRSS:	    3484 kB
+rep=0 documents=256 VmHWM:	    7656 kB
+rep=0 documents=256 VmRSS:	    6260 kB
+rep=1 documents=256 VmHWM:	   12264 kB
+rep=1 documents=256 VmRSS:	   12264 kB
+rep=1 documents=64 VmHWM:	   12432 kB
+rep=1 documents=64 VmRSS:	   12432 kB
+rep=1 documents=8 VmHWM:	   12432 kB
+rep=1 documents=8 VmRSS:	   12432 kB
+rep=2 documents=8 VmHWM:	   12432 kB
+rep=2 documents=8 VmRSS:	   12432 kB
+rep=2 documents=64 VmHWM:	   12432 kB
+rep=2 documents=64 VmRSS:	   12432 kB
+rep=2 documents=256 VmHWM:	   12432 kB
+rep=2 documents=256 VmRSS:	   12432 kB

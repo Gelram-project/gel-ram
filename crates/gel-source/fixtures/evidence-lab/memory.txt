@@ -1,0 +1,3 @@
+RAM is volatile.
+A saved source snapshot can be reopened using an independently retained hash.
+A checksum comparison establishes byte correspondence, not factual truth.

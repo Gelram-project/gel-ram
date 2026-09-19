@@ -4,6 +4,7 @@
 #![forbid(unsafe_code)]
 mod builder;
 mod bundle;
+pub mod collection;
 pub mod document;
 pub use builder::{CorpusBuilder, EncodedCorpus};
 pub use bundle::{import_text, load_bundle, read_regular, write_bundle_new, BundleError};

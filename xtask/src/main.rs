@@ -751,6 +751,7 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_real", vec![]),
         ("gel-source", "source_find", vec![]),
         ("gel-source", "source_build", vec![]),
+        ("gel-cli", "quantization_matrix", vec![]),
     ] {
         let mut command = vec![
             "run",
@@ -775,6 +776,21 @@ fn verify() -> Result<(), String> {
             "--release",
             "-p",
             "gel-live-lab",
+            "--",
+            "--demo",
+        ],
+    )?;
+    run(
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
             "--",
             "--demo",
         ],

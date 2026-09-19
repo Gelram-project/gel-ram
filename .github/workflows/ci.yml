@@ -112,5 +112,7 @@ jobs:
         run: |
           cargo run --locked --offline -p gel-source --example source_build
           cargo run --locked --offline -p gel-live-lab -- --demo
+          cargo run --locked --offline -p gel-live-lab --bin gel-evidence -- --demo
+          cargo run --locked --offline -p gel-cli --example quantization_matrix
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"

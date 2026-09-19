@@ -1,5 +1,6 @@
 [package]
 name = "gel-live-lab"
+default-run = "gel-live-lab"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
