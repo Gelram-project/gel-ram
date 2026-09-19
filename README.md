@@ -14,10 +14,10 @@ experimental Q8 coordinate views, and source-bound quotations.
 
 ## New: reproducible Ocean Scale research bundle
 
-[Download the Rust source + raw evidence bundle](research/ocean-scale-r2.tar.gz)
+[Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
 or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
 It includes the experimental reader, incremental snapshot/journal recovery,
-sealed-copy mapping, vendored dependencies and a verifier that runs **108 tests**.
+sealed-copy mapping, vendored dependencies and a verifier that runs **111 tests**.
 
 On the measured Ryzen AI 9 HX 370 host, full **10M-record scan + top10 + decision**
 had EXACT p50 **615–705 ms** in two longer 24-worker runs (100 observations each).

@@ -16,6 +16,10 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel"];
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
+        "research/ocean-scale-r3.tar.gz",
+        "b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48",
+    ),
+    (
         "research/ocean-scale-r2.tar.gz",
         "f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde",
     ),

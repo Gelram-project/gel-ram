@@ -67,10 +67,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          printf '%s\n' 'f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde  research/ocean-scale-r2.tar.gz' | sha256sum --check -
+          printf '%s\n' 'b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48  research/ocean-scale-r3.tar.gz' | sha256sum --check -
           ocean_run="$(mktemp -d "${RUNNER_TEMP}/gel-ocean.XXXXXX")"
-          tar -xzf research/ocean-scale-r2.tar.gz -C "$ocean_run"
-          package="$ocean_run/p2-m1-c1-review-r2"
+          tar -xzf research/ocean-scale-r3.tar.gz -C "$ocean_run"
+          package="$ocean_run/p2-m1-c1-review-r3"
           rustc +1.85.0 --edition=2021 "$package/tools/verify_review.rs" -o "$ocean_run/verify-ocean"
           if ! "$ocean_run/verify-ocean" "$package" "$ocean_run/evidence"; then
             find "$ocean_run/evidence" -maxdepth 1 -name '*.log' -type f -exec tail -n 30 {} \;

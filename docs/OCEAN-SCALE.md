@@ -19,22 +19,22 @@ generated locally rather than stored in the repository.
 
 ## Download and verify on Linux
 
-Archive: [ocean-scale-r2.tar.gz](../research/ocean-scale-r2.tar.gz), 3,006,950 bytes.
-SHA256: `f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde`.
+Archive: [ocean-scale-r3.tar.gz](../research/ocean-scale-r3.tar.gz), 3,008,345 bytes.
+SHA256: `b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48`.
 
 From the repository root, with Rust 1.85.0 already installed:
 
 ```sh
-printf '%s\n' 'f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde  research/ocean-scale-r2.tar.gz' | sha256sum --check -
+printf '%s\n' 'b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48  research/ocean-scale-r3.tar.gz' | sha256sum --check -
 ocean_run="$(mktemp -d)"
-tar -xzf research/ocean-scale-r2.tar.gz -C "$ocean_run"
-package="$ocean_run/p2-m1-c1-review-r2"
+tar -xzf research/ocean-scale-r3.tar.gz -C "$ocean_run"
+package="$ocean_run/p2-m1-c1-review-r3"
 rustc +1.85.0 --edition=2021 "$package/tools/verify_review.rs" -o "$ocean_run/verify-ocean"
 "$ocean_run/verify-ocean" "$package" "$ocean_run/evidence"
 ```
 
 The verifier uses a fresh Cargo home and target, locked offline dependencies,
-and keeps build outputs outside the immutable bundle. It runs 100 project
+and keeps build outputs outside the immutable bundle. It runs 103 project
 tests, 3 manifest tests and 5 saved-storage-log tests; independently recalculates
 C1/R10 statistics and their cross-campaign links; checks P2/M1 log consistency;
 then verifies the file inventory and hashes again. It does **not** allocate or
@@ -42,7 +42,7 @@ recreate the full 10M bank by default. Local clean runs also used an isolated
 network namespace. CI runs locked offline Cargo; it does not claim network
 namespace isolation of the whole GitHub-hosted runner.
 
-Inside the extracted bundle, start with README.md, RESULTS.md and CHANGES-R2.md.
+Inside the extracted bundle, start with README.md, RESULTS.md and CHANGES-R3.md.
 The research sources are independent workspaces. Unpacking preserves their
 recorded manifest; they are not added as members of the stable root workspace.
 Follow the opt-in large-campaign instructions only with sufficient RAM/disk.
@@ -79,7 +79,14 @@ signatures; storage requires a separately trusted owner-controlled anchor.
 
 ## Provenance, license and publication state
 
-The source archive is the exact previously reviewed R2 snapshot. Its internal
+R3 fixes the small P2 verifier's excessive memory reserve, with three regression
+checks and an isolated run reporting 5 GiB MemAvailable (111 tests PASS).
+This is an admission-path test, not a physical 5 GiB host benchmark. The 1M/10M
+campaign reserves, scoring and raw evidence are unchanged. The historical
+[R2 archive](../research/ocean-scale-r2.tar.gz) remains available unchanged.
+Its historical test suite requires more than 8 GiB available RAM; use R3.
+
+The R3 source snapshot has its own complete manifest. Its internal
 status files preserve the **historical pre-publication state**; they are not
 silently rewritten. The current owner-authorized distribution status is in
 [CANDIDATE-STATUS.md](../CANDIDATE-STATUS.md). No new legal certification is claimed.
