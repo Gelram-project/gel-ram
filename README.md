@@ -1,9 +1,56 @@
 # GEL RAM
 
-**Native Rust memory/readout research: exact source-bound readout, experimental Q8 coordinate views, reproducible verification, and explicit UNKNOWN when evidence is insufficient.**
+**Experimental Rust research into RAM-resident knowledge, exact source-bound readout, reproducible evidence, and memory architectures that do not treat a full CPU scan as the final design.**
 
-> New public Live Lab integration, not a new tagged release.
-> [Update scope and verification](RELEASE-NOTES-LIVE-LAB.md).
+> Public `main` contains the reproducible subset of GEL RAM. The tagged `v0.3.0` release is an earlier immutable release point; newer verified work lives on `main`.
+
+## What GEL RAM is
+
+GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles, integrity gates, and large synthetic Ocean measurements.
+
+The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
+
+## What exists today
+
+| Capability | Public status |
+|---|---|
+| Rust public core | **AVAILABLE** |
+| Exact source-bound readout with SHA-256 provenance | **AVAILABLE** |
+| GELSRC01 no-replace save + independently pinned reopen | **AVAILABLE** |
+| Offline GEL Live Lab | **AVAILABLE** |
+| Synthetic Q8 reversible coordinate views | **AVAILABLE** |
+| Ocean Scale 1M / 10M evidence | **AVAILABLE** |
+| Independent byte / numeric / ranking checks | **AVAILABLE** |
+| Linux / macOS / Windows verification | **AVAILABLE** |
+| Private next-generation RAM execution path | **NOT PUBLICLY DESCRIBED** |
+| Physical memory-side compute claim | **NOT ESTABLISHED** |
+
+## Important performance distinction
+
+The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are useful as a reproducible comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
+
+The project owner's private experimental measurements are materially better than this public full-scan baseline, but those measurements and the mechanism behind them are intentionally **not published here yet**. Until their raw evidence and exact reproduction protocol are made public, this repository does not state a multiplier, queries/s figure, or public latency claim for that private path.
+
+### Public CPU/RAM baseline
+
+EXACT full scan → top10 → decision, 24 CPU workers:
+
+| Ocean | seed | N | p50 | p95 | p99 | max |
+|---|---:|---:|---:|---:|---:|---:|
+| 1M | 41119 | 100 | 72.427 ms | 81.018 ms | 82.859 ms | 90.949 ms |
+| 1M | 61141 | 100 | 71.962 ms | 79.860 ms | 80.576 ms | 88.227 ms |
+| 10M | 41119 | 100 | 615.428 ms | 684.888 ms | 710.313 ms | 734.085 ms |
+| 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |
+
+These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
+
+[Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
+
+[![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
+
+▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
+
+The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms.
 
 ## Try GEL Live Lab on your own text
 
