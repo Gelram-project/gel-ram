@@ -13,7 +13,7 @@ use std::process::{Command, ExitCode};
 #[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 
-const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel"];
+const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "cff"];
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
@@ -91,7 +91,7 @@ const ALLOWED_EXTENSIONLESS: &[&str] = &[
 ];
 
 /// A backtick-quoted token with one of these extensions is a repository path citation.
-const REFERENCE_EXTENSIONS: &[&str] = &["md", "toml", "txt", "yml", "rs", "lock"];
+const REFERENCE_EXTENSIONS: &[&str] = &["md", "toml", "txt", "yml", "rs", "lock", "cff"];
 /// A backtick-quoted token starting with one of these prefixes is a repository path citation.
 const REFERENCE_PREFIXES: &[&str] = &["docs/", ".github/", "crates/", "xtask/"];
 
@@ -897,6 +897,11 @@ mod tests {
         fs::create_dir(&root).unwrap();
         let source = root.join("good.rs");
         fs::write(&source, "fn main() {}\n").unwrap();
+        fs::write(
+            root.join("CITATION.cff"),
+            "cff-version: 1.2.0\ntitle: \"fixture\"\n",
+        )
+        .unwrap();
         assert!(rust_only_at(&root).is_ok());
 
         let link = root.join("link.rs");
