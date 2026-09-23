@@ -81,12 +81,6 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-[![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
-
-▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
-
-The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** ship the private chat engine, private bank, encoder or speaker and do not prove unrestricted AI capability.
-
 A Rust memory core for an AI knowledge bank: exact binary ORB readout,
 experimental Q8 coordinate views, and source-bound quotations.
 **A verifiable public system — not a complete AI model or the private research system.**
