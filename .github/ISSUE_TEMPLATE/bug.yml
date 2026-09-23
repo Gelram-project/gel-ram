@@ -5,12 +5,12 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: Do not include secrets, personal data, private datasets or unpatched security vulnerabilities.
+      value: Do not include secrets, personal data, private datasets, unpublished private implementation details or unpatched security vulnerabilities.
   - type: input
     id: version
     attributes:
-      label: GEL RAM version or commit
-      placeholder: v0.2.0 or a complete commit SHA
+      label: GEL RAM release or commit
+      placeholder: v0.3.0 or a complete current-main commit SHA
     validations:
       required: true
   - type: input
@@ -24,7 +24,7 @@ body:
     id: reproduce
     attributes:
       label: Minimal reproduction
-      description: List the exact commands and smallest synthetic input needed to reproduce the problem.
+      description: List the exact commands and smallest public or synthetic input needed to reproduce the problem.
     validations:
       required: true
   - type: textarea
@@ -46,5 +46,5 @@ body:
       options:
         - label: I confirmed this is not a private security report.
           required: true
-        - label: I removed secrets, personal data and private datasets.
+        - label: I removed secrets, personal data, private datasets and confidential information.
           required: true

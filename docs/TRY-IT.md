@@ -1,100 +1,141 @@
-# Try GEL RAM: exact readout on your hardware
+# Try GEL RAM on your hardware
 
-This demo uses the public core and deterministic synthetic data only. It does
-not encode text, answer questions, or require private models. Start with the
-[README setup](../README.md#quick-start), then run from the repository root.
+This guide is the shortest reproducible path through the current public core.
+It uses public source, deterministic fixtures and caller-selected text. It does
+not require the private application, a private knowledge bank or an external LLM.
 
-## 1. Check the implementation
+## 0. Prepare a fresh checkout
 
 ```text
+git clone https://github.com/Gelram-project/gel-ram.git
+cd gel-ram
+rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+cargo fetch --locked
 git rev-parse HEAD
-rustc --version
+```
+
+Keep the exact commit SHA with any result you share.
+
+## 1. Run the complete public verification gate
+
+```text
 cargo run --locked --offline -p xtask -- verify
 ```
 
-Keep the commit ID with your results. The final marker must be
-`GEL_VERIFY_ALL=PASS`; any failure needs investigation before performance claims.
-
-## 2. Compare old and new exact Top-K
+Expected final marker:
 
 ```text
-cargo run --locked --offline --release -p gel-reader --example topk_compare -- --orbs 8192
+GEL_VERIFY_ALL=PASS
 ```
 
-This small demo uses 1 MiB banks and a frozen v0.2.0 reference in the same
-binary as the new reader. It runs uniform, clustered and all-tied banks;
-K=1/8/32/256; and full/progressive search. It checks equal indices, scores,
-tie ordering and progressive stage counts, and prints every timing sample.
+A failed gate must be investigated before interpreting benchmark output.
 
-Expected final marker: `TOPK_COMPARE_EXACT=PASS`. Each RESULT row reports
-52/52 exact method outputs (including warmups) and stage agreement. Times
-are nanoseconds. The old/new median latency ratio is greater than 1 for a
-speedup and less than 1 for a slowdown. Preserve every row, not just the best.
-There is no expected speedup on every CPU or workload.
-
-For the documented 16 MiB synthetic matrix, omit `--orbs 8192`:
+## 2. Run GEL Live Lab on your own UTF-8 text
 
 ```text
-cargo run --locked --offline --release -p gel-reader --example topk_compare
+cargo run --locked --offline --release -p gel-live-lab
 ```
 
-This portable command does not reproduce x86-64-v3 code generation. On a CPU
-that supports x86-64-v3, a Linux example is:
+Useful commands:
 
-```bash
-RUSTFLAGS="-C target-cpu=x86-64-v3" CARGO_TARGET_DIR=target/v3 taskset -c 2 cargo run --locked --offline --release -p gel-reader --example topk_compare
+```text
+open PATH
+find PHRASE
+match 1
+save NEW_PATH
+load SHA256 PATH
+exit
 ```
 
-Choose a CPU in your allowed affinity set; CPU 2 is an example, not a universal
-setting. Do not run the v3 build on unsupported hardware. Record CPU model,
-RAM, OS, compiler flags, affinity, load and power settings. Shared-host timings
-can vary substantially; eleven measured queries do not establish reliable p99.
-See [the full protocol](TOPK-BENCHMARK.md) and [all recorded results](VALIDATION-v0.2.1.md).
+The bundle is plaintext. Keep the displayed SHA-256 pin independently if you
+want to verify a fresh-process reopen.
 
-## 3. Separate GEL byte integrity from FP16/Q8 conversion loss
+See [Live Lab](LIVE-LAB.md).
+
+## 3. Reproduce exact document readout
+
+```text
+cargo run --locked --offline -p gel-source --example source_find -- "garbage collection"
+```
+
+Try `ownership` and a phrase that is absent. The example reports source pins,
+exact quotations/ranges and modification rejection. This is bounded source
+extraction, not semantic question answering.
+
+See [Document Readout](DOCUMENT-READOUT.md).
+
+## 4. Run the independent byte/numeric/ranking audit
+
+Choose a new output directory:
 
 ```text
 cargo run --locked --offline --release -p gel-cli --example data_integrity -- target/integrity-demo-01
 ```
 
-The output directory must not exist. On a second run choose a different name,
-such as target/integrity-demo-02. Fixtures remain on disk for inspection;
-nothing is overwritten. Expected final marker: `GEL_DATA_INTEGRITY_ALL=PASS`.
-
-GEL must recover every encoded byte exactly for all representations. FP16
-and reference Q8 can still differ numerically from the original FP32 values:
-that is conversion loss, not corrupted readout. The audit prints sizes and
-numeric errors separately. It includes no model inference or GPU benchmark.
-The [integrity protocol](DATA-INTEGRITY.md) specifies the Q8 format and tests.
-
-## 4. Compare four Q8 views with one shared scan (unreleased, on main)
+Expected final marker:
 
 ```text
-cargo run --locked --offline --release -p gel-phase-quad --example quad_compare -- --orbs 8192 --rounds 9 --workers 1 --sparse 1 --policy active
+GEL_DATA_INTEGRITY_ALL=PASS
 ```
 
-Expect `Q8_QUAD_COMPARE_V2` and `Q8_QUAD_EXACT=PASS`.
-Repeat with `--workers 24` only as a requested budget; record the effective
-budget reported on your host. Keep all samples and both reference fallback
-counts. A `TIMING_COMPARISON=DEGRADED_REFERENCE_SERIAL_FALLBACK` marker means
-the reference did not complete with its intended parallel budget.
+Encoded-byte recovery and numerical conversion error are reported separately.
 
-This phase-Q8 record uses 1024 phase bytes plus a 128-byte activity mask.
-It is not the numerical reference-Q8 conversion in step 3, nor the 128-byte
-binary ORB. Four matching coordinate transforms preserve the same score;
-they do not add four independent facts. Semantic accuracy is not measured.
+## 5. Explore the public Q8 record
 
-See the [contract and full matrix commands](Q8-QUAD.md),
-[historical V1 timings](Q8-QUAD-RESULTS.md), and [V2 regression tests](Q8-QUAD-VALIDATION.md).
-The existing v0.2.1 tag does not include this example.
+```text
+cargo run --locked --offline --release -p gel-phase-quad --example quad_playground -- --interactive
+```
 
-## Share a useful result
+Try:
 
-Open a [reproduction report](https://github.com/gelramlicensing-wq/gel-ram/issues/new?template=reproduction.yml)
-with your commit, exact command, hardware, flags, final PASS/failure markers
-and all timing trials. Include regressions. Redact usernames, private paths
-and any confidential content from logs. Never upload tokens or private banks.
+```text
+phase 128
+mask 3
+noise 100
+view 3
+show
+quit
+```
 
-An independently reproduced result or a small failing input is more useful
-than a star alone. No code contribution or signed agreement is needed merely
-to report a test result; code contributions follow [CONTRIBUTING](../CONTRIBUTING.md).
+Four reversible coordinate views describe one stored carrier. They do not create
+four independent memories.
+
+## 6. Verify the Ocean Scale R3 research package
+
+Linux only for the bundled Ocean research verifier:
+
+```sh
+printf '%s\n' 'b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48  research/ocean-scale-r3.tar.gz' | sha256sum --check -
+ocean_run="$(mktemp -d)"
+tar -xzf research/ocean-scale-r3.tar.gz -C "$ocean_run"
+package="$ocean_run/p2-m1-c1-review-r3"
+rustc +1.85.0 --edition=2021 "$package/tools/verify_review.rs" -o "$ocean_run/verify-ocean"
+"$ocean_run/verify-ocean" "$package" "$ocean_run/evidence"
+```
+
+This verifies the pinned source/evidence package and its small offline suite.
+It does **not** allocate and rerun the full 10M campaign by default.
+
+For the opt-in large campaigns and their RAM requirements, follow
+[Ocean Scale](OCEAN-SCALE.md).
+
+## 7. Share a useful independent result
+
+Open:
+https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml
+
+Include:
+
+- exact commit or release tag;
+- exact command;
+- CPU, RAM, OS and Rust version;
+- requested/effective worker counts where relevant;
+- every timing sample, not only the fastest;
+- PASS/failure markers;
+- regressions and slower results.
+
+Remove usernames, private paths, credentials, private datasets and confidential
+material before posting logs.
+
+A benchmark/correctness report does **not** require a code contribution or CLA.
+Code intended for merge follows [CONTRIBUTING](../CONTRIBUTING.md).

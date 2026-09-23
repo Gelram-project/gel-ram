@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use or discuss GEL RAM, cite this repository and record the exact commit or release tag tested."
+title: "GEL RAM"
+type: software
+authors:
+  - given-names: "RR"
+    family-names: "GEL RAM Project"
+repository-code: "https://github.com/Gelram-project/gel-ram"
+url: "https://github.com/Gelram-project/gel-ram"
+abstract: "Independent Rust research into RAM-resident knowledge, exact source-bound readout, reproducible integrity checks, synthetic Q8 experiments and large-scale memory/Ocean evidence."

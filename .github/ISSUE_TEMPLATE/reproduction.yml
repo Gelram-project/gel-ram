@@ -1,19 +1,23 @@
 name: Benchmark or correctness reproduction
-description: Share an independent test of the public GEL core, including slower or failing cases.
+description: Share an independent test of the public GEL RAM core, including slower or failing cases.
 title: "reproduction: "
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Independent reproductions are especially valuable. Please report the exact revision and all relevant results, including slow or failing runs. Do not include private GEL data or unpublished private mechanisms.
   - type: input
     id: revision
     attributes:
       label: Commit or release tag
-      description: Include the exact commit tested.
+      description: Include the exact commit SHA or release tag tested.
     validations:
       required: true
   - type: textarea
     id: hardware
     attributes:
       label: Hardware and environment
-      description: CPU, RAM, OS, Rust version, compiler flags, affinity and background load/power settings if known.
+      description: CPU, installed/usable RAM, OS, Rust version, compiler flags, affinity and background load/power settings if known.
     validations:
       required: true
   - type: textarea
@@ -26,15 +30,17 @@ body:
   - type: textarea
     id: results
     attributes:
-      label: Correctness and full timing results
-      description: Include PASS/failure markers and every trial, including regressions. Small-demo results are not the 16 MiB benchmark.
+      label: Correctness and complete results
+      description: Include PASS/failure markers, every timing trial used in a summary, memory/resource observations and regressions. Do not report p99.9+ from insufficient sample counts.
       render: text
     validations:
       required: true
   - type: checkboxes
-    id: privacy
+    id: scope
     attributes:
-      label: Before posting
+      label: Scope
       options:
-        - label: I removed credentials, private datasets and confidential information from this report.
+        - label: I am reporting only public GEL RAM behavior; I am not requesting disclosure of private implementation details.
+          required: true
+        - label: I removed credentials, usernames/private paths, private datasets and confidential information from this report.
           required: true
