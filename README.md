@@ -46,6 +46,8 @@ These numbers deliberately expose the cost of the public full-scan path. They ar
 
 [Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
 
+**Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
+
 [![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
 
 ▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
