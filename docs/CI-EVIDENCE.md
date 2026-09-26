@@ -26,6 +26,10 @@ rechecker uses release. This is not a fresh R1 timing campaign or a report of
 every workflow step. It excludes archive Ocean tests, examples outside this
 command list, visual review and hardware experiments.
 
+Nested Cargo commands use an ignored, separate target directory so Windows
+does not try to replace the running collector executable during test builds.
+Failed checks also print the sanitized report; they still never emit COMPLETE.
+
 ## Redaction policy and limits
 
 Raw stdout/stderr, environment variables, compiler diagnostics and filesystem

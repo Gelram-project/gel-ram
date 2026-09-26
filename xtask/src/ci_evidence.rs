@@ -146,6 +146,8 @@ pub fn report(args: &[String]) -> Result<(), String> {
         let out = Command::new("cargo")
             .args(*command)
             .current_dir(&root)
+            // A Windows test build must not replace the running collector.
+            .env("CARGO_TARGET_DIR", root.join("target/ci-evidence-tests"))
             .output()
             .map_err(|_| "cannot execute evidence command")?;
         let text = String::from_utf8_lossy(&out.stdout);
@@ -171,11 +173,11 @@ pub fn report(args: &[String]) -> Result<(), String> {
         gel_source::hex(&gel_source::digest(tests.as_bytes()))
     );
     write_new(output, "SHA256SUMS.txt", hashes.as_bytes())?;
+    println!("CI_EVIDENCE_REPORT_BEGIN\n{report}{tests}{hashes}CI_EVIDENCE_REPORT_END");
     if !success {
         return Err("evidence checks failed; no COMPLETE".into());
     }
     write_new(output, "COMPLETE", b"CI_EVIDENCE_SCOPE=PASS\n")?;
-    println!("CI_EVIDENCE_REPORT_BEGIN\n{report}{tests}{hashes}CI_EVIDENCE_REPORT_END");
     println!("CI_EVIDENCE=PASS");
     Ok(())
 }
