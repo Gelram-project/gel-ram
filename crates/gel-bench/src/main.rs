@@ -48,6 +48,20 @@ fn processor_field(stat: &str) -> Option<usize> {
 
 /// `observed_cpu_*=` value: the CPU this thread was last scheduled on, or
 /// `unavailable` when `/proc/self/stat` cannot be read or parsed. It records
+/// `cpu_model=` from the first Linux /proc/cpuinfo "model name" line, or
+/// `unavailable`. It identifies hardware; it does not prove clock or power state.
+fn cpu_model() -> String {
+    std::fs::read_to_string("/proc/cpuinfo")
+        .ok()
+        .and_then(|text| {
+            text.lines()
+                .find_map(|l| l.strip_prefix("model name"))
+                .and_then(|rest| rest.split_once(':'))
+                .map(|(_, name)| name.trim().to_owned())
+        })
+        .unwrap_or_else(|| "unavailable".to_owned())
+}
+
 /// where the process ran at that instant; it does not prove pinning.
 fn observed_cpu() -> String {
     std::fs::read_to_string("/proc/self/stat")
@@ -171,6 +185,8 @@ fn run() -> Result<(), String> {
     }
     let elapsed = started_all.elapsed();
     require_exact_rounds(exact, rounds)?;
+    // Keep every timed observation in execution order before sorting.
+    let durations_in_order = durations.clone();
     durations.sort_unstable();
     let scans = count.checked_mul(rounds).ok_or("scan count overflow")?;
     let seconds = elapsed.as_secs_f64();
@@ -209,7 +225,16 @@ fn run() -> Result<(), String> {
     };
     let backend: KernelBackend = backend();
 
-    println!("GEL_BENCH_V4");
+    println!("GEL_BENCH_V5");
+    println!(
+        "profile={}",
+        if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "release"
+        }
+    );
+    println!("cpu_model={}", cpu_model());
     println!("generator=splitmix64_with_unique_word0");
     println!("generator_seed={GENERATOR_SEED}");
     println!("bank_crc64_ecma={bank_crc64:016x}");
@@ -275,6 +300,14 @@ fn run() -> Result<(), String> {
     println!("query_p50_ns={}", percentile(&durations, 0.50));
     println!("query_p95_ns={}", percentile(&durations, 0.95));
     println!("query_p99_ns={}", percentile(&durations, 0.99));
+    println!(
+        "query_samples={rounds} percentile_method=sorted[ceil((n-1)*q)] empirical_not_a_tail_bound"
+    );
+    println!(
+        "query_p99_is_max={}",
+        percentile(&durations, 0.99) == durations[durations.len() - 1]
+    );
+    println!("query_ns_execution_order={durations_in_order:?}");
     println!("orbs_per_sec={orbs_per_sec:.3}");
     println!("effective_gib_per_sec={gib_per_sec:.6}");
     println!("top1_exact={exact}/{rounds}");
