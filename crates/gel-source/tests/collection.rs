@@ -35,6 +35,36 @@ fn bank() -> Collection {
     c
 }
 #[test]
+fn streamed_root_matches_serialized_oracle_through_mutation_and_reload() {
+    let mut c = Collection::new();
+    for step in 0..240 {
+        let ids: Vec<_> = c.documents().map(|d| d.id()).collect();
+        match step % 4 {
+            0 | 1 => {
+                c.add(
+                    &format!("doc {step}"),
+                    &format!("Zażółć 🦀\r\n{step}\n{}", "abc".repeat(step)),
+                )
+                .unwrap();
+            }
+            2 if !ids.is_empty() => {
+                c.replace(ids[step % ids.len()], &format!("replacement {step}"))
+                    .unwrap();
+            }
+            3 if !ids.is_empty() => {
+                c.remove(ids[step % ids.len()]).unwrap();
+            }
+            _ => {}
+        }
+        let bytes = c.to_bytes();
+        assert_eq!(c.root(), digest(&bytes));
+        let loaded = Collection::from_bytes(&bytes, c.root()).unwrap();
+        assert_eq!(loaded.to_bytes(), bytes);
+        assert_eq!(loaded.root(), c.root());
+        c = loaded;
+    }
+}
+#[test]
 fn no_cross_document_phrase() {
     let mut c = Collection::new();
     c.add("A", "not ").unwrap();

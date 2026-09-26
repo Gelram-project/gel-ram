@@ -240,20 +240,7 @@ impl Collection {
         b
     }
     fn refresh_root(&mut self) {
-        use sha2::{Digest, Sha256};
-        let mut hash = Sha256::new();
-        hash.update(MAGIC);
-        for n in [self.revision, self.next_id, self.documents.len() as u64] {
-            hash.update(n.to_le_bytes());
-        }
-        for d in self.documents.values() {
-            hash.update(d.id.to_le_bytes());
-            hash.update((d.title.len() as u32).to_le_bytes());
-            hash.update((d.text.len() as u64).to_le_bytes());
-            hash.update(d.title.as_bytes());
-            hash.update(d.text.as_bytes());
-        }
-        self.root = hash.finalize().into();
+        self.root = digest(&self.to_bytes());
     }
     pub fn from_bytes(bytes: &[u8], trusted_pin: Hash) -> Result<Self, String> {
         if bytes.len() > MAX_BUNDLE {

@@ -59,8 +59,13 @@ recovered byte-for-byte from local integration revision
 That integration revision is provenance metadata, not a promise that the commit
 exists in public Git history. The preserved file is available in this checkout.
 Its SHA256 is `fdbd6a9fd24483aa0b95012aff6e9edabf7b3c7da4fce43019383c474afab7bf`.
-The measurement verifier maps only the historical manifest's Cargo.lock entry
-to this file; the current checkout lockfile is separately pinned by the root
+The measurement verifier maps the historical manifest's Cargo.lock entry
+to this file, and its collection.rs entry to the unchanged
+[collection.measured.rs.txt](collection.measured.rs.txt) snapshot. The current
+collection implementation uses streaming root hashing rather than allocating
+its complete serialization for each mutation. Historical measurements still
+describe the old implementation, not timings of the new one.
+The current checkout lockfile is separately pinned by the root
 manifest. Running the old sha256sum command against the current root lockfile
 is not the historical verification procedure.
 The historical source pins remain unchanged; future implementation changes
