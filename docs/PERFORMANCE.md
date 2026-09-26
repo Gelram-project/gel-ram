@@ -93,9 +93,11 @@ build without AVX-512 unless the record shows that the `zmm` reduction is not
 slower than the AVX2 one on that machine.
 
 The current output header is `GEL_BENCH_V5`. V5 is V4 plus `profile=`,
-`cpu_model=`, `query_ns_execution_order=` (every timed round before sorting),
-`query_samples=` with the percentile method, and `query_p99_is_max=`; the
-measurement loop is unchanged. Label V4 and V5 logs by their own header.
+`cpu_model=`, `query_ns_execution_order=` (every timed round in nanoseconds,
+before sorting, as a comma-separated list without spaces so the line stays one
+key=value token), `query_samples=` with the percentile method, and
+`query_p99_is_max=`; the measurement loop is unchanged. Label V4 and V5 logs by
+their own header.
 See [MEASUREMENT-PROTOCOL.md](MEASUREMENT-PROTOCOL.md) for comparison rules.
 
 V3 logs remain historical and

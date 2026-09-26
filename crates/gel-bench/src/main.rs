@@ -38,6 +38,15 @@ fn percentile(sorted: &[u128], q: f64) -> u128 {
     sorted[index.min(sorted.len() - 1)]
 }
 
+/// Comma-joined values (no spaces) so a row stays one key=value token.
+fn joined(values: &[u128]) -> String {
+    values
+        .iter()
+        .map(u128::to_string)
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
 /// Field 39 (`processor`) of a `/proc/<pid>/stat` line: the CPU the task
 /// last ran on. The `comm` field (2) may contain spaces and parentheses, so
 /// the line is split after its last `)`; field 39 is then the 37th token.
@@ -46,9 +55,7 @@ fn processor_field(stat: &str) -> Option<usize> {
     rest.split_ascii_whitespace().nth(36)?.parse().ok()
 }
 
-/// `observed_cpu_*=` value: the CPU this thread was last scheduled on, or
-/// `unavailable` when `/proc/self/stat` cannot be read or parsed. It records
-/// `cpu_model=` from the first Linux /proc/cpuinfo "model name" line, or
+/// `cpu_model=` value: the first Linux /proc/cpuinfo "model name" line, or
 /// `unavailable`. It identifies hardware; it does not prove clock or power state.
 fn cpu_model() -> String {
     std::fs::read_to_string("/proc/cpuinfo")
@@ -62,6 +69,8 @@ fn cpu_model() -> String {
         .unwrap_or_else(|| "unavailable".to_owned())
 }
 
+/// `observed_cpu_*=` value: the CPU this thread was last scheduled on, or
+/// `unavailable` when `/proc/self/stat` cannot be read or parsed. It records
 /// where the process ran at that instant; it does not prove pinning.
 fn observed_cpu() -> String {
     std::fs::read_to_string("/proc/self/stat")
@@ -307,7 +316,7 @@ fn run() -> Result<(), String> {
         "query_p99_is_max={}",
         percentile(&durations, 0.99) == durations[durations.len() - 1]
     );
-    println!("query_ns_execution_order={durations_in_order:?}");
+    println!("query_ns_execution_order={}", joined(&durations_in_order));
     println!("orbs_per_sec={orbs_per_sec:.3}");
     println!("effective_gib_per_sec={gib_per_sec:.6}");
     println!("top1_exact={exact}/{rounds}");
@@ -415,6 +424,13 @@ mod tests {
         report.spawned_workers = 0;
         report.fallback = Some(Top1Fallback::ThreadStartFailed);
         assert_eq!(execution_mode(&[report]), "mixed_or_serial_fallback");
+    }
+
+    #[test]
+    fn execution_order_is_one_token_without_spaces() {
+        assert_eq!(joined(&[222_479, 208_232, 207_991]), "222479,208232,207991");
+        assert_eq!(joined(&[7]), "7");
+        assert_eq!(joined(&[]), "");
     }
 
     #[test]

@@ -71,7 +71,6 @@ pub fn effective_workers(requested: usize, records: usize) -> Result<usize, &'st
     let available = std::thread::available_parallelism().map_or(1, usize::from);
     budget(requested, records, available)
 }
-/// One piece of evidence, not four independent confidence votes.
 /// Execution facts of one scan, for timing reports.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ScanReport {
@@ -81,6 +80,7 @@ pub struct ScanReport {
     pub serial_fallback: bool,
 }
 
+/// One piece of evidence, not four independent confidence votes.
 #[derive(Clone, Copy, Default)]
 pub struct SharedScore(f64);
 impl SharedScore {
