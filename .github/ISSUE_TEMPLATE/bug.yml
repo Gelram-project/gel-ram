@@ -10,7 +10,7 @@ body:
     id: version
     attributes:
       label: GEL RAM release or commit
-      placeholder: v0.3.0 or a complete current-main commit SHA
+      placeholder: v0.4.0 or a complete current-main commit SHA
     validations:
       required: true
   - type: input
@@ -46,5 +46,5 @@ body:
       options:
         - label: I confirmed this is not a private security report.
           required: true
-        - label: I removed secrets, personal data, private datasets and confidential information.
+        - label: I removed secrets, personal data, usernames, hostnames, local paths, private datasets and confidential information.
           required: true

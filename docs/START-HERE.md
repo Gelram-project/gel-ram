@@ -70,9 +70,8 @@ A reproduction report does not require a CLA. Code intended for merge follows
 
 ## Public / private boundary
 
-Public documentation intentionally does not disclose the private next-generation
-execution mechanism, unpublished private banks, private encoder, speaker,
-private network implementation, keys or user data.
+Public documentation intentionally does not describe private components, keys
+or user data.
 
 Do not infer those components from the public CPU/RAM baseline.
 

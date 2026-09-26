@@ -1,5 +1,9 @@
 # GEL RAM
 
+> **Historical document** from the v0.2.x period, kept as written. Where it says
+> "this public tree" or names the license, it describes that earlier tree. The
+> current tree's license is [LICENSE](LICENSE); see [LICENSING](LICENSING.md).
+
 ## Local Q8 evidence candidate — not a tagged release
 
 [Revision2 audit](docs/Q8-CANDIDATE-R2-AUDIT.md): hardened fixture inputs,

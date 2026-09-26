@@ -4,8 +4,7 @@ title: "GEL RAM"
 version: "0.4.0"
 type: software
 authors:
-  - given-names: "RR"
-    family-names: "GEL RAM Project"
+  - name: "RR — GEL RAM Project"
 repository-code: "https://github.com/Gelram-project/gel-ram"
 url: "https://github.com/Gelram-project/gel-ram"
 abstract: "Independent Rust research into RAM-resident knowledge, exact source-bound readout, reproducible integrity checks, synthetic Q8 experiments and large-scale memory/Ocean evidence."
