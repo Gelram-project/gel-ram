@@ -22,6 +22,9 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | numeric-loss | numeric | SEPARATE_GATE |
 | ranking-oracle | ranking | SEPARATE_GATE |
 | mutation-memory | memory | NOT_MEASURED |
+| publication-os-faults | persistence | SEPARATE_GATE |
+| platform-exclusions | test-scope | SEPARATE_GATE |
+| recorder-fail-closed | tooling | SEPARATE_GATE |
 | media-full-review | presentation | NOT_VERIFIED |
 | physical-refresh-compute | mechanism | NOT_ESTABLISHED |
 | commercial-advantage | comparison | NOT_ESTABLISHED |
