@@ -35,8 +35,8 @@ The latter directory must be new and outside the source tree. Includes corpus
 snapshots, so review contents before sharing reports from your own data.
 Cached dependencies and Rust 1.85.0 are prerequisites for offline compilation.
 
-Candidate-specific Windows/macOS execution remains untested. Prepared workflows
-do not count as executed CI. The authorized public PR will trigger standard CI.
+Candidate-specific native results are pinned in [the platform record](docs/PLATFORM-REVIEW.md).
+Prepared workflows alone do not count as executed CI; inspect the run for each revision.
 Technical PASS does not grant merge or release approval.
 
 ## Limits

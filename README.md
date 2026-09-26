@@ -10,7 +10,7 @@
 
 [70-second actual terminal walkthrough](media/EVIDENCE-LAB-GUIDE.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
-[Windows/macOS review instructions (execution pending)](docs/PLATFORM-REVIEW.md).
+[Windows/macOS verification record and instructions](docs/PLATFORM-REVIEW.md).
 
 ```sh
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence

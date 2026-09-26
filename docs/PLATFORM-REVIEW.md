@@ -1,10 +1,30 @@
-# Candidate platform handoff — no remote run performed
+# Candidate platform verification and handoff
 
-Linux is tested locally. Windows and macOS execution for this new candidate is
-**pending**, not covered by old green CI. The prepared workflow executes tests
-and demos; preparation neither uploads code nor triggers a runner. No paid
+Linux is tested locally and in CI. Native Windows and macOS tests and examples
+also passed for the exact revision recorded below. Newer revisions must pass
+their own checks; earlier green runs are not proof for changed bytes. No paid
 service, larger runner, VM or LFS storage is authorized. Public branch/PR
 upload and standard free public-repository CI are now authorized.
+
+## Verified revision (2026-09-26)
+
+Head: `08208c49a12f12f0af0fbaab3e6d78a86947b8b3`, Rust 1.85.0.
+[Branch run](https://github.com/Gelram-project/gel-ram/actions/runs/36236486732)
+and [PR run](https://github.com/Gelram-project/gel-ram/actions/runs/36236498081)
+both passed. The PR merge-test commit `80dbb77c7538ccea714b12667db84f0a7783ad65`
+has the same source tree as that head. This was a test merge, not a merge into main.
+
+| Platform | Workspace tests | Additional execution |
+|---|---:|---|
+| Linux | 305 PASS | Full verify, integrity audit, 111 pinned Ocean archive tests |
+| macOS ARM64 | 305 PASS | Source/collection demos, Q reference, integrity audit |
+| Windows x64 MSVC | 299 PASS | Source/collection demos, Q reference, integrity audit |
+
+Six Unix-only tests are absent on Windows: two SIGKILL cases, symlink rejection
+and Unix permission checks. They are not counted as Windows passes. Ocean's
+Linux-specific mapping/persistence remains Linux-specific. This table records
+the linked revision, not an unqualified guarantee of compatibility.
+For subsequent documentation changes, inspect [PR #9 checks](https://github.com/Gelram-project/gel-ram/pull/9/checks).
 
 ## Same source and toolchain on every host
 

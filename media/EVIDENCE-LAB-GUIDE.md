@@ -56,4 +56,5 @@ Execution and capture used a separate network namespace, with local X11 only.
 The complete video was decoded without errors; start/result/restart frames were
 visually inspected. It does not prove power-loss survival, encryption or general
 AI quality. Media rights remain as described in [RIGHTS.md](RIGHTS.md).
-Candidate not approved for publication.
+The owner authorized public branch/PR publication. Merging and a final release
+remain unapproved; see [candidate status](../CANDIDATE-STATUS.md).

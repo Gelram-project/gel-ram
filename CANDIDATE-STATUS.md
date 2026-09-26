@@ -16,7 +16,7 @@ RELEASE_APPROVED=NO
 SNAPSHOT_KIND=PUBLIC_PR_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
-EXACT_REVISION_PLATFORM_RESULTS=LOCAL_LINUX_ONLY
+EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
 CURRENT_LINUX_WORKSPACE_TESTS=305_PASS
 BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
@@ -41,6 +41,9 @@ Technical checks accept a pending candidate and report its approval status
 without changing it. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
 Previous Linux, Windows and macOS CI results do not validate these changes.
+The candidate's subsequent native CI evidence is pinned by SHA in
+[the platform record](docs/PLATFORM-REVIEW.md). The LOCAL_VALIDATION fields
+above describe local validation, not remote CI results.
 Standard public-repository CI is authorized for the branch/PR; execution results
 must be checked separately. Only free standard runners are in scope.
 

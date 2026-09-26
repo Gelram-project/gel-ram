@@ -16,7 +16,7 @@ Success requires exit code zero and `GEL_VERIFY_ALL=PASS`. Read failures rather
 than treating an earlier PASS line as the final result. The gate includes
 workspace tests, source demonstrations and the multi-document demo. It is not
 a speed or semantic-accuracy benchmark. Linux is the locally tested platform;
-candidate-specific Windows/macOS execution remains pending.
+native Windows/macOS results are pinned in [the platform record](PLATFORM-REVIEW.md).
 
 ## Watch a small real run
 
