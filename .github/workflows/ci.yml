@@ -48,6 +48,8 @@ jobs:
           fi
           cat "$ocean_run/evidence/COMPLETE"
           grep 'test result:' "$ocean_run/evidence/"*-test.log "$ocean_run/evidence/inventory-tests.log" "$ocean_run/evidence/storage-tests.log"
+      - name: Generate scoped sanitized evidence (no artifact upload)
+        run: cargo run --locked --offline -p xtask -- ci-evidence "${{ runner.temp }}/gel-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}"
 
   portable-build:
     # Keep this job ID stable for existing required-check configurations.
@@ -92,5 +94,7 @@ jobs:
         run: cargo run --locked --offline --release -p gel-source --example collection_recheck -- docs/evidence-collection/r1
       - name: Workspace documentation tests
         run: cargo test --locked --offline --workspace --doc
+      - name: Generate scoped sanitized evidence (no artifact upload)
+        run: cargo run --locked --offline -p xtask -- ci-evidence "${{ runner.temp }}/gel-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}"
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"

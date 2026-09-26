@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+mod ci_evidence;
 mod license_metadata;
 mod measured_sources;
 #[cfg(test)]
@@ -873,6 +874,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
     match args.first().map(String::as_str) {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
+        Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("rust-only") => rust_only(),
