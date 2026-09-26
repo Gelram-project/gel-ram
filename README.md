@@ -2,11 +2,13 @@
 
 **Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
-> PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
-> Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
-> [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
+> EVIDENCE LAB IS ON MAIN through [PR #9](https://github.com/Gelram-project/gel-ram/pull/9).
+> Workspace: **0.4.0-rc.1**, not a final v0.4.0 release. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
+> Follow-up runtime, test and documentation improvements are under review in [PR #10](https://github.com/Gelram-project/gel-ram/pull/10), open at the 2026-09-26 status check.
+> [Roadmap with 24 acceptance items](docs/ROADMAP.md) · [Approval scope](CANDIDATE-STATUS.md).
+> Historical releases, films and measurements retain their original scope.
 
-## New candidate: your documents, exact citations, a real restart
+## Evidence Lab: your documents, exact citations, a real restart
 
 [Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
@@ -30,10 +32,14 @@ This is phrase retrieval from plaintext sources, not a general chatbot or privat
 **Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
 See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
 for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
+The registry, quote-context improvements, collection builder and new CI evidence
+report belong to PR #10, not the PR #9 main baseline at this status check.
+Full visual review of the films, measured optimization gains and independent
+second-host campaigns remain open in the roadmap.
 
 The tagged `v0.3.0` release remains an immutable historical release point.
-Current-main capabilities and candidate checks are not automatically part of
-that tag. See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
+Main and review-branch capabilities are not automatically part of that tag.
+See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
 
 ## What GEL RAM is
 
@@ -49,6 +55,7 @@ The public repository is **not the complete private research system**. Some expe
 | Exact source-bound readout with SHA-256 provenance | **AVAILABLE** |
 | GELSRC01 no-replace save + independently pinned reopen | **AVAILABLE** |
 | Offline GEL Live Lab | **AVAILABLE** |
+| Multi-document Evidence Lab, plaintext snapshots and stale-citation checks | **ON MAIN VIA PR #9** |
 | Synthetic Q8 reversible coordinate views | **AVAILABLE** |
 | Ocean Scale 1M / 10M evidence | **AVAILABLE** |
 | Independent byte / numeric / ranking checks | **AVAILABLE** |
@@ -82,6 +89,8 @@ These numbers deliberately expose the cost of the public full-scan path. They ar
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
+**Historical private-application preview, not the public Evidence Lab executable:**
+
 [![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
 
 ▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
@@ -103,7 +112,7 @@ Install the toolchain and fetch dependencies first using the instructions below.
 This public Rust program runs offline without an LLM. The source panel and
 synthetic Q8 panel are explicitly separate; the text is not encoded by those
 four views. Saved source bundles are plaintext, not an encrypted private vault.
-The films below still preview a different, private application.
+The private-application previews show a different program.
 
 ## Try the new document readout
 
@@ -117,7 +126,7 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-## New: reproducible Ocean Scale research bundle
+## Reproducible Ocean Scale research bundle
 
 [Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
 or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
@@ -147,11 +156,23 @@ cargo fetch --locked
 cargo run --locked --offline -p xtask -- verify
 ```
 
-Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions; this checkout additionally contains the v0.4.0 PR candidate.
-These additions are available on main after [PR #9](https://github.com/Gelram-project/gel-ram/pull/9)
-is merged; before that, use branch `review/evidence-lab-v040-rc1`.
-No model or private bank is needed.
+Expected on success: `GEL_VERIFY_ALL=PASS`. The default checkout uses main,
+which already contains Evidence Lab from PR #9. No model or private bank is needed.
+PR #10 follow-up features must be tested from that PR's exact revision, not
+inferred from a successful run on main. In a separate fresh checkout for review:
+
+```text
+git fetch origin docs/gel-measurements-20260926
+git switch --detach FETCH_HEAD
+git rev-parse HEAD
+cargo fetch --locked
+cargo run --locked --offline -p xtask -- verify
+```
+
+Record the printed commit and the run's actual result. The review branch can
+advance; check [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) and its
+[CI runs](https://github.com/Gelram-project/gel-ram/actions) for the matching
+revision. Checkout, passing tests and main integration are separate events.
 
 ### Change the numeric input
 
@@ -236,7 +257,9 @@ approves a legal claim; private data and licensing still require review.
 The repository includes two owner-authorized English terminal demonstrations of
 a separate private native Rust application. They show live bounded source-frame
 answers and explicit UNKNOWN cases. They do **not** ship the private chat engine,
-private bank, encoder or speaker.
+private bank, encoder or speaker. The separate public Evidence Lab walkthrough
+is listed with them in the [film index](media/INDEX.md); three films do not imply
+three independently validated engines.
 
 The displayed reply timings belong only to those bounded routes and that recorded
 MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
