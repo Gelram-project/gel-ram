@@ -51,12 +51,21 @@ impl App {
         type_text("gel-evidence");
         pause(1500);
         println!();
-        let mut child = Command::new(binary)
+        let mut child = match Command::new(binary)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .unwrap();
+        {
+            Ok(child) => child,
+            Err(error) => {
+                let mut status_log = status_log;
+                let _ = writeln!(status_log, "FAILED spawn: {error}");
+                let _ = status_log.sync_all();
+                eprintln!("RECORDING_FAILED: spawn: {error}");
+                std::process::exit(1);
+            }
+        };
         let stdout = child.stdout.take().unwrap();
         let stderr = child.stderr.take().unwrap();
         let input = child.stdin.take();

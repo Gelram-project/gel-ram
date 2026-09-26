@@ -60,3 +60,13 @@ separate work; the existence of the driver or its successful terminal log is
 not evidence that a fourth MP4 has been filmed or approved. The original
 two-document mode and three historical videos remain available and unchanged.
 No answers are substituted, and pauses are outside application timers.
+
+## Recorder failure regression
+
+`cargo test --locked --offline -p xtask --test recorder_process` compiles and
+runs the actual Rust recorder. It checks refusal of an existing command log,
+a missing application executable, and an application exiting before its first
+prompt. All must fail without a completion marker or a panic; the existing log
+must remain byte-identical. Spawn failure and early EOF retain a failed process
+status log. This complements stream-fragment and I/O injection tests; it does
+not establish coverage of every recorder error path.
