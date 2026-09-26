@@ -2,6 +2,13 @@
 //! Integrity proves correspondence to approved bytes, NOT truth, encoder correctness,
 //! semantic relevance or authenticity of an untrusted catalog's claimed ORB addresses.
 #![forbid(unsafe_code)]
+// The Rust examples in these public guides compile and run as doctests.
+#[cfg(doctest)]
+#[doc = include_str!("../../../docs/SOURCE-BUILDER.md")]
+struct SourceBuilderGuide;
+#[cfg(doctest)]
+#[doc = include_str!("../../../docs/COLLECTION-BUILDER.md")]
+struct CollectionBuilderGuide;
 mod builder;
 mod bundle;
 pub mod collection;
