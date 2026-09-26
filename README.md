@@ -1,6 +1,6 @@
 # GEL RAM
 
-**Experimental Rust research into RAM-resident knowledge, exact source-bound readout, reproducible evidence, and memory architectures that do not treat a full CPU scan as the final design.**
+**Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
 > PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
 > Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
@@ -8,9 +8,12 @@
 
 ## New candidate: your documents, exact citations, a real restart
 
-[70-second actual terminal walkthrough](media/EVIDENCE-LAB-GUIDE.md) ·
+[Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
 [Windows/macOS verification record and instructions](docs/PLATFORM-REVIEW.md).
+
+First install the pinned Rust 1.85.0 toolchain and run `cargo fetch --locked`
+with network access. The command below then runs offline with cached dependencies:
 
 ```sh
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
@@ -26,8 +29,9 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
 **Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
 
-The sections below describe the previously published baseline, not approval of
-this candidate. The tagged `v0.3.0` release remains an immutable release point.
+The tagged `v0.3.0` release remains an immutable historical release point.
+Current-main capabilities and candidate checks are not automatically part of
+that tag. See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
 
 ## What GEL RAM is
 
@@ -54,7 +58,10 @@ The public repository is **not the complete private research system**. Some expe
 
 The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are useful as a reproducible comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
-The project owner's private experimental measurements are materially better than this public full-scan baseline, but those measurements and the mechanism behind them are intentionally **not published here yet**. Until their raw evidence and exact reproduction protocol are made public, this repository does not state a multiplier, queries/s figure, or public latency claim for that private path.
+Separate [author-reported GEL component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)
+cover compact-sketch search and phase evolution. Their tasks, sizes and timing
+boundaries differ from Ocean full scans. They do not establish an end-to-end
+advantage over this baseline or a commercial product. Private engines remain private.
 
 ### Public CPU/RAM baseline
 
@@ -107,10 +114,6 @@ An actual pinned Rust Book excerpt → original UTF-8 quote and source SHA256
 Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN.
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
-
-A Rust memory core for an AI knowledge bank: exact binary ORB readout,
-experimental Q8 coordinate views, and source-bound quotations.
-**A verifiable public system — not a complete AI model or the private research system.**
 
 ## New: reproducible Ocean Scale research bundle
 

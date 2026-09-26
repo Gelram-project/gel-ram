@@ -28,6 +28,18 @@ body:
     validations:
       required: true
   - type: textarea
+    id: contract
+    attributes:
+      label: Input and success contract fixed before the test
+      description: Identify public or synthetic input, size, input hash, operation, expected result and accepted error. State cold/warm cache assumptions and build profile. Do not upload private data.
+    validations:
+      required: true
+  - type: textarea
+    id: usability
+    attributes:
+      label: First-run usability and scope
+      description: Optional — time to first correct result, steps that failed, and which behavior you understood as public versus private. Do not count compilation time as retrieval latency.
+  - type: textarea
     id: results
     attributes:
       label: Correctness and complete results
