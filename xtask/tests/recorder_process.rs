@@ -102,3 +102,169 @@ fn main() {
     }
     fs::remove_dir_all(&root).unwrap();
 }
+
+fn fresh_root(label: &str) -> std::path::PathBuf {
+    let root = std::env::temp_dir().join(format!(
+        "gel-recorder-{label}-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir(&root).unwrap();
+    root
+}
+
+fn compiled_recorder(root: &Path) -> std::path::PathBuf {
+    let recorder = root.join(format!("recorder{}", std::env::consts::EXE_SUFFIX));
+    compile(
+        &Path::new(env!("CARGO_MANIFEST_DIR")).join("../tools/record_evidence.rs"),
+        &recorder,
+    );
+    recorder
+}
+
+fn compiled_child(root: &Path, name: &str, source: &str) -> std::path::PathBuf {
+    let path = root.join(format!("{name}.rs"));
+    fs::write(&path, source).unwrap();
+    let binary = root.join(format!("{name}{}", std::env::consts::EXE_SUFFIX));
+    compile(&path, &binary);
+    binary
+}
+
+#[test]
+fn recorder_usage_and_closed_display_fail_closed() {
+    use std::io::Read;
+    use std::process::Stdio;
+    let root = fresh_root("display");
+    let recorder = compiled_recorder(&root);
+    // A wrong command line is refused with exit 2 before any output exists.
+    for (index, args) in [&[][..], &["a", "b"][..], &["a", "--other"][..]]
+        .iter()
+        .enumerate()
+    {
+        let dir = root.join(format!("usage-{index}"));
+        fs::create_dir(&dir).unwrap();
+        let output = Command::new(&recorder)
+            .args(*args)
+            .current_dir(&dir)
+            .output()
+            .unwrap();
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert_eq!(output.status.code(), Some(2), "{args:?}: {stderr}");
+        assert!(stderr.contains("RECORDING_REFUSED: usage"), "{stderr}");
+        assert!(!stderr.contains("panicked"), "{stderr}");
+        assert_eq!(fs::read_dir(&dir).unwrap().count(), 0, "{args:?}");
+    }
+    // The display disappears while the child is alive: controlled failure,
+    // child killed, no completion marker and no command logged.
+    let child = compiled_child(
+        &root,
+        "prompt_wait",
+        "use std::io::{BufRead, Write}; fn main() { print!(\"gel> \"); \
+         std::io::stdout().flush().unwrap(); \
+         for line in std::io::stdin().lock().lines() { if line.is_err() { break; } } }\n",
+    );
+    let dir = root.join("closed-display");
+    fs::create_dir(&dir).unwrap();
+    let mut running = Command::new(&recorder)
+        .arg(&child)
+        .current_dir(&dir)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let mut display = running.stdout.take().unwrap();
+    let mut seen = Vec::new();
+    let mut buf = [0u8; 256];
+    while !seen.windows(5).any(|w| w == b"gel> ") {
+        let n = display.read(&mut buf).unwrap();
+        assert!(n > 0, "recorder ended before the child prompt");
+        seen.extend_from_slice(&buf[..n]);
+    }
+    drop(display);
+    let output = running.wait_with_output().unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(!output.status.success(), "{stderr}");
+    assert!(stderr.contains("RECORDING_FAILED: display I/O"), "{stderr}");
+    assert!(!stderr.contains("panicked"), "{stderr}");
+    assert!(!dir.join("COMPLETE.txt").exists());
+    assert_eq!(fs::read(dir.join("commands.txt")).unwrap(), b"");
+    let status = fs::read_to_string(dir.join("process-1-status.txt")).unwrap();
+    assert!(status.starts_with("FAILED display I/O"), "{status}");
+    // Linux: a full display device fails the first banner write.
+    #[cfg(target_os = "linux")]
+    {
+        let dir = root.join("full-display");
+        fs::create_dir(&dir).unwrap();
+        let output = Command::new(&recorder)
+            .arg(root.join("never-started"))
+            .current_dir(&dir)
+            .stdout(
+                fs::OpenOptions::new()
+                    .write(true)
+                    .open("/dev/full")
+                    .unwrap(),
+            )
+            .output()
+            .unwrap();
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert_eq!(output.status.code(), Some(1), "{stderr}");
+        assert!(stderr.contains("RECORDING_FAILED: display I/O"), "{stderr}");
+        assert!(!stderr.contains("panicked"), "{stderr}");
+        assert!(!dir.join("COMPLETE.txt").exists());
+        assert!(!dir.join("process-1.txt").exists());
+    }
+    fs::remove_dir_all(&root).unwrap();
+}
+
+#[test]
+fn recorder_invalid_emitted_pin_fails_closed() {
+    let root = fresh_root("pin");
+    let recorder = compiled_recorder(&root);
+    // Answers every marker of the default walkthrough, then emits a bad pin.
+    let child = compiled_child(
+        &root,
+        "bad_pin",
+        r#"
+use std::io::{BufRead, Write};
+fn main() {
+    let mut out = std::io::stdout();
+    print!("gel> "); out.flush().unwrap();
+    for line in std::io::stdin().lock().lines() {
+        let line = line.unwrap();
+        let reply = if line.starts_with("add memory") { "ADDED id=1" }
+            else if line.starts_with("add unicode") { "ADDED id=2" }
+            else if line == "find imaginary evidence" { "FIND=UNKNOWN" }
+            else if line.starts_with("find") { "FIND=HIT" }
+            else if line.starts_with("proof") { "CITATION=PASS" }
+            else if line.starts_with("save") { "BUNDLE_SHA256=not-a-64-hex-pin;" }
+            else { "Closed." };
+        println!("{reply}"); print!("gel> "); out.flush().unwrap();
+    }
+}
+"#,
+    );
+    let dir = root.join("run");
+    fs::create_dir(&dir).unwrap();
+    let output = Command::new(&recorder)
+        .arg(&child)
+        .current_dir(&dir)
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(output.status.code(), Some(1), "{stderr}");
+    assert!(
+        stderr.contains("RECORDING_FAILED: invalid emitted pin"),
+        "{stderr}"
+    );
+    assert!(!stderr.contains("panicked"), "{stderr}");
+    assert!(!dir.join("COMPLETE.txt").exists());
+    assert!(!dir.join("process-2.txt").exists());
+    let status = fs::read_to_string(dir.join("process-1-status.txt")).unwrap();
+    assert!(status.starts_with("FAILED invalid emitted pin"), "{status}");
+    let commands = fs::read_to_string(dir.join("commands.txt")).unwrap();
+    assert!(commands.ends_with("save checkpoint.gelset\n"), "{commands}");
+    fs::remove_dir_all(&root).unwrap();
+}

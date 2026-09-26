@@ -46,6 +46,9 @@ pub fn pump(
             if n == 0 {
                 break;
             }
+            let chunk = buf
+                .get(..n)
+                .ok_or_else(|| io::Error::other("read length exceeds buffer"))?;
             {
                 let mut state = shared
                     .lock()
@@ -53,10 +56,10 @@ pub fn pump(
                 if state.bytes.len().saturating_add(n) > LIMIT {
                     return Err(io::Error::other("capture limit"));
                 }
-                log.write_all(&buf[..n])?;
-                state.bytes.extend_from_slice(&buf[..n]);
+                log.write_all(chunk)?;
+                state.bytes.extend_from_slice(chunk);
             }
-            display.write_all(&buf[..n])?;
+            display.write_all(chunk)?;
             display.flush()?;
         }
         log.sync_all()
