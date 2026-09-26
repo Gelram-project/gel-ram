@@ -60,6 +60,6 @@ every platform; non-Unix directory sync is not implemented by this path.
 
 Record manifest, commit if present, rustc host triple, OS, actual test count,
 exit status and complete logs per host. Only then mark that host tested.
-Publication permission is limited to public branch/PR review; merging and
-release are not approved. See CANDIDATE-STATUS.md for the current scope.
+Publication and main integration after checks are approved; a final release
+is not approved. See CANDIDATE-STATUS.md for the current scope.
 External independent evaluation of answers is another separate gate.

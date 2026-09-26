@@ -1,19 +1,19 @@
-# GEL RAM Evidence Lab — public PR candidate
+# GEL RAM Evidence Lab — public integration candidate
 
-Updated 2026-09-26. Public branch and PR scope only. Originally prepared from published commit
+Updated 2026-09-26. Public integration approved. Originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
 `main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
-The owner authorized publication of the reviewed source on a public branch and
-opening a PR. This does not authorize merging, a final tag or a release.
+The owner authorized publication of the reviewed source and merging PR #9 into
+main after successful checks. A final tag and release are not authorized.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
 REVIEW_PUBLICATION_APPROVED=YES
 PUBLICATION_APPROVED=YES
-PUBLICATION_SCOPE=PUBLIC_BRANCH_AND_PR_ONLY
-MERGE_APPROVED=NO
+PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
+MERGE_APPROVED=YES
 RELEASE_APPROVED=NO
-SNAPSHOT_KIND=PUBLIC_PR_CANDIDATE
+SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD

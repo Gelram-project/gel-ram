@@ -1,7 +1,7 @@
 # v0.4.0 candidate — Evidence Lab
 
 Local workspace version: **0.4.0-rc.1**. Target: v0.4.0.
-Approved for public branch/PR review only; not approved for merging or release.
+Approved for public main integration after checks; not approved for a final release.
 
 ## New relative to reviewed public main
 
@@ -37,6 +37,6 @@ results, pending platform checks and publication gates are recorded separately.
 No semantic chatbot, encrypted private vault, private speaker, physical DRAM
 synchronization or fourfold independent information capacity is claimed.
 
-PUBLICATION_APPROVED=YES (public branch and PR only)
+PUBLICATION_APPROVED=YES (public main integration)
 TAG_CREATED=NO
 RELEASE_CREATED=NO

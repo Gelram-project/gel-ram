@@ -1,7 +1,7 @@
 # Evidence Lab — public PR candidate
 
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
-The owner authorized public branch and PR review, without merging or release. The workspace is now
+The owner authorized public main integration after checks, without a final release. The workspace is now
 `0.4.0-rc.1`; no tag or release was created. Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
