@@ -6,6 +6,17 @@ body:
     attributes:
       value: |
         Independent reproductions are especially valuable. Please report the exact revision and all relevant results, including slow or failing runs. Do not include private GEL data or unpublished private mechanisms.
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Who ran this test?
+      description: Tests by the project author or affiliated contributors are useful, but they are not independent reproductions.
+      options:
+        - Independent — no involvement in GEL RAM development
+        - Contributor or otherwise affiliated with the project
+        - Project author or maintainer
+    validations:
+      required: true
   - type: input
     id: revision
     attributes:
@@ -47,6 +58,12 @@ body:
       render: text
     validations:
       required: true
+  - type: textarea
+    id: hashes
+    attributes:
+      label: Output and log hashes
+      description: SHA256 of the input files, the complete output/log files and any generated report (for example the xtask ci-evidence SHA256SUMS.txt). A hash identifies bytes; it does not authenticate the tester or prove correctness.
+      render: text
   - type: checkboxes
     id: scope
     attributes:
