@@ -15,6 +15,7 @@ recorded provenance; do not assign today's commit to historical recordings.
 Subsequent recorder/context fixes have not silently replaced these films.
 
 [Detailed annotated preview guide](FILMS-GUIDE.md) ·
+[Descriptive transcripts with timelines — PL / EN](TRANSCRIPTS-PL-EN.md) ·
 [Full decode checks and remaining visual-review limitations](../docs/MEDIA-DECODE-REVIEW.md).
 
 ## Polski — co pokazują filmy
@@ -25,5 +26,6 @@ swobodna rozmowa AI. Dwa pozostałe filmy pokazują prywatną aplikację i ogran
 scenariusze rozmowy. Ich silnika ani banku nie ma w publicznym repozytorium.
 Nie porównujemy czasów tych filmów z pełnym skanem milionów ORB.
 
-Pełne transkrypcje PL/EN i kontrola czytelności całych nagrań nadal wymagają
-osobnego przeglądu; ta karta nie jest jego zamiennikiem.
+[Transkrypcje opisowe PL/EN](TRANSCRIPTS-PL-EN.md) zawierają polecenia,
+odpowiedzi i orientacyjne momenty filmu. Pełna kontrola wizualna wszystkich
+klatek oraz czytelności na małym ekranie pozostaje otwarta.
