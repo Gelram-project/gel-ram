@@ -3,6 +3,7 @@ mod ci_evidence;
 mod claims;
 mod license_metadata;
 mod measured_sources;
+mod process_sequence;
 #[cfg(test)]
 mod publication_status_tests;
 mod reproduce;
@@ -117,7 +118,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|test|bench|physics";
+    "verify|report|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -682,16 +683,39 @@ fn cla_ack() -> Result<(), String> {
 }
 
 fn run(program: &str, args: &[&str]) -> Result<(), String> {
-    let status = Command::new(program)
-        .args(args)
-        .current_dir(workspace_root()?)
-        .status()
-        .map_err(|e| e.to_string())?;
-    if status.success() {
-        Ok(())
-    } else {
-        Err(format!("{program} failed: {status}"))
+    let mut command = Command::new(program);
+    command.args(args).current_dir(workspace_root()?);
+    process_sequence::sequence(&mut [command])
+}
+
+fn runtime_examples() -> Result<(), String> {
+    let root = workspace_root()?;
+    let specs: &[&[&str]] = &[
+        &["-p", "gel-source", "--example", "source_build"],
+        &["-p", "gel-live-lab", "--", "--demo"],
+        &[
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
+            "--",
+            "--demo",
+        ],
+        &["-p", "gel-cli", "--example", "quantization_matrix"],
+        &["-p", "gel-source", "--example", "collection_review"],
+    ];
+    let mut commands = Vec::new();
+    for spec in specs {
+        let mut command = Command::new("cargo");
+        command
+            .args(["run", "--locked", "--offline", "--release"])
+            .args(*spec)
+            .current_dir(root);
+        commands.push(command);
     }
+    process_sequence::sequence(&mut commands)?;
+    println!("RUNTIME_EXAMPLES=PASS");
+    Ok(())
 }
 
 fn run_docs() -> Result<(), String> {
@@ -878,6 +902,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("report") => reproduce::report(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
+        Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("rust-only") => rust_only(),

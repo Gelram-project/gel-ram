@@ -80,16 +80,8 @@ jobs:
         run: cargo run --locked --offline -p gel-source --example source_real
       - name: Pinned document phrase readout runtime demo
         run: cargo run --locked --offline -p gel-source --example source_find
-      - name: Source writer runtime demo
-        run: cargo run --locked --offline --release -p gel-source --example source_build
-      - name: Live laboratory runtime demo
-        run: cargo run --locked --offline --release -p gel-live-lab -- --demo
-      - name: Evidence laboratory runtime demo
-        run: cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
-      - name: Quantization reference matrix
-        run: cargo run --locked --offline --release -p gel-cli --example quantization_matrix
-      - name: Collection review
-        run: cargo run --locked --offline --release -p gel-source --example collection_review
+      - name: Checked native runtime sequence (fail fast)
+        run: cargo run --locked --offline -p xtask -- runtime-examples
       - name: Recheck published collection measurements
         run: cargo run --locked --offline --release -p gel-source --example collection_recheck -- docs/evidence-collection/r1
       - name: Workspace documentation tests

@@ -44,6 +44,26 @@ No untrusted output is interpreted as a command. A successful process exit is
 mandatory; a printed PASS cannot replace it. Checksums provide byte identity,
 not author authentication or proof of truth. Failure prevents COMPLETE.
 
+## Native command sequencing
+
+The portable workflow runs its five release demonstrations through the Rust
+command below. Each native ExitStatus is checked before starting the next
+command; neither PowerShell's final exit status nor a printed PASS substitutes
+for that check. The same process runner is used by ordinary xtask commands.
+
+```sh
+cargo run --locked --offline -p xtask -- runtime-examples
+```
+
+[Process tests](../xtask/tests/process_sequence.rs) compile a tiny native child
+which appends an execution trace and deliberately prints PASS even when exiting
+with an error. First-failure and middle-failure cases require a stopped trace;
+the all-success control requires all three executions. A missing executable is
+also rejected. These tests are part of workspace tests on all three platforms.
+Their Linux result does not establish Windows execution until that revision's
+Windows CI completes. The successful control still runs each real demonstration
+in release; this helper does not replace them with fixtures in production CI.
+
 ## Zero-cost publication policy
 
 This command never uploads anything. CI prints the sanitized projection between
