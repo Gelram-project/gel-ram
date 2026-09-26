@@ -1,5 +1,8 @@
 # v0.4.0 candidate — Evidence Lab
 
+Historical candidate notes, kept as written for rc.1. The final notes are
+[RELEASE-NOTES-v0.4.0.md](RELEASE-NOTES-v0.4.0.md).
+
 Workspace version: **0.4.0-rc.1** (public main since PR #9). Target: v0.4.0.
 Approved for public main integration after checks; not approved for a final release.
 
@@ -20,8 +23,8 @@ These rc.1 additions were merged into public main through PR #9 (71142a2).
 
 ## Review repairs in PR #10
 
-These review repairs come from PR #10. They are part of main only after that PR
-is merged (see its GitHub page); they are not part of the rc.1 content of PR #9:
+These review repairs come from PR #10, merged into main as 0c17f6e after these
+notes were written; they are not part of the rc.1 content of PR #9:
 
 - Public F32/F16/affine Q1–Q16 [precision matrix](docs/PRECISION-MATRIX.md)
   (GPMX v1 example container); the private codec is not implemented.

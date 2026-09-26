@@ -2,9 +2,9 @@
 
 **Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
-> PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
-> Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
-> [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
+> Workspace: **0.4.0** — Evidence Lab and the review repairs are on main.
+> [Release notes](RELEASE-NOTES-v0.4.0.md) · [scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md) ·
+> [tagged releases](https://github.com/Gelram-project/gel-ram/releases). Earlier films remain historical.
 
 ## Evidence Lab: your documents, exact citations, a real restart
 
@@ -152,11 +152,10 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions. Evidence Lab (workspace 0.4.0-rc.1) has been on public main since
-[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) was merged as 71142a2;
-no v0.4.0 tag or release exists. The review repairs in
-[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) are part of main once
-that PR is merged; its GitHub page shows the current state. No model or private bank is needed.
+instructions. Evidence Lab has been on public main since
+[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) (71142a2) and the review
+repairs since [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) (0c17f6e);
+the workspace version is 0.4.0. No model or private bank is needed.
 
 ### Change the numeric input
 

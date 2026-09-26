@@ -32,7 +32,7 @@ and Unix permission checks. They are not counted as Windows passes; later
 revisions declare and check each one in the [CI evidence report](CI-EVIDENCE.md). Ocean's
 Linux-specific mapping/persistence remains Linux-specific. This table records
 the linked revision, not an unqualified guarantee of compatibility.
-For later revisions, inspect the checks of the PR that contains them (currently [PR #10](https://github.com/Gelram-project/gel-ram/pull/10/checks)) and its CI evidence report.
+For later revisions, inspect the checks of the PR or push run that tested them and the [recorded CI evidence](evidence-ci/README.md).
 
 ## Same source and toolchain on every host
 

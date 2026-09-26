@@ -1,11 +1,12 @@
-# GEL RAM Evidence Lab — public integration candidate
+# GEL RAM 0.4.0 — publication and release status
 
-Updated 2026-09-26. Originally prepared from published commit
-`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; merged into public `main` through
-PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92` after successful checks,
-with the owner's authorization. PR #10 carries the review repairs; its merge
-requires a separate owner decision and is shown on its GitHub page.
-A final tag and release are not authorized.
+Updated 2026-09-26. Evidence Lab, originally prepared from published commit
+`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`, was merged into public `main` through
+PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`; the review repairs followed
+through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`. Both merges passed
+the required checks and were authorized by the owner. The version line is now
+0.4.0. A v0.4.0 GitHub release is prepared as a draft; publishing it is the
+owner's release decision.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -13,9 +14,9 @@ REVIEW_PUBLICATION_APPROVED=YES
 PUBLICATION_APPROVED=YES
 PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
-MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2
-RELEASE_APPROVED=NO
-SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
+MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2,PR_10_MERGED_AS_0C17F6E
+RELEASE_APPROVED=DRAFT_ONLY
+SNAPSHOT_KIND=VERSION_CUTOVER_0_4_0
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
@@ -24,9 +25,9 @@ CURRENT_TEST_COUNTS=SEE_PER_PLATFORM_CI_EVIDENCE_REPORT
 BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
-VERSION_LINE=0.4.0-rc.1
+VERSION_LINE=0.4.0
 TARGET_RELEASE=0.4.0
-V0_4_0_TAGGED_RELEASE=NOT_CREATED
+V0_4_0_TAGGED_RELEASE=DRAFT_PREPARED_NOT_PUBLISHED
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
 CI_REQUIRED_FOR_VERSION_CUTOVER=YES
@@ -35,18 +36,22 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version identifies the `0.4.0-rc.1` candidate on public main.
-The v0.3.0 fields above describe the historical release, not approval of this
-candidate. No v0.4.0 tag or release is authorized by this approval.
-See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
+The workspace version is 0.4.0. `RELEASE_APPROVED=DRAFT_ONLY` means a draft
+GitHub release exists for owner review; the v0.4.0 tag is created only when the
+owner publishes that draft. This file records the state at the cutover commit;
+the [Releases page](https://github.com/Gelram-project/gel-ram/releases) shows
+whether the draft has since been published. The v0.3.0 fields describe the
+historical release. See the [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md) and
+the historical [candidate notes](RELEASE-NOTES-v0.4.0-RC.md).
 
 Technical checks accept a pending candidate and report its approval status
 without changing it. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
 Previous Linux, Windows and macOS CI results do not validate these changes.
 Native CI evidence for the PR #9 head is pinned by SHA in
-[the platform record](docs/PLATFORM-REVIEW.md); PR #10 revisions are evidenced
-by the per-platform [CI evidence report](docs/CI-EVIDENCE.md) of their exact run. The LOCAL_VALIDATION fields
+[the platform record](docs/PLATFORM-REVIEW.md); later revisions are evidenced
+by the per-platform [CI evidence report](docs/CI-EVIDENCE.md) of their exact run
+([recorded reports](docs/evidence-ci/README.md)). The LOCAL_VALIDATION fields
 above describe local validation, not remote CI results.
 Standard public-repository CI is authorized for the branch/PR; execution results
 must be checked separately. Only free standard runners are in scope.
@@ -63,7 +68,7 @@ Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
 
-## Review repairs in PR #10 (not released)
+## Review repairs in PR #10 (merged as 0c17f6e)
 
 An external review of `71142a2` listed 24 points. PR #10 addresses them in
 small commits, each with local verification and platform CI. Main additions:

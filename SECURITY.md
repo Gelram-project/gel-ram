@@ -2,7 +2,7 @@
 
 ## Fix policy
 
-Fixes, when made, land only on current public `main` (version line 0.4.0-rc.1); the tagged v0.3.0 release point is immutable and is not patched in place. No fix, response time or support is promised.
+Fixes, when made, land only on current public `main` (version line 0.4.0); the tagged v0.3.0 release point is immutable and is not patched in place. No fix, response time or support is promised.
 
 ## Attack surface
 
