@@ -6,7 +6,7 @@
 > Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 > [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
 
-## New candidate: your documents, exact citations, a real restart
+## Evidence Lab: your documents, exact citations, a real restart
 
 [Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
@@ -85,7 +85,7 @@ Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
-[![Private application preview: 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
+[![Public Evidence Lab walkthrough: add, cite, save, restart and reload a pinned snapshot](media/evidence-lab/02-reopened-56s.png)](media/GEL-EVIDENCE-LAB-EN.mp4)
 
 ▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
 
@@ -109,7 +109,7 @@ four views. Saved source bundles are plaintext, not an encrypted private vault.
 The two private-preview films show a different, private application; the
 Evidence Lab film shows the public gel-evidence tool, not this Live Lab.
 
-## Try the new document readout
+## Try the document readout
 
 ```text
 cargo run --locked --offline -p gel-source --example source_find -- "garbage collection"
@@ -121,7 +121,7 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-## New: reproducible Ocean Scale research bundle
+## Reproducible Ocean Scale research bundle
 
 [Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
 or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
@@ -155,8 +155,8 @@ Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
 instructions. Evidence Lab (workspace 0.4.0-rc.1) has been on public main since
 [PR #9](https://github.com/Gelram-project/gel-ram/pull/9) was merged as 71142a2;
 no v0.4.0 tag or release exists. The review repairs in
-[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) exist only on its
-branch until that PR is merged. No model or private bank is needed.
+[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) are part of main once
+that PR is merged; its GitHub page shows the current state. No model or private bank is needed.
 
 ### Change the numeric input
 

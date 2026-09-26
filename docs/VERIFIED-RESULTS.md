@@ -20,8 +20,8 @@ retains its own license terms.
 | Ocean Scale R3 | Public 1M/10M synthetic numerical source/evidence archive with raw measurements and independent verifier | CPU/RAM full-scan baseline, not the private execution path |
 | Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only Ocean persistence/mapping research is not claimed portable |
 | Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or private vault |
-| Precision matrix (PR #10, not merged) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec or Q2.5; timing not measured |
-| Publication faults (PR #10, not merged) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
+| Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec or Q2.5; timing not measured |
+| Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
 
 ## Published Ocean full-scan baseline
 

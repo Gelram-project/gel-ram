@@ -3,7 +3,8 @@
 Updated 2026-09-26. Originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; merged into public `main` through
 PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92` after successful checks,
-with the owner's authorization. PR #10 (review repairs) is open and not merged.
+with the owner's authorization. PR #10 carries the review repairs; its merge
+requires a separate owner decision and is shown on its GitHub page.
 A final tag and release are not authorized.
 Public pseudonym: **RR — GEL RAM Project**.
 
@@ -13,7 +14,6 @@ PUBLICATION_APPROVED=YES
 PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
 MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2
-PR_10_MERGED=NO
 RELEASE_APPROVED=NO
 SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
@@ -35,7 +35,7 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version now identifies the local `0.4.0-rc.1` candidate.
+The workspace version identifies the `0.4.0-rc.1` candidate on public main.
 The v0.3.0 fields above describe the historical release, not approval of this
 candidate. No v0.4.0 tag or release is authorized by this approval.
 See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
@@ -63,7 +63,7 @@ Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
 
-## Review repairs in PR #10 (not merged, not released)
+## Review repairs in PR #10 (not released)
 
 An external review of `71142a2` listed 24 points. PR #10 addresses them in
 small commits, each with local verification and platform CI. Main additions:

@@ -1,6 +1,6 @@
 # Check the Evidence Lab candidate (0.4.0-rc.1) yourself
 
-Run these commands from a current main checkout or the PR #10 branch, not from
+Run these commands from a current main checkout (or a PR branch under review), not from
 the older v0.3.0 tag. Evidence Lab is merged into public main (PR #9); v0.4.0
 has not been released.
 Rust 1.85.0 and cached locked dependencies are prerequisites. Initial toolchain

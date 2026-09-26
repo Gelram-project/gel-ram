@@ -277,7 +277,11 @@ fn run() -> Result<(), String> {
     );
     println!("execution_reported_scans={}", executions.len());
     println!("execution_scope=warmup+timed+threaded_null_check_if_requested");
-    println!("execution_reports={executions:?}");
+    // One key=value token: the Debug text without spaces.
+    println!(
+        "execution_reports={}",
+        format!("{executions:?}").replace(' ', "")
+    );
     println!(
         "fallback_scans={}",
         executions.iter().filter(|r| r.fallback.is_some()).count()

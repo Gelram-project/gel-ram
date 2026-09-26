@@ -40,7 +40,7 @@ A release candidate is green only when all applicable gates pass on the same sou
 
 Performance results are evidence, not correctness substitutes.
 
-## Additional Q8 preview checks on main
+## Additional Q8 checks on main
 
 - Shared scores agree with equivalent materialized views, including mask
   semantics and reversible transforms; these are not semantic-retrieval tests.
@@ -53,7 +53,8 @@ Performance results are evidence, not correctness substitutes.
   OS-refusal probe and a 16-cell post-fix correctness matrix. That probe is
   not an automatic cross-platform CI gate or general OOM/panic certification.
 
-Historical V1 timing results remain frozen. Any new V2 performance claim
+Historical V1 and V2 timing results remain frozen under their own headers.
+Any new performance claim for the current V3 comparison
 requires new timing evidence with effective budgets and fallback counts.
 macOS/Windows CI executes workspace tests, documentation tests, the fail-fast
 runtime demonstrations and the independent integrity audit; the full `verify`

@@ -74,4 +74,5 @@ They do not authenticate payloads or metadata: a relabelled malicious view may
 still restore different data. Use trusted manifests/signatures at trust boundaries.
 Legacy low-level Grid/View APIs remain available and are not automatically guarded.
 The numeric fixture tool reads bounded data, never evaluates it, and has no network
-or model integration. See [candidate scope](docs/Q8-EVIDENCE-CANDIDATE.md).
+or model integration. See the [Q8 module scope](docs/Q8-QUAD.md) and the
+[historical candidate record](docs/Q8-EVIDENCE-CANDIDATE.md).

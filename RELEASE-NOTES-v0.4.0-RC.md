@@ -1,6 +1,6 @@
 # v0.4.0 candidate — Evidence Lab
 
-Local workspace version: **0.4.0-rc.1**. Target: v0.4.0.
+Workspace version: **0.4.0-rc.1** (public main since PR #9). Target: v0.4.0.
 Approved for public main integration after checks; not approved for a final release.
 
 ## New relative to reviewed public main
@@ -18,10 +18,10 @@ Public baseline: `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
 [Full scope](RELEASE-NOTES-EVIDENCE-LAB.md) · [Quickcheck](docs/CANDIDATE-QUICKCHECK.md).
 These rc.1 additions were merged into public main through PR #9 (71142a2).
 
-## Pending in PR #10 (not merged)
+## Review repairs in PR #10
 
-These review repairs exist only on the PR #10 branch. None of them is part of
-0.4.0-rc.1 on main unless that PR is merged:
+These review repairs come from PR #10. They are part of main only after that PR
+is merged (see its GitHub page); they are not part of the rc.1 content of PR #9:
 
 - Public F32/F16/affine Q1–Q16 [precision matrix](docs/PRECISION-MATRIX.md)
   (GPMX v1 example container); the private Q2.5 codec is not implemented.

@@ -109,10 +109,10 @@ physical analog RAM mechanism, macOS/Windows runtime or GPU result is claimed.
 - Source changes originate in the private master, with an explicit export
   mapping; ranking, selection, private banks, evidence/mouth adapters and models
   are not part of this export.
-- The original051 snapshot stopped full verify at pending license confirmation.
+- The original 051 snapshot stopped full verify at pending license confirmation.
   The author subsequently confirmed the public PolyForm license. The licensing
-  check remains enabled. The subsequent052 full-gate rerun passed on Rust1.85.0
-  (`GEL_VERIFY_ALL=PASS`), as did103 release test executions and the independent
-  data-integrity example. All11 workspace packages resolve to PolyForm
+  check remains enabled. The subsequent 052 full-gate rerun passed on Rust 1.85.0
+  (`GEL_VERIFY_ALL=PASS`), as did 103 release test executions and the independent
+  data-integrity example. All 11 workspace packages resolve to PolyForm
   Noncommercial1.0.0 in Cargo metadata. These checks are separate from the
-  unchanged051 benchmark. A new release has not been issued.
+  unchanged 051 benchmark. A new release has not been issued.

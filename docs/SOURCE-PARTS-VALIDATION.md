@@ -8,14 +8,14 @@ are not the current total number of workspace or example tests.
 2026-09-12. Local Linux, Rust1.85.0. Unreleased candidate based on public
 commit `82a7e5d6a48109d091113661b69be0a8ef1dccdd`.
 
--23 source tests pass:11 new multipart tests and12 existing catalog tests.
+-23 source tests pass: 11 new multipart tests and 12 existing catalog tests.
 -Full workspace `xtask verify` passes, including formatting, Clippy, tests
   and runtime demos. Multipart demo ends with `SOURCE_PARTS_E2E=PASS`.
 -Tests include PL/EN Unicode, reordered roles/offsets, duplicates, mixed
   layouts, missing/ambiguous titles, malformed/overflow numbers, missing
   initial/internal/final parts, changed pins and cross-generation passages.
 -Overlapping catalog ranges cannot expand the returned quote bytes beyond
-  the64MiB output budget. This is not a total process memory bound.
+  the 64 MiB output budget. This is not a total process memory bound.
 -No dependencies added; Cargo.lock unchanged. Known-advisory audit reports
   no vulnerabilities or warnings against database commit
   `b50980aad8b8f14f77e25a97b32dd94bf008b0af` (2026-09-09).

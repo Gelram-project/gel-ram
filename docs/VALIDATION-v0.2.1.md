@@ -24,8 +24,8 @@ encoder, a compression breakthrough, or proof of 99% knowledge retrieval.
 
 Finite tests establish results for those inputs, not universal or physical
 fault guarantees. Linux was tested locally. Subsequent publication check:
-[PR #3](https://github.com/gelramlicensing-wq/gel-ram/pull/3) merged the implementation
-as 95c7dab. Its [post-merge CI](https://github.com/gelramlicensing-wq/gel-ram/actions/runs/34032946492)
+PR #3 of the earlier, now non-public repository merged the implementation
+as 95c7dab. Its post-merge CI (run 34032946492 there)
 passed Linux verification and the synthetic integrity audit, plus fresh
 Windows/macOS compilation checks. The latter do not establish runtime test
 coverage on Windows/macOS. The local measurements below are unchanged.

@@ -12,8 +12,8 @@ private performance work are intentionally outside this document.
   exact source quotations, Unicode/CR regressions and runtime CI on three OSes.
 - [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
   in PR #5. [Evidence Lab](EVIDENCE-LAB.md) was merged into main through
-  PR #9 (71142a2, workspace 0.4.0-rc.1). PR #10 review repairs are not merged,
-  and no v0.4.0 tag or release exists ([status](../CANDIDATE-STATUS.md)).
+  PR #9 (71142a2, workspace 0.4.0-rc.1). The PR #10 review repairs follow it;
+  no v0.4.0 tag or release exists ([status](../CANDIDATE-STATUS.md)).
 ## Public main — already delivered
 
 The following capabilities are present on public `main`:

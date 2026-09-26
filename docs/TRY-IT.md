@@ -52,6 +52,20 @@ want to verify a fresh-process reopen.
 
 See [Live Lab](LIVE-LAB.md).
 
+### 2a. Evidence Lab: several documents, citations and a restart
+
+```text
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
+```
+
+The first command runs a scripted demonstration and must end with
+`GEL_EVIDENCE_DEMO=PASS`. The second is interactive: `add PATH` for each UTF-8
+file, then `find PHRASE`, `proof 1`, `save NEW_PATH`, exit, and reopen with
+`load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate earlier results.
+This is phrase retrieval from plaintext sources, not a chatbot.
+See [Evidence Lab](EVIDENCE-LAB.md) and the [public walkthrough film](../media/GEL-EVIDENCE-LAB-EN.mp4).
+
 ## 3. Reproduce exact document readout
 
 ```text
