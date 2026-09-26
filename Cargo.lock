@@ -48,7 +48,7 @@ dependencies = [
 
 [[package]]
 name = "gel-bench"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-kernel",
@@ -58,7 +58,7 @@ dependencies = [
 
 [[package]]
 name = "gel-cli"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -69,11 +69,11 @@ dependencies = [
 
 [[package]]
 name = "gel-core"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 
 [[package]]
 name = "gel-kernel"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -81,7 +81,7 @@ dependencies = [
 
 [[package]]
 name = "gel-live-lab"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-phase-quad",
  "gel-source",
@@ -89,25 +89,25 @@ dependencies = [
 
 [[package]]
 name = "gel-orb"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
 ]
 
 [[package]]
 name = "gel-phase-quad"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 
 [[package]]
 name = "gel-physics"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
 ]
 
 [[package]]
 name = "gel-reader"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-kernel",
@@ -116,7 +116,7 @@ dependencies = [
 
 [[package]]
 name = "gel-source"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "sha2",
  "unicode-normalization",
@@ -124,7 +124,7 @@ dependencies = [
 
 [[package]]
 name = "gel-store"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "gel-structural"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -194,7 +194,7 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "xtask"
-version = "0.3.0"
+version = "0.4.0-rc.1"
 dependencies = [
  "gel-core",
  "gel-source",

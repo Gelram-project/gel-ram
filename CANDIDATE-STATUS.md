@@ -16,7 +16,9 @@ CURRENT_LINUX_WORKSPACE_TESTS=305_PASS
 BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
-VERSION_LINE=0.3.0
+VERSION_LINE=0.4.0-rc.1
+TARGET_RELEASE=0.4.0
+V0_4_0_TAGGED_RELEASE=NOT_CREATED
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
 CI_REQUIRED_FOR_VERSION_CUTOVER=YES
@@ -24,6 +26,11 @@ LEGAL_APPROVED=NO
 PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
+
+The workspace version now identifies the local `0.4.0-rc.1` candidate.
+The v0.3.0 fields above describe the historical release, not approval of this
+candidate. No v0.4.0 tag, release or publication has been created.
+See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 
 Technical checks accept a pending candidate and report its approval status
 without changing it. A successful verification never supplies publication permission.

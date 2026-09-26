@@ -1,7 +1,8 @@
 # Evidence Lab — unpublished local candidate
 
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
-No permission to publish this candidate. No version/tag change. Root licensing
+No permission to publish this candidate. The local workspace is now
+`0.4.0-rc.1`; no tag or release was created. Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
 Local integration review also includes public documentation updates through

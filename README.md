@@ -3,6 +3,7 @@
 **Experimental Rust research into RAM-resident knowledge, exact source-bound readout, reproducible evidence, and memory architectures that do not treat a full CPU scan as the final design.**
 
 > LOCAL REVIEW CANDIDATE — not published or approved for publication.
+> Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 > [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
 
 ## New candidate: your documents, exact citations, a real restart
@@ -142,7 +143,8 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions for the current v0.3.0 line. No model or private bank is needed.
+instructions; this checkout additionally contains the unpublished v0.4.0 candidate.
+Cloning public main does not obtain the unpublished additions. No model or private bank is needed.
 
 ### Change the numeric input
 
