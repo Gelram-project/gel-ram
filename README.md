@@ -13,14 +13,19 @@
 [Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
 [per-revision CI evidence](docs/CI-EVIDENCE.md).
 
-First install the pinned Rust 1.85.0 toolchain and run `cargo fetch --locked`
-with network access. The command below then runs offline with cached dependencies:
+Try it in a few minutes. You need Git and [rustup](https://rustup.rs); the first
+three commands need network access, the last one runs offline:
 
 ```sh
-cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
+git clone https://github.com/Gelram-project/gel-ram.git && cd gel-ram
+rustup toolchain install 1.85.0 --profile minimal
+cargo fetch --locked
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
 ```
 
-Type `add PATH` for each UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
+The scripted demonstration ends with `GEL_EVIDENCE_DEMO=PASS`. Run the same
+command without `-- --demo` for the interactive prompt: type `add PATH` for each
+UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
 Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
 `load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate previous results.
 No text crosses document boundaries. Nothing is uploaded or automatically saved.
@@ -28,13 +33,14 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 [Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
 This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
-**Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
+**Verify it yourself:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
 See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
 for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
 
-The tagged `v0.3.0` release remains an immutable historical release point.
-Current-main capabilities and candidate checks are not automatically part of
-that tag. See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
+This tree is the 0.4.0 version line ([release notes](RELEASE-NOTES-v0.4.0.md));
+tagged releases are listed on the [Releases page](https://github.com/Gelram-project/gel-ram/releases),
+and the earlier `v0.3.0` release is unchanged. See [codec boundaries](docs/CODEC-SCOPE.md)
+before interpreting Q labels.
 
 ## What GEL RAM is
 
@@ -42,7 +48,7 @@ GEL RAM is an independent experimental memory/readout project written in Rust. T
 
 The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
 
-## Previously published capabilities
+## What is publicly available
 
 | Capability | Public status |
 |---|---|

@@ -106,13 +106,13 @@ Try:
 phase 128
 mask 3
 noise 100
-view 3
 show
 quit
 ```
 
 Four reversible coordinate views describe one stored carrier. They do not create
-four independent memories.
+four independent memories. To highlight one view row, use `view 0..3` inside
+[Live Lab](LIVE-LAB.md); the playground has no view command.
 
 ## 6. Verify the Ocean Scale R3 research package
 

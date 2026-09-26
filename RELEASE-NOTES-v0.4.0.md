@@ -1,6 +1,12 @@
-# GEL RAM v0.4.0 — Evidence Lab and review repairs
+# GEL RAM v0.4.0 — Evidence Lab
 
 Date: 2026-09-26
+
+Load several UTF-8 documents, find exact quotations with byte ranges and SHA-256
+proofs, reject stale citations, save a snapshot and reopen it in a new process —
+offline, in Rust, without an LLM. After the setup below, try:
+`cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`
+(expected last marker: `GEL_EVIDENCE_DEMO=PASS`).
 
 v0.4.0 is the first tagged release after v0.3.0. It collects everything merged
 into public `main` since then: document readout, Live Lab, the Evidence Lab
@@ -75,7 +81,7 @@ and public execution-identity evidence remain open. See the
 ## Not claimed
 
 No semantic chatbot, general AI, unrestricted question answering, private
-engine or bank, encrypted private vault, physical DRAM-refresh computation,
+engine or bank, encrypted private vault, hardware-level memory computation,
 fourfold independent capacity from coordinate views or commercial superiority
 is claimed. Earlier films and measurements keep their original revision labels.
 

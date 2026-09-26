@@ -13,6 +13,10 @@ multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
 snapshots, and 1M/10M synthetic Ocean evidence. The complete private research system is larger
 and is intentionally not described here.
 
+Fastest try, after the setup in [TRY-IT](TRY-IT.md):
+`cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`
+(expected last marker: `GEL_EVIDENCE_DEMO=PASS`).
+
 ## Five useful entry points
 
 1. **See what exists:** [README](../README.md)

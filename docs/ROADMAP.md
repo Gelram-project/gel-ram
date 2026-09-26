@@ -5,7 +5,8 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- Tagged `v0.3.0` remains an immutable earlier release.
+- The 0.4.0 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.3.0` remains an earlier release.
 - Ocean Scale R3 is on `main`: numerical 1M/10M evidence, bounded offline
   verification and Linux-only research persistence/mapping. See [scope](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -69,6 +70,8 @@ identify its independent operator rather than invent one.
 
 ## Review work list and next acceptance
 
+Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
+
 | ID | State | Work and next acceptance condition | Evidence / entry point |
 |---|---|---|---|
 | A01 | DONE_SCOPED | Historical source/lockfile mapping and a public R1 reproduction procedure exist; old hashes are kept and both positive and changed-source checks pass. | [Measured-source guide](evidence-collection/README.md) |
@@ -94,7 +97,7 @@ identify its independent operator rather than invent one.
 | A21 | PARTIAL | Scoped author-reported component measurements are published. An identical-task, end-to-end comparison with the exact baseline remains open. | [Component scope](GEL-EXPERIMENTAL-MEASUREMENTS.md) |
 | A22 | OPEN | Implement a public execution-identity gate only within approved disclosure scope. Substituting the full-scan baseline must fail that gate even when results match. | [Baseline boundaries](OCEAN-SCALE.md), [claims](CLAIMS.md) |
 | A23 | OPEN | Adaptive precision needs a declared error budget, independent oracle, full metadata costs and stable task decisions, including weak-signal failures. | [Codec scope](CODEC-SCOPE.md) |
-| A24 | DONE_SCOPED | PR #10 was built in small commits, each with the source manifest, full verify and a leak scan; later PRs follow the same practice. A green job implies no merge, release or disclosure. | [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) |
+| A24 | DONE_SCOPED | PR #10 was built in small commits, each with the source manifest, full verify and a leak scan; later PRs follow the same practice. A green job alone does not authorize a merge, release or disclosure. | [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) |
 
 ## Execution order and dependencies
 

@@ -5,8 +5,8 @@ Updated 2026-09-26. Evidence Lab, originally prepared from published commit
 PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`; the review repairs followed
 through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`. Both merges passed
 the required checks and were authorized by the owner. The version line is now
-0.4.0. A v0.4.0 GitHub release is prepared as a draft; publishing it is the
-owner's release decision.
+0.4.0. The owner publishes the v0.4.0 GitHub Release from the merge commit of
+this version cutover; the Releases page shows whether that has happened.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -15,7 +15,7 @@ PUBLICATION_APPROVED=YES
 PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
 MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2,PR_10_MERGED_AS_0C17F6E
-RELEASE_APPROVED=DRAFT_ONLY
+RELEASE_APPROVED=BY_OWNER_PUBLICATION
 SNAPSHOT_KIND=VERSION_CUTOVER_0_4_0
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
@@ -27,7 +27,7 @@ ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
 VERSION_LINE=0.4.0
 TARGET_RELEASE=0.4.0
-V0_4_0_TAGGED_RELEASE=DRAFT_PREPARED_NOT_PUBLISHED
+V0_4_0_TAGGED_RELEASE=SEE_RELEASES_PAGE
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
 CI_REQUIRED_FOR_VERSION_CUTOVER=YES
@@ -36,16 +36,16 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version is 0.4.0. `RELEASE_APPROVED=DRAFT_ONLY` means a draft
-GitHub release exists for owner review; the v0.4.0 tag is created only when the
-owner publishes that draft. This file records the state at the cutover commit;
-the [Releases page](https://github.com/Gelram-project/gel-ram/releases) shows
-whether the draft has since been published. The v0.3.0 fields describe the
-historical release. See the [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md) and
-the historical [candidate notes](RELEASE-NOTES-v0.4.0-RC.md).
+The workspace version is 0.4.0. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
+the release is approved by the owner's act of publishing the GitHub Release for
+tag v0.4.0; the tag exists only after that act, and until then this is the
+prepared release commit. The
+[Releases page](https://github.com/Gelram-project/gel-ram/releases) is
+authoritative for that state. The v0.3.0 fields describe the earlier release.
+See the [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md) and the historical
+[candidate notes](RELEASE-NOTES-v0.4.0-RC.md).
 
-Technical checks accept a pending candidate and report its approval status
-without changing it. A successful verification never supplies publication permission.
+Technical checks report the approval flags without changing them. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
 Previous Linux, Windows and macOS CI results do not validate these changes.
 Native CI evidence for the PR #9 head is pinned by SHA in
@@ -59,7 +59,7 @@ must be checked separately. Only free standard runners are in scope.
 New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 encrypted vault, speaker, encoder, private corpus or user data was exported.
-Current scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
+Evidence Lab scope and results: [Evidence Lab notes](RELEASE-NOTES-EVIDENCE-LAB.md).
 Historical R2 preparation record (its publication and platform flags predate the approvals above): [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md). Open external gates: [claim registry](docs/CLAIMS.md).
 Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
