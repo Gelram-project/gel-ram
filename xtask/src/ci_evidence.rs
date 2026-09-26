@@ -17,8 +17,21 @@ fn safe_test(line: &str) -> Option<&str> {
 
 fn accepted(id: &str, exited_successfully: bool, text: &str, count: usize) -> bool {
     exited_successfully
+        && !text.lines().any(|line| {
+            line.starts_with("test result: FAILED")
+                || safe_test(line).is_some_and(|test| test.ends_with(" ... FAILED"))
+        })
         && match id {
-            "workspace-debug" => count > 0,
+            "workspace-debug" => {
+                count > 0
+                    && text
+                        .lines()
+                        .filter_map(safe_test)
+                        .any(|test| test.ends_with(" ... ok"))
+                    && text
+                        .lines()
+                        .any(|line| line.starts_with("test result: ok."))
+            }
             "saved-r1-release" => text.lines().any(|l| l == "COLLECTION_RECHECK=PASS"),
             "doctests-debug" => text.contains("test result: ok."),
             _ => false,
@@ -207,6 +220,21 @@ mod tests {
             assert!(!complete);
         }
     }
+    #[test]
+    fn zero_exit_cannot_hide_failed_or_only_ignored_workspace_tests() {
+        let good = "test sample::ok ... ok\ntest result: ok. 1 passed; 0 failed;";
+        assert!(accepted("workspace-debug", true, good, 1));
+        assert!(!accepted("workspace-debug", false, good, 1));
+        for text in [
+            "test sample::skip ... ignored\ntest result: ok. 0 passed; 0 failed;",
+            "test sample::bad ... FAILED\ntest result: ok. 1 passed; 0 failed;",
+            "test sample::ok ... ok\ntest result: FAILED. 1 passed; 1 failed;",
+            "test sample::ok ... ok",
+        ] {
+            assert!(!accepted("workspace-debug", true, text, 1), "{text}");
+        }
+    }
+
     #[test]
     fn projection_accepts_only_test_identifiers_and_known_statuses() {
         assert!(safe_test("test module::check_1 ... ok").is_some());
