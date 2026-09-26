@@ -1,19 +1,21 @@
-# Q8 Quad shared readout — local measurements, not a released feature
+# Q8 Quad shared readout — historical V1 local measurements (2026-09-08)
 
 One canonical scan preserved the scores of four equivalent transformed views
 in every run of this synthetic experiment. This demonstrates removal of
 redundant computation, **not better semantic retrieval or four independent
-pieces of knowledge**. The author has confirmed PolyForm Noncommercial 1.0.0
-for this public export. This is an unreleased preview.
+pieces of knowledge**. At measurement time the export was an unreleased
+PolyForm Noncommercial 1.0.0 preview; the module has since been released in
+v0.3.0, with GEL RAM NCRL 1.0 as the operative license ([licensing](../LICENSING.md)).
 
 ## Protocol and hardware
 
 This 48-run performance table is historical: it uses `Q8_QUAD_COMPARE_V1`,
 preserved in commit `4e7805990874851907611d1e21f05d2a5c64db35` before the
 reference-worker fix. The Q8 library scoring algorithm has not changed.
-The current V2 example uses fallible reference spawning and reports fallback
-counts. Its [separate regression validation](Q8-QUAD-VALIDATION.md) does not
-replace these timings or establish a new speedup ratio for the changed runner.
+The later V2 example added fallible reference spawning and fallback counts; the
+current example prints Q8_QUAD_COMPARE_V3. The V2
+[separate regression validation](Q8-QUAD-VALIDATION.md) does not replace these
+timings, and neither V2 nor V3 establishes a new speedup ratio for the changed runner.
 
 Measured 2026-09-08 on AMD Ryzen AI 9 HX 370, 12 cores / 24 logical CPUs,
 approximately 93.91 GiB OS-reported RAM, Ubuntu 24.04.4 LTS,
@@ -104,13 +106,12 @@ physical analog RAM mechanism, macOS/Windows runtime or GPU result is claimed.
   tests run in both harnesses, so totals are executions, not unique assertions.
 - Workspace format check, Clippy with warnings denied, docs and binary selftest
   pass on Rust 1.85.0. Existing data-integrity example reports PASS.
-- Source changes originate in the private master, with an explicit export
-  mapping; ranking, selection, private banks, evidence/mouth adapters and models
-  are not part of this export.
-- The original051 snapshot stopped full verify at pending license confirmation.
+- Source changes originate in a private codebase, with an explicit export
+  mapping; no other private component is part of this export.
+- The original 051 snapshot stopped full verify at pending license confirmation.
   The author subsequently confirmed the public PolyForm license. The licensing
-  check remains enabled. The subsequent052 full-gate rerun passed on Rust1.85.0
-  (`GEL_VERIFY_ALL=PASS`), as did103 release test executions and the independent
-  data-integrity example. All11 workspace packages resolve to PolyForm
+  check remains enabled. The subsequent 052 full-gate rerun passed on Rust 1.85.0
+  (`GEL_VERIFY_ALL=PASS`), as did 103 release test executions and the independent
+  data-integrity example. All 11 workspace packages resolve to PolyForm
   Noncommercial1.0.0 in Cargo metadata. These checks are separate from the
-  unchanged051 benchmark. A new release has not been issued.
+  unchanged 051 benchmark. A new release has not been issued.

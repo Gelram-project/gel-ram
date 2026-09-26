@@ -44,6 +44,18 @@ fn main() -> Result<(), String> {
     println!("timing_authority=std::time::Instant_ns");
     println!("cycles=NOT_REPORTED");
     println!(
+        "profile={}",
+        if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "release"
+        }
+    );
+    println!("target_arch={}", std::env::consts::ARCH);
+    println!(
+        "repeats={repeats} percentile_method=sorted[ceil((n-1)*q)] empirical_not_a_tail_bound"
+    );
+    println!(
         "sequential_probe=eight_independent_lane_accumulators_no_per_element_barrier_aligned64"
     );
     println!("probe_buffer_alignment=64");
@@ -51,33 +63,36 @@ fn main() -> Result<(), String> {
     println!("observed_cpu_start={cpu_start}");
     println!("--- pointer_chase ---");
     for &bytes in DEFAULT_SIZES {
-        let samples = repeat(repeats, || pointer_chase(bytes));
+        let (order, samples) = repeat(repeats, || pointer_chase(bytes));
         println!(
-            "bytes={bytes} min_ns_per_step={:.3} p50_ns_per_step={:.3} p99_ns_per_step={:.3}",
+            "bytes={bytes} min_ns_per_step={:.3} p50_ns_per_step={:.3} p99_ns_per_step={:.3} execution_order={}",
             samples[0],
             percentile(&samples, 0.50),
-            percentile(&samples, 0.99)
+            percentile(&samples, 0.99),
+            joined(&order)
         );
     }
     println!("--- sequential_bandwidth ---");
     for &bytes in DEFAULT_SIZES {
-        let samples = repeat(repeats, || sequential_gib_s(bytes));
+        let (order, samples) = repeat(repeats, || sequential_gib_s(bytes));
         println!(
-            "bytes={bytes} max_gib_s={:.3} p50_gib_s={:.3}",
+            "bytes={bytes} max_gib_s={:.3} p50_gib_s={:.3} execution_order={}",
             samples[samples.len() - 1],
-            percentile(&samples, 0.50)
+            percentile(&samples, 0.50),
+            joined(&order)
         );
     }
     println!("--- random_orb_fetch ---");
     for fetch_bytes in [32usize, 64, 128] {
-        let samples = repeat(repeats, || random_orb_fetch_ns(64 << 20, fetch_bytes));
+        let (order, samples) = repeat(repeats, || random_orb_fetch_ns(64 << 20, fetch_bytes));
         println!(
-            "working_set_bytes={} fetch_bytes={} min_ns={:.3} p50_ns={:.3} p99_ns={:.3}",
+            "working_set_bytes={} fetch_bytes={} min_ns={:.3} p50_ns={:.3} p99_ns={:.3} execution_order={}",
             64 << 20,
             fetch_bytes,
             samples[0],
             percentile(&samples, 0.50),
-            percentile(&samples, 0.99)
+            percentile(&samples, 0.99),
+            joined(&order)
         );
     }
     println!("observed_cpu_end={}", observed_cpu());
@@ -120,7 +135,8 @@ fn arg_usize(index: usize, default: usize, name: &str) -> Result<usize, String> 
         })
 }
 
-fn repeat<F>(n: usize, mut f: F) -> Vec<f64>
+/// Samples in execution order and a sorted copy for the summary statistics.
+fn repeat<F>(n: usize, mut f: F) -> (Vec<f64>, Vec<f64>)
 where
     F: FnMut() -> f64,
 {
@@ -128,8 +144,18 @@ where
     for _ in 0..n {
         samples.push(f());
     }
-    samples.sort_by(|a, b| a.total_cmp(b));
+    let mut sorted = samples.clone();
+    sorted.sort_by(|a, b| a.total_cmp(b));
+    (samples, sorted)
+}
+
+/// Comma-joined samples (no spaces) so a row stays one key=value line.
+fn joined(samples: &[f64]) -> String {
     samples
+        .iter()
+        .map(|v| format!("{v:.3}"))
+        .collect::<Vec<_>>()
+        .join(",")
 }
 
 fn percentile(sorted: &[f64], q: f64) -> f64 {

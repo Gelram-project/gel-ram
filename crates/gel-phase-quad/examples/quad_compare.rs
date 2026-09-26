@@ -203,8 +203,9 @@ fn run(o: Options) -> Result<(), String> {
     let mut sums = [0u128; 3];
     let mut checked = 0usize;
     let mut reference_fallbacks = [0usize; 2];
-    println!("Q8_QUAD_COMPARE_V2 seed={SEED} arch={} orbs={} rounds={} requested_workers={} effective_workers={} sparse={} policy={}",
-        std::env::consts::ARCH, o.orbs, o.rounds, o.workers, workers, o.sparse, if o.masked {"active"} else {"archive"});
+    let mut shared_fallbacks = 0usize;
+    println!("Q8_QUAD_COMPARE_V3 seed={SEED} arch={} profile={} orbs={} rounds={} warmup_rounds=1 requested_workers={} effective_workers={} sparse={} policy={}",
+        std::env::consts::ARCH, if cfg!(debug_assertions) {"debug"} else {"release"}, o.orbs, o.rounds, o.workers, workers, o.sparse, if o.masked {"active"} else {"archive"});
     println!("canonical_record_bytes={} materialized_four_frame_bytes={} packed_four_record_bytes={} timing=scan_only_reused_output_views_precomputed host_isolation=false",
         std::mem::size_of::<Record>(), std::mem::size_of::<[Frame; 4]>(), 4 * std::mem::size_of::<Record>());
     println!("round,reference_one_ns,four_views_ns,shared_ns");
@@ -246,13 +247,14 @@ fn run(o: Options) -> Result<(), String> {
                     black_box(&four);
                 }
                 _ => {
-                    reader.scan_into(
+                    let report = reader.scan_into_report(
                         black_box(&q),
                         black_box(&bank),
                         policy,
                         o.workers,
                         &mut shared,
                     )?;
+                    shared_fallbacks += usize::from(report.serial_fallback);
                     black_box(&shared);
                 }
             }
@@ -276,9 +278,12 @@ fn run(o: Options) -> Result<(), String> {
         }
     }
     println!(
-        "reference_one_fallback_scans={} four_views_fallback_scans={} warmup_included=true",
-        reference_fallbacks[0], reference_fallbacks[1]
+        "reference_one_fallback_scans={} four_views_fallback_scans={} shared_fallback_scans={} warmup_included=true",
+        reference_fallbacks[0], reference_fallbacks[1], shared_fallbacks
     );
+    if shared_fallbacks > 0 {
+        println!("TIMING_COMPARISON=DEGRADED_SHARED_SERIAL_FALLBACK");
+    }
     if reference_fallbacks.iter().any(|&count| count > 0) {
         println!("TIMING_COMPARISON=DEGRADED_REFERENCE_SERIAL_FALLBACK");
     }

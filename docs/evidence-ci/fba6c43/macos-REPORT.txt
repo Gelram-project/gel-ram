@@ -1,0 +1,24 @@
+FORMAT=GEL_CI_EVIDENCE_2
+COMMIT=fba6c438cd3a6abb5705c07e1f54d0dbd9c4ef30
+SOURCE_MANIFEST_SHA256=a979b10e0e9896fbe8261e981e47203b08e067fa929c11eb3c65b6da6c44820c
+RUN_ID=36257696669
+RUN_ATTEMPT=1
+OS=macos
+ARCH=aarch64
+SCOPE=workspace tests (debug), core-path tests (release), doctests, saved R1 recheck; not full CI or a fresh benchmark
+RUST_VERSION=1.85.0
+REDACTION=only strict test identifiers and derived counts; raw stdout/stderr excluded
+CASE=workspace-debug accepted=true exit_code=Some(0) named_test_executions=366 summaries=49 passed=366 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=29128 stderr_bytes=7131
+CASE=core-release accepted=true exit_code=Some(0) named_test_executions=163 summaries=26 passed=163 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=13014 stderr_bytes=4007
+CASE=doctests-debug accepted=true exit_code=Some(0) named_test_executions=0 summaries=9 passed=2 failed=0 ignored=0 filtered_out=0 unlisted_executions=2 stdout_bytes=1165 stderr_bytes=293
+CASE=saved-r1-release accepted=true exit_code=Some(0) named_test_executions=0 summaries=0 passed=0 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=24 stderr_bytes=257
+PLATFORM_EXCLUSION test=sigkill_after_save_ack_keeps_a_readable_snapshot condition=unix here=RAN_PASSED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=sigkill_at_observable_publication_never_installs_a_partial_snapshot condition=unix here=RAN_PASSED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=symlink_input_and_output_rejected condition=unix here=RAN_PASSED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::rust_only_gate_rejects_symlinks_and_executable_files condition=unix here=RAN_PASSED reason=Unix symlink and execute-bit creation
+PLATFORM_EXCLUSION test=source_bundle::tests::symlink_file_and_directory_rejected condition=unix here=RAN_PASSED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::atomic_write_is_private_by_default_and_preserves_existing_mode condition=unix here=RAN_PASSED reason=Unix permission bits
+PLATFORM_EXCLUSION test=kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file condition=unix here=RAN_PASSED reason=Unix permission bits
+PARTIAL_PLATFORM_BRANCH test=persisted_roundtrip_and_no_temporary_files condition=unix here=RAN_PASSED branch=active detail=0600 file mode assertion
+PARTIAL_PLATFORM_BRANCH test=recorder_usage_and_closed_display_fail_closed condition=linux here=RAN_PASSED branch=inactive detail=/dev/full display assertion
+PLATFORM_EXCLUSIONS=CHECKED whole_tests=7 partial_branches=2

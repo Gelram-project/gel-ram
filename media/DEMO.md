@@ -55,4 +55,6 @@ No chat ORB/s metric, 99% semantic accuracy, general reasoning, persistent
 learning, P2P operation, physical DRAM-refresh synchronization or GPU attestation
 is established here. The four scenarios exercise limited source relations.
 The film does not grant access to the private engine or expand the public
-source's implemented features. Publication remains a separate approval gate.
+source's implemented features. When recorded, publication was a separate
+approval gate; the film has since been published under [RIGHTS.md](RIGHTS.md).
+The private application itself remains unpublished.

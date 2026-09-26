@@ -1,9 +1,10 @@
 # Q8 benchmark V2 — worker-refusal regression validation
 
 2026-09-08. This fixes the reference paths of the comparison example, not the
-Q8 scoring formula, stored data, weights or semantic accuracy. The public
-module remains an experimental PolyForm Noncommercial preview; the existing
-v0.2.1 release tag is unchanged.
+Q8 scoring formula, stored data, weights or semantic accuracy. At that time
+the public module was an experimental PolyForm Noncommercial preview, and the
+v0.2.1 release tag of the earlier repository was unchanged. The module has
+since been released in v0.3.0 under GEL RAM NCRL 1.0 ([licensing](../LICENSING.md)).
 
 ## What changed
 
@@ -12,7 +13,8 @@ cannot start, the example waits for started workers and recomputes the complete
 reference output serially. No partially filled score buffer is accepted.
 The shared library reader already had this recovery path and is unchanged.
 
-The header is now `Q8_QUAD_COMPARE_V2`. It prints `reference_one_fallback_scans`
+On 2026-09-08 the header became `Q8_QUAD_COMPARE_V2` (historical; the current
+example prints Q8_QUAD_COMPARE_V3, see [measurement protocol](MEASUREMENT-PROTOCOL.md)). It prints `reference_one_fallback_scans`
 and `four_views_fallback_scans`, including warm-up. If either is nonzero it also
 prints `TIMING_COMPARISON=DEGRADED_REFERENCE_SERIAL_FALLBACK`. Do not interpret
 such timings as a successful full-worker performance run. These counters

@@ -38,12 +38,35 @@ fn percentile(sorted: &[u128], q: f64) -> u128 {
     sorted[index.min(sorted.len() - 1)]
 }
 
+/// Comma-joined values (no spaces) so a row stays one key=value token.
+fn joined(values: &[u128]) -> String {
+    values
+        .iter()
+        .map(u128::to_string)
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
 /// Field 39 (`processor`) of a `/proc/<pid>/stat` line: the CPU the task
 /// last ran on. The `comm` field (2) may contain spaces and parentheses, so
 /// the line is split after its last `)`; field 39 is then the 37th token.
 fn processor_field(stat: &str) -> Option<usize> {
     let (_, rest) = stat.rsplit_once(')')?;
     rest.split_ascii_whitespace().nth(36)?.parse().ok()
+}
+
+/// `cpu_model=` value: the first Linux /proc/cpuinfo "model name" line, or
+/// `unavailable`. It identifies hardware; it does not prove clock or power state.
+fn cpu_model() -> String {
+    std::fs::read_to_string("/proc/cpuinfo")
+        .ok()
+        .and_then(|text| {
+            text.lines()
+                .find_map(|l| l.strip_prefix("model name"))
+                .and_then(|rest| rest.split_once(':'))
+                .map(|(_, name)| name.trim().to_owned())
+        })
+        .unwrap_or_else(|| "unavailable".to_owned())
 }
 
 /// `observed_cpu_*=` value: the CPU this thread was last scheduled on, or
@@ -171,6 +194,8 @@ fn run() -> Result<(), String> {
     }
     let elapsed = started_all.elapsed();
     require_exact_rounds(exact, rounds)?;
+    // Keep every timed observation in execution order before sorting.
+    let durations_in_order = durations.clone();
     durations.sort_unstable();
     let scans = count.checked_mul(rounds).ok_or("scan count overflow")?;
     let seconds = elapsed.as_secs_f64();
@@ -209,7 +234,16 @@ fn run() -> Result<(), String> {
     };
     let backend: KernelBackend = backend();
 
-    println!("GEL_BENCH_V4");
+    println!("GEL_BENCH_V5");
+    println!(
+        "profile={}",
+        if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "release"
+        }
+    );
+    println!("cpu_model={}", cpu_model());
     println!("generator=splitmix64_with_unique_word0");
     println!("generator_seed={GENERATOR_SEED}");
     println!("bank_crc64_ecma={bank_crc64:016x}");
@@ -243,7 +277,11 @@ fn run() -> Result<(), String> {
     );
     println!("execution_reported_scans={}", executions.len());
     println!("execution_scope=warmup+timed+threaded_null_check_if_requested");
-    println!("execution_reports={executions:?}");
+    // One key=value token: the Debug text without spaces.
+    println!(
+        "execution_reports={}",
+        format!("{executions:?}").replace(' ', "")
+    );
     println!(
         "fallback_scans={}",
         executions.iter().filter(|r| r.fallback.is_some()).count()
@@ -275,6 +313,14 @@ fn run() -> Result<(), String> {
     println!("query_p50_ns={}", percentile(&durations, 0.50));
     println!("query_p95_ns={}", percentile(&durations, 0.95));
     println!("query_p99_ns={}", percentile(&durations, 0.99));
+    println!(
+        "query_samples={rounds} percentile_method=sorted[ceil((n-1)*q)] empirical_not_a_tail_bound"
+    );
+    println!(
+        "query_p99_is_max={}",
+        percentile(&durations, 0.99) == durations[durations.len() - 1]
+    );
+    println!("query_ns_execution_order={}", joined(&durations_in_order));
     println!("orbs_per_sec={orbs_per_sec:.3}");
     println!("effective_gib_per_sec={gib_per_sec:.6}");
     println!("top1_exact={exact}/{rounds}");
@@ -382,6 +428,13 @@ mod tests {
         report.spawned_workers = 0;
         report.fallback = Some(Top1Fallback::ThreadStartFailed);
         assert_eq!(execution_mode(&[report]), "mixed_or_serial_fallback");
+    }
+
+    #[test]
+    fn execution_order_is_one_token_without_spaces() {
+        assert_eq!(joined(&[222_479, 208_232, 207_991]), "222479,208232,207991");
+        assert_eq!(joined(&[7]), "7");
+        assert_eq!(joined(&[]), "");
     }
 
     #[test]

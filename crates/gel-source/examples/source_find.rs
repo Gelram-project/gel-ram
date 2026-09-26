@@ -61,13 +61,19 @@ fn run(phrase: &str) -> Result<(), String> {
         result.skipped_long_lines
     );
     for span in &result.passages {
-        let quote = text.get(span.clone()).ok_or("invalid source range")?;
+        let context = gel_source::context::surrounding(text, span.clone(), 512)?;
+        let quote = text
+            .get(context.context_span.clone())
+            .ok_or("invalid source range")?;
         println!(
-            "UTF8 {}..{} | SOURCE_BOUND_QUOTE\n{}",
-            span.start,
-            span.end,
+            "UTF8 {}..{} | SOURCE_BOUND_CONTEXT\n{}",
+            context.context_span.start,
+            context.context_span.end,
             terminal_safe(quote)
         );
+        println!("MATCH_SPAN={}..{} CONTEXT_SPAN={}..{} OMITTED_BEFORE={} OMITTED_AFTER={} BOUNDED_CONTEXT_NOT_COMPLETE_SENTENCE",
+            span.start, span.end, context.context_span.start, context.context_span.end,
+            context.omitted_before, context.omitted_after);
     }
     if result.skipped_long_lines > 0 {
         println!("INCOMPLETE_SEARCH: overlong lines were skipped");

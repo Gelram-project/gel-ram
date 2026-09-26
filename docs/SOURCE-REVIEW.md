@@ -1,4 +1,7 @@
-# Source-readout pre-publication review
+# Source-readout pre-publication review (historical, 2026-09-11)
+
+> Historical record from the PolyForm era, before v0.3.0. The module has since
+> been released under GEL RAM NCRL 1.0; see [licensing](../LICENSING.md).
 
 2026-09-11. Scope: the proposed gel-source module, its example/tests, locked
 dependency additions and associated documentation/CI changes. This is an

@@ -27,7 +27,7 @@ This public preview is not a complete AI model.
 
 [Start with the evidence](docs/VERIFIED-RESULTS.md) ·
 [Run the demos](#quick-start) ·
-[Reproduce on your CPU](https://github.com/gelramlicensing-wq/gel-ram/issues/new?template=reproduction.yml)
+[Reproduce on your CPU](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
 > Binary-core hardening: scheduling, raw rotation bounds,
 > canonical residual validation and benchmark failure gates.
@@ -174,13 +174,14 @@ results are retained.
 </p>
 
 <p align="center">
-  <a href="https://github.com/gelramlicensing-wq/gel-ram/actions/workflows/ci.yml"><img src="https://github.com/gelramlicensing-wq/gel-ram/actions/workflows/ci.yml/badge.svg?branch=main" alt="Rust CI status on main"/></a>
+  Historical README of the earlier, now non-public repository. Its CI badge,
+  release and pull-request links no longer resolve and have been removed.
 </p>
 
 <p align="center">
   <a href="#quick-start">Run the demo</a> ·
   <a href="#measured-results">See the results</a> ·
-  <a href="https://github.com/gelramlicensing-wq/gel-ram/releases/tag/v0.2.1">Download v0.2.1</a> ·
+  v0.2.1 (earlier repository, not public) ·
   <a href="docs/ROADMAP.md">Roadmap</a>
 </p>
 
@@ -206,7 +207,7 @@ It is separate from the already published Q8 measurements.
 Clone into a new directory, not over an existing checkout.
 
 ```text
-git clone https://github.com/gelramlicensing-wq/gel-ram.git
+git clone https://github.com/Gelram-project/gel-ram.git   # current repository; v0.2.1 is not in it
 cd gel-ram
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
@@ -232,7 +233,7 @@ and prints every timing sample. It requires **no model, private encoder or exter
 **Expected final line:** `TOPK_COMPARE_EXACT=PASS`.
 A ratio above 1 means faster; below 1 means slower. There is no guaranteed speedup on every workload.
 
-[Full demo and integrity checks](docs/TRY-IT.md) · [Report your reproduction](https://github.com/gelramlicensing-wq/gel-ram/issues/new?template=reproduction.yml)
+[Full demo and integrity checks](docs/TRY-IT.md) · [Report your reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
 ## GEL at a glance
 
@@ -330,14 +331,14 @@ ranged from 0.79× to 1.20× old/new speed, including a slowdown.
 | Source-bound readout | Exact source passages, independent pins, bounded catalog parsing | [Source catalog](docs/SOURCE-READOUT.md) |
 | Candidate Q8 evidence | Checked in-memory descriptors; real/synthetic numeric parity and canonical baseline | [Candidate](docs/Q8-EVIDENCE-CANDIDATE.md) |
 
-The v0.2.1 binary-core implementation was merged in [PR #3](https://github.com/gelramlicensing-wq/gel-ram/pull/3).
-[Post-merge CI](https://github.com/gelramlicensing-wq/gel-ram/actions/runs/34032946492)
+The v0.2.1 binary-core implementation was merged in PR #3 of the earlier, now non-public repository.
+Its post-merge CI (run 34032946492 there)
 passed Linux verification and the independent integrity audit, plus macOS/Windows **compilation checks**.
 The [recorded validation](docs/VALIDATION-v0.2.1.md) documents 79 passing tests per local
 portable/v3 profile. It does not claim macOS/Windows runtime coverage.
 
-The later Q8 export was merged in [PR #6](https://github.com/gelramlicensing-wq/gel-ram/pull/6).
-Its [main CI](https://github.com/gelramlicensing-wq/gel-ram/actions/runs/34257368867)
+The later Q8 export was merged in PR #6 of that earlier repository.
+Its main CI (run 34257368867 there)
 passed. Local post-fix validation recorded 109 test executions per debug/release
 profile, including 19 Q8 library and 11 example-harness executions; some tests
 run in both harnesses. These counts do not replace the historical v0.2.1 record.
@@ -537,7 +538,7 @@ AI assistance is part of the process, not proof of correctness. Reproducible tes
 explicit limits and measurements on identified hardware are the standard.
 
 A reproduction, bug report or constructive technical criticism is welcome.
-[Run the demo](docs/TRY-IT.md), then [share your results](https://github.com/gelramlicensing-wq/gel-ram/issues/new?template=reproduction.yml).
+[Run the demo](docs/TRY-IT.md), then [share your results](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml).
 Include the commit, hardware, flags and all timing trials, including regressions.
 Do not upload credentials, private knowledge banks or confidential model data.
 Reporting test results needs no CLA; code contributions follow [CONTRIBUTING](CONTRIBUTING.md).

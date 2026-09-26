@@ -140,6 +140,39 @@ pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, Bund
 
 /// Internal shared no-replace publisher. Callers enforce their format limits.
 pub(crate) fn write_bytes_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleError> {
+    publish_with(path, bytes, &mut SystemPublication)
+}
+
+trait PublicationIo {
+    fn write(&mut self, file: &mut File, bytes: &[u8]) -> std::io::Result<()> {
+        file.write_all(bytes)
+    }
+    fn sync(&mut self, file: &File) -> std::io::Result<()> {
+        file.sync_all()
+    }
+    fn publish(&mut self, tmp: &Path, path: &Path) -> std::io::Result<()> {
+        fs::hard_link(tmp, path)
+    }
+    fn sync_parent(&mut self, parent: &Path) -> std::io::Result<()> {
+        #[cfg(unix)]
+        File::open(parent)?.sync_all()?;
+        #[cfg(not(unix))]
+        let _ = parent;
+        Ok(())
+    }
+}
+struct SystemPublication;
+impl PublicationIo for SystemPublication {}
+
+#[cfg(test)]
+#[path = "publication_fault_tests.rs"]
+mod publication_fault_tests;
+
+fn publish_with(
+    path: &Path,
+    bytes: &[u8],
+    io: &mut impl PublicationIo,
+) -> Result<Hash, BundleError> {
     let parent = path
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
@@ -168,12 +201,11 @@ pub(crate) fn write_bytes_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleE
         }
     };
     let result = (|| -> Result<(), std::io::Error> {
-        file.write_all(bytes)?;
-        file.sync_all()?;
+        io.write(&mut file, bytes)?;
+        io.sync(&file)?;
         drop(file);
-        fs::hard_link(&tmp, path)?;
-        #[cfg(unix)]
-        File::open(parent)?.sync_all()?;
+        io.publish(&tmp, path)?;
+        io.sync_parent(parent)?;
         Ok(())
     })();
     // Only our create_new temporary file is removed. A process crash can leave it;

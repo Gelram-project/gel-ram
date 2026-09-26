@@ -1,5 +1,10 @@
 # GEL RAM — two native terminal demonstrations
 
+This guide covers the two **private application previews**. The third film,
+the public [Evidence Lab walkthrough](EVIDENCE-LAB-GUIDE.md), is the one you can
+reproduce from this repository; start there. All three are listed in the
+[film index](INDEX.md).
+
 These are local application previews, not videos of the public source examples.
 The chat command, private bank and private implementation are **not included**
 in this review bundle. The demonstrated route uses native Rust, local source
@@ -111,10 +116,13 @@ evidence that the Ocean lacks information about the subject.
 - No ORB/s throughput is inferred from chat latency. No token rate, semantic
   accuracy percentage, 4× independent capacity, physical DRAM-refresh coupling
   or P2P performance is established by either recording.
-- The startup panel explicitly says diagnostic transcript logging is ON.
+- The startup panel shows “Session transcript logging ON”.
   “Volatile” at exit describes the in-memory conversation state; it does not
-  mean that diagnostics never wrote text to disk. The diagnostic transcripts
+  mean that no transcript was written to disk. Those session transcripts
   are not bundled. Neither film tests durable learning or crash recovery.
+- The private-preview label is on screen only before `/chat` clears it: 0–24.5 s
+  in the 90-second film and 0–15.7 s in the 60-second film. Everything after
+  that is still the private application, not the public checkout.
 - Network isolation and native/no-LLM execution belong to the recording setup.
   A screenshot alone cannot independently certify the entire execution path.
 

@@ -221,3 +221,37 @@ fn cli_does_not_emit_terminal_escape_from_text() {
     assert!(!r.stdout.contains(&27));
     assert!(String::from_utf8(r.stdout).unwrap().contains("\\u{1b}"));
 }
+
+#[cfg(unix)]
+#[test]
+fn kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file() {
+    use std::os::unix::fs::PermissionsExt;
+    let root = Scratch::new();
+    let previous = root.0.join("previous.gelsrc");
+    let pin = write_bundle_new(&previous, &data()).unwrap();
+    let locked = root.0.join("locked");
+    fs::create_dir(&locked).unwrap();
+    fs::set_permissions(&locked, fs::Permissions::from_mode(0o500)).unwrap();
+    // The kernel itself must refuse; an unprivileged probe establishes that.
+    let probe = fs::File::create(locked.join("probe"));
+    let result = write_bundle_new(&locked.join("new.gelsrc"), &data());
+    let entries = fs::read_dir(&locked).unwrap().count();
+    fs::set_permissions(&locked, fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(
+        matches!(&probe, Err(e) if e.kind() == std::io::ErrorKind::PermissionDenied),
+        "run unprivileged: the kernel did not refuse a write into a 0500 directory"
+    );
+    assert!(
+        matches!(&result, Err(BundleError::Io(e)) if e.kind() == std::io::ErrorKind::PermissionDenied),
+        "{result:?}"
+    );
+    assert_eq!(entries, 0, "no destination or temporary file may appear");
+    let reopened = load_bundle(&previous, pin).unwrap();
+    assert_eq!(
+        reopened
+            .quote(Address { node: 1, role: 1 })
+            .unwrap()
+            .quote(),
+        "Zażółć 🦀\r\nIt's exact."
+    );
+}

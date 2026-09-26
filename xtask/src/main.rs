@@ -1,7 +1,12 @@
 #![forbid(unsafe_code)]
+mod ci_evidence;
+mod claims;
 mod license_metadata;
+mod measured_sources;
+mod process_sequence;
 #[cfg(test)]
 mod publication_status_tests;
+mod recorder_lint;
 mod reproduce;
 mod source_bundle;
 
@@ -114,7 +119,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|test|bench|physics";
+    "verify|report|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -254,6 +259,9 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
             "docs/evidence-collection/MEASURED-SOURCES.sha256",
             "docs/evidence-collection/r1/raw.csv",
             "docs/evidence-collection/r1/summary.csv",
+            "docs/evidence-gel-components/run-1.csv",
+            "docs/evidence-gel-components/run-2.csv",
+            "docs/evidence-gel-components/run-3.csv",
         ]
         .iter()
         .any(|p| path == root.join(p));
@@ -676,16 +684,40 @@ fn cla_ack() -> Result<(), String> {
 }
 
 fn run(program: &str, args: &[&str]) -> Result<(), String> {
-    let status = Command::new(program)
-        .args(args)
-        .current_dir(workspace_root()?)
-        .status()
-        .map_err(|e| e.to_string())?;
-    if status.success() {
-        Ok(())
-    } else {
-        Err(format!("{program} failed: {status}"))
+    let mut command = Command::new(program);
+    command.args(args).current_dir(workspace_root()?);
+    process_sequence::sequence(&mut [command])
+}
+
+fn runtime_examples() -> Result<(), String> {
+    let root = workspace_root()?;
+    let specs: &[&[&str]] = &[
+        &["-p", "gel-source", "--example", "source_build"],
+        &["-p", "gel-live-lab", "--", "--demo"],
+        &[
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
+            "--",
+            "--demo",
+        ],
+        &["-p", "gel-cli", "--example", "quantization_matrix"],
+        &["-p", "gel-cli", "--example", "precision_matrix"],
+        &["-p", "gel-source", "--example", "collection_review"],
+    ];
+    let mut commands = Vec::new();
+    for spec in specs {
+        let mut command = Command::new("cargo");
+        command
+            .args(["run", "--locked", "--offline", "--release"])
+            .args(*spec)
+            .current_dir(root);
+        commands.push(command);
     }
+    process_sequence::sequence(&mut commands)?;
+    println!("RUNTIME_EXAMPLES=PASS");
+    Ok(())
 }
 
 fn run_docs() -> Result<(), String> {
@@ -733,11 +765,33 @@ fn verify() -> Result<(), String> {
     docs_refs()?;
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
+    recorder_lint::check(workspace_root()?)?;
     run(
         "cargo",
         &["build", "--locked", "--offline", "--release", "--workspace"],
     )?;
     run_docs()?;
+    measured_sources::verify(workspace_root()?)?;
+    claims::check(workspace_root()?)?;
+    run(
+        "cargo",
+        &["test", "--locked", "--offline", "--workspace", "--doc"],
+    )?;
+    run(
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-source",
+            "--example",
+            "collection_recheck",
+            "--",
+            "docs/evidence-collection/r1",
+        ],
+    )?;
     run("cargo", TEST_ARGS)?;
     run_release_binary("gel-cli", &["selftest"])?;
     run_release_binary("gel-bench", &["8192", "3", "2"])?;
@@ -849,6 +903,9 @@ fn dispatch(args: &[String]) -> Result<(), String> {
     match args.first().map(String::as_str) {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
+        Some("ci-evidence") => ci_evidence::report(&args[1..]),
+        Some("claims") => claims::check(workspace_root()?),
+        Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("rust-only") => rust_only(),
@@ -858,6 +915,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("cla-ack") => cla_ack(),
         Some("fmt") => run("cargo", FMT_CHECK_ARGS),
         Some("clippy") => run("cargo", CLIPPY_ARGS),
+        Some("recorder-lint") => recorder_lint::check(workspace_root()?),
+        Some("platform-diff") => ci_evidence::platform_diff(&args[1..]),
         Some("test") => run("cargo", TEST_ARGS),
         Some("bench") => run_release_binary("gel-bench", &args[1..]),
         Some("physics") => run_release_binary("gel-physics", &args[1..]),
@@ -878,6 +937,31 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn component_evidence_exception_is_exact_and_text_only() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root =
+            std::env::temp_dir().join(format!("gel-component-gate-{}-{nonce}", std::process::id()));
+        let dir = root.join("docs/evidence-gel-components");
+        fs::create_dir_all(&dir).unwrap();
+        for i in 1..=3 {
+            let path = dir.join(format!("run-{i}.csv"));
+            fs::write(&path, b"rep,n\n0,16384\n").unwrap();
+            assert!(rust_only_at(&root).is_ok());
+            for bad in [b"\xff".as_slice(), b"\x1b[2J", b"binary\0"] {
+                fs::write(&path, bad).unwrap();
+                assert!(rust_only_at(&root).is_err());
+            }
+            fs::write(&path, b"rep,n\n0,16384\n").unwrap();
+        }
+        fs::write(dir.join("run-4.csv"), b"unreviewed\n").unwrap();
+        assert!(rust_only_at(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
 
     #[test]
     fn collection_evidence_exception_is_exact_and_text_only() {

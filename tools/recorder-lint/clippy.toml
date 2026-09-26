@@ -1,0 +1,16 @@
+# Used only by `cargo xtask recorder-lint` (CLIPPY_CONF_DIR) for
+# tools/record_evidence.rs; the workspace clippy run does not read this file.
+disallowed-macros = [
+    "std::assert",
+    "std::assert_eq",
+    "std::assert_ne",
+    "std::debug_assert",
+    "std::debug_assert_eq",
+    "std::debug_assert_ne",
+]
+disallowed-methods = [
+    "std::thread::spawn",
+    "str::split_at",
+    "alloc::vec::Vec::remove",
+    "std::env::args",
+]

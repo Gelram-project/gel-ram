@@ -99,6 +99,29 @@ fn corrupt_load_refusal_retains_current_collection() {
     assert!(log.contains("REFUSED"));
     assert!(log.contains("CITATION=PASS"));
 }
+
+#[test]
+fn well_hashed_invalid_snapshot_does_not_replace_live_documents() {
+    let s = Scratch::new();
+    let input = s.0.join("retained.txt");
+    let bad = s.0.join("invalid.snapshot");
+    fs::write(&input, "retained independent source").unwrap();
+    let mut invalid = Collection::new().to_bytes();
+    // A fresh empty collection cannot contain a zero next-ID. Re-pin the
+    // malicious input to bypass the checksum mismatch branch deliberately.
+    invalid[16..24].copy_from_slice(&0_u64.to_le_bytes());
+    let pin = hex(&gel_source::digest(&invalid));
+    fs::write(&bad, invalid).unwrap();
+    let log = run(&format!(
+        "add {}\nfind retained independent\nproof 1\nload {pin} {}\nfind retained independent\nproof 1\nexit\n",
+        input.display(), bad.display()
+    ));
+    assert!(log.contains("COLLECTION_HEADER"), "{log}");
+    assert_eq!(log.matches("REFUSED").count(), 1);
+    assert_eq!(log.matches("CITATION=PASS").count(), 2);
+    assert!(!log.contains("REOPEN=PASS"));
+    assert!(!log.contains("FIND=UNKNOWN"));
+}
 #[test]
 fn controls_in_document_never_become_terminal_escape() {
     let s = Scratch::new();
@@ -108,6 +131,60 @@ fn controls_in_document_never_become_terminal_escape() {
     assert!(!log.contains('\x1b'));
     assert!(!log.contains('\u{202e}'));
     assert!(log.contains("FIND=HIT"));
+}
+
+#[test]
+fn complete_update_restart_and_corruption_scenario() {
+    let s = Scratch::new();
+    let original = s.0.join("original.txt");
+    let revised = s.0.join("revised.txt");
+    let old = s.0.join("old.snapshot");
+    let new = s.0.join("new.snapshot");
+    let bad = s.0.join("corrupt.snapshot");
+    fs::write(
+        &original,
+        "Safety condition:\nDo not\nopen the valve while pressure is high.",
+    )
+    .unwrap();
+    fs::write(
+        &revised,
+        "Safety condition:\nKeep the valve closed until pressure is zero.",
+    )
+    .unwrap();
+    let first = run(&format!(
+        "add {}\nfind open the valve\nproof 1\nfind invented instruction\nsave {}\nfind open the valve\nproof 1\nreplace 1 {}\nproof 1\nfind open the valve\nfind keep the valve closed\nproof 1\nsave {}\nexit\n",
+        original.display(), old.display(), revised.display(), new.display()
+    ));
+    assert_eq!(first.matches("REFUSED").count(), 1, "{first}");
+    assert!(first.contains("Do not\\nopen the valve"), "{first}");
+    assert_eq!(first.matches("NO_CURRENT_RESULT").count(), 1);
+    assert_eq!(first.matches("FIND=UNKNOWN").count(), 2);
+    assert_eq!(first.matches("CITATION=PASS").count(), 3);
+    let before_replace = first.split("REPLACED id=1").next().unwrap();
+    assert!(
+        before_replace.rfind("CITATION=PASS").unwrap()
+            > before_replace.rfind("FIND=UNKNOWN").unwrap()
+    );
+    let old_bytes = fs::read(&old).unwrap();
+    let new_bytes = fs::read(&new).unwrap();
+    let old_pin = hex(&gel_source::digest(&old_bytes));
+    let new_pin = hex(&gel_source::digest(&new_bytes));
+    assert_ne!(old_pin, new_pin);
+    let mut corrupt = old_bytes.clone();
+    let last = corrupt.len() - 1;
+    corrupt[last] ^= 1;
+    fs::write(&bad, corrupt).unwrap();
+    // A fresh process has no access to the first process's in-memory state.
+    let second = run(&format!(
+        "load {new_pin} {}\nfind keep the valve closed\nproof 1\nload {old_pin} {}\nfind open the valve\nproof 1\nload {old_pin} {}\nfind open the valve\nproof 1\nexit\n",
+        new.display(), old.display(), bad.display()
+    ));
+    assert_eq!(second.matches("REOPEN=PASS").count(), 2);
+    assert_eq!(second.matches("REFUSED").count(), 1);
+    assert_eq!(second.matches("CITATION=PASS").count(), 3);
+    assert!(!second.contains("FIND=UNKNOWN"));
+    assert_eq!(fs::read(old).unwrap(), old_bytes);
+    assert_eq!(fs::read(new).unwrap(), new_bytes);
 }
 #[test]
 fn demo_really_executes_the_collection() {

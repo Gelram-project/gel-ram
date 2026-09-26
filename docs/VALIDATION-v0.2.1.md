@@ -1,8 +1,8 @@
 # v0.2.1 local validation — 2026-09-06
 
 Historical measurement status: **local review candidate on 2026-09-06**. Based on public main
-04a4d21f5cf9ac77adec5a47b1d0c452bbf5a117. No private encoder or internal
-v5.12.1 module is included. The earlier verified-range experiment is excluded.
+04a4d21f5cf9ac77adec5a47b1d0c452bbf5a117. No private encoder or other private
+module is included. The earlier verified-range experiment is excluded.
 
 ## Decision
 
@@ -24,8 +24,8 @@ encoder, a compression breakthrough, or proof of 99% knowledge retrieval.
 
 Finite tests establish results for those inputs, not universal or physical
 fault guarantees. Linux was tested locally. Subsequent publication check:
-[PR #3](https://github.com/gelramlicensing-wq/gel-ram/pull/3) merged the implementation
-as 95c7dab. Its [post-merge CI](https://github.com/gelramlicensing-wq/gel-ram/actions/runs/34032946492)
+PR #3 of the earlier, now non-public repository merged the implementation
+as 95c7dab. Its post-merge CI (run 34032946492 there)
 passed Linux verification and the synthetic integrity audit, plus fresh
 Windows/macOS compilation checks. The latter do not establish runtime test
 coverage on Windows/macOS. The local measurements below are unchanged.

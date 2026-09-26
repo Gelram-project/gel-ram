@@ -1,7 +1,8 @@
 # Multi-document Evidence Lab
 
 Rust runtime, local CPU/RAM, no LLM, no server and no shell execution.
-This is a new local-review candidate, not the private conversational application.
+Evidence Lab has been on public main since PR #9 (workspace 0.4.0-rc.1, not a
+final release). It is not the private conversational application.
 
 ```sh
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo

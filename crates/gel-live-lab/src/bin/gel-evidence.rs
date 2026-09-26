@@ -36,7 +36,10 @@ impl Session {
             "find"=>{let start=Instant::now();let result=self.bank.search(arg)?;let ns=start.elapsed().as_nanos();
                 println!("FIND={} documents={} matching_lines={} shown={} skipped_lines={} search_ns={ns}",result.status(),result.documents_examined,result.matching_lines,result.hits.len(),result.skipped_long_lines);
                 for (n,h) in result.hits.iter().enumerate(){let d=self.bank.get(h.document_id()).ok_or("MISSING_DOCUMENT")?;
-                    println!("RESULT {} doc={} title={} bytes={}..{}\nQUOTE {}",n+1,d.id(),safe(d.title()),h.span().start,h.span().end,safe(h.quote()));}
+                    self.bank.validate(h)?;
+                    let c=gel_source::context::surrounding(d.text(),h.span(),512)?;
+                    println!("RESULT {} doc={} title={} bytes={}..{}\nQUOTE {}",n+1,d.id(),safe(d.title()),h.span().start,h.span().end,safe(h.quote()));
+                    println!("CONTEXT bytes={}..{} omitted_before={} omitted_after={} bounded_not_complete_sentence=true\n{}",c.context_span.start,c.context_span.end,c.omitted_before,c.omitted_after,safe(&d.text()[c.context_span.clone()]));}
                 self.hits=result.hits;
             },
             "proof"=>{let n=arg.parse::<usize>().map_err(|_|"INVALID_RESULT")?;let h=self.hits.get(n.checked_sub(1).ok_or("RESULTS_START_AT_1")?).ok_or("NO_CURRENT_RESULT")?;

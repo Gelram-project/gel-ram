@@ -1,0 +1,73 @@
+# Snapshot publication fault matrix
+
+The public source/collection publisher now has an internal, statically dispatched
+I/O boundary for deterministic tests. Production still uses ordinary write_all,
+file sync, no-replace hard link and (on Unix) parent-directory sync. There is no
+runtime option to weaken these operations.
+
+| Injected condition | Expected API result | New destination | Previous snapshot |
+|---|---|---|---|
+| Successful writes of at most 3 bytes | Success | Complete, reloadable | Unchanged |
+| Write failure after half the bytes | Error | Absent | Unchanged |
+| Permission-denied write | Error | Absent | Unchanged |
+| File sync failure | Error | Absent | Unchanged |
+| Hard-link publication failure | Error | Absent | Unchanged |
+| Parent sync failure after linking | Error | Complete, reloadable | Unchanged |
+| Existing destination | Error | Existing bytes unchanged | Unchanged |
+
+Every case reloads the previous snapshot with its independently retained pin.
+Partial temporary files are not treated as committed snapshots. Controlled
+failures clean up the temporary file; a process crash can still leave one.
+
+A failed parent sync cannot safely be interpreted as “nothing was written”.
+The complete destination can already exist. Inspect it using its trusted pin;
+do not blindly overwrite or delete it. Non-Unix production directory durability
+remains unproven.
+
+These are deterministic failures at the real publisher boundary. Two further
+checks use the operating system itself rather than an injected error:
+
+- **Kernel permission denial (Unix test):** publishing into a 0500 directory
+  must fail with PermissionDenied, leave no destination or temporary file, and
+  keep the previous snapshot reloadable with its pin. The test first proves
+  that the kernel refuses an ordinary file creation there. Run it unprivileged:
+  as root the kernel permits the write and the test fails by design, rather
+  than reporting a pass it did not exercise.
+- **Physically full filesystem (Linux CI):** `full_disk_publication` fills a
+  dedicated 1 MiB tmpfs until the kernel returns ENOSPC, then publishes. It
+  requires ENOSPC from the publisher, an unchanged directory listing (no
+  destination, no temporary file) and a reloadable previous snapshot. After the
+  filler is removed, the same publication must succeed and reload. The program
+  refuses a directory unless it is the root of its own tmpfs mount (not a bind
+  of a subdirectory), its device matches that mount (so a shadowed or
+  over-mounted entry cannot be mistaken for it), and the tmpfs has an explicit,
+  non-zero
+  size of at most 64 MiB (size 0 means unlimited; read from /proc/self/mountinfo). It refuses a
+  non-empty directory, caps the filler at 64 MiB and removes it on every exit
+  path, including a failure while filling or while writing its own output.
+
+```sh
+cargo run --locked --offline --release -p gel-source --example full_disk_publication -- EMPTY_SMALL_TMPFS
+```
+
+Neither is a power-cut test. Existing separate SIGKILL tests retain their
+narrower process-crash scope.
+The old measured publisher remains preserved as
+[bundle.measured.rs.txt](evidence-collection/bundle.measured.rs.txt).
+
+## Valid hash does not make a valid structure
+
+The collection tests recompute the input hash for each deliberately malformed
+fixture: inconsistent next-ID/revision, missing or invented record counts,
+duplicate/out-of-order IDs, ID overflow, empty/oversized/overflowing text or
+title lengths, blank/control-character titles and invalid UTF-8. These must
+fail structure validation even though their supplied hash matches.
+
+Separate valid near-exhaustion snapshots exercise u64 revision and next-ID
+overflow. Rejected add/replace/remove operations leave bytes, root and existing
+citation validity unchanged; the resulting state still roundtrips.
+
+An executable CLI test loads a well-hashed invalid snapshot over a live
+collection. It requires a structural refusal and confirms that the previous
+document remains queryable with a valid citation. No input is relabelled as
+trusted merely because the caller supplied its matching hash.

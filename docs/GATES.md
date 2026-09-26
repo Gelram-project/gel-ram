@@ -3,7 +3,10 @@
 A release candidate is green only when all applicable gates pass on the same source tree.
 
 1. Rust-only source/tooling gate.
-2. Licensing-mode gate (PolyForm Noncommercial 1.0.0 only).
+2. Licensing-mode gate: the only accepted LICENSE-MODE.txt value is GEL RAM
+   NCRL 1.0 + Commercial + CLA 2.0, the root LICENSE must match the pinned NCRL
+   bytes, and the publication status must keep LEGAL_APPROVED=NO. This checks
+   consistency of the active license files, not legal validity.
 3. CI policy gate: pinned checkout SHA, read-only checkout credentials and a
    metadata-only CLA workflow that cannot execute pull-request code.
 4. `cargo fmt --check`.
@@ -21,10 +24,23 @@ A release candidate is green only when all applicable gates pass on the same sou
     code, including description-edit events).
 15. multi-thread Top-1 == single-thread Top-1: gel-reader equality tests plus the gel-bench smoke run in verify (`thread_scan_exact=PASS`).
 16. docs-refs gate: every backtick-quoted repository path in .md files exists.
+17. recorder-lint: clippy restriction lints on the standalone film recorder,
+    with injected panicking constructs that must be rejected (negative controls).
+18. historical measured-source pins (`MEASURED_SOURCES_R1=PASS`).
+19. claim registry (`xtask claims`): documented table equals the Rust registry
+    and executable claims pass their positive and negative cases.
+20. workspace documentation tests (`cargo test --doc`).
+21. saved R1 collection recheck (collection_recheck over the published r1 evidence).
+22. runtime demonstrations: `verify` runs the source, collection, Q8 and Live Lab
+    examples, including gel-evidence --demo; Windows/macOS CI runs the fail-fast
+    `xtask runtime-examples` sequence.
+23. CI only: a physically full 1 MiB tmpfs publication check and the pinned
+    Ocean archive tests (Linux), and the per-platform CI evidence report
+    (`xtask ci-evidence`) on Linux, Windows and macOS.
 
 Performance results are evidence, not correctness substitutes.
 
-## Additional Q8 preview checks on main
+## Additional Q8 checks on main
 
 - Shared scores agree with equivalent materialized views, including mask
   semantics and reversible transforms; these are not semantic-retrieval tests.
@@ -37,9 +53,12 @@ Performance results are evidence, not correctness substitutes.
   OS-refusal probe and a 16-cell post-fix correctness matrix. That probe is
   not an automatic cross-platform CI gate or general OOM/panic certification.
 
-Historical V1 timing results remain frozen. Any new V2 performance claim
+Historical V1 and V2 timing results remain frozen under their own headers.
+Any new performance claim for the current V3 comparison
 requires new timing evidence with effective budgets and fallback counts.
-macOS/Windows CI currently checks compilation, not runtime behavior.
+macOS/Windows CI executes workspace tests, documentation tests, the fail-fast
+runtime demonstrations and the independent integrity audit; the full `verify`
+gate, pinned Ocean archive tests and the full-disk tmpfs check run on Linux only.
 
 ## Binary-core hardening checks
 
