@@ -25,6 +25,11 @@ struct Totals {
     filtered: u64,
 }
 
+fn add(sum: &mut u64, value: u64) -> Result<(), String> {
+    *sum = sum.checked_add(value).ok_or("test summary overflow")?;
+    Ok(())
+}
+
 fn totals(text: &str) -> Result<Totals, String> {
     let mut t = Totals::default();
     for line in text.lines() {
@@ -36,26 +41,30 @@ fn totals(text: &str) -> Result<Totals, String> {
             .or_else(|| rest.strip_prefix("FAILED. "))
             .ok_or("unrecognised test summary")?;
         let fields: Vec<&str> = rest.split("; ").collect();
+        // Plain unsigned decimal digits only; no sign, no separators.
         let number = |index: usize, label: &str| -> Result<u64, String> {
             fields
                 .get(index)
                 .and_then(|f| f.strip_suffix(label))
+                .filter(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
                 .and_then(|n| n.parse().ok())
                 .ok_or_else(|| format!("malformed test summary field {label}"))
         };
-        t.passed += number(0, " passed")?;
-        t.failed += number(1, " failed")?;
-        t.ignored += number(2, " ignored")?;
+        add(&mut t.passed, number(0, " passed")?)?;
+        add(&mut t.failed, number(1, " failed")?)?;
+        add(&mut t.ignored, number(2, " ignored")?)?;
         number(3, " measured")?;
-        t.filtered += number(4, " filtered out")?;
-        t.summaries += 1;
+        add(&mut t.filtered, number(4, " filtered out")?)?;
+        t.summaries = t.summaries.checked_add(1).ok_or("test summary overflow")?;
     }
     Ok(t)
 }
 
-/// Whole tests compiled only for some targets. Where excluded, the name must be
+/// Whole tests compiled only for Unix targets. Where excluded, the name must be
 /// absent; elsewhere it must have run and passed exactly once. A compile-time
-/// exclusion is never reported as a success on the excluding platform.
+/// exclusion is never reported as a success on the excluding platform. A new
+/// Unix-only test must be added here; `xtask platform-diff` compares a Unix and
+/// a Windows TESTS.txt and fails on any undeclared difference.
 const EXCLUSIONS: &[(&str, &str)] = &[
     (
         "sigkill_after_save_ack_keeps_a_readable_snapshot",
@@ -78,9 +87,14 @@ const EXCLUSIONS: &[(&str, &str)] = &[
         "tests::atomic_write_is_private_by_default_and_preserves_existing_mode",
         "Unix permission bits",
     ),
+    (
+        "kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file",
+        "Unix permission bits",
+    ),
 ];
 
 /// Tests that run everywhere but contain an extra platform-only assertion block.
+/// Each must run and pass exactly once on every platform.
 const PARTIAL_BRANCHES: &[(&str, &str, &str)] = &[
     (
         "persisted_roundtrip_and_no_temporary_files",
@@ -94,25 +108,28 @@ const PARTIAL_BRANCHES: &[(&str, &str, &str)] = &[
     ),
 ];
 
+/// (passed, listed) executions of `name` in the debug workspace pass.
+fn workspace_counts(tests: &str, name: &str) -> (usize, usize) {
+    let mut passed = 0;
+    let mut listed = 0;
+    for rest in tests
+        .lines()
+        .filter_map(|l| l.strip_prefix("workspace-debug\ttest "))
+    {
+        if let Some((n, status)) = rest.split_once(" ... ") {
+            if n == name {
+                listed += 1;
+                passed += usize::from(status == "ok");
+            }
+        }
+    }
+    (passed, listed)
+}
+
 fn check_exclusions(tests: &str, unix: bool) -> Result<String, String> {
     let mut lines = String::new();
     for (name, reason) in EXCLUSIONS {
-        let ran = tests
-            .lines()
-            .filter(|l| {
-                l.strip_prefix("workspace-debug\ttest ")
-                    .and_then(|rest| rest.strip_suffix(" ... ok"))
-                    == Some(*name)
-            })
-            .count();
-        let listed = tests
-            .lines()
-            .filter(|l| {
-                l.strip_prefix("workspace-debug\ttest ")
-                    .and_then(|rest| rest.split_once(" ... "))
-                    .is_some_and(|(n, _)| n == *name)
-            })
-            .count();
+        let (ran, listed) = workspace_counts(tests, name);
         let here = match (unix, ran, listed) {
             (true, 1, 1) => "RAN_PASSED",
             (false, 0, 0) => "EXCLUDED_NOT_COUNTED",
@@ -127,11 +144,78 @@ fn check_exclusions(tests: &str, unix: bool) -> Result<String, String> {
         ));
     }
     for (name, condition, detail) in PARTIAL_BRANCHES {
+        if workspace_counts(tests, name) != (1, 1) {
+            return Err(format!(
+                "partial-branch test {name} did not run and pass once"
+            ));
+        }
         lines.push_str(&format!(
-            "PARTIAL_PLATFORM_BRANCH test={name} condition={condition} detail={detail}\n"
+            "PARTIAL_PLATFORM_BRANCH test={name} condition={condition} here=RAN_PASSED detail={detail}\n"
         ));
     }
     Ok(lines)
+}
+
+/// Per-name counts of passing debug-workspace executions; any other status fails.
+fn passing_names(tests: &str) -> Result<std::collections::BTreeMap<&str, usize>, String> {
+    let mut names = std::collections::BTreeMap::new();
+    for rest in tests
+        .lines()
+        .filter_map(|l| l.strip_prefix("workspace-debug\ttest "))
+    {
+        let (name, status) = rest.split_once(" ... ").ok_or("malformed TESTS.txt line")?;
+        if status != "ok" {
+            return Err(format!("non-passing test in report: {name} {status}"));
+        }
+        let count = names.entry(name).or_insert(0usize);
+        *count = count.checked_add(1).ok_or("test count overflow")?;
+    }
+    Ok(names)
+}
+
+/// Every name that passes on Unix but not on Windows must be a declared
+/// exclusion, and nothing may pass on Windows only.
+fn compare_platforms(unix: &str, windows: &str) -> Result<String, String> {
+    let (u, w) = (passing_names(unix)?, passing_names(windows)?);
+    let declared: std::collections::BTreeSet<&str> =
+        EXCLUSIONS.iter().map(|(name, _)| *name).collect();
+    let mut problems = Vec::new();
+    for (name, &count) in &u {
+        let other = w.get(name).copied().unwrap_or(0);
+        let expected = if declared.contains(name) { 0 } else { count };
+        if other != expected {
+            problems.push(format!("{name}: unix={count} windows={other}"));
+        }
+    }
+    for (name, &count) in &w {
+        if !u.contains_key(name) {
+            problems.push(format!("{name}: unix=0 windows={count}"));
+        }
+    }
+    for name in &declared {
+        if !u.contains_key(name) {
+            problems.push(format!("{name}: declared but absent on unix"));
+        }
+    }
+    if problems.is_empty() {
+        Ok(format!(
+            "PLATFORM_DIFF=PASS unix_passed={} windows_passed={} declared_unix_only={}",
+            u.values().sum::<usize>(),
+            w.values().sum::<usize>(),
+            declared.len()
+        ))
+    } else {
+        Err(format!("PLATFORM_DIFF=FAIL {}", problems.join("; ")))
+    }
+}
+
+pub fn platform_diff(args: &[String]) -> Result<(), String> {
+    let [unix, windows] = args else {
+        return Err("platform-diff requires UNIX_TESTS.txt WINDOWS_TESTS.txt".into());
+    };
+    let read = |path: &String| fs::read_to_string(path).map_err(|e| format!("{path}: {e}"));
+    println!("{}", compare_platforms(&read(unix)?, &read(windows)?)?);
+    Ok(())
 }
 
 fn accepted(id: &str, exited_successfully: bool, text: &str, count: usize) -> bool {
@@ -423,28 +507,78 @@ mod tests {
         for (name, _) in EXCLUSIONS {
             ran.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
         }
-        let other = "workspace-debug\ttest unrelated::case ... ok\n";
+        let mut other = String::from("workspace-debug\ttest unrelated::case ... ok\n");
+        for (name, _, _) in PARTIAL_BRANCHES {
+            other.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
         // Unix: every excluded-elsewhere test must have run and passed once.
         let lines = check_exclusions(&format!("{other}{ran}"), true).unwrap();
-        assert_eq!(lines.matches("here=RAN_PASSED").count(), EXCLUSIONS.len());
-        assert!(check_exclusions(other, true).is_err());
-        assert!(check_exclusions(&format!("{ran}{ran}"), true).is_err());
+        assert_eq!(
+            lines.matches("here=RAN_PASSED").count(),
+            EXCLUSIONS.len() + PARTIAL_BRANCHES.len()
+        );
+        assert!(check_exclusions(&other, true).is_err());
+        assert!(check_exclusions(&format!("{other}{ran}{ran}"), true).is_err());
         let ignored = ran.replacen(" ... ok", " ... ignored", 1);
-        assert!(check_exclusions(&ignored, true).is_err());
+        assert!(check_exclusions(&format!("{other}{ignored}"), true).is_err());
         // Other targets: excluded tests are absent and never counted as success.
-        let lines = check_exclusions(other, false).unwrap();
+        let lines = check_exclusions(&other, false).unwrap();
         assert_eq!(
             lines.matches("here=EXCLUDED_NOT_COUNTED").count(),
             EXCLUSIONS.len()
         );
-        assert!(check_exclusions(&ran, false).is_err());
+        assert!(check_exclusions(&format!("{other}{ran}"), false).is_err());
         // Another case id with the same name does not satisfy the workspace check.
         let release_only = ran.replace("workspace-debug\t", "core-release\t");
-        assert!(check_exclusions(&release_only, true).is_err());
-        assert_eq!(
-            lines.matches("PARTIAL_PLATFORM_BRANCH").count(),
-            PARTIAL_BRANCHES.len()
+        assert!(check_exclusions(&format!("{other}{release_only}"), true).is_err());
+        // Partial-branch tests are checked, not merely listed.
+        assert!(check_exclusions(&ran, true).is_err());
+        let failed_branch = other.replacen(" ... ok", " ... FAILED", 2);
+        assert!(check_exclusions(&failed_branch, false).is_err());
+    }
+
+    #[test]
+    fn platform_diff_rejects_undeclared_stale_and_windows_only_tests() {
+        let mut shared = String::from("workspace-debug\ttest shared::case ... ok\n");
+        for (name, _, _) in PARTIAL_BRANCHES {
+            shared.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
+        let mut declared = String::new();
+        for (name, _) in EXCLUSIONS {
+            declared.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
+        let unix = format!("{shared}{declared}");
+        assert!(compare_platforms(&unix, &shared)
+            .unwrap()
+            .starts_with("PLATFORM_DIFF=PASS"));
+        // A Unix-only test that is not declared is caught.
+        let undeclared = format!("{unix}workspace-debug\ttest new::unix_only ... ok\n");
+        assert!(compare_platforms(&undeclared, &shared).is_err());
+        // A declared test that no longer exists on Unix is caught.
+        let first = EXCLUSIONS[0].0;
+        let stale = unix.replace(&format!("test {first} ... ok\n"), "");
+        assert!(compare_platforms(&stale, &shared).is_err());
+        // A test passing only on Windows, or a declared test running there, is caught.
+        let win_only = format!("{shared}workspace-debug\ttest win::only ... ok\n");
+        assert!(compare_platforms(&unix, &win_only).is_err());
+        assert!(compare_platforms(&unix, &unix).is_err());
+        // A non-passing line in either report fails.
+        let failed = unix.replacen(" ... ok", " ... FAILED", 1);
+        assert!(compare_platforms(&failed, &shared).is_err());
+    }
+
+    #[test]
+    fn summary_overflow_and_signed_counts_are_rejected() {
+        let max = format!(
+            "test result: ok. {} passed; 0 failed; 0 ignored; 0 measured; 0 filtered out\n",
+            u64::MAX
         );
+        assert!(totals(&max).is_ok());
+        assert!(totals(&format!("{max}{max}")).is_err());
+        assert!(totals(
+            "test result: ok. +3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out"
+        )
+        .is_err());
     }
 
     #[test]

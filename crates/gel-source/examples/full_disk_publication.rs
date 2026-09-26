@@ -1,6 +1,8 @@
 //! Physically full filesystem: snapshot publication must fail closed on ENOSPC.
-//! Run ONLY on a small dedicated, empty filesystem (for example a 1 MiB tmpfs).
-//! The filler is capped at 64 MiB; a larger filesystem is refused, not filled.
+//! Run ONLY on a small dedicated, empty tmpfs (for example 1 MiB). The directory
+//! must itself be a tmpfs mount point with an explicit size of at most 64 MiB
+//! (read from /proc/self/mountinfo); anything else is refused before writing.
+//! The filler is also capped at 64 MiB and removed on every exit path.
 //! Linux only. This is a full-device test, not a power-loss test.
 #[cfg(not(target_os = "linux"))]
 fn main() -> Result<(), String> {
@@ -15,7 +17,11 @@ fn main() -> Result<(), String> {
 #[cfg(target_os = "linux")]
 mod linux {
     use gel_source::{import_text, load_bundle, write_bundle_new, BundleError, EncodedCorpus};
-    use std::{fs, io::Write, path::Path};
+    use std::{
+        fs,
+        io::Write,
+        path::{Path, PathBuf},
+    };
 
     const CAP: u64 = 64 * 1024 * 1024;
     const ENOSPC: i32 = 28;
@@ -33,6 +39,72 @@ mod linux {
         Ok(names)
     }
 
+    /// Removes the filler file on every exit path, including early errors.
+    struct Filler(Option<PathBuf>);
+    impl Filler {
+        fn remove(mut self) -> Result<(), String> {
+            match self.0.take() {
+                Some(path) => fs::remove_file(path).map_err(|e| e.to_string()),
+                None => Ok(()),
+            }
+        }
+    }
+    impl Drop for Filler {
+        fn drop(&mut self) {
+            if let Some(path) = self.0.take() {
+                let _ = fs::remove_file(path);
+            }
+        }
+    }
+
+    fn unescape(field: &str) -> String {
+        field
+            .replace("\\040", " ")
+            .replace("\\011", "\t")
+            .replace("\\012", "\n")
+            .replace("\\134", "\\")
+    }
+
+    fn tmpfs_bytes(size: &str) -> Option<u64> {
+        let (digits, scale) = match size.as_bytes().last()? {
+            b'k' | b'K' => (&size[..size.len() - 1], 1024),
+            b'm' | b'M' => (&size[..size.len() - 1], 1024 * 1024),
+            b'g' | b'G' => (&size[..size.len() - 1], 1024 * 1024 * 1024),
+            _ => (size, 1),
+        };
+        digits.parse::<u64>().ok()?.checked_mul(scale)
+    }
+
+    /// The directory must be a tmpfs mount point with an explicit size <= CAP.
+    fn small_tmpfs(dir: &Path) -> Result<u64, String> {
+        let canonical = fs::canonicalize(dir).map_err(|e| e.to_string())?;
+        let target = canonical.to_str().ok_or("non-UTF-8 directory path")?;
+        let info = fs::read_to_string("/proc/self/mountinfo").map_err(|e| e.to_string())?;
+        // The last matching entry is the visible mount; earlier ones are shadowed.
+        let line = info
+            .lines()
+            .filter(|l| l.split(' ').nth(4).map(unescape).as_deref() == Some(target))
+            .last()
+            .ok_or("refusing: the directory is not a mount point")?;
+        let (_, tail) = line.split_once(" - ").ok_or("malformed mountinfo line")?;
+        let mut fields = tail.split(' ');
+        if fields.next() != Some("tmpfs") {
+            return Err("refusing: the mount point is not tmpfs".into());
+        }
+        let options = fields.nth(1).unwrap_or("");
+        let bytes = options
+            .split(',')
+            .find_map(|o| o.strip_prefix("size="))
+            .and_then(tmpfs_bytes)
+            .ok_or("refusing: tmpfs without an explicit size")?;
+        if bytes > CAP {
+            return Err(format!(
+                "refusing: tmpfs size {bytes} B exceeds the 64 MiB cap"
+            ));
+        }
+        Ok(bytes)
+    }
+
     fn corpus(label: &str) -> Result<EncodedCorpus, String> {
         let text = format!("{label}: full-disk publication fixture line.\n").repeat(256);
         import_text(text.as_bytes(), label).map_err(|e| format!("{e:?}"))
@@ -44,6 +116,7 @@ mod linux {
             return Err("usage: full_disk_publication EMPTY_SMALL_FILESYSTEM_DIR".into());
         };
         let dir = Path::new(dir);
+        let device_bytes = small_tmpfs(dir)?;
         if !names(dir)?.is_empty() {
             return Err("refusing a non-empty directory".into());
         }
@@ -58,12 +131,12 @@ mod linux {
             .create_new(true)
             .open(&filler_path)
             .map_err(|e| e.to_string())?;
+        let guard = Filler(Some(filler_path.clone()));
         let chunk = vec![0xA5u8; 64 * 1024];
         let mut filled = 0u64;
         let full = loop {
             if filled >= CAP {
                 drop(filler);
-                let _ = fs::remove_file(&filler_path);
                 return Err("filesystem larger than the 64 MiB cap; refusing to fill it".into());
             }
             match filler.write_all(&chunk) {
@@ -74,7 +147,7 @@ mod linux {
         };
         drop(filler);
         println!(
-            "FULL_DISK_SETUP filler_bytes_at_least={filled} kernel_error={full} previous_pin_prefix={:02x}{:02x}{:02x}{:02x}",
+            "FULL_DISK_SETUP tmpfs_bytes={device_bytes} filler_bytes_at_least={filled} kernel_error={full} previous_pin_prefix={:02x}{:02x}{:02x}{:02x}",
             previous_pin[0], previous_pin[1], previous_pin[2], previous_pin[3]
         );
 
@@ -97,7 +170,7 @@ mod linux {
         );
 
         // After space is freed the same publication succeeds and reloads.
-        fs::remove_file(&filler_path).map_err(|e| e.to_string())?;
+        guard.remove()?;
         let new_pin = write_bundle_new(&target, &corpus("new")?).map_err(|e| format!("{e:?}"))?;
         load_bundle(&target, new_pin).map_err(|e| format!("{e:?}"))?;
         load_bundle(&previous, previous_pin).map_err(|e| format!("{e:?}"))?;

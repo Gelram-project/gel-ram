@@ -1,7 +1,8 @@
 //! Scripted typing, unmodified live subprocess output; not a benchmark harness.
 //! Run in a NEW directory containing memory.txt and unicode.txt.
 //! Display, log, lock, thread, parse and snapshot failures end in
-//! RECORDING_FAILED (exit 1); a wrong command line ends in RECORDING_REFUSED
+//! RECORDING_FAILED (exit 1); every refusal before any output is written (wrong
+//! command line, relative binary, existing output) ends in RECORDING_REFUSED
 //! (exit 2). `xtask recorder-lint` enforces the lints below with clippy.
 #![deny(
     clippy::unwrap_used,
@@ -122,11 +123,29 @@ impl App {
         let input = child.stdin.take();
         let output = Arc::new(Mutex::new(Capture::default()));
         let shared = output.clone();
-        let reader = thread::spawn(move || pump(stdout, stdout_log, io::stdout(), shared));
+        // A reader thread that cannot start is a controlled failure, not a panic.
+        let reader = match thread::Builder::new()
+            .spawn(move || pump(stdout, stdout_log, io::stdout(), shared))
+        {
+            Ok(reader) => reader,
+            Err(e) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                fail_unlaunched(&mut status_log, &format!("reader thread: {e}"));
+            }
+        };
         let errors = Arc::new(Mutex::new(Capture::default()));
         let shared_errors = errors.clone();
-        let error_reader =
-            thread::spawn(move || pump(stderr, stderr_log, io::stderr(), shared_errors));
+        let error_reader = match thread::Builder::new()
+            .spawn(move || pump(stderr, stderr_log, io::stderr(), shared_errors))
+        {
+            Ok(reader) => reader,
+            Err(e) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                fail_unlaunched(&mut status_log, &format!("reader thread: {e}"));
+            }
+        };
         let mut app = Self {
             child,
             input,
@@ -370,11 +389,14 @@ fn update_walkthrough(binary: &OsStr) {
 }
 
 fn main() {
-    // args_os: a non-UTF-8 argument is refused, not a panic.
+    // args_os: the binary may be any absolute OS path, including non-UTF-8;
+    // a relative binary, a missing binary or an unknown flag is refused.
     let args: Vec<OsString> = std::env::args_os().collect();
     let (binary, update) = match (args.get(1), args.get(2), args.len()) {
-        (Some(binary), None, 2) => (binary.clone(), false),
-        (Some(binary), Some(flag), 3) if flag == "--update" => (binary.clone(), true),
+        (Some(binary), None, 2) if Path::new(binary).is_absolute() => (binary.clone(), false),
+        (Some(binary), Some(flag), 3) if flag == "--update" && Path::new(binary).is_absolute() => {
+            (binary.clone(), true)
+        }
         _ => {
             report(
                 "RECORDING_REFUSED",
@@ -400,12 +422,12 @@ fn main() {
         match fs::symlink_metadata(path) {
             Ok(_) => {
                 report("RECORDING_REFUSED", &format!("existing output {path}"));
-                std::process::exit(1);
+                std::process::exit(2);
             }
             Err(e) if e.kind() == io::ErrorKind::NotFound => {}
             Err(e) => {
                 report("RECORDING_REFUSED", &e.to_string());
-                std::process::exit(1);
+                std::process::exit(2);
             }
         }
     }

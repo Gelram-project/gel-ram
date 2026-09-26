@@ -119,7 +119,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|test|bench|physics";
+    "verify|report|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -916,6 +916,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("fmt") => run("cargo", FMT_CHECK_ARGS),
         Some("clippy") => run("cargo", CLIPPY_ARGS),
         Some("recorder-lint") => recorder_lint::check(workspace_root()?),
+        Some("platform-diff") => ci_evidence::platform_diff(&args[1..]),
         Some("test") => run("cargo", TEST_ARGS),
         Some("bench") => run_release_binary("gel-bench", &args[1..]),
         Some("physics") => run_release_binary("gel-physics", &args[1..]),

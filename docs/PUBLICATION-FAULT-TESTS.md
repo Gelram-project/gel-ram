@@ -30,13 +30,18 @@ checks use the operating system itself rather than an injected error:
 - **Kernel permission denial (Unix test):** publishing into a 0500 directory
   must fail with PermissionDenied, leave no destination or temporary file, and
   keep the previous snapshot reloadable with its pin. The test first proves
-  that the kernel refuses an ordinary file creation there; run it unprivileged.
+  that the kernel refuses an ordinary file creation there. Run it unprivileged:
+  as root the kernel permits the write and the test fails by design, rather
+  than reporting a pass it did not exercise.
 - **Physically full filesystem (Linux CI):** `full_disk_publication` fills a
   dedicated 1 MiB tmpfs until the kernel returns ENOSPC, then publishes. It
   requires ENOSPC from the publisher, an unchanged directory listing (no
   destination, no temporary file) and a reloadable previous snapshot. After the
   filler is removed, the same publication must succeed and reload. The program
-  refuses a non-empty directory and never fills more than 64 MiB.
+  refuses a directory that is not itself a tmpfs mount point with an explicit
+  size of at most 64 MiB (read from /proc/self/mountinfo), refuses a
+  non-empty directory, caps the filler at 64 MiB and removes it on every exit
+  path, including a failure while filling.
 
 ```sh
 cargo run --locked --offline --release -p gel-source --example full_disk_publication -- EMPTY_SMALL_TMPFS

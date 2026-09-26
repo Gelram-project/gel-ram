@@ -13,15 +13,24 @@ Current recorder safeguards:
 - EOF before a required marker is an error, even if the child exited with status 0.
 - COMPLETE is created only after both processes have finished successfully.
   A failed COMPLETE write removes the partial marker.
-- Display, log, lock, reader-thread, emitted-pin and snapshot failures end in
-  `RECORDING_FAILED` with exit 1; a running child is killed first and its
-  status file records `FAILED`. A wrong command line, including a non-UTF-8
-  argument, ends in `RECORDING_REFUSED: usage` with exit 2 before any output.
+- Display, log, lock, reader-thread start, emitted-pin and snapshot failures
+  end in `RECORDING_FAILED` with exit 1; a running child is killed first and its
+  status file records `FAILED`.
+- Every refusal before any output is written ends in `RECORDING_REFUSED` with
+  exit 2: a missing or relative binary path, an unknown flag (including a
+  non-UTF-8 flag), `--update` without a binary, or an existing output path. The
+  binary may be any absolute OS path, including a non-UTF-8 one.
 - `cargo xtask recorder-lint` (part of `verify`) runs clippy-driver on the
-  standalone tool, which denies `unwrap_used`, `expect_used`, `panic`,
-  `unreachable`, `todo`, `unimplemented`, `indexing_slicing`, `print_stdout`
-  and `print_stderr`. The gate also lints a copy with one injected `unwrap()`
-  and fails if that copy is accepted, so a silent no-op lint cannot pass.
+  standalone tool with 13 lints forbidden from the command line, so an
+  `#[allow]` inside the file cannot relax them: `unwrap_used`, `expect_used`,
+  `panic`, `unreachable`, `todo`, `unimplemented`, `indexing_slicing`,
+  `string_slice`, `arithmetic_side_effects`, `print_stdout`, `print_stderr`,
+  and `disallowed_macros` / `disallowed_methods` configured to reject the
+  assert macros, `std::thread::spawn`, `str::split_at` and `Vec::remove`
+  ([tools/recorder-lint/clippy.toml](../tools/recorder-lint/clippy.toml)).
+  The gate then lints eight copies, each with one injected construct (unwrap,
+  an `#[allow]` bypass, assert, indexing, string slicing, arithmetic, thread
+  spawn, print) and fails unless every copy is rejected by the expected lint.
 
 Use a new directory controlled by the operator. This is not a security boundary
 against another process replacing paths concurrently in that directory.
@@ -44,6 +53,8 @@ the operator's failure handling only; they are not application evidence.
 
 A local re-run of both live walkthroughs with the hardened operator produced
 byte-identical snapshots and command logs to the previous runs; the displayed
-text differed only in measured timing digits.
+text differed only in measured timing digits. Since then the default mode's
+two closing lines were reworded on purpose ("citation hash correspondence
+checked", "Nothing was published"); the `--update` display is unchanged.
 
 This does not certify old films or replace full movie decoding and visual review.

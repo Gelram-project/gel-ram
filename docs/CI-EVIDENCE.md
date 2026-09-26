@@ -57,14 +57,29 @@ not author authentication or proof of truth. Failure prevents COMPLETE.
 
 ## Platform exclusions
 
-Six whole tests are compiled only on Unix: two SIGKILL process tests, three
-symlink tests and one permission-bit test. They are declared in the collector.
+Seven whole tests are compiled only on Unix: two SIGKILL process tests, three
+symlink tests and two permission-bit tests. They are declared in the collector.
 On Linux/macOS each must appear exactly once in the debug workspace pass as
 `ok` (`here=RAN_PASSED`); on Windows each must be absent
 (`here=EXCLUDED_NOT_COUNTED`). Any other combination — missing, repeated,
 ignored, or present where excluded — fails the report, so a stale declaration
-cannot pass and an exclusion is never counted as a Windows success. Platform
-reports are separate; do not add them into one number of unique tests.
+cannot pass and an exclusion is never counted as a Windows success. Two tests
+that run everywhere but contain an extra Unix- or Linux-only assertion block
+must run and pass once on every platform (`PARTIAL_PLATFORM_BRANCH … here=RAN_PASSED`).
+Platform reports are separate; do not add them into one number of unique tests.
+
+A single job cannot see a test that another platform never compiled, so the
+per-job check alone cannot find an undeclared Unix-only test. Compare two
+reports' test lists (for example the TESTS.txt of a Linux and a Windows run of
+the same commit, or the same lines printed in their CI logs):
+
+```sh
+cargo run --locked --offline -p xtask -- platform-diff UNIX_TESTS.txt WINDOWS_TESTS.txt
+```
+
+It fails unless the tests passing on Unix but not on Windows are exactly the
+declared exclusions and nothing passes on Windows only. Test names are not
+qualified by crate; each declared name is currently defined once.
 
 ## Native command sequencing
 

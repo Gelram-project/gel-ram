@@ -85,8 +85,18 @@ fn main() {
             .output()
             .unwrap();
         assert!(!output.status.success(), "{case}");
+        if case == "existing" {
+            assert_eq!(output.status.code(), Some(2), "{case}: refusal exit code");
+        }
         let stderr = String::from_utf8_lossy(&output.stderr);
-        assert!(stderr.contains(diagnostic), "{case}: {stderr}");
+        // A child that exits right after its prompt fails either on the command
+        // pipe or at the next marker, depending on scheduling; both fail closed.
+        let alternative = case == "closed_stdin"
+            && stderr.contains("RECORDING_FAILED: EOF or timeout before marker");
+        assert!(
+            stderr.contains(diagnostic) || alternative,
+            "{case}: {stderr}"
+        );
         assert!(!stderr.contains("panicked"), "{case}: {stderr}");
         assert!(!dir.join("COMPLETE.txt").exists(), "{case}");
         if case == "existing" {
@@ -140,9 +150,16 @@ fn recorder_usage_and_closed_display_fail_closed() {
     let root = fresh_root("display");
     let recorder = compiled_recorder(&root);
     // A wrong command line is refused with exit 2 before any output exists.
-    for (index, args) in [&[][..], &["a", "b"][..], &["a", "--other"][..]]
-        .iter()
-        .enumerate()
+    for (index, args) in [
+        &[][..],
+        &["a", "b"][..],
+        &["a", "--other"][..],
+        &["--update"][..],
+        &["relative-binary"][..],
+        &["relative-binary", "--update"][..],
+    ]
+    .iter()
+    .enumerate()
     {
         let dir = root.join(format!("usage-{index}"));
         fs::create_dir(&dir).unwrap();
