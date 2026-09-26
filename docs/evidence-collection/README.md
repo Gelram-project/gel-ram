@@ -81,3 +81,34 @@ who can replace the entire package. The enclosing SOURCE-SHA256SUMS.txt pins the
 whole source snapshot; retain its digest separately.
 
 [Measurement protocol and limitations](../EVIDENCE-CAMPAIGN.md).
+
+## Rebuild the measured configuration from public history
+
+The measured code is public: commit `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`
+differs from the measured tree only in the workspace version string. Restoring
+that string reproduces every pinned measured source byte for byte:
+
+```sh
+git checkout 71142a25e7ad75e4d75acf4e244d8e4a996c4a92
+sed -i 's/^version = "0.4.0-rc.1"$/version = "0.3.0"/' Cargo.toml Cargo.lock
+sha256sum -c docs/evidence-collection/MEASURED-SOURCES.sha256   # 8 of 8 OK, including Cargo.lock
+cargo +1.85.0 run --locked --offline --release -p gel-source --example collection_campaign -- ../new-collection-run
+cargo +1.85.0 run --locked --offline --release -p gel-source --example collection_recheck -- ../new-collection-run
+```
+
+What must match, and what cannot:
+
+- **Deterministic, must match [r1](r1/):** every `sha256`, `text_bytes` and
+  `snapshot_bytes` row of `corpora.txt`; 2115 observations with the same
+  `(rep, documents, operation, sample)` keys in the same order; `correct=1` on
+  every row; the same 99 summary groups; recheck PASS.
+- **Not reproducible by rebuilding:** every time (`build_ns`, percentiles) and
+  RSS. They depend on the host state, which the original run did not record.
+
+Owner-side rerun on 26 September 2026 (Rust 1.85.0, the same machine, network
+namespace, CPU governor `powersave`, other desktop processes running): all
+deterministic items above matched r1, recheck PASS, and a copy with one altered
+observation failed recheck with `SUMMARY_MISMATCH`. Binaries built from the
+public variant were byte-identical to binaries built from the local measured
+revision. Per-group p50 ratios new/r1 ranged 0.77–3.38 (median 2.33); this is a
+record of a different host state, not evidence of a slowdown or speed-up.
