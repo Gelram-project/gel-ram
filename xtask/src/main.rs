@@ -254,6 +254,9 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
             "docs/evidence-collection/MEASURED-SOURCES.sha256",
             "docs/evidence-collection/r1/raw.csv",
             "docs/evidence-collection/r1/summary.csv",
+            "docs/evidence-gel-components/run-1.csv",
+            "docs/evidence-gel-components/run-2.csv",
+            "docs/evidence-gel-components/run-3.csv",
         ]
         .iter()
         .any(|p| path == root.join(p));
@@ -878,6 +881,31 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn component_evidence_exception_is_exact_and_text_only() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root =
+            std::env::temp_dir().join(format!("gel-component-gate-{}-{nonce}", std::process::id()));
+        let dir = root.join("docs/evidence-gel-components");
+        fs::create_dir_all(&dir).unwrap();
+        for i in 1..=3 {
+            let path = dir.join(format!("run-{i}.csv"));
+            fs::write(&path, b"rep,n\n0,16384\n").unwrap();
+            assert!(rust_only_at(&root).is_ok());
+            for bad in [b"\xff".as_slice(), b"\x1b[2J", b"binary\0"] {
+                fs::write(&path, bad).unwrap();
+                assert!(rust_only_at(&root).is_err());
+            }
+            fs::write(&path, b"rep,n\n0,16384\n").unwrap();
+        }
+        fs::write(dir.join("run-4.csv"), b"unreviewed\n").unwrap();
+        assert!(rust_only_at(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
 
     #[test]
     fn collection_evidence_exception_is_exact_and_text_only() {
