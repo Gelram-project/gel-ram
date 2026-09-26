@@ -29,3 +29,26 @@ The source-level removal of a temporary serialization buffer does not itself
 prove a measured RSS reduction. Memory profiling and repeated isolated runs
 remain necessary before a broad optimization claim. Do not compare these
 mutation timings with Ocean searches, Q8 decoding or private GEL/WAVE timings.
+
+## Separate Linux process-memory experiment
+
+```sh
+cargo build --locked --offline --release -p gel-source --example mutation_compare
+target/release/examples/mutation_compare --memory stream 256 replace
+target/release/examples/mutation_compare --memory historical_vec 256 replace
+```
+
+Run each command in a fresh process. Supported sizes are 8, 64, 256 and operations
+are add, replace, remove. This mode builds only the selected bank, samples Linux
+VmRSS and VmHWM before and after one mutation, then serializes and checks its
+result with the current decoder and SHA256 oracle. Compare result roots and
+lengths across variants before comparing memory. Preserve every output and
+repeat with alternating execution order for a performance campaign.
+
+The reported bytes convert Linux kB by 1024. VmHWM is a lifetime high-water mark:
+it includes bank construction and is not reset at the operation boundary.
+RSS includes process/runtime state and allocator-retained pages. Sampling and
+reading proc also have overhead. These are not allocation counts, copied-byte
+counts, or a precise isolated mutation peak. A zero HWM increase does not mean
+zero allocation. The single operation latency is diagnostic, not a percentile.
+No unsafe allocator hook is added; workspace safety policy is unchanged.

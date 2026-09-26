@@ -157,8 +157,115 @@ fn run(out: &Path) -> Result<(), String> {
     println!("MUTATION_COMPARE=PASS");
     Ok(())
 }
+fn memory_field(status: &str, key: &str) -> Result<u64, String> {
+    let line = status
+        .lines()
+        .find_map(|s| s.strip_prefix(key))
+        .ok_or_else(|| format!("missing memory field {key}"))?;
+    let fields: Vec<_> = line.split_whitespace().collect();
+    if fields.len() != 2 || fields[1] != "kB" {
+        return Err("unexpected proc memory unit".into());
+    }
+    fields[0]
+        .parse::<u64>()
+        .map_err(|e| e.to_string())?
+        .checked_mul(1024)
+        .ok_or_else(|| "memory overflow".into())
+}
+
+fn memory_sample() -> Result<(u64, u64), String> {
+    let status = fs::read_to_string("/proc/self/status").map_err(|e| e.to_string())?;
+    Ok((
+        memory_field(&status, "VmRSS:")?,
+        memory_field(&status, "VmHWM:")?,
+    ))
+}
+
+// One fresh process per variant/size/operation. No simultaneous reference bank.
+// VmHWM includes startup/building the bank and is NOT an allocation counter.
+fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
+    if cfg!(debug_assertions) || !cfg!(target_os = "linux") {
+        return Err("memory mode requires Linux and --release".into());
+    }
+    if ![8, 64, 256].contains(&n)
+        || !["stream", "historical_vec"].contains(&variant)
+        || !["add", "replace", "remove"].contains(&operation)
+    {
+        return Err("unsupported memory experiment configuration".into());
+    }
+    let text = "Synthetic source data. Zażółć gęślą jaźń.\n".repeat(400);
+    let replacement = format!("Revised synthetic source.\n{text}");
+    macro_rules! measure {
+        ($bank:expr) => {{
+            let mut bank = $bank;
+            for i in 0..n {
+                bank.add(&format!("Document {i}"), &text)?;
+            }
+            let before = memory_sample()?;
+            let start = Instant::now();
+            match operation {
+                "add" => { black_box(bank.add("Extra", &replacement)?); }
+                "replace" => bank.replace(1, &replacement)?,
+                _ => bank.remove(1)?,
+            }
+            let elapsed = start.elapsed().as_nanos();
+            let after = memory_sample()?;
+            // Serialization/oracle is deliberately AFTER the memory samples.
+            let bytes = bank.to_bytes();
+            let restored = Collection::from_bytes(&bytes, bank.root())?;
+            if restored.to_bytes() != bytes || digest(&bytes) != bank.root() {
+                return Err("memory experiment oracle mismatch".into());
+            }
+            println!("variant,documents,operation,rss_before_bytes,hwm_before_bytes,rss_after_bytes,hwm_after_bytes,latency_ns,result_bytes,result_root");
+            println!("{variant},{n},{operation},{},{},{},{},{elapsed},{},{}",
+                before.0, before.1, after.0, after.1, bytes.len(), hex(&bank.root()));
+            println!("MEMORY_SCOPE=process RSS and lifetime HWM; setup included; allocator retained pages possible; not allocations or isolated operation peak");
+            println!("HARNESS_SHA256={}", hex(&digest(include_bytes!("mutation_compare.rs"))));
+            println!("MEMORY_SAMPLE=PASS");
+        }};
+    }
+    if variant == "stream" {
+        measure!(Collection::new());
+    } else {
+        measure!(historical::Collection::new());
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+    #[test]
+    fn proc_units_and_missing_values_are_checked() {
+        assert_eq!(
+            memory_field("VmRSS: 12 kB\nVmHWM: 19 kB", "VmRSS:").unwrap(),
+            12288
+        );
+        for status in [
+            "",
+            "VmRSS: 12 MB",
+            "VmRSS: -1 kB",
+            "VmRSS: 18446744073709551615 kB",
+        ] {
+            assert!(memory_field(status, "VmRSS:").is_err());
+        }
+    }
+}
+
 fn main() {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
+    if args.len() == 4 && args[0] == "--memory" {
+        let result = args[2]
+            .to_string_lossy()
+            .parse::<usize>()
+            .map_err(|e| e.to_string())
+            .and_then(|n| memory_run(&args[1].to_string_lossy(), n, &args[3].to_string_lossy()));
+        if let Err(e) = result {
+            eprintln!("{e}");
+            std::process::exit(1);
+        }
+        return;
+    }
     if args.len() != 1 {
         eprintln!("mutation_compare NEW_DIRECTORY");
         std::process::exit(2);
