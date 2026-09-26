@@ -50,6 +50,10 @@ They require Linux resource monitoring, including the tested AMD sensor.
 
 ## Measured scope and limits
 
+Separate [GEL component measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)
+cover private-prototype sketch search and phase evolution. They measure
+different tasks and are not speedup comparisons against this full scan.
+
 EXACT full scan → top10 → decision, milliseconds, 24 workers:
 
 | ORB count | Seed | N | p50 | p95 | p99 | max |

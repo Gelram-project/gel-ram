@@ -119,7 +119,7 @@ fn benchmark(bank: &[Record], rounds: usize, masked: bool) -> Result<(), String>
     let mut shared = Vec::with_capacity(bank.len());
     let mut comparisons = 0;
     let mut total = [0u128; 3];
-    println!("Q8_EVIDENCE_V1 records={} rounds={rounds} policy={} workers=1 view_inverses={inverses} timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED", bank.len(), if masked {"active"} else {"archive"});
+    println!("Q8_EVIDENCE_V1 records={} rounds={rounds} warmup_rounds=2 policy={} workers=1 view_inverses={inverses} timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED", bank.len(), if masked {"active"} else {"archive"});
     println!("record_bytes={} materialized_four_bytes={} simultaneous_banks=true query_preparation_timed=false", std::mem::size_of::<Record>(), std::mem::size_of::<[reference::Frame; 4]>());
     println!("round,canonical_single_ns,four_materialized_ns,shared_ns");
     for round in 0..rounds + 2 {

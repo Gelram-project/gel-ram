@@ -1,6 +1,11 @@
 # Source candidate: validation index and release gates
 
-Local candidate, not a published version. This document separates implemented
+> Historical pre-v0.3.0 validation index, kept for provenance. The multipart
+> and real-source readout covered here was later released in v0.3.0, with GEL
+> RAM NCRL 1.0 as the operative root license. Legal certification is still not
+> claimed ([publication status](../CANDIDATE-STATUS.md)).
+
+At the time a local candidate, not a published version. This document separates implemented
 checks from approvals that software tests cannot supply.
 
 ## Reproduction and scope
@@ -68,7 +73,7 @@ campaign or a new measurement of semantic retrieval.
 - Actual remote platform CI for that exact change; configured jobs are not
   evidence that Windows/macOS have run locally or remotely for this candidate.
 - Licensor/chain-of-rights/CLA privacy review and review by appropriate counsel,
-  followed by an atomic licensing cutover if approved. Root PolyForm remains.
+  followed by an atomic licensing cutover if approved. Root PolyForm remained at that time.
 - Explicit approval of the public file list. Do not include private audit logs,
   original private corpora, model weights, account records or the private engine.
 

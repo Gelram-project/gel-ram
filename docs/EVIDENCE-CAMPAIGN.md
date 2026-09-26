@@ -38,8 +38,9 @@ and two f32 endpoints (8 metadata bytes). Total block sizes 12/16/24/40 bytes,
 not just 4/8/16/32 payload bytes. No private encoder or decoder is included.
 Six synthetic sample families, 21 timings after warmup, full raw nanoseconds,
 RMSE and maximum absolute error. Tiny signals beside outliers can be lost even
-in Q8; loss is not necessarily noise. F16 is only in the existing separate
-data-integrity reference, not implemented by this Q matrix.
+in Q8; loss is not necessarily noise. F16 is not implemented by this historical
+Q matrix; see the separate data-integrity reference and the public
+[precision matrix](PRECISION-MATRIX.md) (F32/F16/Q1–Q16, untimed).
 
 No results here establish media perception, 4x independent capacity, conversation
 quality or superiority to commercial AI. Existing Ocean runs are a different

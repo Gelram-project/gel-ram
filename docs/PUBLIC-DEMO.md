@@ -25,9 +25,10 @@ Windows/macOS CI now executes workspace tests, not --no-run compilation alone.
 
 Local verification passed 160 test executions in both debug and release
 (including repeated reference harnesses). The report command completed full
-verify and36 scan invocations on the development PC. An interactive sequence
-phase128 → mask3 → noise100 → show → quit also passed reference/inverse checks.
-These are functional checks, not semantic accuracy. Final remote CI is tracked in PR #10.
+verify and 36 scan invocations on the development PC. An interactive sequence
+phase 128 → mask 3 → noise 100 → show → quit also passed reference/inverse checks.
+These are functional checks, not semantic accuracy. Final remote CI was tracked
+in PR #10 of the earlier pre-v0.3.0 repository (not PR #10 of Gelram-project/gel-ram).
 
 ## Interactive Q8
 
@@ -35,12 +36,12 @@ These are functional checks, not semantic accuracy. Final remote CI is tracked i
 cargo run --locked --offline --release -p gel-phase-quad --example quad_playground -- --interactive
 ```
 
-Commands: phase0..255 shifts body phase; mask0..1024 is the active-dimension
-stride (0 disables all body dimensions); noise0..1024 perturbs that many leading
+Commands: phase 0..255 shifts body phase; mask 0..1024 is the active-dimension
+stride (0 disables all body dimensions); noise 0..1024 perturbs that many leading
 dimensions deterministically. Use spaces, for example `noise 100`.
 The query stays fully active; empty body scores zero, not UNKNOWN. No active
 query would be UNKNOWN in the library. Noise is a repeatable perturbation, not
-a measured physical noise process. Input lines are capped at1024 bytes.
+a measured physical noise process. Input lines are capped at 1024 bytes.
 
 Each view is materialized and scored independently for comparison with Shared.
 Inverse phase and mask equality are checked. Timing is one shared read,
@@ -71,8 +72,8 @@ available threads, verification and scan results. Review local paths before
 sharing. No data is uploaded. Linux CPU/RAM readings are snapshots, not sustained
 utilization; other OSs need manually supplied model/system RAM information.
 
-The bounded synthetic scan campaign uses32/512/8192 records, both policies,
-1 and min(available threads,24) workers (deduplicated), three repetitions,
+The bounded synthetic scan campaign uses 32/512/8192 records, both policies,
+1 and min(available threads, 24) workers (deduplicated), three repetitions,
 nine timed rounds and rotating per-method order. All logs are retained,
 including slower outcomes. This is a new portable reproduction profile, not
 the historical sparse/dense campaign or the private real-input experiment.

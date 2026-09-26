@@ -75,7 +75,8 @@ GEL benchmark attestation. Visual review and release pins do not prove absence
 of arbitrary steganography or vulnerabilities in downstream image decoders.
 
 The [prompt record](VISUAL-PROMPTS.md) documents the approved wording and method.
-The Rust release gate allows exactly these four PNG paths and their reviewed
-SHA-256 digests; other PNGs or modified bytes fail. Implementation remains Rust.
+The Rust release gate pins these four PNG paths by their reviewed SHA-256
+digests, alongside the separately reviewed media screenshots and previews; any
+PNG outside that reviewed list, or modified bytes, fails. Implementation remains Rust.
 This is a content approval boundary, not a new multimedia decoder or private
 image-to-ORB encoder. The public license is unchanged.

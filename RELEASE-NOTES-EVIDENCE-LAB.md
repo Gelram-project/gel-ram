@@ -1,4 +1,4 @@
-# Evidence Lab — public PR candidate
+# Evidence Lab — merged into public main (PR #9), not a final release
 
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
 The owner authorized public main integration after checks, without a final release. The workspace is now

@@ -4,8 +4,9 @@ An interactive English-language terminal demonstration of the public Rust core.
 Everything runs locally. No LLM, network service, GPU backend or subscription.
 This is a laboratory, not an unrestricted chatbot.
 
-The two existing repository films preview a separate private application, not
-this public laboratory. Run the commands below to inspect this implementation.
+Of the three repository films, two preview a separate private application and
+one shows the public Evidence Lab (gel-evidence); none shows this Live Lab.
+Run the commands below to inspect this implementation.
 
 ## Start
 

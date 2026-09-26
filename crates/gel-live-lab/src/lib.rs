@@ -188,17 +188,23 @@ impl Lab {
             .get(index.checked_sub(1).ok_or("Matches start at 1")?)
             .ok_or("No such match; run find PHRASE first")?
             .clone();
+        let context =
+            gel_source::context::surrounding(self.corpus.source_text(), span.clone(), 512)?;
         self.quote = self
             .corpus
             .source_text()
-            .get(span.clone())
+            .get(context.context_span.clone())
             .ok_or("Invalid source span")?
             .to_string();
         self.quote_label = format!(
-            "match {index}/{} | exact source bytes {}..{}",
+            "match {index}/{} | MATCH {}..{} CONTEXT {}..{} omitted_before={} omitted_after={} bounded context",
             self.matches.len(),
             span.start,
-            span.end
+            span.end,
+            context.context_span.start,
+            context.context_span.end,
+            context.omitted_before,
+            context.omitted_after
         );
         self.page = 0;
         Ok(())

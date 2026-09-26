@@ -1,9 +1,10 @@
-# Q8 evidence candidate — numeric sample, checked views, current measurements
+# Q8 evidence candidate (historical, 2026-09-11) — numeric sample, checked views, first measurements
 
 Local candidate based on main `339f3649684683da3d8ee54d6fdcc1c624bdfabe`.
 The [revision2 audit and repeat measurements](Q8-CANDIDATE-R2-AUDIT.md) add
 fixture input hardening. The first campaign below remains a historical record.
-Not a new tagged release. PolyForm licensing unchanged. No private application,
+Not a tagged release at the time; PolyForm licensing was then unchanged (the
+module was later released in v0.3.0 under GEL RAM NCRL 1.0). No private application,
 encoder, conversation, media bank, donor monolith or model is included.
 
 ## Try the sample now
@@ -61,7 +62,7 @@ Descriptors are in-memory values; no stable wire format, migration or private
 decoder compatibility is introduced. This change does not claim to fix all
 private variants merely because their names also contain Quad Grid.
 
-## Current measurement protocol
+## Measurement protocol (2026-09-11)
 
 2026-09-11, AMD Ryzen AI 9 HX 370, 12 cores / 24 logical CPUs, about 93.9 GiB
 OS-reported RAM. Linux, Rust 1.85.0 release, thin LTO, one codegen unit,
@@ -138,5 +139,6 @@ knowledge recall, four independent files, hardware RAM signatures or a PUF.
 See [campaign instructions and raw logs](evidence-q8-current/README.md).
 The historical V1 results remain unchanged. New V2 results do not retrospectively
 alter them. Full Linux checks and source review are recorded in
-[candidate validation](Q8-CANDIDATE-VALIDATION.md). Remote CI has not been run
-for this unpublished candidate; no new Windows/macOS runtime result is claimed.
+[candidate validation](Q8-CANDIDATE-VALIDATION.md). Remote CI had not been run
+for this then-unpublished candidate; no Windows/macOS runtime result was claimed
+here. Later CI is recorded per revision.

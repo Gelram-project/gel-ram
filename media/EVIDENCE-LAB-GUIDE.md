@@ -54,7 +54,23 @@ Execution and capture used a separate network namespace, with local X11 only.
   Screen capture tools are optional and not required to run the application.
 
 The complete video was decoded without errors; start/result/restart frames were
-visually inspected. It does not prove power-loss survival, encryption or general
+visually inspected when it was recorded. On 26 September 2026 a separate AI
+reviewer viewed all 161 visually distinct frames ([media review](../docs/MEDIA-DECODE-REVIEW.md));
+a human review of the complete film remains NOT_VERIFIED. It does not prove power-loss survival, encryption or general
 AI quality. Media rights remain as described in [RIGHTS.md](RIGHTS.md).
 The owner authorized publication and main integration after checks. A final
 release remains unapproved; see [candidate status](../CANDIDATE-STATUS.md).
+
+## Recorder failure checks (current code, not a new historical video)
+
+The recorder support tests split UTF-8 across reads, retry interrupted reads,
+enforce the capture bound and refuse existing output files. Injected read errors
+after a prompt, broken display writes, failed display flushes and a read-only
+log handle must terminate capture with an error rather than certify the prompt.
+Partial raw logs are retained; a log write failure does not expose unwritten
+bytes as captured output. An exit timeout is reported as RECORDING_FAILED and
+the subprocess is killed/reaped, rather than triggering the old timeout assert.
+
+These tests do not certify every possible device failure, the complete operator
+error surface or frame-by-frame video privacy. A successful scripted application
+run is not a newly recorded MP4. Historical films and their hashes stay unchanged.

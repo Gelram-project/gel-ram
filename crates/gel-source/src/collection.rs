@@ -84,6 +84,32 @@ pub struct Collection {
     total_text: usize,
     root: Hash,
 }
+/// New-bank staging only. No lookup, persistence or root is exposed until build.
+/// Accepted documents have the same IDs and revision as sequential `add` calls.
+/// A rejected add leaves previous staged documents intact; it is not a live-bank
+/// transaction and never mutates an existing collection.
+pub struct CollectionBuilder {
+    staged: Collection,
+}
+impl Default for CollectionBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+impl CollectionBuilder {
+    pub fn new() -> Self {
+        Self {
+            staged: Collection::new(),
+        }
+    }
+    pub fn add(&mut self, title: &str, text: &str) -> Result<u64, String> {
+        self.staged.insert_without_refresh(title, text)
+    }
+    pub fn build(mut self) -> Collection {
+        self.staged.refresh_root();
+        self.staged
+    }
+}
 impl Default for Collection {
     fn default() -> Self {
         Self::new()
@@ -127,6 +153,11 @@ impl Collection {
         Ok(())
     }
     pub fn add(&mut self, title: &str, text: &str) -> Result<u64, String> {
+        let id = self.insert_without_refresh(title, text)?;
+        self.refresh_root();
+        Ok(id)
+    }
+    fn insert_without_refresh(&mut self, title: &str, text: &str) -> Result<u64, String> {
         Self::admit(title, text)?;
         if self.documents.len() >= MAX_DOCUMENTS || text.len() > MAX_TOTAL_TEXT - self.total_text {
             return Err("COLLECTION_LIMIT".into());
@@ -152,7 +183,6 @@ impl Collection {
         self.total_text += text.len();
         self.revision = revision;
         self.next_id = next;
-        self.refresh_root();
         Ok(id)
     }
     pub fn replace(&mut self, id: u64, text: &str) -> Result<(), String> {
@@ -240,7 +270,20 @@ impl Collection {
         b
     }
     fn refresh_root(&mut self) {
-        self.root = digest(&self.to_bytes());
+        use sha2::{Digest, Sha256};
+        let mut hash = Sha256::new();
+        hash.update(MAGIC);
+        for n in [self.revision, self.next_id, self.documents.len() as u64] {
+            hash.update(n.to_le_bytes());
+        }
+        for d in self.documents.values() {
+            hash.update(d.id.to_le_bytes());
+            hash.update((d.title.len() as u32).to_le_bytes());
+            hash.update((d.text.len() as u64).to_le_bytes());
+            hash.update(d.title.as_bytes());
+            hash.update(d.text.as_bytes());
+        }
+        self.root = hash.finalize().into();
     }
     pub fn from_bytes(bytes: &[u8], trusted_pin: Hash) -> Result<Self, String> {
         if bytes.len() > MAX_BUNDLE {

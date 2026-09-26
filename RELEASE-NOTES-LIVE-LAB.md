@@ -1,8 +1,9 @@
 # GEL Live Lab — public core integration
 
 Base: `c0058a1ed5df758f2cd118ad15db81845d4cbd46` (document readout, PR #4).
-The owner requested completion of this bounded public integration. Publication
-is conditional on the final source/privacy checks and exact-revision CI.
+The owner requested completion of this bounded public integration. It was
+published through PR #5 (8b92deb) after the final source/privacy checks and
+exact-revision CI.
 No new tag or Release is created; the existing v0.3.0 asset remains unchanged.
 
 ## Runnable scope

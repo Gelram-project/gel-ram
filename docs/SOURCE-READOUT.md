@@ -1,4 +1,4 @@
-# Source-bound readout — unreleased preview on main
+# Source-bound readout (released in v0.3.0)
 
 The gel-source crate reads an immutable UTF-8 catalog and returns an exact
 source passage for a node/role address. It checks independent SHA-256 pins,
@@ -24,7 +24,9 @@ it does not perform full Unicode case folding, accent removal or semantic matchi
 
 ## Reproduce
 
-The PR #10 example now prints title, quote, source entry/section/byte range and
+Since PR #10 of the earlier pre-v0.3.0 repository (not PR #10 of
+Gelram-project/gel-ram), the source_readout example prints title, quote,
+source entry/section/byte range and
 pins, then demonstrates rejection of modified synthetic text with unchanged
 pins. An optional exact title argument selects the fixture; unknown titles
 return UNKNOWN. See [public demos](PUBLIC-DEMO.md). This is not semantic search.
@@ -44,13 +46,15 @@ CI fetches those locked dependencies before the existing offline checks.
 This is a narrow extraction of the project owner's private source-catalog
 module and its regression tests. The adapter replaces the private hash-provider
 dependency with sha2 and bounds TSV splitting to nine fields. The catalog and
-passage contracts are otherwise preserved. The workspace's existing PolyForm
-licensing is retained; no private master licensing files are changed.
+passage contracts are otherwise preserved. GEL RAM-owned material is under
+GEL RAM NCRL 1.0 ([licensing](../LICENSING.md)); the extraction was first
+prepared under the then-active PolyForm licensing, and no private master
+licensing files are changed.
 
-Only synthetic test text accompanies this preview. No Wikipedia corpus,
+Only synthetic test text accompanies this readout. No Wikipedia corpus,
 machine-specific paths, models, TLS credentials, private reports, donor monolith
-or the private application is included. This preview is not a tagged release.
-See the pull request checks for platform CI results.
+or the private application is included. Released in v0.3.0; platform results
+belong to the CI of each exact revision.
 
 ## Security boundaries
 

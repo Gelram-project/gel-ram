@@ -1,7 +1,8 @@
-# Check the Evidence Lab PR candidate yourself
+# Check the Evidence Lab candidate (0.4.0-rc.1) yourself
 
-Run these commands from this candidate checkout, not from the older v0.3.0
-tag. This guide does not say that the candidate has been published.
+Run these commands from a current main checkout (or a PR branch under review), not from
+the older v0.3.0 tag. Evidence Lab is merged into public main (PR #9); v0.4.0
+has not been released.
 Rust 1.85.0 and cached locked dependencies are prerequisites. Initial toolchain
 installation and `cargo fetch --locked` need internet; execution below is offline.
 No model, private bank, paid service or remote API is needed.

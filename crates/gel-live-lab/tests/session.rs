@@ -152,7 +152,9 @@ fn find_after_restart_uses_exact_text_across_storage_parts() {
     let mut lab = Lab::demo().unwrap();
     lab.command(&format!("open {}", input.display())).unwrap();
     lab.find("cat dog").unwrap();
-    assert_eq!(lab.quote, "cat dog");
+    let matched = gel_source::MAX_PASSAGE - 3..gel_source::MAX_PASSAGE + 4;
+    let context = gel_source::context::surrounding(&text, matched, 512).unwrap();
+    assert_eq!(lab.quote, &text[context.context_span]);
     lab.save(&bundle).unwrap();
     let pin = gel_source::hex(&lab.last_pin.unwrap());
     let out = run(&format!(
@@ -191,9 +193,17 @@ fn matching_lines_and_cr_boundaries_survive_import_and_reopen() {
     l.find("alpha").unwrap();
     assert!(l.notice.contains("matches=3 shown=3"));
     l.command("match 2").unwrap();
-    assert_eq!(l.quote, "Alpha two");
+    assert_eq!(
+        l.quote,
+        "Alpha one\rAlpha two\r\nAlpha three\nnot\rapproved"
+    );
+    assert!(l.quote_label.contains("MATCH 10..19"));
     l.command("match 3").unwrap();
-    assert_eq!(l.quote, "Alpha three");
+    assert_eq!(
+        l.quote,
+        "Alpha one\rAlpha two\r\nAlpha three\nnot\rapproved"
+    );
+    assert!(l.quote_label.contains("MATCH 21..32"));
     l.command("read 1").unwrap();
     assert!(l.command("match 1").is_err());
     l.find("not approved").unwrap();

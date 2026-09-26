@@ -7,9 +7,9 @@ push, PR, release, private engine export or dependency change.
 
 The fixture reader checked regular-file status only AFTER opening its input.
 A named pipe with no writer blocked during open; a bounded Linux probe timed
-out (exit124). The reader now rejects stable special files and symbolic links
+out (exit 124). The reader now rejects stable special files and symbolic links
 before opening, and also retains the handle metadata check and byte limit.
-The same pipe, a symlink and a directory now return exit2 promptly.
+The same pipe, a symlink and a directory now return exit 2 promptly.
 
 This is NOT a race-proof filesystem sandbox: a hostile process able to replace
 the pathname between checks may still interfere. Use a caller-controlled input
@@ -19,10 +19,10 @@ changes are not corruption-detectable without an external trusted digest.
 
 ## Expanded verification
 
-- 145 test executions in debug and145 in release, all successful. These include
-  repeated reference harnesses, not145 separate features.
+- 145 test executions in debug and 145 in release, all successful. These include
+  repeated reference harnesses, not 145 separate features.
 - Additional parser tests cover every truncation of a one-record fixture,
-  all96 header-bit flips, maximum8192 records, all1024 activity-bit positions,
+  all 96 header-bit flips, maximum 8192 records, all 1024 activity-bit positions,
   exact phase preservation and invalid command arguments.
 - Four standalone Rust summary tests cover invalid/duplicate/non-finite metrics,
   failed statuses, worker fallback and expected campaign shape.
@@ -31,7 +31,7 @@ changes are not corruption-detectable without an external trusted digest.
   and a successful status. An empty campaign is rejected before printing a table.
 - The stricter summary reproduces the first campaign table byte-for-byte.
 - Full `xtask verify` and the independent data-integrity audit passed again.
-  The latter checks262400 structural cases and256 ranking queries.
+  The latter checks 262400 structural cases and 256 ranking queries.
 
 The standalone helper tests can be run from the repository root:
 
@@ -46,8 +46,8 @@ No new claim is made about the private donor variants or general semantic qualit
 
 ## Complete rerun after the input fix
 
-All72 invocations were repeated:48 V2 runs and24 canonical-baseline runs.
-All8,355,840 V2 and2,509,056 canonical view comparisons passed again. No reference
+All 72 invocations were repeated: 48 V2 runs and 24 canonical-baseline runs.
+All 8,355,840 V2 and 2,509,056 canonical view comparisons passed again. No reference
 worker fallback was reported. The scoring kernels were unchanged.
 
 | Real768 records | FourViews / Shared median (range) | Single / Shared median (range) | Shared median ms/query |
@@ -55,7 +55,7 @@ worker fallback was reported. The scoring kernels were unchanged.
 | BodyActivity |3.627 (3.338–4.478)|1.145 (0.993–1.420)|1.385|
 | Archive |3.953 (3.838–4.178)|1.174 (1.130–1.630)|0.413|
 
-These are medians of three run-level ratios. The small synthetic32 bank still
+These are medians of three run-level ratios. The small synthetic 32 bank still
 favors the single reader. The real BodyActivity range still includes a slower
 Shared run. The full [R2 summary](evidence-q8-r2/summary.txt) includes every cell,
 including unfavorable results; the first campaign remains intact, not replaced
@@ -70,10 +70,10 @@ The [hardware snapshot](evidence-q8-r2/hardware-after.txt) was taken AFTER the r
 it is not a pre-run snapshot or proof of constant load during measurement.
 
 All raw numerical logs and final [source/binary fingerprints](evidence-q8-r2/MEASURED-SOURCE-SHA256SUMS.txt)
-are included. Binaries and the private768-record input are not included. The
+are included. Binaries and the private 768-record input are not included. The
 old fingerprint file belongs to the old campaign, before the R2 input fix.
 Neither campaign measures four independent memories, media understanding,
-physical DRAM signatures, native reasoning or semantic99% accuracy.
+physical DRAM signatures, native reasoning or semantic 99% accuracy.
 
 ## Publication gate
 

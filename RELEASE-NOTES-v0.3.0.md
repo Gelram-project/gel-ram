@@ -2,7 +2,7 @@
 
 Date: 2026-09-13
 
-GEL RAM v0.3.0 marks the current public generation after the controlled publication cutover in PR #16. The version bump is intentionally a minor-version change rather than a patch because the public package now includes materially expanded source-readout functionality, demonstration media, stronger cross-platform verification and a different operative licensing model.
+GEL RAM v0.3.0 marks the current public generation after the controlled publication cutover in PR #16 of the earlier pre-publication repository. The version bump is intentionally a minor-version change rather than a patch because the public package now includes materially expanded source-readout functionality, demonstration media, stronger cross-platform verification and a different operative licensing model.
 
 ## What defines v0.3.0
 
@@ -29,6 +29,6 @@ Earlier releases and copies already distributed retain the rights validly grante
 
 ## Release verification
 
-The publication tree introduced through PR #16 passed pre-merge and post-merge Linux, Windows and macOS gates. The v0.3.0 version-metadata change must pass the same current CI gates before it is accepted into `main`.
+The publication tree introduced through PR #16 of the earlier pre-publication repository passed pre-merge and post-merge Linux, Windows and macOS gates. The v0.3.0 version-metadata change must pass the same current CI gates before it is accepted into `main`.
 
 `LEGAL_APPROVED=NO` remains an explicit statement that no independent legal-counsel certification is claimed for the custom license.

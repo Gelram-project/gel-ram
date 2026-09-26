@@ -1,7 +1,9 @@
-# GEL RAM v0.2 architecture
+# GEL RAM architecture
 
-The public core is Rust-only. The v0.2.1 binary branch below remains unchanged;
-main also includes an unreleased, separate Q8 phase-readout module.
+The public core is Rust-only. The v0.2.1 binary branch below remains unchanged.
+The separate Q8 phase-readout module and the [source readers](SOURCE-READOUT.md)
+have been released since v0.3.0; multi-document collections
+([Evidence Lab](EVIDENCE-LAB.md)) are on main as 0.4.0-rc.1, not in a tagged release.
 
 ```text
 QUERY
@@ -21,7 +23,7 @@ QUERY
 ORB bytes -> v2 .gel store -> header CRC64 + payload CRC64 -> RAM
 ```
 
-## Additive Q8 phase branch (unreleased)
+## Additive Q8 phase branch
 
 The [Q8 module](Q8-QUAD.md) holds 1024 phase bytes and 128 activity-mask bytes
 per canonical record. A query–record comparison produces one canonical

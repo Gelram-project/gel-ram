@@ -1,0 +1,24 @@
+FORMAT=GEL_CI_EVIDENCE_2
+COMMIT=2b292368cce2e7b704f264c337e142724249fdf9
+SOURCE_MANIFEST_SHA256=e822501ab7135d5ceb14fe31d226ab2ee924c7a992addba306aba94039204305
+RUN_ID=36251557201
+RUN_ATTEMPT=1
+OS=windows
+ARCH=x86_64
+SCOPE=workspace tests (debug), core-path tests (release), doctests, saved R1 recheck; not full CI or a fresh benchmark
+RUST_VERSION=1.85.0
+REDACTION=only strict test identifiers and derived counts; raw stdout/stderr excluded
+CASE=workspace-debug accepted=true exit_code=Some(0) named_test_executions=358 summaries=49 passed=358 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=28544 stderr_bytes=7118
+CASE=core-release accepted=true exit_code=Some(0) named_test_executions=158 summaries=26 passed=158 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=12663 stderr_bytes=4000
+CASE=doctests-debug accepted=true exit_code=Some(0) named_test_executions=0 summaries=9 passed=2 failed=0 ignored=0 filtered_out=0 unlisted_executions=2 stdout_bytes=1129 stderr_bytes=751
+CASE=saved-r1-release accepted=true exit_code=Some(0) named_test_executions=0 summaries=0 passed=0 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=24 stderr_bytes=247
+PLATFORM_EXCLUSION test=sigkill_after_save_ack_keeps_a_readable_snapshot condition=unix here=EXCLUDED_NOT_COUNTED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=sigkill_at_observable_publication_never_installs_a_partial_snapshot condition=unix here=EXCLUDED_NOT_COUNTED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=symlink_input_and_output_rejected condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::rust_only_gate_rejects_symlinks_and_executable_files condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink and execute-bit creation
+PLATFORM_EXCLUSION test=source_bundle::tests::symlink_file_and_directory_rejected condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::atomic_write_is_private_by_default_and_preserves_existing_mode condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PLATFORM_EXCLUSION test=kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PARTIAL_PLATFORM_BRANCH test=persisted_roundtrip_and_no_temporary_files condition=unix here=RAN_PASSED detail=0600 file mode assertion
+PARTIAL_PLATFORM_BRANCH test=recorder_usage_and_closed_display_fail_closed condition=linux here=RAN_PASSED detail=/dev/full display assertion
+PLATFORM_EXCLUSIONS=CHECKED whole_tests=7 partial_branches=2

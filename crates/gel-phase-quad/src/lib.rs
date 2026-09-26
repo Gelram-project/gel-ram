@@ -71,6 +71,15 @@ pub fn effective_workers(requested: usize, records: usize) -> Result<usize, &'st
     let available = std::thread::available_parallelism().map_or(1, usize::from);
     budget(requested, records, available)
 }
+/// Execution facts of one scan, for timing reports.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ScanReport {
+    /// `false` for an UNKNOWN (empty) query; output was cleared.
+    pub scored: bool,
+    /// A thread failed to start, so the complete scan ran serially.
+    pub serial_fallback: bool,
+}
+
 /// One piece of evidence, not four independent confidence votes.
 #[derive(Clone, Copy, Default)]
 pub struct SharedScore(f64);
@@ -129,6 +138,7 @@ impl Reader {
     /// Reuses the allocation; only canonical records are scanned.
     /// Caps concurrency including the caller. A failed thread start falls back to
     /// a complete serial scan after all started threads finish. Errors clear output.
+    /// Timing reports should use [`Self::scan_into_report`], which exposes that fallback.
     pub fn scan_into(
         &self,
         q: &Query,
@@ -137,10 +147,26 @@ impl Reader {
         workers: usize,
         output: &mut Vec<SharedScore>,
     ) -> Result<bool, &'static str> {
+        self.scan_into_report(q, bank, policy, workers, output)
+            .map(|report| report.scored)
+    }
+    /// Same scan as [`Self::scan_into`], also reporting whether a requested
+    /// parallel scan completed on the serial fallback path.
+    pub fn scan_into_report(
+        &self,
+        q: &Query,
+        bank: &[Record],
+        policy: Policy,
+        workers: usize,
+        output: &mut Vec<SharedScore>,
+    ) -> Result<ScanReport, &'static str> {
         let workers = effective_workers(workers, bank.len()).inspect_err(|_| output.clear())?;
         if q.active.is_empty() {
             output.clear();
-            return Ok(false);
+            return Ok(ScanReport {
+                scored: false,
+                serial_fallback: false,
+            });
         }
         output
             .try_reserve(bank.len().saturating_sub(output.len()))
@@ -150,7 +176,10 @@ impl Reader {
             })?;
         output.resize(bank.len(), SharedScore::default());
         if bank.is_empty() {
-            return Ok(true);
+            return Ok(ScanReport {
+                scored: true,
+                serial_fallback: false,
+            });
         }
         let fill = |records: &[Record], scores: &mut [SharedScore]| {
             for (record, score) in records.iter().zip(scores) {
@@ -161,7 +190,10 @@ impl Reader {
         };
         if workers == 1 {
             fill(bank, output);
-            return Ok(true);
+            return Ok(ScanReport {
+                scored: true,
+                serial_fallback: false,
+            });
         }
         let chunk = bank.len().div_ceil(workers);
         let failed = std::thread::scope(|scope| {
@@ -184,7 +216,10 @@ impl Reader {
         if failed {
             fill(bank, output);
         }
-        Ok(true)
+        Ok(ScanReport {
+            scored: true,
+            serial_fallback: failed,
+        })
     }
 }
 
@@ -330,6 +365,45 @@ mod tests {
             1.0 / DIM as f64
         );
         assert_eq!(reader.read(&q, &b, Policy::Archive).unwrap().value(), 1.0);
+    }
+    #[test]
+    fn scan_report_matches_scan_and_names_no_fallback_on_normal_paths() {
+        let reader = Reader::new(3);
+        let r = Record::new([9; DIM], &[true; DIM]);
+        let q = reader.prepare(r.clone());
+        let bank = vec![r.clone(); 64];
+        let (mut a, mut b) = (Vec::new(), Vec::new());
+        for workers in [1, 2, 8, 24] {
+            let report = reader
+                .scan_into_report(&q, &bank, Policy::Archive, workers, &mut a)
+                .unwrap();
+            let scored = reader
+                .scan_into(&q, &bank, Policy::Archive, workers, &mut b)
+                .unwrap();
+            assert_eq!(
+                report,
+                ScanReport {
+                    scored: true,
+                    serial_fallback: false
+                }
+            );
+            assert!(scored);
+            assert!(a
+                .iter()
+                .zip(&b)
+                .all(|(x, y)| x.value().to_bits() == y.value().to_bits()));
+        }
+        let silent = reader.prepare(Record::new([9; DIM], &[false; DIM]));
+        assert_eq!(
+            reader
+                .scan_into_report(&silent, &bank, Policy::Archive, 8, &mut a)
+                .unwrap(),
+            ScanReport {
+                scored: false,
+                serial_fallback: false
+            }
+        );
+        assert!(a.is_empty());
     }
     #[test]
     fn unknown_clears_previous_result() {

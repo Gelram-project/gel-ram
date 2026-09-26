@@ -8,8 +8,9 @@ project without reading the entire repository.
 GEL RAM is an independent Rust research project exploring RAM-resident knowledge,
 exact source-bound readout and alternative memory execution models. The public
 repository contains the reproducible subset: source provenance, integrity gates,
-Q8 numeric experiments, persistent source bundles, an offline Live Lab and
-1M/10M synthetic Ocean evidence. The complete private research system is larger
+Q8 numeric experiments, persistent source bundles, an offline Live Lab, the
+multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
+snapshots, and 1M/10M synthetic Ocean evidence. The complete private research system is larger
 and is intentionally not described here.
 
 ## Five useful entry points
@@ -27,9 +28,10 @@ They are intentionally retained because they are independently inspectable and
 give the project a reproducible comparison point.
 
 They are **not** presented as the performance ceiling or final GEL RAM execution
-model. The private project has newer owner-reported experimental results, but
-the detailed mechanism and performance claims remain unpublished until a
-reproducible public package is ready.
+model. Separate [author-reported component measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)
+cover different tasks and do not establish an end-to-end advantage over this
+baseline; the private mechanism remains unpublished until a reproducible public
+package is ready.
 
 ## What you can verify today
 

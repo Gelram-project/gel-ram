@@ -24,7 +24,8 @@ exclusive isolation. Worker counts are reported separately for each experiment:
 that all installed RAM was exercised. The canonical-baseline campaign used
 one worker; the V2 matrix tested one and 24 requested workers.
 
-See the [measurement protocol](Q8-EVIDENCE-CANDIDATE.md#current-measurement-protocol)
-and [R2 results](Q8-CANDIDATE-R2-AUDIT.md). Historical hardware snapshots retain
+See the [2026-09-11 Q8 measurement protocol](Q8-EVIDENCE-CANDIDATE.md#measurement-protocol-2026-09-11)
+and [R2 results](Q8-CANDIDATE-R2-AUDIT.md); for current timing-record rules see
+[MEASUREMENT-PROTOCOL.md](MEASUREMENT-PROTOCOL.md). Historical hardware snapshots retain
 their original OS measurements. The reproduction command records the machine
 on which it actually runs; it must not hardcode this owner's configuration.

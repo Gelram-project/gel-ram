@@ -1,16 +1,20 @@
 # GEL RAM
 
-**Experimental Rust research into RAM-resident knowledge, exact source-bound readout, reproducible evidence, and memory architectures that do not treat a full CPU scan as the final design.**
+**Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
 > PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
 > Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 > [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
 
-## New candidate: your documents, exact citations, a real restart
+## Evidence Lab: your documents, exact citations, a real restart
 
-[70-second actual terminal walkthrough](media/EVIDENCE-LAB-GUIDE.md) ·
+[Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
-[Windows/macOS verification record and instructions](docs/PLATFORM-REVIEW.md).
+[Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
+[per-revision CI evidence](docs/CI-EVIDENCE.md).
+
+First install the pinned Rust 1.85.0 toolchain and run `cargo fetch --locked`
+with network access. The command below then runs offline with cached dependencies:
 
 ```sh
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
@@ -25,9 +29,12 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
 This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
 **Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
+See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
+for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
 
-The sections below describe the previously published baseline, not approval of
-this candidate. The tagged `v0.3.0` release remains an immutable release point.
+The tagged `v0.3.0` release remains an immutable historical release point.
+Current-main capabilities and candidate checks are not automatically part of
+that tag. See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
 
 ## What GEL RAM is
 
@@ -54,7 +61,10 @@ The public repository is **not the complete private research system**. Some expe
 
 The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are useful as a reproducible comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
-The project owner's private experimental measurements are materially better than this public full-scan baseline, but those measurements and the mechanism behind them are intentionally **not published here yet**. Until their raw evidence and exact reproduction protocol are made public, this repository does not state a multiplier, queries/s figure, or public latency claim for that private path.
+Separate [author-reported GEL component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)
+cover compact-sketch search and phase evolution. Their tasks, sizes and timing
+boundaries differ from Ocean full scans. They do not establish an end-to-end
+advantage over this baseline or a commercial product. Private engines remain private.
 
 ### Public CPU/RAM baseline
 
@@ -69,15 +79,17 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 
 These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
 
+Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
+
 [Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
-[![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
+[![Public Evidence Lab walkthrough: add, cite, save, restart and reload a pinned snapshot](media/evidence-lab/02-reopened-56s.png)](media/GEL-EVIDENCE-LAB-EN.mp4)
 
-▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
+▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
 
-The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms.
+The two private previews show a separate private native Rust application: bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms. The Evidence Lab walkthrough shows the public gel-evidence tool from this repository.
 
 ## Try GEL Live Lab on your own text
 
@@ -94,9 +106,10 @@ Install the toolchain and fetch dependencies first using the instructions below.
 This public Rust program runs offline without an LLM. The source panel and
 synthetic Q8 panel are explicitly separate; the text is not encoded by those
 four views. Saved source bundles are plaintext, not an encrypted private vault.
-The films below still preview a different, private application.
+The two private-preview films show a different, private application; the
+Evidence Lab film shows the public gel-evidence tool, not this Live Lab.
 
-## Try the new document readout
+## Try the document readout
 
 ```text
 cargo run --locked --offline -p gel-source --example source_find -- "garbage collection"
@@ -108,11 +121,7 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-A Rust memory core for an AI knowledge bank: exact binary ORB readout,
-experimental Q8 coordinate views, and source-bound quotations.
-**A verifiable public system — not a complete AI model or the private research system.**
-
-## New: reproducible Ocean Scale research bundle
+## Reproducible Ocean Scale research bundle
 
 [Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
 or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
@@ -143,10 +152,11 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions; this checkout additionally contains the v0.4.0 PR candidate.
-These additions are available on main after [PR #9](https://github.com/Gelram-project/gel-ram/pull/9)
-is merged; before that, use branch `review/evidence-lab-v040-rc1`.
-No model or private bank is needed.
+instructions. Evidence Lab (workspace 0.4.0-rc.1) has been on public main since
+[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) was merged as 71142a2;
+no v0.4.0 tag or release exists. The review repairs in
+[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) are part of main once
+that PR is merged; its GitHub page shows the current state. No model or private bank is needed.
 
 ### Change the numeric input
 
@@ -228,10 +238,11 @@ approves a legal claim; private data and licensing still require review.
 
 ## Native demonstration films
 
-The repository includes two owner-authorized English terminal demonstrations of
-a separate private native Rust application. They show live bounded source-frame
-answers and explicit UNKNOWN cases. They do **not** ship the private chat engine,
-private bank, encoder or speaker.
+The repository includes three silent English terminal films: the public,
+reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and two
+owner-authorized previews of a separate private native Rust application. The
+previews show live bounded source-frame answers and explicit UNKNOWN cases.
+They do **not** ship the private chat engine, private bank, encoder or speaker.
 
 The displayed reply timings belong only to those bounded routes and that recorded
 MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
@@ -281,8 +292,8 @@ not a bit-by-bit map. [English and Polish illustrations, explanation and evidenc
 
 ## Evidence and development
 
-1. [Current reporting fixes and demos](docs/PUBLIC-DEMO.md)
-2. [Source-readout update notes](RELEASE-NOTES-SOURCE-CANDIDATE.md)
+1. [Historical reporting fixes and demos (2026-09-11)](docs/PUBLIC-DEMO.md)
+2. [Historical source-readout candidate notes](RELEASE-NOTES-SOURCE-CANDIDATE.md)
 3. [Historical source-candidate validation](docs/SOURCE-CANDIDATE-VALIDATION.md)
 4. [Q8 contract](docs/Q8-QUAD.md) · [Source readout](docs/SOURCE-READOUT.md)
 5. [Initial candidate results](docs/Q8-EVIDENCE-CANDIDATE.md) · [R2 audit](docs/Q8-CANDIDATE-R2-AUDIT.md)

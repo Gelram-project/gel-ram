@@ -59,4 +59,6 @@ operation or physical DRAM-refresh synchronization is established here.
 
 The application, private bank, speaker, encoder, executable and recording scripts
 remain excluded. The public source does not provide this chat command.
-Publication and licence approval remain separate, outstanding gates.
+When recorded, publication and licence approval were separate, outstanding
+gates; the film itself has since been published under [RIGHTS.md](RIGHTS.md),
+which does not license the excluded components above.

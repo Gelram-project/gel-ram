@@ -1,6 +1,6 @@
 # Multipart source readout / Odczyt wieloczęściowy
 
-Unreleased candidate. This adds `Corpus::lead_parts(title, expected_parts)`
+Released in v0.3.0. This adds `Corpus::lead_parts(title, expected_parts)`
 to the public source catalog. No binary ORB format, Q8 algorithm, dependency
 or license is changed. The implementation uses only the public catalog API;
 it needs no private application, corpus, importer, model or sidecar.
