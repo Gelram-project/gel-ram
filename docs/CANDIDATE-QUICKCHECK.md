@@ -1,4 +1,4 @@
-# Check the unpublished Evidence Lab candidate yourself
+# Check the Evidence Lab PR candidate yourself
 
 Run these commands from this candidate checkout, not from the older v0.3.0
 tag. This guide does not say that the candidate has been published.

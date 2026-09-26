@@ -3,7 +3,8 @@
 Linux is tested locally. Windows and macOS execution for this new candidate is
 **pending**, not covered by old green CI. The prepared workflow executes tests
 and demos; preparation neither uploads code nor triggers a runner. No paid
-service, larger runner, VM, LFS storage or upload is authorized.
+service, larger runner, VM or LFS storage is authorized. Public branch/PR
+upload and standard free public-repository CI are now authorized.
 
 ## Same source and toolchain on every host
 
@@ -39,5 +40,6 @@ every platform; non-Unix directory sync is not implemented by this path.
 
 Record manifest, commit if present, rustc host triple, OS, actual test count,
 exit status and complete logs per host. Only then mark that host tested.
-Publication permission remains a separate owner decision (currently NO).
+Publication permission is limited to public branch/PR review; merging and
+release are not approved. See CANDIDATE-STATUS.md for the current scope.
 External independent evaluation of answers is another separate gate.

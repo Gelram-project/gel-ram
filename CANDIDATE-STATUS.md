@@ -1,16 +1,19 @@
-# GEL RAM Evidence Lab — local review candidate
+# GEL RAM Evidence Lab — public PR candidate
 
-Updated 2026-09-26. Preparation ONLY. Originally prepared from published commit
+Updated 2026-09-26. Public branch and PR scope only. Originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
 `main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
-The owner explicitly withheld
-publication of this new candidate. No push, PR, tag or release is authorized.
+The owner authorized publication of the reviewed source on a public branch and
+opening a PR. This does not authorize merging, a final tag or a release.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
-REVIEW_PUBLICATION_APPROVED=NO
-PUBLICATION_APPROVED=NO
-SNAPSHOT_KIND=LOCAL_REVIEW_ONLY
+REVIEW_PUBLICATION_APPROVED=YES
+PUBLICATION_APPROVED=YES
+PUBLICATION_SCOPE=PUBLIC_BRANCH_AND_PR_ONLY
+MERGE_APPROVED=NO
+RELEASE_APPROVED=NO
+SNAPSHOT_KIND=PUBLIC_PR_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=LOCAL_LINUX_ONLY
@@ -31,14 +34,15 @@ PAID_SERVICES_AUTHORIZED=NO
 
 The workspace version now identifies the local `0.4.0-rc.1` candidate.
 The v0.3.0 fields above describe the historical release, not approval of this
-candidate. No v0.4.0 tag, release or publication has been created.
+candidate. No v0.4.0 tag or release is authorized by this approval.
 See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 
 Technical checks accept a pending candidate and report its approval status
 without changing it. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
 Previous Linux, Windows and macOS CI results do not validate these changes.
-Workflows are prepared but will not be run remotely until publication is authorized.
+Standard public-repository CI is authorized for the branch/PR; execution results
+must be checked separately. Only free standard runners are in scope.
 
 New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,

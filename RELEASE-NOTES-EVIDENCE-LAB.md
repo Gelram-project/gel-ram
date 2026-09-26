@@ -1,14 +1,14 @@
-# Evidence Lab — unpublished local candidate
+# Evidence Lab — public PR candidate
 
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
-No permission to publish this candidate. The local workspace is now
+The owner authorized public branch and PR review, without merging or release. The workspace is now
 `0.4.0-rc.1`; no tag or release was created. Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
 Local integration review also includes public documentation updates through
 `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8` (PRs #6 and #7).
 Those updates are already public, not new Evidence Lab functionality. The
-unpublished additions below remain relative to the original implementation base.
+candidate additions below remain relative to the original implementation base.
 Start with [candidate quickcheck](docs/CANDIDATE-QUICKCHECK.md).
 
 ## New, not recycled from the base
@@ -36,8 +36,8 @@ snapshots, so review contents before sharing reports from your own data.
 Cached dependencies and Rust 1.85.0 are prerequisites for offline compilation.
 
 Candidate-specific Windows/macOS execution remains untested. Prepared workflows
-do not count as executed CI. No external network CI is triggered by preparation.
-Technical PASS does not change PUBLICATION_APPROVED=NO.
+do not count as executed CI. The authorized public PR will trigger standard CI.
+Technical PASS does not grant merge or release approval.
 
 ## Limits
 
