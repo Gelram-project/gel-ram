@@ -13,18 +13,27 @@ the complete source inventory against its manifest and checks the commit.
 
 Files:
 
-- REPORT.txt (generated): commit, source-manifest digest, OS, architecture, toolchain,
-  numeric Actions run/attempt (or LOCAL), commands' accepted/exit status and
-  count of projected named test executions.
+- REPORT.txt (generated, `FORMAT=GEL_CI_EVIDENCE_2`): commit, source-manifest
+  digest, OS, architecture, toolchain, numeric Actions run/attempt (or LOCAL).
+  Per command: accepted/exit status, projected named test executions, and the
+  sums of cargo's `test result:` lines — passed, failed, ignored, filtered out —
+  plus `unlisted_executions` (executions whose names are not projected, such as
+  path-bearing doctests). Then one `PLATFORM_EXCLUSION` line per whole test that
+  is compiled only on Unix and one `PARTIAL_PLATFORM_BRANCH` line per test with
+  an extra platform-only assertion block.
 - TESTS.txt (generated): strict ASCII test identifiers and their standard statuses.
 - SHA256SUMS.txt (generated): checksums of those two files.
 - `COMPLETE`: emitted only after all commands and evidence writes succeed.
 
-The collector actually executes workspace all-target tests, documentation tests
-and the saved R1 rechecker. The first two use the test/debug profile; the R1
-rechecker uses release. This is not a fresh R1 timing campaign or a report of
-every workflow step. It excludes archive Ocean tests, examples outside this
-command list, visual review and hardware experiments.
+The collector actually executes workspace all-target tests (test/debug profile),
+the core-path tests of gel-source, gel-store and gel-live-lab again in the
+release profile, documentation tests and the saved R1 rechecker (release). The
+release pass repeats tests already counted in the debug pass; its executions are
+a separate profile check, not additional coverage. This is not a fresh R1 timing
+campaign or a report of every workflow step. It excludes archive Ocean tests,
+examples outside this command list, visual review and hardware experiments.
+Each test command must produce at least one well-formed summary line with zero
+failures; a malformed summary fails the report.
 
 Nested Cargo commands use an ignored, separate target directory so Windows
 does not try to replace the running collector executable during test builds.
@@ -37,12 +46,22 @@ paths are not copied. Test-name projection admits only ASCII letters, digits,
 underscore and colon; only `ok`, `FAILED` and `ignored` statuses are accepted.
 Tests with other output formats (including path-bearing doctest names) are not
 listed; their command exit status still applies. Repeated names remain repeated
-executions, not distinct scientific experiments. Compile-time platform
-exclusions are not visible as ignored tests and must be documented separately.
+executions, not distinct scientific experiments.
 
 No untrusted output is interpreted as a command. A successful process exit is
 mandatory; a printed PASS cannot replace it. Checksums provide byte identity,
 not author authentication or proof of truth. Failure prevents COMPLETE.
+
+## Platform exclusions
+
+Six whole tests are compiled only on Unix: two SIGKILL process tests, three
+symlink tests and one permission-bit test. They are declared in the collector.
+On Linux/macOS each must appear exactly once in the debug workspace pass as
+`ok` (`here=RAN_PASSED`); on Windows each must be absent
+(`here=EXCLUDED_NOT_COUNTED`). Any other combination — missing, repeated,
+ignored, or present where excluded — fails the report, so a stale declaration
+cannot pass and an exclusion is never counted as a Windows success. Platform
+reports are separate; do not add them into one number of unique tests.
 
 ## Native command sequencing
 

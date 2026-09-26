@@ -15,6 +15,125 @@ fn safe_test(line: &str) -> Option<&str> {
     Some(line)
 }
 
+/// Totals from cargo's strict `test result:` summary lines of one command.
+#[derive(Default, Debug, PartialEq, Eq)]
+struct Totals {
+    summaries: usize,
+    passed: u64,
+    failed: u64,
+    ignored: u64,
+    filtered: u64,
+}
+
+fn totals(text: &str) -> Result<Totals, String> {
+    let mut t = Totals::default();
+    for line in text.lines() {
+        let Some(rest) = line.strip_prefix("test result: ") else {
+            continue;
+        };
+        let rest = rest
+            .strip_prefix("ok. ")
+            .or_else(|| rest.strip_prefix("FAILED. "))
+            .ok_or("unrecognised test summary")?;
+        let fields: Vec<&str> = rest.split("; ").collect();
+        let number = |index: usize, label: &str| -> Result<u64, String> {
+            fields
+                .get(index)
+                .and_then(|f| f.strip_suffix(label))
+                .and_then(|n| n.parse().ok())
+                .ok_or_else(|| format!("malformed test summary field {label}"))
+        };
+        t.passed += number(0, " passed")?;
+        t.failed += number(1, " failed")?;
+        t.ignored += number(2, " ignored")?;
+        number(3, " measured")?;
+        t.filtered += number(4, " filtered out")?;
+        t.summaries += 1;
+    }
+    Ok(t)
+}
+
+/// Whole tests compiled only for some targets. Where excluded, the name must be
+/// absent; elsewhere it must have run and passed exactly once. A compile-time
+/// exclusion is never reported as a success on the excluding platform.
+const EXCLUSIONS: &[(&str, &str)] = &[
+    (
+        "sigkill_after_save_ack_keeps_a_readable_snapshot",
+        "SIGKILL of a child process",
+    ),
+    (
+        "sigkill_at_observable_publication_never_installs_a_partial_snapshot",
+        "SIGKILL of a child process",
+    ),
+    ("symlink_input_and_output_rejected", "Unix symlink creation"),
+    (
+        "tests::rust_only_gate_rejects_symlinks_and_executable_files",
+        "Unix symlink and execute-bit creation",
+    ),
+    (
+        "source_bundle::tests::symlink_file_and_directory_rejected",
+        "Unix symlink creation",
+    ),
+    (
+        "tests::atomic_write_is_private_by_default_and_preserves_existing_mode",
+        "Unix permission bits",
+    ),
+];
+
+/// Tests that run everywhere but contain an extra platform-only assertion block.
+const PARTIAL_BRANCHES: &[(&str, &str, &str)] = &[
+    (
+        "persisted_roundtrip_and_no_temporary_files",
+        "unix",
+        "0600 file mode assertion",
+    ),
+    (
+        "recorder_usage_and_closed_display_fail_closed",
+        "linux",
+        "/dev/full display assertion",
+    ),
+];
+
+fn check_exclusions(tests: &str, unix: bool) -> Result<String, String> {
+    let mut lines = String::new();
+    for (name, reason) in EXCLUSIONS {
+        let ran = tests
+            .lines()
+            .filter(|l| {
+                l.strip_prefix("workspace-debug\ttest ")
+                    .and_then(|rest| rest.strip_suffix(" ... ok"))
+                    == Some(*name)
+            })
+            .count();
+        let listed = tests
+            .lines()
+            .filter(|l| {
+                l.strip_prefix("workspace-debug\ttest ")
+                    .and_then(|rest| rest.split_once(" ... "))
+                    .is_some_and(|(n, _)| n == *name)
+            })
+            .count();
+        let here = match (unix, ran, listed) {
+            (true, 1, 1) => "RAN_PASSED",
+            (false, 0, 0) => "EXCLUDED_NOT_COUNTED",
+            _ => {
+                return Err(format!(
+                "platform exclusion mismatch for {name}: unix={unix} passed={ran} listed={listed}"
+            ))
+            }
+        };
+        lines.push_str(&format!(
+            "PLATFORM_EXCLUSION test={name} condition=unix here={here} reason={reason}\n"
+        ));
+    }
+    for (name, condition, detail) in PARTIAL_BRANCHES {
+        lines.push_str(&format!(
+            "PARTIAL_PLATFORM_BRANCH test={name} condition={condition} detail={detail}\n"
+        ));
+    }
+    Ok(lines)
+}
+
 fn accepted(id: &str, exited_successfully: bool, text: &str, count: usize) -> bool {
     exited_successfully
         && !text.lines().any(|line| {
@@ -22,7 +141,7 @@ fn accepted(id: &str, exited_successfully: bool, text: &str, count: usize) -> bo
                 || safe_test(line).is_some_and(|test| test.ends_with(" ... FAILED"))
         })
         && match id {
-            "workspace-debug" => {
+            "workspace-debug" | "core-release" => {
                 count > 0
                     && text
                         .lines()
@@ -111,7 +230,7 @@ pub fn report(args: &[String]) -> Result<(), String> {
         return Err("evidence output must be outside checkout".into());
     }
     fs::create_dir(output).map_err(|_| "new output directory required")?;
-    let mut report = format!("FORMAT=GEL_CI_EVIDENCE_1\nCOMMIT={sha}\nSOURCE_MANIFEST_SHA256={manifest_pin}\nRUN_ID={run_id}\nRUN_ATTEMPT={attempt}\nOS={}\nARCH={}\nSCOPE=workspace tests, doctests, saved R1 recheck; not full CI or a fresh benchmark\n", std::env::consts::OS, std::env::consts::ARCH);
+    let mut report = format!("FORMAT=GEL_CI_EVIDENCE_2\nCOMMIT={sha}\nSOURCE_MANIFEST_SHA256={manifest_pin}\nRUN_ID={run_id}\nRUN_ATTEMPT={attempt}\nOS={}\nARCH={}\nSCOPE=workspace tests (debug), core-path tests (release), doctests, saved R1 recheck; not full CI or a fresh benchmark\n", std::env::consts::OS, std::env::consts::ARCH);
     let rust = Command::new("rustc")
         .arg("-V")
         .output()
@@ -130,6 +249,22 @@ pub fn report(args: &[String]) -> Result<(), String> {
                 "--locked",
                 "--offline",
                 "--workspace",
+                "--all-targets",
+            ],
+        ),
+        (
+            "core-release",
+            &[
+                "test",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-source",
+                "-p",
+                "gel-store",
+                "-p",
+                "gel-live-lab",
                 "--all-targets",
             ],
         ),
@@ -169,10 +304,33 @@ pub fn report(args: &[String]) -> Result<(), String> {
             tests.push_str(&format!("{id}\t{line}\n"));
             count += 1;
         }
-        let accepted = accepted(id, out.status.success(), &text, count);
+        // Malformed summaries fail closed; test commands need at least one summary.
+        let summary = totals(&text);
+        let summarised = match &summary {
+            Ok(t) => *id == "saved-r1-release" || (t.summaries > 0 && t.failed == 0),
+            Err(_) => false,
+        };
+        let accepted = accepted(id, out.status.success(), &text, count) && summarised;
         success &= accepted;
-        report.push_str(&format!("CASE={id} accepted={accepted} exit_code={:?} named_test_executions={count} stdout_bytes={} stderr_bytes={}\n", out.status.code(), out.stdout.len(), out.stderr.len()));
+        let t = summary.unwrap_or_default();
+        // Executions whose names are not projected (e.g. path-bearing doctests).
+        let unlisted = (t.passed + t.failed + t.ignored).saturating_sub(count as u64);
+        report.push_str(&format!("CASE={id} accepted={accepted} exit_code={:?} named_test_executions={count} summaries={} passed={} failed={} ignored={} filtered_out={} unlisted_executions={unlisted} stdout_bytes={} stderr_bytes={}\n", out.status.code(), t.summaries, t.passed, t.failed, t.ignored, t.filtered, out.stdout.len(), out.stderr.len()));
         println!("CI_EVIDENCE_CASE={id} accepted={accepted}");
+    }
+    match check_exclusions(&tests, cfg!(unix)) {
+        Ok(lines) => {
+            report.push_str(&lines);
+            report.push_str(&format!(
+                "PLATFORM_EXCLUSIONS=CHECKED whole_tests={} partial_branches={}\n",
+                EXCLUSIONS.len(),
+                PARTIAL_BRANCHES.len()
+            ));
+        }
+        Err(e) => {
+            success = false;
+            report.push_str(&format!("PLATFORM_EXCLUSIONS=MISMATCH {e}\n"));
+        }
     }
     if identity(&root)? != sha {
         return Err("checkout changed during evidence collection".into());
@@ -233,6 +391,60 @@ mod tests {
         ] {
             assert!(!accepted("workspace-debug", true, text, 1), "{text}");
         }
+    }
+
+    #[test]
+    fn summary_totals_are_summed_and_malformed_lines_rejected() {
+        let text = "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 2 filtered out; finished in 0.01s\n\
+                    test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s\n";
+        assert_eq!(
+            totals(text).unwrap(),
+            Totals {
+                summaries: 2,
+                passed: 7,
+                failed: 1,
+                ignored: 1,
+                filtered: 2
+            }
+        );
+        assert_eq!(totals("no summaries").unwrap(), Totals::default());
+        for bad in [
+            "test result: ok. x passed; 0 failed; 0 ignored; 0 measured; 0 filtered out",
+            "test result: ok. 1 passed; 0 failed",
+            "test result: maybe. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out",
+        ] {
+            assert!(totals(bad).is_err(), "{bad}");
+        }
+    }
+
+    #[test]
+    fn platform_exclusions_are_checked_in_both_directions() {
+        let mut ran = String::new();
+        for (name, _) in EXCLUSIONS {
+            ran.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
+        let other = "workspace-debug\ttest unrelated::case ... ok\n";
+        // Unix: every excluded-elsewhere test must have run and passed once.
+        let lines = check_exclusions(&format!("{other}{ran}"), true).unwrap();
+        assert_eq!(lines.matches("here=RAN_PASSED").count(), EXCLUSIONS.len());
+        assert!(check_exclusions(other, true).is_err());
+        assert!(check_exclusions(&format!("{ran}{ran}"), true).is_err());
+        let ignored = ran.replacen(" ... ok", " ... ignored", 1);
+        assert!(check_exclusions(&ignored, true).is_err());
+        // Other targets: excluded tests are absent and never counted as success.
+        let lines = check_exclusions(other, false).unwrap();
+        assert_eq!(
+            lines.matches("here=EXCLUDED_NOT_COUNTED").count(),
+            EXCLUSIONS.len()
+        );
+        assert!(check_exclusions(&ran, false).is_err());
+        // Another case id with the same name does not satisfy the workspace check.
+        let release_only = ran.replace("workspace-debug\t", "core-release\t");
+        assert!(check_exclusions(&release_only, true).is_err());
+        assert_eq!(
+            lines.matches("PARTIAL_PLATFORM_BRANCH").count(),
+            PARTIAL_BRANCHES.len()
+        );
     }
 
     #[test]
