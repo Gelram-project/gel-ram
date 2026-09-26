@@ -37,7 +37,7 @@ histograms are then equal. `SharedScore::at_pole` exposes the same scalar for
 each valid pole; it does not calculate four independent confidence votes.
 Cross-pole comparisons, different transforms and four different contents are
 outside this shortcut. Grid also retains a small Z5 geometry helper for
-compatibility tests; no Q2.5 codec, residual encoder or text features are exported.
+compatibility tests; no private codec, residual encoder or text features are exported.
 
 ## Resources and errors
 

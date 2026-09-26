@@ -34,7 +34,7 @@ copies or peak RSS.
 The source-level removal of a temporary serialization buffer does not itself
 prove a measured RSS reduction. Memory profiling and repeated isolated runs
 remain necessary before a broad optimization claim. Do not compare these
-mutation timings with Ocean searches, Q8 decoding or private GEL/WAVE timings.
+mutation timings with Ocean searches, Q8 decoding or private-engine timings.
 
 ## Separate Linux process-memory experiment
 

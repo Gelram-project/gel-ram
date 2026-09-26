@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 //! Public precision reference: F32, IEEE binary16 and affine min/max Q1–Q16.
-//! Not the private GEL codec. The private Q2.5 mechanism is not implemented and
+//! Not the private GEL codec. Private formats are not implemented and
 //! cannot be expressed: widths are whole bits 1–16. Timing is not measured here;
 //! the historical timed campaign is `quantization_matrix`.
 //!
@@ -382,7 +382,7 @@ fn main() -> Result<(), String> {
             .as_nanos()
     ));
     fs::create_dir(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    println!("REFERENCE=GPMX_v1 formats=F32,F16,affine_minmax32_Q1..Q16 header_bytes={HEADER}\nSCOPE=public reference precisions on synthetic samples; not semantic accuracy or the private GEL codec; private Q2.5 NOT_IMPLEMENTED\nTIMING=NOT_MEASURED (historical timed campaign: quantization_matrix)");
+    println!("REFERENCE=GPMX_v1 formats=F32,F16,affine_minmax32_Q1..Q16 header_bytes={HEADER}\nSCOPE=public reference precisions on synthetic samples; not semantic accuracy or the private GEL codec; private formats NOT_IMPLEMENTED\nTIMING=NOT_MEASURED (historical timed campaign: quantization_matrix)");
     println!("dataset,format,values,payload_bytes,metadata_bytes,body_bytes,container_bytes,rmse,max_abs_error,bit_exact,file_roundtrip");
     let mut rows = 0;
     for (name, x) in datasets() {

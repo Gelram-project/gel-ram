@@ -6,7 +6,7 @@ meaning remain unchanged. Serialization for explicit save/export is unchanged.
 
 This removes the temporary full-collection Vec used only to compute a mutation
 root. It does **not** make root updates incremental: hashing remains O(total
-serialized bytes). No end-to-end timing gain, peak-RSS reduction or WAVE
+serialized bytes). No end-to-end timing gain, peak-RSS reduction or private-engine
 performance multiplier has been measured for this change.
 
 A regression performs 240 add/replace/remove/reload steps, checking the streamed

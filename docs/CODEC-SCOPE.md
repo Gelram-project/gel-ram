@@ -6,14 +6,14 @@ Names used in different experiments do not imply interchangeable file formats.
 |---|---|---|
 | Source bundles / collections | Exact UTF-8 bytes, pinned reopen, source offsets | Encryption, semantic truth, AI comprehension |
 | Structural F2 codec | Exact reconstruction using binary predictors and residuals | F16 numeric precision or universal 4× compression |
-| Affine minmax32 example (historical) | Q1, Q2, Q4, Q8 timed campaign, 32-value blocks, 8-byte endpoint metadata; pinned source | Widths other than 1/2/4/8 or the private Q2.5 mechanism |
-| Precision matrix GPMX v1 | F32, IEEE F16 and affine Q1–Q16 with versioned container, oracles and file roundtrip; see [PRECISION-MATRIX.md](PRECISION-MATRIX.md) | Private GEL codec, Q2.5, speed or lossless quantization |
+| Affine minmax32 example (historical) | Q1, Q2, Q4, Q8 timed campaign, 32-value blocks, 8-byte endpoint metadata; pinned source | Widths other than 1/2/4/8 or private formats |
+| Precision matrix GPMX v1 | F32, IEEE F16 and affine Q1–Q16 with versioned container, oracles and file roundtrip; see [PRECISION-MATRIX.md](PRECISION-MATRIX.md) | Private GEL codec, speed or lossless quantization |
 | F16 reference in data_integrity | Finite half-value roundtrips and rounding-boundary checks | Lossless conversion of arbitrary F32 |
 | Symmetric Q8 numeric reference | Separate bounded-error experiment | Same format as phase-Q8 or affine minmax32 |
 | Phase Q8 Quad | Four reversible coordinate views of one public record | Four independent datasets at unchanged capacity |
 
-The public reference matrix covers F32, F16 and affine Q1–Q16 only. Q2.5 and
-other private formats are not publicly implemented and require a separate
+The public reference matrix covers F32, F16 and affine Q1–Q16 only. Private
+formats are not publicly implemented and require a separate
 disclosure decision. Unsupported formats remain unsupported; adding a label or
 a passing transport test does not implement a codec.
 

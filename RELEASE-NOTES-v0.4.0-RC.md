@@ -24,7 +24,7 @@ These review repairs come from PR #10. They are part of main only after that PR
 is merged (see its GitHub page); they are not part of the rc.1 content of PR #9:
 
 - Public F32/F16/affine Q1–Q16 [precision matrix](docs/PRECISION-MATRIX.md)
-  (GPMX v1 example container); the private Q2.5 codec is not implemented.
+  (GPMX v1 example container); the private codec is not implemented.
 - Publication tested against kernel permission denial (Unix test) and, in Linux
   CI, a physically full 1 MiB tmpfs ([fault matrix](docs/PUBLICATION-FAULT-TESTS.md)).
 - Per-platform [CI evidence report](docs/CI-EVIDENCE.md) with declared platform

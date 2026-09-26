@@ -1,5 +1,5 @@
 REFERENCE=GPMX_v1 formats=F32,F16,affine_minmax32_Q1..Q16 header_bytes=16
-SCOPE=public reference precisions on synthetic samples; not semantic accuracy or the private GEL codec; private Q2.5 NOT_IMPLEMENTED
+SCOPE=public reference precisions on synthetic samples; not semantic accuracy or the private GEL codec; private formats NOT_IMPLEMENTED
 TIMING=NOT_MEASURED (historical timed campaign: quantization_matrix)
 dataset,format,values,payload_bytes,metadata_bytes,body_bytes,container_bytes,rmse,max_abs_error,bit_exact,file_roundtrip
 silence,F32,32768,131072,0,131072,131088,0.000000000e0,0.000000000e0,32768,PASS

@@ -1,7 +1,7 @@
 # Public precision matrix: F32, F16 and affine Q1–Q16
 
 A transparent public reference for numeric precision, **not the private GEL
-codec**. The private Q2.5 mechanism is not implemented here and cannot be
+codec**. No private format is implemented here, and none can be
 expressed by this format: widths are whole bits 1–16. Timing is not measured;
 the historical timed campaign remains [quantization_matrix](EVIDENCE-CAMPAIGN.md)
 and its pinned source is unchanged.
@@ -108,7 +108,7 @@ Full output: [precision-matrix-r1.txt](evidence-precision/precision-matrix-r1.tx
 
 ## What this does not prove
 
-Not the private GEL codec, the private Q2.5 mechanism, phase-Q8, semantic
+Not the private GEL codec, any private format, phase-Q8, semantic
 accuracy, speed, compression of real media, or any "4×" capacity. A lossless
 byte roundtrip of the container does not make lossy quantization reversible.
 Source evidence must keep its original bytes. Output digits for datasets built
