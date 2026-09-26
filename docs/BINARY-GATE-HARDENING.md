@@ -45,7 +45,7 @@ but `effective_workers_min=1`, `effective_workers_max=1`,
 `spawned_workers_total=0`, a nonzero thread-start fallback count and
 `TIMING_COMPARISON=DEGRADED_SERIAL_FALLBACK`. No other process's resource
 limits are changed. Privileged accounts may bypass the limit; inspect the
-actual report. See [V4 telemetry](PERFORMANCE.md) for scope and denominators.
+actual report. See [gel-bench telemetry (V4 fields; current header GEL_BENCH_V5)](PERFORMANCE.md) for scope and denominators.
 
 Private validation additionally runs deliberately corrupted benchmark copies
 and overflow-checked release binaries. Fault injection is not a runtime switch

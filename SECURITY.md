@@ -2,7 +2,7 @@
 
 ## Fix policy
 
-Fixes, when made, land only on the current 0.2.x line. No fix, response time or support is promised.
+Fixes, when made, land only on current public `main` (version line 0.4.0-rc.1); the tagged v0.3.0 release point is immutable and is not patched in place. No fix, response time or support is promised.
 
 ## Attack surface
 
@@ -11,6 +11,9 @@ Fixes, when made, land only on the current 0.2.x line. No fix, response time or 
 - `gel-cli verify` streams the payload through a fixed 128-byte buffer and holds no payload in memory.
 - The `gel-cli` selftest creates a private directory in the OS temporary directory, writes its store there through a sibling temporary file renamed into place, and removes the directory afterwards (best effort).
 - `write_atomic` writes a sibling `<name>.tmp-<pid>-<n>` file created with O_EXCL semantics and renames it into place. On Unix a new store is mode `0600`; replacement preserves the existing mode. `write_if_newer` assumes a single writer and is not a compare-and-swap.
+- `gel-source` readers for GELSRC01 source bundles, GELSET01 collection snapshots and source catalogs, reached through `gel-live-lab` and its `gel-evidence` binary. Files and pins supplied by another party are untrusted; the pin must come from the caller's own trusted record.
+- Interactive commands and file paths typed into `gel-live-lab` and `gel-evidence`. Input is treated as data and never executed as a shell command.
+- Example-only numeric input: the Q8DEMO01 fixture read by the `quad_evidence` example. The `precision_matrix` example reads back only GPMX v1 files it has just written to a new temporary directory.
 
 ## Input validation
 
@@ -51,7 +54,8 @@ or text encoder. Its worker budget is bounded per call by the requested
 budget, available parallelism, a cap of 64 and the bank length, including
 the caller. It is not a global limit across simultaneous readers.
 
-The shared reader and V2 comparison references handle worker-start refusal
+The shared reader and the reference paths of the current comparison example
+(header Q8_QUAD_COMPARE_V3) handle worker-start refusal
 by joining started workers and recomputing the full output serially.
 This does not certify general out-of-memory or worker-panic recovery.
 Applications still need their own aggregate memory/concurrency limits.
@@ -63,7 +67,7 @@ describe the measured boundary; no general denial-of-service protection is claim
 Use GitHub Private Vulnerability Reporting where it is enabled for this
 repository; otherwise contact `gelram.licensing@gmail.com`. Do not disclose an
 unpatched vulnerability in a public issue.
-## Candidate Q8 compatibility boundary
+## Q8 checked-view compatibility boundary
 
 Checked in-memory views reject unsupported descriptors and another reader's seed.
 They do not authenticate payloads or metadata: a relabelled malicious view may

@@ -6,7 +6,7 @@ their own checks; earlier green runs are not proof for changed bytes. No paid
 service, larger runner, VM or LFS storage is authorized. Public branch/PR
 upload and standard free public-repository CI are now authorized.
 
-## Verified revision (2026-09-26)
+## Verified PR #9 head (2026-09-26) — historical for PR #10
 
 Head: `08208c49a12f12f0af0fbaab3e6d78a86947b8b3`, Rust 1.85.0.
 [Branch run](https://github.com/Gelram-project/gel-ram/actions/runs/36236486732)
@@ -20,11 +20,16 @@ has the same source tree as that head. This was a test merge, not a merge into m
 | macOS ARM64 | 305 PASS | Source/collection demos, Q reference, integrity audit |
 | Windows x64 MSVC | 299 PASS | Source/collection demos, Q reference, integrity audit |
 
-Six Unix-only tests are absent on Windows: two SIGKILL cases, symlink rejection
-and Unix permission checks. They are not counted as Windows passes. Ocean's
+These counts belong to that PR #9 head only. PR #10 changes the test set; read
+the Linux, macOS, Windows and core-release counts from the
+[CI evidence report](CI-EVIDENCE.md) of the exact run, not from this table.
+
+At this revision six Unix-only tests were absent on Windows: two SIGKILL cases, symlink rejection
+and Unix permission checks. They are not counted as Windows passes; later
+revisions declare and check each one in the [CI evidence report](CI-EVIDENCE.md). Ocean's
 Linux-specific mapping/persistence remains Linux-specific. This table records
 the linked revision, not an unqualified guarantee of compatibility.
-For subsequent documentation changes, inspect [PR #9 checks](https://github.com/Gelram-project/gel-ram/pull/9/checks).
+For later revisions, inspect the checks of the PR that contains them (currently [PR #10](https://github.com/Gelram-project/gel-ram/pull/10/checks)) and its CI evidence report.
 
 ## Same source and toolchain on every host
 

@@ -1,5 +1,10 @@
 # Follow-up R2 — preparation, not publication
 
+> Historical record of the R2 preparation. Superseded: publication and main
+> integration were later approved, PR #9 was merged (71142a2), and native
+> Windows/macOS runs for the PR #9 head are pinned in [the platform record](../PLATFORM-REVIEW.md).
+> Current status: [publication status](../../CANDIDATE-STATUS.md).
+
 The previous local snapshot and ZIP are preserved. This successor adds:
 
 - [Actual terminal recording and screenshots](../../media/EVIDENCE-LAB-GUIDE.md),
@@ -20,6 +25,7 @@ Media scope wording now distinguishes the new public-candidate demonstration
 from the old private previews. The reused Rust Book excerpt remains MIT with
 its own notice. Full source/asset bytes are covered by the snapshot manifest.
 
+Status at the time of this record (superseded, see the banner above):
 PUBLICATION_APPROVED=NO. WINDOWS_TESTED=NO. MACOS_TESTED=NO.
-Independent blind review and user approval remain pending. Linux results and a
+Independent blind review remains pending; user approval was then pending and was given later. Linux results and a
 prepared workflow do not satisfy those external gates. No paid service was used.

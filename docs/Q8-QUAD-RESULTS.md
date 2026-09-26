@@ -1,19 +1,21 @@
-# Q8 Quad shared readout — local measurements, not a released feature
+# Q8 Quad shared readout — historical V1 local measurements (2026-09-08)
 
 One canonical scan preserved the scores of four equivalent transformed views
 in every run of this synthetic experiment. This demonstrates removal of
 redundant computation, **not better semantic retrieval or four independent
-pieces of knowledge**. The author has confirmed PolyForm Noncommercial 1.0.0
-for this public export. This is an unreleased preview.
+pieces of knowledge**. At measurement time the export was an unreleased
+PolyForm Noncommercial 1.0.0 preview; the module has since been released in
+v0.3.0, with GEL RAM NCRL 1.0 as the operative license ([licensing](../LICENSING.md)).
 
 ## Protocol and hardware
 
 This 48-run performance table is historical: it uses `Q8_QUAD_COMPARE_V1`,
 preserved in commit `4e7805990874851907611d1e21f05d2a5c64db35` before the
 reference-worker fix. The Q8 library scoring algorithm has not changed.
-The current V2 example uses fallible reference spawning and reports fallback
-counts. Its [separate regression validation](Q8-QUAD-VALIDATION.md) does not
-replace these timings or establish a new speedup ratio for the changed runner.
+The later V2 example added fallible reference spawning and fallback counts; the
+current example prints Q8_QUAD_COMPARE_V3. The V2
+[separate regression validation](Q8-QUAD-VALIDATION.md) does not replace these
+timings, and neither V2 nor V3 establishes a new speedup ratio for the changed runner.
 
 Measured 2026-09-08 on AMD Ryzen AI 9 HX 370, 12 cores / 24 logical CPUs,
 approximately 93.91 GiB OS-reported RAM, Ubuntu 24.04.4 LTS,

@@ -1,10 +1,14 @@
 # Q8 evidence and checked-view candidate
 
+> Historical pre-v0.3.0 notes; status and license statements describe that time.
+> Current terms: GEL RAM NCRL 1.0 ([LICENSING.md](LICENSING.md)).
+
 Revision2: reject stable special-file/symlink inputs before open, strengthen
 campaign validation and repeat all measurements. See the
 [R2 audit](docs/Q8-CANDIDATE-R2-AUDIT.md); no scoring formula changes.
 
-Public PR #10 candidate based on main339f364; no new release tag or version
+PR #10 candidate of the earlier pre-v0.3.0 repository, based on its main 339f364
+(not PR #10 of Gelram-project/gel-ram); no new release tag or version
 number assigned. Existing v0.2.1 historical evidence remains unchanged.
 
 Follow-up: validate log configuration and derive ratios from raw durations,

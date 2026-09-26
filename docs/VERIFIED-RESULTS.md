@@ -19,6 +19,9 @@ retains its own license terms.
 | Independent integrity audit | Byte/numeric/ranking audit reports exact recovery for the encoded representations it tests | Conversion loss and semantic quality are separate questions |
 | Ocean Scale R3 | Public 1M/10M synthetic numerical source/evidence archive with raw measurements and independent verifier | CPU/RAM full-scan baseline, not the private execution path |
 | Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only Ocean persistence/mapping research is not claimed portable |
+| Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or private vault |
+| Precision matrix (PR #10, not merged) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec or Q2.5; timing not measured |
+| Publication faults (PR #10, not merged) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
 
 ## Published Ocean full-scan baseline
 
@@ -86,10 +89,11 @@ The public repository does not claim that it proves:
 - production power-loss durability;
 - fourfold independent capacity from four reversible views.
 
-The project owner reports materially better private experimental measurements
-than the public full-scan baseline. The mechanism and exact performance claims
-remain intentionally unpublished until the owner chooses to provide a
-reproducible public evidence package.
+Separate [author-reported component measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)
+cover different tasks (compact-sketch search, phase evolution); they do not
+establish an end-to-end advantage over this baseline. No private-path speedup
+is claimed; the private mechanism remains unpublished until a reproducible
+public evidence package exists.
 
 ## Reproduce instead of trusting the summary
 

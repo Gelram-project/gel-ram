@@ -54,7 +54,9 @@ Execution and capture used a separate network namespace, with local X11 only.
   Screen capture tools are optional and not required to run the application.
 
 The complete video was decoded without errors; start/result/restart frames were
-visually inspected. It does not prove power-loss survival, encryption or general
+visually inspected when it was recorded. On 26 September 2026 a separate AI
+reviewer viewed all 161 visually distinct frames ([media review](../docs/MEDIA-DECODE-REVIEW.md));
+a human review of the complete film remains NOT_VERIFIED. It does not prove power-loss survival, encryption or general
 AI quality. Media rights remain as described in [RIGHTS.md](RIGHTS.md).
 The owner authorized publication and main integration after checks. A final
 release remains unapproved; see [candidate status](../CANDIDATE-STATUS.md).

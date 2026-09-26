@@ -10,7 +10,8 @@
 
 [Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
 [Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
-[Windows/macOS verification record and instructions](docs/PLATFORM-REVIEW.md).
+[Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
+[per-revision CI evidence](docs/CI-EVIDENCE.md).
 
 First install the pinned Rust 1.85.0 toolchain and run `cargo fetch --locked`
 with network access. The command below then runs offline with cached dependencies:
@@ -88,7 +89,7 @@ Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.
 
 ▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
 
-The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms.
+The two private previews show a separate private native Rust application: bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms. The Evidence Lab walkthrough shows the public gel-evidence tool from this repository.
 
 ## Try GEL Live Lab on your own text
 
@@ -105,7 +106,8 @@ Install the toolchain and fetch dependencies first using the instructions below.
 This public Rust program runs offline without an LLM. The source panel and
 synthetic Q8 panel are explicitly separate; the text is not encoded by those
 four views. Saved source bundles are plaintext, not an encrypted private vault.
-The films below still preview a different, private application.
+The two private-preview films show a different, private application; the
+Evidence Lab film shows the public gel-evidence tool, not this Live Lab.
 
 ## Try the new document readout
 
@@ -150,10 +152,11 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions; this checkout additionally contains the v0.4.0 PR candidate.
-These additions are available on main after [PR #9](https://github.com/Gelram-project/gel-ram/pull/9)
-is merged; before that, use branch `review/evidence-lab-v040-rc1`.
-No model or private bank is needed.
+instructions. Evidence Lab (workspace 0.4.0-rc.1) has been on public main since
+[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) was merged as 71142a2;
+no v0.4.0 tag or release exists. The review repairs in
+[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) exist only on its
+branch until that PR is merged. No model or private bank is needed.
 
 ### Change the numeric input
 
@@ -235,10 +238,11 @@ approves a legal claim; private data and licensing still require review.
 
 ## Native demonstration films
 
-The repository includes two owner-authorized English terminal demonstrations of
-a separate private native Rust application. They show live bounded source-frame
-answers and explicit UNKNOWN cases. They do **not** ship the private chat engine,
-private bank, encoder or speaker.
+The repository includes three silent English terminal films: the public,
+reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and two
+owner-authorized previews of a separate private native Rust application. The
+previews show live bounded source-frame answers and explicit UNKNOWN cases.
+They do **not** ship the private chat engine, private bank, encoder or speaker.
 
 The displayed reply timings belong only to those bounded routes and that recorded
 MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
@@ -288,8 +292,8 @@ not a bit-by-bit map. [English and Polish illustrations, explanation and evidenc
 
 ## Evidence and development
 
-1. [Current reporting fixes and demos](docs/PUBLIC-DEMO.md)
-2. [Source-readout update notes](RELEASE-NOTES-SOURCE-CANDIDATE.md)
+1. [Historical reporting fixes and demos (2026-09-11)](docs/PUBLIC-DEMO.md)
+2. [Historical source-readout candidate notes](RELEASE-NOTES-SOURCE-CANDIDATE.md)
 3. [Historical source-candidate validation](docs/SOURCE-CANDIDATE-VALIDATION.md)
 4. [Q8 contract](docs/Q8-QUAD.md) · [Source readout](docs/SOURCE-READOUT.md)
 5. [Initial candidate results](docs/Q8-EVIDENCE-CANDIDATE.md) · [R2 audit](docs/Q8-CANDIDATE-R2-AUDIT.md)

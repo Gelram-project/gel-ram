@@ -4,15 +4,16 @@ This roadmap describes only work that is safe to discuss in the public repositor
 The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
-## Version boundary and unpublished candidate
+## Version boundary
 - Tagged `v0.3.0` remains an immutable earlier release.
 - Ocean Scale R3 is on `main`: numerical 1M/10M evidence, bounded offline
   verification and Linux-only research persistence/mapping. See [scope](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
   exact source quotations, Unicode/CR regressions and runtime CI on three OSes.
 - [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
-  in PR #5. [Evidence Lab](EVIDENCE-LAB.md) is the new local-only candidate;
-  [status](../CANDIDATE-STATUS.md) explicitly withholds publication permission.
+  in PR #5. [Evidence Lab](EVIDENCE-LAB.md) was merged into main through
+  PR #9 (71142a2, workspace 0.4.0-rc.1). PR #10 review repairs are not merged,
+  and no v0.4.0 tag or release exists ([status](../CANDIDATE-STATUS.md)).
 ## Public main — already delivered
 
 The following capabilities are present on public `main`:
@@ -28,14 +29,18 @@ The following capabilities are present on public `main`:
 - Ocean Scale R3 with reproducible 1M/10M synthetic numerical evidence,
   persistence/replay research and raw measurements.
 - Linux verification plus Windows/macOS workspace/runtime checks.
+- Evidence Lab (0.4.0-rc.1, PR #9): multi-document collection, exact citations,
+  stale-result rejection, GELSET01 snapshots and fresh-process reopen; native
+  Linux/Windows/macOS CI at the PR #9 head.
 - Active branch rules requiring pull requests, current required checks and squash merges.
 
-## Local candidate review — not yet published
-1. Review the multi-document candidate: independent source boundaries, stale
-   citation invalidation, snapshots and independently recomputed raw measurements.
-   Single-document import/read/save/reopen already belongs to the published base.
-2. After separate publication permission, run the same reviewed revision on Linux, Windows and macOS. Unix permission
-   and directory-sync checks remain platform-specific, not portable guarantees.
+## Open review items
+1. Independent, non-author review of the multi-document Evidence Lab: source
+   boundaries, stale citation invalidation, snapshots and independently
+   recomputed raw measurements. The developer-authored assessment is not blind
+   validation. Single-document import/read/save/reopen belongs to the earlier published base.
+2. Keep per-platform CI evidence for every revision. Unix permission and
+   directory-sync checks remain platform-specific, not portable guarantees.
 3. Provide one-command local reporting with raw output, resource/timing scope and
    failures retained. Never infer robust performance from a single UI timing.
 4. Reproduce numeric Q8/Ocean evidence on an independent second host, including
@@ -55,9 +60,11 @@ The published 1M/10M Ocean measurements are deliberately retained as a
 resident in memory. They are valuable comparison evidence, but they are not
 presented as the final GEL RAM execution model.
 
-The private project contains newer experimental work and materially better
-owner-reported measurements. Its mechanism, multiplier and detailed performance
-numbers remain unpublished until an exact public reproduction package exists.
+The private project contains newer experimental work. Author-reported component
+measurements are published separately in
+[GEL-EXPERIMENTAL-MEASUREMENTS.md](GEL-EXPERIMENTAL-MEASUREMENTS.md); they
+measure different tasks and establish no end-to-end advantage or multiplier over
+this baseline. Any such claim requires an exact public reproduction package.
 
 ## Next public acceptance gates
 

@@ -1,9 +1,11 @@
-# Experimental Q8 Quad readout — candidate, not a knowledge encoder
+# Experimental Q8 Quad readout (public since v0.3.0) — not a knowledge encoder
 
 This additive module does not change the ORB128 format, binary Store, existing
 Reader16, weights, Top-K ordering or current public release version.
 It uses only Rust std. There are no private datasets, models or runtime paths.
-This public export uses PolyForm Noncommercial 1.0.0; see [licensing](../LICENSING.md).
+GEL RAM-owned material is licensed under GEL RAM NCRL 1.0 ([licensing](../LICENSING.md)).
+This export was first distributed under PolyForm Noncommercial 1.0.0; historical
+releases retain the license under which they were originally distributed.
 The complete local matrix is in [measured results](Q8-QUAD-RESULTS.md).
 
 ## Exact contract
@@ -44,9 +46,10 @@ The budget includes the calling thread. With one worker no OS thread is created;
 empty banks/queries do not launch workers. Failure to start a worker causes a
 complete serial recomputation after started threads finish. The budget is
 per-call, not a process-wide scheduler; simultaneous callers can still oversubscribe.
-The current V2 comparison example applies this recovery to both reference paths
-as well. It prints reference fallback counts (including warm-up); any such
-fallback marks the timing comparison as degraded, not a normal parallel run.
+The current comparison example (header Q8_QUAD_COMPARE_V3) applies this recovery
+to both reference paths as well. It prints reference and shared-scan fallback
+counts (including warm-up); any such fallback marks the timing comparison as
+degraded, not a normal parallel run. V1/V2 logs keep their own headers.
 
 Zero requested workers returns an error and clears output. Score-buffer
 reservation is fallible. Unit tests cover usize::MAX requests, partial chunks,

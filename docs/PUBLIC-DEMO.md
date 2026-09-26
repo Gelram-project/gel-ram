@@ -27,7 +27,8 @@ Local verification passed 160 test executions in both debug and release
 (including repeated reference harnesses). The report command completed full
 verify and36 scan invocations on the development PC. An interactive sequence
 phase128 → mask3 → noise100 → show → quit also passed reference/inverse checks.
-These are functional checks, not semantic accuracy. Final remote CI is tracked in PR #10.
+These are functional checks, not semantic accuracy. Final remote CI was tracked
+in PR #10 of the earlier pre-v0.3.0 repository (not PR #10 of Gelram-project/gel-ram).
 
 ## Interactive Q8
 

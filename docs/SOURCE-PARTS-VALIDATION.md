@@ -2,7 +2,7 @@
 
 Historical scope of the initial multipart addition. The later real-source
 example and archive-report repairs are tracked in the
-[current candidate validation](SOURCE-CANDIDATE-VALIDATION.md); the counts below
+[later candidate validation (also historical)](SOURCE-CANDIDATE-VALIDATION.md); the counts below
 are not the current total number of workspace or example tests.
 
 2026-09-12. Local Linux, Rust1.85.0. Unreleased candidate based on public

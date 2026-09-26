@@ -1,6 +1,10 @@
 # Source-readout and archive-report candidate
 
-Unreleased, review only. No public tag, publication approval or license cutover.
+> Historical pre-v0.3.0 candidate notes. This material was released in v0.3.0,
+> whose operative root license is GEL RAM NCRL 1.0 ([licensing](LICENSING.md)).
+> Status and licensing statements below describe the state before that release.
+
+At the time: unreleased, review only. No public tag, publication approval or license cutover.
 This extends the public baseline `82a7e5d6a48109d091113661b69be0a8ef1dccdd`
 and includes the staged licensing branch. Exact candidate bytes are identified
 by its separately reviewed source-manifest hash, not by an invented release tag.
@@ -52,6 +56,7 @@ Real text readout and numeric Q8 views remain separate demonstrations. Earlier
 performance results belong to their recorded revisions and inputs, not a new
 speedup of the multipart API. No claim of general security or legal certification.
 
-Root PolyForm remains active for GEL-owned code. The proposed NCRL terms are
-not active; legal identity, rights, privacy practices and legal review remain
-release prerequisites. Earlier public rights and historical tags are unchanged.
+At the time, root PolyForm remained active for GEL-owned code and the proposed
+NCRL terms were not active (superseded by v0.3.0, see the banner above); legal
+identity, rights, privacy practices and legal review were then listed as release
+prerequisites. Earlier public rights and historical tags are unchanged.

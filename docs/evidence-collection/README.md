@@ -1,6 +1,8 @@
 # Local Linux evidence — Evidence Lab
 
-2026-09-19. Candidate only; no publication approval. These are real program
+2026-09-19 measurement record. At that time this was a candidate without
+publication approval; publication and native platform CI followed (see the
+[publication status](../../CANDIDATE-STATUS.md)). These are real program
 outputs, not screenshots with invented timings. The existing two films concern
 the previously published application, not this new multi-document terminal.
 
@@ -15,7 +17,8 @@ the previously published application, not this new multi-document terminal.
   tests, 7 terminal/process tests, 3 independent reducer tests and 7 Q reference
   tests and the scoped evidence allow-list regression. The retained log replaces
   the checkout path with `<CHECKOUT>` only.
-- Windows/macOS: **not executed for this candidate**. Prepared CI is not evidence.
+- Windows/macOS: **not executed for this 2026-09-19 measurement**; later native
+  CI is recorded in [PLATFORM-REVIEW.md](../PLATFORM-REVIEW.md).
 - Process termination tests check acknowledged reopen and old-or-complete-new
   publication. They do not simulate controller failure or sudden power loss.
 

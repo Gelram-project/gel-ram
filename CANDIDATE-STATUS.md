@@ -1,10 +1,10 @@
 # GEL RAM Evidence Lab — public integration candidate
 
-Updated 2026-09-26. Public integration approved. Originally prepared from published commit
-`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
-`main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
-The owner authorized publication of the reviewed source and merging PR #9 into
-main after successful checks. A final tag and release are not authorized.
+Updated 2026-09-26. Originally prepared from published commit
+`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; merged into public `main` through
+PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92` after successful checks,
+with the owner's authorization. PR #10 (review repairs) is open and not merged.
+A final tag and release are not authorized.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -12,6 +12,8 @@ REVIEW_PUBLICATION_APPROVED=YES
 PUBLICATION_APPROVED=YES
 PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
+MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2
+PR_10_MERGED=NO
 RELEASE_APPROVED=NO
 SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
@@ -42,8 +44,9 @@ Technical checks accept a pending candidate and report its approval status
 without changing it. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
 Previous Linux, Windows and macOS CI results do not validate these changes.
-The candidate's subsequent native CI evidence is pinned by SHA in
-[the platform record](docs/PLATFORM-REVIEW.md). The LOCAL_VALIDATION fields
+Native CI evidence for the PR #9 head is pinned by SHA in
+[the platform record](docs/PLATFORM-REVIEW.md); PR #10 revisions are evidenced
+by the per-platform [CI evidence report](docs/CI-EVIDENCE.md) of their exact run. The LOCAL_VALIDATION fields
 above describe local validation, not remote CI results.
 Standard public-repository CI is authorized for the branch/PR; execution results
 must be checked separately. Only free standard runners are in scope.
@@ -52,7 +55,7 @@ New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 encrypted vault, speaker, encoder, private corpus or user data was exported.
 Current scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
-Follow-up recording, assessment and pending external gates: [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md).
+Historical R2 preparation record (its publication and platform flags predate the approvals above): [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md). Open external gates: [claim registry](docs/CLAIMS.md).
 Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
@@ -97,7 +100,7 @@ numerical reader, persistence/mapping and test modules described in the Ocean
 guide are additionally authorized. User conversations, signed agreements, keys,
 personal identity records and private local diagnostic logs are not included.
 
-The films are bounded native Rust source-frame demonstrations. They do not prove general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, P2P operation or physical DRAM-refresh synchronization.
+The two private-preview films are bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, P2P operation or physical DRAM-refresh synchronization.
 
 ## Licensing status
 
