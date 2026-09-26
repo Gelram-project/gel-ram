@@ -1,11 +1,20 @@
-# GEL RAM Evidence Lab — public integration candidate
+# GEL RAM Evidence Lab: integration and review status
 
-Updated 2026-09-26. Public integration approved. Originally prepared from published commit
-`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
-`main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
-The owner authorized publication of the reviewed source and merging PR #9 into
-main after successful checks. A final tag and release are not authorized.
+Updated 2026-09-26. Evidence Lab was merged into public main through
+[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) at
+`71142a25e7ad75e4d75acf4e244d8e4a996c4a92`. It was originally prepared from
+`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` and reviewed against the earlier main
+`44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
+A final tag and release are not authorized by that integration approval.
 Public pseudonym: **RR — GEL RAM Project**.
+
+## Scope of the recorded approval
+
+The approval fields and 305/111 test-count fields below describe the PR #9
+integration baseline. They do not grant blanket approval to later commits or
+authorize merging PR #10. They are not the current test count of every checkout.
+The local Windows/macOS fields describe the original local validation, not the
+subsequent native CI results linked in the platform record.
 
 ```text
 REVIEW_PUBLICATION_APPROVED=YES
@@ -32,26 +41,52 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version now identifies the local `0.4.0-rc.1` candidate.
-The v0.3.0 fields above describe the historical release, not approval of this
-candidate. No v0.4.0 tag or release is authorized by this approval.
-See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
+The workspace remains `0.4.0-rc.1`, not a final v0.4.0 release. The v0.3.0
+fields describe the historical release. See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
+Technical checks report these recorded fields; a successful verification does
+not expand their approval scope. No new licensing policy is activated.
+PR #9 native CI evidence is pinned by SHA in [the platform record](docs/PLATFORM-REVIEW.md).
+Only the configured standard free public-repository runners are in scope.
 
-Technical checks accept a pending candidate and report its approval status
-without changing it. A successful verification never supplies publication permission.
-The active root license is unchanged; no new licensing policy is activated.
-Previous Linux, Windows and macOS CI results do not validate these changes.
-The candidate's subsequent native CI evidence is pinned by SHA in
-[the platform record](docs/PLATFORM-REVIEW.md). The LOCAL_VALIDATION fields
-above describe local validation, not remote CI results.
-Standard public-repository CI is authorized for the branch/PR; execution results
-must be checked separately. Only free standard runners are in scope.
+## Follow-up under review: PR #10
 
-New scope: bounded multi-document collection, exact citations, no-replace
-snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
-encrypted vault, speaker, encoder, private corpus or user data was exported.
-Current scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
-Follow-up recording, assessment and pending external gates: [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md).
+At this dated check, [PR #10](https://github.com/Gelram-project/gel-ram/pull/10)
+is open and not merged. The implementation inventory was reviewed at
+`6f8d3c1e27707e854217a7eb2e448ee66cd2b2f0` on branch
+`docs/gel-measurements-20260926`. The documentation update built on that revision
+keeps code and recorded measurements unchanged. Later PR state must be checked
+at its canonical link rather than inferred from this snapshot.
+
+The complete PR includes runtime and test changes, not documentation alone:
+quote context, collection-root handling and staged construction, publication
+failure tests, recorder safety, per-process runtime checks, historical-source
+verification and CI evidence reporting. It also adds scoped component evidence,
+codec boundaries, a claim registry and film/transcript navigation. The public
+F32/F16/affine Q1 to Q16 reference and GPMX container are described in
+[the precision matrix](docs/PRECISION-MATRIX.md); this is not the private GEL codec.
+
+Use the [roadmap and A01-A24 acceptance list](docs/ROADMAP.md) to distinguish
+implemented review-branch work from open acceptance. Full visual review of all
+films, measured collection-optimization gains, independent second-host evidence,
+end-to-end application integration of all precision formats and same-task
+end-to-end performance acceptance are
+not established by this document. Historical data and videos remain historical.
+
+Each follow-up commit needs checks for its exact revision. The [CI evidence
+contract](docs/CI-EVIDENCE.md) distinguishes test executions, profiles, platform
+exclusions and actual command outcomes. Earlier green jobs do not validate a new
+commit; a synthetic PR merge does not mean main was updated. PR #10 integration
+requires its own review and owner approval. No final tag, release, private-code
+export or paid service is authorized by this documentation update.
+
+## PR #9 scope and retained evidence
+
+Bounded multi-document collection, exact citations, no-replace snapshots,
+generation invalidation, E2E measurement and Q reference tests were integrated.
+No private application code, encrypted vault, speaker, encoder, private corpus
+or user data was exported.
+Scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
+Historical recording/assessment preparation: [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md).
 Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
