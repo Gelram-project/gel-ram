@@ -83,3 +83,9 @@ Profiling changes execution time and process memory. Never mix its latency or
 RSS readings with uninstrumented benchmark results. Raw symbolized profiles can
 contain local paths: review/redact before any publication. No trace or profiler
 binary is added to this repository by these instructions.
+
+For constructing an entirely new bank, see the separate
+[collection builder experiment](COLLECTION-BUILDER.md). It avoids intermediate
+whole-bank root computations without changing the final serialized format.
+Its construction times must not be compared as though they were single live
+add/replace/remove timings from this page.
