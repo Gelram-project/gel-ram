@@ -7,6 +7,7 @@ const LOCK: &str = "docs/evidence-collection/Cargo.lock.measured.txt";
 fn measured_path(name: &str) -> &str {
     match name {
         "Cargo.lock" => LOCK,
+        "crates/gel-source/src/bundle.rs" => "docs/evidence-collection/bundle.measured.rs.txt",
         "crates/gel-source/src/collection.rs" => {
             "docs/evidence-collection/collection.measured.rs.txt"
         }

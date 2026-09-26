@@ -62,6 +62,10 @@ Its SHA256 is `fdbd6a9fd24483aa0b95012aff6e9edabf7b3c7da4fce43019383c474afab7bf`
 The measurement verifier maps the historical manifest's Cargo.lock entry
 to this file, and its collection.rs entry to the unchanged
 [collection.measured.rs.txt](collection.measured.rs.txt) snapshot. The current
+publisher's measured source is likewise preserved as
+[bundle.measured.rs.txt](bundle.measured.rs.txt); its manifest entry is checked
+against that snapshot after adding the testable I/O boundary.
+The current
 collection implementation uses streaming root hashing rather than allocating
 its complete serialization for each mutation. Historical measurements still
 describe the old implementation, not timings of the new one.
