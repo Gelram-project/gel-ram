@@ -13,11 +13,11 @@ the complete source inventory against its manifest and checks the commit.
 
 Files:
 
-- `REPORT.txt`: commit, source-manifest digest, OS, architecture, toolchain,
+- REPORT.txt (generated): commit, source-manifest digest, OS, architecture, toolchain,
   numeric Actions run/attempt (or LOCAL), commands' accepted/exit status and
   count of projected named test executions.
-- `TESTS.txt`: strict ASCII test identifiers and their standard statuses.
-- `SHA256SUMS.txt`: checksums of those two files.
+- TESTS.txt (generated): strict ASCII test identifiers and their standard statuses.
+- SHA256SUMS.txt (generated): checksums of those two files.
 - `COMPLETE`: emitted only after all commands and evidence writes succeed.
 
 The collector actually executes workspace all-target tests, documentation tests
