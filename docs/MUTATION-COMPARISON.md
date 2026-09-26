@@ -222,3 +222,37 @@ For constructing an entirely new bank, see the separate
 whole-bank root computations without changing the final serialized format.
 Its construction times must not be compared as though they were single live
 add/replace/remove timings from this page.
+
+### Peak additional heap inside one mutation
+
+The peak additional heap is the largest value, between entry to and return from the
+boundary function, of the requested bytes of all live malloc-family blocks minus the value
+at entry; frees of blocks that existed before the mutation lower it. It is not RSS, allocator
+footprint or the allocated-bytes total above. It was computed from the complete native event
+sequence recorded by heaptrack 1.5 (three runs per combination, identical results, same machine
+code as the DHAT binary); the call sequence matches a gdb probe of the uninstrumented binary and
+the heap levels match DHAT's process totals to the byte. glibc moved the historical buffer
+during `realloc` only for add, so old and new buffers coexisted during the copy; the atomic
+column omits that overlap, as DHAT does. DHAT's per-point `mb` cannot bound this peak: in
+Valgrind 3.22 it changes only when the whole process reaches a new heap maximum.
+
+| Variant | Documents | Operation | Peak additional heap, native (bytes) | Atomic-realloc model (bytes) | Net change at return (bytes) | `realloc` of the historical buffer |
+|---|---:|---|---:|---:|---:|---|
+| stream | 8 | add | 20,431 | 20,431 | +20,431 | none |
+| stream | 8 | replace | 20,426 | 20,426 | +26 | none |
+| stream | 8 | remove | 0 | 0 | −20,410 | none |
+| stream | 64 | add | 20,431 | 20,431 | +20,431 | none |
+| stream | 64 | replace | 20,426 | 20,426 | +26 | none |
+| stream | 64 | remove | 0 | 0 | −20,410 | none |
+| stream | 256 | add | 21,503 | 21,503 | +21,503 | none |
+| stream | 256 | replace | 20,426 | 20,426 | +26 | none |
+| stream | 256 | remove | 0 | 0 | −20,410 | none |
+| historical_vec | 8 | add | 571,405 | 387,747 | +20,431 | moved |
+| historical_vec | 8 | replace | 326,542 | 326,542 | +26 | in place |
+| historical_vec | 8 | remove | 265,254 | 265,254 | −20,410 | in place |
+| historical_vec | 64 | add | 3,998,605 | 2,672,547 | +20,431 | moved |
+| historical_vec | 64 | replace | 2,611,342 | 2,611,342 | +26 | in place |
+| historical_vec | 64 | remove | 2,550,054 | 2,550,054 | −20,410 | in place |
+| historical_vec | 256 | add | 15,750,077 | 10,507,219 | +21,503 | moved |
+| historical_vec | 256 | replace | 10,444,942 | 10,444,942 | +26 | in place |
+| historical_vec | 256 | remove | 10,383,654 | 10,383,654 | −20,410 | in place |

@@ -77,11 +77,14 @@ reports' test lists (for example the TESTS.txt of a Linux and a Windows run of
 the same commit, or the same lines printed in their CI logs):
 
 ```sh
-cargo run --locked --offline -p xtask -- platform-diff UNIX_TESTS.txt WINDOWS_TESTS.txt
+cargo run --locked --offline -p xtask -- platform-diff UNIX_TESTS.txt WINDOWS_TESTS.txt UNIX_REPORT.txt WINDOWS_REPORT.txt
 ```
 
 It fails unless the tests passing on Unix but not on Windows are exactly the
-declared exclusions and nothing passes on Windows only. Test names are not
+declared exclusions (each run exactly once on Unix) and nothing passes on
+Windows only. Every line must be a projected test line of a known case. With
+the two REPORT files it also requires one commit and a Unix and a Windows
+host. Test names are not
 qualified by crate; each declared name is currently defined once.
 
 ## Native command sequencing

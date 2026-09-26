@@ -12,4 +12,5 @@ disallowed-methods = [
     "std::thread::spawn",
     "str::split_at",
     "alloc::vec::Vec::remove",
+    "std::env::args",
 ]

@@ -21,7 +21,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | no-cross-document | retrieval | EXECUTABLE_CHECK |
 | numeric-loss | numeric | SEPARATE_GATE |
 | ranking-oracle | ranking | SEPARATE_GATE |
-| mutation-memory | memory | NOT_MEASURED |
+| mutation-memory | memory | MEASURED_LOCAL |
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
@@ -34,7 +34,9 @@ PASS applies only to the stated finite fixture and its counterexample. It does
 not prove arbitrary-language understanding, all possible malformed inputs or
 truth of source content. Bytes, numeric loss, ranking and context are separate
 dimensions. SEPARATE_GATE is not PASS: run the linked numerical/ranking checks
-and retain their results independently. Deferred entries deliberately stay open.
+and retain their results independently. MEASURED_LOCAL means an owner-side
+measurement is documented at the linked source; CI does not re-run it.
+Deferred entries deliberately stay open.
 
 This register is not yet an exhaustive map of every historic statement in the
 repository. In particular it does not retroactively validate videos or timing

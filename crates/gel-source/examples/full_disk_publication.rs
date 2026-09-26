@@ -75,8 +75,18 @@ mod linux {
         digits.parse::<u64>().ok()?.checked_mul(scale)
     }
 
-    /// The directory must be a tmpfs mount point with an explicit size <= CAP.
+    /// Linux dev_t split into (major, minor), as printed in mountinfo.
+    fn major_minor(dev: u64) -> (u64, u64) {
+        let major = ((dev >> 8) & 0xfff) | ((dev >> 32) & !0xfff);
+        let minor = (dev & 0xff) | ((dev >> 12) & !0xff);
+        (major, minor)
+    }
+
+    /// The directory must be the root of its own tmpfs mount (not a bind of a
+    /// subdirectory), the filesystem it resolves to must be that mount, and the
+    /// mount must have an explicit, non-zero size <= CAP (size=0 is unlimited).
     fn small_tmpfs(dir: &Path) -> Result<u64, String> {
+        use std::os::unix::fs::MetadataExt;
         let canonical = fs::canonicalize(dir).map_err(|e| e.to_string())?;
         let target = canonical.to_str().ok_or("non-UTF-8 directory path")?;
         let info = fs::read_to_string("/proc/self/mountinfo").map_err(|e| e.to_string())?;
@@ -86,23 +96,44 @@ mod linux {
             .filter(|l| l.split(' ').nth(4).map(unescape).as_deref() == Some(target))
             .last()
             .ok_or("refusing: the directory is not a mount point")?;
+        let fields: Vec<&str> = line.split(' ').collect();
+        let (Some(device), Some(root)) = (fields.get(2), fields.get(3)) else {
+            return Err("malformed mountinfo line".into());
+        };
+        if *root != "/" {
+            return Err("refusing: the mount is a bind of a subdirectory".into());
+        }
+        let (major, minor) =
+            major_minor(fs::metadata(&canonical).map_err(|e| e.to_string())?.dev());
+        if *device != format!("{major}:{minor}") {
+            return Err("refusing: the directory does not resolve to that mount".into());
+        }
         let (_, tail) = line.split_once(" - ").ok_or("malformed mountinfo line")?;
-        let mut fields = tail.split(' ');
-        if fields.next() != Some("tmpfs") {
+        let mut rest = tail.split(' ');
+        if rest.next() != Some("tmpfs") {
             return Err("refusing: the mount point is not tmpfs".into());
         }
-        let options = fields.nth(1).unwrap_or("");
+        let options = rest.nth(1).unwrap_or("");
         let bytes = options
             .split(',')
             .find_map(|o| o.strip_prefix("size="))
             .and_then(tmpfs_bytes)
             .ok_or("refusing: tmpfs without an explicit size")?;
+        if bytes == 0 {
+            return Err("refusing: tmpfs size 0 means no limit".into());
+        }
         if bytes > CAP {
             return Err(format!(
                 "refusing: tmpfs size {bytes} B exceeds the 64 MiB cap"
             ));
         }
         Ok(bytes)
+    }
+
+    /// Output without a panic path: with panic=abort a panic would skip the
+    /// filler guard, so a failed write is returned as an error instead.
+    fn say(line: &str) -> Result<(), String> {
+        writeln!(std::io::stdout(), "{line}").map_err(|e| format!("stdout: {e}"))
     }
 
     fn corpus(label: &str) -> Result<EncodedCorpus, String> {
@@ -146,10 +177,10 @@ mod linux {
             }
         };
         drop(filler);
-        println!(
+        say(&format!(
             "FULL_DISK_SETUP tmpfs_bytes={device_bytes} filler_bytes_at_least={filled} kernel_error={full} previous_pin_prefix={:02x}{:02x}{:02x}{:02x}",
             previous_pin[0], previous_pin[1], previous_pin[2], previous_pin[3]
-        );
+        ))?;
 
         // Publication on the full device must fail closed.
         let target = dir.join("new.gelsrc");
@@ -165,9 +196,9 @@ mod linux {
         }
         let reopened = load_bundle(&previous, previous_pin).map_err(|e| format!("{e:?}"))?;
         drop(reopened);
-        println!(
+        say(&format!(
             "FULL_DISK_PUBLISH result=REFUSED error={refused} destination=ABSENT temporaries=0 previous=RELOADED"
-        );
+        ))?;
 
         // After space is freed the same publication succeeds and reloads.
         guard.remove()?;
@@ -178,8 +209,8 @@ mod linux {
         if left != ["new.gelsrc", "previous.gelsrc"] {
             return Err(format!("unexpected files after recovery: {left:?}"));
         }
-        println!("FULL_DISK_RECOVERY filler_removed=true publish=PASS reload_new=PASS reload_previous=PASS");
-        println!("FULL_DISK_PUBLICATION=PASS");
+        say("FULL_DISK_RECOVERY filler_removed=true publish=PASS reload_new=PASS reload_previous=PASS")?;
+        say("FULL_DISK_PUBLICATION=PASS")?;
         Ok(())
     }
 }

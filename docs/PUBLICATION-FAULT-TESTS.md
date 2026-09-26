@@ -38,10 +38,13 @@ checks use the operating system itself rather than an injected error:
   requires ENOSPC from the publisher, an unchanged directory listing (no
   destination, no temporary file) and a reloadable previous snapshot. After the
   filler is removed, the same publication must succeed and reload. The program
-  refuses a directory that is not itself a tmpfs mount point with an explicit
-  size of at most 64 MiB (read from /proc/self/mountinfo), refuses a
+  refuses a directory unless it is the root of its own tmpfs mount (not a bind
+  of a subdirectory), its device matches that mount (so a shadowed or
+  over-mounted entry cannot be mistaken for it), and the tmpfs has an explicit,
+  non-zero
+  size of at most 64 MiB (size 0 means unlimited; read from /proc/self/mountinfo). It refuses a
   non-empty directory, caps the filler at 64 MiB and removes it on every exit
-  path, including a failure while filling.
+  path, including a failure while filling or while writing its own output.
 
 ```sh
 cargo run --locked --offline --release -p gel-source --example full_disk_publication -- EMPTY_SMALL_TMPFS

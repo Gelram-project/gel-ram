@@ -150,31 +150,53 @@ fn check_exclusions(tests: &str, unix: bool) -> Result<String, String> {
             ));
         }
         lines.push_str(&format!(
-            "PARTIAL_PLATFORM_BRANCH test={name} condition={condition} here=RAN_PASSED detail={detail}\n"
+            "PARTIAL_PLATFORM_BRANCH test={name} condition={condition} here=RAN_PASSED branch={} detail={detail}\n",
+            if branch_active(condition) { "active" } else { "inactive" }
         ));
     }
     Ok(lines)
 }
 
-/// Per-name counts of passing debug-workspace executions; any other status fails.
+/// Whether a partial branch's platform-only block runs on this build target.
+fn branch_active(condition: &str) -> bool {
+    (condition == "unix" && cfg!(unix)) || (condition == "linux" && cfg!(target_os = "linux"))
+}
+
+const CASE_IDS: &[&str] = &[
+    "workspace-debug",
+    "core-release",
+    "doctests-debug",
+    "saved-r1-release",
+];
+
+/// Per-name counts of passing debug-workspace executions. Every line must be a
+/// projected test line of a known case; any other line or status fails.
 fn passing_names(tests: &str) -> Result<std::collections::BTreeMap<&str, usize>, String> {
     let mut names = std::collections::BTreeMap::new();
-    for rest in tests
-        .lines()
-        .filter_map(|l| l.strip_prefix("workspace-debug\ttest "))
-    {
-        let (name, status) = rest.split_once(" ... ").ok_or("malformed TESTS.txt line")?;
+    for line in tests.lines() {
+        let (case, rest) = line
+            .split_once('\t')
+            .filter(|(case, _)| CASE_IDS.contains(case))
+            .ok_or_else(|| format!("unrecognised TESTS.txt line: {line}"))?;
+        let body = rest
+            .strip_prefix("test ")
+            .and_then(|r| r.split_once(" ... "))
+            .filter(|(name, _)| safe_test(&format!("test {name} ... ok")).is_some())
+            .ok_or_else(|| format!("malformed TESTS.txt line: {line}"))?;
+        let (name, status) = body;
         if status != "ok" {
             return Err(format!("non-passing test in report: {name} {status}"));
         }
-        let count = names.entry(name).or_insert(0usize);
-        *count = count.checked_add(1).ok_or("test count overflow")?;
+        if case == "workspace-debug" {
+            let count = names.entry(name).or_insert(0usize);
+            *count = count.checked_add(1).ok_or("test count overflow")?;
+        }
     }
     Ok(names)
 }
 
 /// Every name that passes on Unix but not on Windows must be a declared
-/// exclusion, and nothing may pass on Windows only.
+/// exclusion that ran exactly once on Unix, and nothing may pass on Windows only.
 fn compare_platforms(unix: &str, windows: &str) -> Result<String, String> {
     let (u, w) = (passing_names(unix)?, passing_names(windows)?);
     let declared: std::collections::BTreeSet<&str> =
@@ -185,6 +207,11 @@ fn compare_platforms(unix: &str, windows: &str) -> Result<String, String> {
         let expected = if declared.contains(name) { 0 } else { count };
         if other != expected {
             problems.push(format!("{name}: unix={count} windows={other}"));
+        }
+        if declared.contains(name) && count != 1 {
+            problems.push(format!(
+                "{name}: declared exclusion ran {count} times on unix"
+            ));
         }
     }
     for (name, &count) in &w {
@@ -209,12 +236,50 @@ fn compare_platforms(unix: &str, windows: &str) -> Result<String, String> {
     }
 }
 
+/// `KEY=value` of a collector REPORT.txt; exactly one occurrence required.
+fn report_field<'a>(report: &'a str, key: &str) -> Result<&'a str, String> {
+    let mut values = report
+        .lines()
+        .filter_map(|l| l.strip_prefix(key).and_then(|r| r.strip_prefix('=')));
+    match (values.next(), values.next()) {
+        (Some(value), None) => Ok(value),
+        _ => Err(format!("REPORT.txt needs exactly one {key}= line")),
+    }
+}
+
+/// Both reports must describe the same commit, a Unix and a Windows host.
+fn same_commit(unix: &str, windows: &str) -> Result<String, String> {
+    let commit = report_field(unix, "COMMIT")?;
+    if report_field(windows, "COMMIT")? != commit {
+        return Err("PLATFORM_DIFF=FAIL reports are from different commits".into());
+    }
+    if !matches!(report_field(unix, "OS")?, "linux" | "macos") {
+        return Err("PLATFORM_DIFF=FAIL first report is not from Linux or macOS".into());
+    }
+    if report_field(windows, "OS")? != "windows" {
+        return Err("PLATFORM_DIFF=FAIL second report is not from Windows".into());
+    }
+    Ok(commit.to_owned())
+}
+
 pub fn platform_diff(args: &[String]) -> Result<(), String> {
-    let [unix, windows] = args else {
-        return Err("platform-diff requires UNIX_TESTS.txt WINDOWS_TESTS.txt".into());
-    };
     let read = |path: &String| fs::read_to_string(path).map_err(|e| format!("{path}: {e}"));
-    println!("{}", compare_platforms(&read(unix)?, &read(windows)?)?);
+    match args {
+        [unix, windows] => println!("{}", compare_platforms(&read(unix)?, &read(windows)?)?),
+        [unix, windows, unix_report, windows_report] => {
+            let commit = same_commit(&read(unix_report)?, &read(windows_report)?)?;
+            println!(
+                "{} commit={commit}",
+                compare_platforms(&read(unix)?, &read(windows)?)?
+            );
+        }
+        _ => {
+            return Err(
+                "platform-diff requires UNIX_TESTS WINDOWS_TESTS [UNIX_REPORT WINDOWS_REPORT]"
+                    .into(),
+            )
+        }
+    }
     Ok(())
 }
 
@@ -565,6 +630,45 @@ mod tests {
         // A non-passing line in either report fails.
         let failed = unix.replacen(" ... ok", " ... FAILED", 1);
         assert!(compare_platforms(&failed, &shared).is_err());
+    }
+
+    #[test]
+    fn platform_diff_is_strict_about_lines_duplicates_and_commits() {
+        let mut shared = String::new();
+        for (name, _, _) in PARTIAL_BRANCHES {
+            shared.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
+        let mut unix = shared.clone();
+        for (name, _) in EXCLUSIONS {
+            unix.push_str(&format!("workspace-debug\ttest {name} ... ok\n"));
+        }
+        assert!(compare_platforms(&unix, &shared).is_ok());
+        // Unknown or malformed lines are errors, not silently skipped.
+        assert!(compare_platforms(&format!("{unix}garbage line\n"), &shared).is_err());
+        assert!(compare_platforms(&format!("{unix}other-case\ttest x ... ok\n"), &shared).is_err());
+        assert!(compare_platforms(
+            &format!("{unix}workspace-debug\ttest /path ... ok\n"),
+            &shared
+        )
+        .is_err());
+        // A declared exclusion must run exactly once on Unix.
+        let first = EXCLUSIONS[0].0;
+        let twice = format!("{unix}workspace-debug\ttest {first} ... ok\n");
+        assert!(compare_platforms(&twice, &shared).is_err());
+        // Reports must share one commit and come from a Unix and a Windows host.
+        let report = |commit: &str, os: &str| {
+            format!("FORMAT=GEL_CI_EVIDENCE_2\nCOMMIT={commit}\nOS={os}\n")
+        };
+        assert_eq!(
+            same_commit(&report("abc", "linux"), &report("abc", "windows")).unwrap(),
+            "abc"
+        );
+        assert!(same_commit(&report("abc", "macos"), &report("abc", "windows")).is_ok());
+        assert!(same_commit(&report("abc", "linux"), &report("def", "windows")).is_err());
+        assert!(same_commit(&report("abc", "windows"), &report("abc", "windows")).is_err());
+        assert!(same_commit(&report("abc", "linux"), &report("abc", "linux")).is_err());
+        let doubled = format!("{}COMMIT=abc\n", report("abc", "linux"));
+        assert!(same_commit(&doubled, &report("abc", "windows")).is_err());
     }
 
     #[test]

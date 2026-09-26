@@ -26,6 +26,7 @@ const FORBIDDEN: &[&str] = &[
     "clippy::print_stderr",
     "clippy::disallowed_macros",
     "clippy::disallowed_methods",
+    "clippy::dbg_macro",
 ];
 /// (name, statement injected at the start of main, lint that must reject it)
 const PROBES: &[(&str, &str, &str)] = &[
@@ -65,6 +66,12 @@ const PROBES: &[(&str, &str, &str)] = &[
         "disallowed_methods",
     ),
     ("print", r#"println!("probe");"#, "print_stdout"),
+    ("dbg", "let _p = dbg!(1u8);", "dbg_macro"),
+    (
+        "env-args",
+        "let _p = std::env::args().count();",
+        "disallowed_methods",
+    ),
 ];
 
 fn clippy_driver(root: &Path) -> Result<PathBuf, String> {

@@ -13,7 +13,7 @@ printed in CI match the rebuilt files. Check them with:
 
 ```sh
 cd docs/evidence-ci/2b29236 && sha256sum -c linux-SHA256SUMS.txt windows-SHA256SUMS.txt macos-SHA256SUMS.txt
-cargo run --locked --offline -p xtask -- platform-diff docs/evidence-ci/2b29236/linux-TESTS.txt docs/evidence-ci/2b29236/windows-TESTS.txt
+cargo run --locked --offline -p xtask -- platform-diff docs/evidence-ci/2b29236/linux-TESTS.txt docs/evidence-ci/2b29236/windows-TESTS.txt docs/evidence-ci/2b29236/linux-REPORT.txt docs/evidence-ci/2b29236/windows-REPORT.txt
 ```
 
 | Commit | Push run | Linux / macOS workspace | Windows workspace | Core release (Linux/macOS, Windows) | Doctests | platform-diff |

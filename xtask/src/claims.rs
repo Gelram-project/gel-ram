@@ -93,10 +93,10 @@ const CLAIMS: &[Claim] = &[
         dimension: "memory",
         scope: "streamed versus historical mutation",
         input: "mutation_compare identical paired states",
-        expected: "heap allocations and user-space copies measured (DHAT summary); isolated peak RSS still required",
+        expected: "allocations, user-space copies and peak additional heap measured locally (DHAT, heaptrack); isolated RSS not measured",
         counterexample: "removed temporary Vec called measured RAM saving",
         source: "docs/MUTATION-COMPARISON.md",
-        evidence: Evidence::Deferred("NOT_MEASURED"),
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
         id: "publication-os-faults",
@@ -122,7 +122,7 @@ const CLAIMS: &[Claim] = &[
         id: "recorder-fail-closed",
         dimension: "tooling",
         scope: "scripted film recorder",
-        input: "recorder-lint: 13 forbidden lints and 8 rejected probes; process failure tests",
+        input: "recorder-lint: 14 forbidden lints and 10 rejected probes; process failure tests",
         expected: "controlled RECORDING_FAILED/REFUSED, no panic, no COMPLETE",
         counterexample: "a panic or partial COMPLETE after an I/O failure",
         source: "docs/RECORDER-SAFETY.md",
@@ -278,7 +278,8 @@ mod tests {
             registry_table()
         );
         validate_table(&doc).unwrap();
-        assert!(validate_table(&doc.replacen("NOT_MEASURED", "PASS", 1)).is_err());
+        assert!(validate_table(&doc.replacen("NOT_VERIFIED", "PASS", 1)).is_err());
+        assert!(validate_table(&doc.replacen("MEASURED_LOCAL", "PASS", 1)).is_err());
         assert!(validate_table(
             &doc.replace("| no-cross-document | retrieval | EXECUTABLE_CHECK |\n", "")
         )

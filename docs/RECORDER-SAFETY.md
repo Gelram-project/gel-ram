@@ -21,16 +21,20 @@ Current recorder safeguards:
   non-UTF-8 flag), `--update` without a binary, or an existing output path. The
   binary may be any absolute OS path, including a non-UTF-8 one.
 - `cargo xtask recorder-lint` (part of `verify`) runs clippy-driver on the
-  standalone tool with 13 lints forbidden from the command line, so an
+  standalone tool with 14 lints forbidden from the command line, so an
   `#[allow]` inside the file cannot relax them: `unwrap_used`, `expect_used`,
   `panic`, `unreachable`, `todo`, `unimplemented`, `indexing_slicing`,
   `string_slice`, `arithmetic_side_effects`, `print_stdout`, `print_stderr`,
+  `dbg_macro`,
   and `disallowed_macros` / `disallowed_methods` configured to reject the
-  assert macros, `std::thread::spawn`, `str::split_at` and `Vec::remove`
+  assert macros, `std::thread::spawn`, `str::split_at`, `Vec::remove` and
+  `std::env::args`
   ([tools/recorder-lint/clippy.toml](../tools/recorder-lint/clippy.toml)).
-  The gate then lints eight copies, each with one injected construct (unwrap,
+  The gate then lints ten copies, each with one injected construct (unwrap,
   an `#[allow]` bypass, assert, indexing, string slicing, arithmetic, thread
-  spawn, print) and fails unless every copy is rejected by the expected lint.
+  spawn, print, dbg, env::args) and fails unless every copy is rejected by the
+  expected lint. This is a denylist of named constructs: code hidden inside a
+  local `macro_rules!` is not covered, and the tool defines no such macro.
 
 Use a new directory controlled by the operator. This is not a security boundary
 against another process replacing paths concurrently in that directory.
