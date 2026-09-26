@@ -163,9 +163,86 @@ impl App {
         }
     }
 }
+fn latest_pin(app: &App) -> String {
+    let output = app.text();
+    let pin = output
+        .rsplit("BUNDLE_SHA256=")
+        .next()
+        .unwrap_or("")
+        .split(';')
+        .next()
+        .unwrap_or("")
+        .to_string();
+    assert!(
+        pin.len() == 64 && pin.bytes().all(|b| b.is_ascii_hexdigit()),
+        "invalid emitted pin"
+    );
+    pin
+}
+
+fn update_walkthrough(binary: &str) {
+    println!("UPDATE / STALE CITATION / RESTART / CORRUPTED COPY\nSynthetic document; phrase lookup, not semantic reasoning.\n");
+    let mut first = App::launch(binary, 1);
+    first.command("add original.txt", "ADDED id=1", 1500);
+    first.command("find open the valve", "FIND=HIT", 4000);
+    first.command("proof 1", "CITATION=PASS", 2000);
+    first.command("find invented instruction", "FIND=UNKNOWN", 2000);
+    first.command("save original.gelset", "BUNDLE_SHA256=", 2000);
+    let original_pin = latest_pin(&first);
+    first.command("find open the valve", "FIND=HIT", 2000);
+    first.command("proof 1", "CITATION=PASS", 1500);
+    first.command("replace 1 revised.txt", "REPLACED id=1", 2000);
+    first.command("proof 1", "REFUSED NO_CURRENT_RESULT", 3000);
+    first.command("find open the valve", "FIND=UNKNOWN", 2000);
+    first.command("find keep the valve closed", "FIND=HIT", 4000);
+    first.command("proof 1", "CITATION=PASS", 2000);
+    first.command("save revised.gelset", "BUNDLE_SHA256=", 2000);
+    let revised_pin = latest_pin(&first);
+    assert_ne!(original_pin, revised_pin);
+    first.finish();
+    let original = fs::read("original.gelset").expect("saved original snapshot");
+    let revised = fs::read("revised.gelset").expect("saved revised snapshot");
+    let mut changed = original.clone();
+    *changed.last_mut().expect("nonempty snapshot") ^= 1;
+    let mut bad = new_file(std::path::Path::new("corrupt.gelset")).expect("new corrupt test copy");
+    bad.write_all(&changed).unwrap();
+    bad.sync_all().unwrap();
+    println!("\n--- First process ended. TEST FIXTURE: flipped one byte in a COPY. ---\nOriginal and revised snapshots retained unchanged. Starting new process.\n");
+    pause(2500);
+    let mut second = App::launch(binary, 2);
+    second.command(
+        &format!("load {revised_pin} revised.gelset"),
+        "REOPEN=PASS",
+        2000,
+    );
+    second.command("find keep the valve closed", "FIND=HIT", 4000);
+    second.command("proof 1", "CITATION=PASS", 2000);
+    second.command(
+        &format!("load {original_pin} original.gelset"),
+        "REOPEN=PASS",
+        2000,
+    );
+    second.command("find open the valve", "FIND=HIT", 4000);
+    second.command("proof 1", "CITATION=PASS", 2000);
+    second.command(
+        &format!("load {original_pin} corrupt.gelset"),
+        "REFUSED",
+        3000,
+    );
+    second.command("find open the valve", "FIND=HIT", 4000);
+    second.command("proof 1", "CITATION=PASS", 2000);
+    second.finish();
+    assert_eq!(fs::read("original.gelset").unwrap(), original);
+    assert_eq!(fs::read("revised.gelset").unwrap(), revised);
+    println!("\nWalkthrough complete: old/revised snapshots reopened; corrupt copy refused.\nTimes are individual operation measurements, not performance percentiles.\n");
+}
+
 fn main() {
     let args: Vec<_> = std::env::args().collect();
-    assert_eq!(args.len(), 2, "record_evidence ABSOLUTE_APP_BINARY");
+    assert!(
+        args.len() == 2 || (args.len() == 3 && args[2] == "--update"),
+        "record_evidence ABSOLUTE_APP_BINARY [--update]"
+    );
     for path in [
         "checkpoint.gelset",
         "COMPLETE.txt",
@@ -176,6 +253,9 @@ fn main() {
         "process-2-stderr.txt",
         "process-1-status.txt",
         "process-2-status.txt",
+        "original.gelset",
+        "revised.gelset",
+        "corrupt.gelset",
     ] {
         match fs::symlink_metadata(path) {
             Ok(_) => {
@@ -194,6 +274,16 @@ fn main() {
     let _commands = new_file(std::path::Path::new("commands.txt")).expect("new commands log");
     println!("GEL EVIDENCE LAB  |  Linux terminal  |  OFFLINE / CPU\nScripted typing; real application output. No LLM.\nPhrase retrieval, NOT semantic conversation.\n");
     pause(2000);
+    if args.len() == 3 {
+        update_walkthrough(&args[1]);
+        pause(2000);
+        let mut complete = new_file(std::path::Path::new("COMPLETE.txt")).expect("new completion");
+        complete
+            .write_all(b"LIVE_UPDATE_WALKTHROUGH=PASS\n")
+            .unwrap();
+        complete.sync_all().unwrap();
+        return;
+    }
     let mut first = App::launch(&args[1], 1);
     first.command("add memory.txt", "ADDED id=1", 1200);
     first.command("add unicode.txt", "ADDED id=2", 1200);

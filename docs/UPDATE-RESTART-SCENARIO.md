@@ -13,7 +13,8 @@ executes two actual `gel-evidence` processes through their command interface:
 1. Add a document and find a phrase whose preceding line contains `Do not`.
    Check that the displayed bounded context preserves this negation.
 2. Verify the citation and obtain UNKNOWN for an absent phrase.
-3. Save the original snapshot, replace the document, and require rejection of
+3. Save the original snapshot, select and verify the original citation again
+   after UNKNOWN cleared the earlier selection, replace the document, and require rejection of
    the now-invalid selected result before running another search.
 4. Require the old phrase to be absent and verify the revised phrase. Save a
    second snapshot with a different content pin; exit the process.
@@ -32,3 +33,30 @@ During test development the first assertion incorrectly expected no REFUSED
 output even though stale-proof refusal is required. The assertion was corrected
 to require exactly that refusal, plus NO_CURRENT_RESULT. This was a test
 expectation error, not a change that bypassed production rejection.
+
+A later scenario review found a second test weakness: UNKNOWN had cleared the
+selection before replace, so the later NO_CURRENT_RESULT did not by itself
+demonstrate invalidation by replace. The scenario now reselects and verifies a
+real hit immediately before replacement and checks that ordering. Historical
+test results are not reinterpreted as having covered this stronger precondition.
+
+## Live typing driver for a separate, longer recording
+
+The [Rust driver](../tools/record_evidence.rs) also accepts --update after the
+absolute application binary path. Compile it with Rust 1.85.0, then run it from
+a fresh owner-controlled directory containing the authored
+[original](../crates/gel-source/fixtures/evidence-lab/original.txt) and
+[revised](../crates/gel-source/fixtures/evidence-lab/revised.txt) text fixtures.
+The synthetic instructions are test data, not operational safety advice.
+
+This mode executes the scenario above with scripted typing and genuine process
+output. It retains two snapshots and explicitly announces making a one-byte
+corrupted copy between processes. The original snapshots are compared byte for
+byte at the end. It creates separate stdout, stderr and status logs for each
+process, plus a command log and completion marker only after success.
+
+It does not record pixels itself. Screen capture and a visual review remain
+separate work; the existence of the driver or its successful terminal log is
+not evidence that a fourth MP4 has been filmed or approved. The original
+two-document mode and three historical videos remain available and unchanged.
+No answers are substituted, and pauses are outside application timers.

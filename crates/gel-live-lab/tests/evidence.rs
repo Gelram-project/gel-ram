@@ -152,14 +152,19 @@ fn complete_update_restart_and_corruption_scenario() {
     )
     .unwrap();
     let first = run(&format!(
-        "add {}\nfind open the valve\nproof 1\nfind invented instruction\nsave {}\nreplace 1 {}\nproof 1\nfind open the valve\nfind keep the valve closed\nproof 1\nsave {}\nexit\n",
+        "add {}\nfind open the valve\nproof 1\nfind invented instruction\nsave {}\nfind open the valve\nproof 1\nreplace 1 {}\nproof 1\nfind open the valve\nfind keep the valve closed\nproof 1\nsave {}\nexit\n",
         original.display(), old.display(), revised.display(), new.display()
     ));
     assert_eq!(first.matches("REFUSED").count(), 1, "{first}");
     assert!(first.contains("Do not\\nopen the valve"), "{first}");
     assert_eq!(first.matches("NO_CURRENT_RESULT").count(), 1);
     assert_eq!(first.matches("FIND=UNKNOWN").count(), 2);
-    assert_eq!(first.matches("CITATION=PASS").count(), 2);
+    assert_eq!(first.matches("CITATION=PASS").count(), 3);
+    let before_replace = first.split("REPLACED id=1").next().unwrap();
+    assert!(
+        before_replace.rfind("CITATION=PASS").unwrap()
+            > before_replace.rfind("FIND=UNKNOWN").unwrap()
+    );
     let old_bytes = fs::read(&old).unwrap();
     let new_bytes = fs::read(&new).unwrap();
     let old_pin = hex(&gel_source::digest(&old_bytes));
