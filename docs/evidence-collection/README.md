@@ -99,7 +99,7 @@ cargo +1.85.0 run --locked --offline --release -p gel-source --example collectio
 What must match, and what cannot:
 
 - **Deterministic, must match [r1](r1/):** every `sha256`, `text_bytes` and
-  `snapshot_bytes` row of `corpora.txt`; 2115 observations with the same
+  `snapshot_bytes` row of [corpora.txt](r1/corpora.txt); 2115 observations with the same
   `(rep, documents, operation, sample)` keys in the same order; `correct=1` on
   every row; the same 99 summary groups; recheck PASS.
 - **Not reproducible by rebuilding:** every time (`build_ns`, percentiles) and
