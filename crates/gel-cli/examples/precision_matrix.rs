@@ -12,14 +12,25 @@
 //! LSB-first bitstream; 32·bits bits are exactly 4·bits bytes, so padding is 0.
 //! Rounding: code = round_ties_even((x − lo)/(hi − lo)·(2^bits − 1)) in f64,
 //! code 0 when lo == hi; value = lo + (hi − lo)·code/(2^bits − 1) in f64, then
-//! rounded to f32; a constant block (lo == hi) reconstructs lo exactly and
-//! must carry only zero codes (canonical form).
+//! rounded to f32. Canonical blocks only: a constant block (lo == hi)
+//! reconstructs lo exactly and carries only zero codes; a non-constant block
+//! (lo < hi) contains code 0 and code 2^bits − 1, which the encoder writes for
+//! the block minimum lo and maximum hi.
 //! F16: IEEE 754 round-to-nearest-even from f32; values rounding beyond ±65504
 //! are rejected. Inputs must be finite. Limits: 1 ≤ count ≤ 2^24; affine count
-//! is a multiple of 32. Sign of zero: exact in F32/F16 and in all-(−0) affine
-//! blocks, not preserved in affine blocks mixing −0 and +0.
-//! Error budget per value: affine (hi − lo)/(2·(2^bits − 1)) + max(|lo|,|hi|)·ε32;
-//! F16 half an F16 ulp of the value's binade (2^-25 in the subnormal range).
+//! is a multiple of 32.
+//! Sign of zero: exact in F32/F16 and in affine blocks of 32 zeros of one sign.
+//! A block of only −0 and +0 is constant (lo == hi) and decodes every value as
+//! the stored lo. A non-constant block stores no sign per value: a decoded zero
+//! has the sign of its f64 reconstruction, so −0 decodes as +0 whenever that is
+//! exactly 0 (always for a −0 minimum: −0 + 0 = +0), and a reconstruction in
+//! [−2^-150, 0) decodes as −0, even for a +0 input.
+//! Error budget per value, M = max(|lo|, |hi|), ε32 = 2^-23: affine
+//! (hi − lo)/(2·(2^bits − 1)) + max(M·ε32, 2^-149). The second term bounds half
+//! an f32 ulp of the reconstruction, max(M·2^-24, 2^-150), plus the f64 rounding
+//! of code choice and reconstruction, below 16·2^-53·M = 2^-49·M. The 2^-149
+//! floor covers the subnormal range, where f32 spacing is a fixed 2^-149.
+//! F16: half an F16 ulp of the value's binade (2^-25 in the subnormal range).
 use std::{fs, path::Path};
 
 const MAGIC: &[u8; 4] = b"GPMX";
@@ -243,6 +254,7 @@ fn decode(bytes: &[u8]) -> Result<(Format, Vec<f32>), &'static str> {
                 }
                 let mut payload = block[8..].iter();
                 let (mut acc, mut available) = (0u64, 0u32);
+                let (mut has_bottom, mut has_top) = (false, false);
                 for _ in 0..BLOCK {
                     while available < bits {
                         acc |= u64::from(*payload.next().ok_or("short payload")?) << available;
@@ -254,6 +266,8 @@ fn decode(bytes: &[u8]) -> Result<(Format, Vec<f32>), &'static str> {
                     if lo == hi && code != 0 {
                         return Err("non-canonical constant block");
                     }
+                    has_bottom |= code == 0;
+                    has_top |= code == levels;
                     // A constant block reconstructs lo exactly (keeps the sign of -0).
                     let v = if lo == hi {
                         lo
@@ -264,6 +278,11 @@ fn decode(bytes: &[u8]) -> Result<(Format, Vec<f32>), &'static str> {
                         return Err("non-finite reconstruction");
                     }
                     x.push(v);
+                }
+                // The encoder gives the minimum code 0 and the maximum the top
+                // code, so a range that no code reaches is not its output.
+                if lo < hi && !(has_bottom && has_top) {
+                    return Err("non-canonical non-constant block");
                 }
             }
         }
@@ -531,23 +550,88 @@ mod tests {
         }
     }
 
+    /// Declared affine budget as (quantization, rounding) terms: half a step and
+    /// max(M·ε32, 2^-149) with M = max(|lo|, |hi|).
+    fn affine_budget(lo: f32, hi: f32, bits: u32) -> (f64, f64) {
+        let (lo, hi) = (lo as f64, hi as f64);
+        let levels = ((1u32 << bits) - 1) as f64;
+        let rounding = (hi.abs().max(lo.abs()) * f32::EPSILON as f64).max(2f64.powi(-149));
+        ((hi - lo) / levels / 2., rounding)
+    }
+
+    /// Blocks in and around the f32 subnormal range; each block holds its own lo and hi.
+    fn small_magnitude_blocks() -> Vec<f32> {
+        let tiny = f32::from_bits(1); // 2^-149
+        let mut x = Vec::new();
+        // Every multiple of 2^-149 in [lo, lo + k] for spans k < 200, three offsets.
+        for k in 1..200i32 {
+            for lo in [0, -k / 2, -k] {
+                let values: Vec<f32> = (lo..=lo + k).map(|j| j as f32 * tiny).collect();
+                for chunk in values.chunks(BLOCK - 2) {
+                    x.extend([lo as f32 * tiny, (lo + k) as f32 * tiny]);
+                    x.extend_from_slice(chunk);
+                    x.resize(x.len().next_multiple_of(BLOCK), lo as f32 * tiny);
+                }
+            }
+        }
+        // Mixed blocks: random bit patterns below 2^-126, 2^-125 and 1.0, random signs.
+        let mut rng = Lcg(5);
+        for top in [0x0080_0000u32, 0x0100_0000, 0x3f80_0000] {
+            for _ in 0..BLOCK * 64 {
+                let v = f32::from_bits(rng.next() as u32 % top);
+                x.push(if rng.next() % 2 == 0 { v } else { -v });
+            }
+        }
+        x
+    }
+
     #[test]
     fn affine_error_budget_all_widths_all_datasets() {
-        for (name, x) in datasets() {
+        let mut cases = datasets();
+        cases.push(("subnormal_and_mixed", small_magnitude_blocks()));
+        let mut worst_rounding_share = 0f64;
+        for (name, x) in cases {
             for bits in 1..=16u32 {
-                let levels = ((1u32 << bits) - 1) as f64;
                 let (_, d) = decode(&encode(&x, Format::Affine(bits)).unwrap()).unwrap();
                 for (a, b) in x.chunks_exact(BLOCK).zip(d.chunks_exact(BLOCK)) {
-                    let lo = a.iter().copied().fold(f32::INFINITY, f32::min) as f64;
-                    let hi = a.iter().copied().fold(f32::NEG_INFINITY, f32::max) as f64;
-                    let bound =
-                        (hi - lo) / levels / 2. + hi.abs().max(lo.abs()) * f32::EPSILON as f64;
+                    let lo = a.iter().copied().fold(f32::INFINITY, f32::min);
+                    let hi = a.iter().copied().fold(f32::NEG_INFINITY, f32::max);
+                    let (quantization, rounding) = affine_budget(lo, hi, bits);
                     for (&v, &w) in a.iter().zip(b) {
-                        assert!((v as f64 - w as f64).abs() <= bound, "{name} Q{bits}");
+                        let error = (v as f64 - w as f64).abs();
+                        assert!(error <= quantization + rounding, "{name} Q{bits} {v:e}");
+                        worst_rounding_share =
+                            worst_rounding_share.max((error - quantization) / rounding);
                     }
                 }
             }
         }
+        // Not loose: some value exceeds half a step by at least 0.4 of the rounding
+        // term (half an f32 ulp would be 0.5 of it).
+        assert!(worst_rounding_share >= 0.4, "{worst_rounding_share}");
+        for bits in 1..=16u32 {
+            // A tie at half a step: the quantization term is reached exactly.
+            let levels = (1u32 << bits) - 1;
+            let mut x = [0f32; BLOCK];
+            x[1] = levels as f32;
+            x[2] = 0.5;
+            let d = decode(&encode(&x, Format::Affine(bits)).unwrap())
+                .unwrap()
+                .1;
+            let (quantization, _) = affine_budget(0., levels as f32, bits);
+            assert_eq!((x[2] as f64 - d[2] as f64).abs(), quantization, "Q{bits}");
+        }
+        // Subnormal block: the 2^-149 floor is needed; the budget without it fails.
+        let tiny = f32::from_bits(1);
+        let mut x = [0f32; BLOCK];
+        x[1] = 5. * tiny;
+        x[2] = tiny;
+        let d = decode(&encode(&x, Format::Affine(2)).unwrap()).unwrap().1;
+        let error = (x[2] as f64 - d[2] as f64).abs();
+        let (quantization, rounding) = affine_budget(0., 5. * tiny, 2);
+        assert_eq!(error, tiny as f64);
+        assert!(error > quantization + 5. * tiny as f64 * f32::EPSILON as f64);
+        assert!(error <= quantization + rounding);
     }
 
     #[test]
@@ -706,6 +790,109 @@ mod tests {
         let f16 = encode(&[-0.0, 0.0], Format::F16).unwrap();
         let d = decode(&f16).unwrap().1;
         assert_eq!((d[0].to_bits(), d[1].to_bits()), ((-0f32).to_bits(), 0));
+        // Non-constant blocks lose −0 whenever its reconstruction is exactly 0:
+        // as the block minimum (−0 + 0) and inside a block (−1 + 1).
+        for bits in 1..=16u32 {
+            let levels = (1u32 << bits) - 1;
+            let mut minimum = [1f32; BLOCK];
+            minimum[0] = -0.0;
+            let mut inside = [-0f32; BLOCK];
+            inside[0] = -1.0;
+            inside[1] = (levels - 1) as f32;
+            for x in [minimum, inside] {
+                let d = decode(&encode(&x, Format::Affine(bits)).unwrap())
+                    .unwrap()
+                    .1;
+                let negative_zero = (-0f32).to_bits();
+                for (_, w) in x
+                    .iter()
+                    .zip(&d)
+                    .filter(|(v, _)| v.to_bits() == negative_zero)
+                {
+                    assert_eq!(w.to_bits(), 0, "Q{bits}");
+                }
+            }
+        }
+        // The decoded sign follows the reconstruction, not the input: here
+        // −2^-149 + 6·2^-149/7 rounds to −0 for both +0 and −0.
+        let tiny = f32::from_bits(1);
+        let mut x = [0f32; BLOCK];
+        (x[0], x[1], x[3]) = (-tiny, 5. * tiny, -0.0);
+        let d = decode(&encode(&x, Format::Affine(3)).unwrap()).unwrap().1;
+        assert_eq!(d[2].to_bits(), (-0f32).to_bits());
+        assert_eq!(d[3].to_bits(), (-0f32).to_bits());
+        // Only −0 and +0: a constant block; every value takes the stored lo.
+        let mixed: Vec<f32> = (0..BLOCK).map(|i| [0.0, -0.0][i % 2]).collect();
+        let bytes = encode(&mixed, Format::Affine(8)).unwrap();
+        let lo = &body(&bytes)[..4];
+        assert!(decode(&bytes)
+            .unwrap()
+            .1
+            .iter()
+            .all(|v| v.to_le_bytes() == lo));
+    }
+
+    #[test]
+    fn count_limit_checked_before_body() {
+        // Header-only containers: no body is allocated or needed.
+        let header = |format: Format, count: u32| {
+            let (kind, bits) = format.header_fields();
+            let mut h = MAGIC.to_vec();
+            h.extend_from_slice(&VERSION.to_le_bytes());
+            h.extend_from_slice(&[kind, bits]);
+            h.extend_from_slice(&count.to_le_bytes());
+            h.extend_from_slice(&0u32.to_le_bytes());
+            h
+        };
+        let limit = MAX_VALUES as u32;
+        for (format, count) in [
+            (Format::Affine(8), limit + 32),
+            (Format::Affine(16), u32::MAX - 31),
+            (Format::F32, limit + 1),
+            (Format::F16, limit + 1),
+        ] {
+            assert_eq!(
+                decode(&header(format, count)).unwrap_err(),
+                "value count outside 1..=2^24",
+                "{format:?} {count}"
+            );
+        }
+        // Exactly 2^24 is inside the limit and fails only on the missing body.
+        for format in [Format::Affine(8), Format::F32, Format::F16] {
+            assert_eq!(
+                decode(&header(format, limit)).unwrap_err(),
+                "body length does not match header"
+            );
+        }
+    }
+
+    #[test]
+    fn non_constant_block_needs_bottom_and_top_codes() {
+        for bits in 1..=16u32 {
+            let levels = (1u32 << bits) - 1;
+            let mut x = [0f32; BLOCK];
+            x[1] = levels as f32;
+            let good = encode(&x, Format::Affine(bits)).unwrap();
+            let with_codes = |codes: &[u32]| {
+                let mut b = good.clone();
+                b[HEADER + 8..].copy_from_slice(&oracle_pack(codes, bits));
+                decode(&b)
+            };
+            let mut codes: Vec<u32> = (0..BLOCK as u32).map(|i| i % (levels + 1)).collect();
+            codes[7] = levels;
+            // lo = 0 and hi = levels, so each value equals its code.
+            let accepted = with_codes(&codes).unwrap().1;
+            assert!(accepted.iter().zip(&codes).all(|(&v, &c)| v == c as f32));
+            let no_bottom: Vec<u32> = codes.iter().map(|&c| c.max(1)).collect();
+            let no_top: Vec<u32> = codes.iter().map(|&c| c.min(levels - 1)).collect();
+            for bad in [no_bottom, no_top, vec![levels / 2 + 1; BLOCK]] {
+                assert_eq!(
+                    with_codes(&bad).unwrap_err(),
+                    "non-canonical non-constant block",
+                    "Q{bits}"
+                );
+            }
+        }
     }
 
     #[test]
