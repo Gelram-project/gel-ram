@@ -1,8 +1,8 @@
 # v0.2.1 local validation — 2026-09-06
 
 Historical measurement status: **local review candidate on 2026-09-06**. Based on public main
-04a4d21f5cf9ac77adec5a47b1d0c452bbf5a117. No private encoder or internal
-v5.12.1 module is included. The earlier verified-range experiment is excluded.
+04a4d21f5cf9ac77adec5a47b1d0c452bbf5a117. No private encoder or other private
+module is included. The earlier verified-range experiment is excluded.
 
 ## Decision
 
