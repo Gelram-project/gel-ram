@@ -78,12 +78,19 @@ jobs:
         run: cargo run --locked --offline -p gel-source --example source_real
       - name: Pinned document phrase readout runtime demo
         run: cargo run --locked --offline -p gel-source --example source_find
-      - name: Source writer and interactive laboratory runtime demos
-        run: |
-          cargo run --locked --offline -p gel-source --example source_build
-          cargo run --locked --offline -p gel-live-lab -- --demo
-          cargo run --locked --offline -p gel-live-lab --bin gel-evidence -- --demo
-          cargo run --locked --offline -p gel-cli --example quantization_matrix
-          cargo run --locked --offline -p gel-source --example collection_review
+      - name: Source writer runtime demo
+        run: cargo run --locked --offline --release -p gel-source --example source_build
+      - name: Live laboratory runtime demo
+        run: cargo run --locked --offline --release -p gel-live-lab -- --demo
+      - name: Evidence laboratory runtime demo
+        run: cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
+      - name: Quantization reference matrix
+        run: cargo run --locked --offline --release -p gel-cli --example quantization_matrix
+      - name: Collection review
+        run: cargo run --locked --offline --release -p gel-source --example collection_review
+      - name: Recheck published collection measurements
+        run: cargo run --locked --offline --release -p gel-source --example collection_recheck -- docs/evidence-collection/r1
+      - name: Workspace documentation tests
+        run: cargo test --locked --offline --workspace --doc
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"

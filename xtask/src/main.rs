@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 mod license_metadata;
+mod measured_sources;
 #[cfg(test)]
 mod publication_status_tests;
 mod reproduce;
@@ -741,6 +742,26 @@ fn verify() -> Result<(), String> {
         &["build", "--locked", "--offline", "--release", "--workspace"],
     )?;
     run_docs()?;
+    measured_sources::verify(workspace_root()?)?;
+    run(
+        "cargo",
+        &["test", "--locked", "--offline", "--workspace", "--doc"],
+    )?;
+    run(
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-source",
+            "--example",
+            "collection_recheck",
+            "--",
+            "docs/evidence-collection/r1",
+        ],
+    )?;
     run("cargo", TEST_ARGS)?;
     run_release_binary("gel-cli", &["selftest"])?;
     run_release_binary("gel-bench", &["8192", "3", "2"])?;

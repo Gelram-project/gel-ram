@@ -50,8 +50,21 @@ sync. Search includes allocation of the returned quotes, not terminal rendering.
 
 ```sh
 cargo run --locked --offline --release -p gel-source --example collection_recheck -- docs/evidence-collection/r1
-sha256sum -c docs/evidence-collection/MEASURED-SOURCES.sha256
+cargo run --locked --offline -p xtask -- verify
 ```
+
+The historical Cargo.lock is preserved as [Cargo.lock.measured.txt](Cargo.lock.measured.txt),
+recovered byte-for-byte from local integration revision
+`5d01398dab8c8e4354e46c3549a9212499a89378` (before the version bump).
+That integration revision is provenance metadata, not a promise that the commit
+exists in public Git history. The preserved file is available in this checkout.
+Its SHA256 is `fdbd6a9fd24483aa0b95012aff6e9edabf7b3c7da4fce43019383c474afab7bf`.
+The measurement verifier maps only the historical manifest's Cargo.lock entry
+to this file; the current checkout lockfile is separately pinned by the root
+manifest. Running the old sha256sum command against the current root lockfile
+is not the historical verification procedure.
+The historical source pins remain unchanged; future implementation changes
+require preserving their measured source snapshots, not rewriting old hashes.
 
 The source hashes identify the measured implementation, independent of later
 documentation changes. They are not signatures or protection against an attacker
