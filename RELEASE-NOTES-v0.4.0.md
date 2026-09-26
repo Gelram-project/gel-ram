@@ -59,7 +59,9 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected final marker: `GEL_VERIFY_ALL=PASS`. `SOURCE-SHA256SUMS.txt` lists every
-tracked file of the tagged tree. The release asset
+other tracked file of the tagged tree; it cannot list itself, so trust in the
+manifest comes from the tagged commit or the separately published archive
+digest. The release asset
 GEL-RAM-v0.4.0-SOURCE.zip is `git archive` of the tagged commit; its SHA-256 is
 published next to it. Then follow [TRY-IT](docs/TRY-IT.md).
 
