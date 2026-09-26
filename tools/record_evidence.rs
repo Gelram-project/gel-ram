@@ -444,7 +444,7 @@ fn main() {
     second.command("find ram is volatile", "FIND=HIT", 8000);
     second.command("proof 1", "CITATION=PASS", 4500);
     second.finish();
-    show_or_abort("\n$  Walkthrough complete. Snapshot reopened; citation verified.\nNo publication. Times above are application measurements, not typing delays.\n");
+    show_or_abort("\n$  Walkthrough complete. Snapshot reopened; citation hash correspondence checked.\nNothing was published. Times above are application measurements, not typing delays.\n");
     pause(3000);
     write_complete(b"LIVE_SUBPROCESS_WALKTHROUGH=PASS\n");
 }
