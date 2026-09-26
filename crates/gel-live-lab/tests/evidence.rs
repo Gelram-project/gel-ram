@@ -99,6 +99,29 @@ fn corrupt_load_refusal_retains_current_collection() {
     assert!(log.contains("REFUSED"));
     assert!(log.contains("CITATION=PASS"));
 }
+
+#[test]
+fn well_hashed_invalid_snapshot_does_not_replace_live_documents() {
+    let s = Scratch::new();
+    let input = s.0.join("retained.txt");
+    let bad = s.0.join("invalid.snapshot");
+    fs::write(&input, "retained independent source").unwrap();
+    let mut invalid = Collection::new().to_bytes();
+    // A fresh empty collection cannot contain a zero next-ID. Re-pin the
+    // malicious input to bypass the checksum mismatch branch deliberately.
+    invalid[16..24].copy_from_slice(&0_u64.to_le_bytes());
+    let pin = hex(&gel_source::digest(&invalid));
+    fs::write(&bad, invalid).unwrap();
+    let log = run(&format!(
+        "add {}\nfind retained independent\nproof 1\nload {pin} {}\nfind retained independent\nproof 1\nexit\n",
+        input.display(), bad.display()
+    ));
+    assert!(log.contains("COLLECTION_HEADER"), "{log}");
+    assert_eq!(log.matches("REFUSED").count(), 1);
+    assert_eq!(log.matches("CITATION=PASS").count(), 2);
+    assert!(!log.contains("REOPEN=PASS"));
+    assert!(!log.contains("FIND=UNKNOWN"));
+}
 #[test]
 fn controls_in_document_never_become_terminal_escape() {
     let s = Scratch::new();

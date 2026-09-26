@@ -169,6 +169,87 @@ fn malformed_structure_rejected_even_with_matching_pin() {
         assert!(Collection::from_bytes(&x, digest(&x)).is_err());
     }
 }
+
+#[test]
+fn well_hashed_structure_boundary_matrix() {
+    let mut c = Collection::new();
+    c.add("A", "abc").unwrap();
+    c.add("B", "def").unwrap();
+    let bytes = c.to_bytes();
+    // Header: magic, revision, next ID, count. Each record: ID, u32 title
+    // length, u64 text length, title, text. The first record is 24 bytes.
+    assert_eq!(bytes.len(), 80);
+    let mut cases: Vec<(&str, Vec<u8>)> = Vec::new();
+    for (label, offset, value) in [
+        ("next before first ID", 16, 1_u64),
+        ("next above revision", 16, 4),
+        ("count omits record", 24, 1),
+        ("count invents record", 24, 3),
+        ("count overflow", 24, u64::MAX),
+        ("ID not below next", 32, 3),
+        ("ID overflow", 32, u64::MAX),
+        ("duplicate ID", 56, 1),
+        ("descending ID", 56, 0),
+        ("empty text", 44, 0),
+        ("text over limit", 44, document::MAX_TEXT as u64 + 1),
+        ("text length overflow", 44, u64::MAX),
+    ] {
+        let mut b = bytes.clone();
+        b[offset..offset + 8].copy_from_slice(&value.to_le_bytes());
+        cases.push((label, b));
+    }
+    for value in [0_u32, MAX_TITLE as u32 + 1, u32::MAX] {
+        let mut b = bytes.clone();
+        b[40..44].copy_from_slice(&value.to_le_bytes());
+        cases.push(("invalid title length", b));
+    }
+    for (label, offset, value) in [
+        ("blank title", 52, b' '),
+        ("control title", 52, 0),
+        ("invalid title UTF8", 52, 255),
+        ("invalid text UTF8", 53, 255),
+    ] {
+        let mut b = bytes.clone();
+        b[offset] = value;
+        cases.push((label, b));
+    }
+    for (label, b) in cases {
+        // Deliberately recompute the pin: rejection must come from structure,
+        // not from the easier original-hash mismatch check.
+        assert!(Collection::from_bytes(&b, digest(&b)).is_err(), "{label}");
+    }
+    assert_eq!(c.to_bytes(), bytes);
+}
+
+#[test]
+fn exhausted_revision_and_id_counters_reject_without_mutation() {
+    let original = bank().to_bytes();
+    for (revision, next_id, expected_add) in [
+        (u64::MAX, 3_u64, "COLLECTION_REVISION_OVERFLOW"),
+        (u64::MAX - 1, u64::MAX, "COLLECTION_ID_OVERFLOW"),
+    ] {
+        let mut b = original.clone();
+        b[8..16].copy_from_slice(&revision.to_le_bytes());
+        b[16..24].copy_from_slice(&next_id.to_le_bytes());
+        let mut c = Collection::from_bytes(&b, digest(&b)).unwrap();
+        let hit = c.search("RAM").unwrap().hits.remove(0);
+        assert_eq!(c.add("extra", "new text").unwrap_err(), expected_add);
+        assert_eq!(c.to_bytes(), b);
+        assert_eq!(c.root(), digest(&b));
+        c.validate(&hit).unwrap();
+        if revision == u64::MAX {
+            assert_eq!(
+                c.replace(2, "replacement").unwrap_err(),
+                "COLLECTION_REVISION_OVERFLOW"
+            );
+            assert_eq!(c.remove(2).unwrap_err(), "COLLECTION_REVISION_OVERFLOW");
+            assert_eq!(c.to_bytes(), b);
+            c.validate(&hit).unwrap();
+        }
+        let restored = Collection::from_bytes(&c.to_bytes(), c.root()).unwrap();
+        assert_eq!(restored.to_bytes(), b);
+    }
+}
 #[test]
 fn search_caps_do_not_hide_total_counts() {
     let mut c = Collection::new();
