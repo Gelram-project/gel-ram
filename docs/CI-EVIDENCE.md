@@ -68,6 +68,9 @@ that run everywhere but contain an extra Unix- or Linux-only assertion block
 must run and pass once on every platform (`PARTIAL_PLATFORM_BRANCH … here=RAN_PASSED`).
 Platform reports are separate; do not add them into one number of unique tests.
 
+Reports for selected commits are kept in [evidence-ci](evidence-ci/README.md),
+because Actions runs, logs and artifacts expire.
+
 A single job cannot see a test that another platform never compiled, so the
 per-job check alone cannot find an undeclared Unix-only test. Compare two
 reports' test lists (for example the TESTS.txt of a Linux and a Windows run of
