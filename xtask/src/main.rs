@@ -18,6 +18,18 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
+        "media/GEL-EVIDENCE-LAB-EN.mp4",
+        "a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835",
+    ),
+    (
+        "media/evidence-lab/01-source-17s.png",
+        "9c73954fe6b732f56140d7d541e2ba4e04768ced5f3f4ea90036de93b2e240c0",
+    ),
+    (
+        "media/evidence-lab/02-reopened-56s.png",
+        "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
+    ),
+    (
         "research/ocean-scale-r3.tar.gz",
         "b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48",
     ),
@@ -236,7 +248,30 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
                 continue;
             }
         }
-        let allowed = documentation_image
+        // Only these reviewed text evidence paths, not a general CSV/sha256 exception.
+        // Their exact bytes are pinned by the enclosing source manifest.
+        let collection_evidence = [
+            "docs/evidence-collection/MEASURED-SOURCES.sha256",
+            "docs/evidence-collection/r1/raw.csv",
+            "docs/evidence-collection/r1/summary.csv",
+        ]
+        .iter()
+        .any(|p| path == root.join(p));
+        if collection_evidence {
+            let bytes = fs::read(&path).map_err(|e| e.to_string())?;
+            if bytes.len() > 1024 * 1024
+                || std::str::from_utf8(&bytes).is_err()
+                || bytes.iter().any(|b| *b == 0 || *b == 27)
+            {
+                bad.push(format!(
+                    "invalid collection text evidence: {}",
+                    path.display()
+                ));
+                continue;
+            }
+        }
+        let allowed = collection_evidence
+            || documentation_image
             || approved_png.is_some()
             || path
                 .extension()
@@ -751,6 +786,8 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_real", vec![]),
         ("gel-source", "source_find", vec![]),
         ("gel-source", "source_build", vec![]),
+        ("gel-source", "collection_review", vec![]),
+        ("gel-cli", "quantization_matrix", vec![]),
     ] {
         let mut command = vec![
             "run",
@@ -775,6 +812,21 @@ fn verify() -> Result<(), String> {
             "--release",
             "-p",
             "gel-live-lab",
+            "--",
+            "--demo",
+        ],
+    )?;
+    run(
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
             "--",
             "--demo",
         ],
@@ -826,6 +878,28 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn collection_evidence_exception_is_exact_and_text_only() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root =
+            std::env::temp_dir().join(format!("gel-evidence-gate-{}-{nonce}", std::process::id()));
+        fs::create_dir_all(root.join("docs/evidence-collection/r1")).unwrap();
+        let raw = root.join("docs/evidence-collection/r1/raw.csv");
+        fs::write(&raw, b"rep,documents\n0,8\n").unwrap();
+        assert!(rust_only_at(&root).is_ok());
+        for bad in [b"\xff".as_slice(), b"\x1b[2J", b"binary\0"] {
+            fs::write(&raw, bad).unwrap();
+            assert!(rust_only_at(&root).is_err());
+        }
+        fs::write(&raw, b"rep,documents\n0,8\n").unwrap();
+        fs::write(root.join("unreviewed.csv"), b"text\n").unwrap();
+        assert!(rust_only_at(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
 
     #[test]
     fn documentation_png_gate_requires_exact_reviewed_bytes_and_path() {

@@ -1,23 +1,29 @@
-# GEL RAM Live Lab publication scope
+# GEL RAM Evidence Lab — public integration candidate
 
-2026-09-19. The project owner authorized publication of the reviewed public
-Live Lab/source-writer integration based on commit
-`c0058a1ed5df758f2cd118ad15db81845d4cbd46`, conditional on successful checks.
-This authorization excludes the private application and its newer experiments.
+Updated 2026-09-26. Public integration approved. Originally prepared from published commit
+`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
+`main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
+The owner authorized publication of the reviewed source and merging PR #9 into
+main after successful checks. A final tag and release are not authorized.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
 REVIEW_PUBLICATION_APPROVED=YES
 PUBLICATION_APPROVED=YES
-SNAPSHOT_KIND=PUBLIC_CORE_UPDATE
+PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
+MERGE_APPROVED=YES
+RELEASE_APPROVED=NO
+SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
-EXACT_REVISION_PLATFORM_RESULTS=SEE_GITHUB_ACTIONS
-CURRENT_LINUX_WORKSPACE_TESTS=272_PASS
-CURRENT_OCEAN_ARCHIVE_TESTS=111_PASS
+EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
+CURRENT_LINUX_WORKSPACE_TESTS=305_PASS
+BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
-VERSION_LINE=0.3.0
+VERSION_LINE=0.4.0-rc.1
+TARGET_RELEASE=0.4.0
+V0_4_0_TAGGED_RELEASE=NOT_CREATED
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
 CI_REQUIRED_FOR_VERSION_CUTOVER=YES
@@ -26,23 +32,32 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-Technical checks accept a pending candidate and report its approval status
-without changing it. Here the owner supplied publication permission separately;
-a successful verification alone never supplies that permission.
-The active root license is unchanged; no new licensing policy is activated.
-Linux, Windows and macOS CI results belong to their exact tested SHA and are
-available in [GitHub Actions](https://github.com/Gelram-project/gel-ram/actions).
-The local validation fields above are not claims about subsequent CI runs.
+The workspace version now identifies the local `0.4.0-rc.1` candidate.
+The v0.3.0 fields above describe the historical release, not approval of this
+candidate. No v0.4.0 tag or release is authorized by this approval.
+See [candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
 
-New scope: Rust Live Lab, source import/writer, no-replace save/reopen and
-integration of the public phrase-search API. No private application code,
+Technical checks accept a pending candidate and report its approval status
+without changing it. A successful verification never supplies publication permission.
+The active root license is unchanged; no new licensing policy is activated.
+Previous Linux, Windows and macOS CI results do not validate these changes.
+The candidate's subsequent native CI evidence is pinned by SHA in
+[the platform record](docs/PLATFORM-REVIEW.md). The LOCAL_VALIDATION fields
+above describe local validation, not remote CI results.
+Standard public-repository CI is authorized for the branch/PR; execution results
+must be checked separately. Only free standard runners are in scope.
+
+New scope: bounded multi-document collection, exact citations, no-replace
+snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 encrypted vault, speaker, encoder, private corpus or user data was exported.
-Current scope and results: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
+Current scope and results: [Evidence Lab candidate](RELEASE-NOTES-EVIDENCE-LAB.md).
+Follow-up recording, assessment and pending external gates: [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md).
+Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
 
-`LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. It does not withdraw the project owner's publication authorization.
+`LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
 
 ## Previously published base
 

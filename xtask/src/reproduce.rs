@@ -192,6 +192,78 @@ pub fn report(args: &[String]) -> Result<(), String> {
         ],
         "GEL_LIVE_LAB_DEMO=PASS",
     )?;
+    capture(
+        &output,
+        "evidence-lab.txt",
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
+            "--",
+            "--demo",
+        ],
+        "GEL_EVIDENCE_DEMO=PASS",
+    )?;
+    capture(
+        &output,
+        "quantization-matrix.txt",
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-cli",
+            "--example",
+            "quantization_matrix",
+        ],
+        "QUANTIZATION_MATRIX=PASS",
+    )?;
+    let campaign = output.join("collection-campaign");
+    let campaign = campaign.to_str().ok_or("report path must be UTF-8")?;
+    capture(
+        &output,
+        "collection-campaign.txt",
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-source",
+            "--example",
+            "collection_campaign",
+            "--",
+            campaign,
+        ],
+        "COLLECTION_CAMPAIGN=PASS",
+    )?;
+    capture(
+        &output,
+        "collection-recheck.txt",
+        "cargo",
+        &[
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-source",
+            "--example",
+            "collection_recheck",
+            "--",
+            campaign,
+        ],
+        "COLLECTION_RECHECK=PASS",
+    )?;
     let mut budgets = vec![1, workers];
     budgets.sort();
     budgets.dedup();

@@ -1,0 +1,24 @@
+GEL EVIDENCE LAB | RUST | OFFLINE | NO LLM
+Source lookup, not conversation. Timers exclude terminal rendering. No automatic saving.
+gel> list
+id=1 title=Memory notes bytes=57 sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377
+id=2 title=Polish notes bytes=51 sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d
+gel> find ram is volatile
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=27662
+RESULT 1 doc=1 title=Memory notes bytes=0..16
+QUOTE RAM is volatile.
+gel> proof 1
+CITATION=PASS document_sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377 collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
+gel> find zażółć gęślą
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=9988
+RESULT 1 doc=2 title=Polish notes bytes=0..27
+QUOTE Zażółć gęślą jaźń.
+gel> proof 1
+CITATION=PASS document_sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
+gel> find invented answer
+FIND=UNKNOWN documents=2 matching_lines=0 shown=0 skipped_lines=0 search_ns=5740
+gel> drop 1
+REMOVED id=1; old snapshots remain on disk
+gel> find ram is volatile
+FIND=UNKNOWN documents=1 matching_lines=0 shown=0 skipped_lines=0 search_ns=3737
+GEL_EVIDENCE_DEMO=PASS

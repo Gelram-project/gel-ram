@@ -1,0 +1,1088 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/xtask verify`
+RUST_ONLY_GATE=PASS
+PUBLICATION_APPROVED=NO
+PROJECT_CONTACT_GATE=PASS
+LICENSING_GATE=PASS
+LICENSE_MODE=GEL-RAM-NCRL-1.0 + Commercial + CLA-2.0
+LICENSE_CHECK_SCOPE=ACTIVE_LICENSE_CONSISTENCY_NOT_LEGAL_CERTIFICATION
+CI_POLICY_GATE=PASS
+DOCS_REFS_GATE=PASS
+DOCS_REFS_CHECKED=47
+    Checking xtask v0.3.0 (<CHECKOUT>/xtask)
+    Checking gel-source v0.3.0 (<CHECKOUT>/crates/gel-source)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s
+    Finished `release` profile [optimized] target(s) in 0.03s
+ Documenting gel-source v0.3.0 (<CHECKOUT>/crates/gel-source)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.21s
+   Generated <CHECKOUT>/target/doc/gel_bench/index.html and 13 other files
+   Compiling xtask v0.3.0 (<CHECKOUT>/xtask)
+   Compiling gel-source v0.3.0 (<CHECKOUT>/crates/gel-source)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running unittests src/main.rs (target/debug/deps/gel_bench-230133dad365f9b3)
+
+running 4 tests
+test tests::telemetry_never_labels_fallback_as_parallel_execution ... ok
+test tests::timed_gate_rejects_one_wrong_hit_and_missing_results ... ok
+test tests::processor_field_survives_spaces_and_parentheses_in_comm ... ok
+test tests::top8_gate_checks_every_index_score_order_and_length ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/gel_cli-0a20b6a60bd7803b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/data_integrity.rs (target/debug/examples/data_integrity-f21fa7f2c154da03)
+
+running 4 tests
+test tests::q8_reference_has_exact_integer_endpoints_and_accounts_for_scale ... ok
+test tests::external_dump_is_shape_checked_without_using_labels ... ok
+test tests::external_dump_rejects_bad_shapes_nonfinite_values_and_scale_underflow ... ok
+test tests::fp16_reference_is_exact_for_all_finite_codes_and_midpoints ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests examples/quantization_matrix.rs (target/debug/examples/quantization_matrix-865e4ac3d0879f06)
+
+running 7 tests
+test tests::exact_endpoints_and_constant_all_q ... ok
+test tests::halfway_ties_are_even ... ok
+test tests::extremes_are_finite ... ok
+test tests::invalid_inputs_and_ranges_rejected ... ok
+test tests::packed_codes_are_independently_known ... ok
+test tests::weak_signal_is_lost_not_just_noise ... ok
+test tests::reconstruction_bound_all_datasets ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_core-9361d97554f9277c)
+
+running 5 tests
+test tests::constants_are_exact ... ok
+test tests::crc64_detects_single_bit_change ... ok
+test tests::crc64_ecma_has_canonical_check_value ... ok
+test tests::legacy_checksum_contract_is_preserved ... ok
+test tests::incremental_crc_matches_one_shot ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_kernel-bd791372f0736c7a)
+
+running 5 tests
+test tests::backend_describes_compile_time_features ... ok
+test tests::contingency_partitions_all_1024_bits ... ok
+test tests::subspaces_sum_to_global_matches ... ok
+test tests::progressive_bound_never_excludes_exact_score ... ok
+test tests::kernel_matches_reference ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_live_lab-26b18f0e4faca82e)
+
+running 8 tests
+test tests::pin_parsing_is_bounded ... ok
+test tests::terminal_controls_are_escaped ... ok
+test tests::bad_commands_leave_controls_unchanged ... ok
+test tests::tamper_never_changes_original ... ok
+test tests::no_body_support_means_zero ... ok
+test tests::unicode_quote_is_preserved ... ok
+test tests::four_inverses_and_phase_response ... ok
+test tests::views_do_not_mutate_quote ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gel-evidence.rs (target/debug/deps/gel_evidence-446d3af44ed8f489)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/gel_live_lab-05e95cd6d2bfc49a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/evidence.rs (target/debug/deps/evidence-ab4c7fa3676f59bf)
+
+running 7 tests
+test update_delete_clear_results_and_old_snapshot_stays ... ok
+test corrupt_load_refusal_retains_current_collection ... ok
+test controls_in_document_never_become_terminal_escape ... ok
+test demo_really_executes_the_collection ... ok
+test sigkill_after_save_ack_keeps_a_readable_snapshot ... ok
+test own_documents_save_restart_find_and_refuse_cross_source ... ok
+test sigkill_at_observable_publication_never_installs_a_partial_snapshot ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.16s
+
+     Running tests/session.rs (target/debug/deps/session-091250aa79092d44)
+
+running 12 tests
+test malformed_input_does_not_replace_demo ... ok
+test find_miss_never_displays_previous_quote_as_a_result ... ok
+test failed_load_preserves_session ... ok
+test skipped_lines_and_search_limits_are_not_reported_as_absence ... ok
+test matching_lines_and_cr_boundaries_survive_import_and_reopen ... ok
+test multi_node_catalog_search_cannot_join_unrelated_documents ... ok
+test save_never_replaces_existing_file ... ok
+test long_command_is_rejected ... ok
+test scripted_demo_and_no_terminal_controls ... ok
+test fresh_process_reopens_own_saved_document ... ok
+test paging_cannot_hide_unreachable_unicode ... ok
+test find_after_restart_uses_exact_text_across_storage_parts ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_orb-b969af0bb47d1b3e)
+
+running 4 tests
+test tests::exact_byte_roundtrip ... ok
+test tests::wrong_byte_lengths_are_rejected ... ok
+test tests::bit_access_is_checked_and_reversible ... ok
+test tests::similarity_endpoints ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_phase_quad-5db1bb0ddbbfb897)
+
+running 29 tests
+test evidence_summary_regressions::tests::campaign_shape ... ok
+test evidence_summary_regressions::tests::invalid_status_rejected ... ok
+test bound_view::tests::compatibility_metadata_is_not_authentication ... ok
+test evidence_summary_regressions::tests::invalid_metrics_rejected ... ok
+test bound_view::tests::unsupported_descriptors_and_poles_rejected ... ok
+test bound_view::tests::different_seed_rejected_even_for_unmasked_poles ... ok
+test grid::tests::unknown_and_invalid_inputs ... ok
+test evidence_summary_regressions::tests::fallback_rejected ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test evidence_summary_regressions::tests::ratios_recomputed_and_tampering_rejected ... ok
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test grid::tests::z5_matches_historical_equations ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test grid::tests::four_views_and_inverse_both_grids ... ok
+test tests::worker_budget_extremes_are_bounded_without_spawning ... ok
+test tests::unknown_clears_previous_result ... ok
+test tests::invalid_budget_clears_stale_scores_and_recovers ... ok
+test tests::silence_not_active_zero_and_denominator_is_query_support ... ok
+test evidence_summary_regressions::tests::swapped_logs_and_configuration_rejected ... ok
+test grid::tests::every_q8_symbol_and_offset_invert ... ok
+test bound_view::tests::exact_phase_and_mask_for_every_pole ... ok
+test tests::all_views_and_masks_match_reference ... ok
+test tests::threads_buffers_and_empty_bank_are_stable ... ok
+test grid::tests::quantization_error_bound_and_boundaries ... ok
+test tests::large_worker_requests_partial_chunks_and_masks_match_scalar ... ok
+test grid::tests::same_pole_preserves_geometry_and_support ... ok
+test tests::score_matches_four_independent_reads ... ok
+test tests::storage_is_1152_bytes_and_every_bit_survives ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests examples/quad_compare.rs (target/debug/examples/quad_compare-700c44008f3349ce)
+
+running 11 tests
+test argument_tests::bounds_are_checked_before_allocating ... ok
+test argument_tests::serial_and_empty_bank_do_not_spawn ... ok
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test argument_tests::reference_one_recovers_from_first_spawn_failure ... ok
+test argument_tests::reference_four_recovers_from_first_spawn_failure ... ok
+test argument_tests::reference_one_recovers_after_partial_launch ... ok
+test argument_tests::reference_parallel_matches_serial_without_failure ... ok
+test argument_tests::reference_four_recovers_after_partial_launch ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests examples/quad_evidence.rs (target/debug/examples/quad_evidence-f36e0cae4e4b907d)
+
+running 11 tests
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test tests::active_mask_bit_order ... ok
+test tests::malformed_cli_is_rejected_before_io ... ok
+test tests::every_header_bit_and_every_truncation_rejected ... ok
+test tests::fixture_bounds_and_trailing_bytes ... ok
+test tests::generator_refuses_to_overwrite ... ok
+test tests::single_oracle_and_empty_masks ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+test tests::upper_bound_and_payload_bits_roundtrip ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running unittests examples/quad_playground.rs (target/debug/examples/quad_playground-b8e3a6673f25db7b)
+
+running 6 tests
+test reference::tests::unequal_views_have_predeclared_mean ... ok
+test reference::tests::no_query_activity_is_unknown ... ok
+test tests::invalid_commands_preserve_state ... ok
+test reference::tests::zero_phase_is_not_silence ... ok
+test tests::phase_and_mask_behaviour ... ok
+test reference::tests::four_views_preserve_scores_and_inverse ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (target/debug/deps/gel_physics-229859e5ede87393)
+
+running 5 tests
+test tests::probe_buffers_are_64_byte_aligned ... ok
+test tests::percentile_uses_sorted_upper_rank ... ok
+test tests::lane_reduce_matches_lane_model ... ok
+test tests::processor_field_survives_spaces_and_parentheses_in_comm ... ok
+test tests::tiny_physics_probes_produce_finite_positive_values ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_reader-1d1d2837ccbcd5d6)
+
+running 20 tests
+test tests::chunk_bounds_partition_the_bank_in_order ... ok
+test tests::all_public_geometries_are_exactly_invertible ... ok
+test tests::coordinate_geometries_preserve_xnor_when_applied_to_both_sides ... ok
+test tests::insertion_boundary_respects_index_even_out_of_order ... ok
+test tests::caller_and_child_scans_overlap_before_join ... ok
+test tests::execution_report_distinguishes_empty_serial_and_guarded_calls ... ok
+test tests::reader16_exposes_local_and_asymmetric_judgments ... ok
+test tests::progressive_strict_boundary_and_all_pruning_stages ... ok
+test tests::top1_finds_exact_query ... ok
+test tests::top_k_is_deterministic_on_ties ... ok
+test tests::thread_counts_above_machine_budget_fall_back_to_top1 ... ok
+test tests::start_refusal_joins_partial_work_before_complete_retry ... ok
+test tests::worker_panic_retries_only_in_unwinding_builds ... ok
+test tests::progressive_top_k_is_exactly_equal_to_full_top_k ... ok
+test tests::oversized_thread_counts_equal_top1_without_spawning ... ok
+test tests::top1_threads_equals_top1_for_random_banks ... ok
+test tests::top_k_matches_independent_bits_at_all_k_boundaries ... ok
+test tests::raw_rotation_fields_roundtrip_for_every_u16 ... ok
+test tests::top1_threads_finds_winner_exactly_at_chunk_boundaries ... ok
+test tests::top1_threads_tie_resolves_to_lowest_index ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+
+     Running unittests examples/topk_compare.rs (target/debug/examples/topk_compare-dd493ba597bb57db)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_source-c46572ca6d32cc82)
+
+running 29 tests
+test builder::tests::empty_builder_rejected ... ok
+test builder::tests::empty_or_oversized_passage_rejected ... ok
+test builder::tests::invalid_labels_rejected ... ok
+test builder::tests::changed_text_and_catalog_rejected ... ok
+test builder::tests::duplicate_is_transactional ... ok
+test bundle::tests::empty_and_invalid_utf8_rejected ... ok
+test builder::tests::output_is_deterministic ... ok
+test builder::tests::conflicting_node_is_transactional ... ok
+test builder::tests::same_title_different_nodes_remains_ambiguous ... ok
+test bundle::tests::envelope_roundtrip ... ok
+test builder::tests::old_passage_not_valid_in_new_generation ... ok
+test builder::tests::unicode_multipart_roundtrip ... ok
+test builder::tests::unicode_label_limit_is_bytes ... ok
+test document::tests::bounded_results_do_not_hide_additional_matches ... ok
+test document::tests::mixed_line_endings_preserve_original_byte_ranges ... ok
+test document::tests::quote_is_not_execution_or_conflict_resolution ... ok
+test document::tests::original_unicode_offsets_survive_normalization ... ok
+test document::tests::standalone_carriage_returns_separate_phrases ... ok
+test document::tests::whole_tokens_not_substrings_and_no_cross_line_inference ... ok
+test document::tests::sigma_variants_match_without_rewriting_source ... ok
+test bundle::tests::malformed_even_with_matching_pin_fails ... ok
+test document::tests::limits_are_explicit_not_silent_no_match ... ok
+test document::tests::reads_beyond_preview_and_preserves_negation_and_order ... ok
+test bundle::tests::every_truncation_fails_with_original_pin ... ok
+test bundle::tests::every_byte_mutation_fails_with_original_pin ... ok
+test builder::tests::maximum_passage_accepted ... ok
+test bundle::tests::utf8_boundary_split_preserves_every_byte ... ok
+test document::tests::admission_and_exact_line_boundaries ... ok
+test document::tests::optimized_token_windows_match_reference ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running unittests src/bin/gel-source.rs (target/debug/deps/gel_source-6de8b1b0de595034)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/collection.rs (target/debug/deps/collection-f1b281a615f3bcd3)
+
+running 14 tests
+test ids_and_revision_survive_empty_bank_roundtrip ... ok
+test exact_canonical_roundtrip_and_citation ... ok
+test no_cross_document_phrase ... ok
+test malformed_structure_rejected_even_with_matching_pin ... ok
+test rejected_mutations_are_transactional ... ok
+test no_replace_and_successful_load ... ok
+test replace_delete_and_unrelated_add_invalidate_hits ... ok
+test unicode_offsets_and_duplicate_titles_keep_identity ... ok
+test concurrent_publish_has_one_winner ... ok
+test skipped_lines_are_incomplete_and_empty_bank_validates_query ... ok
+test search_caps_do_not_hide_total_counts ... ok
+test every_byte_mutation_and_truncation_rejected_with_original_pin ... ok
+test arbitrary_short_inputs_never_panic ... ok
+test document_and_collection_limits_fail_before_mutating ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/parts.rs (target/debug/deps/parts-7c3d40975877e230)
+
+running 11 tests
+test exact_unicode_not_accent_stripping_or_normalization ... ok
+test missing_tail_needs_independent_expected_count ... ok
+test refuses_changed_pins_and_cross_generation_passages ... ok
+test arbitrary_other_sections_do_not_enter_the_lead ... ok
+test detects_initial_and_internal_gaps ... ok
+test single_and_numbered_one_are_supported ... ok
+test missing_and_ambiguous_titles_are_not_guessed ... ok
+test rejects_noncanonical_and_overflow_numbering ... ok
+test orders_by_number_not_catalog_role_or_offset ... ok
+test rejects_duplicate_and_mixed_families_or_layouts ... ok
+test overlapping_ranges_cannot_amplify_total_quotes_beyond_text_budget ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.60s
+
+     Running tests/persistence.rs (target/debug/deps/persistence-073e1fbc40858f5e)
+
+running 9 tests
+test bounded_read_and_non_file_rejected ... ok
+test persisted_roundtrip_and_no_temporary_files ... ok
+test corrupt_or_other_generation_rejected ... ok
+test existing_directory_is_not_replaced ... ok
+test existing_file_is_never_overwritten ... ok
+test symlink_input_and_output_rejected ... ok
+test competing_writers_have_exactly_one_winner ... ok
+test cli_does_not_emit_terminal_escape_from_text ... ok
+test cli_fresh_process_roundtrip_and_unknown_title ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/source.rs (target/debug/deps/source-6c5713bdafce215a)
+
+running 12 tests
+test approved_content_is_returned_as_data_not_interpreted ... ok
+test payload_and_catalog_pins_are_both_required ... ok
+test duplicate_titles_stay_ambiguous_and_missing_role_fails ... ok
+test trusting_new_document_hash_does_not_hide_wrong_fragment_hash ... ok
+test rejects_duplicate_address_and_node_source_disagreement ... ok
+test roundtrip_source_bytes_and_lowercased_title ... ok
+test root_binds_metadata_even_for_identical_text ... ok
+test strict_header_suffix_hash_and_empty_catalog ... ok
+test utf8_boundaries_range_and_canonical_numbers_are_checked ... ok
+test large_ambiguous_title_preserves_order_without_duplicate_ids ... ok
+test limits_and_control_labels ... ok
+test record_limit_is_enforced_and_labels_cannot_inject_controls ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.40s
+
+     Running unittests examples/collection_campaign.rs (target/debug/examples/collection_campaign-df750a8ea6540650)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/collection_recheck.rs (target/debug/examples/collection_recheck-6d6a284d144a02d0)
+
+running 3 tests
+test tests::rejects_duplicate_missing_or_wrong_config ... ok
+test tests::accepts_complete_matrix ... ok
+test tests::rejects_forged_timing_or_summary ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests examples/collection_review.rs (target/debug/examples/collection_review-70ce8575b730f1ed)
+
+running 1 test
+test frozen_real_document_cases ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests examples/document_bench.rs (target/debug/examples/document_bench-1d66fdf51f45b0fb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/document_stats.rs (target/debug/examples/document_stats-aabc57bfda95b3cf)
+
+running 3 tests
+test tests::nearest_rank_is_explicit_for_small_n ... ok
+test tests::validates_four_known_classes ... ok
+test tests::rejects_malformed_or_inconsistent_rows ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_build.rs (target/debug/examples/source_build-9f5162ed65df77bb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_find.rs (target/debug/examples/source_find-ade6b50bfeabd557)
+
+running 4 tests
+test tests::terminal_controls_are_visible_not_executed ... ok
+test tests::exact_original_spans_are_recoverable ... ok
+test tests::pinned_source_and_actual_cli_path ... ok
+test tests::changes_cannot_bypass_pinned_gate ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests examples/source_parts.rs (target/debug/examples/source_parts-a342aea5e1faec4e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_readout.rs (target/debug/examples/source_readout-7e52ba9ba3261283)
+
+running 3 tests
+test tests::absent_title_is_unknown ... ok
+test tests::exact_unicode_quote ... ok
+test tests::source_and_tamper_e2e ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/source_real.rs (target/debug/examples/source_real-ab2c1ebc1a5ca6f3)
+
+running 5 tests
+test tests::missing_tail_and_invalid_utf8_rejected ... ok
+test tests::unknown_title_does_not_return_unrelated_text ... ok
+test tests::shuffled_catalog_returns_exact_ordered_paragraphs ... ok
+test tests::reviewed_fixture_pins_and_complete_demo ... ok
+test tests::every_single_byte_mutation_rejected_with_original_pins ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_store-3310c31c2139f009)
+
+running 22 tests
+test tests::default_budget_rejects_oversized_sparse_file_before_read_or_allocation ... ok
+test tests::configured_open_limits_fail_before_large_allocation ... ok
+test tests::atomic_write_is_private_by_default_and_preserves_existing_mode ... ok
+test tests::corrupt_v2_cannot_supply_generation_or_be_silently_overwritten ... ok
+test tests::generation_rollback_and_equal_generation_are_rejected ... ok
+test tests::oversized_record_count_is_rejected_before_allocation ... ok
+test tests::persistence_roundtrip_and_payload_corruption_rejection ... ok
+test tests::legacy_v1_store_is_verified_and_migrates_to_v2_on_write ... ok
+test tests::malformed_lengths_and_trailing_bytes_are_rejected ... ok
+test tests::v2_header_is_exactly_64_bytes_and_self_protected ... ok
+test tests::record_budget_boundary_and_explicit_unbounded_are_preserved ... ok
+test tests::v2_nonzero_flags_are_rejected_before_crc ... ok
+test tests::legacy_v1_nonzero_reserved_bytes_are_rejected ... ok
+test tests::verify_file_reports_legacy_v1_while_providing_upgrade_header ... ok
+test tests::legacy_generation_is_discarded_and_never_authorizes_publication ... ok
+test tests::verify_file_agrees_with_open_verified_and_rejects_corruption ... ok
+test tests::every_single_header_bit_flip_is_rejected ... ok
+test tests::every_truncation_length_is_rejected ... ok
+test tests::legacy_v1_header_single_bit_sweep_freezes_detection_boundary ... ok
+test tests::every_payload_byte_flip_is_rejected ... ok
+test tests::random_headers_are_rejected_and_never_panic ... ok
+test tests::every_double_header_bit_flip_is_rejected ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running unittests src/lib.rs (target/debug/deps/gel_structural-24dfd58240b600d3)
+
+running 12 tests
+test tests::delta_depth_is_hard_bounded ... ok
+test tests::best_prototype_selects_correlated_parent_and_decodes_exactly ... ok
+test tests::full_record_break_even_includes_parent_metadata ... ok
+test tests::measured_sparse_dense_break_even_is_100_bits ... ok
+test tests::random_data_falls_back_to_literal_when_delta_is_not_smaller ... ok
+test tests::sparse_padding_bit_set_is_rejected ... ok
+test tests::sparse_count_and_packed_length_mismatch_is_rejected ... ok
+test tests::sparse_position_at_or_above_1024_is_rejected ... ok
+test tests::sparse_positions_must_be_strictly_increasing ... ok
+test tests::sparse_truncated_packed_positions_are_rejected ... ok
+test tests::exact_xor_roundtrip_is_bit_identical ... ok
+test tests::sparse_popcount_and_apply_reject_the_same_invalid_encodings ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src/main.rs (target/debug/deps/xtask-a74cc52cccb628ab)
+
+running 31 tests
+test license_metadata::tests::comments_are_not_permissions ... ok
+test license_metadata::tests::additional_license_is_rejected ... ok
+test license_metadata::tests::duplicate_is_rejected ... ok
+test license_metadata::tests::member_inherits_license_file ... ok
+test license_metadata::tests::root_license_file ... ok
+test license_metadata::tests::old_identifier_is_rejected ... ok
+test license_metadata::tests::wrong_location_is_rejected ... ok
+test license_metadata::tests::wrong_section_is_rejected ... ok
+test publication_status_tests::ambiguous_or_missing_status_is_rejected ... ok
+test publication_status_tests::unapproved_candidate_can_be_tested_but_remains_unapproved ... ok
+test reproduce::tests::status_and_fallback_must_pass_on_both_streams ... ok
+test source_bundle::tests::bounded_read_rejects_oversize_file ... ok
+test reproduce::tests::archive_requires_independent_pin ... ok
+test reproduce::tests::archive_mutation_and_extra_files_are_not_approved ... ok
+test source_bundle::tests::strict_manifest_format_and_duplicates ... ok
+test source_bundle::tests::only_portable_relative_paths ... ok
+test source_bundle::tests::symlink_file_and_directory_rejected ... ok
+test tests::cla_ack_needles_match_the_template_line ... ok
+test tests::code_spans_follow_backtick_run_width ... ok
+test tests::contact_gate_distinguishes_source_suffix_from_an_address ... ok
+test source_bundle::tests::build_and_git_metadata_never_copied ... ok
+test source_bundle::tests::changed_missing_extra_files_and_wrong_pin_fail ... ok
+test tests::fenced_blocks_are_not_scanned ... ok
+test tests::reference_shape_matches_repository_paths_only ... ok
+test tests::collection_evidence_exception_is_exact_and_text_only ... ok
+test tests::rust_only_gate_rejects_symlinks_and_executable_files ... ok
+test licensing_scope_tests::root_third_party_scope_and_notices ... ok
+test reproduce::tests::broken_git_does_not_fall_back_to_archive ... ok
+test licensing_scope_tests::appended_overbroad_claim_is_rejected ... ok
+test tests::canonical_license_rejects_changed_or_appended_bytes ... ok
+test tests::documentation_png_gate_requires_exact_reviewed_bytes_and_path ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.58s
+
+     Running tests/dependency_inventory.rs (target/debug/deps/dependency_inventory-9ff1c38a5ce781f9)
+
+running 2 tests
+test inventory_matches_every_locked_external_package ... ok
+test rejects_stale_extra_duplicate_or_missing_inventory_entries ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/staged_licensing.rs (target/debug/deps/staged_licensing-48ce7232d8fcf8d4)
+
+running 6 tests
+test guide_and_commercial_notice_explain_selected_boundaries ... ok
+test keeps_contributor_ownership_bilateral_acceptance_and_no_retroactivity ... ok
+test privacy_draft_distinguishes_voluntary_submission_and_effective_acceptance ... ok
+test draft_keeps_selected_policy_boundaries ... ok
+test rejects_reintroduced_private_deadline_and_page_view_clock ... ok
+test each_required_clause_omission_is_detected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-cli selftest`
+GEL_SELFTEST_V2=PASS
+ORB_BITS=1024
+ORB_BYTES=128
+VIEW_ROUNDTRIPS=6/6
+READER16=PASS
+PROGRESSIVE_EXACT=PASS
+STRUCTURAL_EXACT=PASS
+STRUCTURAL_DER_LOCAL=5.120000
+PERSISTENCE_V2_CRC64=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-bench 8192 3 2`
+GEL_BENCH_V4
+generator=splitmix64_with_unique_word0
+generator_seed=5135594514081467971
+bank_crc64_ecma=6f038d6db5b8839f
+orbs=8192
+bank_bytes=1048576
+orb_bytes=128
+rounds=3
+warmup_rounds=1
+query_schedule=varying-exact-self-stride-65537
+requested_workers=2
+worker_budget=96
+effective_workers_min=2
+effective_workers_max=2
+spawned_workers_total=5
+execution_reported_scans=5
+execution_scope=warmup+timed+threaded_null_check_if_requested
+execution_reports=[Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }, Top1Execution { requested_workers: 2, worker_budget: 96, effective_workers: 2, spawned_workers: 1, fallback: None }]
+fallback_scans=0
+fallback_bank_too_small=0
+fallback_budget_exceeded=0
+fallback_thread_start_failed=0
+fallback_worker_panicked=0
+thread_scan=exact_merge_lowest_index_tie
+thread_scan_exact=PASS
+backend=count_ones(popcnt=false,avx2=false)
+target_arch=x86_64
+observed_cpu_start=5
+scanned_orbs=24576
+elapsed_ns=305875
+query_p50_ns=99978
+query_p95_ns=105909
+query_p99_ns=105909
+orbs_per_sec=80346546.792
+effective_gib_per_sec=9.578055
+top1_exact=3/3
+progressive_top8_exact=PASS
+progressive_candidates=8192
+progressive_reject_32b=0
+progressive_reject_64b=0
+progressive_full_128b=8192
+quality_flips_1=target:4096,hit:4096,score:1023,survived:true
+quality_flips_8=target:4096,hit:4096,score:1016,survived:true
+quality_flips_32=target:4096,hit:4096,score:992,survived:true
+quality_flips_64=target:4096,hit:4096,score:960,survived:true
+quality_flips_128=target:4096,hit:4096,score:896,survived:true
+quality_flips_256=target:4096,hit:4096,score:768,survived:true
+quality_flips_384=target:4096,hit:4096,score:640,survived:true
+null_top1_index=3916
+null_top1_score=565
+observed_cpu_end=1
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-bench 8192 3 1`
+GEL_BENCH_V4
+generator=splitmix64_with_unique_word0
+generator_seed=5135594514081467971
+bank_crc64_ecma=6f038d6db5b8839f
+orbs=8192
+bank_bytes=1048576
+orb_bytes=128
+rounds=3
+warmup_rounds=1
+query_schedule=varying-exact-self-stride-65537
+requested_workers=1
+worker_budget=96
+effective_workers_min=1
+effective_workers_max=1
+spawned_workers_total=0
+execution_reported_scans=4
+execution_scope=warmup+timed+threaded_null_check_if_requested
+execution_reports=[Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }, Top1Execution { requested_workers: 1, worker_budget: 96, effective_workers: 1, spawned_workers: 0, fallback: None }]
+fallback_scans=0
+fallback_bank_too_small=0
+fallback_budget_exceeded=0
+fallback_thread_start_failed=0
+fallback_worker_panicked=0
+thread_scan=single
+thread_scan_exact=SINGLE
+backend=count_ones(popcnt=false,avx2=false)
+target_arch=x86_64
+observed_cpu_start=18
+scanned_orbs=24576
+elapsed_ns=435569
+query_p50_ns=137349
+query_p95_ns=162305
+query_p99_ns=162305
+orbs_per_sec=56422748.175
+effective_gib_per_sec=6.726116
+top1_exact=3/3
+progressive_top8_exact=PASS
+progressive_candidates=8192
+progressive_reject_32b=0
+progressive_reject_64b=0
+progressive_full_128b=8192
+quality_flips_1=target:4096,hit:4096,score:1023,survived:true
+quality_flips_8=target:4096,hit:4096,score:1016,survived:true
+quality_flips_32=target:4096,hit:4096,score:992,survived:true
+quality_flips_64=target:4096,hit:4096,score:960,survived:true
+quality_flips_128=target:4096,hit:4096,score:896,survived:true
+quality_flips_256=target:4096,hit:4096,score:768,survived:true
+quality_flips_384=target:4096,hit:4096,score:640,survived:true
+null_top1_index=3916
+null_top1_score=565
+observed_cpu_end=18
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/quad_compare --orbs 32 --rounds 3 --workers 2 --sparse 1`
+Q8_QUAD_COMPARE_V2 seed=510051 arch=x86_64 orbs=32 rounds=3 requested_workers=2 effective_workers=2 sparse=true policy=active
+canonical_record_bytes=1152 materialized_four_frame_bytes=8192 packed_four_record_bytes=4608 timing=scan_only_reused_output_views_precomputed host_isolation=false
+round,reference_one_ns,four_views_ns,shared_ns
+1,74450,154250,120597
+2,61235,178356,98566
+3,67287,158237,103865
+reference_one_fallback_scans=0 four_views_fallback_scans=0 warmup_included=true
+four_over_shared_total=1.519506 reference_one_over_shared_total=0.628342 score_view_comparisons=512
+Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/quad_evidence --demo`
+Q8_EVIDENCE_V1 records=32 rounds=9 policy=active workers=1 view_inverses=128 timed_query=bank_record_with_one_code_perturbed semantic_accuracy=NOT_MEASURED
+record_bytes=1152 materialized_four_bytes=8192 simultaneous_banks=true query_preparation_timed=false
+round,canonical_single_ns,four_materialized_ns,shared_ns
+1,45967,175099,73157
+2,41729,120196,63970
+3,45847,173606,72767
+4,42179,122781,60755
+5,48691,175770,72236
+6,41348,126017,60053
+7,45656,172995,92985
+8,42220,123492,61205
+9,54572,175470,72527
+canonical_over_shared=0.648306 four_over_shared=2.168530 view_comparisons=1408
+Q8_EVIDENCE=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/quad_playground --demo`
+phase=0 mask_stride=1 noise_dimensions=0 policy=BodyActivity
+P0: reference=1.000000000 shared=1.000000000 inverse=PASS
+P1: reference=1.000000000 shared=1.000000000 inverse=PASS
+P2: reference=1.000000000 shared=1.000000000 inverse=PASS
+P3: reference=1.000000000 shared=1.000000000 inverse=PASS
+single_shared_read_ns=2174 (one observation, NOT a benchmark)
+canonical_pair_bytes=2304 materialized_pair_bytes=16384 (payload only, NOT total RAM)
+process_VmRSS:	    2672 kB (includes runtime and demo buffers)
+QUAD_PLAYGROUND=PASS; four equivalent views, not four independent facts
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_readout`
+TITLE: Demo vessel
+QUOTE: Demo vessel pressure is 2 bar. This is synthetic test data. Łódź — próba Unicode.
+SOURCE: built-in synthetic fixture / entry=1 / section=Lead / byte_range=0..87
+CATALOG_SHA256: 392161ff9eb66ef8fd5545d9fd9ba398dc5f45c6350c8e7faf789f678da8ec8b
+TEXT_SHA256: 53d430befc80486cb18a3c0fa0778244245dec55870fd2dfe3341c3c85c224b1
+TAMPER: 2 bar -> 9 bar; original pins retained; REJECTED
+SOURCE_E2E=PASS
+Integrity proves approved bytes, NOT factual truth or semantic relevance.
+    Finished `release` profile [optimized] target(s) in 0.00s
+     Running `target/release/examples/source_parts`
+TITLE="Demo light"
+PART="Lead (1)" QUOTE="This is a synthetic lamp, not a measured device." SOURCE=0:2 ENTRY=0 BYTES=51..99 SHA256=31a3c2e1f4c276bf3258e8de8d90ed34c264ac8c2070ce0039d4aa5940773d3b GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+PART="Lead (2)" QUOTE="The lamp is switched off in this fictional example." SOURCE=0:9 ENTRY=0 BYTES=0..51 SHA256=7feb15351c9d92605e90c79487d6db5823e87578b5551c2b3aa9ccf512d021b4 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+TITLE="Żółta latarnia"
+PART="WSTĘP (1)" QUOTE="To autorski przykład testowy, nie opis rzeczywistego urządzenia." SOURCE=1:8 ENTRY=1 BYTES=162..228 SHA256=6fe983e3d4d5ed5b84286773c64d2b284b1de3256f98cc5675f6e771375acfe8 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+PART="WSTĘP (2)" QUOTE="Druga część: zażółć gęślą jaźń — dokładny cytat." SOURCE=1:4 ENTRY=1 BYTES=99..162 SHA256=52a21f754c97598ed950ea7add01d48b56135e2cca4593be63322ad130fc9f88 GENERATION=bfc64f01f8653de5b35b4ba6740e1434f6047135bbab50e2941bdf65fe1ae361
+EXPECTED_PART_COUNT_MISMATCH=REJECTED
+MODIFIED_TEXT_WITH_ORIGINAL_PINS=REJECTED
+SOURCE_PARTS_E2E=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_real`
+TITLE=Rust ownership
+SOURCE_URL=https://github.com/rust-lang/book/blob/1500248d8f230566e4ec9f27fcbb8fe9e2898ab1/src/ch04-01-what-is-ownership.md
+SOURCE_LICENSE=MIT
+TEXT_PIN=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+CATALOG_PIN=f5e81e25d4f6f5c4ae1f01c7516ed8313a46c2821bf33731cb540ccd06d5a3a8
+SCOPE=exact excerpt readout, not truth certification or semantic retrieval
+PART=Lead (1) ADDRESS=0:1 ENTRY=0 EXCERPT_BYTES=0..615 UPSTREAM_BYTES=23..638 SHA256=852a602c2b750c1fc23e0cc8826359ba0ef133ff0a775b85b47e2501e22b634d GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+_Ownership_ is a set of rules that govern how a Rust program manages memory.
+All programs have to manage the way they use a computer’s memory while running.
+Some languages have garbage collection that regularly looks for no-longer-used
+memory as the program runs; in other languages, the programmer must explicitly
+allocate and free the memory. Rust uses a third approach: Memory is managed
+through a system of ownership with a set of rules that the compiler checks. If
+any of the rules are violated, the program won’t compile. None of the features
+of ownership will slow down your program while it’s running.
+QUOTE_END
+PART=Lead (2) ADDRESS=0:2 ENTRY=0 EXCERPT_BYTES=617..909 UPSTREAM_BYTES=640..932 SHA256=1fec1fe19017d2a7a6b3a8e54bdd25bcfa86f991cc12d475d9e3a1ee7d07ab4c GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+Because ownership is a new concept for many programmers, it does take some time
+to get used to. The good news is that the more experienced you become with Rust
+and the rules of the ownership system, the easier you’ll find it to naturally
+develop code that is safe and efficient. Keep at it!
+QUOTE_END
+PART=Lead (3) ADDRESS=0:3 ENTRY=0 EXCERPT_BYTES=911..1157 UPSTREAM_BYTES=934..1180 SHA256=1412eaacb003f9137314b6003dd0cb8620c54f79bdce8a7ef326f43f6cb4c986 GENERATION=34732a240a0b56f624172680f301040395d764ef9e2186d8c371336fee5395a1
+QUOTE_BEGIN
+When you understand ownership, you’ll have a solid foundation for understanding
+the features that make Rust unique. In this chapter, you’ll learn ownership by
+working through some examples that focus on a very common data structure:
+strings.
+
+QUOTE_END
+MODIFIED_TEXT=REJECTED
+MODIFIED_CATALOG=REJECTED
+EXPECTED_COUNT_MISMATCH=REJECTED
+SOURCE_REAL_E2E=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_find`
+SOURCE=Rust Book ownership excerpt
+SOURCE_LICENSE=MIT
+SOURCE_SHA256=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+SOURCE_EXTRACT_ONLY; phrase lookup, not semantic truth or an ORB search
+matching_lines=7 shown=4 skipped_long_lines=0
+UTF8 0..76 | SOURCE_BOUND_QUOTE
+_Ownership_ is a set of rules that govern how a Rust program manages memory.
+UTF8 393..471 | SOURCE_BOUND_QUOTE
+through a system of ownership with a set of rules that the compiler checks. If
+UTF8 553..615 | SOURCE_BOUND_QUOTE
+of ownership will slow down your program while it’s running.
+UTF8 617..696 | SOURCE_BOUND_QUOTE
+Because ownership is a new concept for many programmers, it does take some time
+search_ns=39455 verified_search_ns=71635
+TIMING_SCOPE=source validation plus search; excludes startup and printing; not a benchmark
+MODIFIED_SOURCE=REJECTED
+SOURCE_FIND_E2E=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/source_build`
+Lead (1): Exact text: Zażółć gęślą jaźń.
+
+Lead (2): Unicode stays unchanged: café, café, 🦀.
+
+TEXT_BYTES=86 CATALOG_BYTES=266
+MODIFIED_TEXT=REJECTED
+SOURCE_BUILD_E2E=PASS
+SCOPE=exact UTF-8 source catalog; not Q8 quantization or semantic understanding
+   Compiling gel-source v0.3.0 (<CHECKOUT>/crates/gel-source)
+    Finished `release` profile [optimized] target(s) in 1.85s
+     Running `target/release/examples/collection_review`
+DOCUMENT title=Rust Book bytes=1157 sha256=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+DOCUMENT title=Source builder bytes=5317 sha256=201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282
+DOCUMENT title=Ocean scope bytes=5664 sha256=5ded58dffff2adf67ae394d4e184785eb9dc0f84c02de85005a35b088afb840d
+DOCUMENT title=Synthetic Unicode bytes=139 sha256=3aec47fe721b6eae1e67411db1a0cc2f09f457613767b24ddf813166f30eebd2
+ASSESSMENT=post-freeze, developer-authored; NOT blind or independent semantic validation
+CASES_SHA256=182b4b9a9f439c0fbee347c9131364e81572fff5a6b1d7de28ee7464f858eaa5
+case=1 kind=real-exact query="garbage collection" expected={1} actual={1} status=HIT search_ns=144712 pass=true
+case=2 kind=real-case query="GARBAGE COLLECTION" expected={1} actual={1} status=HIT search_ns=86011 pass=true
+case=3 kind=real-exact query="compiler checks" expected={1} actual={1} status=HIT search_ns=91462 pass=true
+case=4 kind=real-exact query="safe and efficient" expected={1} actual={1} status=HIT search_ns=95850 pass=true
+case=5 kind=real-exact query="no-replace publication" expected={2} actual={2} status=HIT search_ns=88757 pass=true
+case=6 kind=real-punctuation query="no replace publication" expected={2} actual={2} status=HIT search_ns=68489 pass=true
+case=7 kind=real-exact query="UTF-8 bytes" expected={2} actual={2} status=HIT search_ns=87654 pass=true
+case=8 kind=real-exact query="physical power loss" expected={3} actual={3} status=HIT search_ns=80782 pass=true
+case=9 kind=real-punctuation query="kernel sealed copy" expected={3} actual={3} status=HIT search_ns=80571 pass=true
+case=10 kind=real-punctuation query="zero copy disk" expected={3} actual={3} status=HIT search_ns=77215 pass=true
+case=11 kind=real-punctuation query="1M 10M numerical campaigns" expected={3} actual={3} status=HIT search_ns=88446 pass=true
+case=12 kind=absent query="proof of immortality" expected={} actual={} status=UNKNOWN search_ns=78798 pass=true
+case=13 kind=unsupported-paraphrase query="Rust guarantees that no program can fail" expected={} actual={} status=UNKNOWN search_ns=97042 pass=true
+case=14 kind=real-exact query="Memory is managed" expected={1} actual={1} status=HIT search_ns=76584 pass=true
+case=15 kind=cross-line-rejected query="managed through a system" expected={} actual={} status=UNKNOWN search_ns=82224 pass=true
+case=16 kind=real-exact query="slow down your program" expected={1} actual={1} status=HIT search_ns=80542 pass=true
+case=17 kind=real-exact query="independently trusted pins" expected={2} actual={2} status=HIT search_ns=68208 pass=true
+case=18 kind=real-exact query="caller supplied passages" expected={2} actual={2} status=HIT search_ns=71294 pass=true
+case=19 kind=absent query="mind reading processor" expected={} actual={} status=UNKNOWN search_ns=73839 pass=true
+case=20 kind=unsupported-paraphrase query="explain why computers forget" expected={} actual={} status=UNKNOWN search_ns=75031 pass=true
+case=21 kind=unicode-fixture query="ZAŻÓŁĆ GĘŚLĄ" expected={4} actual={4} status=HIT search_ns=88787 pass=true
+case=22 kind=unicode-fixture query="cafe\u{301}" expected={4} actual={4} status=HIT search_ns=84820 pass=true
+case=23 kind=unicode-fixture query="ος" expected={4} actual={4} status=HIT search_ns=81925 pass=true
+case=24 kind=unicode-fixture query="LODŹ" expected={} actual={} status=UNKNOWN search_ns=73368 pass=true
+CASES=24 FAILURES=0 REOPEN_BIT_EQUAL=PASS CORRUPTION_REJECTED=PASS
+COLLECTION_REVIEW=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/examples/quantization_matrix`
+REFERENCE=affine_minmax32 LSB_packed metadata_per_block=8 rounds=21 warmup=1
+SCOPE=synthetic decoded sample quality; not semantic accuracy, media container compression or private GEL codec
+TIMING=encode_and_decode_with_allocations warm_buffers not cold_DRAM; no ORB/s claim
+dataset,q,values,payload_bytes,metadata_bytes,total_bytes,rmse,max_abs_error,bit_exact,median_ns,p95_ns
+silence,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=silence q=Q1 values=[237827, 203723, 174147, 173837, 173847, 183455, 173897, 173837, 173848, 173717, 179527, 173726, 173646, 173527, 173426, 173537, 177944, 173887, 173566, 173717, 173597]
+silence,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,173837,203723
+RAW_NS dataset=silence q=Q2 values=[202390, 174779, 173977, 173807, 173898, 182133, 173967, 173827, 173898, 173696, 177273, 173827, 173767, 173577, 173917, 173847, 164730, 82596, 81473, 81293, 81243]
+silence,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,173827,182133
+RAW_NS dataset=silence q=Q4 values=[97173, 82054, 81473, 81453, 80621, 93476, 81543, 81473, 81504, 81453, 81483, 81434, 81413, 81363, 81453, 81423, 81404, 88386, 82505, 81664, 93075]
+silence,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,81473,93476
+RAW_NS dataset=silence q=Q8 values=[102994, 82245, 81363, 81353, 81343, 81514, 93215, 81393, 81423, 81374, 81353, 81353, 81673, 81603, 81574, 81513, 81463, 81564, 93095, 82145, 81543]
+silence,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,81514,93215
+constant,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=constant q=Q1 values=[82445, 81914, 81723, 81704, 81954, 82064, 82766, 95590, 81343, 81413, 81343, 81463, 82676, 82705, 82835, 82716, 82726, 82735, 82114, 85481, 81603]
+constant,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,82114,85481
+RAW_NS dataset=constant q=Q2 values=[82135, 82235, 82064, 86563, 82415, 81574, 81423, 81513, 83067, 92043, 81473, 81383, 81504, 81393, 94378, 84328, 86362, 86934, 86753, 86593, 90240]
+constant,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,82415,92043
+RAW_NS dataset=constant q=Q4 values=[82796, 80321, 80131, 80221, 80000, 80291, 80131, 80060, 80011, 80051, 84669, 80411, 80271, 80352, 80251, 80311, 80311, 80381, 80291, 80331, 80181]
+constant,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,80291,82796
+RAW_NS dataset=constant q=Q8 values=[82705, 80501, 80411, 80221, 80151, 95179, 90751, 80211, 80221, 80321, 80181, 80161, 192743, 244019, 260339, 259388, 277792, 87896, 83427, 92233, 80291]
+constant,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,82705,260339
+image_gradient,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=image_gradient q=Q1 values=[151675, 155833, 144322, 144301, 143921, 143841, 143720, 143891, 147858, 143821, 143991, 144191, 143691, 143750, 144241, 145905, 144081, 144001, 144001, 143911, 143891]
+image_gradient,Q1,32768,4096,8192,12288,3.452316843e-2,5.882352963e-2,2048,144001,151675
+RAW_NS dataset=image_gradient q=Q2 values=[150934, 144863, 144792, 168848, 145704, 150684, 150784, 144151, 183715, 159470, 150623, 151515, 157346, 145264, 144452, 152667, 145534, 152557, 144742, 148880, 145012]
+image_gradient,Q2,32768,8192,8192,16384,1.150772280e-2,1.960784383e-2,2048,150623,168848
+RAW_NS dataset=image_gradient q=Q4 values=[144532, 144432, 144482, 145523, 149191, 144451, 143961, 143911, 144402, 144361, 148660, 144021, 144752, 144121, 144162, 144081, 144391, 147447, 144402, 144662, 155242]
+image_gradient,Q4,32768,16384,8192,24576,2.301545295e-3,3.921568859e-3,2048,144432,149191
+RAW_NS dataset=image_gradient q=Q8 values=[150674, 144452, 148890, 143710, 143410, 144362, 143510, 144031, 144101, 147237, 144452, 144432, 144171, 143620, 143941, 144562, 145634, 144202, 143430, 143770, 143480]
+image_gradient,Q8,32768,32768,8192,40960,1.353803701e-4,2.306848764e-4,2048,144171,148890
+audio_tones,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=audio_tones q=Q1 values=[153960, 149722, 149711, 160983, 172705, 160872, 156134, 149952, 175020, 185469, 156494, 156103, 162025, 149712, 149782, 149751, 149762, 150012, 150003, 155132, 149761]
+audio_tones,Q1,32768,4096,8192,12288,1.773959113e-1,4.747211635e-1,2048,153960,175020
+RAW_NS dataset=audio_tones q=Q2 values=[159951, 159390, 159460, 162646, 152768, 152988, 153168, 152847, 152788, 154470, 152727, 152807, 153038, 152788, 152677, 152788, 154911, 152778, 160692, 152968, 152867]
+audio_tones,Q2,32768,8192,8192,16384,6.328337530e-2,1.600412279e-1,2048,152968,160692
+RAW_NS dataset=audio_tones q=Q4 values=[154391, 149912, 149812, 149782, 149461, 149892, 149672, 152547, 149791, 149632, 149752, 149531, 149571, 152297, 149762, 149521, 149551, 149792, 149792, 149622, 153639]
+audio_tones,Q4,32768,16384,8192,24576,1.278285612e-2,3.174974024e-2,2048,149782,153639
+RAW_NS dataset=audio_tones q=Q8 values=[150723, 171373, 159290, 156294, 154020, 149561, 149301, 168808, 245642, 182674, 171643, 152076, 151686, 151384, 151434, 151586, 154851, 151756, 151585, 151334, 151485]
+audio_tones,Q8,32768,32768,8192,40960,7.672565664e-4,1.873880625e-3,2048,151756,182674
+small_signal_outliers,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=small_signal_outliers q=Q1 values=[149441, 146937, 146345, 146456, 146726, 146395, 146195, 149020, 146516, 146044, 146666, 146606, 145995, 146425, 148079, 146646, 153559, 154601, 146566, 146105, 146345]
+small_signal_outliers,Q1,32768,4096,8192,12288,1.718920447e-3,3.000000026e-3,2048,146566,153559
+RAW_NS dataset=small_signal_outliers q=Q2 values=[146175, 146906, 145984, 146375, 145974, 150493, 146175, 146797, 147046, 145845, 146115, 146395, 149151, 145834, 145905, 146135, 146225, 146045, 146375, 147798, 146877]
+small_signal_outliers,Q2,32768,8192,8192,16384,1.718920447e-3,3.000000026e-3,2048,146225,149151
+RAW_NS dataset=small_signal_outliers q=Q4 values=[168607, 145164, 143990, 156784, 144131, 144983, 158277, 205937, 153239, 147587, 151605, 147056, 146756, 146726, 146846, 146806, 148830, 146085, 146075, 146596, 146165]
+small_signal_outliers,Q4,32768,16384,8192,24576,1.718920447e-3,3.000000026e-3,2048,146806,168607
+RAW_NS dataset=small_signal_outliers q=Q8 values=[146325, 149171, 152827, 146366, 146215, 146346, 146515, 146516, 148980, 145524, 145584, 145774, 145725, 145984, 148790, 145334, 146285, 156214, 145664, 145614, 145103]
+small_signal_outliers,Q8,32768,32768,8192,40960,1.718920447e-3,3.000000026e-3,2048,146285,152827
+alternating_extremes,F32,32768, 131072,0,131072,0,0,32768,NA,NA
+RAW_NS dataset=alternating_extremes q=Q1 values=[145463, 145463, 145153, 145123, 145404, 146075, 147658, 146105, 145203, 145343, 145293, 145333, 148129, 145303, 145304, 145213, 145093, 144933, 145213, 147558, 145083]
+alternating_extremes,Q1,32768,4096,8192,12288,0.000000000e0,0.000000000e0,32768,145304,147658
+RAW_NS dataset=alternating_extremes q=Q2 values=[149541, 170210, 146035, 145223, 149601, 145583, 149391, 194826, 178786, 155493, 161333, 146666, 145684, 145825, 146155, 146085, 147708, 149371, 145824, 146385, 146094]
+alternating_extremes,Q2,32768,8192,8192,16384,0.000000000e0,0.000000000e0,32768,146666,178786
+RAW_NS dataset=alternating_extremes q=Q4 values=[146035, 150323, 145654, 145964, 145194, 162355, 145314, 145483, 147939, 145353, 145374, 145714, 145544, 145313, 146225, 147338, 144812, 158929, 145965, 145884, 146245]
+alternating_extremes,Q4,32768,16384,8192,24576,0.000000000e0,0.000000000e0,32768,145884,158929
+RAW_NS dataset=alternating_extremes q=Q8 values=[146436, 146766, 145674, 146115, 146405, 146285, 148379, 145804, 145765, 146736, 145924, 145794, 145984, 148780, 146456, 146355, 146165, 146155, 146225, 148309, 146205]
+alternating_extremes,Q8,32768,32768,8192,40960,0.000000000e0,0.000000000e0,32768,146225,148379
+QUANTIZATION_MATRIX=PASS F16=SEE_EXISTING_DATA_INTEGRITY_REFERENCE
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-live-lab --demo`
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  part 1/4 | address 1:1 | bytes 0..205 | quote + validation: 0.002 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > RAM holds working data while a program runs. Volatile memory alone does 
+  > not preserve that data across a power loss. This laboratory can save an 
+  > exact source catalog and verify it again in a fresh process.\n
+  Quote SHA256:
+  17367c1b54ab6055b5f00e00881b4e7de67e4b77f10c440abd1aa9bbba8a491c
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=0 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+  > P0 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f  inverse=PASS
+    P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
+    P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
+    P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
+  Shared score: +1.000000 | one read: 1693 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  open PATH | find PHRASE | match N | read N | page N | save NEW_PATH | load
+   SHA256 PATH | tamper | phase 0..255 | mask 0..1024 | noise 0..1024 | view
+   0..3 | demo | exit
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  part 2/4 | address 1:2 | bytes 205..435 | quote + validation: 0.001 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > A cryptographic digest detects a change relative to independently truste
+  > d bytes. It does not prove that a statement is true. Changing the file a
+  > nd accepting a new digest from its sender would not authenticate the ori
+  > ginal source.\n
+  Quote SHA256:
+  d5c9e5bfabe3bfc81f0705e50349ad1a5695f8511bc052f4fef3424180de4647
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=0 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+  > P0 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f  inverse=PASS
+    P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
+    P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
+    P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
+  Shared score: +1.000000 | one read: 2194 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  open PATH | find PHRASE | match N | read N | page N | save NEW_PATH | load
+   SHA256 PATH | tamper | phase 0..255 | mask 0..1024 | noise 0..1024 | view
+   0..3 | demo | exit
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > A cryptographic digest detects a change relative to independently truste
+  > d bytes. It does not prove that a statement is true. Changing the file a
+  > nd accepting a new digest from its sender would not authenticate the ori
+  > ginal source.
+  Quote SHA256:
+  83f6d1bb88942c074809dc54f664b8967c52bdcbd1811578d0a6d8c987916a7b
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=0 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+  > P0 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f  inverse=PASS
+    P1 a8 0e 76 60 4c 5b 65 ea f3 2a 1a a8 7e 66 b2 7b  inverse=PASS
+    P2 ff fe fd fc fb fa f9 f8 f7 f6 f5 f4 f3 f2 f1 f0  inverse=PASS
+    P3 a7 0b 71 59 43 50 58 db e2 17 05 91 65 4b 95 5c  inverse=PASS
+  Shared score: +1.000000 | one read: 2194 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
+  t semantic QA. Use match N for another result. Timing: search only; exclud
+  es import, load and rendering.
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > A cryptographic digest detects a change relative to independently truste
+  > d bytes. It does not prove that a statement is true. Changing the file a
+  > nd accepting a new digest from its sender would not authenticate the ori
+  > ginal source.
+  Quote SHA256:
+  83f6d1bb88942c074809dc54f664b8967c52bdcbd1811578d0a6d8c987916a7b
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=64 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+  > P0 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  inverse=PASS
+    P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
+    P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
+    P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
+  Shared score: -0.000000 | one read: 1453 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
+  t semantic QA. Use match N for another result. Timing: search only; exclud
+  es import, load and rendering.
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > A cryptographic digest detects a change relative to independently truste
+  > d bytes. It does not prove that a statement is true. Changing the file a
+  > nd accepting a new digest from its sender would not authenticate the ori
+  > ginal source.
+  Quote SHA256:
+  83f6d1bb88942c074809dc54f664b8967c52bdcbd1811578d0a6d8c987916a7b
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=64 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+    P0 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  inverse=PASS
+    P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
+    P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
+  > P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
+  Shared score: -0.000000 | one read: 1443 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  FIND=HIT matches=1 shown=1 skipped_long_lines=0 | source phrase lookup; no
+  t semantic QA. Use match N for another result. Timing: search only; exclud
+  es import, load and rendering.
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+  GEL LIVE LAB  /  RUST  /  OFFLINE  /  NO LLM
+  ========================================================================
+  SOURCE | Built-in authored demonstration (4 parts)
+  Text: 817 B | catalog: 543 B | parts: 4 | plaintext, not a vault
+  match 1/1 | exact source bytes 205..434 | phrase search: 0.035 ms
+  Quote page 1/1 (controls escaped; exact bytes remain in source):
+  > A cryptographic digest detects a change relative to independently truste
+  > d bytes. It does not prove that a statement is true. Changing the file a
+  > nd accepting a new digest from its sender would not authenticate the ori
+  > ginal source.
+  Quote SHA256:
+  83f6d1bb88942c074809dc54f664b8967c52bdcbd1811578d0a6d8c987916a7b
+  ------------------------------------------------------------------------
+  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text
+  Phase=64 mask_stride=1 noise=0 | Record=1152 B, 256 phase levels
+    P0 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  inverse=PASS
+    P1 e8 4e b6 a0 8c 9b a5 2a 33 6a 5a e8 be a6 f2 bb  inverse=PASS
+    P2 3f 3e 3d 3c 3b 3a 39 38 37 36 35 34 33 32 31 30  inverse=PASS
+  > P3 e7 4b b1 99 83 90 98 1b 22 57 45 d1 a5 8b d5 9c  inverse=PASS
+  Shared score: -0.000000 | one read: 1433 ns (not a benchmark)
+  4 reversible views = 1 evidence item, not 4x independent capacity
+  ------------------------------------------------------------------------
+  TAMPER=REJECTED | changed 1 byte in a RAM COPY; original untouched
+  Commands: help | open PATH | find PHRASE | match N | read N | save PATH | exit
+GEL_LIVE_LAB_DEMO=PASS
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/gel-evidence --demo`
+GEL EVIDENCE LAB | RUST | OFFLINE | NO LLM
+Source lookup, not conversation. Timers exclude terminal rendering. No automatic saving.
+gel> list
+id=1 title=Memory notes bytes=57 sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377
+id=2 title=Polish notes bytes=51 sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d
+gel> find ram is volatile
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=37290
+RESULT 1 doc=1 title=Memory notes bytes=0..16
+QUOTE RAM is volatile.
+gel> proof 1
+CITATION=PASS document_sha256=cd80713e331db82a8232293d9bc2624827ed8c6b89efdb48f438b0409ce0f377 collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
+gel> find zażółć gęślą
+FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=10199
+RESULT 1 doc=2 title=Polish notes bytes=0..27
+QUOTE Zażółć gęślą jaźń.
+gel> proof 1
+CITATION=PASS document_sha256=d623770976fe2a2e1b415bf4b28fd02a4b7345b04677de1509ab8d6d2e24d65d collection_sha256=bf2e5435cdecdc0701cab32a20dd5d49c63718b0d4a7ffa2b27b503619739e34; correspondence, not truth
+gel> find invented answer
+FIND=UNKNOWN documents=2 matching_lines=0 shown=0 skipped_lines=0 search_ns=6402
+gel> drop 1
+REMOVED id=1; old snapshots remain on disk
+gel> find ram is volatile
+FIND=UNKNOWN documents=1 matching_lines=0 shown=0 skipped_lines=0 search_ns=3857
+GEL_EVIDENCE_DEMO=PASS
+GEL_VERIFY_ALL=PASS

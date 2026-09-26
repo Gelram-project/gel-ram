@@ -134,3 +134,8 @@ b7e650f3fce5c53249d1cdc608b54df156a97edd636cf9d23498d0cfe7aec63e  version_check-
 ## Other redistributed third-party material
 
 The MIT Rust Book excerpt is identified separately in [real-source provenance](REAL-SOURCE-DEMO.md), with its full license beside the fixture. It is not a Cargo dependency. GEL-owned material remains under the root license; this inventory neither changes that license nor licenses third-party material on GEL terms. Recheck the inventory whenever Cargo.lock or distributed fixtures change.
+
+The collection-review fixture reuses that exact same excerpt with its MIT notice
+copied beside it; [provenance](../crates/gel-source/fixtures/collection-review/PROVENANCE.md).
+No new upstream source or Cargo dependency is introduced by this copy. Capture
+tools (FFmpeg, Xvfb, xterm) are not shipped in the source package.

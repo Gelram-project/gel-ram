@@ -2,7 +2,32 @@
 
 **Experimental Rust research into RAM-resident knowledge, exact source-bound readout, reproducible evidence, and memory architectures that do not treat a full CPU scan as the final design.**
 
-> Public `main` contains the reproducible subset of GEL RAM. The tagged `v0.3.0` release is an earlier immutable release point; newer verified work lives on `main`.
+> PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
+> Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
+> [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
+
+## New candidate: your documents, exact citations, a real restart
+
+[70-second actual terminal walkthrough](media/EVIDENCE-LAB-GUIDE.md) ·
+[Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
+[Windows/macOS verification record and instructions](docs/PLATFORM-REVIEW.md).
+
+```sh
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
+```
+
+Type `add PATH` for each UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
+Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
+`load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate previous results.
+No text crosses document boundaries. Nothing is uploaded or automatically saved.
+
+[Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
+[Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
+This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
+**Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
+
+The sections below describe the previously published baseline, not approval of
+this candidate. The tagged `v0.3.0` release remains an immutable release point.
 
 ## What GEL RAM is
 
@@ -10,7 +35,7 @@ GEL RAM is an independent experimental memory/readout project written in Rust. T
 
 The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
 
-## What exists today
+## Previously published capabilities
 
 | Capability | Public status |
 |---|---|
@@ -118,7 +143,10 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions for the current v0.3.0 line. No model or private bank is needed.
+instructions; this checkout additionally contains the v0.4.0 PR candidate.
+These additions are available on main after [PR #9](https://github.com/Gelram-project/gel-ram/pull/9)
+is merged; before that, use branch `review/evidence-lab-v040-rc1`.
+No model or private bank is needed.
 
 ### Change the numeric input
 

@@ -1,0 +1,35 @@
+   Compiling gel-source v0.3.0 (<CHECKOUT>/crates/gel-source)
+    Finished `release` profile [optimized] target(s) in 1.96s
+     Running `target/release/examples/collection_review`
+DOCUMENT title=Rust Book bytes=1157 sha256=5284e31747fcb796ef577c64343c36d1627ac44a16b683a4dc4e81fa520dec71
+DOCUMENT title=Source builder bytes=5317 sha256=201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282
+DOCUMENT title=Ocean scope bytes=5664 sha256=5ded58dffff2adf67ae394d4e184785eb9dc0f84c02de85005a35b088afb840d
+DOCUMENT title=Synthetic Unicode bytes=139 sha256=3aec47fe721b6eae1e67411db1a0cc2f09f457613767b24ddf813166f30eebd2
+ASSESSMENT=post-freeze, developer-authored; NOT blind or independent semantic validation
+CASES_SHA256=182b4b9a9f439c0fbee347c9131364e81572fff5a6b1d7de28ee7464f858eaa5
+case=1 kind=real-exact query="garbage collection" expected={1} actual={1} status=HIT search_ns=140724 pass=true
+case=2 kind=real-case query="GARBAGE COLLECTION" expected={1} actual={1} status=HIT search_ns=82806 pass=true
+case=3 kind=real-exact query="compiler checks" expected={1} actual={1} status=HIT search_ns=89378 pass=true
+case=4 kind=real-exact query="safe and efficient" expected={1} actual={1} status=HIT search_ns=94057 pass=true
+case=5 kind=real-exact query="no-replace publication" expected={2} actual={2} status=HIT search_ns=87604 pass=true
+case=6 kind=real-punctuation query="no replace publication" expected={2} actual={2} status=HIT search_ns=68489 pass=true
+case=7 kind=real-exact query="UTF-8 bytes" expected={2} actual={2} status=HIT search_ns=86553 pass=true
+case=8 kind=real-exact query="physical power loss" expected={3} actual={3} status=HIT search_ns=78097 pass=true
+case=9 kind=real-punctuation query="kernel sealed copy" expected={3} actual={3} status=HIT search_ns=83187 pass=true
+case=10 kind=real-punctuation query="zero copy disk" expected={3} actual={3} status=HIT search_ns=75362 pass=true
+case=11 kind=real-punctuation query="1M 10M numerical campaigns" expected={3} actual={3} status=HIT search_ns=87805 pass=true
+case=12 kind=absent query="proof of immortality" expected={} actual={} status=UNKNOWN search_ns=76894 pass=true
+case=13 kind=unsupported-paraphrase query="Rust guarantees that no program can fail" expected={} actual={} status=UNKNOWN search_ns=96832 pass=true
+case=14 kind=real-exact query="Memory is managed" expected={1} actual={1} status=HIT search_ns=76133 pass=true
+case=15 kind=cross-line-rejected query="managed through a system" expected={} actual={} status=UNKNOWN search_ns=81543 pass=true
+case=16 kind=real-exact query="slow down your program" expected={1} actual={1} status=HIT search_ns=80050 pass=true
+case=17 kind=real-exact query="independently trusted pins" expected={2} actual={2} status=HIT search_ns=67677 pass=true
+case=18 kind=real-exact query="caller supplied passages" expected={2} actual={2} status=HIT search_ns=70984 pass=true
+case=19 kind=absent query="mind reading processor" expected={} actual={} status=UNKNOWN search_ns=72296 pass=true
+case=20 kind=unsupported-paraphrase query="explain why computers forget" expected={} actual={} status=UNKNOWN search_ns=74100 pass=true
+case=21 kind=unicode-fixture query="ZAŻÓŁĆ GĘŚLĄ" expected={4} actual={4} status=HIT search_ns=86222 pass=true
+case=22 kind=unicode-fixture query="cafe\u{301}" expected={4} actual={4} status=HIT search_ns=82966 pass=true
+case=23 kind=unicode-fixture query="ος" expected={4} actual={4} status=HIT search_ns=112732 pass=true
+case=24 kind=unicode-fixture query="LODŹ" expected={} actual={} status=UNKNOWN search_ns=110919 pass=true
+CASES=24 FAILURES=0 REOPEN_BIT_EQUAL=PASS CORRUPTION_REJECTED=PASS
+COLLECTION_REVIEW=PASS

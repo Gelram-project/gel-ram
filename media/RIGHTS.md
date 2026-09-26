@@ -10,8 +10,9 @@ Any Monetized Use of those media files, including paid redistribution, advertisi
 
 Third-party rights, platform terms, privacy rights and mandatory legal exceptions remain unaffected. Facts visible in a recording are not claimed as exclusive intellectual property.
 
-The films do not ship or license the demonstrated private application, private bank, speaker, encoder or recording scripts. The public code and the private demonstrated application remain distinct.
+The two historical private-preview films do not ship or license the demonstrated private application, private bank, speaker, encoder or their recording scripts. The public code and that private application remain distinct. The separately documented Evidence Lab film demonstrates the public-candidate application; its Rust typing driver is included with that candidate under the root license.
 
 See [the film guide](FILMS-GUIDE.md) for the exact demonstrated scope and limitations.
+The new public-candidate recording has its own [Evidence Lab guide](EVIDENCE-LAB-GUIDE.md).
 
 Permission and commercial enquiries: `gelram.licensing@gmail.com`.

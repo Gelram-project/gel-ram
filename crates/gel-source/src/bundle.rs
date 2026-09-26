@@ -135,6 +135,11 @@ pub fn load_bundle(path: &Path, trusted_pin: Hash) -> Result<Corpus, BundleError
 /// is not guaranteed. An I/O error after linking may leave a complete destination:
 /// callers must inspect it, never blindly delete/overwrite it. Parent must be trusted.
 pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, BundleError> {
+    write_bytes_new(path, &encode(value))
+}
+
+/// Internal shared no-replace publisher. Callers enforce their format limits.
+pub(crate) fn write_bytes_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleError> {
     let parent = path
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
@@ -142,8 +147,7 @@ pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, Bund
     if path.file_name().is_none() {
         return Err(Error::Format.into());
     }
-    let bytes = encode(value);
-    let pin = digest(&bytes);
+    let pin = digest(bytes);
     let mut attempt = 0;
     let (tmp, mut file) = loop {
         let id = NEXT.fetch_add(1, Ordering::Relaxed);
@@ -164,7 +168,7 @@ pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, Bund
         }
     };
     let result = (|| -> Result<(), std::io::Error> {
-        file.write_all(&bytes)?;
+        file.write_all(bytes)?;
         file.sync_all()?;
         drop(file);
         fs::hard_link(&tmp, path)?;

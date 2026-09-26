@@ -1,0 +1,12 @@
+GEL EVIDENCE LAB | RUST | OFFLINE | NO LLM
+Source lookup, not conversation. Timers exclude terminal rendering. No automatic saving.
+gel> ADDED id=1 bytes=169
+gel> ADDED id=2 bytes=139
+gel> FIND=HIT documents=2 matching_lines=1 shown=1 skipped_lines=0 search_ns=47389
+RESULT 1 doc=1 title=memory.txt bytes=0..16
+QUOTE RAM is volatile.
+gel> CITATION=PASS document_sha256=74584bd6e1ea9be5289970d946c9f9247cab335627990274981055fd0ff9e1d2 collection_sha256=5d2f2e31509a4a4d9da15261d2f1fc1d79e1beac397fa9174cf6905729cc4e9e; correspondence, not truth
+gel> FIND=UNKNOWN documents=2 matching_lines=0 shown=0 skipped_lines=0 search_ns=45666
+gel> SAVED revision=2 save_ns=12155075
+BUNDLE_SHA256=5d2f2e31509a4a4d9da15261d2f1fc1d79e1beac397fa9174cf6905729cc4e9e; retain independently
+gel> Closed. Only explicitly saved snapshots persist.

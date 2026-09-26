@@ -1,0 +1,11 @@
+add memory.txt
+add unicode.txt
+find ram is volatile
+proof 1
+find imaginary evidence
+save checkpoint.gelset
+exit
+load 5d2f2e31509a4a4d9da15261d2f1fc1d79e1beac397fa9174cf6905729cc4e9e checkpoint.gelset
+find ram is volatile
+proof 1
+exit
