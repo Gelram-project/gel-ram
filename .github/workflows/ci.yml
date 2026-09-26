@@ -11,36 +11,6 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  manifest-sync:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/review/public-core-media-ncrl-h1'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: true
-          ref: review/public-core-media-ncrl-h1
-      - name: Canonicalize complete source SHA-256 manifest
-        shell: bash
-        run: |
-          set -euo pipefail
-          expected="${RUNNER_TEMP}/SOURCE-SHA256SUMS.expected.txt"
-          git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do
-            sha256sum "$file"
-          done > "$expected"
-          if cmp -s SOURCE-SHA256SUMS.txt "$expected"; then
-            echo "SOURCE_MANIFEST_ALREADY_CANONICAL=YES"
-            exit 0
-          fi
-          cp "$expected" SOURCE-SHA256SUMS.txt
-          git config user.name "RR — GEL RAM Project"
-          git config user.email "324499237+gelramlicensing-wq@users.noreply.github.com"
-          git add SOURCE-SHA256SUMS.txt
-          git commit -m "Integrity: canonicalize publication source manifest"
-          git push origin HEAD:review/public-core-media-ncrl-h1
-
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
