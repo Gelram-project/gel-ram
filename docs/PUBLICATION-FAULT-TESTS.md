@@ -24,9 +24,26 @@ The complete destination can already exist. Inspect it using its trusted pin;
 do not blindly overwrite or delete it. Non-Unix production directory durability
 remains unproven.
 
-These are deterministic failures at the real publisher boundary, not a physically
-full disk, a kernel permission experiment or a power-cut test. Existing separate
-SIGKILL tests retain their narrower process-crash scope.
+These are deterministic failures at the real publisher boundary. Two further
+checks use the operating system itself rather than an injected error:
+
+- **Kernel permission denial (Unix test):** publishing into a 0500 directory
+  must fail with PermissionDenied, leave no destination or temporary file, and
+  keep the previous snapshot reloadable with its pin. The test first proves
+  that the kernel refuses an ordinary file creation there; run it unprivileged.
+- **Physically full filesystem (Linux CI):** `full_disk_publication` fills a
+  dedicated 1 MiB tmpfs until the kernel returns ENOSPC, then publishes. It
+  requires ENOSPC from the publisher, an unchanged directory listing (no
+  destination, no temporary file) and a reloadable previous snapshot. After the
+  filler is removed, the same publication must succeed and reload. The program
+  refuses a non-empty directory and never fills more than 64 MiB.
+
+```sh
+cargo run --locked --offline --release -p gel-source --example full_disk_publication -- EMPTY_SMALL_TMPFS
+```
+
+Neither is a power-cut test. Existing separate SIGKILL tests retain their
+narrower process-crash scope.
 The old measured publisher remains preserved as
 [bundle.measured.rs.txt](evidence-collection/bundle.measured.rs.txt).
 

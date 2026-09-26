@@ -48,6 +48,14 @@ jobs:
           fi
           cat "$ocean_run/evidence/COMPLETE"
           grep 'test result:' "$ocean_run/evidence/"*-test.log "$ocean_run/evidence/inventory-tests.log" "$ocean_run/evidence/storage-tests.log"
+      - name: Physically full filesystem publication (dedicated 1 MiB tmpfs)
+        shell: bash
+        run: |
+          set -euo pipefail
+          full="$(mktemp -d "${RUNNER_TEMP}/gel-full.XXXXXX")"
+          sudo mount -t tmpfs -o "size=1m,mode=0700,uid=$(id -u),gid=$(id -g)" tmpfs "$full"
+          trap 'sudo umount "$full"' EXIT
+          cargo run --locked --offline --release -p gel-source --example full_disk_publication -- "$full"
       - name: Generate scoped sanitized evidence (no artifact upload)
         run: cargo run --locked --offline -p xtask -- ci-evidence "${{ runner.temp }}/gel-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}"
 
