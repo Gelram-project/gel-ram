@@ -4,6 +4,12 @@ Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
 No permission to publish this candidate. No version/tag change. Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
+Local integration review also includes public documentation updates through
+`44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8` (PRs #6 and #7).
+Those updates are already public, not new Evidence Lab functionality. The
+unpublished additions below remain relative to the original implementation base.
+Start with [candidate quickcheck](docs/CANDIDATE-QUICKCHECK.md).
+
 ## New, not recycled from the base
 
 - Multi-document collection: independent IDs/titles/source hashes, bounded UTF-8.

@@ -1,5 +1,5 @@
 name: Feature proposal
-description: Propose a focused improvement to the public GEL RAM binary engine.
+description: Propose a focused improvement to the public GEL RAM repository.
 title: "proposal: "
 labels: [enhancement]
 body:
@@ -7,21 +7,21 @@ body:
     id: problem
     attributes:
       label: Problem
-      description: Describe the concrete binary-memory problem, not a general AI claim.
+      description: Describe the concrete public memory/readout, integrity, persistence, verification or reproducibility problem.
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
       label: Proposed change
-      description: Explain the API, format or algorithm change and its compatibility impact.
+      description: Explain the public API, format, algorithm, test or documentation change and its compatibility impact.
     validations:
       required: true
   - type: textarea
     id: evidence
     attributes:
       label: Exactness and measurement evidence
-      description: State which exactness invariants remain true and how performance would be measured.
+      description: State which invariants remain true and how correctness/performance would be tested. Include negative results where relevant.
     validations:
       required: true
   - type: checkboxes
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Scope confirmation
       options:
-        - label: This proposal stays within the public binary ORB engine scope described in README.md.
+        - label: This proposal stays within the public GEL RAM scope and does not request disclosure of unpublished private mechanisms.
           required: true
-        - label: I understand that a code contribution requires a completed private CLA before opening a pull request.
+        - label: I understand that a code contribution intended for merge requires the private CLA process described in CONTRIBUTING.md.
           required: true

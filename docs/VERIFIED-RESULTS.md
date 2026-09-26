@@ -1,85 +1,103 @@
-# GEL RAM — start with the evidence
+# GEL RAM — verified public evidence
 
-**Four equivalent Q8 views, one stored record. Exactness checks beside the timings.**
+This page is the compact evidence map for the current public repository.
+It separates **measured public results**, **public engineering checks** and
+**private/unpublished work**.
 
-GEL's public Rust core explores memory for an AI knowledge bank. These are
-bounded engineering results, not proof of a complete AI system or semantic
-understanding. No private encoder, dataset or model is needed for the public
-synthetic demonstrations below. The public license is
-[PolyForm Noncommercial 1.0.0](../LICENSE), not an unrestricted commercial license.
+GEL RAM-owned material is distributed under the
+[GEL RAM Noncommercial Reciprocal License 1.0](../LICENSE). Third-party material
+retains its own license terms.
 
-## What has actually been checked?
+## Current public capabilities
 
-| Capability | Recorded result | Evidence and boundary |
-| :--- | :--- | :--- |
-| Shared Q8 Quad readout | 8,355,840 / 8,355,840 view-score comparisons passed in 48 V1 invocations | [Full matrix](Q8-QUAD-RESULTS.md), [raw logs](evidence-q8-quad/README.md). Correlated synthetic comparisons, not independent knowledge questions. |
-| Q8 record material | 1152 bytes for one canonical record, versus 4608 bytes for four packed copies | [Contract](Q8-QUAD.md). Includes activity mask; excludes runtime tables and buffers. Four views of the same content, not four distinct memories. |
-| Historical Q8 scan timing | Configuration medians span 1.21–5.31× FourViews/Shared | [All 16 configurations, ranges and timings](Q8-QUAD-RESULTS.md). Complete implementation comparison, not universal speedup; Shared is not uniformly faster than ReferenceOne. |
-| Exact binary Top-K | Published comparison checks indices, scores and tie ordering | [Protocol and reproduction](TOPK-BENCHMARK.md), [recorded results](VALIDATION-v0.2.1.md). K=1 includes regressions; exact ranking is not semantic accuracy. |
-| Binary reconstruction | Tests compare restored ORB bytes to their input | [Integrity audit](DATA-INTEGRITY.md). This does not establish lossless conversion of arbitrary source knowledge into a 128-byte ORB. |
-| Q8 V2 worker refusal | A real Linux worker-start refusal completed with exact comparisons passing after the fix | [Before/after evidence and 16-run regression matrix](Q8-QUAD-VALIDATION.md). Not a replacement timing campaign or a guarantee of all failure recovery. |
+| Capability | Public evidence | Boundary |
+|---|---|---|
+| Source-bound exact readout | Exact UTF-8 quotations, byte ranges, source/catalog SHA-256 pins, corruption and stale-generation rejection | Integrity of approved bytes is not proof that the source statement is true |
+| GELSRC01 persistence | No-replace publication, full-file pin, fresh-process reopen, truncation/corruption rejection and competing-writer tests | Plaintext source bundle, not an encrypted vault |
+| GEL Live Lab | Offline Rust terminal integration for import, phrase lookup, readout, save/reopen and a separate synthetic Q8 panel | Not the private application and not a semantic chatbot |
+| Q8 coordinate views | Four reversible views of one 1152-byte public Q8 record with inverse/exactness checks | Four views are not four independent facts or 4× storage capacity |
+| Independent integrity audit | Byte/numeric/ranking audit reports exact recovery for the encoded representations it tests | Conversion loss and semantic quality are separate questions |
+| Ocean Scale R3 | Public 1M/10M synthetic numerical source/evidence archive with raw measurements and independent verifier | CPU/RAM full-scan baseline, not the private execution path |
+| Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only Ocean persistence/mapping research is not claimed portable |
 
-The Q8 timing campaign ran on **AMD Ryzen AI 9 HX 370, 12 cores / 24 logical
-CPUs, about 93.91 GiB RAM, Rust 1.85.0 release**, on 2026-09-08. It used 1 and
-24 workers on a shared host without exclusive isolation. These were CPU-only
-scan timings with prepared data, not end-to-end question answering. The
-historical binary Top-K campaign has a different protocol, documented separately.
+## Published Ocean full-scan baseline
 
-The public Q8 preview is on main, not in the existing v0.2.1 release tag.
-The current Q8 V2 runner differs from the preserved V1 timing runner.
+EXACT full scan → top10 → decision, 24 CPU workers:
 
-## Try it on your machine
+| ORB count | seed | N | p50 | p95 | p99 | max |
+|---|---:|---:|---:|---:|---:|---:|
+| 1M | 41119 | 100 | 72.427 ms | 81.018 ms | 82.859 ms | 90.949 ms |
+| 1M | 61141 | 100 | 71.962 ms | 79.860 ms | 80.576 ms | 88.227 ms |
+| 10M | 41119 | 100 | 615.428 ms | 684.888 ms | 710.313 ms | 734.085 ms |
+| 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |
 
-In a fresh checkout, install the pinned Rust toolchain and record the commit:
+These are intentionally published as a **conventional CPU/RAM baseline**.
+They do not represent the intended final GEL RAM execution model. The public
+Ocean guide also records a shorter 10M/24-worker campaign with p50 498.265 ms,
+and explicitly does not substitute that faster shorter run for the longer runs.
 
-```text
-git clone https://github.com/gelramlicensing-wq/gel-ram.git
-cd gel-ram
-rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
-git rev-parse HEAD
-cargo fetch --locked
-cargo run --locked --offline -p xtask -- verify
-```
+With only 100 observations per long run, the project does **not** claim stable
+p99.9, p99.99 or p99.999 tails from this dataset.
 
-Cloning, toolchain installation and fetching any locked dependencies need
-network access. After setup, the commands below run locally without a model
-or external data API. Run separately, not concurrently when comparing timings:
+Full provenance and limitations:
+[Ocean Scale](OCEAN-SCALE.md).
 
-```text
-cargo run --locked --offline --release -p gel-phase-quad --example quad_compare -- --orbs 8192 --rounds 9 --workers 1 --sparse 1 --policy active
-cargo run --locked --offline --release -p gel-reader --example topk_compare -- --orbs 8192
-```
+## Q8 evidence
 
-Expected checks: `GEL_VERIFY_ALL=PASS`, `Q8_QUAD_EXACT=PASS` and
-`TOPK_COMPARE_EXACT=PASS`. The Q8 demo also reports
-`SEMANTIC_ACCURACY=NOT_MEASURED`. Investigate failed checks before interpreting
-timings. One invocation is a reproduction probe, not a full performance campaign.
+The public Q8 record contains 1024 phase bytes plus a 128-byte activity mask:
+**1152 bytes per record**, excluding runtime tables and buffers.
 
-## Help test the claim, not the headline
+Historical R2 evidence recorded:
 
-We welcome reproductions on different CPUs, including slower cases and failures.
-[Open a reproduction report](https://github.com/gelramlicensing-wq/gel-ram/issues/new?template=reproduction.yml)
-with the commit, full command and output, CPU/OS, requested and effective worker
-counts, and other host load. Remove personal paths, usernames and secrets before
-uploading logs; no private knowledge bank or personal conversations are needed.
+- 8,355,840 V2 view-score comparisons passing;
+- 2,509,056 canonical-baseline comparisons passing;
+- complete raw timing/evidence retained in the repository;
+- no claim that the coordinate transforms create independent information.
 
-The next valuable evidence is a complete V2 timing matrix and a fair canonical
-single-view baseline, followed by independent hardware reproductions. See the
-[roadmap](ROADMAP.md). Neither has been marked complete by this presentation.
+See [Q8 R2 audit](Q8-CANDIDATE-R2-AUDIT.md) and
+[Q8 contract](Q8-QUAD.md).
 
-## Also on main: source-bound readout
+## Source and Live Lab evidence
 
-[PR #8](https://github.com/gelramlicensing-wq/gel-ram/pull/8) added a bounded
-source reader with 12 regression tests covering corrupted or inconsistent input,
-stale source generations and the 50,000-record boundary. It was merged on
-2026-09-11 and is **an unreleased preview on main**, not part of the v0.2.1 tag.
-Its [scoped review](https://github.com/gelramlicensing-wq/gel-ram/blob/384679bc383793e228cbf02045ed656b5b796fed/docs/SOURCE-REVIEW.md)
-documents the audit and its limits. Consult the PR for current status.
+The current public integration includes regression coverage for:
 
-CI reports Linux verification and macOS/Windows compilation separately.
-Compilation is not runtime testing on those operating systems. Integrity
-checks establish correspondence to trusted source bytes, not their truth.
+- exact source pins and byte ranges;
+- composed/decomposed Unicode and Greek sigma handling;
+- CR, LF and CRLF boundaries;
+- overlong lines reported as incomplete rather than false absence;
+- corruption and truncation;
+- no-replace persistence;
+- competing writers;
+- fresh-process reopen;
+- terminal-control escaping.
 
-Private multimedia, native inference and conversational research are not
-included here. This page adds no implementation details beyond existing public
-documentation and makes no new performance or semantic-accuracy claim.
+See [Document Readout](DOCUMENT-READOUT.md),
+[Source Builder](SOURCE-BUILDER.md) and [Live Lab](LIVE-LAB.md).
+
+## What is intentionally not a public claim
+
+The public repository does not claim that it proves:
+
+- private-system architecture or performance;
+- unrestricted semantic AI accuracy;
+- 30M queries/s or any conversion from internal update-rate measurements to queries/s;
+- stable extreme-tail latency without sufficient observations;
+- physical memory-side compute or physical DRAM-refresh synchronization;
+- production power-loss durability;
+- fourfold independent capacity from four reversible views.
+
+The project owner reports materially better private experimental measurements
+than the public full-scan baseline. The mechanism and exact performance claims
+remain intentionally unpublished until the owner chooses to provide a
+reproducible public evidence package.
+
+## Reproduce instead of trusting the summary
+
+Start with [TRY-IT](TRY-IT.md). For the larger research snapshot, use
+[Ocean Scale](OCEAN-SCALE.md). When reporting results, include the exact commit,
+commands, hardware, Rust version, complete output and failures.
+
+Open an independent reproduction report:
+https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml
+
+A slower result is useful evidence too.
