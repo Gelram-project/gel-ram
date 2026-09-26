@@ -28,6 +28,8 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
 This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
 **Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
+See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
+for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
 
 The tagged `v0.3.0` release remains an immutable historical release point.
 Current-main capabilities and candidate checks are not automatically part of

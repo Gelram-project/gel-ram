@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 mod ci_evidence;
+mod claims;
 mod license_metadata;
 mod measured_sources;
 #[cfg(test)]
@@ -744,6 +745,7 @@ fn verify() -> Result<(), String> {
     )?;
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
+    claims::check(workspace_root()?)?;
     run(
         "cargo",
         &["test", "--locked", "--offline", "--workspace", "--doc"],
@@ -875,6 +877,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
+        Some("claims") => claims::check(workspace_root()?),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("rust-only") => rust_only(),
