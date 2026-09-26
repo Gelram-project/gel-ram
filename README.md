@@ -44,7 +44,7 @@ before interpreting Q labels.
 
 ## What GEL RAM is
 
-GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles, integrity gates, and large synthetic Ocean measurements.
+GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles and integrity gates. Earlier large synthetic Ocean measurements remain documented as historical results.
 
 The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
 
@@ -57,7 +57,7 @@ The public repository is **not the complete private research system**. Some expe
 | GELSRC01 no-replace save + independently pinned reopen | **AVAILABLE** |
 | Offline GEL Live Lab | **AVAILABLE** |
 | Synthetic Q8 reversible coordinate views | **AVAILABLE** |
-| Ocean Scale 1M / 10M evidence | **AVAILABLE** |
+| Ocean Scale 1M / 10M measurements | **HISTORICAL** (archive withdrawn in 0.4.0) |
 | Independent byte / numeric / ranking checks | **AVAILABLE** |
 | Linux / macOS / Windows verification | **AVAILABLE** |
 | Private next-generation RAM execution path | **NOT PUBLICLY DESCRIBED** |
@@ -65,7 +65,7 @@ The public repository is **not the complete private research system**. Some expe
 
 ## Important performance distinction
 
-The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are useful as a reproducible comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
+The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
 Separate [author-reported GEL component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)
 cover compact-sketch search and phase evolution. Their tasks, sizes and timing
@@ -87,7 +87,7 @@ These numbers deliberately expose the cost of the public full-scan path. They ar
 
 Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
 
-[Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
+[Ocean Scale recorded measurements and limits](docs/OCEAN-SCALE.md)
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
@@ -127,19 +127,14 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-## Reproducible Ocean Scale research bundle
+## Ocean Scale measurements (historical)
 
-[Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
-or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
-It includes the experimental reader, incremental snapshot/journal recovery,
-sealed-copy mapping, vendored dependencies and a verifier that runs **111 tests**.
-
-On the measured Ryzen AI 9 HX 370 host, full **10M-record scan + top10 + decision**
+On the measured Ryzen AI 9 HX 370 host, a full **10M-record scan + top10 + decision**
 had EXACT p50 **615–705 ms** in two longer 24-worker runs (100 observations each).
-All raw runs, including slower ones, are included. This is synthetic numerical
-readout, **not semantic AI accuracy** or microsecond search across the Ocean.
-The research code is separate from the stable public workspace; it does not
-replace the v0.3.0 reader or claim a new tagged release.
+This is synthetic numerical readout, **not semantic AI accuracy** or microsecond
+search across the Ocean. The research archive behind these numbers is not part
+of the public tree from 0.4.0 onward; the results remain as historical
+author-reported measurements ([Ocean Scale](docs/OCEAN-SCALE.md)).
 
 ![GEL public readout: one carrier, four equivalent views and a separate source integrity gate](docs/images/public-readout.svg)
 

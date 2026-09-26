@@ -53,6 +53,13 @@ this change alone alters no source-bundle, collection or Q8 wire format.
   [transcripts](media/TRANSCRIPTS-PL-EN.md) and the A01–A24 review work list in
   the [roadmap](docs/ROADMAP.md).
 
+## Withdrawn from main
+
+The Ocean Scale research archive, which was on main from 19 September and was
+never part of a tagged release, is not in this release. Its recorded 1M/10M
+full-scan results remain as historical measurements in
+[Ocean Scale](docs/OCEAN-SCALE.md); they cannot be re-run from this tree.
+
 ## Verify this release yourself
 
 ```text

@@ -22,7 +22,7 @@ LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
 LINUX_WORKSPACE_TESTS_AT_71142A2=305_PASS
 CURRENT_TEST_COUNTS=SEE_PER_PLATFORM_CI_EVIDENCE_REPORT
-BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
+OCEAN_RESEARCH_ARCHIVE=WITHDRAWN_IN_0_4_0
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
 VERSION_LINE=0.4.0
@@ -85,12 +85,10 @@ not from a fixed number here.
 
 ## Previously published base
 
-The owner additionally authorized the bounded Ocean Scale source/evidence
-snapshot described in [the Ocean guide](docs/OCEAN-SCALE.md). Its exact archive
-pin is checked by the repository gate and Linux CI before extraction.
-This is an experimental research addition, not a v0.4.0 release or replacement
-of the v0.3.0 stable workspace. Archive-internal pre-publication status remains
-historical; this document records the subsequent owner authorization.
+The Ocean Scale source/evidence archive that was on main from 2026-09-19 is
+withdrawn from the public tree in the 0.4.0 version line by the owner's
+decision; it is not part of any tagged release. Its recorded 1M/10M results
+remain documented as historical measurements in [the Ocean guide](docs/OCEAN-SCALE.md).
 
 1. Rust public core, multipart source readout, integrity and reproduction tools, pinned source fixtures and dependency/third-party inventory.
 2. GEL RAM NCRL 1.0 as the operative root public license for GEL RAM-owned material, plus the commercial licensing path and CLA 2.0.
@@ -100,9 +98,8 @@ historical; this document records the subsequent owner authorization.
 ## Excluded private scope
 
 The private application, speaker, private banks of knowledge, private encoder
-and private Ocean/P2P application internals remain excluded. Only the selected
-numerical reader, persistence/mapping and test modules described in the Ocean
-guide are additionally authorized. User conversations, signed agreements, keys,
+and private Ocean/P2P application internals remain excluded, and no Ocean
+research module is part of the current tree. User conversations, signed agreements, keys,
 personal identity records and private local diagnostic logs are not included.
 
 The two private-preview films are bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, P2P operation or physical DRAM-refresh synchronization.

@@ -35,14 +35,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
     ),
     (
-        "research/ocean-scale-r3.tar.gz",
-        "b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48",
-    ),
-    (
-        "research/ocean-scale-r2.tar.gz",
-        "f3f5bdcc7a9177b76f14d0a0acc90521bd6cba9893587807a1bbd2d8352b8fde",
-    ),
-    (
         "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
         "3b568bebdef34d34931970ce1f86ae0c521dba9e9ef6f7d050c5363357b63064",
     ),

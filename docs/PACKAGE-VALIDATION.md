@@ -36,7 +36,7 @@ failure logs remain in the operator's local audit record. Gates were not disable
 
 Testing uses offline Cargo and a network-isolated Linux namespace. The root
 source package references dependencies; a new machine needs the toolchain and
-cached/fetched dependencies first. The embedded Ocean archives retain their
+cached/fetched dependencies first. The Ocean archives embedded at that time retained their
 own vendored dependencies. Runtime demo needs no LLM, service or internet.
 
 Publication flags are set only from the owner's authorization, never from

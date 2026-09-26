@@ -17,13 +17,13 @@ retains its own license terms.
 | GEL Live Lab | Offline Rust terminal integration for import, phrase lookup, readout, save/reopen and a separate synthetic Q8 panel | Not the private application and not a semantic chatbot |
 | Q8 coordinate views | Four reversible views of one 1152-byte public Q8 record with inverse/exactness checks | Four views are not four independent facts or 4× storage capacity |
 | Independent integrity audit | Byte/numeric/ranking audit reports exact recovery for the encoded representations it tests | Conversion loss and semantic quality are separate questions |
-| Ocean Scale R3 | Public 1M/10M synthetic numerical source/evidence archive with raw measurements and independent verifier | CPU/RAM full-scan baseline, not the private execution path |
-| Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only Ocean persistence/mapping research is not claimed portable |
+| Ocean Scale R3 (historical) | Recorded 1M/10M synthetic full-scan measurements; the research archive was withdrawn from the tree in 0.4.0, so they cannot be re-run from it | CPU/RAM full-scan baseline, not the private execution path |
+| Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only persistence tests are declared per platform |
 | Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or private vault |
 | Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec; timing not measured |
 | Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
 
-## Published Ocean full-scan baseline
+## Recorded Ocean full-scan baseline (historical)
 
 EXACT full scan → top10 → decision, 24 CPU workers:
 
@@ -36,7 +36,7 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 
 These are intentionally published as a **conventional CPU/RAM baseline**.
 They do not represent the intended final GEL RAM execution model. The public
-Ocean guide also records a shorter 10M/24-worker campaign with p50 498.265 ms,
+Ocean record also lists a shorter 10M/24-worker campaign with p50 498.265 ms,
 and explicitly does not substitute that faster shorter run for the longer runs.
 
 With only 100 observations per long run, the project does **not** claim stable
@@ -97,7 +97,7 @@ public evidence package exists.
 
 ## Reproduce instead of trusting the summary
 
-Start with [TRY-IT](TRY-IT.md). For the larger research snapshot, use
+Start with [TRY-IT](TRY-IT.md). The recorded Ocean results are in
 [Ocean Scale](OCEAN-SCALE.md). When reporting results, include the exact commit,
 commands, hardware, Rust version, complete output and failures.
 

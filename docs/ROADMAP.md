@@ -7,8 +7,8 @@ private performance work are intentionally outside this document.
 ## Version boundary
 - The 0.4.0 version line contains everything below; tagged releases are listed on
   the Releases page. Tagged `v0.3.0` remains an earlier release.
-- Ocean Scale R3 is on `main`: numerical 1M/10M evidence, bounded offline
-  verification and Linux-only research persistence/mapping. See [scope](OCEAN-SCALE.md).
+- Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
+  its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
   exact source quotations, Unicode/CR regressions and runtime CI on three OSes.
 - [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
@@ -27,8 +27,8 @@ The following capabilities are present on public `main`:
 - Offline GEL Live Lab for caller-selected UTF-8 documents.
 - Synthetic Q8 records with four reversible coordinate views and exact inverse checks.
 - Independent byte/numeric/ranking audit.
-- Ocean Scale R3 with reproducible 1M/10M synthetic numerical evidence,
-  persistence/replay research and raw measurements.
+- Recorded Ocean Scale 1M/10M synthetic full-scan measurements (historical;
+  the research archive was withdrawn in 0.4.0).
 - Linux verification plus Windows/macOS workspace/runtime checks.
 - Evidence Lab (0.4.0-rc.1, PR #9): multi-document collection, exact citations,
   stale-result rejection, GELSET01 snapshots and fresh-process reopen; native
@@ -44,7 +44,7 @@ The following capabilities are present on public `main`:
    directory-sync checks remain platform-specific, not portable guarantees.
 3. Provide one-command local reporting with raw output, resource/timing scope and
    failures retained. Never infer robust performance from a single UI timing.
-4. Reproduce numeric Q8/Ocean evidence on an independent second host, including
+4. Reproduce numeric Q8 evidence on an independent second host, including
    regressions and complete memory costs. Keep addressed readout and full scan
    distinct; coordinate views are not independent information.
 5. Evaluate knowledge retrieval only after defining a redistributable corpus,
@@ -174,7 +174,7 @@ this baseline. Any such claim requires an exact public reproduction package.
 
 ## Next public acceptance gates
 
-1. **Independent reproduction on a second host.** Re-run the public Ocean/Q8 and
+1. **Independent reproduction on a second host.** Re-run the public Q8 and
    source-integrity evidence on different hardware. Publish slow cases and
    failures, not only best runs.
 2. **Larger statistical campaigns.** Where performance claims need tail latency,
@@ -196,14 +196,13 @@ this baseline. Any such claim requires an exact public reproduction package.
 
 The most useful independent work is currently:
 
-- Ocean Scale R3 on a second Linux host;
 - public workspace verification on additional CPU families;
 - corruption/restart/concurrency edge cases;
 - Unicode/source-boundary cases for the document reader;
 - complete memory-cost measurements;
 - slower or negative performance results that help identify the real limits.
 
-Start with [TRY-IT](TRY-IT.md), [Ocean Scale](OCEAN-SCALE.md) and
+Start with [TRY-IT](TRY-IT.md) and
 [VERIFIED RESULTS](VERIFIED-RESULTS.md). A benchmark report does not require a
 code contribution or a CLA; code intended for merge follows [CONTRIBUTING](../CONTRIBUTING.md).
 
