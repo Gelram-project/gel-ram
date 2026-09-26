@@ -15,6 +15,16 @@ fn safe_test(line: &str) -> Option<&str> {
     Some(line)
 }
 
+fn accepted(id: &str, exited_successfully: bool, text: &str, count: usize) -> bool {
+    exited_successfully
+        && match id {
+            "workspace-debug" => count > 0,
+            "saved-r1-release" => text.lines().any(|l| l == "COLLECTION_RECHECK=PASS"),
+            "doctests-debug" => text.contains("test result: ok."),
+            _ => false,
+        }
+}
+
 fn git(root: &Path, args: &[&str]) -> Result<String, String> {
     let out = Command::new("git")
         .args(args)
@@ -144,12 +154,7 @@ pub fn report(args: &[String]) -> Result<(), String> {
             tests.push_str(&format!("{id}\t{line}\n"));
             count += 1;
         }
-        let accepted = out.status.success()
-            && match *id {
-                "workspace-debug" => count > 0,
-                "saved-r1-release" => text.lines().any(|l| l == "COLLECTION_RECHECK=PASS"),
-                _ => text.contains("test result: ok."),
-            };
+        let accepted = accepted(id, out.status.success(), &text, count);
         success &= accepted;
         report.push_str(&format!("CASE={id} accepted={accepted} exit_code={:?} named_test_executions={count} stdout_bytes={} stderr_bytes={}\n", out.status.code(), out.stdout.len(), out.stderr.len()));
         println!("CI_EVIDENCE_CASE={id} accepted={accepted}");
@@ -177,6 +182,29 @@ pub fn report(args: &[String]) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn printed_success_never_overrides_exit_failure_or_missing_evidence() {
+        let marker = "COLLECTION_RECHECK=PASS\ntest result: ok.";
+        for id in ["workspace-debug", "doctests-debug", "saved-r1-release"] {
+            assert!(!accepted(id, false, marker, 10));
+        }
+        assert!(!accepted("workspace-debug", true, marker, 0));
+        assert!(!accepted(
+            "saved-r1-release",
+            true,
+            "prefix COLLECTION_RECHECK=PASS",
+            0
+        ));
+        assert!(!accepted("unrecognised", true, marker, 10));
+        // Neither an early nor a middle failure can be overwritten by the last PASS.
+        for sequence in [[false, true, true], [true, false, true]] {
+            let mut complete = true;
+            for passed in sequence {
+                complete &= passed;
+            }
+            assert!(!complete);
+        }
+    }
     #[test]
     fn projection_accepts_only_test_identifiers_and_known_statuses() {
         assert!(safe_test("test module::check_1 ... ok").is_some());
