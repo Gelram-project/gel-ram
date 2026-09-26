@@ -52,3 +52,34 @@ reading proc also have overhead. These are not allocation counts, copied-byte
 counts, or a precise isolated mutation peak. A zero HWM increase does not mean
 zero allocation. The single operation latency is diagnostic, not a percentile.
 No unsafe allocator hook is added; workspace safety policy is unchanged.
+
+## Optional external allocation profiling
+
+Build a separate release binary with debug symbols and without symbol stripping.
+The memory mode contains named, non-inlined profile_current_change and
+profile_historical_change boundaries around the mutation only. External stack
+profiling can therefore exclude bank construction and the later oracle without
+linking a profiler into GEL or changing the workspace's unsafe-code policy.
+
+```sh
+CARGO_TARGET_DIR=../profile-target CARGO_PROFILE_RELEASE_DEBUG=1 CARGO_PROFILE_RELEASE_STRIP=none cargo build --locked --offline --release -p gel-source --example mutation_compare
+heaptrack --record-only -o ../new-stream-profile ../profile-target/release/examples/mutation_compare --memory stream 256 replace
+heaptrack_print ../new-stream-profile.zst --filter-bt-function profile_current_change -F ../new-stream-stacks.txt
+```
+
+Use fresh output names. Repeat for historical_vec with the historical boundary;
+preserve the trace, executable/source hashes, tool version and result roots.
+Compression suffix depends on the installed profiler. This is an optional Linux
+diagnostic, not a new build dependency or a required service.
+
+For heaptrack 1.5, scope counts to the exported filtered allocation stacks.
+Its final report totals and allocation histogram can still describe the whole
+process despite the backtrace filter; do not label them mutation-only numbers.
+Check a known allocating control before interpreting an empty filtered stack.
+Allocation calls, requested bytes, memory-copy volume, heap peak and RSS are
+different metrics. This procedure does not measure memory-copy volume.
+
+Profiling changes execution time and process memory. Never mix its latency or
+RSS readings with uninstrumented benchmark results. Raw symbolized profiles can
+contain local paths: review/redact before any publication. No trace or profiler
+binary is added to this repository by these instructions.

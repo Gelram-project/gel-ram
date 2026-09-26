@@ -181,6 +181,28 @@ fn memory_sample() -> Result<(u64, u64), String> {
     ))
 }
 
+// Named boundaries separate the mutation from construction/oracle in external
+// allocation-profiler stacks. No unsafe allocator hook or profiling dependency.
+macro_rules! profile_boundary {
+    ($name:ident, $bank:ty) => {
+        #[inline(never)]
+        fn $name(bank: &mut $bank, operation: &str, replacement: &str) -> Result<(), String> {
+            match operation {
+                "add" => {
+                    black_box(bank.add("Extra", replacement)?);
+                }
+                "replace" => bank.replace(1, replacement)?,
+                "remove" => bank.remove(1)?,
+                _ => return Err("invalid profiling operation".into()),
+            }
+            black_box(bank.root());
+            Ok(())
+        }
+    };
+}
+profile_boundary!(profile_current_change, Collection);
+profile_boundary!(profile_historical_change, historical::Collection);
+
 // One fresh process per variant/size/operation. No simultaneous reference bank.
 // VmHWM includes startup/building the bank and is NOT an allocation counter.
 fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
@@ -196,18 +218,14 @@ fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
     let text = "Synthetic source data. Zażółć gęślą jaźń.\n".repeat(400);
     let replacement = format!("Revised synthetic source.\n{text}");
     macro_rules! measure {
-        ($bank:expr) => {{
+        ($bank:expr, $change:ident) => {{
             let mut bank = $bank;
             for i in 0..n {
                 bank.add(&format!("Document {i}"), &text)?;
             }
             let before = memory_sample()?;
             let start = Instant::now();
-            match operation {
-                "add" => { black_box(bank.add("Extra", &replacement)?); }
-                "replace" => bank.replace(1, &replacement)?,
-                _ => bank.remove(1)?,
-            }
+            $change(&mut bank, operation, &replacement)?;
             let elapsed = start.elapsed().as_nanos();
             let after = memory_sample()?;
             // Serialization/oracle is deliberately AFTER the memory samples.
@@ -225,9 +243,9 @@ fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
         }};
     }
     if variant == "stream" {
-        measure!(Collection::new());
+        measure!(Collection::new(), profile_current_change);
     } else {
-        measure!(historical::Collection::new());
+        measure!(historical::Collection::new(), profile_historical_change);
     }
     Ok(())
 }
