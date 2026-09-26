@@ -1,7 +1,9 @@
 # GEL RAM Evidence Lab — local review candidate
 
-2026-09-19. Preparation ONLY, based on published commit
-`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`. The owner explicitly withheld
+Updated 2026-09-26. Preparation ONLY. Originally prepared from published commit
+`8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`; now integrated locally with public
+`main` at `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8`.
+The owner explicitly withheld
 publication of this new candidate. No push, PR, tag or release is authorized.
 Public pseudonym: **RR — GEL RAM Project**.
 
