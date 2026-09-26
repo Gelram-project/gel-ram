@@ -17,7 +17,8 @@ SNAPSHOT_KIND=PUBLIC_INTEGRATION_CANDIDATE
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
-CURRENT_LINUX_WORKSPACE_TESTS=305_PASS
+LINUX_WORKSPACE_TESTS_AT_71142A2=305_PASS
+CURRENT_TEST_COUNTS=SEE_PER_PLATFORM_CI_EVIDENCE_REPORT
 BASELINE_OCEAN_ARCHIVE_TESTS=111_PASS
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
@@ -58,6 +59,21 @@ Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
+
+## Review repairs in PR #10 (not merged, not released)
+
+An external review of `71142a2` listed 24 points. PR #10 addresses them in
+small commits, each with local verification and platform CI. Main additions:
+fail-closed film recorder with a lint gate that proves it can fail; public
+F32/F16/Q1–Q16 [precision matrix](docs/PRECISION-MATRIX.md); per-platform test
+counts and declared platform exclusions in the [CI evidence report](docs/CI-EVIDENCE.md);
+publication tested against real permission denial and a full device
+([fault matrix](docs/PUBLICATION-FAULT-TESTS.md)); raw timing order and
+small-sample percentile labels ([measurement protocol](docs/MEASUREMENT-PROTOCOL.md));
+corrected film timelines. Human film review, independent reproductions and
+the private-path research points remain open; see the [claim registry](docs/CLAIMS.md).
+Test counts change with each commit; read them from the per-platform report,
+not from a fixed number here.
 
 ## Previously published base
 

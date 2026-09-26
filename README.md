@@ -78,13 +78,15 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 
 These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
 
+Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
+
 [Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
-[![Watch the 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
+[![Private application preview: 90-second native GEL RAM demonstration](media/terminal-preview.png)](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)
 
-▶ **[Watch the 90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4)** · [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film guide and evidence limits](media/FILMS-GUIDE.md) · [Publication status](CANDIDATE-STATUS.md)
+▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
 
 The films preview a separate private native Rust application. They show bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms.
 

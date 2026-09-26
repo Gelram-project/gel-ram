@@ -27,5 +27,6 @@ scenariusze rozmowy. Ich silnika ani banku nie ma w publicznym repozytorium.
 Nie porównujemy czasów tych filmów z pełnym skanem milionów ORB.
 
 [Transkrypcje opisowe PL/EN](TRANSCRIPTS-PL-EN.md) zawierają polecenia,
-odpowiedzi i orientacyjne momenty filmu. Pełna kontrola wizualna wszystkich
-klatek oraz czytelności na małym ekranie pozostaje otwarta.
+odpowiedzi i momenty zdarzeń. Wszystkie wizualnie różne klatki obejrzał
+recenzent AI; przegląd przez człowieka pozostaje otwarty. Na ekranie 640 px
+hashe są nieczytelne — ich wartości są w transkrypcjach.
