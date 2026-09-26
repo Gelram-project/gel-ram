@@ -6,14 +6,16 @@ Names used in different experiments do not imply interchangeable file formats.
 |---|---|---|
 | Source bundles / collections | Exact UTF-8 bytes, pinned reopen, source offsets | Encryption, semantic truth, AI comprehension |
 | Structural F2 codec | Exact reconstruction using binary predictors and residuals | F16 numeric precision or universal 4× compression |
-| Affine minmax32 example | Q1, Q2, Q4, Q8 numeric reference, 32-value blocks, 8-byte endpoint metadata | Q1–Q16 coverage or the private Q2.5 mechanism |
+| Affine minmax32 example (historical) | Q1, Q2, Q4, Q8 timed campaign, 32-value blocks, 8-byte endpoint metadata; pinned source | Widths other than 1/2/4/8 or the private Q2.5 mechanism |
+| Precision matrix GPMX v1 | F32, IEEE F16 and affine Q1–Q16 with versioned container, oracles and file roundtrip; see [PRECISION-MATRIX.md](PRECISION-MATRIX.md) | Private GEL codec, Q2.5, speed or lossless quantization |
 | F16 reference in data_integrity | Finite half-value roundtrips and rounding-boundary checks | Lossless conversion of arbitrary F32 |
 | Symmetric Q8 numeric reference | Separate bounded-error experiment | Same format as phase-Q8 or affine minmax32 |
 | Phase Q8 Quad | Four reversible coordinate views of one public record | Four independent datasets at unchanged capacity |
 
-No complete public Q1–Q16/Q2.5 codec matrix is claimed. Unsupported formats
-remain unsupported; adding a label or a passing transport test does not implement
-a codec. Private formats require a separate disclosure decision.
+The public reference matrix covers F32, F16 and affine Q1–Q16 only. Q2.5 and
+other private formats are not publicly implemented and require a separate
+disclosure decision. Unsupported formats remain unsupported; adding a label or
+a passing transport test does not implement a codec.
 
 Before adding a format, specify byte order, bit packing, padding, metadata,
 rounding, exceptional values, limits, version and error budget. Require an
@@ -32,8 +34,9 @@ A successful byte roundtrip does not answer the other three. UNKNOWN is a
 boundary response, not automatic semantic success. The authored document
 assessment is not a universal-language test.
 
-The affine example's small_signal_outliers case explicitly exposes small-signal
-loss even at Q8. Keep that negative result when evaluating adaptive precision.
+The affine small_signal_outliers case explicitly exposes small-signal loss at
+Q8 and, in the precision matrix, at every width through Q16 while F16 keeps it.
+Keep that negative result when evaluating adaptive precision.
 An adaptation succeeds only when it meets the declared task error budget, not
 merely when its payload is smaller.
 

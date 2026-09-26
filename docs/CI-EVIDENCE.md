@@ -46,7 +46,7 @@ not author authentication or proof of truth. Failure prevents COMPLETE.
 
 ## Native command sequencing
 
-The portable workflow runs its five release demonstrations through the Rust
+The portable workflow runs its six release demonstrations through the Rust
 command below. Each native ExitStatus is checked before starting the next
 command; neither PowerShell's final exit status nor a printed PASS substitutes
 for that check. The same process runner is used by ordinary xtask commands.

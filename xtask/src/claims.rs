@@ -72,10 +72,10 @@ const CLAIMS: &[Claim] = &[
         id: "numeric-loss",
         dimension: "numeric",
         scope: "public reference quantizers only",
-        input: "quantization_matrix and small_signal_outliers",
+        input: "quantization_matrix, precision_matrix Q1-Q16/F16 and small_signal_outliers",
         expected: "separate numeric error, metadata and loss report",
         counterexample: "byte roundtrip described as lossless F32 quantization",
-        source: "docs/CODEC-SCOPE.md",
+        source: "docs/PRECISION-MATRIX.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {

@@ -703,6 +703,7 @@ fn runtime_examples() -> Result<(), String> {
             "--demo",
         ],
         &["-p", "gel-cli", "--example", "quantization_matrix"],
+        &["-p", "gel-cli", "--example", "precision_matrix"],
         &["-p", "gel-source", "--example", "collection_review"],
     ];
     let mut commands = Vec::new();
