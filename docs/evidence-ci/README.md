@@ -19,6 +19,7 @@ cargo run --locked --offline -p xtask -- platform-diff docs/evidence-ci/2b29236/
 | Commit | Push run | Linux / macOS workspace | Windows workspace | Core release (Linux/macOS, Windows) | Doctests | platform-diff |
 |---|---|---:|---:|---|---:|---|
 | [2b29236](2b29236/) | 36251557201 | 365 / 365 | 358 (7 declared Unix-only) | 163, 158 | 2 | PASS |
+| [fba6c43](fba6c43/) | 36257696669 | 366 / 366 | 359 (7 declared Unix-only) | 163, 158 | 2 | PASS (strict: commit and hosts checked) |
 
 A checksum identifies bytes; it does not authenticate the CI system or prove
 that the tests cover every property. The report scope is stated in

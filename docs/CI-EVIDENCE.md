@@ -20,7 +20,8 @@ Files:
   plus `unlisted_executions` (executions whose names are not projected, such as
   path-bearing doctests). Then one `PLATFORM_EXCLUSION` line per whole test that
   is compiled only on Unix and one `PARTIAL_PLATFORM_BRANCH` line per test with
-  an extra platform-only assertion block.
+  an extra platform-only assertion block; its branch field says whether that
+  block was active on the recording platform (active or inactive).
 - TESTS.txt (generated): strict ASCII test identifiers and their standard statuses.
 - SHA256SUMS.txt (generated): checksums of those two files.
 - `COMPLETE`: emitted only after all commands and evidence writes succeed.
