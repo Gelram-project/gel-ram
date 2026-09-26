@@ -32,6 +32,32 @@ fn recorder_existing_log_missing_executable_and_eof_fail_closed() {
     fs::write(&empty_source, "fn main() {}\n").unwrap();
     let empty_child = root.join(format!("empty{}", std::env::consts::EXE_SUFFIX));
     compile(&empty_source, &empty_child);
+    let prompt_source = root.join("prompt_then_exit.rs");
+    fs::write(
+        &prompt_source,
+        "use std::io::Write; fn main() { print!(\"gel> \" ); std::io::stdout().flush().unwrap(); }\n",
+    ).unwrap();
+    let prompt_child = root.join(format!("prompt_then_exit{}", std::env::consts::EXE_SUFFIX));
+    compile(&prompt_source, &prompt_child);
+    let log_failure_source = root.join("log_failure.rs");
+    fs::write(
+        &log_failure_source,
+        r#"
+use std::io::Write;
+fn main() {
+    std::fs::remove_file("commands.txt").unwrap();
+    std::fs::create_dir("commands.txt").unwrap();
+    print!("gel> "); std::io::stdout().flush().unwrap();
+    let mut line = String::new();
+    std::io::stdin().read_line(&mut line).unwrap();
+    println!("ADDED id=1"); std::io::stdout().flush().unwrap();
+    std::thread::sleep(std::time::Duration::from_secs(30));
+}
+"#,
+    )
+    .unwrap();
+    let log_failure_child = root.join(format!("log_failure{}", std::env::consts::EXE_SUFFIX));
+    compile(&log_failure_source, &log_failure_child);
     for (case, diagnostic) in [
         (
             "existing",
@@ -39,16 +65,19 @@ fn recorder_existing_log_missing_executable_and_eof_fail_closed() {
         ),
         ("missing", "RECORDING_FAILED: spawn:"),
         ("eof", "RECORDING_FAILED: EOF or timeout before marker"),
+        ("closed_stdin", "RECORDING_FAILED: command I/O:"),
+        ("command_log", "RECORDING_FAILED: command log I/O:"),
     ] {
         let dir = root.join(case);
         fs::create_dir(&dir).unwrap();
         if case == "existing" {
             fs::write(dir.join("commands.txt"), b"KEEP ORIGINAL\n").unwrap();
         }
-        let binary = if case == "eof" {
-            empty_child.clone()
-        } else {
-            root.join("nonexistent")
+        let binary = match case {
+            "eof" => empty_child.clone(),
+            "closed_stdin" => prompt_child.clone(),
+            "command_log" => log_failure_child.clone(),
+            _ => root.join("nonexistent"),
         };
         let output = Command::new(&recorder)
             .arg(binary)

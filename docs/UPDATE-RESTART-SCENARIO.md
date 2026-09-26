@@ -65,8 +65,13 @@ No answers are substituted, and pauses are outside application timers.
 
 `cargo test --locked --offline -p xtask --test recorder_process` compiles and
 runs the actual Rust recorder. It checks refusal of an existing command log,
-a missing application executable, and an application exiting before its first
-prompt. All must fail without a completion marker or a panic; the existing log
+a missing application executable, an application exiting before its first
+prompt, one exiting just after that prompt (closed stdin), and a command-log
+path replaced with a directory in the disposable test environment.
+All must fail without a completion marker or a panic; the existing log
 must remain byte-identical. Spawn failure and early EOF retain a failed process
-status log. This complements stream-fragment and I/O injection tests; it does
+status log. Command transmission and command-log write/sync failures terminate
+and reap the subprocess through the same failure path. Command-log sync is
+outside application operation timers; it is not benchmark work.
+This complements stream-fragment and I/O injection tests; it does
 not establish coverage of every recorder error path.

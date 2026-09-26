@@ -134,16 +134,26 @@ impl App {
         }
         println!();
         std::io::stdout().flush().unwrap();
-        let stdin = self.input.as_mut().unwrap();
-        writeln!(stdin, "{cmd}").unwrap();
-        stdin.flush().unwrap();
+        let sent = (|| -> std::io::Result<()> {
+            let stdin = self.input.as_mut().ok_or_else(|| {
+                std::io::Error::other("subprocess stdin unavailable")
+            })?;
+            writeln!(stdin, "{cmd}")?;
+            stdin.flush()
+        })();
+        if let Err(error) = sent {
+            self.fail(&format!("command I/O: {error}"));
+        }
         self.wait_for(from, marker);
         pause(hold);
-        let mut events = fs::OpenOptions::new()
-            .append(true)
-            .open("commands.txt")
-            .unwrap();
-        writeln!(events, "{cmd}").unwrap();
+        let logged = (|| -> std::io::Result<()> {
+            let mut events = fs::OpenOptions::new().append(true).open("commands.txt")?;
+            writeln!(events, "{cmd}")?;
+            events.sync_all()
+        })();
+        if let Err(error) = logged {
+            self.fail(&format!("command log I/O: {error}"));
+        }
     }
     fn finish(mut self) {
         self.command("exit", "Closed.", 1000);
