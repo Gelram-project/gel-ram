@@ -149,7 +149,9 @@ impl App {
                 }
                 break;
             }
-            assert!(start.elapsed() < Duration::from_secs(5));
+            if start.elapsed() >= Duration::from_secs(5) {
+                self.fail("subprocess exit timeout");
+            }
             pause(10);
         }
         self.reader.take().unwrap().join().unwrap();

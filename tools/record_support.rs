@@ -39,7 +39,10 @@ pub fn pump(
     let result = (|| -> io::Result<()> {
         let mut buf = [0u8; 4096];
         loop {
-            let n = input.read(&mut buf)?;
+            let n = match input.read(&mut buf) {
+                Err(e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                other => other?,
+            };
             if n == 0 {
                 break;
             }
@@ -66,6 +69,129 @@ pub fn pump(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn temp_log(label: &str) -> std::path::PathBuf {
+        std::env::temp_dir().join(format!(
+            "gel-capture-{label}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
+    }
+
+    struct InterruptOnce<R> {
+        inner: R,
+        interrupted: bool,
+    }
+    impl<R: Read> Read for InterruptOnce<R> {
+        fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+            if !self.interrupted {
+                self.interrupted = true;
+                return Err(io::Error::from(io::ErrorKind::Interrupted));
+            }
+            self.inner.read(out)
+        }
+    }
+
+    #[test]
+    fn interrupted_read_retries_and_clean_eof_preserves_unicode() {
+        let path = temp_log("interrupt");
+        let raw = "Zażółć 🦀 gel> ".as_bytes();
+        let shared = Arc::new(Mutex::new(Capture::default()));
+        pump(
+            InterruptOnce {
+                inner: raw,
+                interrupted: false,
+            },
+            new_file(&path).unwrap(),
+            io::sink(),
+            shared.clone(),
+        );
+        let state = shared.lock().unwrap();
+        assert!(state.done && state.error.is_none());
+        assert_eq!(state.bytes, raw);
+        assert!(state.marker(0, b"gel> ").unwrap());
+        assert_eq!(std::fs::read(&path).unwrap(), raw);
+        std::fs::remove_file(path).unwrap();
+    }
+
+    struct FailRead;
+    impl Read for FailRead {
+        fn read(&mut self, _: &mut [u8]) -> io::Result<usize> {
+            Err(io::Error::other("injected read failure"))
+        }
+    }
+    struct FailDisplay {
+        flush_only: bool,
+    }
+    impl Write for FailDisplay {
+        fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+            if self.flush_only {
+                Ok(bytes.len())
+            } else {
+                Err(io::Error::from(io::ErrorKind::BrokenPipe))
+            }
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Err(io::Error::other("injected flush failure"))
+        }
+    }
+
+    #[test]
+    fn read_failure_after_marker_is_not_success() {
+        let path = temp_log("read-error");
+        let raw = b"gel> ";
+        let shared = Arc::new(Mutex::new(Capture::default()));
+        pump(
+            raw.as_slice().chain(FailRead),
+            new_file(&path).unwrap(),
+            io::sink(),
+            shared.clone(),
+        );
+        let state = shared.lock().unwrap();
+        assert!(state.done && state.error.is_some());
+        assert!(state.marker(0, raw).is_err());
+        assert_eq!(std::fs::read(&path).unwrap(), raw);
+        std::fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn display_write_and_flush_errors_keep_raw_log_but_invalidate_capture() {
+        for flush_only in [false, true] {
+            let path = temp_log("display");
+            let shared = Arc::new(Mutex::new(Capture::default()));
+            pump(
+                b"gel> ".as_slice(),
+                new_file(&path).unwrap(),
+                FailDisplay { flush_only },
+                shared.clone(),
+            );
+            let state = shared.lock().unwrap();
+            assert!(state.done && state.error.is_some());
+            assert!(state.marker(0, b"gel> ").is_err());
+            assert_eq!(std::fs::read(&path).unwrap(), b"gel> ");
+            std::fs::remove_file(path).unwrap();
+        }
+    }
+
+    #[test]
+    fn unwritable_log_does_not_publish_marker_to_capture() {
+        let path = temp_log("readonly");
+        new_file(&path).unwrap().write_all(b"original").unwrap();
+        let shared = Arc::new(Mutex::new(Capture::default()));
+        pump(
+            b"gel> ".as_slice(),
+            File::open(&path).unwrap(),
+            io::sink(),
+            shared.clone(),
+        );
+        let state = shared.lock().unwrap();
+        assert!(state.done && state.error.is_some());
+        assert!(state.bytes.is_empty());
+        assert_eq!(std::fs::read(&path).unwrap(), b"original");
+        std::fs::remove_file(path).unwrap();
+    }
     #[test]
     fn every_utf8_byte_split_is_safe() {
         let raw = "Zażółć 🦀 gel> ".as_bytes();

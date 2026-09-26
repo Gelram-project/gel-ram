@@ -18,9 +18,10 @@ against another process replacing paths concurrently in that directory.
 The display and the diagnostic pin parser may use replacement characters for
 malformed UTF-8, but the captured stream bytes are not rewritten.
 
-Four safety tests execute through xtask's platform test targets: every split
+Eight safety tests execute through xtask's platform test targets: every split
 position of a Polish/emoji string, existing-output preservation, capture error
-propagation and the buffer limit. A local Linux subprocess test with a child
+propagation, the buffer limit, interrupted-read retry, failure after a prompt,
+display write/flush failure and unwritable-log refusal. A local Linux subprocess test with a child
 that exits before the prompt returned a controlled failure and no COMPLETE;
 a second attempt refused existing logs.
 
