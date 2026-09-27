@@ -28,7 +28,9 @@ A release candidate is green only when all applicable gates pass on the same sou
     with injected panicking constructs that must be rejected (negative controls).
 18. historical measured-source pins (`MEASURED_SOURCES_R1=PASS`).
 19. claim registry (`xtask claims`): documented table equals the Rust registry
-    and executable claims pass their positive and negative cases.
+    and executable claims pass their positive and negative cases; the
+    [format mutation matrix](MUTATION-MATRIX.md) (`xtask mutation-matrix`) passes
+    all rows, keeps its negative control and equals the committed report.
 20. workspace documentation tests (`cargo test --doc`).
 21. saved R1 collection recheck (collection_recheck over the published r1 evidence).
 22. runtime demonstrations: `verify` runs the source, collection, Q8 and Live Lab

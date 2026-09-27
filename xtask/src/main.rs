@@ -4,6 +4,7 @@ mod claims;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
+mod mutation_matrix;
 mod process_sequence;
 #[cfg(test)]
 mod publication_status_tests;
@@ -112,7 +113,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|isolation-check|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|isolation-check|mutation-matrix|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -766,6 +767,7 @@ fn verify() -> Result<(), String> {
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
+    mutation_matrix::check(workspace_root()?)?;
     run(
         "cargo",
         &["test", "--locked", "--offline", "--workspace", "--doc"],
@@ -897,6 +899,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
+        Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("runtime-examples") => runtime_examples(),
