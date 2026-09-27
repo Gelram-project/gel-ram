@@ -94,13 +94,20 @@ These historical numbers show the cost of a conventional full scan. They are **a
 
 ### GEL's own search path — author-reported, a different task
 
-| Task | Data | p50 per query | Evidence |
-|---|---|---:|---|
-| Public full scan → top-10 → decision, 24 workers | 1M records of 1152 B | 72 ms | historical, author-reported; not reproducible from this checkout |
-| Public full scan → top-10 → decision, 24 workers | 10M records of 1152 B | 615–705 ms | historical, author-reported; not reproducible from this checkout |
-| GEL compact-sketch search, minimum distance, 3 workers | 16,384 sketches of 128 B | 15.5–21.3 µs | author-reported, private engine |
-| GEL compact-sketch search, minimum distance, 3 workers | 131,072 sketches of 128 B | 269–338 µs | author-reported, private engine |
-| GEL compact-sketch search, minimum distance, 3 workers | 500,000 sketches of 128 B | 1.26–1.44 ms | author-reported, private engine |
+Minimum-distance sketch search without a supplied result address, **3 CPU workers**.
+Replayed on 26 September 2026; the engine remains private.
+
+| GEL sketches | Bytes per sketch | Run 1 p50 | Run 2 p50 | Run 3 p50 |
+|---:|---:|---:|---:|---:|
+| 16,384 | 128 B | 21.310 µs | 15.521 µs | 17.918 µs |
+| 131,072 | 128 B | 337.910 µs | 279.205 µs | 269.472 µs |
+| 294,378 | 128 B | 885.044 µs | 750.340 µs | 728.198 µs |
+| 500,000 | 128 B | 1.440327 ms | 1.326322 ms | 1.264046 ms |
+
+Each p50 summarizes **201 measured batches** after three warm-up rounds.
+Times are amortized per scan (batch wall time divided by scans per batch),
+not cold single-request latency. Synthetic data and the query were reused.
+All three runs passed the numerical oracle; this is not semantic recall.
 
 The rows answer different questions on different data: a sketch is 128 bytes,
 not a 1152-byte Q8 record; the sketch search returns one minimum-distance
@@ -110,7 +117,7 @@ repository. **Do not divide one row by another.** A same-task comparison —
 identical corpus, queries and top-k, answers checked against the full scan,
 with preparation, updates and memory counted — is open work
 ([roadmap A21](docs/ROADMAP.md)); until it exists, no speed-up factor is
-claimed. Ranges span three runs; see
+claimed. No 1M/10M sketch replay or CPU-free execution is established here. See
 [the component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md) for method
 and raw data.
 
