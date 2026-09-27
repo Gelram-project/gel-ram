@@ -277,6 +277,67 @@ its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
 New presentation is not a new execution, benchmark or human acceptance.
 
+## Measured GEL results — scope matters
+
+These are **author-run measurements of a separate private implementation**,
+not benchmarks of this public checkout or an LLM leaderboard.
+They are reported here without publishing the private engine.
+
+| Operation | Observations | Measured result | What it establishes |
+|:---|---:|:---|:---|
+| Resident read at a known address | 40 | p50 **53.872 µs**, p95 **79.640 µs**, p99 **90.009 µs**; 40/40 reference matches | Addressed read after loading into RAM, not semantic search |
+| Source-integrity gate | 1,000 source fragments; 5 controls each | **1,000 valid payloads admitted; 4,000 invalid cases rejected** | Changed payload, missing address, wrong source and stale catalog generation are distinguished |
+| Single Q8 ranking | 400 probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
+| Quad ranking | Same 400 probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
+
+The logical ranking bank contains **1M fragments across four 250k slots**;
+these probes do **not** search all 1M candidates. One empty probe remains in
+the quality denominator. Integrity controls use a separate 1,000-fragment
+PL/EN catalog, not the million-record bank. The gate is an experimental
+CPU adapter, tested offline in a Linux sandbox, not a deployed API hybrid.
+
+Percentiles use nearest-rank; with N=40, p99 is the maximum. These are
+single-host diagnostic runs, not independently replicated measurements.
+Matching source bytes does not establish truth or understanding.
+Neither physical DRAM-refresh computation nor a speedup over LLMs is
+established by these tests.
+
+The underlying logs and private harness remain outside this checkout.
+**These rows are not independently reproducible from the public release.**
+Public-tool demonstrations and their reproducible evidence above retain
+their own, separate scope. No private version identifiers, source code,
+knowledge banks or credentials are included here.
+
+### Same supplied-source task: GEL adapter and models served by Groq
+
+Twelve development claims (six PL, six EN), with the same supplied Wikipedia
+passages and prompts. **One timed batch per language and profile**, not six
+latency observations. Label agreement is separate from citation/format validity.
+
+| System / profile | Language | Batch time | Labels matching working gold | Label + required structure | S/R decisions |
+|:---|:---:|---:|---:|---:|---:|
+| GEL bounded adapter R0 | PL | **85.851 µs** | 2/6 | 2/6 | **0/6** |
+| GEL bounded adapter R0 | EN | **78.057 µs** | 2/6 | 2/6 | **0/6** |
+| Groq / Qwen R0 | PL | 537.134 ms | 5/6 | 5/6 | 5/6 |
+| Groq / Qwen R0 | EN | 552.672 ms | 6/6 | 6/6 | 4/6 |
+| Groq / GPT-OSS-20B R1 | PL | 818.245 ms | 5/6 | 1/6 | 5/6 |
+| Groq / GPT-OSS-20B R1 | EN | 879.478 ms | protocol rejected | 0/6 | 0/6 admitted |
+| Groq / GPT-OSS-120B R1 | PL | 1219.564 ms | 5/6 | 5/6 | 5/6 |
+| Groq / GPT-OSS-120B R1 | EN | 1035.560 ms | 6/6 | 1/6 | 4/6 |
+
+**GEL returned UNKNOWN for every claim because the grammar was unsupported.**
+Its microsecond times measure parsing and abstention, not successful semantic
+decisions; the 2/6 agreement is the always-UNKNOWN baseline.
+Groq times include HTTP/network and generation. There is **no justified
+GEL/LLM speedup multiplier** here, and N=1 does not support latency percentiles.
+The adapter is not the full GEL chat or an Ocean retrieval benchmark.
+
+Earlier 20B and 120B PL attempts were incomplete at the 1024-token limit
+(1383.914 ms and 2407.528 ms). They are retained in the
+[protocol, exact times and failure notes](docs/GEL-GROQ-DIAGNOSTIC.md).
+This small, development-exposed comparison is not independently validated
+or a general model ranking. Private code, banks and API credentials stay private.
+
 "####;
 const GUIDE: &str = r####"# Multimedia README presentation
 
