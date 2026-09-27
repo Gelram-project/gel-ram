@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="510" viewBox="0 0 1200 510" role="img" aria-labelledby="title desc">
+<title id="title">GEL RAM — measured progress</title>
+<desc id="desc">Quad top-1 77.5% to 92.75%, top-10 90.25% to 99%, on 400 known-slot source probes. Separate five-article dialogue pilot: field answer median 2.054 to 4.819 microseconds. Groq batches 537.134 to 1219.564 milliseconds on a different decision task. No speedup ratio. Animation only highlights rows.</desc>
+<style>
+text{font-family:DejaVu Sans,Arial,sans-serif;fill:#e8efff}
+.label{font-size:20px}.value{font-size:25px;font-weight:700}.note{font-size:17px;fill:#b9c8df}
+.pulse{animation:highlight 9s ease-in-out infinite;fill:#48dcca;opacity:.04}
+.b{animation-delay:3s}.c{animation-delay:6s}
+@keyframes highlight{0%,30%,100%{opacity:.04}12%,20%{opacity:.16}}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+</style>
+<rect width="1200" height="510" rx="24" fill="#0b1629"/>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="36" y="46" class="note">GEL RAM / AUTHOR-RUN DIAGNOSTICS / SEPARATE TASKS</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="36" y="89" font-size="34" font-weight="700">Measured progress. Visible limits.</text>
+<path d="M36 116H1164" stroke="#334764"/>
+<rect fill="#48dcca" opacity="0.04" class="pulse" x="24" y="132" width="1152" height="90" rx="12"/>
+<rect fill="#48dcca" opacity="0.04" class="pulse b" x="24" y="232" width="1152" height="90" rx="12"/>
+<rect fill="#48dcca" opacity="0.04" class="pulse c" x="24" y="332" width="1152" height="90" rx="12"/>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="163" class="label">QUAD / RANKING</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="370" y="163" class="value">top-1 77.5% to 92.75%</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="820" y="163" class="value">top-10 99%</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="201" class="note">400 source-text probes · known 250k slot in 1M bank · not natural-question accuracy</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="263" class="label">GEL / FIELD ANSWER</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="370" y="263" class="value">p50 2.054–4.819 µs</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="820" y="263" class="label">5-article pilot</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="301" class="note">Five field questions × three runs · 1,000 warm repeats each · worst warm sample 711.017 µs</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="363" class="label">GROQ / DECISION BATCH</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="370" y="363" class="value">537.134–1219.564 ms</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="820" y="363" class="label">HTTP included</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="401" class="note">Six completed batches · six claims per batch · quality and protocol errors in README</text>
+<path d="M36 436H1164" stroke="#334764"/>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="467" class="label">Different tasks. No speedup ratio. No private engine disclosed.</text>
+<text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="493" class="note">Highlight animation is editorial, not elapsed time. Full static tables and scope below.</text>
+</svg>
