@@ -32,7 +32,7 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 
 [Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
-This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
+This is phrase retrieval from plaintext sources, not a general chatbot or an encrypted store.
 **Verify it yourself:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
 See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
 for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
@@ -95,7 +95,7 @@ Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.
 
 ▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
 
-The two private previews show a separate private native Rust application: bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank, encoder, speaker or unreleased memory mechanisms. The Evidence Lab walkthrough shows the public gel-evidence tool from this repository.
+The two private previews show a separate private native Rust application: bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank or other unreleased components. The Evidence Lab walkthrough shows the public gel-evidence tool from this repository.
 
 ## Try GEL Live Lab on your own text
 
@@ -111,7 +111,7 @@ Install the toolchain and fetch dependencies first using the instructions below.
 
 This public Rust program runs offline without an LLM. The source panel and
 synthetic Q8 panel are explicitly separate; the text is not encoded by those
-four views. Saved source bundles are plaintext, not an encrypted private vault.
+four views. Saved source bundles are plaintext, not encrypted.
 The two private-preview films show a different, private application; the
 Evidence Lab film shows the public gel-evidence tool, not this Live Lab.
 
@@ -242,7 +242,7 @@ The repository includes three silent English terminal films: the public,
 reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and two
 owner-authorized previews of a separate private native Rust application. The
 previews show live bounded source-frame answers and explicit UNKNOWN cases.
-They do **not** ship the private chat engine, private bank, encoder or speaker.
+They do **not** ship the private application, its engine or its bank.
 
 The displayed reply timings belong only to those bounded routes and that recorded
 MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
@@ -278,8 +278,8 @@ Q8 means 256 phase levels, not a 256-bit record. Runtime tables and buffers cost
 additional memory. The playground distinguishes payload sizes from process RSS
 (Linux only); its single-read timing is not a robust performance benchmark.
 
-No private encoder, media bank, conversation, LLM, physical RAM fingerprint,
-PUF or blockchain network is included. The source catalog is separate from the
+No private encoder, media bank, conversation, LLM, hardware binding or
+network service is included. The source catalog is separate from the
 numeric Q8 demonstration; no hidden text-to-Q8 encoder is implied.
 
 ### Illustrated guide / przewodnik graficzny

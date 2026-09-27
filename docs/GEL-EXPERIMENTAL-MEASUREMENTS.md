@@ -3,7 +3,7 @@
 These additional measurements describe components of a private GEL prototype.
 They are **not** a replacement for the reproducible [Ocean Scale](OCEAN-SCALE.md)
 benchmark, a commercial-product comparison, or a claim of full AI performance.
-No private engine, source bank, encoder or speaker is included.
+No private engine, source bank or other private component is included.
 
 ## Replayed compact-sketch search — 26 September 2026
 
@@ -72,7 +72,7 @@ is explicitly **author-reported**, not independently reproducible evidence.
   Do not divide their times to claim an end-to-end speedup.
 - No 1M/10M sketch replay or equivalence to the Q8 top-10 ranking is established here.
 - Phase graph nodes are not automatically Ocean ORBs.
-- The computations execute on CPU with data in memory. Physical DRAM refresh
+- The computations execute on CPU with data in memory. Hardware-level memory
   computing, operation without CPU and permanent CPU-cache residency are not proven.
 - There is no measured superiority over a named commercial system.
 

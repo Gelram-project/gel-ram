@@ -88,7 +88,7 @@ and public execution-identity evidence remain open. See the
 ## Not claimed
 
 No semantic chatbot, general AI, unrestricted question answering, private
-engine or bank, encrypted private vault, hardware-level memory computation,
+engine or bank, encrypted storage, hardware-level memory computation,
 fourfold independent capacity from coordinate views or commercial superiority
 is claimed. Earlier films and measurements keep their original revision labels.
 

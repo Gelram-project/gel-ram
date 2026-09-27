@@ -1,4 +1,4 @@
-//! Offline interactive evidence laboratory, not a speaker or semantic encoder.
+//! Offline interactive evidence laboratory, not an answer generator or semantic encoder.
 #![forbid(unsafe_code)]
 use gel_phase_quad::{grid::DIM, Policy, Reader, Record};
 use gel_source::{

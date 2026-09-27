@@ -32,7 +32,7 @@ make quantization itself lossless.
 
 See the [Q8 contract](Q8-QUAD.md), [interactive Rust demo](PUBLIC-DEMO.md#interactive-q8)
 and [binary format](FORMAT.md). The wave-shaped lines and fixed central point
-are a visual metaphor, not an assertion that the CPU controls physical DRAM waves.
+are a visual metaphor, not an assertion about physical memory hardware.
 
 ## Evidence and limits
 
@@ -54,7 +54,7 @@ not represent a GPU experiment: the reported timing campaign is CPU-only.
 Integrity is not truth: matching an approved source proves byte correspondence,
 not that the source is factually correct. Repeated benchmarks have varying
 durations, not identical times. Reference implementations and CI are not an
-independent third-party scientific validation. No live web/video/P2P demo is
+independent third-party scientific validation. No live web, video or networked demo is
 advertised by these two illustrations.
 
 | Claim illustrated | Public evidence | Scope |

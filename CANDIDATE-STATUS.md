@@ -58,7 +58,7 @@ must be checked separately. Only free standard runners are in scope.
 
 New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
-encrypted vault, speaker, encoder, private corpus or user data was exported.
+private component, private corpus or user data was exported.
 Evidence Lab scope and results: [Evidence Lab notes](RELEASE-NOTES-EVIDENCE-LAB.md).
 Historical R2 preparation record (its publication and platform flags predate the approvals above): [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md). Open external gates: [claim registry](docs/CLAIMS.md).
 Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
@@ -97,12 +97,12 @@ remain documented as historical measurements in [the Ocean guide](docs/OCEAN-SCA
 
 ## Excluded private scope
 
-The private application, speaker, private banks of knowledge, private encoder
-and private Ocean/P2P application internals remain excluded, and no Ocean
+The private application and its internal components, private knowledge banks
+and networked components remain excluded, and no Ocean
 research module is part of the current tree. User conversations, signed agreements, keys,
 personal identity records and private local diagnostic logs are not included.
 
-The two private-preview films are bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, P2P operation or physical DRAM-refresh synchronization.
+The two private-preview films are bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, network operation or hardware-level memory effects.
 
 ## Licensing status
 

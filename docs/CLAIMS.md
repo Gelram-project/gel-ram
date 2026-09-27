@@ -26,7 +26,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
 | media-full-review | presentation | NOT_VERIFIED |
-| physical-refresh-compute | mechanism | NOT_ESTABLISHED |
+| hardware-memory-compute | mechanism | NOT_ESTABLISHED |
 | commercial-advantage | comparison | NOT_ESTABLISHED |
 <!-- REGISTRY-END -->
 

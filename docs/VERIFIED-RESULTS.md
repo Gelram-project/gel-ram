@@ -13,13 +13,13 @@ retains its own license terms.
 | Capability | Public evidence | Boundary |
 |---|---|---|
 | Source-bound exact readout | Exact UTF-8 quotations, byte ranges, source/catalog SHA-256 pins, corruption and stale-generation rejection | Integrity of approved bytes is not proof that the source statement is true |
-| GELSRC01 persistence | No-replace publication, full-file pin, fresh-process reopen, truncation/corruption rejection and competing-writer tests | Plaintext source bundle, not an encrypted vault |
+| GELSRC01 persistence | No-replace publication, full-file pin, fresh-process reopen, truncation/corruption rejection and competing-writer tests | Plaintext source bundle, not encrypted storage |
 | GEL Live Lab | Offline Rust terminal integration for import, phrase lookup, readout, save/reopen and a separate synthetic Q8 panel | Not the private application and not a semantic chatbot |
 | Q8 coordinate views | Four reversible views of one 1152-byte public Q8 record with inverse/exactness checks | Four views are not four independent facts or 4× storage capacity |
 | Independent integrity audit | Byte/numeric/ranking audit reports exact recovery for the encoded representations it tests | Conversion loss and semantic quality are separate questions |
 | Ocean Scale R3 (historical) | Recorded 1M/10M synthetic full-scan measurements; the research archive was withdrawn from the tree in 0.4.0, so they cannot be re-run from it | CPU/RAM full-scan baseline, not the private execution path |
 | Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only persistence tests are declared per platform |
-| Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or private vault |
+| Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or encrypted storage |
 | Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec; timing not measured |
 | Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
 
@@ -85,7 +85,7 @@ The public repository does not claim that it proves:
 - unrestricted semantic AI accuracy;
 - 30M queries/s or any conversion from internal update-rate measurements to queries/s;
 - stable extreme-tail latency without sufficient observations;
-- physical memory-side compute or physical DRAM-refresh synchronization;
+- physical memory-side compute or hardware-level memory synchronization;
 - production power-loss durability;
 - fourfold independent capacity from four reversible views.
 

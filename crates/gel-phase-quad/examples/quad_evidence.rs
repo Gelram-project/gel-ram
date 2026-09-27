@@ -1,4 +1,4 @@
-//! Bounded numeric fixture + canonical single-read baseline. No semantic or hardware-PUF claims.
+//! Bounded numeric fixture + canonical single-read baseline. No semantic or hardware claims.
 #![forbid(unsafe_code)]
 #[path = "../src/reference.rs"]
 #[allow(dead_code)]

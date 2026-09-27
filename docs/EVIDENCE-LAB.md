@@ -80,4 +80,4 @@ No physical power cut, cache-controller flush proof or protection from root is c
 
 Search timers exclude terminal output/import/load. Mutation includes serialization
 and hashing of the entire collection. RAM holds exact strings, hashes and results;
-disk snapshots are plaintext. Do not use this tool as an encrypted private vault.
+disk snapshots are plaintext. Do not use this tool as encrypted storage.

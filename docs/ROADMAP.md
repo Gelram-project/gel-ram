@@ -214,7 +214,6 @@ The public project does not currently establish:
 - universal speedup on all hardware or workloads;
 - stable p99.9–p99.999 from campaigns with too few observations;
 - physical memory-side compute;
-- physical DRAM-refresh coupling;
 - production power-loss durability;
 - fourfold independent information capacity from four coordinate views;
 - private-system performance or architecture.

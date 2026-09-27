@@ -114,8 +114,8 @@ evidence that the Ocean lacks information about the subject.
 - Both runs use a small bank: 885,776 bytes and 256 nodes. Engine RSS is about
   67 MiB. These observations do not establish full-Ocean scalability.
 - No ORB/s throughput is inferred from chat latency. No token rate, semantic
-  accuracy percentage, 4× independent capacity, physical DRAM-refresh coupling
-  or P2P performance is established by either recording.
+  accuracy percentage, 4× independent capacity, hardware-level memory effects
+  or network performance is established by either recording.
 - The startup panel shows “Session transcript logging ON”.
   “Volatile” at exit describes the in-memory conversation state; it does not
   mean that no transcript was written to disk. Those session transcripts

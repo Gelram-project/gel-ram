@@ -54,10 +54,10 @@ It excludes typing, reading holds and final display rendering. Recording and
 other workloads can affect it. The readings are from this run, not reused from
 the first movie or selected from multiple runs to claim peak performance.
 Differences between the two movies are not a controlled speed comparison.
-No chat ORB/s, token throughput, general accuracy, persistent learning, P2P
-operation or physical DRAM-refresh synchronization is established here.
+No chat ORB/s, token throughput, general accuracy, persistent learning, network
+operation or hardware-level memory effect is established here.
 
-The application, private bank, speaker, encoder, executable and recording scripts
+The application, private bank, its components, executable and recording scripts
 remain excluded. The public source does not provide this chat command.
 When recorded, publication and licence approval were separate, outstanding
 gates; the film itself has since been published under [RIGHTS.md](RIGHTS.md),
