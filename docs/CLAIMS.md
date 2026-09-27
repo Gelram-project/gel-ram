@@ -25,6 +25,16 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
+| batch-contract | interface | SEPARATE_GATE |
+| backup-restore | persistence | SEPARATE_GATE |
+| network-isolation | environment | SEPARATE_GATE |
+| format-mutations | structure | SEPARATE_GATE |
+| binary-packages | distribution | SEPARATE_GATE |
+| property-map | test-scope | SEPARATE_GATE |
+| grep-comparison | comparison | MEASURED_LOCAL |
+| mutation-timing | timing | MEASURED_LOCAL |
+| gel-sketch-search | timing | MEASURED_LOCAL |
+| ocean-full-scan | timing | MEASURED_LOCAL |
 | media-full-review | presentation | NOT_VERIFIED |
 | hardware-memory-compute | mechanism | NOT_ESTABLISHED |
 | commercial-advantage | comparison | NOT_ESTABLISHED |
@@ -37,6 +47,13 @@ dimensions. SEPARATE_GATE is not PASS: run the linked numerical/ranking checks
 and retain their results independently. MEASURED_LOCAL means an owner-side
 measurement is documented at the linked source; CI does not re-run it.
 Deferred entries deliberately stay open.
+
+An open row carries one of four states — SEPARATE_GATE, MEASURED_LOCAL,
+NOT_VERIFIED or NOT_ESTABLISHED — and the registry rejects any other word, so a
+row cannot declare itself passed. The registry covers the tools added for
+v0.5.0 and every timing table shown in the README; the GEL sketch-search and
+Ocean full-scan rows are author-reported and cannot be re-run from this
+checkout.
 
 This register is not yet an exhaustive map of every historic statement in the
 repository. In particular it does not retroactively validate videos or timing

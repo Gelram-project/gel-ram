@@ -50,7 +50,7 @@ the binary package smoke run) are listed under the table.
 | P32 | The film recorder fails closed | [recorder safety](RECORDER-SAFETY.md) | `recorder_existing_log_missing_executable_and_eof_fail_closed` `record_support::tests::every_utf8_byte_split_is_safe` |
 | P33 | The dependency inventory matches every locked external package | [dependency inventory](DEPENDENCY-INVENTORY.md) | `inventory_matches_every_locked_external_package` `rejects_stale_extra_duplicate_or_missing_inventory_entries` |
 | P34 | The file gate rejects symlinks and executable files, and a reviewed asset must have its exact bytes and path | [gates](GATES.md) | `tests::rust_only_gate_rejects_symlinks_and_executable_files` `tests::documentation_png_gate_requires_exact_reviewed_bytes_and_path` |
-| P35 | The claims registry and its documentation agree | [claims](CLAIMS.md) | `claims::tests::documentation_and_registry_agree` |
+| P35 | The claims registry and its documentation agree, and an open row cannot declare itself passed | [claims](CLAIMS.md) | `claims::tests::documentation_and_registry_agree` `claims::tests::every_open_row_uses_an_allowed_mode` |
 
 Checks outside the table:
 
