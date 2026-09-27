@@ -32,8 +32,10 @@ Attaching the archives to a release is a separate owner decision.
 ## What the package check refuses
 
 `cargo run --locked --offline -p xtask -- package-binaries NEW_DIR` builds and
-assembles the package. BUILD-INFO.txt and SHA256SUMS.txt are written last, so a
-refused package has neither. It is refused when:
+assembles the package. SHA256SUMS.txt is written after every other file, and
+BUILD-INFO.txt, which carries `release_eligible`, is written last: a refused
+package has no BUILD-INFO.txt, and a package without it fails the checksum
+check. It is refused when:
 
 - a third-party crate in the target's normal dependency graph is missing from
   the [reviewed inventory](DEPENDENCY-INVENTORY.md), or one of its license files

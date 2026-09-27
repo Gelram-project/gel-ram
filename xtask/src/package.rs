@@ -462,15 +462,18 @@ pub fn run(args: &[String]) -> Result<(), String> {
         (true, false) => "no (working tree not clean)".to_string(),
     };
     let _ = writeln!(info, "release_eligible={eligible}");
-    fs::write(pkg.join("BUILD-INFO.txt"), &info).map_err(|e| e.to_string())?;
 
+    // SHA256SUMS.txt lists BUILD-INFO.txt from its in-memory bytes and is
+    // written first; BUILD-INFO.txt, the release-eligibility marker, is written
+    // last, so no failure can leave the marker without a checksum manifest.
     let mut files = Vec::new();
     super::reproduction::hashes(&pkg, &pkg, &mut files)?;
-    let mut sums = String::new();
-    for (hash, file) in &files {
-        let _ = writeln!(sums, "{hash}  {file}");
-    }
-    fs::write(pkg.join("SHA256SUMS.txt"), sums).map_err(|e| e.to_string())?;
+    fs::write(
+        pkg.join("SHA256SUMS.txt"),
+        checksum_manifest(files, info.as_bytes()),
+    )
+    .map_err(|e| e.to_string())?;
+    fs::write(pkg.join("BUILD-INFO.txt"), &info).map_err(|e| e.to_string())?;
     if let Some(gh) = std::env::var_os("GITHUB_OUTPUT") {
         fs::OpenOptions::new()
             .append(true)
@@ -482,9 +485,32 @@ pub fn run(args: &[String]) -> Result<(), String> {
     Ok(())
 }
 
+/// `sha256sum -c` lines for the package files plus BUILD-INFO.txt, which is
+/// not on disk yet; sorted by path.
+fn checksum_manifest(mut files: Vec<(String, String)>, build_info: &[u8]) -> String {
+    files.push((hex(&digest(build_info)), "BUILD-INFO.txt".into()));
+    files.sort_by(|a, b| a.1.cmp(&b.1));
+    let mut sums = String::new();
+    for (hash, file) in &files {
+        let _ = writeln!(sums, "{hash}  {file}");
+    }
+    sums
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_checksum_manifest_covers_build_info_before_it_is_written() {
+        let sums = checksum_manifest(vec![("a".repeat(64), "LICENSE".into())], b"x");
+        let expected = format!(
+            "{}  BUILD-INFO.txt\n{}  LICENSE\n",
+            hex(&digest(b"x")),
+            "a".repeat(64)
+        );
+        assert_eq!(sums, expected);
+    }
 
     #[test]
     fn inventory_reads_license_files_and_skips_the_archive() {

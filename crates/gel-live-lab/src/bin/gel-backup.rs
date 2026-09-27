@@ -3,7 +3,7 @@
 //! one result line; stderr carries usage and diagnostics.
 #![forbid(unsafe_code)]
 use gel_live_lab::{parse_pin, safe};
-use gel_source::backup::{self, DeleteError, RestoreError, State};
+use gel_source::backup::{self, CreateError, DeleteError, RestoreError, State};
 use std::{io::Write, path::Path, process::ExitCode};
 
 const USAGE: &str = "usage:
@@ -35,8 +35,14 @@ fn run(args: &[String]) -> Result<Outcome, String> {
     let words: Vec<&str> = args.iter().map(String::as_str).collect();
     Ok(match words.as_slice() {
         ["create", pin, snapshot, dir] => {
-            let state = backup::create(Path::new(snapshot), parse_pin(pin)?, Path::new(dir))?;
-            Outcome(format!("BACKUP=CREATED {}", state_line(&state)), 0)
+            match backup::create(Path::new(snapshot), parse_pin(pin)?, Path::new(dir)) {
+                Ok(state) => Outcome(format!("BACKUP=CREATED {}", state_line(&state)), 0),
+                Err(CreateError::NotCreated(why)) => return Err(why),
+                Err(CreateError::CreatedUnconfirmed(why)) => Outcome(
+                    format!("BACKUP=CREATED_UNCONFIRMED reason={}", safe(&why)),
+                    4,
+                ),
+            }
         }
         ["inspect", pin, dir] => {
             let found = backup::inspect(Path::new(dir), parse_pin(pin)?)?;
