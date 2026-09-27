@@ -9,15 +9,15 @@ aggregate disclosure, not a publicly reproducible benchmark or an LLM leaderboar
 Same 400 source-text probes, 500k PL + 500k EN bank split into four 250k slots.
 Each query knows its slot. Single top-1/top-10: 368/393 → 379/397 out of 400.
 Quad: 310/361 → 371/396. Quad recovered 63 top-1 matches and lost two.
-Sequence encoding and removal of a known export footer both changed.
+Two changes to the private pipeline were made between the runs.
 Do not attribute the entire improvement to either alone. No per-answer
 latency series for the new profile is reported here.
 
 ## Source-field dialogue: first timing run
 
-Five real articles, 82 fields, resident bank. Release, Rust 1.97.0,
+Five real articles, 82 fields, resident bank. Release build,
 Ryzen AI9 HX370. Nearest-rank, N=1000 warm repetitions per row, 20 warmups.
-Timer covers Dialogue::respond through completed reply construction,
+Timer covers the dialogue response call through completed reply construction,
 excluding loading, display, report writes and subsequent Q8 fallback.
 The first run is shown, not a selected best run. All times are **µs**.
 
