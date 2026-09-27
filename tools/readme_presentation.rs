@@ -108,7 +108,7 @@ const NATIVE: &str = r####"# GEL RAM
 <!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200" height="228">
+  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
@@ -216,7 +216,7 @@ The license, CLA, historical permissions and third-party notices are unchanged.
 fn picture(id: &str, title: &str, still: bool) -> String {
     let ext = if still { "png" } else { "gif" };
     format!(
-        r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/{id}-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.{ext}"><img alt="{title}" src="media/gifs/{id}-light.{ext}" width="1000" height="460" loading="lazy"></picture>"#
+        r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/{id}-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.{ext}"><img alt="{title}" src="media/gifs/{id}-light.{ext}" width="1000" loading="lazy"></picture>"#
     )
 }
 fn pair(id: &str, title: &str) -> String {
@@ -527,5 +527,15 @@ mod tests {
         assert!(s.contains("<table>"));
         assert!(s.contains("README-MULTIMEDIA.html"));
         assert_eq!(s.matches("<td width=\"50%\"").count(), 6);
+    }
+    #[test]
+    fn images_keep_their_aspect_ratio() {
+        // A fixed height with a width the page narrows stretches the image.
+        for text in [native_intro(), page()] {
+            for img in text.split("<img ").skip(1) {
+                let tag = img.split('>').next().unwrap_or("");
+                assert!(!tag.contains(" height="), "fixed image height: {tag}");
+            }
+        }
     }
 }
