@@ -6,14 +6,14 @@
   <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="How a citation is checked: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin; a copy with one changed byte is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
 quotations, stale-citation refusal and independently pinned snapshots.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
 
-[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
+[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
 > **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
 > commit you test.
@@ -63,6 +63,25 @@ The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
 its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
 New presentation is not a new execution, benchmark or human acceptance.
+
+## What the public checks cover
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/wall-dark.svg"><img alt="Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows." src="media/presentation/wall-light.svg" width="1200"></picture>
+
+Each cell is one documented property on one CI platform. On every platform the
+[CI evidence collector](docs/CI-EVIDENCE.md) withholds COMPLETE unless each test
+named in the [property map](docs/PROPERTY-TESTS.md) ran and passed exactly once;
+declared Unix-only tests are exempt on Windows. The image shows this rule, not
+the outcome of one run: read that in the run's CI report.
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/bars-dark.svg"><img alt="Format mutation matrix: rejected and accepted rows per public format in the committed report, and how many rows matched their expected verdict." src="media/presentation/bars-light.svg" width="1200"></picture>
+
+Every mutant of the [format mutation matrix](docs/MUTATION-MATRIX.md) is read
+twice: with the original pin, which must refuse any changed byte, and with a
+recomputed pin, which lets the structural rules decide. The bars count the
+committed report; `xtask verify` regenerates it and fails on any difference.
+Both images are drawn from these files when the presentation is built, and the
+read-only presentation check fails if they drift.
 
 ## Measured GEL results — scope matters
 

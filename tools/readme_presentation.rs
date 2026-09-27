@@ -54,62 +54,6 @@ const SVG: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" hei
 <text x="814" y="137" font-size="21">Inspect it. Reproduce it.</text>
 </g></svg>
 "####;
-/// Animated diagram of the public citation check. It illustrates the flow of
-/// the recorded workflows; it is not a recording or a timing measurement.
-const FLOW: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="t d">
-<title id="t">How a GEL citation is checked</title>
-<desc id="d">Animated diagram: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin and passes, and a copy with one changed byte that is refused.</desc>
-<style>
-text{font-family:Arial,Helvetica,sans-serif;fill:__INK__}
-.mono{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace;font-size:13px;fill:__MUTED__}
-.title{font-size:18px;font-weight:700}
-.box{fill:__PAPER__;stroke:__LINE__;stroke-width:2}
-.ico{fill:none;stroke:__INK__;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
-.acc{fill:__ACCENT__}
-.wire{fill:none;stroke:__ACCENT__;stroke-width:4;stroke-linecap:round;stroke-dasharray:130;stroke-dashoffset:130}
-.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:0}
-.n1{animation:n1 12s infinite}.n2{animation:n2 12s infinite}.n3{animation:n3 12s infinite}.n4{animation:n4 12s infinite}.n5{animation:n5 12s infinite}
-.w1{animation:w1 12s infinite}.w2{animation:w2 12s infinite}.w3{animation:w3 12s infinite}.w4{animation:w4 12s infinite}
-.ok{animation:ok 12s infinite}.bad{animation:bad 12s infinite}
-@keyframes n1{0%{opacity:0;transform:translateY(10px)}6%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes n2{0%,14%{opacity:0;transform:translateY(10px)}20%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes n3{0%,28%{opacity:0;transform:translateY(10px)}34%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes n4{0%,42%{opacity:0;transform:translateY(10px)}48%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes n5{0%,56%{opacity:0;transform:translateY(10px)}62%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes w1{0%,8%{stroke-dashoffset:130}16%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
-@keyframes w2{0%,22%{stroke-dashoffset:130}30%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
-@keyframes w3{0%,36%{stroke-dashoffset:130}44%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
-@keyframes w4{0%,50%{stroke-dashoffset:130}58%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
-@keyframes ok{0%,63%{opacity:0;transform:scale(.8)}67%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes bad{0%,72%{opacity:0}75%{opacity:1;transform:translateX(0)}76.5%{transform:translateX(-5px)}78%{transform:translateX(5px)}79.5%{transform:translateX(-3px)}81%,94%{opacity:1;transform:none}100%{opacity:0}}
-.n1,.n2,.n3,.n4,.n5,.ok,.bad{transform-box:fill-box;transform-origin:center}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:1}.wire{stroke-dashoffset:0}}
-</style>
-<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="__BG1__"/><stop offset="1" stop-color="__BG2__"/></linearGradient></defs>
-<rect x="1" y="1" width="1198" height="328" rx="24" fill="url(#bg)" stroke="__LINE__"/>
-<text x="40" y="44" font-size="13" font-weight="700" letter-spacing="2" style="fill:__ACCENT__">HOW A CITATION IS CHECKED</text>
-<path class="wire w1" d="M215 150H285"/><path class="wire w2" d="M455 150H525"/><path class="wire w3" d="M695 150H765"/><path class="wire w4" d="M935 150H995"/>
-<g class="n1"><rect class="box" x="40" y="80" width="175" height="140" rx="16"/>
-<path class="ico" d="M104 96h34l14 14v44h-48z M138 96v14h14 M114 124h26 M114 134h26 M114 144h18"/>
-<text class="title" x="127" y="186" text-anchor="middle">Your document</text><text class="mono" x="127" y="207" text-anchor="middle">UTF-8, stays local</text></g>
-<g class="n2"><rect class="box" x="285" y="80" width="170" height="140" rx="16"/>
-<path class="ico" d="M346 96h34l14 14v44h-48z M380 96v14h14"/><rect class="acc" x="352" y="124" width="36" height="10" rx="3"/><path class="ico" d="M356 142h26"/>
-<text class="title" x="370" y="186" text-anchor="middle">Exact quote</text><text class="mono" x="370" y="207" text-anchor="middle">bytes 67..105</text></g>
-<g class="n3"><rect class="box" x="525" y="80" width="170" height="140" rx="16"/>
-<rect class="ico" x="590" y="118" width="40" height="34" rx="6"/><path class="ico" d="M598 118v-8a12 12 0 0 1 24 0v8"/><circle class="acc" cx="610" cy="135" r="5"/>
-<text class="title" x="610" y="186" text-anchor="middle">SHA-256 pin</text><text class="mono" x="610" y="207" text-anchor="middle">you keep it</text></g>
-<g class="n4"><rect class="box" x="765" y="80" width="170" height="140" rx="16"/>
-<path class="ico" d="M870 125a20 20 0 1 1-6-14 M864 100v11h11"/>
-<text class="title" x="850" y="186" text-anchor="middle">New process</text><text class="mono" x="850" y="207" text-anchor="middle">load with the pin</text></g>
-<g class="n5"><rect class="box" x="995" y="80" width="170" height="140" rx="16"/>
-<text class="title" x="1080" y="106" text-anchor="middle">Reopen</text>
-<g class="ok"><rect x="1015" y="116" width="130" height="32" rx="16" fill="__GREEN__"/><text x="1080" y="137" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✓ PASS</text></g>
-<g class="bad"><rect x="1015" y="156" width="130" height="32" rx="16" fill="__RED__"/><text x="1080" y="177" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✗ REFUSED</text>
-<text class="mono" x="1080" y="207" text-anchor="middle" style="font-size:11.5px">copy, 1 changed byte</text></g></g>
-<text x="40" y="262" font-size="17">A citation matches the bytes you pinned, or it is refused.</text>
-<text class="mono" x="40" y="292">Illustration of the public Evidence Lab flow · not a timing measurement · see the six recorded runs below</text>
-</svg>
-"####;
 /// Four checked facts; the counts are read from the repository by `fact_counts`.
 const FACTS: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="128" viewBox="0 0 1200 128" role="img" aria-labelledby="t d">
 <title id="t">Checked facts about this release</title>
@@ -200,7 +144,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 110" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" aria-hidden="true"><path d="M52 4 96 29V80L52 106 8 80V29Z"/><path d="M8 29 52 54 96 29M52 54V106"/><path d="M52 30 74 43V68L52 81 30 68V43Z" fill="#218bff"/><path d="M30 43 52 56 74 43M52 56V81"/></svg>
 <div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Your documents. Exact quotes. A restart you can check.</p></div>
 <div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">Local CLI</span><span class="chip">Source-linked media</span></div></div></div>
-<nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
+<nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
 <div class="view-tools"><label for="still-mode">Show still images</label><a href="__DOC__/media/gifs/MANIFEST.txt">Media provenance</a><span>12-second edited replays, not wall time</span></div>
 <main id="content">
 <section class="hero" aria-labelledby="hero-heading">
@@ -210,6 +154,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <section class="section flow" aria-label="How a citation is checked">__FLOW__<div class="facts">__FACTS__</div></section>
 <section class="section" id="workflows" aria-labelledby="workflow-heading"><div class="section-heading"><p class="eyebrow">Six workflows. Their original evidence.</p><h2 id="workflow-heading">See it in action</h2><p>These are edited replays of recorded public command output, not product screenshots or new benchmark runs. Open each image at full size to read the terminal text.</p></div><div class="grid">__CARDS__</div>
 <div class="trust"><div><strong>Inspectable</strong><p>Transcripts and retained hashes accompany the previews.</p></div><div><strong>Explicit failures</strong><p>Inspect refusal and incomplete states, not only success.</p></div><div><strong>Local operation</strong><p>The CLI uses your local documents. No automatic upload.</p></div><div><strong>Reproducible scope</strong><p>Commands, sources and limitations remain linked.</p></div></div></section>
+<section class="section" id="checks" aria-labelledby="checks-heading"><div class="section-heading"><p class="eyebrow">Drawn from this checkout</p><h2 id="checks-heading">What the public checks cover</h2><p>The property map, the CI exclusion list and the committed mutation report are read when the images are built; the read-only presentation check fails if they drift.</p></div>__WALL__<div class="facts">__BARS__</div></section>
 <div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; the demo uses locked offline dependencies.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
 git checkout __RELEASE__
@@ -240,7 +185,7 @@ quotations, stale-citation refusal and independently pinned snapshots.
 
 __FACTS__
 
-[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
+[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
 > **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
 > commit you test.
@@ -276,6 +221,25 @@ The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
 its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
 New presentation is not a new execution, benchmark or human acceptance.
+
+## What the public checks cover
+
+__WALL__
+
+Each cell is one documented property on one CI platform. On every platform the
+[CI evidence collector](docs/CI-EVIDENCE.md) withholds COMPLETE unless each test
+named in the [property map](docs/PROPERTY-TESTS.md) ran and passed exactly once;
+declared Unix-only tests are exempt on Windows. The image shows this rule, not
+the outcome of one run: read that in the run's CI report.
+
+__BARS__
+
+Every mutant of the [format mutation matrix](docs/MUTATION-MATRIX.md) is read
+twice: with the original pin, which must refuse any changed byte, and with a
+recomputed pin, which lets the structural rules decide. The bars count the
+committed report; `xtask verify` regenerates it and fails on any difference.
+Both images are drawn from these files when the presentation is built, and the
+read-only presentation check fails if they drift.
 
 ## Measured GEL results — scope matters
 
@@ -342,21 +306,26 @@ or a general model ranking. Private code, banks and API credentials stay private
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner, an animated SVG diagram of the citation check, a strip of checked
-facts, colour-coded workflow badges and six real GIF previews. The adjacent
+an SVG banner, an animated 3D scene of the citation check, a strip of checked
+facts, colour-coded workflow badges, six real GIF previews and two 3D graphics
+of the public checks. The adjacent
 README-MULTIMEDIA.html is a script-free local document with the full responsive
 panel layout, theme-aware backgrounds, a still-image control and links to the
 public documentation. Open it from the checkout in a browser. GitHub's file
 viewer does not host it as a web page; no Pages deployment or new public service
 is configured.
 
-The animated diagram illustrates the flow the six recordings show: an exact
-quote with its byte range, a SHA-256 pin kept by the user, a new process that
-reopens the snapshot, and a copy with one changed byte that is refused. It is
-drawn, not recorded, and its timing is not a measurement. Under reduced motion
-it shows its final state. The numbers in the facts strip are read by the
-builder from the property map and the recorded mutation matrix, so a change to
-either makes the read-only check fail until the strip is rebuilt.
+The animated scene illustrates the flow the six recordings show: an exact
+quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
+new process that reopens it with the same pin, and a copy with one changed byte
+that is refused. It is drawn, not recorded, and its timing is not a
+measurement. Under reduced motion it shows its final state.
+
+The builder draws the facts strip and the two check graphics from the property
+map, the Unix-only exclusion list of the CI evidence collector and the committed
+mutation matrix report. The property-map graphic shows the rule the collector
+enforces on each CI platform, not the result of a particular run. A change to
+any of these sources makes the read-only check fail until the images are rebuilt.
 
 ## Preservation and source
 
@@ -389,7 +358,7 @@ external documentation links needs a network; opening the local presentation doe
 The Rust-only presentation builder is tools/readme_presentation.rs. It refuses
 unexpected input headings and pre-existing output paths, verifies the original
 media pins before and after its edits, archives the actual preceding README and
-adds only three exact presentation-asset pins. It does not allow arbitrary SVG or
+adds exact pins only for the files it generates. It does not allow arbitrary SVG or
 HTML files. The source manifest is then refreshed and the complete tree must
 pass xtask verify. Normal three-platform CI is read separately for the final head.
 
@@ -447,47 +416,523 @@ fn fill(template: &str, pairs: &[(&str, &str)]) -> String {
     }
     s
 }
-fn flow(dark: bool) -> String {
-    let v = if dark {
-        [
-            "#101d31", "#0d1117", "#30465f", "#58a6ff", "#e6edf3", "#9fb3c8", "#151b23", "#238636",
-            "#da3633",
-        ]
-    } else {
-        [
-            "#f7fbff", "#deedff", "#cbdcf0", "#0969da", "#102949", "#486380", "#ffffff", "#1a7f37",
-            "#cf222e",
-        ]
-    };
-    let keys = [
-        "BG1", "BG2", "LINE", "ACCENT", "INK", "MUTED", "PAPER", "GREEN", "RED",
-    ];
-    let pairs: Vec<(&str, &str)> = keys.into_iter().zip(v).collect();
-    fill(FLOW, &pairs)
+/// Colours of the drawn 3D graphics. Box faces are listed top, left, right.
+struct Theme {
+    bg: [&'static str; 2],
+    line: &'static str,
+    ink: &'static str,
+    muted: &'static str,
+    accent: &'static str,
+    floor: &'static str,
+    good: &'static str,
+    paper: [&'static str; 3],
+    blue: [&'static str; 3],
+    green: [&'static str; 3],
+    red: [&'static str; 3],
+    amber: [&'static str; 3],
 }
-/// Counts shown in the facts strip, read from the repository so they cannot
-/// drift: property rows and their tests in the property map, and distinct
-/// (format, case) mutants in the recorded mutation matrix.
-fn fact_counts() -> Result<(usize, usize, usize)> {
-    let map = fs::read_to_string("docs/PROPERTY-TESTS.md")?;
-    let rows: Vec<&str> = map.lines().filter(|l| l.starts_with("| P")).collect();
-    let tests: usize = rows
-        .iter()
-        .map(|r| r.rsplit('|').nth(1).unwrap_or("").matches('`').count() / 2)
-        .sum();
-    let matrix = fs::read_to_string("docs/evidence-mutation/matrix-r1.txt")?;
-    let mutants: std::collections::BTreeSet<(&str, &str)> = matrix
-        .lines()
-        .skip(1)
-        .filter_map(|l| {
-            let mut f = l.split('\t');
-            Some((f.next()?, f.next()?))
-        })
-        .collect();
-    if rows.is_empty() || tests == 0 || mutants.is_empty() {
-        return Err("missing fact sources".into());
+const LIGHT: Theme = Theme {
+    bg: ["#f7fbff", "#deedff"],
+    line: "#cbdcf0",
+    ink: "#102949",
+    muted: "#486380",
+    accent: "#0969da",
+    floor: "#9fbce0",
+    good: "#1a7f37",
+    paper: ["#ffffff", "#dde7f3", "#c3d2e6"],
+    blue: ["#7db4ff", "#2f7fe0", "#1f5fb0"],
+    green: ["#6fdc8c", "#2da44e", "#1a7f37"],
+    red: ["#ff9b93", "#e5484d", "#b3242a"],
+    amber: ["#ffd46b", "#d4a72c", "#9a6700"],
+};
+const DARK: Theme = Theme {
+    bg: ["#101d31", "#0d1117"],
+    line: "#30465f",
+    ink: "#e6edf3",
+    muted: "#9fb3c8",
+    accent: "#58a6ff",
+    floor: "#26405f",
+    good: "#56d364",
+    paper: ["#e6edf3", "#9fb3c8", "#6e859e"],
+    blue: ["#79c0ff", "#388bfd", "#1f6feb"],
+    green: ["#56d364", "#2ea043", "#196c2e"],
+    red: ["#ff9492", "#f85149", "#b62324"],
+    amber: ["#e3b341", "#bb8009", "#845306"],
+};
+fn theme(dark: bool) -> &'static Theme {
+    if dark {
+        &DARK
+    } else {
+        &LIGHT
     }
-    Ok((rows.len(), tests, mutants.len()))
+}
+const COS30: f64 = 0.866;
+type Point = (f64, f64);
+type Vec3 = (f64, f64, f64);
+/// Isometric projection of the world point (x, y, z) around the origin `o`.
+fn iso(o: Point, x: f64, y: f64, z: f64) -> Point {
+    (o.0 + (x - y) * COS30, o.1 + (x + y) * 0.5 - z)
+}
+fn polygon(points: &[Point], fill: &str, extra: &str) -> String {
+    let points: Vec<String> = points
+        .iter()
+        .map(|(x, y)| format!("{x:.1},{y:.1}"))
+        .collect();
+    format!(
+        r#"<polygon points="{}" fill="{fill}"{extra}/>"#,
+        points.join(" ")
+    )
+}
+/// An isometric box at world position `p` with size `d`.
+fn iso_box(o: Point, p: Vec3, d: Vec3, faces: [&str; 3], stroke: &str) -> String {
+    let ((x, y, z), (dx, dy, dz)) = (p, d);
+    let q = |a, b, c| iso(o, a, b, c);
+    let edge = format!(r#" stroke="{stroke}" stroke-linejoin="round""#);
+    let top = [
+        q(x, y, z + dz),
+        q(x + dx, y, z + dz),
+        q(x + dx, y + dy, z + dz),
+        q(x, y + dy, z + dz),
+    ];
+    let left = [
+        q(x, y + dy, z),
+        q(x + dx, y + dy, z),
+        q(x + dx, y + dy, z + dz),
+        q(x, y + dy, z + dz),
+    ];
+    let right = [
+        q(x + dx, y, z),
+        q(x + dx, y + dy, z),
+        q(x + dx, y + dy, z + dz),
+        q(x + dx, y, z + dz),
+    ];
+    polygon(&left, faces[1], &edge)
+        + &polygon(&right, faces[2], &edge)
+        + &polygon(&top, faces[0], &edge)
+}
+/// Transform drawing local coordinates (u right, v down) on a box's right face.
+fn right_face(o: Point, p: Vec3, d: Vec3) -> String {
+    let (x, y) = iso(o, p.0 + d.0, p.1 + d.1, p.2 + d.2);
+    format!("matrix({COS30} -0.5 0 1 {x:.1} {y:.1})")
+}
+/// Transform drawing local coordinates (u along x, v along y) on a box's top face.
+fn top_face(o: Point, p: Vec3, d: Vec3) -> String {
+    let (x, y) = iso(o, p.0, p.1, p.2 + d.2);
+    format!("matrix({COS30} 0.5 -{COS30} 0.5 {x:.1} {y:.1})")
+}
+/// A box in oblique projection: front face w × h at (x, y), receding by `depth`.
+fn oblique(x: f64, y: f64, (w, h, depth): Vec3, faces: [&str; 3]) -> String {
+    let edge = r##" stroke="#00000022" stroke-width=".6""##;
+    let (xd, yd) = (x + depth, y - depth);
+    polygon(
+        &[(x, y), (x + w, y), (x + w, y + h), (x, y + h)],
+        faces[1],
+        edge,
+    ) + &polygon(
+        &[(x + w, y), (xd + w, yd), (xd + w, yd + h), (x + w, y + h)],
+        faces[2],
+        edge,
+    ) + &polygon(
+        &[(x, y), (xd, yd), (xd + w, yd), (x + w, y)],
+        faces[0],
+        edge,
+    )
+}
+/// A themed card: `text` is the title and the description for screen readers.
+fn card((w, h): (u32, u32), t: &Theme, text: (&str, &str), style: &str, body: &str) -> String {
+    format!(
+        r##"<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="t d">
+<title id="t">{title}</title>
+<desc id="d">{desc}</desc>
+<style>
+text{{font-family:Arial,Helvetica,sans-serif;fill:{ink}}}
+.mono{{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace;fill:{muted}}}
+.kick{{font-size:13px;font-weight:700;letter-spacing:2px;fill:{accent}}}
+{style}
+</style>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="{bg1}"/><stop offset="1" stop-color="{bg2}"/></linearGradient>
+<clipPath id="card"><rect x="1" y="1" width="{iw}" height="{ih}" rx="24"/></clipPath></defs>
+<rect x="1" y="1" width="{iw}" height="{ih}" rx="24" fill="url(#bg)" stroke="{line}"/>
+{body}
+</svg>
+"##,
+        title = text.0,
+        desc = text.1,
+        ink = t.ink,
+        muted = t.muted,
+        accent = t.accent,
+        bg1 = t.bg[0],
+        bg2 = t.bg[1],
+        line = t.line,
+        iw = w - 2,
+        ih = h - 2
+    )
+}
+const SCENE_STYLE: &str = r#".sheet,.snap,.ok,.bad,.b1,.b2,.b3{opacity:0;transform-box:fill-box;transform-origin:center}
+.s0{animation:s0 12s infinite}.s1{animation:s1 12s infinite}.s2{animation:s2 12s infinite}
+.b1{animation:b1 12s infinite}.snap{animation:snap 12s infinite}.b2{animation:b2 12s infinite}.b3{animation:b3 12s infinite}
+.ok{animation:ok 12s infinite}.bad{animation:bad 12s infinite}.hot{animation:hot 1s infinite alternate}
+.beam{animation-name:b1,flow;animation-duration:12s,1s;animation-iteration-count:infinite;animation-timing-function:ease,linear}
+.b2.beam{animation-name:b2,flow}.b3.beam{animation-name:b3,flow}
+@keyframes s0{0%{opacity:0;transform:translateY(-40px)}6%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes s1{0%,4%{opacity:0;transform:translateY(-40px)}10%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes s2{0%,8%{opacity:0;transform:translateY(-40px)}14%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes b1{0%,16%{opacity:0}22%,94%{opacity:1}100%{opacity:0}}
+@keyframes snap{0%,22%{opacity:0;transform:scale(.6)}30%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes b2{0%,34%{opacity:0}40%,94%{opacity:1}100%{opacity:0}}
+@keyframes b3{0%,50%{opacity:0}56%,94%{opacity:1}100%{opacity:0}}
+@keyframes ok{0%,42%{opacity:0;transform:translateY(-30px)}50%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes bad{0%,56%{opacity:0;transform:translateY(-30px)}62%{opacity:1;transform:none}64%{transform:translateX(-6px)}66%{transform:translateX(6px)}68%{transform:translateX(-4px)}70%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes hot{from{opacity:1}to{opacity:.35}}
+@keyframes flow{to{stroke-dashoffset:-36}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.sheet,.snap,.ok,.bad,.b1,.b2,.b3{opacity:1}}"#;
+/// Animated 3D scene of the public citation check: document sheets with a
+/// highlighted quote, the pinned snapshot, the reopened copy and the refused
+/// copy. It illustrates the recorded workflows; it is not a recording or a
+/// timing measurement.
+fn scene(dark: bool) -> String {
+    let t = theme(dark);
+    let o = (100.0, 245.0);
+    let mut floor = String::from(r#"<g clip-path="url(#card)" opacity=".55">"#);
+    for k in -18..=18 {
+        let v = f64::from(k) * 40.0;
+        for (a, b) in [
+            (iso(o, v, -800.0, 0.0), iso(o, v, 400.0, 0.0)),
+            (
+                iso(o, -400.0, v - 360.0, 0.0),
+                iso(o, 900.0, v - 360.0, 0.0),
+            ),
+        ] {
+            floor.push_str(&format!(
+                r#"<line x1="{:.1}" y1="{:.1}" x2="{:.1}" y2="{:.1}" stroke="{}" stroke-width=".7"/>"#,
+                a.0, a.1, b.0, b.1, t.floor
+            ));
+        }
+    }
+    floor.push_str("</g>");
+    // Boxes stand on the floor diagonal: `at(a, d)` centres a box of side d at a.
+    let at = |a: f64, d: f64| (a - d / 2.0, -a - d / 2.0, 0.0);
+    let sheet = (110.0, 90.0, 5.0);
+    let (x, y, _) = at(46.0, 90.0);
+    let mut docs = String::new();
+    for (i, z) in [0.0, 8.0, 16.0].into_iter().enumerate() {
+        docs.push_str(&format!(
+            r#"<g class="sheet s{i}">{}</g>"#,
+            iso_box(o, (x, y, z), sheet, t.paper, t.line)
+        ));
+    }
+    docs.push_str(&format!(
+        r#"<g class="sheet s2"><g transform="{}">"#,
+        top_face(o, (x, y, 16.0), sheet)
+    ));
+    for (k, row) in [16.0, 30.0, 44.0, 58.0, 72.0].into_iter().enumerate() {
+        let (fill, h, len) = if k == 2 {
+            (t.accent, 7.0, 84.0)
+        } else {
+            (t.floor, 4.0, 70.0 - 4.0 * k as f64)
+        };
+        docs.push_str(&format!(
+            r#"<rect x="14" y="{row}" width="{len}" height="{h}" rx="2" fill="{fill}"/>"#
+        ));
+    }
+    docs.push_str("</g></g>");
+    let big = (96.0, 96.0, 96.0);
+    let p = at(214.0, 96.0);
+    let snap = format!(
+        r##"<g class="snap">{}<g transform="{}"><rect x="30" y="44" width="36" height="30" rx="5" fill="#ffffff" opacity=".92"/><path d="M38 44v-9a10 10 0 0 1 20 0v9" fill="none" stroke="#ffffff" stroke-width="5" opacity=".92"/><circle cx="48" cy="57" r="4.5" fill="{}"/></g></g>"##,
+        iso_box(o, p, big, t.blue, t.line),
+        right_face(o, p, big),
+        t.blue[2]
+    );
+    let small = (80.0, 80.0, 80.0);
+    let p = at(404.0, 80.0);
+    let ok = format!(
+        r##"<g class="ok">{}<g transform="{}"><path d="M22 42l14 14 26-30" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g></g>"##,
+        iso_box(o, p, small, t.green, t.line),
+        top_face(o, p, small)
+    );
+    let p = at(543.0, 80.0);
+    let mut cells = String::new();
+    for i in 0..4 {
+        for j in 0..4 {
+            let hot = (i, j) == (2, 1);
+            cells.push_str(&format!(
+                r##"<rect{} x="{}" y="{}" width="16" height="16" rx="2" fill="#ffffff" opacity="{}"/>"##,
+                if hot { r#" class="hot""# } else { "" },
+                8 + 17 * i,
+                8 + 17 * j,
+                if hot { "1" } else { ".22" }
+            ));
+        }
+    }
+    let bad = format!(
+        r#"<g class="bad">{}<g transform="{}">{cells}</g></g>"#,
+        iso_box(o, p, small, t.red, t.line),
+        right_face(o, p, small)
+    );
+    let beam = |a: f64, b: f64, class: &str| {
+        let ((x1, y1), (x2, y2)) = (iso(o, a, -a, 30.0), iso(o, b, -b, 30.0));
+        format!(
+            r#"<path class="beam {class}" d="M{x1:.1} {y1:.1}H{x2:.1}" stroke="{c}" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round" fill="none"/><path class="{class}" d="M{x2:.1} {y2:.1}l-12 -7v14z" fill="{c}"/>"#,
+            c = t.accent
+        )
+    };
+    let arc = format!(
+        r#"<path class="beam b3" d="M540 96Q760 -6 985 104" stroke="{c}" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round" fill="none"/><path class="b3" d="M992 110l-15 -1 8 -12z" fill="{c}"/><text class="mono b3" x="760" y="84" text-anchor="middle" font-size="13">copy with 1 byte flipped</text>"#,
+        c = t.accent
+    );
+    let label = |x: u32, head: &str, sub: &str, class: &str| {
+        format!(
+            r#"<g class="{class}"><text x="{x}" y="318" text-anchor="middle" font-size="18" font-weight="700">{head}</text><text class="mono" x="{x}" y="340" text-anchor="middle" font-size="13">{sub}</text></g>"#
+        )
+    };
+    let body = [
+        floor,
+        r#"<text class="kick" x="40" y="44">WHAT HAPPENS TO A CITATION</text>"#.to_string(),
+        beam(108.0, 150.0, "b1"),
+        beam(282.0, 350.0, "b2"),
+        arc,
+        docs,
+        snap,
+        ok,
+        bad,
+        label(180, "Your document", "exact quote, bytes 67..105", "s0"),
+        label(470, "Pinned snapshot", "SHA-256 you keep", "snap"),
+        label(800, "Reopened · PASS", "new process, same pin", "ok"),
+        label(1041, "1 byte changed · REFUSED", "copy with the old pin", "bad"),
+        r#"<text class="mono" x="40" y="368" font-size="12">Drawn, not recorded: the flow the six recorded runs below show · not a timing measurement</text>"#.to_string(),
+    ]
+    .concat();
+    card(
+        (1200, 380),
+        t,
+        (
+            "What happens to a citation",
+            "Animated 3D illustration: document sheets with a highlighted exact quote become a snapshot pinned by SHA-256; a new process reopens it with the same pin and passes; a copy with one changed byte is refused. Drawn, not recorded; not a timing measurement.",
+        ),
+        SCENE_STYLE,
+        &body,
+    )
+}
+/// Mutation counts of one public format in the committed matrix report.
+#[derive(Default)]
+struct FormatCount {
+    name: String,
+    /// Distinct mutants; each is read with the original and a recomputed pin.
+    mutants: usize,
+    /// Report rows whose declared verdict is a rejection or an acceptance.
+    rejected: usize,
+    accepted: usize,
+    /// Report rows whose observed result equals the declared one.
+    matched: usize,
+}
+/// Public evidence the facts strip and the data graphics are drawn from, read
+/// from this checkout so that no number can drift from its source.
+struct Evidence {
+    /// Property map rows: the ID and the tests the row names.
+    rows: Vec<(String, Vec<String>)>,
+    /// Tests the CI evidence collector declares Unix-only.
+    unix_only: Vec<String>,
+    /// Formats in name order.
+    formats: Vec<FormatCount>,
+}
+impl Evidence {
+    fn read() -> Result<Evidence> {
+        let map = fs::read_to_string("docs/PROPERTY-TESTS.md")?;
+        let rows: Vec<(String, Vec<String>)> = map
+            .lines()
+            .filter(|l| l.starts_with("| P"))
+            .map(|l| {
+                let id = l.split('|').nth(1).unwrap_or("").trim().to_string();
+                let cell = l.rsplit('|').nth(1).unwrap_or("");
+                let tests = cell.split('`').skip(1).step_by(2).map(str::to_string);
+                (id, tests.collect())
+            })
+            .collect();
+        let ci = fs::read_to_string("xtask/src/ci_evidence.rs")?;
+        let list = ci
+            .split_once("const EXCLUSIONS")
+            .and_then(|(_, rest)| rest.split_once("];"))
+            .ok_or("missing CI exclusion list")?
+            .0;
+        // The list holds (test, reason) pairs of string literals.
+        let literals: Vec<&str> = list.split('"').skip(1).step_by(2).collect();
+        let unix_only: Vec<String> = literals.iter().step_by(2).map(|s| s.to_string()).collect();
+        if literals.len() % 2 != 0 || unix_only.iter().any(|s| s.is_empty() || s.contains(' ')) {
+            return Err("unexpected CI exclusion list".into());
+        }
+        let matrix = fs::read_to_string("docs/evidence-mutation/matrix-r1.txt")?;
+        let mut lines = matrix.lines();
+        if lines.next() != Some("format\tcase\tregion\toperator\tpin\texpected\tobserved\tverdict")
+        {
+            return Err("unexpected mutation matrix header".into());
+        }
+        let mut formats: Vec<FormatCount> = Vec::new();
+        let mut seen = std::collections::BTreeSet::new();
+        for line in lines {
+            let f: Vec<&str> = line.split('\t').collect();
+            if f.len() != 8 {
+                return Err(format!("unexpected mutation matrix row: {line}").into());
+            }
+            let i = match formats.iter().position(|c| c.name == f[0]) {
+                Some(i) => i,
+                None => {
+                    formats.push(FormatCount {
+                        name: f[0].to_string(),
+                        ..FormatCount::default()
+                    });
+                    formats.len() - 1
+                }
+            };
+            let c = &mut formats[i];
+            c.mutants += usize::from(seen.insert((f[0], f[1])));
+            if f[5] == "ACCEPT" {
+                c.accepted += 1;
+            } else {
+                c.rejected += 1;
+            }
+            c.matched += usize::from(f[5] == f[6] && f[7] == "PASS");
+        }
+        formats.sort_by(|a, b| a.name.cmp(&b.name));
+        if rows.is_empty() || rows.iter().any(|r| r.1.is_empty()) || formats.is_empty() {
+            return Err("missing evidence sources".into());
+        }
+        Ok(Evidence {
+            rows,
+            unix_only,
+            formats,
+        })
+    }
+    /// Property rows that name at least one declared Unix-only test.
+    fn unix_rows(&self) -> Vec<bool> {
+        let unix = |test: &String| self.unix_only.contains(test);
+        self.rows
+            .iter()
+            .map(|(_, tests)| tests.iter().any(unix))
+            .collect()
+    }
+    /// Counts shown in the facts strip: properties, mapped tests and mutants.
+    fn fact_counts(&self) -> (usize, usize, usize) {
+        let tests = self.rows.iter().map(|r| r.1.len()).sum();
+        let mutants = self.formats.iter().map(|f| f.mutants).sum();
+        (self.rows.len(), tests, mutants)
+    }
+}
+/// Property map across the three CI platforms, as the CI evidence collector
+/// checks it. It draws the rule, not the result of a particular run.
+fn wall(dark: bool, e: &Evidence) -> String {
+    let t = theme(dark);
+    let (side, depth, step, x0) = (19.0, 8.0, 26.0, 150.0);
+    let n = e.rows.len();
+    let unix = e.unix_rows();
+    let partial = unix.iter().filter(|u| **u).count();
+    let full = 3 * n - partial;
+    let mut body = format!(
+        r#"<text class="kick" x="40" y="44">PROPERTY MAP × CI PLATFORMS</text><text x="40" y="84" font-size="26" font-weight="800">{n} properties × 3 platforms</text><text class="mono" x="1160" y="84" text-anchor="end" font-size="12">the rule, not one run: read each run's CI report</text><text class="mono" x="40" y="108" font-size="13">each cell: every mapped test must run and pass exactly once on that platform, or CI evidence is not COMPLETE</text>"#
+    );
+    for (r, platform) in ["Linux", "macOS", "Windows"].into_iter().enumerate() {
+        let back = (2 - r) as f64;
+        let (row_x, row_y) = (x0 + 16.0 * back, 250.0 - 34.0 * back);
+        body.push_str(&format!(
+            r#"<text x="{:.0}" y="{:.0}" text-anchor="end" font-size="14" font-weight="700">{platform}</text>"#,
+            row_x - 12.0,
+            row_y + 14.0
+        ));
+        for (c, unix_only) in unix.iter().enumerate() {
+            let faces = if r == 2 && *unix_only {
+                t.amber
+            } else {
+                t.blue
+            };
+            body.push_str(&format!(
+                r#"<g class="cube" style="animation-delay:{:.2}s">{}</g>"#,
+                0.035 * c as f64 + 0.12 * r as f64,
+                oblique(row_x + step * c as f64, row_y, (side, side, depth), faces)
+            ));
+        }
+    }
+    for c in (0..n).filter(|c| c % 5 == 0 || *c == n - 1) {
+        body.push_str(&format!(
+            r#"<text class="mono" x="{:.1}" y="300" text-anchor="middle" font-size="11">{}</text>"#,
+            x0 + step * c as f64 + side / 2.0,
+            e.rows[c].0
+        ));
+    }
+    body.push_str(&format!(
+        r#"<rect x="40" y="318" width="14" height="14" rx="3" fill="{}"/><text x="62" y="330" font-size="13">{full} cells: every mapped test required</text><rect x="380" y="318" width="14" height="14" rx="3" fill="{}"/><text x="402" y="330" font-size="13">{partial} Windows cells: declared Unix-only tests exempt, the rest required</text>"#,
+        t.blue[1], t.amber[1]
+    ));
+    card(
+        (1200, 350),
+        t,
+        (
+            "Property map across CI platforms",
+            &format!("{n} documented properties by 3 CI platforms, as the CI evidence collector checks them. In {full} cells every mapped test must run and pass exactly once; in {partial} Windows cells the declared Unix-only tests are exempt and the rest are required. This is the rule, not the result of a particular run."),
+        ),
+        ".cube{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.cube{animation:none}}",
+        &body,
+    )
+}
+/// The committed format mutation report as stacked 3D bars per format.
+fn bars(dark: bool, e: &Evidence) -> String {
+    let t = theme(dark);
+    let mutants: usize = e.formats.iter().map(|f| f.mutants).sum();
+    let rejected: usize = e.formats.iter().map(|f| f.rejected).sum();
+    let accepted: usize = e.formats.iter().map(|f| f.accepted).sum();
+    let matched: usize = e.formats.iter().map(|f| f.matched).sum();
+    let rows = rejected + accepted;
+    let tallest = e
+        .formats
+        .iter()
+        .map(|f| f.rejected + f.accepted)
+        .max()
+        .unwrap_or(1);
+    let (base, reach, w, depth) = (300.0, 150.0, 110.0, 36.0);
+    let mut body =
+        String::from(r#"<text class="kick" x="40" y="44">FORMAT MUTATION MATRIX</text>"#);
+    for (i, f) in e.formats.iter().enumerate() {
+        let x = 110.0 + 230.0 * i as f64;
+        let height = |n: usize| n as f64 / tallest as f64 * reach;
+        let (hr, ha) = (height(f.rejected), height(f.accepted));
+        let block = |top: f64, h: f64, faces| {
+            if h > 0.0 {
+                oblique(x, top, (w, h, depth), faces)
+            } else {
+                String::new()
+            }
+        };
+        let (mid, top) = (x + w / 2.0, base - hr - ha - depth);
+        body.push_str(&format!(
+            r#"<g class="bar" style="animation-delay:{:.2}s">{}{}</g><g class="num" style="animation-delay:{:.2}s"><text x="{:.0}" y="{:.0}" text-anchor="middle" font-size="22" font-weight="800">{}</text><text class="mono" x="{:.0}" y="{:.0}" text-anchor="middle" font-size="12">mutants</text></g><text x="{mid:.0}" y="334" text-anchor="middle" font-size="15" font-weight="700">{}</text><text class="mono" x="{mid:.0}" y="354" text-anchor="middle" font-size="12">{} rejected · {} accepted</text>"#,
+            0.2 * i as f64,
+            block(base - hr, hr, t.red),
+            block(base - hr - ha, ha, t.blue),
+            0.8 + 0.2 * i as f64,
+            mid + depth / 2.0,
+            top - 30.0,
+            f.mutants,
+            mid + depth / 2.0,
+            top - 14.0,
+            f.name,
+            f.rejected,
+            f.accepted
+        ));
+    }
+    let verdict = if matched == rows { t.good } else { t.red[1] };
+    body.push_str(&format!(
+        r#"<g class="num" style="animation-delay:1.4s"><text x="830" y="120" font-size="46" font-weight="800" style="fill:{verdict}">{matched}/{rows}</text><text x="830" y="148" font-size="15">rows matched their expected verdict</text><text x="830" y="196" font-size="30" font-weight="800" style="fill:{}">{mutants}</text><text x="900" y="196" font-size="15">byte-level mutants of the</text><text x="830" y="218" font-size="15">three public formats, each read with the</text><text x="830" y="238" font-size="15">original pin and with a recomputed one</text><rect x="830" y="262" width="14" height="14" rx="3" fill="{}"/><text x="852" y="274" font-size="13">rejected: {rejected}</text><rect x="960" y="262" width="14" height="14" rx="3" fill="{}"/><text x="982" y="274" font-size="13">accepted as documented: {accepted}</text><text class="mono" x="830" y="310" font-size="12">committed report; xtask verify requires</text><text class="mono" x="830" y="328" font-size="12">an identical rerun</text></g>"#,
+        t.accent, t.red[1], t.blue[1]
+    ));
+    card(
+        (1200, 380),
+        t,
+        (
+            "Format mutation matrix",
+            &format!("{mutants} byte-level mutants of the three public formats, each read with the original pin and with a recomputed one. In the committed report {matched} of {rows} rows matched their expected verdict: {rejected} rejected, {accepted} accepted as documented."),
+        ),
+        ".bar{animation:grow 1.1s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:bottom}.num{animation:fade .8s ease-out both}@keyframes grow{from{transform:scaleY(0)}to{transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.bar,.num{animation:none}}",
+        &body,
+    )
 }
 fn facts(dark: bool, (props, tests, mutants): (usize, usize, usize)) -> String {
     let v = if dark {
@@ -550,7 +995,7 @@ fn flow_picture() -> String {
     themed(
         "media/presentation/flow-light.svg",
         "media/presentation/flow-dark.svg",
-        "How a citation is checked: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin; a copy with one changed byte is refused.",
+        "What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused.",
         1200,
     )
 }
@@ -562,9 +1007,26 @@ fn facts_picture() -> String {
         1200,
     )
 }
+fn wall_picture() -> String {
+    themed(
+        "media/presentation/wall-light.svg",
+        "media/presentation/wall-dark.svg",
+        "Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows.",
+        1200,
+    )
+}
+fn bars_picture() -> String {
+    themed(
+        "media/presentation/bars-light.svg",
+        "media/presentation/bars-dark.svg",
+        "Format mutation matrix: rejected and accepted rows per public format in the committed report, and how many rows matched their expected verdict.",
+        1200,
+    )
+}
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
-    let counts = fact_counts()?;
+    let evidence = Evidence::read()?;
+    let counts = evidence.fact_counts();
     let mut out = vec![
         (
             "media/presentation/header-light.svg".to_string(),
@@ -574,17 +1036,15 @@ fn assets() -> Result<Vec<(String, String)>> {
             "media/presentation/header-dark.svg".to_string(),
             header(true),
         ),
-        ("media/presentation/flow-light.svg".to_string(), flow(false)),
-        ("media/presentation/flow-dark.svg".to_string(), flow(true)),
-        (
-            "media/presentation/facts-light.svg".to_string(),
-            facts(false, counts),
-        ),
-        (
-            "media/presentation/facts-dark.svg".to_string(),
-            facts(true, counts),
-        ),
     ];
+    for dark in [false, true] {
+        let theme = if dark { "dark" } else { "light" };
+        let path = |name: &str| format!("media/presentation/{name}-{theme}.svg");
+        out.push((path("flow"), scene(dark)));
+        out.push((path("facts"), facts(dark, counts)));
+        out.push((path("wall"), wall(dark, &evidence)));
+        out.push((path("bars"), bars(dark, &evidence)));
+    }
     for i in 0..CHIPS.len() {
         for dark in [false, true] {
             out.push((chip_path(i, dark), chip(i, dark)));
@@ -604,6 +1064,8 @@ fn page() -> String {
         .replace("__CARDS__", &cards)
         .replace("__FLOW__", &flow_picture())
         .replace("__FACTS__", &facts_picture())
+        .replace("__WALL__", &wall_picture())
+        .replace("__BARS__", &bars_picture())
         .replace(
             "__DOC__",
             &format!("https://github.com/Gelram-project/gel-ram/blob/{RELEASE}"),
@@ -625,6 +1087,8 @@ fn native_intro() -> String {
     NATIVE
         .replace("__FLOW__", &flow_picture())
         .replace("__FACTS__", &facts_picture())
+        .replace("__WALL__", &wall_picture())
+        .replace("__BARS__", &bars_picture())
         .replace("__HERO_CHIP__", &chip_picture(4))
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
@@ -710,6 +1174,8 @@ fn check_page(text: &str) -> Result<()> {
         "__branch__",
         "__flow__",
         "__facts__",
+        "__wall__",
+        "__bars__",
         "__hero_chip__",
         "__hero_id__",
     ] {
@@ -724,12 +1190,12 @@ fn check_page(text: &str) -> Result<()> {
             }
         }
     }
-    let mut needed = vec![
-        "media/presentation/flow-light.svg".to_string(),
-        "media/presentation/flow-dark.svg".to_string(),
-        "media/presentation/facts-light.svg".to_string(),
-        "media/presentation/facts-dark.svg".to_string(),
-    ];
+    let mut needed = Vec::new();
+    for name in ["flow", "facts", "wall", "bars"] {
+        for theme in ["light", "dark"] {
+            needed.push(format!("media/presentation/{name}-{theme}.svg"));
+        }
+    }
     for i in 0..CHIPS.len() {
         needed.push(chip_path(i, false));
         needed.push(chip_path(i, true));
@@ -866,7 +1332,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 6 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 10 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -876,6 +1342,8 @@ mod tests {
             for bad in [
                 "__FLOW__",
                 "__FACTS__",
+                "__WALL__",
+                "__BARS__",
                 "__HERO_CHIP__",
                 "__HERO_ID__",
                 "__HERO__",
@@ -887,17 +1355,73 @@ mod tests {
     }
     #[test]
     fn facts_are_read_from_the_repository() {
-        let (props, tests, mutants) = fact_counts().unwrap();
+        let (props, tests, mutants) = Evidence::read().unwrap().fact_counts();
         assert!(props > 0 && tests >= props && mutants > 0);
         let s = facts(false, (props, tests, mutants));
         assert!(s.contains(&format!("{props} → {tests}")));
         assert!(s.contains(&format!(">{mutants}<")));
     }
     #[test]
-    fn motion_can_be_reduced() {
+    fn check_graphics_follow_the_evidence() {
+        let e = Evidence::read().unwrap();
+        let (props, _, mutants) = e.fact_counts();
+        let partial = e.unix_rows().iter().filter(|u| **u).count();
+        let rows: usize = e.formats.iter().map(|f| f.rejected + f.accepted).sum();
+        assert_eq!(rows, 2 * mutants, "each mutant is read with two pins");
         for dark in [false, true] {
-            assert!(flow(dark).contains("prefers-reduced-motion"));
-            assert!(facts(dark, (1, 1, 1)).contains("prefers-reduced-motion"));
+            let w = wall(dark, &e);
+            assert!(w.contains(&format!(">{props} properties × 3 platforms<")));
+            assert!(w.contains(&format!(">{} cells: ", 3 * props - partial)));
+            assert!(w.contains(&format!(">{partial} Windows cells: ")));
+            let b = bars(dark, &e);
+            assert!(b.contains(&format!(">{mutants}<")));
+            for f in &e.formats {
+                assert!(b.contains(&format!(">{}<", f.name)));
+                assert!(b.contains(&format!(
+                    "{} rejected · {} accepted",
+                    f.rejected, f.accepted
+                )));
+            }
+        }
+    }
+    #[test]
+    fn wall_draws_the_rule_not_a_result() {
+        let e = Evidence::read().unwrap();
+        for dark in [false, true] {
+            let w = wall(dark, &e);
+            assert!(w.contains("must run and pass exactly once"));
+            assert!(!w.contains("passed"), "a drawn cell is not a CI result");
+        }
+    }
+    #[test]
+    fn bars_show_a_mismatch() {
+        let e = Evidence {
+            rows: vec![("P01".to_string(), vec!["t".to_string()])],
+            unix_only: Vec::new(),
+            formats: vec![FormatCount {
+                name: "FMT".to_string(),
+                mutants: 1,
+                rejected: 1,
+                accepted: 1,
+                matched: 1,
+            }],
+        };
+        let b = bars(false, &e);
+        assert!(b.contains(&format!("fill:{}\">1/2<", LIGHT.red[1])));
+        assert!(!b.contains(LIGHT.good));
+    }
+    #[test]
+    fn motion_can_be_reduced() {
+        let e = Evidence::read().unwrap();
+        for dark in [false, true] {
+            for s in [
+                scene(dark),
+                facts(dark, (1, 1, 1)),
+                wall(dark, &e),
+                bars(dark, &e),
+            ] {
+                assert!(s.contains("prefers-reduced-motion"));
+            }
         }
         assert!(native_intro().contains("05-integrity"));
     }

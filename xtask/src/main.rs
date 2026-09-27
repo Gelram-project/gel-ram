@@ -32,7 +32,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "7bf9dba77d6acc39fab2395dca32d3d43db747144aa9636e0ac68e3f445be643",
+        "32996a009e499bae4d43ad0e08284b99505dd314b0aaf371145378237e7ecf73",
     ),
     (
         "media/presentation/header-light.svg",
@@ -44,19 +44,35 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/flow-light.svg",
-        "55c927ac3a2aa3952e7906322dbd2667047c9a1ada371d0da0b49d16fb30e748",
-    ),
-    (
-        "media/presentation/flow-dark.svg",
-        "54837e23f8ae145f110d37fd056355d6568f88716402483e7e0277f62a6588f5",
+        "f69dccd7b004f5b95d36fbc4773e8c962b2c39be1a5c23186b152991d1274f5a",
     ),
     (
         "media/presentation/facts-light.svg",
         "93624f881d896900e63d1694c1cc4219150d48b5ef95461ccedcb353ba89a44e",
     ),
     (
+        "media/presentation/wall-light.svg",
+        "1587f805345b09c171b74af481190f74ac49a78c54f373ccda7142cd0f273d83",
+    ),
+    (
+        "media/presentation/bars-light.svg",
+        "d83fb2f2e9abaa13e7371fd9d6df1a2f7bc50bc92f6bda61a43404b6121e05e0",
+    ),
+    (
+        "media/presentation/flow-dark.svg",
+        "4248e73198f4274634098a70f0b6739f981da45f040f20a8444e8051dc005032",
+    ),
+    (
         "media/presentation/facts-dark.svg",
         "9f12978745d6dc6cb1298fd5bd1b85f032e670b0401b5a9f8ab5326a6675a2a5",
+    ),
+    (
+        "media/presentation/wall-dark.svg",
+        "db451d62af58b85ac21d9f9f68822b709e85c48a9a34a4eff1109a3dddebb3ff",
+    ),
+    (
+        "media/presentation/bars-dark.svg",
+        "ff0e0e44a62c8d17f7ba8017fafcca308b9510738085194d11166039fa36e5f4",
     ),
     (
         "media/presentation/chips/01-light.svg",
