@@ -30,7 +30,8 @@ GEL_VERIFY_ALL=PASS
 
 A failed gate must be investigated before interpreting benchmark output.
 For a run with proven network isolation (Linux), see
-[isolated reproduction](REPRODUCE-ISOLATED.md).
+[isolated reproduction](REPRODUCE-ISOLATED.md). To run every check and the comparison in one
+command and share the result, see [reproduce everything](REPRODUCE.md).
 
 ## 2. Run GEL Live Lab on your own UTF-8 text
 

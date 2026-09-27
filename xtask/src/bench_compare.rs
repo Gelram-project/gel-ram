@@ -167,7 +167,7 @@ fn target_binary(root: &Path, name: &str) -> PathBuf {
 }
 
 /// The tested revision and whether the working tree differed from it.
-fn revision(root: &Path) -> String {
+pub(crate) fn revision(root: &Path) -> String {
     let git = |args: &[&str]| {
         Command::new("git")
             .args(args)

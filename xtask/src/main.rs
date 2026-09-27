@@ -11,6 +11,7 @@ mod process_sequence;
 mod publication_status_tests;
 mod recorder_lint;
 mod reproduce;
+mod reproduction;
 mod source_bundle;
 
 use std::ffi::OsStr;
@@ -114,7 +115,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|isolation-check|mutation-matrix|bench-compare|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|bench-compare|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -899,6 +900,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
     match args.first().map(String::as_str) {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
+        Some("reproduce") => reproduction::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),

@@ -13,11 +13,12 @@
 [Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
 [per-revision CI evidence](docs/CI-EVIDENCE.md).
 
-Try it in a few minutes. You need Git and [rustup](https://rustup.rs); the first
-three commands need network access, the last one runs offline:
+Try it in a few minutes. You need Git and [rustup](https://rustup.rs); cloning,
+installing the toolchain and fetching need network access, the last command runs offline:
 
 ```sh
-git clone https://github.com/Gelram-project/gel-ram.git && cd gel-ram
+git clone https://github.com/Gelram-project/gel-ram.git
+cd gel-ram
 rustup toolchain install 1.85.0 --profile minimal
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
