@@ -2,9 +2,13 @@
 
 **Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
-> Workspace: **0.4.0** — Evidence Lab and the review repairs are on main.
-> [Release notes](RELEASE-NOTES-v0.4.0.md) · [scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md) ·
-> [tagged releases](https://github.com/Gelram-project/gel-ram/releases). Earlier films remain historical.
+> **Development toward v0.5.0 — not released.** Batch mode, backup and restore, the format
+> mutation matrix, the grep comparison and the reproduction runner described here belong to
+> the work branch `work/v0.5.0`. Follow these instructions on that branch and record the
+> commit you tested (`git rev-parse HEAD`); a default-branch checkout is not equivalent.
+> The latest tagged release and its own instructions are on the
+> [Releases page](https://github.com/Gelram-project/gel-ram/releases) ·
+> [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md). Earlier films remain historical.
 
 ## Evidence Lab: your documents, exact citations, a real restart
 
@@ -19,6 +23,7 @@ installing the toolchain and fetching need network access, the last command runs
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
+git checkout work/v0.5.0
 rustup toolchain install 1.85.0 --profile minimal
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
@@ -41,9 +46,11 @@ This is phrase retrieval from plaintext sources, not a general chatbot or an enc
 See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
 for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
 
-This tree is the 0.4.0 version line ([release notes](RELEASE-NOTES-v0.4.0.md));
-tagged releases are listed on the [Releases page](https://github.com/Gelram-project/gel-ram/releases),
-and the earlier `v0.3.0` release is unchanged. See [codec boundaries](docs/CODEC-SCOPE.md)
+This work branch still carries the 0.4.0 workspace version
+([release notes](RELEASE-NOTES-v0.4.0.md)); the move to 0.5.0 happens only with the
+owner's release decision. Tagged releases are listed on the
+[Releases page](https://github.com/Gelram-project/gel-ram/releases), and the earlier
+`v0.3.0` release is unchanged. See [codec boundaries](docs/CODEC-SCOPE.md)
 before interpreting Q labels.
 
 ## What GEL RAM is
@@ -69,10 +76,10 @@ The public repository is **not the complete private research system**. Some expe
 
 ## Important performance distinction
 
-The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
+The recorded 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**; they are historical, author-reported and cannot be re-run from this checkout. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
 
-### Public CPU/RAM baseline
+### Historical CPU/RAM full-scan baseline (author-reported)
 
 EXACT full scan → top10 → decision, 24 CPU workers:
 
@@ -83,14 +90,14 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 | 10M | 41119 | 100 | 615.428 ms | 684.888 ms | 710.313 ms | 734.085 ms |
 | 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |
 
-These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
+These historical numbers show the cost of a conventional full scan. They are **author-reported baseline evidence** that cannot be re-run from this checkout, not a claim that GEL RAM's private research path works this way.
 
 ### GEL's own search path — author-reported, a different task
 
 | Task | Data | p50 per query | Evidence |
 |---|---|---:|---|
-| Public full scan → top-10 → decision, 24 workers | 1M records of 1152 B | 72 ms | reproducible baseline above |
-| Public full scan → top-10 → decision, 24 workers | 10M records of 1152 B | 615–705 ms | reproducible baseline above |
+| Public full scan → top-10 → decision, 24 workers | 1M records of 1152 B | 72 ms | historical, author-reported; not reproducible from this checkout |
+| Public full scan → top-10 → decision, 24 workers | 10M records of 1152 B | 615–705 ms | historical, author-reported; not reproducible from this checkout |
 | GEL compact-sketch search, minimum distance, 3 workers | 16,384 sketches of 128 B | 15.5–21.3 µs | author-reported, private engine |
 | GEL compact-sketch search, minimum distance, 3 workers | 131,072 sketches of 128 B | 269–338 µs | author-reported, private engine |
 | GEL compact-sketch search, minimum distance, 3 workers | 500,000 sketches of 128 B | 1.26–1.44 ms | author-reported, private engine |
@@ -171,16 +178,17 @@ The repository pins Rust 1.85.0.
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
+git checkout work/v0.5.0
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 cargo run --locked --offline -p xtask -- verify
 ```
 
-Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions. Evidence Lab has been on public main since
+Expected: `GEL_VERIFY_ALL=PASS`. These instructions verify the `work/v0.5.0`
+development branch; name the commit you tested. Evidence Lab has been on public main since
 [PR #9](https://github.com/Gelram-project/gel-ram/pull/9) (71142a2) and the review
 repairs since [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) (0c17f6e);
-the workspace version is 0.4.0. No model or private bank is needed.
+the workspace version on this branch is still 0.4.0. No model or private bank is needed.
 
 ### Change the numeric input
 

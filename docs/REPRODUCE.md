@@ -27,6 +27,7 @@ verified.
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
+git checkout work/v0.5.0
 rustup toolchain install 1.85.0 --profile minimal
 cargo fetch --locked
 unshare --user --net -- cargo run --locked --offline -p xtask -- reproduce ../gel-repro --require-isolation

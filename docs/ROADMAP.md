@@ -161,7 +161,7 @@ The tagged `v0.3.0` release remains an earlier immutable release point. Public
 
 ## Public performance boundary
 
-The published 1M/10M Ocean measurements are deliberately retained as a
+The historical, author-reported 1M/10M Ocean measurements are retained as a
 **CPU/RAM full-scan baseline**: CPU workers scan, score, rank and select records
 resident in memory. They are valuable comparison evidence, but they are not
 presented as the final GEL RAM execution model.

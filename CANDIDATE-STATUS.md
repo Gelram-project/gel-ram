@@ -27,6 +27,8 @@ ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
 VERSION_LINE=0.4.0
 TARGET_RELEASE=0.4.0
+DEVELOPMENT_BRANCH=work/v0.5.0
+DEVELOPMENT_TARGET=0.5.0_NOT_RELEASED
 V0_4_0_TAGGED_RELEASE=SEE_RELEASES_PAGE
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
@@ -43,7 +45,8 @@ prepared release commit. The
 [Releases page](https://github.com/Gelram-project/gel-ram/releases) is
 authoritative for that state. The v0.3.0 fields describe the earlier release.
 See the [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md) and the historical
-[candidate notes](RELEASE-NOTES-v0.4.0-RC.md).
+[candidate notes](RELEASE-NOTES-v0.4.0-RC.md). `DEVELOPMENT_BRANCH` names the branch where work
+toward 0.5.0 happens; nothing on it is released before the owner's release decision.
 
 Technical checks report the approval flags without changing them. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
