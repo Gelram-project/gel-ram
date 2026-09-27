@@ -31,7 +31,7 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/measured-progress.svg",
-        "82cf4280799997f037454f7ae7ed2cb4fd2a389b5582e526c7a418ffdf3caf8b",
+        "cdfdfd4c7c85c07c09f7968ecb1273672f6c9bfd4aad337f5ebab51fd91dd40f",
     ),
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (

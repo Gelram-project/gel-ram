@@ -75,6 +75,13 @@ moved from an example into the gel-phase-quad crate.
   UNKNOWN for every claim because the grammar was unsupported, so its
   microsecond times measure parsing and abstention; no GEL/LLM speed-up
   multiplier is claimed.
+- **Measured progress of the private implementation**
+  ([measured progress](docs/MEASURED-PROGRESS.md)): on the same 400 known-slot
+  probes, Quad top-1 rose from 310/400 to 371/400 while Single, at 379/400,
+  stays ahead; a separate five-article source-field dialogue pilot has
+  field-answer medians of 2.054–4.819 µs, with a slowest warm sample of
+  711.017 µs. Author-run and not reproducible from this checkout; these tasks
+  differ from the Groq diagnostic, so no speed-up ratio follows.
 - **Cost of one collection change** ([mutation comparison](docs/MUTATION-COMPARISON.md)):
   paired timing and the resident-set peak of one change in fresh processes,
   with the peak reset before the change (`xtask mutation-campaign`).
@@ -92,7 +99,9 @@ not code-signed or notarized and are checked only on their build runners.
 
 ## Documentation
 
-- The README opens with a light and dark header, an animated 3D scene of the
+- The README opens with a light and dark header whose GEL logo is animated
+  (document sheets settle into a translucent cube, a query lights one exact
+  cell, a pin seal appears), an animated 3D scene of the
   citation check (drawn, not recorded; it stops under reduced motion), a strip
   of checked facts whose numbers the builder reads from the property map and
   the mutation matrix, and six short replays of recorded public workflows with

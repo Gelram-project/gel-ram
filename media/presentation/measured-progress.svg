@@ -4,18 +4,18 @@
 <style>
 text{font-family:DejaVu Sans,Arial,sans-serif;fill:#e8efff}
 .label{font-size:20px}.value{font-size:25px;font-weight:700}.note{font-size:17px;fill:#b9c8df}
-.pulse{animation:highlight 9s ease-in-out infinite;fill:#48dcca;opacity:.04}
+.hl{animation:highlight 9s ease-in-out infinite;fill:#48dcca;opacity:.04}
 .b{animation-delay:3s}.c{animation-delay:6s}
 @keyframes highlight{0%,30%,100%{opacity:.04}12%,20%{opacity:.16}}
-@media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+@media(prefers-reduced-motion:reduce){.hl{animation:none}}
 </style>
 <rect width="1200" height="510" rx="24" fill="#0b1629"/>
 <text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="36" y="46" class="note">GEL RAM / AUTHOR-RUN DIAGNOSTICS / SEPARATE TASKS</text>
 <text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="36" y="89" font-size="34" font-weight="700">Measured progress. Visible limits.</text>
 <path d="M36 116H1164" stroke="#334764"/>
-<rect fill="#48dcca" opacity="0.04" class="pulse" x="24" y="132" width="1152" height="90" rx="12"/>
-<rect fill="#48dcca" opacity="0.04" class="pulse b" x="24" y="232" width="1152" height="90" rx="12"/>
-<rect fill="#48dcca" opacity="0.04" class="pulse c" x="24" y="332" width="1152" height="90" rx="12"/>
+<rect fill="#48dcca" opacity="0.04" class="hl" x="24" y="132" width="1152" height="90" rx="12"/>
+<rect fill="#48dcca" opacity="0.04" class="hl b" x="24" y="232" width="1152" height="90" rx="12"/>
+<rect fill="#48dcca" opacity="0.04" class="hl c" x="24" y="332" width="1152" height="90" rx="12"/>
 <text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="40" y="163" class="label">QUAD / RANKING</text>
 <text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="370" y="163" class="value">top-1 77.5% to 92.75%</text>
 <text fill="#e8efff" font-family="DejaVu Sans,Arial,sans-serif" x="820" y="163" class="value">top-10 99%</text>

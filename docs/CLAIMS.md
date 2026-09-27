@@ -18,6 +18,9 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-source-integrity-controls | integrity | MEASURED_LOCAL |
 | gel-single-quad-slot-ranking | ranking | MEASURED_LOCAL |
 | gel-groq-supplied-source-diagnostic | comparison | MEASURED_LOCAL |
+| gel-slot-ranking-update | ranking | MEASURED_LOCAL |
+| gel-source-field-dialogue-timing | timing | MEASURED_LOCAL |
+| gel-new-article-transfer | retrieval | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |
