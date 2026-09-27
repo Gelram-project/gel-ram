@@ -5,6 +5,7 @@ mod claims;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
+mod mutation_campaign;
 mod mutation_matrix;
 mod package;
 mod process_sequence;
@@ -120,7 +121,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|bench-compare|package-binaries|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -947,6 +948,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("reproduce") => reproduction::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
+        Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),

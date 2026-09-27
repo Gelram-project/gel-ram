@@ -93,7 +93,7 @@ const CLAIMS: &[Claim] = &[
         dimension: "memory",
         scope: "streamed versus historical mutation",
         input: "mutation_compare identical paired states",
-        expected: "allocations, user-space copies and peak additional heap measured locally (DHAT, heaptrack); isolated RSS not measured",
+        expected: "allocations, user-space copies and peak additional heap measured locally (DHAT, heaptrack); fresh-process RSS peak of one mutation after a peak reset measured locally (campaign r1)",
         counterexample: "removed temporary Vec called measured RAM saving",
         source: "docs/MUTATION-COMPARISON.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),

@@ -1,0 +1,10 @@
+FORMAT=GEL_MUTATION_CAMPAIGN_1
+revision=2228ed16a25e4efadd813b4028c081aaa66a0d8c working_tree=dirty
+os=linux arch=x86_64 available_parallelism=24
+model name	: AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+MemTotal:       98474964 kB
+loadavg_start=3.06 4.24 5.12 2/2581 3608897
+load_limit=4 memory_reps=10
+harness_sha256=d2cb15cdfca4456dd970f67c381a0211f1606f06d5ffc1edbca2177853b055aa
+loadavg_end=4.21 4.38 5.11 4/2575 3637303
+MUTATION_CAMPAIGN=PASS timing_pairs=270 memory_samples=180

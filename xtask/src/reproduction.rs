@@ -21,7 +21,7 @@ fn available(program: &str) -> bool {
         .is_ok_and(|o| o.status.success())
 }
 
-fn host_lines() -> String {
+pub(crate) fn host_lines() -> String {
     let mut s = format!(
         "os={} arch={} available_parallelism={}\n",
         std::env::consts::OS,
@@ -43,7 +43,7 @@ fn host_lines() -> String {
     s
 }
 
-fn load(when: &str) -> String {
+pub(crate) fn load(when: &str) -> String {
     match fs::read_to_string("/proc/loadavg") {
         Ok(l) => format!("loadavg_{when}={}\n", l.trim()),
         Err(_) => format!("loadavg_{when}=NOT_MEASURED\n"),

@@ -71,6 +71,7 @@ states.
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
 | Still of the update, restart and corrupted-copy scenario | after 4ce332b | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
 | Binary packages for Linux, macOS and Windows, built only in CI | after 4ce332b | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
+| Fresh paired timing and fresh-process RSS of one mutation (A09) | after 2228ed1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
 
 ## How to read the review work list
 
@@ -103,7 +104,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A06 | DONE_SCOPED | The recorder fails closed on split UTF-8, EOF, failed writes, missing markers and child exit; a lint gate forbids 14 lints and rejects 10 probes. | [Recorder safety](RECORDER-SAFETY.md) |
 | A07 | PARTIAL | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 2 partial branches, and a strict cross-platform diff checks them. A complete property-to-test map remains open. | [CI evidence](CI-EVIDENCE.md) |
 | A08 | DONE_SCOPED | Structural, admission and OS-level publication faults (permission denial, SIGKILL, full disk on a bounded tmpfs) keep the previous snapshot; possible publication before a directory-sync error is documented. | [Publication fault tests](PUBLICATION-FAULT-TESTS.md) |
-| A09 | PARTIAL | Allocations, user-space copies and peak additional heap per mutation are measured locally. Isolated RSS and a fresh paired timing comparison remain open. | [Mutation comparison](MUTATION-COMPARISON.md), [builder](COLLECTION-BUILDER.md) |
+| A09 | DONE_SCOPED | Allocations, user-space copies and peak additional heap per mutation are measured locally (DHAT, heaptrack). A fresh paired timing comparison and the resident-set peak of one mutation in fresh processes, with the peak reset before the mutation, are recorded on one host; a second host remains open. | [Mutation comparison](MUTATION-COMPARISON.md), [builder](COLLECTION-BUILDER.md) |
 | A10 | PARTIAL | A comparison protocol (input, profile, clock boundary, warmup, order, host metadata) exists and governs the [grep comparison](BENCHMARK-GREP.md); historical campaigns are not re-run under it. | [Campaign protocol](EVIDENCE-CAMPAIGN.md) |
 | A11 | DONE_SCOPED | A public F32/F16/affine Q1–Q16 reference with a versioned container, independent oracles and retained output exists. It does not establish integration with every GEL reader/writer or with any private format. | [Precision matrix](PRECISION-MATRIX.md), [codec scope](CODEC-SCOPE.md) |
 | A12 | DONE_SCOPED | Bytes, numeric error, ranking and context are separate acceptance results, not derived from transport PASS. | [Claims](CLAIMS.md), [codec scope](CODEC-SCOPE.md) |
