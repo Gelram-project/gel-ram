@@ -96,6 +96,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
     {
         return Err("output directory must be outside the source checkout".into());
     }
+    // Root, including root mapped in a user namespace, bypasses file
+    // permissions, so the permission-denial tests would fail for that reason alone.
+    let effective_root = fs::read_to_string("/proc/self/status").is_ok_and(|s| {
+        s.lines()
+            .find_map(|l| l.strip_prefix("Uid:"))
+            .and_then(|ids| ids.split_whitespace().nth(1))
+            == Some("0")
+    });
+    if effective_root {
+        return Err("REPRODUCTION=REFUSED running as root (also root mapped by unshare --map-root-user); run unprivileged, e.g. unshare --user --net or bwrap --unshare-net".into());
+    }
     fs::create_dir(out).map_err(|e| format!("new output directory required: {e}"))?;
     let out = out.canonicalize().map_err(|e| e.to_string())?;
 

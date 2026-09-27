@@ -20,13 +20,16 @@ cargo build --locked --offline -p xtask
 Either of:
 
 ```text
-unshare --user --map-root-user --net -- bash
+unshare --user --net -- bash
 bwrap --dev-bind / / --unshare-net -- bash
 ```
 
-Some distributions restrict unprivileged user namespaces (on Ubuntu the
-AppArmor setting kernel.apparmor_restrict_unprivileged_userns). Then an
-administrator has to allow them for this run.
+Do not add `--map-root-user`: root, also root mapped inside a user namespace,
+bypasses file permissions, and the permission-denial tests then fail for that
+reason alone. `xtask reproduce` refuses to run as root. Some distributions
+restrict unprivileged user namespaces (on Ubuntu the AppArmor setting
+kernel.apparmor_restrict_unprivileged_userns). Then an administrator has to
+allow them for this run.
 
 ## 3. Prove the isolation
 
