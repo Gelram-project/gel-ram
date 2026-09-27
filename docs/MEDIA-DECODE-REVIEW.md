@@ -42,8 +42,10 @@ Corrections made from this review: event times in the
 appears (they were 3–5 s late); the film guide quotes the on-screen
 “Session transcript logging ON” and states that the private-preview label is
 visible only before `/chat` (0–24.5 s and 0–15.7 s). The films themselves are
-unchanged. At 640 px the hash-heavy screens cannot be read in any film; the
-transcripts carry those values.
+unchanged. At 640 px the hash-heavy screens cannot be read in any film; for the
+public film the transcript carries those values. On 27 September 2026 the
+transcripts of the two private previews were removed from the repository; only
+the public Evidence Lab film is transcribed.
 
 ```text
 AI_FRAME_REVIEW=COMPLETE_FOR_DISTINCT_FRAMES

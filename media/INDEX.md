@@ -15,7 +15,7 @@ recorded provenance; do not assign today's commit to historical recordings.
 Subsequent recorder/context fixes have not silently replaced these films.
 
 [Detailed annotated preview guide](FILMS-GUIDE.md) ·
-[Descriptive transcripts with timelines — PL / EN](TRANSCRIPTS-PL-EN.md) ·
+[Descriptive transcript of the public film — PL / EN](TRANSCRIPTS-PL-EN.md) ·
 [Full decode checks and remaining visual-review limitations](../docs/MEDIA-DECODE-REVIEW.md).
 
 The update, restart and corrupted-copy scenario is shown as one still, not a
@@ -32,7 +32,8 @@ Nie porównujemy czasów tych filmów z pełnym skanem milionów ORB.
 Scenariusz aktualizacji, restartu i uszkodzonej kopii pokazuje jeden zrzut
 ostatniego ekranu, nie film.
 
-[Transkrypcje opisowe PL/EN](TRANSCRIPTS-PL-EN.md) zawierają polecenia,
+[Transkrypcja opisowa PL/EN](TRANSCRIPTS-PL-EN.md) publicznego filmu zawiera polecenia,
 odpowiedzi i momenty zdarzeń. Wszystkie wizualnie różne klatki obejrzał
 recenzent AI; przegląd przez człowieka pozostaje otwarty. Na ekranie 640 px
-hashe są nieczytelne — ich wartości są w transkrypcjach.
+hashe są nieczytelne — dla publicznego filmu ich wartości są w transkrypcji.
+Prywatnych podglądów nie transkrybujemy.

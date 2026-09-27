@@ -72,6 +72,7 @@ states.
 | Still of the update, restart and corrupted-copy scenario | after 4ce332b | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
 | Binary packages for Linux, macOS and Windows, built only in CI | after 4ce332b | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
 | Fresh paired timing and fresh-process RSS of one mutation (A09) | after 2228ed1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
+| Transcript limited to the public film | after 306c7f1 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md): the public Evidence Lab film in full, the private previews only by scope and limits | — |
 
 ## How to read the review work list
 
@@ -113,7 +114,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A15 | OWNER | Description and topics are repository settings. A social-preview image is prepared; uploading it is a manual settings step. | [Repository](https://github.com/Gelram-project/gel-ram) |
 | A16 | DONE_SCOPED | One film index separates the public walkthrough from private previews, with destinations and scope labels. | [Film index](../media/INDEX.md) |
 | A17 | PARTIAL | A two-process update/restart scenario and tests exist. One still of the final screen of a recording of it is published; the recording itself is not. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
-| A18 | PARTIAL | PL/EN descriptive transcripts exist. Human confirmation of full timeline accuracy remains open; translations are not new engine outputs. | [Transcripts](../media/TRANSCRIPTS-PL-EN.md) |
+| A18 | PARTIAL | A PL/EN descriptive transcript of the public Evidence Lab film exists; the private previews are described only by scope and limits. Human confirmation of the timeline remains open; translations are not new engine outputs. | [Transcripts](../media/TRANSCRIPTS-PL-EN.md) |
 | A19 | PARTIAL | An executable claim registry separates executable checks, separate gates, a locally measured row and deferred rows; it is not yet an exhaustive map of historical statements. | [Claims](CLAIMS.md) |
 | A20 | OPEN | Reproduction form and a [verification suite runner](REPRODUCE.md) exist. Obtain and retain an independent second-host campaign and first-use feedback. Hosted CI alone does not close this item. | [Reproduction form](../.github/ISSUE_TEMPLATE/reproduction.yml) |
 | A21 | PARTIAL | Scoped author-reported component measurements are published. An identical-task, end-to-end comparison with the exact baseline remains open. | [Component scope](GEL-EXPERIMENTAL-MEASUREMENTS.md) |
