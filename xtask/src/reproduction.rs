@@ -74,14 +74,31 @@ fn hashes(dir: &Path, base: &Path, out: &mut Vec<(String, String)>) -> Result<()
     Ok(())
 }
 
+/// The recorded result of one step. In strict mode (a release gate) a step
+/// skipped for a missing dependency is a failure, never a pass.
+fn classify(outcome: Result<Option<String>, String>, strict: bool) -> (&'static str, String) {
+    match outcome {
+        Ok(None) => ("PASS", String::new()),
+        Ok(Some(why)) if strict => ("FAIL", format!(" error=skipped in strict mode: {why}")),
+        Ok(Some(why)) => ("SKIPPED", format!(" reason={why}")),
+        Err(e) => ("FAIL", format!(" error={}", e.lines().next().unwrap_or(""))),
+    }
+}
+
 pub fn run(args: &[String]) -> Result<(), String> {
-    let usage =
-        "usage: cargo run -p xtask -- reproduce NEW_DIR_OUTSIDE_CHECKOUT [--require-isolation]";
-    let (dir, require) = match args {
-        [dir] => (dir, false),
-        [dir, flag] if flag == "--require-isolation" => (dir, true),
-        _ => return Err(usage.into()),
+    let usage = "usage: cargo run -p xtask -- reproduce NEW_DIR_OUTSIDE_CHECKOUT [--require-isolation] [--strict]";
+    let Some((dir, flags)) = args.split_first() else {
+        return Err(usage.into());
     };
+    let (mut require, mut strict) = (false, false);
+    for flag in flags {
+        match flag.as_str() {
+            "--require-isolation" if !require => require = true,
+            // Release gate: a skipped step is a failure, never a pass.
+            "--strict" if !strict => strict = true,
+            _ => return Err(usage.into()),
+        }
+    }
     let root = super::workspace_root()?
         .canonicalize()
         .map_err(|e| e.to_string())?;
@@ -155,27 +172,23 @@ pub fn run(args: &[String]) -> Result<(), String> {
             }),
         ),
     ];
-    let mut failed = false;
+    let (mut pass, mut fail, mut skipped, mut not_run) = (0, 0, 0, 0);
     for (name, step) in &steps {
-        if failed {
+        if fail > 0 {
+            not_run += 1;
             let _ = writeln!(text, "step={name} result=NOT_RUN");
             continue;
         }
-        match step() {
-            Ok(None) => {
-                let _ = writeln!(text, "step={name} result=PASS");
-            }
-            Ok(Some(why)) => {
-                let _ = writeln!(text, "step={name} result=SKIPPED reason={why}");
-            }
-            Err(e) => {
-                failed = true;
-                let first = e.lines().next().unwrap_or("").to_string();
-                let _ = writeln!(text, "step={name} result=FAIL error={first}");
-            }
+        let (result, detail) = classify(step(), strict);
+        match result {
+            "PASS" => pass += 1,
+            "SKIPPED" => skipped += 1,
+            _ => fail += 1,
         }
+        let _ = writeln!(text, "step={name} result={result}{detail}");
         write(&text)?;
     }
+    let failed = fail > 0;
     if let Ok(summary) = fs::read_to_string(out.join("bench/summary.txt")) {
         for line in summary.lines() {
             let _ = writeln!(text, "bench: {line}");
@@ -188,16 +201,50 @@ pub fn run(args: &[String]) -> Result<(), String> {
         let _ = writeln!(text, "sha256 {hash}  {name}");
     }
     let verdict = if failed { "FAIL" } else { "PASS" };
-    let _ = writeln!(text, "REPRODUCTION={verdict}");
+    let isolated = if isolation.ends_with("=VERIFIED") {
+        "VERIFIED"
+    } else {
+        "NOT_VERIFIED"
+    };
+    let line = format!(
+        "REPRODUCTION={verdict} pass={pass} fail={fail} skipped={skipped} not_run={not_run} isolation={isolated} required_isolation={} strict={}",
+        if require { "yes" } else { "no" },
+        if strict { "yes" } else { "no" },
+    );
+    let _ = writeln!(text, "{line}");
     write(&text)?;
     if failed {
         return Err(format!(
-            "REPRODUCTION=FAIL see {}",
+            "{line} see {}",
             out.join("REPRODUCTION.txt").display()
         ));
     }
-    fs::write(out.join("COMPLETE.txt"), "REPRODUCTION_COMPLETE=PASS\n")
-        .map_err(|e| e.to_string())?;
-    println!("REPRODUCTION=PASS {}", out.display());
+    // COMPLETE means a complete report of the declared run, not that every
+    // possible check passed on every system.
+    fs::write(
+        out.join("COMPLETE.txt"),
+        format!("REPRODUCTION_COMPLETE=PASS complete report of the declared run: {line}\n"),
+    )
+    .map_err(|e| e.to_string())?;
+    println!("{line} {}", out.display());
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_skip_passes_only_outside_strict_mode() {
+        let skip = || Ok(Some("grep missing".to_string()));
+        assert_eq!(classify(skip(), false).0, "SKIPPED");
+        let strict = classify(skip(), true);
+        assert_eq!(strict.0, "FAIL");
+        assert!(strict.1.contains("strict mode"), "{}", strict.1);
+        assert_eq!(classify(Ok(None), true), ("PASS", String::new()));
+        assert_eq!(
+            classify(Err("first\nsecond".into()), false),
+            ("FAIL", " error=first".to_string())
+        );
+    }
 }

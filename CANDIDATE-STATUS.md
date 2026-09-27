@@ -46,7 +46,8 @@ prepared release commit. The
 authoritative for that state. The v0.3.0 fields describe the earlier release.
 See the [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md) and the historical
 [candidate notes](RELEASE-NOTES-v0.4.0-RC.md). `DEVELOPMENT_BRANCH` names the branch where work
-toward 0.5.0 happens; nothing on it is released before the owner's release decision.
+toward 0.5.0 happens; nothing on it is released before the owner's release decision,
+and the roadmap's v0.5.0 section lists each change with its commit and remaining acceptance.
 
 Technical checks report the approval flags without changing them. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.

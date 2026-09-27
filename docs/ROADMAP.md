@@ -51,6 +51,25 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
+## Development toward v0.5.0 (work/v0.5.0, not released)
+
+Finishing a tool, measuring performance and independent acceptance are three
+different events. This table records the first two with their commits; the last
+column says what acceptance still needs. The A01–A24 list below keeps its own
+states.
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Limits stated without naming private components | 6b3b6b9 | — | current documents | owner-approved content allowlist and manual review of meaning; history, forks and copies keep earlier text |
+| Network-isolation evidence | 8693840, 9937e1a, 9555b6e, 133d225 | `xtask isolation-check` | CI fails it on the networked runner and passes it in a namespace | Linux only; macOS and Windows report NOT_VERIFIED |
+| Batch mode, schema gel-evidence/1 | 40c107a; peak_rss_kb in dc38282 | `gel-evidence --batch` | [schema](EVIDENCE-BATCH.md), batch tests | review by an outside consumer of the schema |
+| Backup, restore, withdraw, delete, clear | fc710d4 | `gel-backup` | [backup](BACKUP.md), unit and CLI tests, full-disk CI | Windows directory durability not confirmed; independent review |
+| Format mutation matrix | 855af81 | `xtask mutation-matrix` | [matrix r1](evidence-mutation/matrix-r1.txt), checked by verify | finite matrix on small fixtures, not exhaustive |
+| Comparison with grep and sha256sum | dc38282, 940f5c0 | `xtask bench-compare` | [run r1](evidence-bench-r1/summary.txt) | one host; an independent second host; does not close A09 (single-mutation costs) |
+| GEL search times beside the baseline | 1738220 | — | README table, author-reported | a same-task comparison (A21) before any speed-up factor |
+| Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` after 7bcca67 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
+| Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
+
 ## How to read the review work list
 
 Implementation state and acceptance state are separate. `DONE_SCOPED` means the
@@ -93,7 +112,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A17 | PARTIAL | A two-process update/restart scenario and tests exist. A recording of it awaits owner review before publication. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
 | A18 | PARTIAL | PL/EN descriptive transcripts exist. Human confirmation of full timeline accuracy remains open; translations are not new engine outputs. | [Transcripts](../media/TRANSCRIPTS-PL-EN.md) |
 | A19 | PARTIAL | An executable claim registry separates executable checks, separate gates, a locally measured row and deferred rows; it is not yet an exhaustive map of historical statements. | [Claims](CLAIMS.md) |
-| A20 | OPEN | Reproduction form and a [one-command reproduction](REPRODUCE.md) exist. Obtain and retain an independent second-host campaign and first-use feedback. Hosted CI alone does not close this item. | [Reproduction form](../.github/ISSUE_TEMPLATE/reproduction.yml) |
+| A20 | OPEN | Reproduction form and a [verification suite runner](REPRODUCE.md) exist. Obtain and retain an independent second-host campaign and first-use feedback. Hosted CI alone does not close this item. | [Reproduction form](../.github/ISSUE_TEMPLATE/reproduction.yml) |
 | A21 | PARTIAL | Scoped author-reported component measurements are published. An identical-task, end-to-end comparison with the exact baseline remains open. | [Component scope](GEL-EXPERIMENTAL-MEASUREMENTS.md) |
 | A22 | OPEN | Implement a public execution-identity gate only within approved disclosure scope. Substituting the full-scan baseline must fail that gate even when results match. | [Baseline boundaries](OCEAN-SCALE.md), [claims](CLAIMS.md) |
 | A23 | OPEN | Adaptive precision needs a declared error budget, independent oracle, full metadata costs and stable task decisions, including weak-signal failures. | [Codec scope](CODEC-SCOPE.md) |

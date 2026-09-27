@@ -1,7 +1,7 @@
-# Reproduce everything in one command
+# Run the public verification suite and record platform exclusions
 
 ```text
-cargo run --locked --offline -p xtask -- reproduce NEW_DIR_OUTSIDE_CHECKOUT [--require-isolation]
+cargo run --locked --offline -p xtask -- reproduce NEW_DIR_OUTSIDE_CHECKOUT [--require-isolation] [--strict]
 ```
 
 The command runs, in this order, into one new directory:
@@ -15,12 +15,23 @@ The command runs, in this order, into one new directory:
 
 It then writes REPRODUCTION.txt: the revision and whether the working tree was
 clean, operating system, CPU model, memory, isolation status, host load at the
-start and end, the result of every step, the comparison summary, the SHA-256 of
-every produced file and a final REPRODUCTION=PASS or FAIL. A failed step stops
-the run and the later steps are marked NOT_RUN. COMPLETE.txt is written only
-when every step passed or was skipped for a stated reason. With
-`--require-isolation` the command refuses to start unless network isolation is
-verified.
+start and end, the result of every step, the comparison summary and the SHA-256
+of every produced file. The last line counts the outcomes, so a skipped step is
+visible without opening any log:
+
+```text
+REPRODUCTION=PASS pass=3 fail=0 skipped=0 not_run=0 isolation=VERIFIED required_isolation=yes strict=no
+```
+
+A failed step stops the run and the later steps are NOT_RUN. A step is SKIPPED
+only for a stated reason, for example the comparison without grep or sha256sum.
+COMPLETE.txt means a complete report of the declared run, with the same counts;
+it does not mean that every possible check passed on every system. Two options
+tighten the run:
+
+- `--require-isolation` refuses to start unless network isolation is verified;
+- `--strict` turns every SKIPPED step into FAIL. Use it as a release gate, so a
+  missing dependency can never pass for a successful check.
 
 ## Linux, with proven isolation
 
@@ -30,7 +41,7 @@ cd gel-ram
 git checkout work/v0.5.0
 rustup toolchain install 1.85.0 --profile minimal
 cargo fetch --locked
-unshare --user --net -- cargo run --locked --offline -p xtask -- reproduce ../gel-repro --require-isolation
+unshare --user --net -- cargo run --locked --offline -p xtask -- reproduce ../gel-repro --require-isolation --strict
 ```
 
 ## macOS and Windows
