@@ -1,0 +1,45 @@
+name: audit-snapshot
+# Read-only audit export. No repository write, release, or private material.
+# This branch is preliminary until its source manifest and repairs are verified.
+on:
+  push:
+    branches: [audit/public-hardening-20260927]
+    paths: [.github/workflows/audit-snapshot.yml]
+permissions:
+  contents: read
+concurrency:
+  group: audit-snapshot-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    if: github.repository == 'Gelram-project/gel-ram' && github.actor == 'Gelram-project'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Prepare pinned public offline kit
+        run: |
+          set -euo pipefail
+          base=9e1b63dc847875a44f78241f10f46f1791835be0
+          kit="$RUNNER_TEMP/gel-audit-kit"
+          mkdir -p "$kit/source" "$RUNNER_TEMP/audit-export"
+          git archive "$base" | tar -x -C "$kit/source"
+          (cd "$kit/source" && sha256sum -c --quiet SOURCE-SHA256SUMS.txt)
+          rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+          cargo +1.85.0 vendor --locked "$kit/vendor" > "$kit/vendor-config.toml"
+          printf 'source_commit=%s\n' "$base" > "$kit/IDENTITY.txt"
+          rustc +1.85.0 -Vv >> "$kit/IDENTITY.txt"
+          tar -czf "$RUNNER_TEMP/audit-export/public-source-vendor.tar.gz" -C "$kit" source vendor vendor-config.toml IDENTITY.txt
+          sysroot="$(rustc +1.85.0 --print sysroot)"
+          tar -czf "$RUNNER_TEMP/audit-export/compiler-1.85.0.tar.gz" -C "$sysroot" bin lib
+          (cd "$RUNNER_TEMP/audit-export" && sha256sum *.tar.gz > SHA256SUMS.txt)
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: public-offline-audit-kit
+          path: ${{ runner.temp }}/audit-export/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
