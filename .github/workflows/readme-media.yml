@@ -1,0 +1,89 @@
+name: readme-media
+on:
+  push:
+    branches: [docs/readme-visual-entry-20260927]
+    paths:
+      - tools/readme_media.rs
+      - .github/workflows/readme-media.yml
+permissions:
+  contents: read
+concurrency:
+  group: readme-media-publisher
+  cancel-in-progress: false
+jobs:
+  render:
+    if: github.repository == 'Gelram-project/gel-ram' && github.actor == 'Gelram-project' && github.ref == 'refs/heads/docs/readme-visual-entry-20260927'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Prepare public media tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+          rustup default 1.85.0
+          cargo fetch --locked
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+          sudo sysctl -q -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Pin recorder source before recording
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rustfmt --edition 2021 tools/readme_media.rs
+          git add tools/readme_media.rs
+          git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do sha256sum "$file"; done > "$RUNNER_TEMP/media-source-manifest.txt"
+          cp "$RUNNER_TEMP/media-source-manifest.txt" SOURCE-SHA256SUMS.txt
+          git add SOURCE-SHA256SUMS.txt
+          git diff --cached --quiet || git commit -m 'build: pin and format the public README media recorder'
+          test -z "$(git status --porcelain)"
+      - name: Build and test Rust recorder and public tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --locked --offline --release -p gel-live-lab --bins
+          cargo build --locked --offline -p xtask
+          rustc --edition 2021 -D warnings --test tools/readme_media.rs -o "$RUNNER_TEMP/readme-media-tests"
+          "$RUNNER_TEMP/readme-media-tests"
+          rustc --edition 2021 -D warnings tools/readme_media.rs -o "$RUNNER_TEMP/readme-media"
+      - name: Record six real workflows and render light and dark GIFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/readme-media" "$RUNNER_TEMP/gel-readme-run-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+      - name: Verify complete generated candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fmt --all
+          git diff --quiet -- LICENSE LICENSE-MODE.txt LICENSING.md CLA.md CLA-PRIVACY.md COMMERCIAL-LICENSE.md THIRD-PARTY-NOTICES.md README-HISTORY-PRE-VISUAL.md
+          git add README.md media/INDEX.md media/gifs xtask/src/main.rs
+          git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do sha256sum "$file"; done > "$RUNNER_TEMP/media-final-manifest.txt"
+          cp "$RUNNER_TEMP/media-final-manifest.txt" SOURCE-SHA256SUMS.txt
+          git add SOURCE-SHA256SUMS.txt
+          sha256sum -c SOURCE-SHA256SUMS.txt > "$RUNNER_TEMP/media-manifest-check.txt"
+          cargo run --locked --offline -p xtask -- verify
+          git commit -m 'docs: add six source-linked light and dark README GIF replays'
+          git show --stat --oneline HEAD
+      - name: Publish only to the authorized documentation branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          branch='docs/readme-visual-entry-20260927'
+          actual="$(git ls-remote origin "refs/heads/$branch" | cut -f1)"
+          test "$actual" = "$GITHUB_SHA" || { echo 'Branch advanced; refusing to overwrite concurrent work.' >&2; exit 1; }
+          git push origin "HEAD:refs/heads/$branch"
+          printf 'MEDIA_PUBLISHED_COMMIT=%s\n' "$(git rev-parse HEAD)"
+          cat media/gifs/MANIFEST.txt
