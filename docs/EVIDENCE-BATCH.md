@@ -39,7 +39,7 @@ keep the order shown below.
 The first record is the session:
 
 ```json
-{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.4.0"}
+{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.5.0"}
 ```
 
 Each command gives one result record, with `seq` (1-based, counting non-blank

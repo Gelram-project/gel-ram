@@ -9,10 +9,9 @@ reopen pinned snapshots. Local Rust tools, without an LLM.
 
 [Quick start](#quick-start) · [See it in action](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
-> **Development toward v0.5.0. Not a tagged release.**
-> The instructions below target `work/v0.5.0`, not the default branch. This work
-> branch still carries workspace version 0.4.0. Record the exact commit you test.
-> [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases) · [Work-branch CI](https://github.com/Gelram-project/gel-ram/actions?query=branch%3Awork%2Fv0.5.0)
+> **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
+> commit you test.
+> [Release notes](RELEASE-NOTES-v0.5.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
 ## See it in action
 
@@ -132,7 +131,7 @@ including in Windows PowerShell.
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout work/v0.5.0
+git checkout v0.5.0
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked

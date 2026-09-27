@@ -5,8 +5,8 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- The 0.4.0 version line contains everything below; tagged releases are listed on
-  the Releases page. Tagged `v0.3.0` remains an earlier release.
+- The 0.5.0 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.4.0` and `v0.3.0` remain earlier releases.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -14,7 +14,7 @@ private performance work are intentionally outside this document.
 - [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
   in PR #5. [Evidence Lab](EVIDENCE-LAB.md) was merged into main through
   PR #9 (71142a2, workspace 0.4.0-rc.1); the PR #10 review repairs followed as
-  0c17f6e and the version line is now 0.4.0 ([status](../CANDIDATE-STATUS.md)).
+  0c17f6e and became version 0.4.0 ([status](../CANDIDATE-STATUS.md)).
 ## Public main — already delivered
 
 The following capabilities are present on public `main`:
@@ -51,7 +51,7 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## Development toward v0.5.0 (work/v0.5.0, not released)
+## v0.5.0
 
 Finishing a tool, measuring performance and independent acceptance are three
 different events. This table records the first two with their commits; the last
@@ -67,13 +67,15 @@ states.
 | Format mutation matrix | 855af81 | `xtask mutation-matrix` | [matrix r1](evidence-mutation/matrix-r1.txt), checked by verify | finite matrix on small fixtures, not exhaustive |
 | Comparison with grep and sha256sum | dc38282, 940f5c0 | `xtask bench-compare` | [run r1](evidence-bench-r1/summary.txt) | one host; an independent second host; does not close A09 (single-mutation costs) |
 | GEL search times beside the baseline | 1738220 | — | README table, author-reported | a same-task comparison (A21) before any speed-up factor |
-| Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` after 7bcca67 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
+| Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` in 4cbfff5 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
-| Still of the update, restart and corrupted-copy scenario | after 4ce332b | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
-| Binary packages for Linux, macOS and Windows, built only in CI | after 4ce332b | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
-| Fresh paired timing and fresh-process RSS of one mutation (A09) | after 2228ed1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
-| Private previews described only by scope and limits | after 306c7f1 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md) and [film guide](../media/FILMS-GUIDE.md); the public Evidence Lab film keeps its full transcript | — |
-| Property-to-test map (A07) | after ffa85b6 | `xtask ci-evidence` | [map](PROPERTY-TESTS.md): 35 properties, 71 tests, one `PROPERTY` line per row in each platform report | properties without a row are not claimed untested; a row shows the tests ran, not full coverage |
+| Still of the update, restart and corrupted-copy scenario | 3c088cc | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
+| Binary packages for Linux, macOS and Windows, built only in CI | 3c088cc | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
+| Fresh paired timing and fresh-process RSS of one mutation (A09) | 306c7f1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
+| Private previews described only by scope and limits | 1f7693c, ffa85b6 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md) and [film guide](../media/FILMS-GUIDE.md); the public Evidence Lab film keeps its full transcript | — |
+| Property-to-test map (A07) | fc5cf90 | `xtask ci-evidence` | [map](PROPERTY-TESTS.md): 35 properties, 71 tests, one `PROPERTY` line per row in each platform report | properties without a row are not claimed untested; a row shows the tests ran, not full coverage |
+| Claim registry for the v0.5.0 tools and every README timing table (A19) | 118e86d | `xtask claims` | [claims](CLAIMS.md) | not an exhaustive map of historical statements |
+| README visual entry: six edited log replays of recorded public workflows | 034cd33 (PR #14) | `tools/readme_media.rs` | [gallery](../media/gifs/README.md), [source and hashes](../media/gifs/MANIFEST.txt) | edited replays, not wall time; the one-off publishing workflow is not part of the release |
 
 ## How to read the review work list
 
