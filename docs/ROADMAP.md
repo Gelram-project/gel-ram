@@ -69,6 +69,7 @@ states.
 | GEL search times beside the baseline | 1738220 | — | README table, author-reported | a same-task comparison (A21) before any speed-up factor |
 | Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` after 7bcca67 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
+| Update, restart and corrupted-copy film | after 4cbfff5 | — | [film](../media/GEL-EVIDENCE-UPDATE-R2.mp4), transcript section 4, decode and AI frame review | a human start-to-finish review (A05, A17) |
 
 ## How to read the review work list
 
@@ -97,7 +98,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A02 | DONE_SCOPED | CI rechecks the retained R1 dataset and rejects missing, duplicated or inconsistent evidence. This is not a new timing campaign. | [R1 negative checks](R1-NEGATIVE-CHECKS.md) |
 | A03 | DONE_SCOPED | Bounded quote context and omission flags with negation, condition, unit and line-ending regressions; no claim of unrestricted context understanding. | [Quote context](QUOTE-CONTEXT.md) |
 | A04 | DONE_SCOPED | Runtime-example sequencing checks each native exit status, including first/middle failures and misleading PASS output. | [Process tests](../xtask/tests/process_sequence.rs) |
-| A05 | PARTIAL | Decode report and an AI review of every visually distinct frame of all three films exist. A human start-to-finish review remains open. | [Media review](MEDIA-DECODE-REVIEW.md) |
+| A05 | PARTIAL | Decode report and an AI review of every visually distinct frame of all four films exist. A human start-to-finish review remains open. | [Media review](MEDIA-DECODE-REVIEW.md) |
 | A06 | DONE_SCOPED | The recorder fails closed on split UTF-8, EOF, failed writes, missing markers and child exit; a lint gate forbids 14 lints and rejects 10 probes. | [Recorder safety](RECORDER-SAFETY.md) |
 | A07 | PARTIAL | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 2 partial branches, and a strict cross-platform diff checks them. A complete property-to-test map remains open. | [CI evidence](CI-EVIDENCE.md) |
 | A08 | DONE_SCOPED | Structural, admission and OS-level publication faults (permission denial, SIGKILL, full disk on a bounded tmpfs) keep the previous snapshot; possible publication before a directory-sync error is documented. | [Publication fault tests](PUBLICATION-FAULT-TESTS.md) |
@@ -109,7 +110,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A14 | DONE_SCOPED | README entry point, fresh-checkout instructions and a first-screen link to the public Evidence Lab walkthrough; main, review branches and the historical tag are distinct. | [README](../README.md) |
 | A15 | OWNER | Description and topics are repository settings. A social-preview image is prepared; uploading it is a manual settings step. | [Repository](https://github.com/Gelram-project/gel-ram) |
 | A16 | DONE_SCOPED | One film index separates the public walkthrough from private previews, with destinations and scope labels. | [Film index](../media/INDEX.md) |
-| A17 | PARTIAL | A two-process update/restart scenario and tests exist. A recording of it awaits owner review before publication. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
+| A17 | PARTIAL | A two-process update/restart scenario and tests exist. Its recording (102.15 s, AI review of all 375 distinct frames) is published with the owner's approval; a human start-to-finish review remains open. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
 | A18 | PARTIAL | PL/EN descriptive transcripts exist. Human confirmation of full timeline accuracy remains open; translations are not new engine outputs. | [Transcripts](../media/TRANSCRIPTS-PL-EN.md) |
 | A19 | PARTIAL | An executable claim registry separates executable checks, separate gates, a locally measured row and deferred rows; it is not yet an exhaustive map of historical statements. | [Claims](CLAIMS.md) |
 | A20 | OPEN | Reproduction form and a [verification suite runner](REPRODUCE.md) exist. Obtain and retain an independent second-host campaign and first-use feedback. Hosted CI alone does not close this item. | [Reproduction form](../.github/ISSUE_TEMPLATE/reproduction.yml) |

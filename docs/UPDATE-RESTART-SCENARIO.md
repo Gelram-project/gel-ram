@@ -57,9 +57,16 @@ process, plus a command log and completion marker only after success.
 
 It does not record pixels itself. Screen capture and a visual review remain
 separate work; the existence of the driver or its successful terminal log is
-not evidence that a fourth MP4 has been filmed or approved. The original
+not evidence that an MP4 has been filmed or approved. The original
 two-document mode and three historical videos remain available and unchanged.
 No answers are substituted, and pauses are outside application timers.
+
+A screen recording of this mode, [GEL-EVIDENCE-UPDATE-R2](../media/GEL-EVIDENCE-UPDATE-R2.mp4)
+(102.15 s), is published with the owner's approval; its transcript is section 4
+of the [transcripts](../media/TRANSCRIPTS-PL-EN.md). Its decode check and an AI
+review of all 375 visually distinct frames are in the
+[media review](MEDIA-DECODE-REVIEW.md). A human start-to-finish review remains
+open.
 
 ## Recorder failure regression
 

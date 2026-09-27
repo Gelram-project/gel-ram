@@ -1,12 +1,13 @@
 # Media decode review — 26 September 2026
 
-Local checks of the three existing repository MP4s:
+Local checks of the four repository MP4s:
 
 | File | Duration | Resolution | Frame rate | Bytes | Full video decode |
 |---|---:|---|---:|---:|---|
 | GEL-EVIDENCE-LAB-EN.mp4 | 70.35 s | 1920×1080 | 20 fps | 840031 | PASS |
 | GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4 | 60 s | 1920×1080 | 30 fps | 1786517 | PASS |
 | GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4 | 90 s | 1920×1080 | 30 fps | 1394644 | PASS |
+| GEL-EVIDENCE-UPDATE-R2.mp4 | 102.15 s | 1920×1080 | 20 fps | 16336071 | PASS (2043 frames) |
 
 All video streams are H264. ffprobe returned metadata; ffmpeg decoded each full
 video with error logging and -xerror, exiting successfully with empty error logs.
@@ -36,6 +37,10 @@ mpdecimate threshold, such as a blinking cursor, may have been skipped.
 | Evidence Lab, 70.35 s | 161 / 161 | nothing found | none | commands, byte counts, ns values and hashes match both process logs | readable; the pointer hides one hash character at 31–67 s (the same hash is readable elsewhere) | hashes and ns values unreadable |
 | Continuous chat, 60 s | 138 / 138 | nothing found; the hardware model is shown on purpose | none | questions, answers, times, sources and RAM/bank values match the guide | readable | borderline |
 | Hardware / answers, 90 s | 134 / 134 | nothing found; the hardware model is shown on purpose | none | four cases, times, bank size and RSS match the guide | readable | small; digits need zoom |
+| Update / restart / corrupted copy, 102.15 s | 375 / 375 | nothing found; no pointer | none | all 24 commands and every line of both application processes (30 and 24 lines) match the recorder logs | readable; one key wraps (collection_sha2|56) and the context shows a literal \n | hashes unreadable; the transcript gives them |
+
+The update film was added with the owner's approval on 27 September 2026 exactly as
+reviewed: the bytes are the reviewed recording, not a re-encoding.
 
 Corrections made from this review: event times in the
 [transcripts](../media/TRANSCRIPTS-PL-EN.md) now mark when each event first

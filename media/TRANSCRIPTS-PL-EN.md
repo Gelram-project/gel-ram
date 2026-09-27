@@ -1,6 +1,6 @@
 # Descriptive transcripts / Transkrypcje opisowe
 
-All three recordings are silent. These descriptions include the meaningful
+All four recordings are silent. These descriptions include the meaningful
 commands, answers and limitations; they are not verbatim transcripts of every
 cursor movement. Times below mark when each event first appears on screen; a
 result stays visible afterwards. They were read from every visually distinct
@@ -167,10 +167,43 @@ historyczne przewodniki; prywatne logi i silnik nie są dołączone. Zegar obejm
 komunikację z procesem, przetwarzanie i formułowanie odpowiedzi, nie pauzy czytania.
 To ograniczone reguły i szablony źródłowe, nie ogólny model językowy.
 
-Neither preview establishes general understanding, persistent learning, P2P
-operation, physical DRAM-refresh computation or chat ORB/s. Public checkout
+Neither preview establishes general understanding, persistent learning, network
+operation, hardware-level memory computation or chat ORB/s. Public checkout
 does not provide the private /chat. For reproduction, use Evidence Lab above.
 
-Podglądy nie dowodzą ogólnego rozumienia, trwałego uczenia, działania P2P,
-obliczeń fizycznym odświeżaniem DRAM ani przepustowości rozmowy w ORB/s.
+Podglądy nie dowodzą ogólnego rozumienia, trwałego uczenia, działania sieciowego,
+obliczeń na poziomie sprzętu pamięci ani przepustowości rozmowy w ORB/s.
 Publiczne repozytorium nie zawiera prywatnego /chat.
+
+
+
+## 4. Update, stale citation, restart, corrupted copy / Aktualizacja, nieaktualny cytat, restart, uszkodzona kopia — 102.15 s
+
+[Video](GEL-EVIDENCE-UPDATE-R2.mp4) · silent / bez dźwięku · SHA256 3d3fce4f…a11f673
+
+EN — times mark first appearance, read from all 375 visually distinct frames in an AI review (not a human sign-off):
+- 0–5.8 s: empty centered terminal, then recorder header (scripted typing, real application output, no LLM, phrase retrieval, synthetic document); gel-evidence starts at 5.8 s.
+- 8.4–21.2 s: add original.txt (106 bytes); find open the valve → HIT, bytes 67..105 (10.7 s); proof 1 → CITATION=PASS, “correspondence, not truth” (15.2 s); invented phrase → UNKNOWN (18.3 s); save → revision 1, pin 88e7194b… (21.2 s).
+- 28.9–35.3 s: replace 1 revised.txt → previous citations invalidated; proof 1 → REFUSED NO_CURRENT_RESULT (31.4 s); the old phrase → UNKNOWN (35.3 s).
+- 38.3–45.7 s: find keep the valve closed → HIT, bytes 60..105; proof → PASS with new hashes (42.8 s); save → revision 2, pin 8c0cf090… (45.7 s).
+- 49.6–55.0 s: exit; recorder flips one byte in a COPY of revision 1 (corrupt.gelset); a new process starts.
+- 59.5–79.1 s: load with pins → REOPEN=PASS revision 2 (59.5 s), then revision 1 (71.7 s); each returns its own quote and hashes.
+- 83.8–92.1 s: the corrupted copy with the revision-1 pin → REFUSED COLLECTION_INTEGRITY; find/proof still answer (87.6 s, 92.1 s).
+- 96.1–102.15 s: exit and recorder summary, held until the last frame.
+- Why title=original.txt after replace: replace keeps document id 1 and its title; the text and document_sha256 (7a9ba8cb…) change.
+- Why answers continue after the refusal: nothing new was loaded, so revision 1 from 71.7 s stays active. The corrupted file was a copy of that same revision, so the answers look the same; only the REFUSED line shows that the copy was rejected.
+Not shown: understanding or truth of the text (the QUOTE line alone drops “Do not” from the line above; CONTEXT shows it), general AI conversation, hardware-level memory computation, throughput or percentiles, network isolation (a setup claim, not visible). ns values are single measurements on one 106-byte synthetic document on a loaded host (load average 6.3–7.3, 24 CPUs).
+
+PL — czas oznacza pierwsze pojawienie się na ekranie; odczytano go ze wszystkich 375 różnych klatek w przeglądzie AI (nie przez człowieka):
+- 0–5,8 s: pusty, wyśrodkowany terminal, potem nagłówek nagrywarki (skryptowane wpisywanie, prawdziwe wyjście aplikacji, bez LLM, wyszukiwanie fraz, dokument syntetyczny); start gel-evidence w 5,8 s.
+- 8,4–21,2 s: dodanie original.txt (106 B); fraza „open the valve” → trafienie, bajty 67..105 (10,7 s); proof → CITATION=PASS, „zgodność, nie prawda” (15,2 s); fraza nieobecna → UNKNOWN (18,3 s); zapis → rewizja 1, pin 88e7194b… (21,2 s).
+- 28,9–35,3 s: zamiana dokumentu → stare cytaty unieważnione; proof → odmowa NO_CURRENT_RESULT (31,4 s); stara fraza → UNKNOWN (35,3 s).
+- 38,3–45,7 s: fraza „keep the valve closed” → trafienie, bajty 60..105; proof z nowymi hashami (42,8 s); zapis → rewizja 2, pin 8c0cf090… (45,7 s).
+- 49,6–55,0 s: koniec procesu; nagrywarka zmienia jeden bajt w KOPII rewizji 1 (corrupt.gelset); start nowego procesu.
+- 59,5–79,1 s: wczytanie z pinem → REOPEN=PASS rewizji 2 (59,5 s), potem rewizji 1 (71,7 s); każda zwraca własny cytat i hashe.
+- 83,8–92,1 s: uszkodzona kopia z pinem rewizji 1 → odmowa COLLECTION_INTEGRITY; find/proof nadal odpowiadają (87,6 s, 92,1 s).
+- 96,1–102,15 s: zamknięcie i podsumowanie nagrywarki, widoczne do ostatniej klatki.
+- Dlaczego po zamianie tytuł to wciąż original.txt: replace zachowuje id 1 i tytuł, a zmienia treść i document_sha256 (7a9ba8cb…).
+- Dlaczego po odmowie odpowiedzi są dalej: nic nowego nie wczytano, więc aktywna zostaje rewizja 1 z 71,7 s. Uszkodzony plik był kopią tej samej rewizji, dlatego odpowiedzi wyglądają tak samo; tylko linia REFUSED pokazuje, że kopię odrzucono.
+Film nie pokazuje: rozumienia ani prawdziwości treści (sama linia QUOTE gubi „Do not” z poprzedniej linii; widać je w CONTEXT), ogólnej rozmowy AI, obliczeń na poziomie sprzętu pamięci, przepustowości ani percentyli, izolacji sieci (deklaracja konfiguracji, niewidoczna). Czasy ns to pojedyncze pomiary na jednym syntetycznym dokumencie o 106 bajtach, na obciążonym hoście (load average 6,3–7,3, 24 CPU).
+

@@ -270,8 +270,10 @@ approves a legal claim; private data and licensing still require review.
 
 ## Native demonstration films
 
-The repository includes three silent English terminal films: the public,
-reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and two
+The repository includes four silent English terminal films: two public ones, the
+reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and an
+[update, restart and corrupted-copy film](media/GEL-EVIDENCE-UPDATE-R2.mp4)
+(timeline in the [transcripts](media/TRANSCRIPTS-PL-EN.md), section 4), and two
 owner-authorized previews of a separate private native Rust application. The
 previews show live bounded source-frame answers and explicit UNKNOWN cases.
 They do **not** ship the private application, its engine or its bank.

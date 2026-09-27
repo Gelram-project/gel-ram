@@ -23,9 +23,17 @@ use std::process::{Command, ExitCode};
 use std::os::unix::fs::PermissionsExt;
 
 const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "cff"];
+/// The single reviewed film above the 4 MiB asset limit, kept byte-identical to
+/// the reviewed recording instead of being re-encoded; its own ceiling applies.
+const LARGE_REVIEWED_ASSETS: &[(&str, u64)] =
+    &[("media/GEL-EVIDENCE-UPDATE-R2.mp4", 17 * 1024 * 1024)];
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    (
+        "media/GEL-EVIDENCE-UPDATE-R2.mp4",
+        "3d3fce4fe98ae314bb2f4e337f09b42cb96b803e662c45f4bf07a5943a11f673",
+    ),
     (
         "media/GEL-EVIDENCE-LAB-EN.mp4",
         "a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835",
@@ -232,8 +240,12 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
         let approved_png = REVIEWED_ASSETS
             .iter()
             .find(|(name, _)| path == root.join(name));
-        if let Some((_, expected)) = approved_png {
-            if !metadata.is_file() || metadata.len() > 4 * 1024 * 1024 {
+        if let Some((name, expected)) = approved_png {
+            let limit = LARGE_REVIEWED_ASSETS
+                .iter()
+                .find(|(large, _)| large == name)
+                .map_or(4 * 1024 * 1024, |(_, bytes)| *bytes);
+            if !metadata.is_file() || metadata.len() > limit {
                 bad.push(format!(
                     "invalid reviewed asset size/type: {}",
                     path.display()
