@@ -56,9 +56,9 @@ fn passive(dev: &str, route4: &str, route6: &str) -> Result<(), String> {
 
 /// Only an immediate "network unreachable" proves the probe could not leave;
 /// a refusal or a timeout means a route existed.
-fn unreachable(target: &str, attempt: io::Result<TcpStream>) -> Result<(), String> {
+fn unreachable(target: &str, attempt: io::Result<()>) -> Result<(), String> {
     match attempt {
-        Ok(_) => Err(format!("{target}: connection succeeded")),
+        Ok(()) => Err(format!("{target}: connection succeeded")),
         Err(e) if e.kind() == io::ErrorKind::NetworkUnreachable => Ok(()),
         Err(e) => Err(format!("{target}: {e} (expected network unreachable)")),
     }
@@ -81,7 +81,7 @@ fn evidence() -> Result<(), String> {
         let addr: SocketAddr = target.parse().map_err(|e| format!("{target}: {e}"))?;
         unreachable(
             target,
-            TcpStream::connect_timeout(&addr, Duration::from_secs(1)),
+            TcpStream::connect_timeout(&addr, Duration::from_secs(1)).map(drop),
         )?;
     }
     Ok(())
@@ -136,7 +136,6 @@ pub fn check(args: &[String]) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::net::TcpListener;
 
     const HEADER: &str = "Inter-|   Receive\n face |bytes\n";
 
@@ -193,9 +192,9 @@ mod tests {
         ] {
             assert!(unreachable("t", Err(io::Error::from(kind))).is_err());
         }
-        // A real loopback connection is the positive counterexample.
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let connected = TcpStream::connect(listener.local_addr().unwrap());
-        assert!(unreachable("t", connected).is_err());
+        // A successful connection is the counterexample. It is given as an
+        // outcome, not opened: inside a fresh network namespace even loopback
+        // is down, and the test must pass there too.
+        assert!(unreachable("t", Ok(())).is_err());
     }
 }
