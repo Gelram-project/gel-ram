@@ -1,0 +1,30 @@
+name: readme-presentation
+# Static documentation checks. No write token, generation commit or deployment.
+# Runs on every change, so no generated file can drift outside a path filter.
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: readme-presentation-check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.85.0 --profile minimal --component rustfmt
+      - name: Test source and verify the existing presentation
+        run: |
+          set -euo pipefail
+          rustfmt +1.85.0 --edition 2021 --check tools/readme_presentation.rs
+          rustc +1.85.0 --edition 2021 -D warnings --test tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-tests"
+          "$RUNNER_TEMP/presentation-tests"
+          rustc +1.85.0 --edition 2021 -D warnings tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-check"
+          "$RUNNER_TEMP/presentation-check"
+          git diff --exit-code
+          test -z "$(git ls-files --others --exclude-standard)"

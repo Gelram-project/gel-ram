@@ -82,9 +82,11 @@ not code-signed or notarized and are checked only on their build runners.
 
 ## Documentation
 
-- The README opens with six short light and dark replays of recorded public
-  workflows ([gallery](media/gifs/README.md)); each is labelled as an edited log
-  replay, not wall time.
+- The README opens with a light and dark header and six short replays of
+  recorded public workflows ([gallery](media/gifs/README.md)); each is labelled
+  as an edited log replay, not wall time. A script-free full-page edition,
+  [README-MULTIMEDIA.html](README-MULTIMEDIA.html), opens from a checkout without
+  network access ([presentation guide](docs/README-PRESENTATION.md)).
 - Public limits are stated without naming private components.
 - The update, restart and corrupted-copy scenario is shown as one still of its
   final screen.
