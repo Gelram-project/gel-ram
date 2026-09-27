@@ -62,15 +62,16 @@ fn render(dir: &Path, temp: &Path, slug: &str, title: &str, source: &str, cards:
     if cards.len() != 3 { return Err("three cards required".into()); }
     let mut pins = Vec::new();
     for (theme, bg, ink) in [("light", "ffffff", "0b2447"), ("dark", "0d1117", "e6edf3")] {
+        let accent = if theme == "light" { "0969da" } else { "4493f8" };
         let frames = temp.join(format!("{slug}-{theme}")); fs::create_dir(&frames)?;
         fs::write(frames.join("title.txt"), title)?;
         fs::write(frames.join("foot.txt"), format!("EDITED LOG REPLAY / NOT WALL TIME / source {}", &source[..8]))?;
         for (i, card) in cards.iter().enumerate() {
             let body = wrap(card);
-            if body.lines().count() > 10 { return Err(format!("card exceeds ten lines: {slug}\n{body}").into()); }
+            if body.lines().count() > 9 { return Err(format!("card exceeds nine lines: {slug}\n{body}").into()); }
             fs::write(frames.join("body.txt"), &body)?;
             fs::write(frames.join("step.txt"), format!("GEL RAM  /  EVIDENCE LAB                             {} / 3", i + 1))?;
-            let filt = format!("drawbox=x=18:y=100:w=964:h=306:color=0x071b2b:t=fill,drawbox=x=18:y=100:w={}:h=4:color=0x1683ff:t=fill,drawtext=fontfile={FONT}:textfile=title.txt:expansion=none:fontcolor=0x{ink}:fontsize=28:x=26:y=22,drawtext=fontfile={FONT}:textfile=step.txt:expansion=none:fontcolor=0x1683ff:fontsize=17:x=26:y=67,drawtext=fontfile={FONT}:textfile=body.txt:expansion=none:fontcolor=0xe6edf3:fontsize=20:line_spacing=7:x=36:y=120,drawtext=fontfile={FONT}:textfile=foot.txt:expansion=none:fontcolor=0x{ink}:fontsize=15:x=26:y=424", 964*(i+1)/cards.len());
+            let filt = format!("drawbox=x=18:y=100:w=964:h=306:color=0x071b2b:t=fill,drawbox=x=18:y=100:w={}:h=4:color=0x{accent}:t=fill,drawtext=fontfile={FONT}:textfile=title.txt:expansion=none:fontcolor=0x{ink}:fontsize=28:x=26:y=22,drawtext=fontfile={FONT}:textfile=step.txt:expansion=none:fontcolor=0x{accent}:fontsize=17:x=26:y=67,drawtext=fontfile={FONT}:textfile=body.txt:expansion=none:fontcolor=0xe6edf3:fontsize=20:line_spacing=7:x=36:y=120,drawtext=fontfile={FONT}:textfile=foot.txt:expansion=none:fontcolor=0x{ink}:fontsize=15:x=26:y=424", 964*(i+1)/cards.len());
             let frame = format!("frame-{i:02}.png");
             checked("ffmpeg", &["-nostdin","-y","-v","error","-f","lavfi","-i", &format!("color=c=0x{bg}:s=1000x460"),"-vf", &filt,"-frames:v","1","-threads","1",&frame], &frames, "", 0)?;
         }
@@ -126,12 +127,15 @@ fn main() -> R<()> {
     let corrupt_in=format!("load {pin} corrupted.gelset\nexit\n");
     let (refusal, refusal_err)=capture(ev,&["--batch"],&temp,&corrupt_in,2)?;
     contains(&refusal,"\"status\":\"ERROR\"")?;
+    contains(&refusal,"\"error\":\"COLLECTION_INTEGRITY\"")?;
+    println!("MEDIA_RECORDING=CLI_CASES_PASSED starting strict reproduction");
     // This is the real reproduction runner, not a simulated stream of PASS labels.
     checked("unshare",&["--user","--net","--",xtask,"reproduce","reproduction","--require-isolation","--strict"],&temp,"",0)?;
     let rep_dir=temp.join("reproduction");
     let rep=fs::read_to_string(rep_dir.join("REPRODUCTION.txt"))?;
     contains(&rep,"REPRODUCTION=PASS pass=3 fail=0 skipped=0 not_run=0 isolation=VERIFIED")?;
-    let answers=fs::read_to_string(rep_dir.join("bench/answers.txt"))?;
+    let answers=fs::read_to_string(rep_dir.join("bench/answers.tsv"))
+        .map_err(|e| format!("read benchmark answers.tsv: {e}"))?;
     let all=[
         format!("PROGRAM=gel-evidence\nPROCESS=1\nSTDIN\n{first_in}STDOUT\n{first}\nPROCESS=2\nSTDIN\n{reopen_in}STDOUT\n{reopen}\nRECORDER_CHECK=quote_before_equals_quote_after\n"),
         format!("PROGRAM=gel-evidence --batch\nSTDIN\n{stale_in}STDOUT\n{stale}\nSTDERR\n{stale_err}\nEXPECTED_AND_OBSERVED_EXIT=2\n"),
@@ -151,6 +155,7 @@ fn main() -> R<()> {
         vec!["Copy the saved snapshot.\nFlip its final byte with XOR 1.\n\nThe original remains untouched.\nThe trusted SHA-256 is unchanged.".into(),format!("$ gel-evidence --batch\nload SAVED_SHA256 corrupted.gelset\n\nObserved JSON result:\n{refusal_line}"),"Observed process exit: 2\n\nPin mismatch is not structural-parser coverage.\nThe finite mutation campaign is linked separately.\nA hash checks bytes, not the truth of a source.".into()],
         vec!["GEL and grep: answer agreement\n\nRecorded by xtask reproduce.\nGEL normalizes Unicode and tokenizes phrases.\ngrep uses different matching rules.".into(),format!("Observed answer-table excerpt:\n\n{rows}"),"A shared corpus is not identical semantics.\n\nKeep both SAME and DIFFERENT rows.\nUse the complete answer table linked below.\nThis animation makes no speed claim.".into()],
     ];
+    println!("MEDIA_RECORDING=COMPLETE rendering six scenarios");
     let dir=root.join("media/gifs"); fs::create_dir(&dir)?;
     fs::copy(temp.join("original.txt"),dir.join("source-original.txt"))?;
     fs::copy(temp.join("revised.txt"),dir.join("source-revised.txt"))?;
@@ -160,6 +165,7 @@ fn main() -> R<()> {
     for (i,(slug,title)) in ITEMS.iter().enumerate() {
         let log=all[i].replace(root.to_str().ok_or("root")?,"$CHECKOUT").replace(temp.to_str().ok_or("temp")?,"$RUN_DIR");
         fs::write(dir.join(format!("{slug}.txt")),format!("source_commit={source}\nSANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained\n\n{log}"))?;
+        println!("MEDIA_RENDER={slug}");
         pins.extend(render(&dir,&temp,slug,title,&source,&cards[i])?);
     }
     for (name,h) in &pins { manifest.push_str(&format!("sha256 {h}  {name}\n")); }
@@ -169,10 +175,10 @@ fn main() -> R<()> {
     let mut static_view=String::from("# Static view without animated images\n\nPosters and complete text transcripts of each edited replay.\n[Provenance](MANIFEST.txt) · [Media rights](../RIGHTS.md)\n\n");
     let mut section=String::from("## See it in action\n\n**Actual public-tool runs, presented as six edited log replays.**\n[Static view](media/gifs/STATIC.md) · [Full gallery and transcripts](media/gifs/README.md) · [Source and hashes](media/gifs/MANIFEST.txt)\n\nEach animation lasts 12 seconds. Card pacing is editorial, not execution time.\nLight and dark variants match the README theme; these are not product UI screenshots.\n\n");
     for (i,(slug,title)) in ITEMS.iter().enumerate() {
-        gallery.push_str(&format!("## {}. {title}\n\n{}\n[Complete transcript]({slug}.txt)\n\n",i+1,picture(slug,title)));
-        static_view.push_str(&format!("## {}. {title}\n\n<picture>\n<source media=\"(prefers-color-scheme: dark)\" srcset=\"{slug}-dark.png\">\n<img alt=\"{title}\" src=\"{slug}-light.png\" width=\"1000\">\n</picture>\n\n[Complete transcript]({slug}.txt)\n\n",i+1));
+        gallery.push_str(&format!("## {}. {title}\n\n{}\n[Complete transcript]({slug}.txt) · [Full-size animation]({slug}-light.gif)\n\n",i+1,picture(slug,title)));
+        static_view.push_str(&format!("## {}. {title}\n\n<picture>\n<source media=\"(prefers-color-scheme: dark)\" srcset=\"{slug}-dark.png\">\n<img alt=\"{title}\" src=\"{slug}-light.png\" width=\"1000\">\n</picture>\n\n[Complete transcript]({slug}.txt) · [Full-size animation]({slug}-light.gif)\n\n",i+1));
         if i==0 { section.push_str(&format!("{}\n[Read the full source/restart transcript](media/gifs/{slug}.txt)\n\n",picture(&format!("media/gifs/{slug}"),title))); }
-        else { section.push_str(&format!("<details>\n<summary><strong>{}. {title}</strong></summary>\n\n{}\n[Complete transcript](media/gifs/{slug}.txt)\n\n</details>\n\n",i+1,picture(&format!("media/gifs/{slug}"),title))); }
+        else { section.push_str(&format!("<details>\n<summary><strong>{}. {title}</strong></summary>\n\n{}\n[Complete transcript](media/gifs/{slug}.txt) · [Full-size animation](media/gifs/{slug}-light.gif)\n\n</details>\n\n",i+1,picture(&format!("media/gifs/{slug}"),title))); }
     }
     section.push_str("The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),\nits [original process logs](media/EVIDENCE-LAB-GUIDE.md) and\n[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.\nThe new replays do not close that review.\n\n");
     fs::write(dir.join("README.md"),gallery)?; fs::write(dir.join("STATIC.md"),static_view)?;

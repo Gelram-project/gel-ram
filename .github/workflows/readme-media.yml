@@ -39,6 +39,12 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Integrate only the reviewed public base; preserve concurrent source work.
+          if git merge --no-commit --no-ff 118e86d281fc27e4b63104b07084020588982e81; then
+            :
+          else
+            test "$(git diff --name-only --diff-filter=U)" = 'SOURCE-SHA256SUMS.txt' || exit 1
+          fi
           rustfmt --edition 2021 tools/readme_media.rs
           git add tools/readme_media.rs
           git ls-files | grep -v '^SOURCE-SHA256SUMS\.txt$' | LC_ALL=C sort | while IFS= read -r file; do sha256sum "$file"; done > "$RUNNER_TEMP/media-source-manifest.txt"
