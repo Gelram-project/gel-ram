@@ -70,10 +70,6 @@ The public repository is **not the complete private research system**. Some expe
 
 The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
-Separate [author-reported GEL component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)
-cover compact-sketch search and phase evolution. Their tasks, sizes and timing
-boundaries differ from Ocean full scans. They do not establish an end-to-end
-advantage over this baseline or a commercial product. Private engines remain private.
 
 ### Public CPU/RAM baseline
 
@@ -87,6 +83,28 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 | 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |
 
 These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
+
+### GEL's own search path — author-reported, a different task
+
+| Task | Data | p50 per query | Evidence |
+|---|---|---:|---|
+| Public full scan → top-10 → decision, 24 workers | 1M records of 1152 B | 72 ms | reproducible baseline above |
+| Public full scan → top-10 → decision, 24 workers | 10M records of 1152 B | 615–705 ms | reproducible baseline above |
+| GEL compact-sketch search, minimum distance, 3 workers | 16,384 sketches of 128 B | 15.5–21.3 µs | author-reported, private engine |
+| GEL compact-sketch search, minimum distance, 3 workers | 131,072 sketches of 128 B | 269–338 µs | author-reported, private engine |
+| GEL compact-sketch search, minimum distance, 3 workers | 500,000 sketches of 128 B | 1.26–1.44 ms | author-reported, private engine |
+
+The rows answer different questions on different data: a sketch is 128 bytes,
+not a 1152-byte Q8 record; the sketch search returns one minimum-distance
+sketch, not a ranked top-10 with a HIT/UNKNOWN decision; the sizes differ; and
+the sketch engine is private, so its numbers cannot be reproduced from this
+repository. **Do not divide one row by another.** A same-task comparison —
+identical corpus, queries and top-k, answers checked against the full scan,
+with preparation, updates and memory counted — is open work
+([roadmap A21](docs/ROADMAP.md)); until it exists, no speed-up factor is
+claimed. Ranges span three runs; see
+[the component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md) for method
+and raw data.
 
 Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
 A paired comparison with grep and sha256sum on the same public corpus, including where
