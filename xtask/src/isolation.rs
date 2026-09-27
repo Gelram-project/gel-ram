@@ -95,12 +95,29 @@ fn evidence() -> Result<(), String> {
     ))
 }
 
-/// One line for reports: VERIFIED or NOT_VERIFIED with its reason.
+/// One line for reports that people share: VERIFIED or NOT_VERIFIED with a
+/// reason that counts interfaces and routes instead of naming them, since host
+/// interface names reveal the local network setup.
 pub fn status() -> String {
     match evidence() {
         Ok(()) => "network_isolation=VERIFIED".into(),
-        Err(reason) => format!("network_isolation=NOT_VERIFIED ({reason})"),
+        Err(reason) => format!("network_isolation=NOT_VERIFIED ({})", redact(&reason)),
     }
+}
+
+fn redact(reason: &str) -> String {
+    for (prefix, noun) in [
+        (
+            "interfaces other than loopback: ",
+            "network interfaces including loopback",
+        ),
+        ("routes through: ", "routes through other devices"),
+    ] {
+        if let Some(names) = reason.strip_prefix(prefix) {
+            return format!("{} {noun}", names.split(',').count());
+        }
+    }
+    reason.to_string()
 }
 
 pub fn check(args: &[String]) -> Result<(), String> {
@@ -153,6 +170,16 @@ mod tests {
         assert!(passive(&dev(&["lo"]), "Iface\n", v6).is_err());
         let lo6 = "00000000000000000000000000000001 80 0 0 0 0 0 0 0 lo\n";
         assert_eq!(passive(&dev(&["lo"]), "Iface\n", lo6), Ok(()));
+    }
+
+    #[test]
+    fn shared_reports_count_interfaces_instead_of_naming_them() {
+        let named = passive(&dev(&["lo", "eth0", "vpn0"]), "Iface\n", "").unwrap_err();
+        let shared = redact(&named);
+        assert_eq!(shared, "3 network interfaces including loopback");
+        assert!(!shared.contains("eth0") && !shared.contains("vpn0"));
+        let routed = passive(&dev(&["lo"]), "Iface\tDestination\nwlan0\t0\n", "").unwrap_err();
+        assert_eq!(redact(&routed), "1 routes through other devices");
     }
 
     #[test]
