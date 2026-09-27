@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="t d">
+<title id="t">How a GEL citation is checked</title>
+<desc id="d">Animated diagram: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin and passes, and a copy with one changed byte that is refused.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#e6edf3}
+.mono{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace;font-size:13px;fill:#9fb3c8}
+.title{font-size:18px;font-weight:700}
+.box{fill:#151b23;stroke:#30465f;stroke-width:2}
+.ico{fill:none;stroke:#e6edf3;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.acc{fill:#58a6ff}
+.wire{fill:none;stroke:#58a6ff;stroke-width:4;stroke-linecap:round;stroke-dasharray:130;stroke-dashoffset:130}
+.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:0}
+.n1{animation:n1 12s infinite}.n2{animation:n2 12s infinite}.n3{animation:n3 12s infinite}.n4{animation:n4 12s infinite}.n5{animation:n5 12s infinite}
+.w1{animation:w1 12s infinite}.w2{animation:w2 12s infinite}.w3{animation:w3 12s infinite}.w4{animation:w4 12s infinite}
+.ok{animation:ok 12s infinite}.bad{animation:bad 12s infinite}
+@keyframes n1{0%{opacity:0;transform:translateY(10px)}6%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n2{0%,14%{opacity:0;transform:translateY(10px)}20%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n3{0%,28%{opacity:0;transform:translateY(10px)}34%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n4{0%,42%{opacity:0;transform:translateY(10px)}48%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n5{0%,56%{opacity:0;transform:translateY(10px)}62%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes w1{0%,8%{stroke-dashoffset:130}16%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w2{0%,22%{stroke-dashoffset:130}30%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w3{0%,36%{stroke-dashoffset:130}44%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w4{0%,50%{stroke-dashoffset:130}58%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes ok{0%,63%{opacity:0;transform:scale(.8)}67%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes bad{0%,72%{opacity:0}75%{opacity:1;transform:translateX(0)}76.5%{transform:translateX(-5px)}78%{transform:translateX(5px)}79.5%{transform:translateX(-3px)}81%,94%{opacity:1;transform:none}100%{opacity:0}}
+.n1,.n2,.n3,.n4,.n5,.ok,.bad{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:1}.wire{stroke-dashoffset:0}}
+</style>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d31"/><stop offset="1" stop-color="#0d1117"/></linearGradient></defs>
+<rect x="1" y="1" width="1198" height="328" rx="24" fill="url(#bg)" stroke="#30465f"/>
+<text x="40" y="44" font-size="13" font-weight="700" letter-spacing="2" style="fill:#58a6ff">HOW A CITATION IS CHECKED</text>
+<path class="wire w1" d="M215 150H285"/><path class="wire w2" d="M455 150H525"/><path class="wire w3" d="M695 150H765"/><path class="wire w4" d="M935 150H995"/>
+<g class="n1"><rect class="box" x="40" y="80" width="175" height="140" rx="16"/>
+<path class="ico" d="M104 96h34l14 14v44h-48z M138 96v14h14 M114 124h26 M114 134h26 M114 144h18"/>
+<text class="title" x="127" y="186" text-anchor="middle">Your document</text><text class="mono" x="127" y="207" text-anchor="middle">UTF-8, stays local</text></g>
+<g class="n2"><rect class="box" x="285" y="80" width="170" height="140" rx="16"/>
+<path class="ico" d="M346 96h34l14 14v44h-48z M380 96v14h14"/><rect class="acc" x="352" y="124" width="36" height="10" rx="3"/><path class="ico" d="M356 142h26"/>
+<text class="title" x="370" y="186" text-anchor="middle">Exact quote</text><text class="mono" x="370" y="207" text-anchor="middle">bytes 67..105</text></g>
+<g class="n3"><rect class="box" x="525" y="80" width="170" height="140" rx="16"/>
+<rect class="ico" x="590" y="118" width="40" height="34" rx="6"/><path class="ico" d="M598 118v-8a12 12 0 0 1 24 0v8"/><circle class="acc" cx="610" cy="135" r="5"/>
+<text class="title" x="610" y="186" text-anchor="middle">SHA-256 pin</text><text class="mono" x="610" y="207" text-anchor="middle">you keep it</text></g>
+<g class="n4"><rect class="box" x="765" y="80" width="170" height="140" rx="16"/>
+<path class="ico" d="M870 125a20 20 0 1 1-6-14 M864 100v11h11"/>
+<text class="title" x="850" y="186" text-anchor="middle">New process</text><text class="mono" x="850" y="207" text-anchor="middle">load with the pin</text></g>
+<g class="n5"><rect class="box" x="995" y="80" width="170" height="140" rx="16"/>
+<text class="title" x="1080" y="106" text-anchor="middle">Reopen</text>
+<g class="ok"><rect x="1015" y="116" width="130" height="32" rx="16" fill="#238636"/><text x="1080" y="137" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✓ PASS</text></g>
+<g class="bad"><rect x="1015" y="156" width="130" height="32" rx="16" fill="#da3633"/><text x="1080" y="177" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✗ REFUSED</text>
+<text class="mono" x="1080" y="207" text-anchor="middle" style="font-size:11.5px">copy, 1 changed byte</text></g></g>
+<text x="40" y="262" font-size="17">A citation matches the bytes you pinned, or it is refused.</text>
+<text class="mono" x="40" y="292">Illustration of the public Evidence Lab flow · not a timing measurement · see the six recorded runs below</text>
+</svg>

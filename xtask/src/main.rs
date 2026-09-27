@@ -32,7 +32,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "effda9ac8686b74c09ff8ab5ee5333c62fde56de5e6a62a7777c60937b75770c",
+        "30a976b6e5cdf56544026b48e132a2925110bd0c56e9aac5a0a0cc2d95e07b9d",
     ),
     (
         "media/presentation/header-light.svg",
@@ -41,6 +41,70 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/header-dark.svg",
         "34543ac9a1841597b77c9003dcc6951bdd67d0c36015da208ec67231c75acf0a",
+    ),
+    (
+        "media/presentation/flow-light.svg",
+        "55c927ac3a2aa3952e7906322dbd2667047c9a1ada371d0da0b49d16fb30e748",
+    ),
+    (
+        "media/presentation/flow-dark.svg",
+        "54837e23f8ae145f110d37fd056355d6568f88716402483e7e0277f62a6588f5",
+    ),
+    (
+        "media/presentation/facts-light.svg",
+        "0bc8b73224f4ea4d3713d59c7453c17dd1a494fd025c1e315407278f7bdda6d0",
+    ),
+    (
+        "media/presentation/facts-dark.svg",
+        "25dd00dd4cfe2437ff2759387020a3c78df80841e9518967c283863c18bb8d53",
+    ),
+    (
+        "media/presentation/chips/01-light.svg",
+        "d4207f2334a255e66fc3a92cfeba06ff3ee66dd50b045496c41005c4694f3fc2",
+    ),
+    (
+        "media/presentation/chips/01-dark.svg",
+        "68bbe4c1bed153874c101d9e5d751637f2bcbf4068c8778dfbd2e041ed303b1f",
+    ),
+    (
+        "media/presentation/chips/02-light.svg",
+        "4e399c79f4e0bfa56bdf4a86b551191a5534fd499d51de414e5b0d31cd63b3aa",
+    ),
+    (
+        "media/presentation/chips/02-dark.svg",
+        "e03c7ac8e5a4a2794180cd22913477ed7e54e5d32dde3066f0089c1cf5465ce3",
+    ),
+    (
+        "media/presentation/chips/03-light.svg",
+        "865090b3f865e2682231124d870338099a17ec37e9407e5be3973c8571f079d9",
+    ),
+    (
+        "media/presentation/chips/03-dark.svg",
+        "88c6121b08bc8a95f8666d9a02af346ffc0776e5ece865a605e323ef11599c86",
+    ),
+    (
+        "media/presentation/chips/04-light.svg",
+        "058fafbbe1bc80d77cd2b24f506674b3e8940b70e40ef2ce7f8500f0506f770d",
+    ),
+    (
+        "media/presentation/chips/04-dark.svg",
+        "458ebc39c0b25944f5fe249fa709f7fb011bb4359afc6721c2289d9aa1b91177",
+    ),
+    (
+        "media/presentation/chips/05-light.svg",
+        "f6696cfb93f899c380b24988cd3473fd8987f2c71b156752355407e9aae76a70",
+    ),
+    (
+        "media/presentation/chips/05-dark.svg",
+        "256f86e09deaee7505000945f5c67eec176fcdfbeebe17666701bbf6d4e9d804",
+    ),
+    (
+        "media/presentation/chips/06-light.svg",
+        "e96efa2ff68822e546332a5b20933d6feca51181833995a4f618b9ea5802ea75",
+    ),
+    (
+        "media/presentation/chips/06-dark.svg",
+        "e64e325af468f9803365e27c18f269821ad94be8a718b163759b587d47c55bba",
     ),
     (
         "media/gifs/01-evidence-light.gif",

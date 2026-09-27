@@ -54,6 +54,126 @@ const SVG: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" hei
 <text x="814" y="137" font-size="21">Inspect it. Reproduce it.</text>
 </g></svg>
 "####;
+/// Animated diagram of the public citation check. It illustrates the flow of
+/// the recorded workflows; it is not a recording or a timing measurement.
+const FLOW: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="t d">
+<title id="t">How a GEL citation is checked</title>
+<desc id="d">Animated diagram: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin and passes, and a copy with one changed byte that is refused.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:__INK__}
+.mono{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace;font-size:13px;fill:__MUTED__}
+.title{font-size:18px;font-weight:700}
+.box{fill:__PAPER__;stroke:__LINE__;stroke-width:2}
+.ico{fill:none;stroke:__INK__;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.acc{fill:__ACCENT__}
+.wire{fill:none;stroke:__ACCENT__;stroke-width:4;stroke-linecap:round;stroke-dasharray:130;stroke-dashoffset:130}
+.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:0}
+.n1{animation:n1 12s infinite}.n2{animation:n2 12s infinite}.n3{animation:n3 12s infinite}.n4{animation:n4 12s infinite}.n5{animation:n5 12s infinite}
+.w1{animation:w1 12s infinite}.w2{animation:w2 12s infinite}.w3{animation:w3 12s infinite}.w4{animation:w4 12s infinite}
+.ok{animation:ok 12s infinite}.bad{animation:bad 12s infinite}
+@keyframes n1{0%{opacity:0;transform:translateY(10px)}6%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n2{0%,14%{opacity:0;transform:translateY(10px)}20%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n3{0%,28%{opacity:0;transform:translateY(10px)}34%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n4{0%,42%{opacity:0;transform:translateY(10px)}48%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes n5{0%,56%{opacity:0;transform:translateY(10px)}62%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes w1{0%,8%{stroke-dashoffset:130}16%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w2{0%,22%{stroke-dashoffset:130}30%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w3{0%,36%{stroke-dashoffset:130}44%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes w4{0%,50%{stroke-dashoffset:130}58%,94%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+@keyframes ok{0%,63%{opacity:0;transform:scale(.8)}67%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes bad{0%,72%{opacity:0}75%{opacity:1;transform:translateX(0)}76.5%{transform:translateX(-5px)}78%{transform:translateX(5px)}79.5%{transform:translateX(-3px)}81%,94%{opacity:1;transform:none}100%{opacity:0}}
+.n1,.n2,.n3,.n4,.n5,.ok,.bad{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.n1,.n2,.n3,.n4,.n5,.ok,.bad{opacity:1}.wire{stroke-dashoffset:0}}
+</style>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="__BG1__"/><stop offset="1" stop-color="__BG2__"/></linearGradient></defs>
+<rect x="1" y="1" width="1198" height="328" rx="24" fill="url(#bg)" stroke="__LINE__"/>
+<text x="40" y="44" font-size="13" font-weight="700" letter-spacing="2" style="fill:__ACCENT__">HOW A CITATION IS CHECKED</text>
+<path class="wire w1" d="M215 150H285"/><path class="wire w2" d="M455 150H525"/><path class="wire w3" d="M695 150H765"/><path class="wire w4" d="M935 150H995"/>
+<g class="n1"><rect class="box" x="40" y="80" width="175" height="140" rx="16"/>
+<path class="ico" d="M104 96h34l14 14v44h-48z M138 96v14h14 M114 124h26 M114 134h26 M114 144h18"/>
+<text class="title" x="127" y="186" text-anchor="middle">Your document</text><text class="mono" x="127" y="207" text-anchor="middle">UTF-8, stays local</text></g>
+<g class="n2"><rect class="box" x="285" y="80" width="170" height="140" rx="16"/>
+<path class="ico" d="M346 96h34l14 14v44h-48z M380 96v14h14"/><rect class="acc" x="352" y="124" width="36" height="10" rx="3"/><path class="ico" d="M356 142h26"/>
+<text class="title" x="370" y="186" text-anchor="middle">Exact quote</text><text class="mono" x="370" y="207" text-anchor="middle">bytes 67..105</text></g>
+<g class="n3"><rect class="box" x="525" y="80" width="170" height="140" rx="16"/>
+<rect class="ico" x="590" y="118" width="40" height="34" rx="6"/><path class="ico" d="M598 118v-8a12 12 0 0 1 24 0v8"/><circle class="acc" cx="610" cy="135" r="5"/>
+<text class="title" x="610" y="186" text-anchor="middle">SHA-256 pin</text><text class="mono" x="610" y="207" text-anchor="middle">you keep it</text></g>
+<g class="n4"><rect class="box" x="765" y="80" width="170" height="140" rx="16"/>
+<path class="ico" d="M870 125a20 20 0 1 1-6-14 M864 100v11h11"/>
+<text class="title" x="850" y="186" text-anchor="middle">New process</text><text class="mono" x="850" y="207" text-anchor="middle">load with the pin</text></g>
+<g class="n5"><rect class="box" x="995" y="80" width="170" height="140" rx="16"/>
+<text class="title" x="1080" y="106" text-anchor="middle">Reopen</text>
+<g class="ok"><rect x="1015" y="116" width="130" height="32" rx="16" fill="__GREEN__"/><text x="1080" y="137" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✓ PASS</text></g>
+<g class="bad"><rect x="1015" y="156" width="130" height="32" rx="16" fill="__RED__"/><text x="1080" y="177" text-anchor="middle" font-size="14" font-weight="700" style="fill:#ffffff">✗ REFUSED</text>
+<text class="mono" x="1080" y="207" text-anchor="middle" style="font-size:11.5px">copy, 1 changed byte</text></g></g>
+<text x="40" y="262" font-size="17">A citation matches the bytes you pinned, or it is refused.</text>
+<text class="mono" x="40" y="292">Illustration of the public Evidence Lab flow · not a timing measurement · see the six recorded runs below</text>
+</svg>
+"####;
+/// Four checked facts; the counts are read from the repository by `fact_counts`.
+const FACTS: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="128" viewBox="0 0 1200 128" role="img" aria-labelledby="t d">
+<title id="t">Checked facts about this release</title>
+<desc id="d">__PROPS__ documented properties mapped to __TESTS__ tests on every CI platform; 3 CI platforms; __MUTANTS__ format mutants each rejected or explained; network isolation verified in the strict reproduction.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.num{font-size:36px;font-weight:800}
+.lab{font-size:14px;fill:__MUTED__}
+.tile{fill:__PAPER__;stroke:__LINE__;stroke-width:2}
+.t1,.t2,.t3,.t4{animation:rise 1.2s ease-out both;transform-box:fill-box}
+.t2{animation-delay:.25s}.t3{animation-delay:.5s}.t4{animation-delay:.75s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.t1,.t2,.t3,.t4{animation:none}}
+</style>
+<g class="t1"><rect class="tile" x="2" y="2" width="288" height="124" rx="16"/><rect x="2" y="2" width="8" height="124" rx="4" fill="__C1__"/>
+<text class="num" x="28" y="54" fill="__C1__">__PROPS__ → __TESTS__</text><text class="lab" x="28" y="82">documented properties mapped</text><text class="lab" x="28" y="102">to tests on every CI platform</text></g>
+<g class="t2"><rect class="tile" x="306" y="2" width="288" height="124" rx="16"/><rect x="306" y="2" width="8" height="124" rx="4" fill="__C2__"/>
+<text class="num" x="332" y="54" fill="__C2__">3</text><text class="lab" x="332" y="82">CI platforms:</text><text class="lab" x="332" y="102">Linux · macOS · Windows</text></g>
+<g class="t3"><rect class="tile" x="610" y="2" width="288" height="124" rx="16"/><rect x="610" y="2" width="8" height="124" rx="4" fill="__C3__"/>
+<text class="num" x="636" y="54" fill="__C3__">__MUTANTS__</text><text class="lab" x="636" y="82">format mutants, each rejected</text><text class="lab" x="636" y="102">or its acceptance explained</text></g>
+<g class="t4"><rect class="tile" x="914" y="2" width="284" height="124" rx="16"/><rect x="914" y="2" width="8" height="124" rx="4" fill="__C4__"/>
+<text class="num" x="940" y="54" fill="__C4__">offline</text><text class="lab" x="940" y="82">network isolation verified</text><text class="lab" x="940" y="102">in the strict reproduction</text></g>
+</svg>
+"####;
+/// One colour-coded badge per scene, in SCENES order: label, icon path, light
+/// colour, dark colour.
+const CHIPS: &[(&str, &str, &str, &str)] = &[
+    (
+        "01 · CITE AND RESTART",
+        "M4 13c0-4 2-6 5-7v3c-1 1-2 2-2 4h2v5H4zM13 13c0-4 2-6 5-7v3c-1 1-2 2-2 4h2v5h-5z",
+        "#0969da",
+        "#58a6ff",
+    ),
+    (
+        "02 · STALE CITATION REFUSED",
+        "M12 3a9 9 0 1 0 .01 0zM5.6 5.6l12.8 12.8",
+        "#bc4c00",
+        "#f0883e",
+    ),
+    (
+        "03 · BACKUP AND RESTORE",
+        "M3 5h18v4H3zM5 9h14v11H5zM10 13h4",
+        "#1a7f37",
+        "#3fb950",
+    ),
+    (
+        "04 · STRICT REPRODUCTION",
+        "M3 4h18v16H3zM7 9l3 3-3 3M12 15h5",
+        "#8250df",
+        "#bc8cff",
+    ),
+    (
+        "05 · CHANGED BYTE REFUSED",
+        "M12 2l8 3v6c0 5-4 8-8 10-4-2-8-5-8-10V5zM9 11l6 6M15 11l-6 6",
+        "#cf222e",
+        "#ff7b72",
+    ),
+    (
+        "06 · ANSWERS BEFORE SPEED",
+        "M4 8h15l-3-3M20 16H5l3 3",
+        "#0b7285",
+        "#39c5cf",
+    ),
+];
 const HTML: &str = r####"<!doctype html>
 <html lang="en">
 <head>
@@ -68,6 +188,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 @media(prefers-color-scheme:dark){:root{--bg:#0d1117;--paper:#151b23;--ink:#e6edf3;--muted:#a9b9ce;--line:#303d50;--blue:#79c0ff;--soft:#16253a;--shadow:0 18px 45px #0003}body{background:radial-gradient(ellipse at 95% 0%,#1a3555 0,transparent 55%),var(--bg)}.button{color:#081322}.button.secondary{color:var(--blue)}}
 @media(max-width:920px){.hero{grid-template-columns:1fr;gap:24px}.hero figure{order:2}.hero h1{max-width:680px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr 1fr}.columns>section:first-child{grid-column:1/-1}.header-right{max-width:290px}.brand-name{font-size:28px}.brand-name small{font-size:20px}.page{padding:24px 22px 0}}
 @media(max-width:580px){.page{padding:20px 16px 0}.brand-row{display:block}.header-right{text-align:left;max-width:none;margin-top:18px}.header-right p{font-size:15px}.chips{justify-content:flex-start}.hero{padding:19px}.hero h1{font-size:38px}.grid,.columns{grid-template-columns:1fr}.card h3{min-height:0}.trust{grid-template-columns:1fr 1fr}.view-tools{justify-content:flex-start;flex-wrap:wrap;gap:10px}nav{gap:16px;font-size:13px}.section{margin:32px 0}}
+.facts{margin-top:18px}.card .num img{width:auto;max-width:100%}
 @media print{.motion{display:none!important}.poster{display:block!important}body{background:white;color:black}.view-tools{display:none}.hero,.card{box-shadow:none}}
 </style>
 </head>
@@ -86,6 +207,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <figure><a class="media-link" href="media/gifs/01-evidence-light.gif" aria-label="Open the exact quotes and restart animation at full size">__HERO__</a><figcaption>Real public CLI output, edited into three readable cards.<br><a href="media/gifs/01-evidence.txt">Full transcript and source revision</a> · <a href="media/gifs/01-evidence-dark.gif">Dark full-size version</a></figcaption></figure>
 <div><p class="eyebrow">Inspect the source. Keep the evidence.</p><h1 id="hero-heading">Find the passage.<br>Check the source.</h1><p class="hero-lead">Load your text, retrieve exact quotations and check that a saved collection reopens with the expected bytes.</p><ul class="checks"><li>Source text, identifiers and byte ranges</li><li>SHA-256 pins retained independently</li><li>Explicit refusal after source replacement</li><li>Public Rust tools, without an LLM</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">Source correspondence is not source truth. This is phrase retrieval, not unrestricted question answering.</p></div>
 </section>
+<section class="section flow" aria-label="How a citation is checked">__FLOW__<div class="facts">__FACTS__</div></section>
 <section class="section" id="workflows" aria-labelledby="workflow-heading"><div class="section-heading"><p class="eyebrow">Six workflows. Their original evidence.</p><h2 id="workflow-heading">See it in action</h2><p>These are edited replays of recorded public command output, not product screenshots or new benchmark runs. Open each image at full size to read the terminal text.</p></div><div class="grid">__CARDS__</div>
 <div class="trust"><div><strong>Inspectable</strong><p>Transcripts and retained hashes accompany the previews.</p></div><div><strong>Explicit failures</strong><p>Inspect refusal and incomplete states, not only success.</p></div><div><strong>Local operation</strong><p>The CLI uses your local documents. No automatic upload.</p></div><div><strong>Reproducible scope</strong><p>Commands, sources and limitations remain linked.</p></div></div></section>
 <div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; the demo uses locked offline dependencies.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
@@ -111,8 +233,12 @@ const NATIVE: &str = r####"# GEL RAM
   <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
+__FLOW__
+
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
 quotations, stale-citation refusal and independently pinned snapshots.
+
+__FACTS__
 
 [Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
@@ -132,9 +258,11 @@ source, not as a hosted page; this repository does not enable Pages.
 Each animation lasts 12 seconds; pacing is editorial, not execution time.
 [Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
 
+__HERO_CHIP__
+
 __HERO__
 
-[Full source/restart transcript](media/gifs/01-evidence.txt) · [Full-size dark replay](media/gifs/01-evidence-dark.gif)
+[Full transcript](media/gifs/__HERO_ID__.txt) · [Full-size dark replay](media/gifs/__HERO_ID__-dark.gif)
 
 ### Six workflows, one evidence trail
 
@@ -153,11 +281,21 @@ New presentation is not a new execution, benchmark or human acceptance.
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner and six real GIF previews. The adjacent README-MULTIMEDIA.html is a
-script-free local document with the full responsive panel layout, theme-aware
-backgrounds, a still-image control and links to the public documentation.
-Open it from the checkout in a browser. GitHub's file viewer does not host it as
-a web page; no Pages deployment or new public service is configured.
+an SVG banner, an animated SVG diagram of the citation check, a strip of checked
+facts, colour-coded workflow badges and six real GIF previews. The adjacent
+README-MULTIMEDIA.html is a script-free local document with the full responsive
+panel layout, theme-aware backgrounds, a still-image control and links to the
+public documentation. Open it from the checkout in a browser. GitHub's file
+viewer does not host it as a web page; no Pages deployment or new public service
+is configured.
+
+The animated diagram illustrates the flow the six recordings show: an exact
+quote with its byte range, a SHA-256 pin kept by the user, a new process that
+reopens the snapshot, and a copy with one changed byte that is refused. It is
+drawn, not recorded, and its timing is not a measurement. Under reduced motion
+it shows its final state. The numbers in the facts strip are read by the
+builder from the property map and the recorded mutation matrix, so a change to
+either makes the read-only check fail until the strip is rebuilt.
 
 ## Preservation and source
 
@@ -241,16 +379,170 @@ fn header(dark: bool) -> String {
     }
     s
 }
+fn fill(template: &str, pairs: &[(&str, &str)]) -> String {
+    let mut s = template.to_string();
+    for (key, val) in pairs {
+        s = s.replace(&format!("__{key}__"), val);
+    }
+    s
+}
+fn flow(dark: bool) -> String {
+    let v = if dark {
+        [
+            "#101d31", "#0d1117", "#30465f", "#58a6ff", "#e6edf3", "#9fb3c8", "#151b23", "#238636",
+            "#da3633",
+        ]
+    } else {
+        [
+            "#f7fbff", "#deedff", "#cbdcf0", "#0969da", "#102949", "#486380", "#ffffff", "#1a7f37",
+            "#cf222e",
+        ]
+    };
+    let keys = [
+        "BG1", "BG2", "LINE", "ACCENT", "INK", "MUTED", "PAPER", "GREEN", "RED",
+    ];
+    let pairs: Vec<(&str, &str)> = keys.into_iter().zip(v).collect();
+    fill(FLOW, &pairs)
+}
+/// Counts shown in the facts strip, read from the repository so they cannot
+/// drift: property rows and their tests in the property map, and distinct
+/// (format, case) mutants in the recorded mutation matrix.
+fn fact_counts() -> Result<(usize, usize, usize)> {
+    let map = fs::read_to_string("docs/PROPERTY-TESTS.md")?;
+    let rows: Vec<&str> = map.lines().filter(|l| l.starts_with("| P")).collect();
+    let tests: usize = rows
+        .iter()
+        .map(|r| r.rsplit('|').nth(1).unwrap_or("").matches('`').count() / 2)
+        .sum();
+    let matrix = fs::read_to_string("docs/evidence-mutation/matrix-r1.txt")?;
+    let mutants: std::collections::BTreeSet<(&str, &str)> = matrix
+        .lines()
+        .skip(1)
+        .filter_map(|l| {
+            let mut f = l.split('\t');
+            Some((f.next()?, f.next()?))
+        })
+        .collect();
+    if rows.is_empty() || tests == 0 || mutants.is_empty() {
+        return Err("missing fact sources".into());
+    }
+    Ok((rows.len(), tests, mutants.len()))
+}
+fn facts(dark: bool, (props, tests, mutants): (usize, usize, usize)) -> String {
+    let v = if dark {
+        [
+            "#9fb3c8", "#151b23", "#30465f", "#58a6ff", "#bc8cff", "#f0883e", "#3fb950",
+        ]
+    } else {
+        [
+            "#486380", "#ffffff", "#cbdcf0", "#0969da", "#8250df", "#bc4c00", "#1a7f37",
+        ]
+    };
+    let (props, tests, mutants) = (props.to_string(), tests.to_string(), mutants.to_string());
+    fill(
+        FACTS,
+        &[
+            ("MUTED", v[0]),
+            ("PAPER", v[1]),
+            ("LINE", v[2]),
+            ("C1", v[3]),
+            ("C2", v[4]),
+            ("C3", v[5]),
+            ("C4", v[6]),
+            ("PROPS", &props),
+            ("TESTS", &tests),
+            ("MUTANTS", &mutants),
+        ],
+    )
+}
+fn chip(i: usize, dark: bool) -> String {
+    let (label, icon, light, dark_colour) = CHIPS[i];
+    let (colour, tint) = if dark {
+        (dark_colour, ".16")
+    } else {
+        (light, ".1")
+    };
+    format!(
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="320" height="40" viewBox="0 0 320 40" role="img" aria-label="Workflow {label}"><rect x="1" y="1" width="318" height="38" rx="19" fill="{colour}" fill-opacity="{tint}" stroke="{colour}" stroke-width="1.5"/><g transform="translate(12 8)" fill="none" stroke="{colour}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{icon}"/></g><text x="46" y="26" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" letter-spacing="1" fill="{colour}">{label}</text></svg>
+"#
+    )
+}
+fn chip_path(i: usize, dark: bool) -> String {
+    let theme = if dark { "dark" } else { "light" };
+    format!("media/presentation/chips/{:02}-{theme}.svg", i + 1)
+}
+/// A light/dark SVG picture. Only the width is fixed, so it keeps its proportions.
+fn themed(light: &str, dark: &str, alt: &str, width: u32) -> String {
+    format!(
+        r#"<picture><source media="(prefers-color-scheme: dark)" srcset="{dark}"><img alt="{alt}" src="{light}" width="{width}"></picture>"#
+    )
+}
+fn chip_picture(i: usize) -> String {
+    themed(
+        &chip_path(i, false),
+        &chip_path(i, true),
+        &format!("Workflow {}", CHIPS[i].0),
+        320,
+    )
+}
+fn flow_picture() -> String {
+    themed(
+        "media/presentation/flow-light.svg",
+        "media/presentation/flow-dark.svg",
+        "How a citation is checked: your document, an exact quote with its byte range, a SHA-256 pin you keep, a new process that reopens the snapshot with the pin; a copy with one changed byte is refused.",
+        1200,
+    )
+}
+fn facts_picture() -> String {
+    themed(
+        "media/presentation/facts-light.svg",
+        "media/presentation/facts-dark.svg",
+        "Checked facts: documented properties mapped to tests on every CI platform, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction.",
+        1200,
+    )
+}
+/// Every generated SVG asset with its body.
+fn assets() -> Result<Vec<(String, String)>> {
+    let counts = fact_counts()?;
+    let mut out = vec![
+        (
+            "media/presentation/header-light.svg".to_string(),
+            header(false),
+        ),
+        (
+            "media/presentation/header-dark.svg".to_string(),
+            header(true),
+        ),
+        ("media/presentation/flow-light.svg".to_string(), flow(false)),
+        ("media/presentation/flow-dark.svg".to_string(), flow(true)),
+        (
+            "media/presentation/facts-light.svg".to_string(),
+            facts(false, counts),
+        ),
+        (
+            "media/presentation/facts-dark.svg".to_string(),
+            facts(true, counts),
+        ),
+    ];
+    for i in 0..CHIPS.len() {
+        for dark in [false, true] {
+            out.push((chip_path(i, dark), chip(i, dark)));
+        }
+    }
+    Ok(out)
+}
 fn page() -> String {
     let mut cards = String::new();
     for (i, (id, title, desc)) in SCENES.iter().enumerate() {
         if i > 0 {
             cards.push('\n');
         }
-        cards.push_str(&format!(r#"<article class="card"><div class="num">WORKFLOW 0{}</div><h3>{title}</h3><a class="media-link" href="media/gifs/{id}-light.gif" aria-label="Open {title} at full size">{}</a><p>{desc}</p><div class="links"><a href="media/gifs/{id}.txt">Full transcript</a><a href="media/gifs/{id}-dark.gif">Dark full size</a></div></article>"#,i+1,pair(id,title)));
+        cards.push_str(&format!(r#"<article class="card"><div class="num">{}</div><h3>{title}</h3><a class="media-link" href="media/gifs/{id}-light.gif" aria-label="Open {title} at full size">{}</a><p>{desc}</p><div class="links"><a href="media/gifs/{id}.txt">Full transcript</a><a href="media/gifs/{id}-dark.gif">Dark full size</a></div></article>"#,chip_picture(i),pair(id,title)));
     }
     HTML.replace("__HERO__", &pair(SCENES[0].0, SCENES[0].1))
         .replace("__CARDS__", &cards)
+        .replace("__FLOW__", &flow_picture())
+        .replace("__FACTS__", &facts_picture())
         .replace(
             "__DOC__",
             &format!("https://github.com/Gelram-project/gel-ram/blob/{RELEASE}"),
@@ -259,16 +551,22 @@ fn page() -> String {
 }
 fn native_intro() -> String {
     let mut grid = String::from("<table>\n");
-    for row in SCENES.chunks(2) {
+    for (r, row) in SCENES.chunks(2).enumerate() {
         grid.push_str("<tr>\n");
-        for (id, title, desc) in row {
-            grid.push_str(&format!("<td width=\"50%\" valign=\"top\"><h4>{title}</h4><a href=\"media/gifs/{id}-light.gif\">{}</a><p>{desc}</p><p><a href=\"media/gifs/{id}.txt\">Transcript</a> · <a href=\"media/gifs/{id}-dark.gif\">Dark full size</a></p></td>\n",picture(id,title,false)));
+        for (c, (id, title, desc)) in row.iter().enumerate() {
+            grid.push_str(&format!("<td width=\"50%\" valign=\"top\">{}<h4>{title}</h4><a href=\"media/gifs/{id}-light.gif\">{}</a><p>{desc}</p><p><a href=\"media/gifs/{id}.txt\">Transcript</a> · <a href=\"media/gifs/{id}-dark.gif\">Dark full size</a></p></td>\n",chip_picture(r*2+c),picture(id,title,false)));
         }
         grid.push_str("</tr>\n");
     }
     grid.push_str("</table>\n");
+    // The opening preview is the most telling one: a changed byte is refused.
+    let (hero_id, hero_title, _) = SCENES[4];
     NATIVE
-        .replace("__HERO__", &picture(SCENES[0].0, SCENES[0].1, false))
+        .replace("__FLOW__", &flow_picture())
+        .replace("__FACTS__", &facts_picture())
+        .replace("__HERO_CHIP__", &chip_picture(4))
+        .replace("__HERO__", &picture(hero_id, hero_title, false))
+        .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
 }
 fn rewrite_readme(before: &str) -> Result<String> {
@@ -349,6 +647,10 @@ fn check_page(text: &str) -> Result<()> {
         "__release__",
         "__base__",
         "__branch__",
+        "__flow__",
+        "__facts__",
+        "__hero_chip__",
+        "__hero_id__",
     ] {
         if low.contains(bad) {
             return Err(format!("unexpected active/remote/unresolved markup: {bad}").into());
@@ -359,6 +661,21 @@ fn check_page(text: &str) -> Result<()> {
             if !text.contains(&format!("media/gifs/{id}{ending}")) {
                 return Err(format!("missing {id}{ending}").into());
             }
+        }
+    }
+    let mut needed = vec![
+        "media/presentation/flow-light.svg".to_string(),
+        "media/presentation/flow-dark.svg".to_string(),
+        "media/presentation/facts-light.svg".to_string(),
+        "media/presentation/facts-dark.svg".to_string(),
+    ];
+    for i in 0..CHIPS.len() {
+        needed.push(chip_path(i, false));
+        needed.push(chip_path(i, true));
+    }
+    for need in needed {
+        if !text.contains(&need) {
+            return Err(format!("missing {need}").into());
         }
     }
     Ok(())
@@ -389,13 +706,14 @@ fn run() -> Result<()> {
         .collect::<Result<_>>()?;
     let before = fs::read_to_string("README.md")?;
     if before.contains("<!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->") {
-        if !before.starts_with(&native_intro())
-            || fs::read_to_string("docs/README-PRESENTATION.md")?
-                != GUIDE.replace("__RELEASE__", RELEASE)
-            || fs::read_to_string("README-MULTIMEDIA.html")? != page()
-            || fs::read_to_string("media/presentation/header-light.svg")? != header(false)
-            || fs::read_to_string("media/presentation/header-dark.svg")? != header(true)
-        {
+        let mut same = before.starts_with(&native_intro())
+            && fs::read_to_string("docs/README-PRESENTATION.md")?
+                == GUIDE.replace("__RELEASE__", RELEASE)
+            && fs::read_to_string("README-MULTIMEDIA.html")? == page();
+        for (name, body) in assets()? {
+            same &= fs::read_to_string(&name).is_ok_and(|found| found == body);
+        }
+        if !same {
             return Err("existing presentation differs; refuse to overwrite it".into());
         }
         check_page(&page())?;
@@ -405,13 +723,9 @@ fn run() -> Result<()> {
     let new = rewrite_readme(&before)?;
     let html = page();
     check_page(&html)?;
-    let paths = [
-        "README-MULTIMEDIA.html",
-        "media/presentation/header-light.svg",
-        "media/presentation/header-dark.svg",
-    ];
-    let bodies = [html, header(false), header(true)];
-    for name in paths.iter().copied().chain([
+    let mut outputs = vec![("README-MULTIMEDIA.html".to_string(), html)];
+    outputs.extend(assets()?);
+    for name in outputs.iter().map(|(n, _)| n.as_str()).chain([
         "README-HISTORY-PRE-MULTIMEDIA.md",
         "docs/README-PRESENTATION.md",
     ]) {
@@ -425,14 +739,14 @@ fn run() -> Result<()> {
         return Err("asset pin insertion point is not unique".into());
     }
     write_new("README-HISTORY-PRE-MULTIMEDIA.md", before.as_bytes())?;
-    for (name, body) in paths.iter().zip(bodies.iter()) {
+    for (name, body) in &outputs {
         write_new(name, body.as_bytes())?;
     }
     let mut pins = mark.to_string();
     pins.push_str(
         "    // Exact script-free documentation presentation assets; no HTML/SVG wildcard.\n",
     );
-    for name in paths {
+    for (name, _) in &outputs {
         pins.push_str(&format!(
             "    (\n        \"{name}\",\n        \"{}\",\n    ),\n",
             hash(name)?
@@ -490,12 +804,41 @@ mod tests {
     }
     #[test]
     fn themes_have_no_placeholders() {
-        for b in [false, true] {
-            let s = header(b);
-            assert!(!s.contains("__"));
-            assert!(!s.contains("<script"));
-            assert!(s.contains("<title"));
+        let all = assets().unwrap();
+        assert_eq!(all.len(), 6 + 2 * CHIPS.len());
+        for (name, s) in all {
+            assert!(!s.contains("__"), "{name}");
+            assert!(!s.contains("<script"), "{name}");
+            assert!(s.contains("<title") || s.contains("aria-label="), "{name}");
         }
+        for s in [native_intro(), page()] {
+            for bad in [
+                "__FLOW__",
+                "__FACTS__",
+                "__HERO_CHIP__",
+                "__HERO_ID__",
+                "__HERO__",
+                "__GRID__",
+            ] {
+                assert!(!s.contains(bad), "{bad}");
+            }
+        }
+    }
+    #[test]
+    fn facts_are_read_from_the_repository() {
+        let (props, tests, mutants) = fact_counts().unwrap();
+        assert!(props > 0 && tests >= props && mutants > 0);
+        let s = facts(false, (props, tests, mutants));
+        assert!(s.contains(&format!("{props} → {tests}")));
+        assert!(s.contains(&format!(">{mutants}<")));
+    }
+    #[test]
+    fn motion_can_be_reduced() {
+        for dark in [false, true] {
+            assert!(flow(dark).contains("prefers-reduced-motion"));
+            assert!(facts(dark, (1, 1, 1)).contains("prefers-reduced-motion"));
+        }
+        assert!(native_intro().contains("05-integrity"));
     }
     #[test]
     fn keeps_technical_tail() {

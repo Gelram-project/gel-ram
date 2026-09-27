@@ -1,11 +1,21 @@
 # Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner and six real GIF previews. The adjacent README-MULTIMEDIA.html is a
-script-free local document with the full responsive panel layout, theme-aware
-backgrounds, a still-image control and links to the public documentation.
-Open it from the checkout in a browser. GitHub's file viewer does not host it as
-a web page; no Pages deployment or new public service is configured.
+an SVG banner, an animated SVG diagram of the citation check, a strip of checked
+facts, colour-coded workflow badges and six real GIF previews. The adjacent
+README-MULTIMEDIA.html is a script-free local document with the full responsive
+panel layout, theme-aware backgrounds, a still-image control and links to the
+public documentation. Open it from the checkout in a browser. GitHub's file
+viewer does not host it as a web page; no Pages deployment or new public service
+is configured.
+
+The animated diagram illustrates the flow the six recordings show: an exact
+quote with its byte range, a SHA-256 pin kept by the user, a new process that
+reopens the snapshot, and a copy with one changed byte that is refused. It is
+drawn, not recorded, and its timing is not a measurement. Under reduced motion
+it shows its final state. The numbers in the facts strip are read by the
+builder from the property map and the recorded mutation matrix, so a change to
+either makes the read-only check fail until the strip is rebuilt.
 
 ## Preservation and source
 
