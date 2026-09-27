@@ -128,7 +128,7 @@ const HTML: &str = r####"<!doctype html>
 <style>
 :root{color-scheme:light dark;--bg:#f6f9ff;--paper:#fff;--ink:#102949;--muted:#485e77;--line:#cbdcf0;--blue:#0969da;--soft:#e9f3ff;--shadow:0 18px 48px #24497112}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 95% 0%,#d8eaff 0,transparent 55%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}a:focus-visible,label:focus-visible{outline:3px solid var(--blue);outline-offset:5px}img{max-width:100%;height:auto;display:block}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(34px,4.3vw,57px);letter-spacing:-.05em;line-height:1.07;margin-bottom:22px}h2{font-size:29px;letter-spacing:-.025em;line-height:1.2}h3{font-size:18px;line-height:1.35}code,pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:20px}code{overflow-wrap:anywhere}.page{max-width:1220px;padding:32px 32px 0;margin:auto}.brand-row{display:flex;justify-content:space-between;gap:28px;align-items:center}.brand{display:flex;align-items:center;gap:18px}.brand picture{flex:none}.brand img{width:84px}.brand-name{font-size:33px;letter-spacing:-.03em;line-height:1.12;font-weight:780}.brand-name small{display:block;font-size:23px;letter-spacing:0}.strap{margin:10px 0 0;font-size:14px;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:750;color:var(--blue);margin-bottom:14px}.header-right{text-align:right;max-width:355px}.header-right p{font-size:17px;margin:0 0 10px}.chips{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.chip{border:1px solid var(--line);padding:3px 10px;border-radius:6px;font-size:12px;background:var(--paper);color:var(--muted)}nav{display:flex;gap:26px;flex-wrap:wrap;padding:18px 0;margin:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:600;font-size:14px}nav a{text-decoration:none}.hero{display:grid;grid-template-columns:1.18fr 1fr;gap:36px;align-items:center;padding:30px;background:linear-gradient(135deg,var(--soft),var(--paper));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero>*{min-width:0}.hero figure{margin:0}.media-link{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);text-decoration:none;box-shadow:var(--shadow)}.hero figcaption{font-size:12px;color:var(--muted);margin-top:13px}.hero-lead{font-size:17px}.checks{list-style:none;padding:0;margin:20px 0}.checks li{margin:8px 0;font-size:14px}.checks li::before{content:'✓';font-weight:800;color:var(--blue);margin-right:10px}.buttons{display:flex;flex-wrap:wrap;gap:10px}.button{display:inline-block;background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:10px;padding:10px 17px;text-decoration:none;font-weight:650;font-size:14px}.button.secondary{background:var(--paper);color:var(--blue);border-color:var(--line)}.boundary{margin:19px 0 0;color:var(--muted);font-size:12px}.section{margin:44px 0}.section-heading{text-align:center;max-width:760px;margin:0 auto 24px}.section-heading p{color:var(--muted);font-size:14px;margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.card{padding:17px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.card .num{font-size:11px;letter-spacing:.14em;color:var(--blue);font-weight:750;margin-bottom:8px}.card h3{min-height:49px;margin-bottom:12px}.card p{color:var(--muted);font-size:13px;margin:14px 0 12px}.card .links{font-size:12px;display:flex;gap:12px;flex-wrap:wrap}.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border-block:1px solid var(--line);padding:24px 0;margin-top:34px}.trust strong{display:block;margin-bottom:5px;font-size:16px}.trust p{font-size:13px;color:var(--muted);margin:0}.columns{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}.columns>section{min-width:0}.columns h2{font-size:23px}.columns p,.columns li{font-size:14px;color:var(--muted)}.doclinks{padding:0;list-style:none}.doclinks li{margin:9px 0}.scope{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px;font-size:13px}.scope h2{font-size:20px}.scope p:last-child{margin-bottom:0}footer{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}footer p{margin:0}.poster{display:none}.motion-control{position:absolute;left:-9999px}.view-tools{display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:12px;margin:0 0 18px;color:var(--muted)}.view-tools label{cursor:pointer;border:1px solid var(--line);border-radius:7px;background:var(--paper);padding:6px 10px}.motion-control:focus-visible~.page label[for=still-mode]{outline:3px solid var(--blue)}.motion-control:checked~.page .motion{display:none}.motion-control:checked~.page .poster{display:block}.motion-control:checked~.page label[for=still-mode]{background:var(--soft);outline:2px solid var(--blue)}.skip{position:absolute;left:12px;top:-80px;padding:8px 12px;background:var(--paper);z-index:5}.skip:focus{top:10px}
+a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}a:focus-visible,label:focus-visible{outline:3px solid var(--blue);outline-offset:5px}img{max-width:100%;height:auto;display:block}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(34px,4.3vw,57px);letter-spacing:-.05em;line-height:1.07;margin-bottom:22px}h2{font-size:29px;letter-spacing:-.025em;line-height:1.2}h3{font-size:18px;line-height:1.35}code,pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:20px}code{overflow-wrap:anywhere}.page{max-width:1220px;padding:32px 32px 0;margin:auto}.brand-row{display:flex;justify-content:space-between;gap:28px;align-items:center}.brand{display:flex;align-items:center;gap:18px}.brand>.motion,.brand>.poster{flex:none}.brand img{width:84px}.brand-name{font-size:33px;letter-spacing:-.03em;line-height:1.12;font-weight:780}.brand-name small{display:block;font-size:23px;letter-spacing:0}.strap{margin:10px 0 0;font-size:14px;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:750;color:var(--blue);margin-bottom:14px}.header-right{text-align:right;max-width:355px}.header-right p{font-size:17px;margin:0 0 10px}.chips{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.chip{border:1px solid var(--line);padding:3px 10px;border-radius:6px;font-size:12px;background:var(--paper);color:var(--muted)}nav{display:flex;gap:26px;flex-wrap:wrap;padding:18px 0;margin:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:600;font-size:14px}nav a{text-decoration:none}.hero{display:grid;grid-template-columns:1.18fr 1fr;gap:36px;align-items:center;padding:30px;background:linear-gradient(135deg,var(--soft),var(--paper));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero>*{min-width:0}.hero figure{margin:0}.media-link{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);text-decoration:none;box-shadow:var(--shadow)}.hero figcaption{font-size:12px;color:var(--muted);margin-top:13px}.hero-lead{font-size:17px}.checks{list-style:none;padding:0;margin:20px 0}.checks li{margin:8px 0;font-size:14px}.checks li::before{content:'✓';font-weight:800;color:var(--blue);margin-right:10px}.buttons{display:flex;flex-wrap:wrap;gap:10px}.button{display:inline-block;background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:10px;padding:10px 17px;text-decoration:none;font-weight:650;font-size:14px}.button.secondary{background:var(--paper);color:var(--blue);border-color:var(--line)}.boundary{margin:19px 0 0;color:var(--muted);font-size:12px}.section{margin:44px 0}.section-heading{text-align:center;max-width:760px;margin:0 auto 24px}.section-heading p{color:var(--muted);font-size:14px;margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.card{padding:17px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.card .num{font-size:11px;letter-spacing:.14em;color:var(--blue);font-weight:750;margin-bottom:8px}.card h3{min-height:49px;margin-bottom:12px}.card p{color:var(--muted);font-size:13px;margin:14px 0 12px}.card .links{font-size:12px;display:flex;gap:12px;flex-wrap:wrap}.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border-block:1px solid var(--line);padding:24px 0;margin-top:34px}.trust strong{display:block;margin-bottom:5px;font-size:16px}.trust p{font-size:13px;color:var(--muted);margin:0}.columns{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}.columns>section{min-width:0}.columns h2{font-size:23px}.columns p,.columns li{font-size:14px;color:var(--muted)}.doclinks{padding:0;list-style:none}.doclinks li{margin:9px 0}.scope{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px;font-size:13px}.scope h2{font-size:20px}.scope p:last-child{margin-bottom:0}footer{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}footer p{margin:0}.poster{display:none}.motion-control{position:absolute;left:-9999px}.view-tools{display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:12px;margin:0 0 18px;color:var(--muted)}.view-tools label{cursor:pointer;border:1px solid var(--line);border-radius:7px;background:var(--paper);padding:6px 10px}.motion-control:focus-visible~.page label[for=still-mode]{outline:3px solid var(--blue)}.motion-control:checked~.page .motion{display:none}.motion-control:checked~.page .poster{display:block}.motion-control:checked~.page label[for=still-mode]{background:var(--soft);outline:2px solid var(--blue)}.skip{position:absolute;left:12px;top:-80px;padding:8px 12px;background:var(--paper);z-index:5}.skip:focus{top:10px}
 @media(prefers-color-scheme:dark){:root{--bg:#0d1117;--paper:#151b23;--ink:#e6edf3;--muted:#a9b9ce;--line:#303d50;--blue:#79c0ff;--soft:#16253a;--shadow:0 18px 45px #0003}body{background:radial-gradient(ellipse at 95% 0%,#1a3555 0,transparent 55%),var(--bg)}.button{color:#081322}.button.secondary{color:var(--blue)}}
 @media(max-width:920px){.hero{grid-template-columns:1fr;gap:24px}.hero figure{order:2}.hero h1{max-width:680px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr 1fr}.columns>section:first-child{grid-column:1/-1}.header-right{max-width:290px}.brand-name{font-size:28px}.brand-name small{font-size:20px}.page{padding:24px 22px 0}}
 @media(max-width:580px){.page{padding:20px 16px 0}.brand-row{display:block}.header-right{text-align:left;max-width:none;margin-top:18px}.header-right p{font-size:15px}.chips{justify-content:flex-start}.hero{padding:19px}.hero h1{font-size:38px}.grid,.columns{grid-template-columns:1fr}.card h3{min-height:0}.trust{grid-template-columns:1fr 1fr}.view-tools{justify-content:flex-start;flex-wrap:wrap;gap:10px}nav{gap:16px;font-size:13px}.section{margin:32px 0}}
@@ -413,22 +413,34 @@ fn header(dark: bool) -> String {
     {
         s = s.replace(&format!("__{key}__"), val);
     }
-    let logo = gel_logo(theme(dark), values[3], (120.0, 118.0), 86.0);
+    let (o, a) = ((120.0, 118.0), 86.0);
+    let logo = gel_logo(theme(dark), values[3], o, a) + &gel_sheets(theme(dark), values[3], o, a);
     s.replace("__LOGO_STYLE__", LOGO_STYLE)
         .replace("__LOGO__", &logo)
 }
-/// The animated logo alone, for the brand of the full-page edition.
-fn logo(dark: bool) -> String {
-    let accent = if dark { "#79c0ff" } else { "#0969da" };
+/// The logo alone, for the brand of the full-page edition: animated, or still
+/// in its final state for the page's still-image control and for print.
+fn logo(dark: bool, animated: bool) -> String {
+    let (t, accent) = (theme(dark), if dark { "#79c0ff" } else { "#0969da" });
+    let (o, a) = ((96.0, 108.0), 76.0);
+    let (label, style, body) = if animated {
+        (
+            "GEL RAM animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears",
+            format!("<style>\n{LOGO_STYLE}\n</style>\n"),
+            gel_logo(t, accent, o, a) + &gel_sheets(t, accent, o, a),
+        )
+    } else {
+        (
+            "GEL RAM logo: a translucent cube of source cells with one exact cell lit and a pin seal",
+            String::new(),
+            gel_logo(t, accent, o, a),
+        )
+    };
     format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="GEL RAM animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears">
-<style>
-{LOGO_STYLE}
-</style>
-{}
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="{label}">
+{style}{body}
 </svg>
-"#,
-        gel_logo(theme(dark), accent, (96.0, 108.0), 76.0)
+"#
     )
 }
 fn fill(template: &str, pairs: &[(&str, &str)]) -> String {
@@ -1088,7 +1100,12 @@ fn gel_logo(t: &Theme, accent: &str, o: Point, a: f64) -> String {
         t.ink,
         x - 7.0
     ));
-    // Three document sheets dropping in through the top face.
+    s
+}
+/// The three document sheets that drop into the cube; only the animated logo
+/// draws them, so a still logo carries no hidden elements.
+fn gel_sheets(t: &Theme, accent: &str, o: Point, a: f64) -> String {
+    let mut s = String::new();
     for (class, dx, dy) in [("sa", -34.0, 6.0), ("sb", 0.0, -6.0), ("sc", 32.0, 4.0)] {
         let (x, y) = (o.0 + dx - 11.0, o.1 - 1.3 * a + dy);
         s.push_str(&format!(
@@ -1186,14 +1203,22 @@ fn wall_picture() -> String {
         1200,
     )
 }
-/// The animated logo in the brand of the full-page edition; the brand name next
-/// to it carries the text, so the image is decorative.
+/// The logo in the brand of the full-page edition, animated or still like the
+/// previews, so the still-image control and print stop it too. The brand name
+/// next to it carries the text, so the image is decorative.
 fn logo_picture() -> String {
-    themed(
-        "media/presentation/logo-light.svg",
-        "media/presentation/logo-dark.svg",
-        "",
-        84,
+    let img = |name: &str| {
+        themed(
+            &format!("media/presentation/{name}-light.svg"),
+            &format!("media/presentation/{name}-dark.svg"),
+            "",
+            84,
+        )
+    };
+    format!(
+        r#"<div class="motion">{}</div><div class="poster">{}</div>"#,
+        img("logo"),
+        img("logo-still")
     )
 }
 fn bars_picture() -> String {
@@ -1225,7 +1250,8 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((path("facts"), facts(dark, counts)));
         out.push((path("wall"), wall(dark, &evidence)));
         out.push((path("bars"), bars(dark, &evidence)));
-        out.push((path("logo"), logo(dark)));
+        out.push((path("logo"), logo(dark, true)));
+        out.push((path("logo-still"), logo(dark, false)));
     }
     for i in 0..CHIPS.len() {
         for dark in [false, true] {
@@ -1375,7 +1401,7 @@ fn check_page(text: &str) -> Result<()> {
         }
     }
     let mut needed = Vec::new();
-    for name in ["flow", "facts", "wall", "bars", "logo"] {
+    for name in ["flow", "facts", "wall", "bars", "logo", "logo-still"] {
         for theme in ["light", "dark"] {
             needed.push(format!("media/presentation/{name}-{theme}.svg"));
         }
@@ -1516,7 +1542,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 12 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 14 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -1602,7 +1628,7 @@ mod tests {
             for s in [
                 scene(dark),
                 header(dark),
-                logo(dark),
+                logo(dark, true),
                 facts(dark, (1, 1, 1)),
                 wall(dark, &e),
                 bars(dark, &e),
@@ -1615,7 +1641,17 @@ mod tests {
     #[test]
     fn logo_keeps_its_core_and_a_final_state() {
         for dark in [false, true] {
-            let s = logo(dark);
+            let s = logo(dark, true);
+            // The still variant draws the same logo without any animation.
+            let still = logo(dark, false);
+            assert!(!still.contains("animation") && !still.contains("<style"));
+            assert!(!still.contains("class=\"sheet"));
+            assert!(still.contains(&gel_logo(
+                theme(dark),
+                if dark { "#79c0ff" } else { "#0969da" },
+                (96.0, 108.0),
+                76.0
+            )));
             // The accent core is drawn outside every animated group.
             let core = iso_box(
                 (96.0, 108.0),
@@ -1666,6 +1702,17 @@ mod tests {
         assert!(page().contains("prefers-reduced-motion"));
         assert!(page().contains("id=\"still-mode\""));
         assert_eq!(page().matches("<article class=\"card\"").count(), 6);
+        // The still-image control also stops the animated brand logo.
+        let brand = page()
+            .split("<div class=\"brand\">")
+            .nth(1)
+            .and_then(|s| s.split("<div class=\"brand-name\">").next())
+            .unwrap()
+            .to_string();
+        assert!(brand.trim_start().starts_with("<div class=\"motion\">"));
+        assert!(brand.contains("logo-light.svg") && brand.contains("logo-dark.svg"));
+        assert!(brand.contains("<div class=\"poster\">"));
+        assert!(brand.contains("logo-still-light.svg") && brand.contains("logo-still-dark.svg"));
     }
     #[test]
     fn native_is_not_one_big_image() {

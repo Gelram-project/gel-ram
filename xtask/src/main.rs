@@ -32,7 +32,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "61c1aed932aa05243791e9618de5f0dfce9fc9ef6c5cfed8985d18382ce338dc",
+        "6c6f9523ef83c17c30350bed75f3ee2d4a14962298e7a5ef72abdee232536250",
     ),
     (
         "media/presentation/header-light.svg",
@@ -63,6 +63,10 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "0bfa881db2ea8d988c385664eb840f8faef1c5e931e37a7e8d6d3f101b67b0b5",
     ),
     (
+        "media/presentation/logo-still-light.svg",
+        "2cb1b673a1c1791b5cdd30b7194f6b2bf4f3f9c7d909c939470e2de7c79f26e4",
+    ),
+    (
         "media/presentation/flow-dark.svg",
         "4248e73198f4274634098a70f0b6739f981da45f040f20a8444e8051dc005032",
     ),
@@ -81,6 +85,10 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/logo-dark.svg",
         "1bb4a8be9ff7c951a62e1a18e1ee7ba6d9861213df7cd7ca4e1f64413286be6b",
+    ),
+    (
+        "media/presentation/logo-still-dark.svg",
+        "0863d48ebe5fbb4199e9947f29518f6f3224250142cb4d4eb4c3c9f68926a132",
     ),
     (
         "media/presentation/chips/01-light.svg",
