@@ -6,8 +6,8 @@ individual demonstration are not latency-distribution benchmarks.
 | Film | Scope | Inputs and observations | Reproduction |
 |---|---|---|---|
 | [Evidence Lab, 70.35 s](GEL-EVIDENCE-LAB-EN.mp4) | PUBLIC tool | Two documents, 308 input bytes; phrase, citation, UNKNOWN, save, restart, reload | [Commands and evidence](EVIDENCE-LAB-GUIDE.md) |
-| [Hardware / answers, 90 s](GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4) | PRIVATE APPLICATION PREVIEW | Four prepared cases; 256 source nodes; contextual follow-up and refusal | [Historical scope](DEMO.md); private engine not supplied |
-| [Continuous chat, 60 s](GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) | PRIVATE APPLICATION PREVIEW | Three prepared questions, bounded templates, including an unresolved case | [Historical scope](DEMO-CONTINUOUS-CHAT.md); private engine not supplied |
+| [Hardware / answers, 90 s](GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4) | PRIVATE APPLICATION PREVIEW | Four prepared questions; a follow-up and a refusal | [Scope and limits](FILMS-GUIDE.md); private engine not supplied |
+| [Continuous chat, 60 s](GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) | PRIVATE APPLICATION PREVIEW | Three prepared questions in one session, including an UNKNOWN | [Scope and limits](FILMS-GUIDE.md); private engine not supplied |
 
 The private previews are dated 13 September 2026. They do not imply that running
 the public checkout opens the private /chat. Use the individual guides for

@@ -72,7 +72,7 @@ states.
 | Still of the update, restart and corrupted-copy scenario | after 4ce332b | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
 | Binary packages for Linux, macOS and Windows, built only in CI | after 4ce332b | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
 | Fresh paired timing and fresh-process RSS of one mutation (A09) | after 2228ed1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
-| Transcript limited to the public film | after 306c7f1 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md): the public Evidence Lab film in full, the private previews only by scope and limits | — |
+| Private previews described only by scope and limits | after 306c7f1 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md) and [film guide](../media/FILMS-GUIDE.md); the public Evidence Lab film keeps its full transcript | — |
 
 ## How to read the review work list
 
