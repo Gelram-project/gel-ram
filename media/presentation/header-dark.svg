@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="228" viewBox="0 0 1200 228" role="img" aria-labelledby="title desc">
+<title id="title">GEL RAM | Evidence Lab</title><desc id="desc">Your documents. Exact quotes. A restart you can check. Public Rust tools with source-linked evidence.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d31"/><stop offset="1" stop-color="#0d1117"/></linearGradient></defs>
+<rect x="1" y="1" width="1198" height="226" rx="24" fill="url(#bg)" stroke="#303d50"/>
+<path d="M680 0Q755 180 1200 92V0Z" fill="#79c0ff" opacity=".06"/><path d="M560 228Q850 38 1200 156V228Z" fill="#79c0ff" opacity=".05"/>
+<g transform="translate(36 48)" fill="none" stroke="#e6edf3" stroke-width="5" stroke-linejoin="round">
+<path d="M51 0 94 25V76L51 101 8 76V25Z"/><path d="M8 25 51 50 94 25M51 50V101"/>
+<path d="M51 27 72 39V63L51 75 30 63V39Z" fill="#79c0ff"/><path d="M30 39 51 51 72 39M51 51V75"/>
+</g>
+<g font-family="Arial,Helvetica,sans-serif" fill="#e6edf3">
+<text x="162" y="86" font-size="46" font-weight="700" letter-spacing="1">GEL RAM</text>
+<text x="163" y="128" font-size="30" font-weight="600">Evidence Lab</text>
+<text x="42" y="192" font-size="23">Your documents. Exact quotes. A restart you can check.</text>
+<text x="814" y="76" font-size="16" font-weight="700" letter-spacing="2" fill="#79c0ff">PUBLIC RUST TOOLS</text>
+<text x="814" y="108" font-size="21">Source-linked evidence.</text>
+<text x="814" y="137" font-size="21">Inspect it. Reproduce it.</text>
+</g></svg>

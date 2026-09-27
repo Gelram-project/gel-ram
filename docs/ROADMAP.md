@@ -76,6 +76,7 @@ states.
 | Property-to-test map (A07) | fc5cf90 | `xtask ci-evidence` | [map](PROPERTY-TESTS.md): 35 properties, 71 tests, one `PROPERTY` line per row in each platform report | properties without a row are not claimed untested; a row shows the tests ran, not full coverage |
 | Claim registry for the v0.5.0 tools and every README timing table (A19) | 118e86d | `xtask claims` | [claims](CLAIMS.md) | not an exhaustive map of historical statements |
 | README visual entry: six edited log replays of recorded public workflows | 034cd33 (PR #14) | `tools/readme_media.rs` | [gallery](../media/gifs/README.md), [source and hashes](../media/gifs/MANIFEST.txt) | edited replays, not wall time; the one-off publishing workflow is not part of the release |
+| Multimedia README and script-free full-page edition | this change | `tools/readme_presentation.rs`, workflow `readme-presentation` (read-only check) | [presentation guide](README-PRESENTATION.md), [full-page edition](../README-MULTIMEDIA.html) | built locally and rechecked in CI; a human review of the rendered page in browsers |
 
 ## How to read the review work list
 

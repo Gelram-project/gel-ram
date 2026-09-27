@@ -1,3 +1,5 @@
+[Multimedia README and local full-page edition](../docs/README-PRESENTATION.md). Existing recordings below retain their original scope.
+
 # Animated workflow gallery
 
 [Six edited public CLI replays](gifs/README.md) · [Static accessible view](gifs/STATIC.md) · [Provenance](gifs/MANIFEST.txt)

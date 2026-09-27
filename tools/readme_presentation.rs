@@ -1,16 +1,40 @@
 //! Generate a script-free README presentation. Existing recordings are never rewritten.
 #![forbid(unsafe_code)]
-use std::{fs,io::Write,path::Path,process::Command};
+use std::{fs, io::Write, path::Path, process::Command};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-const BASE: &str = "ea44234918dc64b8e1fadcd7eb250dc56fdfdf9d";
-const BRANCH: &str = "docs/multimedia-readme-20260927";
-const SCENES: &[(&str,&str,&str)] = &[
-    ("01-evidence", "Exact quotes. A verifiable restart.", "Add a source, inspect its citation, save and reopen it in a separate process."),
-    ("02-stale", "Changed source. Old citation refused.", "Replace the source and inspect the refusal of the previous result."),
-    ("03-backup", "Backup. Inspect. Restore.", "Restore into a new path and check equality with the saved snapshot."),
-    ("04-reproduce", "One command. Inspect every result.", "Read the recorded strict reproduction result and its declared scope."),
-    ("05-integrity", "Changed bytes. Retained pin. Refusal.", "A changed-byte copy is rejected against the original trusted hash."),
-    ("06-compare", "GEL and grep. Answers before speed.", "See matching and differing answers. No universal speedup is claimed."),
+/// The release whose sources the page links to and checks out.
+const RELEASE: &str = "v0.5.0";
+const SCENES: &[(&str, &str, &str)] = &[
+    (
+        "01-evidence",
+        "Exact quotes. A verifiable restart.",
+        "Add a source, inspect its citation, save and reopen it in a separate process.",
+    ),
+    (
+        "02-stale",
+        "Changed source. Old citation refused.",
+        "Replace the source and inspect the refusal of the previous result.",
+    ),
+    (
+        "03-backup",
+        "Backup. Inspect. Restore.",
+        "Restore into a new path and check equality with the saved snapshot.",
+    ),
+    (
+        "04-reproduce",
+        "One command. Inspect every result.",
+        "Read the recorded strict reproduction result and its declared scope.",
+    ),
+    (
+        "05-integrity",
+        "Changed bytes. Retained pin. Refusal.",
+        "A changed-byte copy is rejected against the original trusted hash.",
+    ),
+    (
+        "06-compare",
+        "GEL and grep. Answers before speed.",
+        "See matching and differing answers. No universal speedup is claimed.",
+    ),
 ];
 const SVG: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="228" viewBox="0 0 1200 228" role="img" aria-labelledby="title desc">
 <title id="title">GEL RAM | Evidence Lab</title><desc id="desc">Your documents. Exact quotes. A restart you can check. Public Rust tools with source-linked evidence.</desc>
@@ -66,7 +90,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <div class="trust"><div><strong>Inspectable</strong><p>Transcripts and retained hashes accompany the previews.</p></div><div><strong>Explicit failures</strong><p>Inspect refusal and incomplete states, not only success.</p></div><div><strong>Local operation</strong><p>The CLI uses your local documents. No automatic upload.</p></div><div><strong>Reproducible scope</strong><p>Commands, sources and limitations remain linked.</p></div></div></section>
 <div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; the demo uses locked offline dependencies.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout __BRANCH__
+git checkout __RELEASE__
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
@@ -74,7 +98,7 @@ cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --d
 <section id="reproduce"><p class="eyebrow">Check the declared scope</p><h2>Reproduce the checks.</h2><pre><code>cargo run --locked --offline -p xtask -- verify
 cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new</code></pre><p>Use a new output directory outside the checkout. Read failed, skipped and unmeasured steps. Cargo offline mode is not system-wide network isolation.</p><ul class="doclinks"><li><a href="__DOC__/docs/REPRODUCE.md">Reproduction instructions</a></li><li><a href="__DOC__/docs/CI-EVIDENCE.md">Per-revision CI evidence</a></li><li><a href="__DOC__/docs/CLAIMS.md">Executable claim registry</a></li></ul></section>
 <section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">Technical README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/EVIDENCE-BATCH.md">Batch mode and exit codes</a></li><li><a href="__DOC__/docs/BACKUP.md">Backup and restore</a></li><li><a href="__DOC__/docs/MUTATION-MATRIX.md">Format mutation matrix</a></li><li><a href="__DOC__/docs/BENCHMARK-GREP.md">Comparison with grep</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the pinned source on GitHub. Viewing this local page loads only adjacent assets, with no scripts, trackers or remote fonts.</p></section></div>
-<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. The public base is <code>__BASE__</code>. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
+<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It belongs to the <code>__RELEASE__</code> source. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
 </main>
 <footer><p><strong>GEL RAM · Evidence Lab</strong><br>RR, GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
 </div></body></html>
@@ -92,15 +116,14 @@ quotations, stale-citation refusal and independently pinned snapshots.
 
 [Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
-> **Multimedia presentation candidate.** This branch changes presentation, not the
-> public runtime or license. The workspace reports 0.5.0; this page does not publish
-> a release. Use the branch in the commands below and record its exact commit.
-> [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+> **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
+> commit you test.
+> [Release notes](RELEASE-NOTES-v0.5.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
 **Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
 Open that file from this checkout in a browser for the responsive blue-panel layout,
 light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this PR does not enable Pages.
+source, not as a hosted page; this repository does not enable Pages.
 [Presentation guide](docs/README-PRESENTATION.md).
 
 ## See it in action
@@ -138,11 +161,11 @@ a web page; no Pages deployment or new public service is configured.
 
 ## Preservation and source
 
-The parent public source is __BASE__. The exact prior README is retained as
-[README-HISTORY-PRE-MULTIMEDIA.md](../README-HISTORY-PRE-MULTIMEDIA.md).
+The presentation belongs to the __RELEASE__ source. The exact prior README is
+retained as [README-HISTORY-PRE-MULTIMEDIA.md](../README-HISTORY-PRE-MULTIMEDIA.md).
 The already existing pre-visual history also remains untouched. The new README
-keeps its technical content below the presentation, changing only the quick-start
-checkout from an unverified tag to this named presentation branch.
+keeps its technical content below the presentation unchanged, including the
+quick-start checkout of the __RELEASE__ tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
@@ -168,15 +191,16 @@ The Rust-only presentation builder is tools/readme_presentation.rs. It refuses
 unexpected input headings and pre-existing output paths, verifies the original
 media pins before and after its edits, archives the actual preceding README and
 adds only three exact presentation-asset pins. It does not allow arbitrary SVG or
-HTML files. The source manifest is then refreshed and the complete candidate must
+HTML files. The source manifest is then refreshed and the complete tree must
 pass xtask verify. Normal three-platform CI is read separately for the final head.
 
-The one-off CI builder is restricted to __BRANCH__ and the owner account.
-It refuses concurrent branch advancement and never force-pushes, merges or
-publishes a release. A rerun validates already-produced files instead of replacing
-historic recordings. Its public source archive includes licenses and notices, not
-machine-local logs or fonts. The final PR records actual visual and CI results;
-this guide does not predeclare PASS.
+The presentation was built once with Rust 1.85.0 and committed by its author;
+no workflow writes to the repository. The read-only `readme-presentation`
+workflow compiles and tests the builder and reruns it on every change to the
+presentation or its sources. On an existing presentation the builder only
+validates: any generated file that differs from the committed one fails the
+check, and historic recordings are never replaced. Visual and CI results are
+recorded in the pull request; this guide does not predeclare PASS.
 
 ## Review criteria
 
@@ -191,133 +215,317 @@ The license, CLA, historical permissions and third-party notices are unchanged.
 "####;
 fn picture(id: &str, title: &str, still: bool) -> String {
     let ext = if still { "png" } else { "gif" };
-    format!(r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/{id}-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.{ext}"><img alt="{title}" src="media/gifs/{id}-light.{ext}" width="1000" height="460" loading="lazy"></picture>"#)
+    format!(
+        r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/{id}-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/{id}-dark.{ext}"><img alt="{title}" src="media/gifs/{id}-light.{ext}" width="1000" height="460" loading="lazy"></picture>"#
+    )
 }
 fn pair(id: &str, title: &str) -> String {
-    format!("<div class=\"motion\">{}</div><div class=\"poster\">{}</div>", picture(id,title,false),picture(id,title,true))
+    format!(
+        "<div class=\"motion\">{}</div><div class=\"poster\">{}</div>",
+        picture(id, title, false),
+        picture(id, title, true)
+    )
 }
 fn header(dark: bool) -> String {
-    let values = if dark { ["#101d31","#0d1117","#303d50","#79c0ff","#e6edf3"] } else { ["#f7fbff","#deedff","#cbdcf0","#0969da","#102949"] };
+    let values = if dark {
+        ["#101d31", "#0d1117", "#303d50", "#79c0ff", "#e6edf3"]
+    } else {
+        ["#f7fbff", "#deedff", "#cbdcf0", "#0969da", "#102949"]
+    };
     let mut s = SVG.to_string();
-    for (key,val) in ["BG1","BG2","LINE","ACCENT","INK"].into_iter().zip(values) { s=s.replace(&format!("__{key}__"),val); }
+    for (key, val) in ["BG1", "BG2", "LINE", "ACCENT", "INK"]
+        .into_iter()
+        .zip(values)
+    {
+        s = s.replace(&format!("__{key}__"), val);
+    }
     s
 }
 fn page() -> String {
-    let mut cards=String::new();
-    for (i,(id,title,desc)) in SCENES.iter().enumerate() {
-        if i>0 { cards.push('\n'); }
+    let mut cards = String::new();
+    for (i, (id, title, desc)) in SCENES.iter().enumerate() {
+        if i > 0 {
+            cards.push('\n');
+        }
         cards.push_str(&format!(r#"<article class="card"><div class="num">WORKFLOW 0{}</div><h3>{title}</h3><a class="media-link" href="media/gifs/{id}-light.gif" aria-label="Open {title} at full size">{}</a><p>{desc}</p><div class="links"><a href="media/gifs/{id}.txt">Full transcript</a><a href="media/gifs/{id}-dark.gif">Dark full size</a></div></article>"#,i+1,pair(id,title)));
     }
-    HTML.replace("__HERO__",&pair(SCENES[0].0,SCENES[0].1)).replace("__CARDS__",&cards).replace("__DOC__",&format!("https://github.com/Gelram-project/gel-ram/blob/{BASE}")).replace("__BASE__",BASE).replace("__BRANCH__",BRANCH)
+    HTML.replace("__HERO__", &pair(SCENES[0].0, SCENES[0].1))
+        .replace("__CARDS__", &cards)
+        .replace(
+            "__DOC__",
+            &format!("https://github.com/Gelram-project/gel-ram/blob/{RELEASE}"),
+        )
+        .replace("__RELEASE__", RELEASE)
 }
 fn native_intro() -> String {
-    let mut grid=String::from("<table>\n");
+    let mut grid = String::from("<table>\n");
     for row in SCENES.chunks(2) {
         grid.push_str("<tr>\n");
-        for (id,title,desc) in row {
+        for (id, title, desc) in row {
             grid.push_str(&format!("<td width=\"50%\" valign=\"top\"><h4>{title}</h4><a href=\"media/gifs/{id}-light.gif\">{}</a><p>{desc}</p><p><a href=\"media/gifs/{id}.txt\">Transcript</a> · <a href=\"media/gifs/{id}-dark.gif\">Dark full size</a></p></td>\n",picture(id,title,false)));
         }
         grid.push_str("</tr>\n");
     }
     grid.push_str("</table>\n");
-    NATIVE.replace("__HERO__",&picture(SCENES[0].0,SCENES[0].1,false)).replace("__GRID__",&grid)
+    NATIVE
+        .replace("__HERO__", &picture(SCENES[0].0, SCENES[0].1, false))
+        .replace("__GRID__", &grid)
 }
 fn rewrite_readme(before: &str) -> Result<String> {
-    let marker="### What you can inspect\n";
-    if !before.starts_with("# GEL RAM\n\n### Evidence Lab\n") || before.matches(marker).count()!=1 {
+    let marker = "### What you can inspect\n";
+    if !before.starts_with("# GEL RAM\n\n### Evidence Lab\n") || before.matches(marker).count() != 1
+    {
         return Err("unexpected README structure; no guessed replacement".into());
     }
-    let tail=before.split_once(marker).ok_or("missing content boundary")?.1;
-    let tail=tail.replace("git checkout v0.5.0",&format!("git checkout {BRANCH}"));
-    Ok(format!("{}{marker}{tail}",native_intro()))
+    let tail = before
+        .split_once(marker)
+        .ok_or("missing content boundary")?
+        .1;
+
+    Ok(format!("{}{marker}{tail}", native_intro()))
 }
 fn write_new(name: &str, bytes: &[u8]) -> Result<()> {
-    if let Some(parent)=Path::new(name).parent() { if !parent.as_os_str().is_empty() { fs::create_dir_all(parent)?; } }
-    let mut f=fs::OpenOptions::new().write(true).create_new(true).open(name)?;
-    f.write_all(bytes)?; f.sync_all()?; Ok(())
+    if let Some(parent) = Path::new(name).parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent)?;
+        }
+    }
+    let mut f = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(name)?;
+    f.write_all(bytes)?;
+    f.sync_all()?;
+    Ok(())
 }
 fn hash(name: &str) -> Result<String> {
-    let out=Command::new("sha256sum").args(["--",name]).output()?;
-    if !out.status.success() { return Err(format!("cannot hash {name}").into()); }
-    let s=String::from_utf8(out.stdout)?;
-    let h=s.split_whitespace().next().ok_or("missing hash")?;
-    if h.len()!=64 || !h.bytes().all(|b|b.is_ascii_hexdigit()) { return Err("invalid hash".into()); }
+    let out = Command::new("sha256sum").args(["--", name]).output()?;
+    if !out.status.success() {
+        return Err(format!("cannot hash {name}").into());
+    }
+    let s = String::from_utf8(out.stdout)?;
+    let h = s.split_whitespace().next().ok_or("missing hash")?;
+    if h.len() != 64 || !h.bytes().all(|b| b.is_ascii_hexdigit()) {
+        return Err("invalid hash".into());
+    }
     Ok(h.to_string())
 }
-fn check_media() -> Result<Vec<(String,String)>> {
-    let text=fs::read_to_string("media/gifs/MANIFEST.txt")?;
-    let mut checked=Vec::new();
-    for line in text.lines().filter(|l|l.starts_with("sha256 ")) {
-        let words: Vec<_>=line.split_whitespace().collect();
-        if words.len()!=3 || !words[2].starts_with("media/gifs/") || words[2].contains("..") { return Err("unexpected original media pin".into()); }
-        if hash(words[2])?!=words[1] { return Err(format!("changed original media: {}",words[2]).into()); }
-        checked.push((words[2].to_string(),words[1].to_string()));
+fn check_media() -> Result<Vec<(String, String)>> {
+    let text = fs::read_to_string("media/gifs/MANIFEST.txt")?;
+    let mut checked = Vec::new();
+    for line in text.lines().filter(|l| l.starts_with("sha256 ")) {
+        let words: Vec<_> = line.split_whitespace().collect();
+        if words.len() != 3 || !words[2].starts_with("media/gifs/") || words[2].contains("..") {
+            return Err("unexpected original media pin".into());
+        }
+        if hash(words[2])? != words[1] {
+            return Err(format!("changed original media: {}", words[2]).into());
+        }
+        checked.push((words[2].to_string(), words[1].to_string()));
     }
-    if checked.len()!=24 { return Err("expected 24 original media assets".into()); }
+    if checked.len() != 24 {
+        return Err("expected 24 original media assets".into());
+    }
     Ok(checked)
 }
 fn check_page(text: &str) -> Result<()> {
-    let low=text.to_ascii_lowercase();
-    for bad in ["<script","<iframe","<object","<embed","<form","javascript:","onerror=","onload=","@import","url(","src=\"http","srcset=\"http","__hero__","__cards__","__doc__","__base__","__branch__"] {
-        if low.contains(bad) { return Err(format!("unexpected active/remote/unresolved markup: {bad}").into()); }
+    let low = text.to_ascii_lowercase();
+    for bad in [
+        "<script",
+        "<iframe",
+        "<object",
+        "<embed",
+        "<form",
+        "javascript:",
+        "onerror=",
+        "onload=",
+        "@import",
+        "url(",
+        "src=\"http",
+        "srcset=\"http",
+        "__hero__",
+        "__cards__",
+        "__doc__",
+        "__release__",
+        "__base__",
+        "__branch__",
+    ] {
+        if low.contains(bad) {
+            return Err(format!("unexpected active/remote/unresolved markup: {bad}").into());
+        }
     }
-    for (id,_,_) in SCENES {
-        for ending in ["-dark.gif","-light.gif","-dark.png","-light.png",".txt"] {
-            if !text.contains(&format!("media/gifs/{id}{ending}")) { return Err(format!("missing {id}{ending}").into()); }
+    for (id, _, _) in SCENES {
+        for ending in ["-dark.gif", "-light.gif", "-dark.png", "-light.png", ".txt"] {
+            if !text.contains(&format!("media/gifs/{id}{ending}")) {
+                return Err(format!("missing {id}{ending}").into());
+            }
         }
     }
     Ok(())
 }
 fn run() -> Result<()> {
-    if std::env::args().len()!=1 { return Err("run the builder without arguments from the repository root".into()); }
-    let media=check_media()?;
-    let immutable=["LICENSE","NOTICE","CLA.md","CLA-PRIVACY.md","LICENSING.md","media/RIGHTS.md","media/gifs/MANIFEST.txt","media/gifs/01-evidence.txt","media/gifs/02-stale.txt","media/gifs/03-backup.txt","media/gifs/04-reproduce.txt","media/gifs/05-integrity.txt","media/gifs/06-compare.txt"];
-    let saved: Vec<_>=immutable.iter().map(|s| Ok((*s,hash(s)?))).collect::<Result<_>>()?;
-    let before=fs::read_to_string("README.md")?;
+    if std::env::args().len() != 1 {
+        return Err("run the builder without arguments from the repository root".into());
+    }
+    let media = check_media()?;
+    let immutable = [
+        "LICENSE",
+        "NOTICE",
+        "CLA.md",
+        "CLA-PRIVACY.md",
+        "LICENSING.md",
+        "media/RIGHTS.md",
+        "media/gifs/MANIFEST.txt",
+        "media/gifs/01-evidence.txt",
+        "media/gifs/02-stale.txt",
+        "media/gifs/03-backup.txt",
+        "media/gifs/04-reproduce.txt",
+        "media/gifs/05-integrity.txt",
+        "media/gifs/06-compare.txt",
+    ];
+    let saved: Vec<_> = immutable
+        .iter()
+        .map(|s| Ok((*s, hash(s)?)))
+        .collect::<Result<_>>()?;
+    let before = fs::read_to_string("README.md")?;
     if before.contains("<!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->") {
-        if fs::read_to_string("README-MULTIMEDIA.html")?!=page() || fs::read_to_string("media/presentation/header-light.svg")?!=header(false) || fs::read_to_string("media/presentation/header-dark.svg")?!=header(true) {
+        if !before.starts_with(&native_intro())
+            || fs::read_to_string("docs/README-PRESENTATION.md")?
+                != GUIDE.replace("__RELEASE__", RELEASE)
+            || fs::read_to_string("README-MULTIMEDIA.html")? != page()
+            || fs::read_to_string("media/presentation/header-light.svg")? != header(false)
+            || fs::read_to_string("media/presentation/header-dark.svg")? != header(true)
+        {
             return Err("existing presentation differs; refuse to overwrite it".into());
         }
         check_page(&page())?;
         println!("README_PRESENTATION=UNCHANGED original media pins verified");
         return Ok(());
     }
-    let new= rewrite_readme(&before)?;
-    let html=page(); check_page(&html)?;
-    let paths=["README-MULTIMEDIA.html","media/presentation/header-light.svg","media/presentation/header-dark.svg"];
-    let bodies=[html,header(false),header(true)];
-    for name in paths.iter().copied().chain(["README-HISTORY-PRE-MULTIMEDIA.md","docs/README-PRESENTATION.md"]) {
-        if Path::new(name).try_exists()? { return Err(format!("new path already exists: {name}").into()); }
+    let new = rewrite_readme(&before)?;
+    let html = page();
+    check_page(&html)?;
+    let paths = [
+        "README-MULTIMEDIA.html",
+        "media/presentation/header-light.svg",
+        "media/presentation/header-dark.svg",
+    ];
+    let bodies = [html, header(false), header(true)];
+    for name in paths.iter().copied().chain([
+        "README-HISTORY-PRE-MULTIMEDIA.md",
+        "docs/README-PRESENTATION.md",
+    ]) {
+        if Path::new(name).try_exists()? {
+            return Err(format!("new path already exists: {name}").into());
+        }
     }
-    let main=fs::read_to_string("xtask/src/main.rs")?;
-    let mark="const REVIEWED_ASSETS: &[(&str, &str)] = &[\n";
-    if main.matches(mark).count()!=1 { return Err("asset pin insertion point is not unique".into()); }
-    write_new("README-HISTORY-PRE-MULTIMEDIA.md",before.as_bytes())?;
-    for (name,body) in paths.iter().zip(bodies.iter()) { write_new(name,body.as_bytes())?; }
-    let mut pins=mark.to_string();
-    pins.push_str("    // Exact script-free documentation presentation assets; no HTML/SVG wildcard.\n");
-    for name in paths { pins.push_str(&format!("    (\n        \"{name}\",\n        \"{}\",\n    ),\n",hash(name)?)); }
-    fs::write("xtask/src/main.rs",main.replacen(mark,&pins,1))?;
-    fs::write("README.md",new)?;
-    write_new("docs/README-PRESENTATION.md",GUIDE.replace("__BASE__",BASE).replace("__BRANCH__",BRANCH).as_bytes())?;
-    let index=fs::read_to_string("media/INDEX.md")?;
+    let main = fs::read_to_string("xtask/src/main.rs")?;
+    let mark = "const REVIEWED_ASSETS: &[(&str, &str)] = &[\n";
+    if main.matches(mark).count() != 1 {
+        return Err("asset pin insertion point is not unique".into());
+    }
+    write_new("README-HISTORY-PRE-MULTIMEDIA.md", before.as_bytes())?;
+    for (name, body) in paths.iter().zip(bodies.iter()) {
+        write_new(name, body.as_bytes())?;
+    }
+    let mut pins = mark.to_string();
+    pins.push_str(
+        "    // Exact script-free documentation presentation assets; no HTML/SVG wildcard.\n",
+    );
+    for name in paths {
+        pins.push_str(&format!(
+            "    (\n        \"{name}\",\n        \"{}\",\n    ),\n",
+            hash(name)?
+        ));
+    }
+    fs::write("xtask/src/main.rs", main.replacen(mark, &pins, 1))?;
+    fs::write("README.md", new)?;
+    write_new(
+        "docs/README-PRESENTATION.md",
+        GUIDE.replace("__RELEASE__", RELEASE).as_bytes(),
+    )?;
+    let index = fs::read_to_string("media/INDEX.md")?;
     fs::write("media/INDEX.md",format!("[Multimedia README and local full-page edition](../docs/README-PRESENTATION.md). Existing recordings below retain their original scope.\n\n{index}"))?;
-    if fs::read("README-HISTORY-PRE-MULTIMEDIA.md")?!=before.as_bytes() { return Err("README archive differs".into()); }
-    if check_media()?!=media { return Err("media inventory changed".into()); }
-    for (name,pin) in saved { if hash(name)?!=pin { return Err(format!("protected file changed: {name}").into()); } }
+    if fs::read("README-HISTORY-PRE-MULTIMEDIA.md")? != before.as_bytes() {
+        return Err("README archive differs".into());
+    }
+    if check_media()? != media {
+        return Err("media inventory changed".into());
+    }
+    for (name, pin) in saved {
+        if hash(name)? != pin {
+            return Err(format!("protected file changed: {name}").into());
+        }
+    }
     println!("README_PRESENTATION=BUILT six existing previews, exact archive, unchanged licenses and recordings");
     Ok(())
 }
-fn main() { if let Err(e)=run() { eprintln!("README_PRESENTATION=FAIL {e}"); std::process::exit(1); } }
+fn main() {
+    if let Err(e) = run() {
+        eprintln!("README_PRESENTATION=FAIL {e}");
+        std::process::exit(1);
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test] fn six_real_scenarios(){assert_eq!(SCENES.len(),6);let p=page();for(id,_,_)in SCENES{assert!(p.contains(&format!("media/gifs/{id}.txt")));}}
-    #[test] fn no_active_or_remote_assets(){check_page(&page()).unwrap();for s in ["<script>x</script>","<img src=\"https://remote.test/a.png\">","__HERO__"]{assert!(check_page(&(page()+s)).is_err());}}
-    #[test] fn themes_have_no_placeholders(){for b in [false,true]{let s=header(b);assert!(!s.contains("__"));assert!(!s.contains("<script"));assert!(s.contains("<title"));}}
-    #[test] fn keeps_technical_tail(){let s="# GEL RAM\n\n### Evidence Lab\nold\n### What you can inspect\nkeep these bytes\n";assert!(rewrite_readme(s).unwrap().ends_with("### What you can inspect\nkeep these bytes\n"));}
-    #[test] fn unknown_readme_refused(){assert!(rewrite_readme("unrelated").is_err());}
-    #[test] fn no_false_status_badges(){for bad in ["CI passing","No hallucinations","platforms 3/3"]{assert!(!page().contains(bad));assert!(!native_intro().contains(bad));}}
-    #[test] fn movement_has_alternatives(){assert!(page().contains("prefers-reduced-motion"));assert!(page().contains("id=\"still-mode\""));assert_eq!(page().matches("<article class=\"card\"").count(),6);}
-    #[test] fn native_is_not_one_big_image(){let s=native_intro();assert!(s.contains("<table>"));assert!(s.contains("README-MULTIMEDIA.html"));assert_eq!(s.matches("<td width=\"50%\"").count(),6);}
+    #[test]
+    fn six_real_scenarios() {
+        assert_eq!(SCENES.len(), 6);
+        let p = page();
+        for (id, _, _) in SCENES {
+            assert!(p.contains(&format!("media/gifs/{id}.txt")));
+        }
+    }
+    #[test]
+    fn no_active_or_remote_assets() {
+        check_page(&page()).unwrap();
+        for s in [
+            "<script>x</script>",
+            "<img src=\"https://remote.test/a.png\">",
+            "__HERO__",
+        ] {
+            assert!(check_page(&(page() + s)).is_err());
+        }
+    }
+    #[test]
+    fn themes_have_no_placeholders() {
+        for b in [false, true] {
+            let s = header(b);
+            assert!(!s.contains("__"));
+            assert!(!s.contains("<script"));
+            assert!(s.contains("<title"));
+        }
+    }
+    #[test]
+    fn keeps_technical_tail() {
+        let s = "# GEL RAM\n\n### Evidence Lab\nold\n### What you can inspect\nkeep these bytes\n";
+        assert!(rewrite_readme(s)
+            .unwrap()
+            .ends_with("### What you can inspect\nkeep these bytes\n"));
+    }
+    #[test]
+    fn unknown_readme_refused() {
+        assert!(rewrite_readme("unrelated").is_err());
+    }
+    #[test]
+    fn no_false_status_badges() {
+        for bad in ["CI passing", "No hallucinations", "platforms 3/3"] {
+            assert!(!page().contains(bad));
+            assert!(!native_intro().contains(bad));
+        }
+    }
+    #[test]
+    fn movement_has_alternatives() {
+        assert!(page().contains("prefers-reduced-motion"));
+        assert!(page().contains("id=\"still-mode\""));
+        assert_eq!(page().matches("<article class=\"card\"").count(), 6);
+    }
+    #[test]
+    fn native_is_not_one_big_image() {
+        let s = native_intro();
+        assert!(s.contains("<table>"));
+        assert!(s.contains("README-MULTIMEDIA.html"));
+        assert_eq!(s.matches("<td width=\"50%\"").count(), 6);
+    }
 }

@@ -1,62 +1,97 @@
 # GEL RAM
 
-<!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200" height="228">
-</picture>
+### Evidence Lab
 
-**Find the passage. Check the source.** Local Rust tools for exact source-bound
-quotations, stale-citation refusal and independently pinned snapshots.
+**Your documents. Exact quotes. A restart you can check.**
 
-[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
+Load UTF-8 documents, retrieve source-bound passages, reject stale citations and
+reopen pinned snapshots. Local Rust tools, without an LLM.
+
+[Quick start](#quick-start) · [See it in action](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
 > **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
 > commit you test.
 > [Release notes](RELEASE-NOTES-v0.5.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
-**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
-Open that file from this checkout in a browser for the responsive blue-panel layout,
-light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this repository does not enable Pages.
-[Presentation guide](docs/README-PRESENTATION.md).
-
 ## See it in action
 
 **Actual public-tool runs, presented as six edited log replays.**
-Each animation lasts 12 seconds; pacing is editorial, not execution time.
-[Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
+[Static view](media/gifs/STATIC.md) · [Full gallery and transcripts](media/gifs/README.md) · [Source and hashes](media/gifs/MANIFEST.txt)
 
-<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/01-evidence-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.gif"><img alt="Exact quotes. A verifiable restart." src="media/gifs/01-evidence-light.gif" width="1000" height="460" loading="lazy"></picture>
+Each animation lasts 12 seconds. Card pacing is editorial, not execution time.
+Light and dark variants match the README theme; these are not product UI screenshots.
 
-[Full source/restart transcript](media/gifs/01-evidence.txt) · [Full-size dark replay](media/gifs/01-evidence-dark.gif)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.gif">
+  <img alt="Exact quotes. Verified restart." src="media/gifs/01-evidence-light.gif" width="1000">
+</picture>
 
-### Six workflows, one evidence trail
+[Read the full source/restart transcript](media/gifs/01-evidence.txt)
 
-Open a preview at full size to read the terminal text. All six existing scenarios
-are visible here rather than hidden in collapsed sections. Their original
-transcripts and source revisions remain unchanged.
+<details>
+<summary><strong>2. Changed source. Old citation refused.</strong></summary>
 
-<table>
-<tr>
-<td width="50%" valign="top"><h4>Exact quotes. A verifiable restart.</h4><a href="media/gifs/01-evidence-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/01-evidence-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.gif"><img alt="Exact quotes. A verifiable restart." src="media/gifs/01-evidence-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>Add a source, inspect its citation, save and reopen it in a separate process.</p><p><a href="media/gifs/01-evidence.txt">Transcript</a> · <a href="media/gifs/01-evidence-dark.gif">Dark full size</a></p></td>
-<td width="50%" valign="top"><h4>Changed source. Old citation refused.</h4><a href="media/gifs/02-stale-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/02-stale-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/02-stale-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/02-stale-dark.gif"><img alt="Changed source. Old citation refused." src="media/gifs/02-stale-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>Replace the source and inspect the refusal of the previous result.</p><p><a href="media/gifs/02-stale.txt">Transcript</a> · <a href="media/gifs/02-stale-dark.gif">Dark full size</a></p></td>
-</tr>
-<tr>
-<td width="50%" valign="top"><h4>Backup. Inspect. Restore.</h4><a href="media/gifs/03-backup-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/03-backup-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/03-backup-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/03-backup-dark.gif"><img alt="Backup. Inspect. Restore." src="media/gifs/03-backup-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>Restore into a new path and check equality with the saved snapshot.</p><p><a href="media/gifs/03-backup.txt">Transcript</a> · <a href="media/gifs/03-backup-dark.gif">Dark full size</a></p></td>
-<td width="50%" valign="top"><h4>One command. Inspect every result.</h4><a href="media/gifs/04-reproduce-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/04-reproduce-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/04-reproduce-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/04-reproduce-dark.gif"><img alt="One command. Inspect every result." src="media/gifs/04-reproduce-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>Read the recorded strict reproduction result and its declared scope.</p><p><a href="media/gifs/04-reproduce.txt">Transcript</a> · <a href="media/gifs/04-reproduce-dark.gif">Dark full size</a></p></td>
-</tr>
-<tr>
-<td width="50%" valign="top"><h4>Changed bytes. Retained pin. Refusal.</h4><a href="media/gifs/05-integrity-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/05-integrity-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif"><img alt="Changed bytes. Retained pin. Refusal." src="media/gifs/05-integrity-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>A changed-byte copy is rejected against the original trusted hash.</p><p><a href="media/gifs/05-integrity.txt">Transcript</a> · <a href="media/gifs/05-integrity-dark.gif">Dark full size</a></p></td>
-<td width="50%" valign="top"><h4>GEL and grep. Answers before speed.</h4><a href="media/gifs/06-compare-light.gif"><picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/06-compare-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/06-compare-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/06-compare-dark.gif"><img alt="GEL and grep. Answers before speed." src="media/gifs/06-compare-light.gif" width="1000" height="460" loading="lazy"></picture></a><p>See matching and differing answers. No universal speedup is claimed.</p><p><a href="media/gifs/06-compare.txt">Transcript</a> · <a href="media/gifs/06-compare-dark.gif">Dark full size</a></p></td>
-</tr>
-</table>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/02-stale-dark.gif">
+  <img alt="Changed source. Old citation refused." src="media/gifs/02-stale-light.gif" width="1000">
+</picture>
 
+[Complete transcript](media/gifs/02-stale.txt) · [Full-size animation](media/gifs/02-stale-light.gif)
+
+</details>
+
+<details>
+<summary><strong>3. Backup. Inspect. Restore to a new path.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/03-backup-dark.gif">
+  <img alt="Backup. Inspect. Restore to a new path." src="media/gifs/03-backup-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/03-backup.txt) · [Full-size animation](media/gifs/03-backup-light.gif)
+
+</details>
+
+<details>
+<summary><strong>4. One command. Inspect every result.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/04-reproduce-dark.gif">
+  <img alt="One command. Inspect every result." src="media/gifs/04-reproduce-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/04-reproduce.txt) · [Full-size animation](media/gifs/04-reproduce-light.gif)
+
+</details>
+
+<details>
+<summary><strong>5. One changed byte. Trusted pin rejects it.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif">
+  <img alt="One changed byte. Trusted pin rejects it." src="media/gifs/05-integrity-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/05-integrity.txt) · [Full-size animation](media/gifs/05-integrity-light.gif)
+
+</details>
+
+<details>
+<summary><strong>6. GEL and grep. Compare answers first.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/06-compare-dark.gif">
+  <img alt="GEL and grep. Compare answers first." src="media/gifs/06-compare-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/06-compare.txt) · [Full-size animation](media/gifs/06-compare-light.gif)
+
+</details>
 
 The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
 its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
-New presentation is not a new execution, benchmark or human acceptance.
+The new replays do not close that review.
 
 ### What you can inspect
 

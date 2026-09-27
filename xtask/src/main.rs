@@ -29,6 +29,19 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
+    (
+        "README-MULTIMEDIA.html",
+        "221a74e1cb108eae10aeb599ef105c82ad3ebede4b0c35c624652655e9d3e67b",
+    ),
+    (
+        "media/presentation/header-light.svg",
+        "96ccef92c92ea16bef19ef0fb2b50c038a8fc8761edaa4fb7c3fbdd01d3b0c6e",
+    ),
+    (
+        "media/presentation/header-dark.svg",
+        "34543ac9a1841597b77c9003dcc6951bdd67d0c36015da208ec67231c75acf0a",
+    ),
     (
         "media/gifs/01-evidence-light.gif",
         "9e01ffa4b8ffe327a71a6d7c40d56a1ab3e805b2e0574999b486cd9fe9285a0c",
@@ -621,13 +634,30 @@ fn ci_policy() -> Result<(), String> {
             "{binaries_path}: id-token must be granted once, to the workflow_dispatch job"
         ));
     }
-    for (file, text) in [
-        (".github/workflows/ci.yml", &ci),
-        (binaries_path, &binaries),
-    ] {
-        pinned_actions(text, file)?;
+    // Every workflow pins its actions to commits. Only the hand-started release
+    // job of the binaries workflow may hold a write permission; no workflow
+    // writes to the repository itself.
+    let dir = root.join(".github/workflows");
+    let mut workflows: Vec<PathBuf> = fs::read_dir(&dir)
+        .map_err(|e| format!(".github/workflows: {e}"))?
+        .filter_map(|e| e.ok().map(|e| e.path()))
+        .collect();
+    workflows.sort();
+    for path in &workflows {
+        let file = format!(
+            ".github/workflows/{}",
+            path.file_name().unwrap_or_default().to_string_lossy()
+        );
+        let text = fs::read_to_string(path).map_err(|e| format!("{file}: {e}"))?;
+        pinned_actions(&text, &file)?;
+        let writes = text.lines().filter(|l| l.contains(": write")).count();
+        if file != binaries_path && writes != 0 || text.contains("contents: write") {
+            return Err(format!(
+                "{file}: write permission outside the binaries release job"
+            ));
+        }
     }
-    println!("CI_POLICY_GATE=PASS");
+    println!("CI_POLICY_GATE=PASS workflows={}", workflows.len());
     Ok(())
 }
 

@@ -1,129 +1,43 @@
 name: readme-presentation
-# One-off assembly, scoped to the owner's new documentation branch.
-# Before publication this file is replaced with a read-only validation workflow.
+# Static documentation checks. No write token, generation commit or deployment.
 on:
   push:
-    branches: [docs/multimedia-readme-20260927]
-    paths: [tools/readme_presentation.rs, .github/workflows/readme-presentation.yml]
-  workflow_dispatch:
+    paths:
+      - tools/readme_presentation.rs
+      - .github/workflows/readme-presentation.yml
+      - README.md
+      - README-MULTIMEDIA.html
+      - media/presentation/**
+      - media/gifs/**
+  pull_request:
+    paths:
+      - tools/readme_presentation.rs
+      - .github/workflows/readme-presentation.yml
+      - README.md
+      - README-MULTIMEDIA.html
+      - media/presentation/**
+      - media/gifs/**
 permissions:
   contents: read
 concurrency:
-  group: readme-presentation-assembly
-  cancel-in-progress: false
+  group: readme-presentation-check-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  assemble:
-    if: github.repository == 'Gelram-project/gel-ram' && github.actor == 'Gelram-project' && github.ref == 'refs/heads/docs/multimedia-readme-20260927'
+  presentation:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-    permissions:
-      contents: write
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ github.sha }}
           persist-credentials: false
-          fetch-depth: 1
-      - name: Prepare the pinned Rust toolchain
+      - run: rustup toolchain install 1.85.0 --profile minimal --component rustfmt
+      - name: Test source and verify the existing presentation
         run: |
           set -euo pipefail
-          rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
-          rustup default 1.85.0
-          cargo fetch --locked
-      - name: Test and assemble the presentation without changing recordings
-        run: |
-          set -euo pipefail
-          rustfmt --edition 2021 tools/readme_presentation.rs
-          rustc --edition 2021 -D warnings --test tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-tests"
+          rustfmt +1.85.0 --edition 2021 --check tools/readme_presentation.rs
+          rustc +1.85.0 --edition 2021 -D warnings --test tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-tests"
           "$RUNNER_TEMP/presentation-tests"
-          rustc --edition 2021 -D warnings tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-builder"
-          "$RUNNER_TEMP/presentation-builder"
-          rustfmt --edition 2021 xtask/src/main.rs
-      - name: Retain only a read-only presentation check
-        run: |
-          set -euo pipefail
-          cat > .github/workflows/readme-presentation.yml <<'READ_ONLY'
-          name: readme-presentation
-          # Static documentation checks. No write token, generation commit or deployment.
-          on:
-            push:
-              paths:
-                - tools/readme_presentation.rs
-                - .github/workflows/readme-presentation.yml
-                - README.md
-                - README-MULTIMEDIA.html
-                - media/presentation/**
-                - media/gifs/**
-            pull_request:
-              paths:
-                - tools/readme_presentation.rs
-                - .github/workflows/readme-presentation.yml
-                - README.md
-                - README-MULTIMEDIA.html
-                - media/presentation/**
-                - media/gifs/**
-          permissions:
-            contents: read
-          concurrency:
-            group: readme-presentation-check-${{ github.ref }}
-            cancel-in-progress: true
-          jobs:
-            presentation:
-              runs-on: ubuntu-latest
-              timeout-minutes: 10
-              steps:
-                - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-                  with:
-                    persist-credentials: false
-                - run: rustup toolchain install 1.85.0 --profile minimal --component rustfmt
-                - name: Test source and verify the existing presentation
-                  run: |
-                    set -euo pipefail
-                    rustfmt +1.85.0 --edition 2021 --check tools/readme_presentation.rs
-                    rustc +1.85.0 --edition 2021 -D warnings --test tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-tests"
-                    "$RUNNER_TEMP/presentation-tests"
-                    rustc +1.85.0 --edition 2021 -D warnings tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-check"
-                    "$RUNNER_TEMP/presentation-check"
-                    git diff --exit-code
-                    test -z "$(git ls-files --others --exclude-standard)"
-          READ_ONLY
-      - name: Refresh the manifest and verify the full candidate
-        run: |
-          set -euo pipefail
-          git add .github/workflows/readme-presentation.yml tools/readme_presentation.rs README.md README-MULTIMEDIA.html README-HISTORY-PRE-MULTIMEDIA.md docs/README-PRESENTATION.md media/presentation/header-light.svg media/presentation/header-dark.svg media/INDEX.md xtask/src/main.rs
-          git ls-files -z | LC_ALL=C sort -z | while IFS= read -r -d '' file; do
-            if [ "$file" != SOURCE-SHA256SUMS.txt ]; then sha256sum "$file"; fi
-          done > "$RUNNER_TEMP/presentation-manifest.txt"
-          cp "$RUNNER_TEMP/presentation-manifest.txt" SOURCE-SHA256SUMS.txt
-          git add SOURCE-SHA256SUMS.txt
-          sha256sum -c --quiet SOURCE-SHA256SUMS.txt
-          cargo run --locked --offline -p xtask -- verify
-          "$RUNNER_TEMP/presentation-builder"
-          git diff --name-only --cached | while IFS= read -r file; do
-            case "$file" in
-              .github/workflows/readme-presentation.yml|tools/readme_presentation.rs|README.md|README-MULTIMEDIA.html|README-HISTORY-PRE-MULTIMEDIA.md|docs/README-PRESENTATION.md|media/presentation/header-light.svg|media/presentation/header-dark.svg|media/INDEX.md|xtask/src/main.rs|SOURCE-SHA256SUMS.txt) ;;
-              *) echo "Unexpected changed path: $file" >&2; exit 1 ;;
-            esac
-          done
+          rustc +1.85.0 --edition 2021 -D warnings tools/readme_presentation.rs -o "$RUNNER_TEMP/presentation-check"
+          "$RUNNER_TEMP/presentation-check"
           git diff --exit-code
-      - name: Commit only to the authorized documentation branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          branch=docs/multimedia-readme-20260927
-          remote=$(git ls-remote origin "refs/heads/$branch" | cut -f1)
-          test "$remote" = "$GITHUB_SHA"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git diff --cached --quiet || git commit -m 'docs: add themed multimedia README and script-free full-page edition'
-          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch"
-          git archive --format=zip --output="$RUNNER_TEMP/gel-presentation-source.zip" HEAD
-      - name: Export the exact public source for review
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: gel-multimedia-readme-source
-          path: ${{ runner.temp }}/gel-presentation-source.zip
-          if-no-files-found: error
-          retention-days: 7
+          test -z "$(git ls-files --others --exclude-standard)"
