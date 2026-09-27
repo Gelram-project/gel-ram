@@ -42,7 +42,7 @@ evidence and no replacement performance campaign. Do not relabel these V1
 bars as measured V2 performance.
 
 The colored flow diagram shows one canonical record and equivalent views.
-It is not a physical-wave circuit, four independent facts, a new encoder or
+It is not hardware-level memory computation, four independent facts, a new encoder or
 an end-to-end knowledge-answering system. Packed record sizes exclude bank
 allocation, indices and other process overhead.
 

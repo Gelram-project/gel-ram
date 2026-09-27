@@ -29,7 +29,7 @@ For N equal-sized documents, the previous new-bank construction hashes growing
 prefixes after every insertion. Staging avoids those intermediate full-bank
 hashes: it hashes each document and one final canonical bank (plus the tiny
 initial empty root). This is a source-level work reduction, not a measured
-claim of a particular speedup, physical RAM processing, or reduced RSS.
+claim of a particular speedup, hardware-level memory computation, or reduced RSS.
 
 ## Reproduction
 

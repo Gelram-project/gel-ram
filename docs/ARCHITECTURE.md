@@ -33,8 +33,8 @@ views. Archive and BodyActivity have distinct mask semantics; see the contract.
 This is separate from the 128-byte binary ORB and v2 store shown above: no Q8
 persistence format or automatic text-to-phase encoder is added. Shared
 scoring only applies to equivalent views of the same contents, not four
-different records. The public module does not implement a physical analog
-wave circuit or native knowledge inference. Worker budgets are bounded per
+different records. The public module does not implement hardware-level
+memory computation or native knowledge inference. Worker budgets are bounded per
 call; serial fallback handles worker-start refusal, not every panic or OOM.
 
 ## Two axes of progressive work

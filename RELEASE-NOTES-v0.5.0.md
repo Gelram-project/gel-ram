@@ -61,10 +61,20 @@ moved from an example into the gel-phase-quad crate.
   answers are compared before any timing; 20 of 36 public queries give the same
   answer. On those, one host, GEL is slower: p50 72.7 ms against 62.8 ms for the
   whole process workload and 3.13 ms against 1.95 ms for the integrity check.
-- **GEL's own search path** ([README](README.md)): three replays of the private
-  sketch-search engine are shown next to the historical full-scan baseline as
-  author-reported numbers that cannot be re-run from this checkout. No speed-up
-  factor is claimed.
+- **GEL's own search path** ([measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)):
+  three replays of the private compact-sketch search are documented next to the
+  historical full-scan baseline as author-reported numbers that cannot be
+  re-run from this checkout. No speed-up factor is claimed.
+- **Author-run measurements of a separate private implementation** ([README](README.md)):
+  resident reads at a known address, a source-integrity gate and Q8 ranking
+  within one known slot, each with its scope; these rows are not reproducible
+  from the public release.
+- **Supplied-source diagnostic against models served by Groq**
+  ([diagnostic](docs/GEL-GROQ-DIAGNOSTIC.md)): twelve development claims, one
+  timed batch per language and profile. The bounded GEL adapter returned
+  UNKNOWN for every claim because the grammar was unsupported, so its
+  microsecond times measure parsing and abstention; no GEL/LLM speed-up
+  multiplier is claimed.
 - **Cost of one collection change** ([mutation comparison](docs/MUTATION-COMPARISON.md)):
   paired timing and the resident-set peak of one change in fresh processes,
   with the peak reset before the change (`xtask mutation-campaign`).
@@ -82,15 +92,21 @@ not code-signed or notarized and are checked only on their build runners.
 
 ## Documentation
 
-- The README opens with a light and dark header, an animated diagram of the
+- The README opens with a light and dark header, an animated 3D scene of the
   citation check (drawn, not recorded; it stops under reduced motion), a strip
   of checked facts whose numbers the builder reads from the property map and
   the mutation matrix, and six short replays of recorded public workflows with
   colour-coded badges ([gallery](media/gifs/README.md)); each replay is labelled
-  as an edited log replay, not wall time. A script-free full-page edition,
+  as an edited log replay, not wall time. A section on the public checks draws
+  the property map across the three CI platforms (the rule the CI evidence
+  collector enforces, not a run result) and the committed mutation report as
+  3D graphics, read from those files. A script-free full-page edition,
   [README-MULTIMEDIA.html](README-MULTIMEDIA.html), opens from a checkout without
   network access ([presentation guide](docs/README-PRESENTATION.md)).
-- Public limits are stated without naming private components.
+- Public limits are stated without naming private components. Limitation
+  statements across the documentation and one review fixture now use one
+  general term, hardware-level memory computation; the fourth row of the two
+  evidence-and-limits illustrations was edited to match, not regenerated.
 - The update, restart and corrupted-copy scenario is shown as one still of its
   final screen.
 - The two private application previews are described by scope and limits

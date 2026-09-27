@@ -31,24 +31,24 @@ independent files in one record. Numeric exactness after quantization does not
 make quantization itself lossless.
 
 See the [Q8 contract](Q8-QUAD.md), [interactive Rust demo](PUBLIC-DEMO.md#interactive-q8)
-and [binary format](FORMAT.md). The wave-shaped lines and fixed central point
-are a visual metaphor, not an assertion about physical memory hardware.
+and [binary format](FORMAT.md). The curved lines and fixed central point
+are a visual metaphor for phase codes, not a picture of hardware.
 
 ## Evidence and limits
 
 ### English — evidence
 
-![Tests check ORB128 bytes, Q8 view scores and Top-K against references. CPU timings retain slower cases. This is not proof of semantics, independent capacity x4, universal speedup or physical RAM PUF.](images/evidence-limits-en.png)
+![Tests check ORB128 bytes, Q8 view scores and Top-K against references. CPU timings retain slower cases. This is not proof of semantics, independent capacity x4, universal speedup or hardware-level memory computation.](images/evidence-limits-en.png)
 
 ### Polski — dowody
 
-![GEL RAM: zgodność bajtów ORB128, widoków Q8 i rankingu Top-K z referencją w testach; surowe pomiary CPU. Brak twierdzenia o pełnej semantyce, pojemności 4x, uniwersalnym przyspieszeniu lub sprzętowym PUF.](images/evidence-limits-pl.png)
+![GEL RAM: zgodność bajtów ORB128, widoków Q8 i rankingu Top-K z referencją w testach; surowe pomiary CPU. Brak twierdzenia o pełnej semantyce, pojemności 4x, uniwersalnym przyspieszeniu lub obliczeniach sprzętowych w pamięci.](images/evidence-limits-pl.png)
 
 **English text equivalent.** The tests check ORB128 byte reconstruction, Q8
 view-score equivalence and Top-K agreement with a reference. CPU measurements
 retain raw durations, repetitions and slower cases. These are not tests of full
 semantic understanding, universal acceleration, fourfold independent capacity,
-physical RAM waves or a hardware fingerprint. The GPU-shaped caution icon does
+hardware-level memory computation or hardware identity. The GPU-shaped caution icon does
 not represent a GPU experiment: the reported timing campaign is CPU-only.
 
 Integrity is not truth: matching an approved source proves byte correspondence,

@@ -31,8 +31,8 @@ paths and any inputs you chose to import.
 
 Final test counts and the exact revision belong to [GitHub Actions](https://github.com/Gelram-project/gel-ram/actions).
 Historical source and Ocean measurements are not timing results of this UI.
-No semantic accuracy, speedup, full-Ocean conversation or physical DRAM-refresh
-synchronization is claimed by the new package.
+No semantic accuracy, speedup, full-Ocean conversation or hardware-level memory
+computation is claimed by the new package.
 
 ## Unchanged/excluded
 

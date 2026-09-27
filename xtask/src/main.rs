@@ -280,7 +280,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "docs/images/evidence-limits-en.png",
-        "0e675a58bb6955a16bde7b413e82094faabda951d60dff078735e30e052c58c2",
+        "6a6b9af2ea626591863d56b6d082613794d52ae1b8f825244ba0b62fecd8b9fd",
     ),
     (
         "docs/images/q8-four-views-pl.png",
@@ -288,7 +288,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "docs/images/evidence-limits-pl.png",
-        "040cf00b6577d7bb7f399e8f7aa112db2dd678119cab919629d3ec0531cc7d53",
+        "5913962e08810b86e253d046b6be8a0628b9affcd0d8beddef87fae0cdde9392",
     ),
 ];
 const ALLOWED_EXTENSIONLESS: &[&str] = &[

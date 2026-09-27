@@ -132,7 +132,7 @@ Only numeric timing/results are included, not the real fixture, original text,
 source IDs, private encoder or corpus. These real-input observations cannot
 be independently reproduced from this archive alone. The complete synthetic
 paths can. They establish numeric readout parity, not verified source facts,
-knowledge recall, four independent files, hardware RAM signatures or a PUF.
+knowledge recall, four independent files or a hardware identity.
 
 ## Reproduction and remaining limits
 

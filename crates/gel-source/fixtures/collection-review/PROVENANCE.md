@@ -13,7 +13,12 @@ blind independent evaluation, human review, semantic benchmark or new web crawl.
 - source-builder.txt: frozen project documentation, SHA256
   `201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282`.
 - ocean-scale.txt: frozen project documentation, SHA256
-  `5ded58dffff2adf67ae394d4e184785eb9dc0f84c02de85005a35b088afb840d`.
+  `cd1f614ac1c5d92600d38e758ebb0386897050024995d780cfae3a7930f4ecd8`.
+  On 2026-09-27 one limitation sentence (line 76) was reworded to general
+  terms; no case query or expected document changed. Outputs recorded before
+  then report the earlier SHA256
+  `5ded58dffff2adf67ae394d4e184785eb9dc0f84c02de85005a35b088afb840d`
+  (5,664 bytes).
 - unicode.txt: authored synthetic fixture, NOT a real-world document benchmark,
   SHA256 `3aec47fe721b6eae1e67411db1a0cc2f09f457613767b24ddf813166f30eebd2`.
 

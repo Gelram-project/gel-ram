@@ -73,7 +73,7 @@ distinct query; EMPTY does not scan the full bank.
 Host: AMD Ryzen AI 9 HX 370, 24 logical CPUs, Linux, Rust 1.85.0. The owner reports
 MINISFORUM AI X1 Pro with 128 GB installed; the OS exposed about 93.9 GiB RAM.
 A live desktop could run in the background. GPU inference, cold-cache behaviour,
-semantic truth, physical DRAM-refresh synchronization and PUF are not established.
+semantic truth, hardware-level memory computation and hardware identity are not established.
 SIGKILL tests do not prove survival of physical power loss. Hashes are not
 signatures; storage requires a separately trusted owner-controlled anchor.
 

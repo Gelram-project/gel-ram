@@ -1,7 +1,8 @@
 # v0.4.0 candidate — Evidence Lab
 
 Historical candidate notes, kept as written for rc.1. The final notes are
-[RELEASE-NOTES-v0.4.0.md](RELEASE-NOTES-v0.4.0.md).
+[RELEASE-NOTES-v0.4.0.md](RELEASE-NOTES-v0.4.0.md). On 2026-09-27 one limitation phrase
+was reworded in general terms.
 
 Workspace version: **0.4.0-rc.1** (public main since PR #9). Target: v0.4.0.
 Approved for public main integration after checks; not approved for a final release.
@@ -57,8 +58,8 @@ Older Linux/Windows/macOS results cannot certify these new bytes. Native
 Linux/Windows/macOS results for the PR #9 head are pinned in
 [the platform record](docs/PLATFORM-REVIEW.md); every later revision needs its
 own per-platform [CI evidence](docs/CI-EVIDENCE.md).
-No semantic chatbot, encrypted private vault, private speaker, physical DRAM
-synchronization or fourfold independent information capacity is claimed.
+No semantic chatbot, encrypted private vault, private speaker, hardware-level
+memory computation or fourfold independent information capacity is claimed.
 
 PUBLICATION_APPROVED=YES (public main integration)
 TAG_CREATED=NO
