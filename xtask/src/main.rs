@@ -1,13 +1,20 @@
 #![forbid(unsafe_code)]
+mod bench_compare;
 mod ci_evidence;
 mod claims;
+mod isolation;
 mod license_metadata;
 mod measured_sources;
+mod mutation_campaign;
+mod mutation_matrix;
+mod package;
 mod process_sequence;
+mod property_map;
 #[cfg(test)]
 mod publication_status_tests;
 mod recorder_lint;
 mod reproduce;
+mod reproduction;
 mod source_bundle;
 
 use std::ffi::OsStr;
@@ -22,6 +29,106 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    (
+        "media/gifs/01-evidence-light.gif",
+        "9e01ffa4b8ffe327a71a6d7c40d56a1ab3e805b2e0574999b486cd9fe9285a0c",
+    ),
+    (
+        "media/gifs/01-evidence-light.png",
+        "29e639a9475e0d2c6a67bb229fcd07370c64efffd2342f50e6bb7b11a04aaead",
+    ),
+    (
+        "media/gifs/01-evidence-dark.gif",
+        "237f4f8618eb8e2b719d2c8a2506ac765a23a5ad6f5f63062c678b2dccd53e41",
+    ),
+    (
+        "media/gifs/01-evidence-dark.png",
+        "6736f687c90ca4bae70faaff1e10d66333d9ed4bb8117839e82c394884277f28",
+    ),
+    (
+        "media/gifs/02-stale-light.gif",
+        "80f3f205cb613013a90b5b0fbfb354ca2caf827ac2e151f319909b2733d1eb81",
+    ),
+    (
+        "media/gifs/02-stale-light.png",
+        "122bed346770e6cc7407038164e8ee411a7b28b753800e6e9f294c6f757cc0a9",
+    ),
+    (
+        "media/gifs/02-stale-dark.gif",
+        "318c72fde8d34635ba59046f6dfab657347873cdb774d064edd75670e450bed1",
+    ),
+    (
+        "media/gifs/02-stale-dark.png",
+        "12d6689c8bc17227bafa24359c0a0e754a49f15875756f52326101c88614a523",
+    ),
+    (
+        "media/gifs/03-backup-light.gif",
+        "498164162e63e8f7b6552911775bf0a06963e92bc1eafd6f86389dab6d2938da",
+    ),
+    (
+        "media/gifs/03-backup-light.png",
+        "84d24540eab4739ca8cf1b34e1951a70272786d05803a8be88dae15925cf010c",
+    ),
+    (
+        "media/gifs/03-backup-dark.gif",
+        "2f99fece6c91187aa310b161143a4da9fd8c15493ac866c56e332354bb2f1d20",
+    ),
+    (
+        "media/gifs/03-backup-dark.png",
+        "536832ac62ed1dbafc8191882e54a50027cfe8ee68bd910be6b74e10239ef688",
+    ),
+    (
+        "media/gifs/04-reproduce-light.gif",
+        "337281dca65313b18a23f6b325e63a030d9c962002efdf70b412a6ff575734f5",
+    ),
+    (
+        "media/gifs/04-reproduce-light.png",
+        "4cba21ee66190fb3b6f3b03b1ca21bd58e6cbbb41220ebc92227080bbdd6ef30",
+    ),
+    (
+        "media/gifs/04-reproduce-dark.gif",
+        "fb62682857c129b694c95d0504fee3a9d64ba2395437129647547c38e5197e94",
+    ),
+    (
+        "media/gifs/04-reproduce-dark.png",
+        "c770e7fbcf2833785fe045a04e10f95bcfba25921c43a5df93a580225cc601be",
+    ),
+    (
+        "media/gifs/05-integrity-light.gif",
+        "13901bd9a30a7ac7717c80962747fa356f4c1953d7caa4f58f1c3d5517936eb1",
+    ),
+    (
+        "media/gifs/05-integrity-light.png",
+        "6486e16d673103733410c8b61644513c044104a722f98a9498bab6f4a0cdfd4b",
+    ),
+    (
+        "media/gifs/05-integrity-dark.gif",
+        "68646d05819a6c0c73a1cf97172a82efb9167e4cf075c16e06f22f56ecc13b88",
+    ),
+    (
+        "media/gifs/05-integrity-dark.png",
+        "dd63479081858ee17f675511e656579534549ff93289455c98f12a0f5bfd7995",
+    ),
+    (
+        "media/gifs/06-compare-light.gif",
+        "1d05cebff9acc9178a963e124c1a991ca69ffb9ab83c38e8891fb85772c7ac83",
+    ),
+    (
+        "media/gifs/06-compare-light.png",
+        "700234b782874f5ef1b6fef819d7dd804dcec457b4f4fb903060a31ef92f381c",
+    ),
+    (
+        "media/gifs/06-compare-dark.gif",
+        "bd42eab15422c4498d54581838bdfdf5b8c2e1e76bda705484a79d2ec48441dc",
+    ),
+    (
+        "media/gifs/06-compare-dark.png",
+        "4d7c067828a56367a0d60f492f82489b964e3ed71ddf99e1eb8361e61c6b3e6b",
+    ),
+    (
+        "media/evidence-lab/03-update-restart-102s.png",
+        "d3de2029ce993457d411649bcac5a41f27f1ec1ed9586cb2f9b4dcbbc8675d14",
+    ),
     (
         "media/GEL-EVIDENCE-LAB-EN.mp4",
         "a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835",
@@ -111,7 +218,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -500,7 +607,46 @@ fn ci_policy() -> Result<(), String> {
             ".github/workflows/cla.yml must not check out or execute pull-request code".into(),
         );
     }
+    let binaries_path = ".github/workflows/binaries.yml";
+    let binaries = fs::read_to_string(root.join(binaries_path))
+        .map_err(|e| format!("{binaries_path}: {e}"))?;
+    require(&binaries, CHECKOUT_SHA, binaries_path)?;
+    require(&binaries, "persist-credentials: false", binaries_path)?;
+    require(&binaries, "contents: read", binaries_path)?;
+    // Only the hand-started release job may request a signing identity.
+    if binaries.matches("id-token: write").count() != 1
+        || !binaries.contains("if: github.event_name == 'workflow_dispatch'\n")
+    {
+        return Err(format!(
+            "{binaries_path}: id-token must be granted once, to the workflow_dispatch job"
+        ));
+    }
+    for (file, text) in [
+        (".github/workflows/ci.yml", &ci),
+        (binaries_path, &binaries),
+    ] {
+        pinned_actions(text, file)?;
+    }
     println!("CI_POLICY_GATE=PASS");
+    Ok(())
+}
+
+/// Every `uses:` in a workflow names a full 40-hex commit, never a movable tag.
+fn pinned_actions(text: &str, file: &str) -> Result<(), String> {
+    for line in text.lines() {
+        let Some((_, used)) = line.split_once("uses:") else {
+            continue;
+        };
+        let pinned = used.trim().rsplit_once('@').is_some_and(|(_, rev)| {
+            rev.len() == 40 && rev.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
+        });
+        if !pinned {
+            return Err(format!(
+                "{file}: action not pinned to a commit: {}",
+                used.trim()
+            ));
+        }
+    }
     Ok(())
 }
 
@@ -765,6 +911,11 @@ fn verify() -> Result<(), String> {
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
+    mutation_matrix::check(workspace_root()?)?;
+    println!(
+        "PROPERTY_MAP_FORMAT=PASS rows={}",
+        property_map::read(workspace_root()?)?.len()
+    );
     run(
         "cargo",
         &["test", "--locked", "--offline", "--workspace", "--doc"],
@@ -895,6 +1046,12 @@ fn dispatch(args: &[String]) -> Result<(), String> {
     match args.first().map(String::as_str) {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
+        Some("reproduce") => reproduction::run(&args[1..]),
+        Some("isolation-check") => isolation::check(&args[1..]),
+        Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
+        Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
+        Some("bench-compare") => bench_compare::run(&args[1..]),
+        Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("runtime-examples") => runtime_examples(),

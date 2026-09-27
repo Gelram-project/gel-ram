@@ -1,0 +1,10 @@
+documents,operation,pairs,min_ratio,median_ratio,max_ratio
+8,add,30,0.96,1.07,1.19
+8,remove,30,0.99,1.03,1.53
+8,replace,30,0.98,1.03,1.30
+64,add,30,0.81,1.07,1.31
+64,remove,30,1.01,1.04,1.29
+64,replace,30,1.01,1.04,1.32
+256,add,30,1.05,1.13,1.52
+256,remove,30,1.04,1.12,1.48
+256,replace,30,1.04,1.12,1.47

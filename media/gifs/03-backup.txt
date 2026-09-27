@@ -1,0 +1,14 @@
+source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
+SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
+
+PROGRAM=gel-backup
+create 0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d snapshot.gelset backup
+BACKUP=CREATED COMPLETE bytes=94 documents=1 revision=1
+
+inspect 0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d backup
+BACKUP=COMPLETE bytes=94 documents=1 revision=1 withdrawn=false temporaries=0
+
+restore 0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d backup restored.gelset
+RESTORE=PASS bytes=94
+
+RECORDER_CHECK=restored_bytes_equal_snapshot_bytes

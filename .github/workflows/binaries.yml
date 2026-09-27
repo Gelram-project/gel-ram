@@ -1,0 +1,102 @@
+name: binaries
+# Builds the Evidence Lab binary packages on each platform and checks them
+# (docs/BINARIES.md). Pushes and pull requests only build and check, with a
+# read-only token. A package is archived, attested and uploaded only when the
+# owner starts this workflow by hand.
+on:
+  push:
+    paths:
+      - ".github/workflows/binaries.yml"
+      - "xtask/src/package.rs"
+      - "crates/gel-live-lab/**"
+      - "crates/gel-source/**"
+      - "crates/gel-phase-quad/**"
+      - "Cargo.lock"
+      - "docs/DEPENDENCY-INVENTORY.md"
+  pull_request:
+    paths:
+      - ".github/workflows/binaries.yml"
+      - "xtask/src/package.rs"
+      - "crates/gel-live-lab/**"
+      - "crates/gel-source/**"
+      - "crates/gel-phase-quad/**"
+      - "Cargo.lock"
+      - "docs/DEPENDENCY-INVENTORY.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    if: github.event_name != 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.85.0 --profile minimal
+      - run: rustup default 1.85.0
+      - run: cargo fetch --locked
+      - name: Build, check and assemble the package
+        id: package
+        run: cargo run --locked --offline -p xtask -- package-binaries "${{ runner.temp }}/gel-package"
+      - name: Verify package checksums
+        shell: bash
+        working-directory: ${{ runner.temp }}/gel-package/${{ steps.package.outputs.name }}
+        run: |
+          set -euo pipefail
+          if command -v sha256sum > /dev/null; then sha256sum -c --quiet SHA256SUMS.txt; else shasum -a 256 -c --quiet SHA256SUMS.txt; fi
+          grep -qx 'release_eligible=yes' BUILD-INFO.txt
+
+  release:
+    if: github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.85.0 --profile minimal
+      - run: rustup default 1.85.0
+      - run: cargo fetch --locked
+      - name: Build, check and assemble the package
+        id: package
+        run: cargo run --locked --offline -p xtask -- package-binaries "${{ runner.temp }}/gel-package"
+      - name: Verify package checksums and archive
+        shell: bash
+        working-directory: ${{ runner.temp }}/gel-package
+        run: |
+          set -euo pipefail
+          name="${{ steps.package.outputs.name }}"
+          (cd "$name" && if command -v sha256sum > /dev/null; then sha256sum -c --quiet SHA256SUMS.txt; else shasum -a 256 -c --quiet SHA256SUMS.txt; fi)
+          grep -qx 'release_eligible=yes' "$name/BUILD-INFO.txt"
+          if [ "$RUNNER_OS" = Windows ]; then 7z a -tzip -bd "$name.zip" "$name" > /dev/null; else tar -czf "$name.tar.gz" "$name"; fi
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: ${{ runner.temp }}/gel-package/${{ steps.package.outputs.name }}.*
+      - name: Upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.package.outputs.name }}
+          path: ${{ runner.temp }}/gel-package/${{ steps.package.outputs.name }}.*
+          if-no-files-found: error
+          retention-days: 30

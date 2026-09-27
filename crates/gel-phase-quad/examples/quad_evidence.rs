@@ -1,4 +1,4 @@
-//! Bounded numeric fixture + canonical single-read baseline. No semantic or hardware-PUF claims.
+//! Bounded numeric fixture + canonical single-read baseline. No semantic or hardware claims.
 #![forbid(unsafe_code)]
 #[path = "../src/reference.rs"]
 #[allow(dead_code)]
@@ -15,28 +15,7 @@ use std::{
     time::Instant,
 };
 
-const MAGIC: &[u8; 8] = b"Q8DEMO01";
-const RECORD_BYTES: usize = 1152;
-const MAX_RECORDS: usize = 8192;
-const MAX_BYTES: usize = 12 + MAX_RECORDS * RECORD_BYTES;
-
-fn decode(raw: &[u8]) -> Result<Vec<Record>, String> {
-    if raw.len() < 12 || &raw[..8] != MAGIC {
-        return Err("invalid Q8DEMO01 header".into());
-    }
-    let count = u32::from_le_bytes(raw[8..12].try_into().unwrap()) as usize;
-    if !(1..=MAX_RECORDS).contains(&count) || raw.len() != 12 + count * RECORD_BYTES {
-        return Err("invalid record count or exact file length".into());
-    }
-    Ok(raw[12..]
-        .chunks_exact(RECORD_BYTES)
-        .map(|r| {
-            let phase = r[..DIM].try_into().unwrap();
-            let active = std::array::from_fn(|j| r[DIM + j / 8] & (1 << (j % 8)) != 0);
-            Record::new(phase, &active)
-        })
-        .collect())
-}
+use gel_phase_quad::fixture::{decode, MAGIC, MAX_BYTES, MAX_RECORDS};
 
 fn synthetic(count: usize) -> Result<Vec<u8>, String> {
     if !(1..=MAX_RECORDS).contains(&count) {

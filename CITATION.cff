@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use or discuss GEL RAM, cite this repository and record the exact commit or release tag tested."
 title: "GEL RAM"
-version: "0.4.0"
+version: "0.5.0"
 type: software
 authors:
   - name: "RR — GEL RAM Project"

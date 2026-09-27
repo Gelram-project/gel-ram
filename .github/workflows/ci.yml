@@ -33,6 +33,20 @@ jobs:
       - run: cargo run --locked --offline -p xtask -- verify
       - name: Independent byte, numeric and ranking audit
         run: cargo run --locked --offline --release -p gel-cli --example data_integrity -- "${{ runner.temp }}/gel-data-integrity-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Network isolation evidence (fails outside, passes in a namespace)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --locked --offline -p xtask
+          if target/debug/xtask isolation-check; then
+            echo "isolation-check passed on a networked runner" >&2
+            exit 1
+          fi
+          # Ubuntu may restrict unprivileged user namespaces through AppArmor.
+          sudo sysctl -q -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          unshare --user --net target/debug/xtask isolation-check
+      - name: Answer agreement with grep (no timing)
+        run: cargo run --locked --offline -p xtask -- bench-compare "${{ runner.temp }}/gel-bench-answers-${{ github.run_id }}-${{ github.run_attempt }}" --answers-only
       - name: Physically full filesystem publication (dedicated 1 MiB tmpfs)
         shell: bash
         run: |

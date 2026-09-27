@@ -1,8 +1,8 @@
 # Multi-document Evidence Lab
 
 Rust runtime, local CPU/RAM, no LLM, no server and no shell execution.
-Evidence Lab has been on public main since PR #9 (first as workspace 0.4.0-rc.1, now
-0.4.0). It is not the private conversational application.
+Evidence Lab has been on public main since PR #9 (first as workspace 0.4.0-rc.1, released in
+v0.4.0). It is not the private conversational application.
 
 ```sh
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
@@ -28,7 +28,16 @@ Restart and use `load RETAINED_SHA256 /YOUR/OWN/DIRECTORY/new.gelset`.
 No dependency on the original files is required to reopen the snapshot.
 Save refuses existing targets. Paths with spaces need no quotes. `replace ID PATH`
 keeps the document ID/title but replaces its text. `drop ID` removes it from RAM;
-old saved snapshots are NOT erased. Deletion is not secure forgetting.
+old saved snapshots are NOT erased. Deletion is not secure forgetting. `clear` empties
+the in-memory collection only. For backups, restore, withdrawal and pinned
+deletion of saved snapshots, see [backup](BACKUP.md).
+
+## Batch mode for scripts
+
+`gel-evidence --batch` reads the same commands from standard input, writes one
+JSON record per line to standard output and diagnostics to standard error, and
+stops at the first error. Exit code 0 means no error and no incomplete search, 3
+means an incomplete search, 2 an error. See the [schema](EVIDENCE-BATCH.md).
 
 ## Source contract
 
@@ -80,4 +89,4 @@ No physical power cut, cache-controller flush proof or protection from root is c
 
 Search timers exclude terminal output/import/load. Mutation includes serialization
 and hashing of the entire collection. RAM holds exact strings, hashes and results;
-disk snapshots are plaintext. Do not use this tool as an encrypted private vault.
+disk snapshots are plaintext. Do not use this tool as encrypted storage.

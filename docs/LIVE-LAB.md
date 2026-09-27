@@ -86,7 +86,7 @@ remember an unsaved conversation. Imported documents are bounded UTF-8, at most
 The original text is never modified. A loaded bundle is read-only in this interface;
 import a source document to save a new bundle. Existing output paths are refused.
 
-Files are **plaintext**, not a private encrypted vault. Use directories you control;
+Files are **plaintext**, not encrypted. Use directories you control;
 the same path-race and filesystem-durability limits described in the
 [source persistence guide](SOURCE-BUILDER.md) apply. No automatic save, scan of
 personal directories, upload or background server runs. Importing is not training.
@@ -97,7 +97,7 @@ personal directories, upload or background server runs. Importing is not trainin
 - After `find`, the label changes to phrase-search time. Source integrity was
   established on import/load; hashing the entire file is not inside this timer.
 - Q8 time covers one shared synthetic read after query preparation, not view
-  construction, rendering, a benchmark campaign or proof of DRAM-refresh sync.
+  construction, rendering, a benchmark campaign or proof of any hardware-level memory effect.
 - Rendering/terminal output is excluded. Very short single measurements fluctuate.
 - No token/s, invented ORB/s or cached language-model answers are shown.
 

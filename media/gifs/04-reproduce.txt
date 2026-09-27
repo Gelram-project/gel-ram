@@ -1,0 +1,127 @@
+source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
+SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
+
+FORMAT=GEL_REPRODUCTION_1
+revision=ace20f3ba6c29abbf363902e17244a114ed4699a working_tree=clean
+os=linux arch=x86_64 available_parallelism=4
+model name	: AMD EPYC 7763 64-Core Processor
+MemTotal:       16373452 kB
+network_isolation=VERIFIED
+loadavg_start=1.31 0.34 0.11 1/262 5090
+step=report result=PASS
+step=mutation-matrix result=PASS
+step=bench-compare result=PASS
+bench: same_answer=18 different_answer=18 queries=36 warmup=3 reps=30
+bench: process-workload: gel-evidence p50=45082284 p95=45437357 | grep p50=38371877 p95=38987894 | median_ratio=1.175 (small sample; p95 is nearest rank)
+bench: integrity-process: gel-evidence p50=1813337 p95=1928764 | sha256sum p50=1496452 p95=1537108 | median_ratio=1.212 (small sample; p95 is nearest rank)
+bench: in-memory-search: gel-evidence per query p50=2350276 p95=2435667 ns (excludes process start and load; no grep counterpart)
+bench: gel-evidence peak_rss_kb per workload run: 2760,2760,2748,2820,2788,2784,2752,2744,2780,2740,2764,2752,2792,2740,2792,2744,2788,2748,2784,2788,2796,2796,2792,2740,2752,2736,2784,2744,2744,2752,2752,2752,2740
+bench: loadavg_end=1.67 0.91 0.37 1/249 17021
+loadavg_end=1.67 0.91 0.37 1/249 17021
+sha256 d8b87ab6ebaf35393dfa4f42e05600d1bb2fe06b0a5060dd7dec496800e6e190  bench/COMPLETE.txt
+sha256 d8d4465b3511747216a98f60922ccc04159c7ba5db5128fb714fc0178fa4f4d7  bench/answers.tsv
+sha256 e3ad67e784532cd4dbc55640e904000aeddcda027115dcba47187f20cac0d535  bench/corpus.gelset
+sha256 4cae318440409d0ca238683abb0eeec85860a98e723985b677fa2769ac254191  bench/manifest.txt
+sha256 12eecfef93122caa54ed4390190bcc0e4bf3426e9d1b18637271038e30e09c73  bench/samples.csv
+sha256 f3f1effe3b5a7df52e2ca8d84d7cb91bf66526996c672635bc335e296f98b185  bench/summary.txt
+sha256 7dce50cb5bb7c92e75730f650cbad192db440e4a8bb7837e1199ee45eaff02e9  bench/unicode.txt
+sha256 bcbbd146b7285c2b59dadff383e92a98f85cbf99c0d6737ced19a8d828d83835  mutation-matrix.txt
+sha256 7cdeba44310ee7c4040d7ad613ccaad8448dac93931ea0bc0719785e72f2c2a7  report/COMPLETE.txt
+sha256 45b6d88ba978635020b613b615bf7eed1e8edd8d218aa27b15fd86b88b6151fc  report/collection-campaign/COMPLETE
+sha256 9dc5864a0a119b4ae3672cc007574936d483f49c48236f43aa0a36b83427cc14  report/collection-campaign/corpora.txt
+sha256 7fdfd1b9bfec6e75780f7b5e320603155c5b02169be13415a76deaed6db23546  report/collection-campaign/environment.txt
+sha256 20cfacd7ebd4a604e46bca3105965dc9ced7ea5bbff047d882f1ca9a78426344  report/collection-campaign/raw.csv
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-0-256-0.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-0-256-1.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-0-256-2.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-0-256-3.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-0-256-4.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-0-64-0.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-0-64-1.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-0-64-2.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-0-64-3.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-0-64-4.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-0-8-0.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-0-8-1.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-0-8-2.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-0-8-3.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-0-8-4.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-1-256-0.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-1-256-1.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-1-256-2.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-1-256-3.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-1-256-4.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-1-64-0.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-1-64-1.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-1-64-2.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-1-64-3.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-1-64-4.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-1-8-0.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-1-8-1.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-1-8-2.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-1-8-3.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-1-8-4.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-2-256-0.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-2-256-1.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-2-256-2.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-2-256-3.gelset
+sha256 0bfe9fbb346e0ae76c9907da7b340b502479acc9458d8a4fb126fc293a22c141  report/collection-campaign/snapshot-2-256-4.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-2-64-0.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-2-64-1.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-2-64-2.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-2-64-3.gelset
+sha256 2a638e88378d01e77298cc51fb147156d7891e3c2d820d51c09f0225695be5bc  report/collection-campaign/snapshot-2-64-4.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-2-8-0.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-2-8-1.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-2-8-2.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-2-8-3.gelset
+sha256 2ecc81bfcb8fc38bfe7a6845c9356d0afbd1722c445dde06c133d65cf6d3fe96  report/collection-campaign/snapshot-2-8-4.gelset
+sha256 a3d020d4b4fee039b452b05888985806f6160a964db514ab2de684ad57cb7d41  report/collection-campaign/summary.csv
+sha256 b39f0532f08e9aa4e32e2704d4f51bd36acb2ae769fa4237cbef30406d62d67b  report/collection-campaign.txt
+sha256 4fe7bfcebcc7a9b4d1486c2fa64c31d29e66c721b212a21ed00b4b582d009a5c  report/collection-recheck.txt
+sha256 b8c643cba56db5369d621cd98701fdffaf15cf2f28b4c312edb670fec52ec207  report/evidence-lab.txt
+sha256 64c6ce1c6f932cbd8c35e979f6d25d7a163f6e540b026e0aa9711c7869e5d58b  report/hardware.txt
+sha256 cd81fb17990b4e6fe83a726d259680b841c11a863f5a4e18adb6232a5d6529f0  report/host-load-end.txt
+sha256 002167942a3a2e7e1e9fda065a3b92709b47d70f94dda2bae87d10e6413d84e4  report/live-lab.txt
+sha256 07f5000f6bf77991cdad23366b40decc61ac586e31abd40386a0b40627a6b2ce  report/quantization-matrix.txt
+sha256 a64be2b4105e178741f80788fb5264b7d91d996dea63e89fb232935f9a0f3c71  report/revision.txt
+sha256 be9e105cd61ce407c0e06d80a25240f93cc48de72942117e1886f09aa08f9a2a  report/rustc.txt
+sha256 ab7e81355de1a9f2b045443bc78f22a920452821763a68c1eac5ac0c115afeed  report/scan-0-32-active-1.txt
+sha256 96452e6be8b21e3ad7dce70a26ac9d3d554bf47df3d15bbf8c708ec1f124c339  report/scan-0-32-active-4.txt
+sha256 449335f757d79530b7721bb3f13a516f41a14931135dd4a9454070fa012d4870  report/scan-0-32-archive-1.txt
+sha256 476fd1795c44ce2a4d2fe8fcfedf597c51304775f1e0736b9df6134da7ec9ff2  report/scan-0-32-archive-4.txt
+sha256 0b72a8a360768ccbc2d83f00f01ea09b4629202ebb026a06e608b0f4e095e44b  report/scan-0-512-active-1.txt
+sha256 07f4e37afbf9105708cae8b9820e7f578cc4e274f362d78cbef49f1fc4e84648  report/scan-0-512-active-4.txt
+sha256 7f101dc33017914b28e874ea27dfbce4fae202194d38b220a9293435e864dcf9  report/scan-0-512-archive-1.txt
+sha256 6329f4207d9c57f5c1dbdc6719f8a64f2f3fa3545eb9646fdfd94e4a7038d96c  report/scan-0-512-archive-4.txt
+sha256 0fdf42f81d4ba0100771f657557887728eda8ee9d75269896a8a0780dccfda2d  report/scan-0-8192-active-1.txt
+sha256 fabb8945249a74ac6800ed941ff058cc62d37d37af60698a20ca29190856489a  report/scan-0-8192-active-4.txt
+sha256 2791ecd63fea2e2cdc0ef67d162074de4bc1223d1203d695b5e8a9b9b2d25236  report/scan-0-8192-archive-1.txt
+sha256 eccc02c0a8713802b8906c9cf72584ca488f3c746dff8aec35ae7d70d9126b3c  report/scan-0-8192-archive-4.txt
+sha256 174afd9f847b6fb8b517dbe8e205e1559b74de00dd77a5fd5500810a828abdac  report/scan-1-32-active-1.txt
+sha256 644c8acba7c53bf49d9c14a28e4491d8253d8ff258a98c60f7811f2810a4224a  report/scan-1-32-active-4.txt
+sha256 fbebd47c9a53b2f57490ffcdbca00fc108b821116fa43ef7a89bfb9e40d06e03  report/scan-1-32-archive-1.txt
+sha256 70bb395f9e5625bece62c5529944660829aafe686a902160490514ff276b2bbc  report/scan-1-32-archive-4.txt
+sha256 1a46e0b9e99446715226c76f2451ade4c36c448ccfd45738616ac5d55bd57be8  report/scan-1-512-active-1.txt
+sha256 0524591dcdd5e964e9a2739205702e49758349968e9fd532d4eb038c9445c557  report/scan-1-512-active-4.txt
+sha256 4e4b69f39dac79618192f7ba750870328540832838b75a605c353c786de7efd5  report/scan-1-512-archive-1.txt
+sha256 45467c1581b702f3fba4734cf1e4bff556911500917662fcfe00a32e178a65a9  report/scan-1-512-archive-4.txt
+sha256 278dcfbf3236da81f37c0d3870558e6a9ad5a3b1c7593ed2ff0666e01edd3832  report/scan-1-8192-active-1.txt
+sha256 38b5eb00ca2a852e6babe42d7b618b3030dab733b9410bad6833b253f1ea75d0  report/scan-1-8192-active-4.txt
+sha256 d89a08fc6bcdeeb9b36e5264780b84d9e3d4bc56fd46000cd2a1e946d17e3c9b  report/scan-1-8192-archive-1.txt
+sha256 cd1483a36b8a9c8c2e1fba5c6baeaf1f8f9f725621de916d5095431315f2e4ab  report/scan-1-8192-archive-4.txt
+sha256 ca4d0ac626a45487e6e78d76641d7a4f95f823df4d88ecb643bf16b0cb6c4677  report/scan-2-32-active-1.txt
+sha256 585c532d56a85368b4726e3c57cb92ed9dfb9aa1472bbdc376770222a82d86d2  report/scan-2-32-active-4.txt
+sha256 44a0bdf3fe8d3d648cf646cff16f3e2302b542ce9399f242387366bef649039f  report/scan-2-32-archive-1.txt
+sha256 789ebfce357522aea758b151628f95a4b2f41997c6fde534444c8ecea46b7ea2  report/scan-2-32-archive-4.txt
+sha256 1886e696284db7b7f12e84d043dc61e76ff7cda83760c30ecf53ad10315a1adc  report/scan-2-512-active-1.txt
+sha256 739bc2429cfa9abf71fa21b88b3535528fbe73347914508cc3152b7df05df231  report/scan-2-512-active-4.txt
+sha256 f88a8e5d71d14e64648210ae3a86e230dfb5c01918e6e14f138ec1942371d7b9  report/scan-2-512-archive-1.txt
+sha256 db78e029668082b428f7fa912e9cf3118d9a1f38d736b95730d566db7c85a768  report/scan-2-512-archive-4.txt
+sha256 ed76a5fa6a04dcc2650175575bccc34e54c9a6cc0e3b684cd577f5b71ab5e27f  report/scan-2-8192-active-1.txt
+sha256 e938f6cc2ba5d50681bbebdfa3c1bf1e98a1be9aa3e2a09d0a653f786e08b609  report/scan-2-8192-active-4.txt
+sha256 94815296e023a16fe26d2477fbb0128978e1f6327ea7f45f2e9b24d8dcdda9e4  report/scan-2-8192-archive-1.txt
+sha256 9825f18e9243a4c4ea843eecf7c7d4acca61353ca46ea90d1b22eb63589af804  report/scan-2-8192-archive-4.txt
+sha256 0638d1196ef67f50a52299fded5001cebeb634dee10ae0d281a44aee43c13530  report/verify.txt
+sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  report/working-tree.txt
+REPRODUCTION=PASS pass=3 fail=0 skipped=0 not_run=0 isolation=VERIFIED required_isolation=yes strict=yes

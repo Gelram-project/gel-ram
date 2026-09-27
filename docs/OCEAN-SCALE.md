@@ -40,6 +40,6 @@ not signatures.
 
 ## What this is not
 
-It is not a full AI or P2P application, not the private execution path and not
+It is not a full AI or networked application, not the private execution path and not
 a release artifact. The root GEL RAM NCRL 1.0 license remains operative for
 GEL-owned material.

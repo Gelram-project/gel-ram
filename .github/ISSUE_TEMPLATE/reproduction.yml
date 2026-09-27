@@ -25,6 +25,12 @@ body:
     validations:
       required: true
   - type: textarea
+    id: reproduction
+    attributes:
+      label: REPRODUCTION.txt (recommended)
+      description: Output of `cargo run --locked --offline -p xtask -- reproduce NEW_DIR` (see docs/REPRODUCE.md). It records the revision, host, isolation, every step and the SHA-256 of every produced file. Read it before pasting.
+      render: text
+  - type: textarea
     id: hardware
     attributes:
       label: Hardware and environment

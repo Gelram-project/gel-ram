@@ -2,6 +2,7 @@
 //! Scores apply only to matching poles of this Grid256 geometry.
 #![forbid(unsafe_code)]
 pub mod bound_view;
+pub mod fixture;
 pub mod grid;
 use grid::{Carrier, Grid, DIM};
 #[cfg(test)]

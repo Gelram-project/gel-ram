@@ -3,7 +3,7 @@
 The public core is Rust-only. The v0.2.1 binary branch below remains unchanged.
 The separate Q8 phase-readout module and the [source readers](SOURCE-READOUT.md)
 have been released since v0.3.0; multi-document collections
-([Evidence Lab](EVIDENCE-LAB.md)) are on main in the 0.4.0 version line.
+([Evidence Lab](EVIDENCE-LAB.md)) have been on main since the 0.4.0 version line.
 
 ```text
 QUERY

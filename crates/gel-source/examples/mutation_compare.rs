@@ -204,7 +204,7 @@ profile_boundary!(profile_current_change, Collection);
 profile_boundary!(profile_historical_change, historical::Collection);
 
 // One fresh process per variant/size/operation. No simultaneous reference bank.
-// VmHWM includes startup/building the bank and is NOT an allocation counter.
+// VmHWM is reset just before the mutation; it is NOT an allocation counter.
 fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
     if cfg!(debug_assertions) || !cfg!(target_os = "linux") {
         return Err("memory mode requires Linux and --release".into());
@@ -224,6 +224,10 @@ fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
                 bank.add(&format!("Document {i}"), &text)?;
             }
             let before = memory_sample()?;
+            // Reset VmHWM to the current RSS (Linux clear_refs value 5), so the HWM
+            // read after the mutation is its own peak, not bank construction's.
+            fs::write("/proc/self/clear_refs", "5").map_err(|e| format!("HWM reset: {e}"))?;
+            let reset = memory_sample()?;
             let start = Instant::now();
             $change(&mut bank, operation, &replacement)?;
             let elapsed = start.elapsed().as_nanos();
@@ -234,10 +238,10 @@ fn memory_run(variant: &str, n: usize, operation: &str) -> Result<(), String> {
             if restored.to_bytes() != bytes || digest(&bytes) != bank.root() {
                 return Err("memory experiment oracle mismatch".into());
             }
-            println!("variant,documents,operation,rss_before_bytes,hwm_before_bytes,rss_after_bytes,hwm_after_bytes,latency_ns,result_bytes,result_root");
-            println!("{variant},{n},{operation},{},{},{},{},{elapsed},{},{}",
-                before.0, before.1, after.0, after.1, bytes.len(), hex(&bank.root()));
-            println!("MEMORY_SCOPE=process RSS and lifetime HWM; setup included; allocator retained pages possible; not allocations or isolated operation peak");
+            println!("variant,documents,operation,rss_before_bytes,hwm_before_bytes,rss_reset_bytes,hwm_reset_bytes,rss_after_bytes,hwm_after_bytes,latency_ns,result_bytes,result_root");
+            println!("{variant},{n},{operation},{},{},{},{},{},{},{elapsed},{},{}",
+                before.0, before.1, reset.0, reset.1, after.0, after.1, bytes.len(), hex(&bank.root()));
+            println!("MEMORY_SCOPE=process RSS; HWM reset before the mutation, so hwm_after is the peak from the reset through the after sample; allocator retained pages possible; not allocations");
             println!("HARNESS_SHA256={}", hex(&digest(include_bytes!("mutation_compare.rs"))));
             println!("MEMORY_SAMPLE=PASS");
         }};

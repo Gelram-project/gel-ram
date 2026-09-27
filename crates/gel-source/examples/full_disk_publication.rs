@@ -16,7 +16,11 @@ fn main() -> Result<(), String> {
 
 #[cfg(target_os = "linux")]
 mod linux {
-    use gel_source::{import_text, load_bundle, write_bundle_new, BundleError, EncodedCorpus};
+    use gel_source::{
+        backup::{self, CreateError, RestoreError, State},
+        collection::Collection,
+        import_text, load_bundle, write_bundle_new, BundleError, EncodedCorpus,
+    };
     use std::{
         fs,
         io::Write,
@@ -136,6 +140,30 @@ mod linux {
         writeln!(std::io::stdout(), "{line}").map_err(|e| format!("stdout: {e}"))
     }
 
+    /// Fills the device until the kernel reports ENOSPC. The returned guard
+    /// removes the filler on every exit path.
+    fn fill(dir: &Path, name: &str) -> Result<(Filler, u64, std::io::Error), String> {
+        let filler_path = dir.join(name);
+        let mut filler = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&filler_path)
+            .map_err(|e| e.to_string())?;
+        let guard = Filler(Some(filler_path));
+        let chunk = vec![0xA5u8; 64 * 1024];
+        let mut filled = 0u64;
+        loop {
+            if filled >= CAP {
+                return Err("filesystem larger than the 64 MiB cap; refusing to fill it".into());
+            }
+            match filler.write_all(&chunk) {
+                Ok(()) => filled += chunk.len() as u64,
+                Err(e) if e.raw_os_error() == Some(ENOSPC) => return Ok((guard, filled, e)),
+                Err(e) => return Err(format!("filler: {e}")),
+            }
+        }
+    }
+
     fn corpus(label: &str) -> Result<EncodedCorpus, String> {
         let text = format!("{label}: full-disk publication fixture line.\n").repeat(256);
         import_text(text.as_bytes(), label).map_err(|e| format!("{e:?}"))
@@ -155,28 +183,7 @@ mod linux {
         let previous_pin =
             write_bundle_new(&previous, &corpus("previous")?).map_err(|e| format!("{e:?}"))?;
 
-        // Fill the device until the kernel reports ENOSPC.
-        let filler_path = dir.join("filler.bin");
-        let mut filler = fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&filler_path)
-            .map_err(|e| e.to_string())?;
-        let guard = Filler(Some(filler_path.clone()));
-        let chunk = vec![0xA5u8; 64 * 1024];
-        let mut filled = 0u64;
-        let full = loop {
-            if filled >= CAP {
-                drop(filler);
-                return Err("filesystem larger than the 64 MiB cap; refusing to fill it".into());
-            }
-            match filler.write_all(&chunk) {
-                Ok(()) => filled += chunk.len() as u64,
-                Err(e) if e.raw_os_error() == Some(ENOSPC) => break e,
-                Err(e) => return Err(format!("filler: {e}")),
-            }
-        };
-        drop(filler);
+        let (guard, filled, full) = fill(dir, "filler.bin")?;
         say(&format!(
             "FULL_DISK_SETUP tmpfs_bytes={device_bytes} filler_bytes_at_least={filled} kernel_error={full} previous_pin_prefix={:02x}{:02x}{:02x}{:02x}",
             previous_pin[0], previous_pin[1], previous_pin[2], previous_pin[3]
@@ -210,6 +217,51 @@ mod linux {
             return Err(format!("unexpected files after recovery: {left:?}"));
         }
         say("FULL_DISK_RECOVERY filler_removed=true publish=PASS reload_new=PASS reload_previous=PASS")?;
+
+        // Backups on the same device: with no space left, creation leaves no
+        // committed manifest and restore leaves no target.
+        let mut bank = Collection::new();
+        bank.add(
+            "notes.txt",
+            "RAM is volatile.\nA backup is committed by its manifest.\n",
+        )?;
+        let snapshot = dir.join("bank.gelset");
+        let pin = bank.save_new(&snapshot)?;
+        let complete = dir.join("backup ok");
+        backup::create(&snapshot, pin, &complete).map_err(|e| format!("{e:?}"))?;
+        let (guard, _, _) = fill(dir, "filler2.bin")?;
+        let unfinished = dir.join("backup full");
+        let create_error = match backup::create(&snapshot, pin, &unfinished) {
+            Ok(_) => return Err("backup created on a full device".into()),
+            Err(CreateError::CreatedUnconfirmed(why)) => {
+                return Err(format!(
+                    "backup reported as created on a full device: {why}"
+                ))
+            }
+            Err(CreateError::NotCreated(why)) => why,
+        };
+        if unfinished.exists() && backup::inspect(&unfinished, pin)?.state != State::Incomplete {
+            return Err("interrupted backup is not INCOMPLETE".into());
+        }
+        let target = dir.join("restored.gelset");
+        match backup::restore(&complete, pin, &target) {
+            Err(RestoreError::NotPublished(why)) if why.contains("No space") => {}
+            other => return Err(format!("restore on a full device: {other:?}")),
+        }
+        if target.exists() {
+            return Err("restore left a target on a full device".into());
+        }
+        say(&format!(
+            "FULL_DISK_BACKUP create=REFUSED({}) manifest=ABSENT restore=NOT_PUBLISHED target=ABSENT",
+            create_error.split_whitespace().next().unwrap_or("")
+        ))?;
+        guard.remove()?;
+        backup::restore(&complete, pin, &target).map_err(|e| format!("{e:?}"))?;
+        Collection::load(&target, pin)?;
+        if unfinished.exists() {
+            fs::remove_dir_all(&unfinished).map_err(|e| e.to_string())?;
+        }
+        say("FULL_DISK_BACKUP_RECOVERY restore=PASS reload=PASS unfinished_backup_removed=true")?;
         say("FULL_DISK_PUBLICATION=PASS")?;
         Ok(())
     }

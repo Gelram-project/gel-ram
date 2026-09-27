@@ -1,6 +1,7 @@
 # Try GEL RAM on your hardware
 
-This guide is the shortest reproducible path through the current public core.
+This guide is the shortest reproducible path through the public core as it stands
+at the v0.5.0 tag.
 It uses public source, deterministic fixtures and caller-selected text. It does
 not require the private application, a private knowledge bank or an external LLM.
 
@@ -9,6 +10,7 @@ not require the private application, a private knowledge bank or an external LLM
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
+git checkout v0.5.0
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 git rev-parse HEAD
@@ -29,6 +31,9 @@ GEL_VERIFY_ALL=PASS
 ```
 
 A failed gate must be investigated before interpreting benchmark output.
+For a run with proven network isolation (Linux), see
+[isolated reproduction](REPRODUCE-ISOLATED.md). To run every check and the comparison in one
+command and share the result, see [the public verification suite](REPRODUCE.md).
 
 ## 2. Run GEL Live Lab on your own UTF-8 text
 

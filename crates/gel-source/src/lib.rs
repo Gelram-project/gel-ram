@@ -1,4 +1,4 @@
-//! Immutable source catalog and exact quoted readout; independent of any speaker.
+//! Immutable source catalog and exact quoted readout; independent of any answer generator.
 //! Integrity proves correspondence to approved bytes, NOT truth, encoder correctness,
 //! semantic relevance or authenticity of an untrusted catalog's claimed ORB addresses.
 #![forbid(unsafe_code)]
@@ -9,6 +9,7 @@ struct SourceBuilderGuide;
 #[cfg(doctest)]
 #[doc = include_str!("../../../docs/COLLECTION-BUILDER.md")]
 struct CollectionBuilderGuide;
+pub mod backup;
 mod builder;
 mod bundle;
 pub mod collection;

@@ -1,0 +1,22 @@
+source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
+SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
+
+PROGRAM=gel-evidence --batch
+STDIN
+add original.txt
+find sample pressure
+replace 1 revised.txt
+proof 1
+exit
+STDOUT
+{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.4.0"}
+{"schema":"gel-evidence/1","record":"result","seq":1,"command":"add","status":"OK","id":1,"bytes":30}
+{"schema":"gel-evidence/1","record":"result","seq":2,"command":"find","status":"HIT","documents_examined":1,"matching_lines":1,"shown":1,"skipped_long_lines":0,"search_ns":6773,"results":[{"n":1,"doc":1,"title":"original.txt","start":0,"end":29,"quote":"The sample pressure is 2 bar.","quote_sha256":"de1ef9fecdcb39181ec0db035d26932a2975ff5c159fb775e3db62d161befd0a","context":{"start":0,"end":29,"omitted_before":false,"omitted_after":true,"text":"The sample pressure is 2 bar."}}]}
+{"schema":"gel-evidence/1","record":"result","seq":3,"command":"replace","status":"OK","id":1,"previous_citations_invalidated":true}
+{"schema":"gel-evidence/1","record":"result","seq":4,"command":"proof","status":"ERROR","error":"NO_CURRENT_RESULT"}
+{"schema":"gel-evidence/1","record":"summary","executed":4,"not_run":1,"statuses":{"OK":2,"HIT":1,"UNKNOWN":0,"INCOMPLETE":0,"ERROR":1},"exit_code":2,"peak_rss_kb":2216}
+
+STDERR
+ERROR seq=4 command=proof NO_CURRENT_RESULT
+
+EXPECTED_AND_OBSERVED_EXIT=2

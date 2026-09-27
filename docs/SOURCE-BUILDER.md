@@ -88,7 +88,7 @@ untrusted sender do not authenticate that sender or their statements. When loadi
 external data, pass independently trusted pins to `Corpus::load`.
 
 This is a **source-catalog writer**, not the private ORB printer, Q8 numeric
-quantizer, multimedia analyzer, semantic retriever or speaker. Source addresses
+quantizer, multimedia analyzer, semantic retriever or answer generator. Source addresses
 are caller declarations, not certified links to an independently verified ORB bank.
 It does not prove truth or add fourfold independent capacity.
 

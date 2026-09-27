@@ -102,6 +102,15 @@ fn capture(
     println!("completed {name}");
     Ok(())
 }
+/// Host load around a run, so readers can discount timings from a busy machine.
+#[cfg(target_os = "linux")]
+fn load_line(when: &str) -> String {
+    match fs::read_to_string("/proc/loadavg") {
+        Ok(load) => format!("loadavg_{when}={}\n", load.trim()),
+        Err(e) => format!("loadavg_{when}=NOT_MEASURED ({e})\n"),
+    }
+}
+
 pub fn report(args: &[String]) -> Result<(), String> {
     if !(1..=2).contains(&args.len()) {
         return Err("usage: cargo run -p xtask -- report NEW_DIRECTORY_OUTSIDE_CHECKOUT [REVIEWED_MANIFEST_SHA256]".into());
@@ -129,10 +138,17 @@ pub fn report(args: &[String]) -> Result<(), String> {
     let workers = std::thread::available_parallelism()
         .map_or(1, usize::from)
         .min(24);
-    let mut hardware=format!("os={} arch={} available_parallelism={} max_requested_workers={}\nCPU_ONLY=true host_isolation=false\n",
-        std::env::consts::OS,std::env::consts::ARCH,std::thread::available_parallelism().map_or(1,usize::from),workers);
+    let mut hardware = format!(
+        "os={} arch={} available_parallelism={} max_requested_workers={}\nCPU_ONLY=true {}\n",
+        std::env::consts::OS,
+        std::env::consts::ARCH,
+        std::thread::available_parallelism().map_or(1, usize::from),
+        workers,
+        super::isolation::status()
+    );
     #[cfg(target_os = "linux")]
     {
+        hardware.push_str(&load_line("start"));
         if let Ok(cpu) = fs::read_to_string("/proc/cpuinfo") {
             if let Some(model) = cpu.lines().find(|l| l.starts_with("model name")) {
                 hardware.push_str(model);
@@ -307,6 +323,8 @@ pub fn report(args: &[String]) -> Result<(), String> {
     if identity(&root, pin)? != initial_identity {
         return Err("source identity changed during report; no completion marker".into());
     }
+    #[cfg(target_os = "linux")]
+    fs::write(output.join("host-load-end.txt"), load_line("end")).map_err(|e| e.to_string())?;
     fs::write(output.join("COMPLETE.txt"),"REPORT_COMPLETE=PASS\nAll configured invocations passed; review every timing including slower runs.\nSource identity rechecked; see revision.txt for whether content was pinned.\nSynthetic scan-only data; not semantic accuracy or the full historical campaign.\n").map_err(|e|e.to_string())?;
     println!("REPORT_COMPLETE=PASS {}", output.display());
     Ok(())

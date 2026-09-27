@@ -45,6 +45,10 @@ checks use the operating system itself rather than an injected error:
   size of at most 64 MiB (size 0 means unlimited; read from /proc/self/mountinfo). It refuses a
   non-empty directory, caps the filler at 64 MiB and removes it on every exit
   path, including a failure while filling or while writing its own output.
+  The same run then fills the device again for [backups](BACKUP.md): creating a
+  backup must fail without a committed manifest (a partial directory reads as
+  INCOMPLETE), restoring must leave no target, and after the filler is removed
+  the restore succeeds and reopens with the same pin.
 
 ```sh
 cargo run --locked --offline --release -p gel-source --example full_disk_publication -- EMPTY_SMALL_TMPFS
