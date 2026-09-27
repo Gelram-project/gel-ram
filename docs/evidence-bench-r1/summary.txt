@@ -1,0 +1,6 @@
+same_answer=20 different_answer=16 queries=36 warmup=3 reps=30
+process-workload: gel-evidence p50=72695441 p95=88185093 | grep p50=62800389 p95=72892864 | median_ratio=1.158 (small sample; p95 is nearest rank)
+integrity-process: gel-evidence p50=3126735 p95=3432540 | sha256sum p50=1945822 p95=2378787 | median_ratio=1.607 (small sample; p95 is nearest rank)
+in-memory-search: gel-evidence per query p50=3319457 p95=4263264 ns (excludes process start and load; no grep counterpart)
+gel-evidence peak_rss_kb per workload run: 2800,2796,2872,2892,2884,2840,2872,2848,2892,2804,2892,2880,2880,2848,2896,2876,2804,2876,2892,2896,2844,2800,2840,2892,2808,2872,2796,2892,2852,2844,2852,2848,2884
+loadavg_end=3.06 2.77 3.49 3/2714 3411465

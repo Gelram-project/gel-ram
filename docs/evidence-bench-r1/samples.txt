@@ -1,0 +1,1453 @@
+phase,tool,rep,warmup,query,value_ns
+process-workload,gel-evidence,0,true,"*",87057561
+in-memory-search,gel-evidence,0,true,"the",3688712
+in-memory-search,gel-evidence,0,true,"release",4052266
+in-memory-search,gel-evidence,0,true,"exact source",4714973
+in-memory-search,gel-evidence,0,true,"no model",4108192
+in-memory-search,gel-evidence,0,true,"plaintext",3992854
+in-memory-search,gel-evidence,0,true,"not encrypted",4216957
+in-memory-search,gel-evidence,0,true,"does not establish",4204362
+in-memory-search,gel-evidence,0,true,"garbage collection",4147436
+in-memory-search,gel-evidence,0,true,"the stack",4204843
+in-memory-search,gel-evidence,0,true,"move semantics",4296045
+in-memory-search,gel-evidence,0,true,"invented answer",4067134
+in-memory-search,gel-evidence,0,true,"quantum banana",4088975
+in-memory-search,gel-evidence,0,true,"purple elephant",4085809
+in-memory-search,gel-evidence,0,true,"cargo run",4068216
+in-memory-search,gel-evidence,0,true,"zażółć gęślą",4077363
+in-memory-search,gel-evidence,0,true,"ZAŻÓŁĆ GĘŚLĄ",4069078
+in-memory-search,gel-evidence,0,true,"jaźń",4004126
+in-memory-search,gel-evidence,0,true,"łódź",4051625
+in-memory-search,gel-evidence,0,true,"λόγος",4002943
+in-memory-search,gel-evidence,0,true,"ΛΌΓΟΣ",3964040
+integrity-process,gel-evidence,0,true,"*",3224268
+process-per-query,grep,0,true,"the",3945706
+process-per-query,grep,0,true,"release",5144231
+process-per-query,grep,0,true,"exact source",5155934
+process-per-query,grep,0,true,"no model",2955743
+process-per-query,grep,0,true,"plaintext",3931740
+process-per-query,grep,0,true,"not encrypted",2452786
+process-per-query,grep,0,true,"does not establish",4478448
+process-per-query,grep,0,true,"garbage collection",3788169
+process-per-query,grep,0,true,"the stack",5291158
+process-per-query,grep,0,true,"move semantics",4413156
+process-per-query,grep,0,true,"invented answer",5183245
+process-per-query,grep,0,true,"quantum banana",2618908
+process-per-query,grep,0,true,"purple elephant",2594383
+process-per-query,grep,0,true,"cargo run",2593341
+process-per-query,grep,0,true,"zażółć gęślą",2395739
+process-per-query,grep,0,true,"ZAŻÓŁĆ GĘŚLĄ",2408533
+process-per-query,grep,0,true,"jaźń",2230107
+process-per-query,grep,0,true,"łódź",2304848
+process-per-query,grep,0,true,"λόγος",2347518
+process-per-query,grep,0,true,"ΛΌΓΟΣ",2173611
+process-workload,grep,0,true,"*",68407304
+integrity-process,sha256sum,0,true,"*",2054616
+process-per-query,grep,1,true,"the",3464791
+process-per-query,grep,1,true,"release",4894060
+process-per-query,grep,1,true,"exact source",4884844
+process-per-query,grep,1,true,"no model",2264562
+process-per-query,grep,1,true,"plaintext",3777589
+process-per-query,grep,1,true,"not encrypted",2178189
+process-per-query,grep,1,true,"does not establish",4009416
+process-per-query,grep,1,true,"garbage collection",3523731
+process-per-query,grep,1,true,"the stack",4211946
+process-per-query,grep,1,true,"move semantics",3752613
+process-per-query,grep,1,true,"invented answer",4273222
+process-per-query,grep,1,true,"quantum banana",2084112
+process-per-query,grep,1,true,"purple elephant",2160636
+process-per-query,grep,1,true,"cargo run",2294929
+process-per-query,grep,1,true,"zażółć gęślą",1926445
+process-per-query,grep,1,true,"ZAŻÓŁĆ GĘŚLĄ",1952194
+process-per-query,grep,1,true,"jaźń",2114821
+process-per-query,grep,1,true,"łódź",1867234
+process-per-query,grep,1,true,"λόγος",1917659
+process-per-query,grep,1,true,"ΛΌΓΟΣ",1965680
+process-workload,grep,1,true,"*",59518673
+integrity-process,sha256sum,1,true,"*",1835415
+process-workload,gel-evidence,1,true,"*",83599643
+in-memory-search,gel-evidence,1,true,"the",3713629
+in-memory-search,gel-evidence,1,true,"release",4022390
+in-memory-search,gel-evidence,1,true,"exact source",4258735
+in-memory-search,gel-evidence,1,true,"no model",4088975
+in-memory-search,gel-evidence,1,true,"plaintext",4022671
+in-memory-search,gel-evidence,1,true,"not encrypted",4257583
+in-memory-search,gel-evidence,1,true,"does not establish",4491093
+in-memory-search,gel-evidence,1,true,"garbage collection",4122088
+in-memory-search,gel-evidence,1,true,"the stack",4195606
+in-memory-search,gel-evidence,1,true,"move semantics",4134351
+in-memory-search,gel-evidence,1,true,"invented answer",3681609
+in-memory-search,gel-evidence,1,true,"quantum banana",4208471
+in-memory-search,gel-evidence,1,true,"purple elephant",5010650
+in-memory-search,gel-evidence,1,true,"cargo run",5232157
+in-memory-search,gel-evidence,1,true,"zażółć gęślą",4825592
+in-memory-search,gel-evidence,1,true,"ZAŻÓŁĆ GĘŚLĄ",3366876
+in-memory-search,gel-evidence,1,true,"jaźń",2893666
+in-memory-search,gel-evidence,1,true,"łódź",2753572
+in-memory-search,gel-evidence,1,true,"λόγος",2767318
+in-memory-search,gel-evidence,1,true,"ΛΌΓΟΣ",2923321
+integrity-process,gel-evidence,1,true,"*",3047846
+process-workload,gel-evidence,2,true,"*",86085061
+in-memory-search,gel-evidence,2,true,"the",3746711
+in-memory-search,gel-evidence,2,true,"release",3955815
+in-memory-search,gel-evidence,2,true,"exact source",4146063
+in-memory-search,gel-evidence,2,true,"no model",4036036
+in-memory-search,gel-evidence,2,true,"plaintext",3958289
+in-memory-search,gel-evidence,2,true,"not encrypted",4239558
+in-memory-search,gel-evidence,2,true,"does not establish",4192540
+in-memory-search,gel-evidence,2,true,"garbage collection",4103803
+in-memory-search,gel-evidence,2,true,"the stack",4181229
+in-memory-search,gel-evidence,2,true,"move semantics",4171291
+in-memory-search,gel-evidence,2,true,"invented answer",4052697
+in-memory-search,gel-evidence,2,true,"quantum banana",4029463
+in-memory-search,gel-evidence,2,true,"purple elephant",4103833
+in-memory-search,gel-evidence,2,true,"cargo run",4102260
+in-memory-search,gel-evidence,2,true,"zażółć gęślą",4112590
+in-memory-search,gel-evidence,2,true,"ZAŻÓŁĆ GĘŚLĄ",4040334
+in-memory-search,gel-evidence,2,true,"jaźń",4013293
+in-memory-search,gel-evidence,2,true,"łódź",4034924
+in-memory-search,gel-evidence,2,true,"λόγος",3985791
+in-memory-search,gel-evidence,2,true,"ΛΌΓΟΣ",4032980
+integrity-process,gel-evidence,2,true,"*",2882525
+process-per-query,grep,2,true,"the",3903056
+process-per-query,grep,2,true,"release",5133612
+process-per-query,grep,2,true,"exact source",5213942
+process-per-query,grep,2,true,"no model",2833272
+process-per-query,grep,2,true,"plaintext",3819548
+process-per-query,grep,2,true,"not encrypted",2633476
+process-per-query,grep,2,true,"does not establish",4357711
+process-per-query,grep,2,true,"garbage collection",4067936
+process-per-query,grep,2,true,"the stack",4937823
+process-per-query,grep,2,true,"move semantics",4020086
+process-per-query,grep,2,true,"invented answer",3689714
+process-per-query,grep,2,true,"quantum banana",2654716
+process-per-query,grep,2,true,"purple elephant",2333812
+process-per-query,grep,2,true,"cargo run",2512779
+process-per-query,grep,2,true,"zażółć gęślą",2688329
+process-per-query,grep,2,true,"ZAŻÓŁĆ GĘŚLĄ",2570858
+process-per-query,grep,2,true,"jaźń",2206542
+process-per-query,grep,2,true,"łódź",2201773
+process-per-query,grep,2,true,"λόγος",2292955
+process-per-query,grep,2,true,"ΛΌΓΟΣ",1922698
+process-workload,grep,2,true,"*",65994638
+integrity-process,sha256sum,2,true,"*",1998852
+process-per-query,grep,3,false,"the",3441587
+process-per-query,grep,3,false,"release",4529454
+process-per-query,grep,3,false,"exact source",4768134
+process-per-query,grep,3,false,"no model",2598761
+process-per-query,grep,3,false,"plaintext",3551925
+process-per-query,grep,3,false,"not encrypted",2238903
+process-per-query,grep,3,false,"does not establish",3626084
+process-per-query,grep,3,false,"garbage collection",3706456
+process-per-query,grep,3,false,"the stack",4507833
+process-per-query,grep,3,false,"move semantics",3657754
+process-per-query,grep,3,false,"invented answer",4217638
+process-per-query,grep,3,false,"quantum banana",2055769
+process-per-query,grep,3,false,"purple elephant",2047103
+process-per-query,grep,3,false,"cargo run",2194450
+process-per-query,grep,3,false,"zażółć gęślą",2211192
+process-per-query,grep,3,false,"ZAŻÓŁĆ GĘŚLĄ",2101384
+process-per-query,grep,3,false,"jaźń",1935623
+process-per-query,grep,3,false,"łódź",2101184
+process-per-query,grep,3,false,"λόγος",2064645
+process-per-query,grep,3,false,"ΛΌΓΟΣ",1872975
+process-workload,grep,3,false,"*",59428854
+integrity-process,sha256sum,3,false,"*",1967513
+process-workload,gel-evidence,3,false,"*",78681317
+in-memory-search,gel-evidence,3,false,"the",3769204
+in-memory-search,gel-evidence,3,false,"release",4001851
+in-memory-search,gel-evidence,3,false,"exact source",4281718
+in-memory-search,gel-evidence,3,false,"no model",4139210
+in-memory-search,gel-evidence,3,false,"plaintext",3991542
+in-memory-search,gel-evidence,3,false,"not encrypted",4238527
+in-memory-search,gel-evidence,3,false,"does not establish",4215494
+in-memory-search,gel-evidence,3,false,"garbage collection",4060302
+in-memory-search,gel-evidence,3,false,"the stack",4248816
+in-memory-search,gel-evidence,3,false,"move semantics",4096680
+in-memory-search,gel-evidence,3,false,"invented answer",4075319
+in-memory-search,gel-evidence,3,false,"quantum banana",4121707
+in-memory-search,gel-evidence,3,false,"purple elephant",4192781
+in-memory-search,gel-evidence,3,false,"cargo run",3614101
+in-memory-search,gel-evidence,3,false,"zażółć gęślą",2916369
+in-memory-search,gel-evidence,3,false,"ZAŻÓŁĆ GĘŚLĄ",2934803
+in-memory-search,gel-evidence,3,false,"jaźń",2783349
+in-memory-search,gel-evidence,3,false,"łódź",2776947
+in-memory-search,gel-evidence,3,false,"λόγος",2807855
+in-memory-search,gel-evidence,3,false,"ΛΌΓΟΣ",2783809
+integrity-process,gel-evidence,3,false,"*",2714588
+process-workload,gel-evidence,4,false,"*",75593366
+in-memory-search,gel-evidence,4,false,"the",3691858
+in-memory-search,gel-evidence,4,false,"release",3997974
+in-memory-search,gel-evidence,4,false,"exact source",4233528
+in-memory-search,gel-evidence,4,false,"no model",4108532
+in-memory-search,gel-evidence,4,false,"plaintext",3986904
+in-memory-search,gel-evidence,4,false,"not encrypted",4239328
+in-memory-search,gel-evidence,4,false,"does not establish",4276048
+in-memory-search,gel-evidence,4,false,"garbage collection",4081531
+in-memory-search,gel-evidence,4,false,"the stack",4178784
+in-memory-search,gel-evidence,4,false,"move semantics",4063397
+in-memory-search,gel-evidence,4,false,"invented answer",4028402
+in-memory-search,gel-evidence,4,false,"quantum banana",3074346
+in-memory-search,gel-evidence,4,false,"purple elephant",2845946
+in-memory-search,gel-evidence,4,false,"cargo run",2965752
+in-memory-search,gel-evidence,4,false,"zażółć gęślą",2884479
+in-memory-search,gel-evidence,4,false,"ZAŻÓŁĆ GĘŚLĄ",2792656
+in-memory-search,gel-evidence,4,false,"jaźń",2908334
+in-memory-search,gel-evidence,4,false,"łódź",2904496
+in-memory-search,gel-evidence,4,false,"λόγος",2947186
+in-memory-search,gel-evidence,4,false,"ΛΌΓΟΣ",2771646
+integrity-process,gel-evidence,4,false,"*",3126735
+process-per-query,grep,4,false,"the",3967277
+process-per-query,grep,4,false,"release",4967398
+process-per-query,grep,4,false,"exact source",4711507
+process-per-query,grep,4,false,"no model",2412971
+process-per-query,grep,4,false,"plaintext",3695865
+process-per-query,grep,4,false,"not encrypted",2181926
+process-per-query,grep,4,false,"does not establish",4040785
+process-per-query,grep,4,false,"garbage collection",3602039
+process-per-query,grep,4,false,"the stack",4167433
+process-per-query,grep,4,false,"move semantics",3641874
+process-per-query,grep,4,false,"invented answer",4175719
+process-per-query,grep,4,false,"quantum banana",2164213
+process-per-query,grep,4,false,"purple elephant",2068262
+process-per-query,grep,4,false,"cargo run",2304928
+process-per-query,grep,4,false,"zażółć gęślą",2015413
+process-per-query,grep,4,false,"ZAŻÓŁĆ GĘŚLĄ",2107196
+process-per-query,grep,4,false,"jaźń",1874798
+process-per-query,grep,4,false,"łódź",1942005
+process-per-query,grep,4,false,"λόγος",2057422
+process-per-query,grep,4,false,"ΛΌΓΟΣ",1928309
+process-workload,grep,4,false,"*",60027340
+integrity-process,sha256sum,4,false,"*",1720618
+process-per-query,grep,5,false,"the",3243685
+process-per-query,grep,5,false,"release",5234742
+process-per-query,grep,5,false,"exact source",4792108
+process-per-query,grep,5,false,"no model",2534730
+process-per-query,grep,5,false,"plaintext",3757572
+process-per-query,grep,5,false,"not encrypted",2104621
+process-per-query,grep,5,false,"does not establish",4147275
+process-per-query,grep,5,false,"garbage collection",3611647
+process-per-query,grep,5,false,"the stack",3670898
+process-per-query,grep,5,false,"move semantics",4974883
+process-per-query,grep,5,false,"invented answer",5010029
+process-per-query,grep,5,false,"quantum banana",2586377
+process-per-query,grep,5,false,"purple elephant",2253721
+process-per-query,grep,5,false,"cargo run",2310087
+process-per-query,grep,5,false,"zażółć gęślą",2272888
+process-per-query,grep,5,false,"ZAŻÓŁĆ GĘŚLĄ",2364620
+process-per-query,grep,5,false,"jaźń",1928620
+process-per-query,grep,5,false,"łódź",1951352
+process-per-query,grep,5,false,"λόγος",2088381
+process-per-query,grep,5,false,"ΛΌΓΟΣ",1995144
+process-workload,grep,5,false,"*",62833380
+integrity-process,sha256sum,5,false,"*",1805007
+process-workload,gel-evidence,5,false,"*",68286144
+in-memory-search,gel-evidence,5,false,"the",3671029
+in-memory-search,gel-evidence,5,false,"release",4012702
+in-memory-search,gel-evidence,5,false,"exact source",4155230
+in-memory-search,gel-evidence,5,false,"no model",4062245
+in-memory-search,gel-evidence,5,false,"plaintext",3038638
+in-memory-search,gel-evidence,5,false,"not encrypted",2986952
+in-memory-search,gel-evidence,5,false,"does not establish",3462987
+in-memory-search,gel-evidence,5,false,"garbage collection",3075668
+in-memory-search,gel-evidence,5,false,"the stack",3100475
+in-memory-search,gel-evidence,5,false,"move semantics",2975139
+in-memory-search,gel-evidence,5,false,"invented answer",3109723
+in-memory-search,gel-evidence,5,false,"quantum banana",2803896
+in-memory-search,gel-evidence,5,false,"purple elephant",2822312
+in-memory-search,gel-evidence,5,false,"cargo run",3313085
+in-memory-search,gel-evidence,5,false,"zażółć gęślą",2865693
+in-memory-search,gel-evidence,5,false,"ZAŻÓŁĆ GĘŚLĄ",2786174
+in-memory-search,gel-evidence,5,false,"jaźń",3042837
+in-memory-search,gel-evidence,5,false,"łódź",2781254
+in-memory-search,gel-evidence,5,false,"λόγος",2776585
+in-memory-search,gel-evidence,5,false,"ΛΌΓΟΣ",2811902
+integrity-process,gel-evidence,5,false,"*",3154297
+process-workload,gel-evidence,6,false,"*",73038017
+in-memory-search,gel-evidence,6,false,"the",3727054
+in-memory-search,gel-evidence,6,false,"release",4078636
+in-memory-search,gel-evidence,6,false,"exact source",4168946
+in-memory-search,gel-evidence,6,false,"no model",4111778
+in-memory-search,gel-evidence,6,false,"plaintext",4058168
+in-memory-search,gel-evidence,6,false,"not encrypted",4215012
+in-memory-search,gel-evidence,6,false,"does not establish",4293300
+in-memory-search,gel-evidence,6,false,"garbage collection",4093204
+in-memory-search,gel-evidence,6,false,"the stack",4032048
+in-memory-search,gel-evidence,6,false,"move semantics",2888716
+in-memory-search,gel-evidence,6,false,"invented answer",3319457
+in-memory-search,gel-evidence,6,false,"quantum banana",2807223
+in-memory-search,gel-evidence,6,false,"purple elephant",2817382
+in-memory-search,gel-evidence,6,false,"cargo run",2812894
+in-memory-search,gel-evidence,6,false,"zażółć gęślą",2836057
+in-memory-search,gel-evidence,6,false,"ZAŻÓŁĆ GĘŚLĄ",2783830
+in-memory-search,gel-evidence,6,false,"jaźń",2775563
+in-memory-search,gel-evidence,6,false,"łódź",2774672
+in-memory-search,gel-evidence,6,false,"λόγος",2776475
+in-memory-search,gel-evidence,6,false,"ΛΌΓΟΣ",2819056
+integrity-process,gel-evidence,6,false,"*",3135592
+process-per-query,grep,6,false,"the",4107300
+process-per-query,grep,6,false,"release",5524147
+process-per-query,grep,6,false,"exact source",5369335
+process-per-query,grep,6,false,"no model",2981361
+process-per-query,grep,6,false,"plaintext",4252283
+process-per-query,grep,6,false,"not encrypted",2707566
+process-per-query,grep,6,false,"does not establish",4527511
+process-per-query,grep,6,false,"garbage collection",4151403
+process-per-query,grep,6,false,"the stack",4790406
+process-per-query,grep,6,false,"move semantics",4116657
+process-per-query,grep,6,false,"invented answer",4447571
+process-per-query,grep,6,false,"quantum banana",2550941
+process-per-query,grep,6,false,"purple elephant",2437688
+process-per-query,grep,6,false,"cargo run",2241548
+process-per-query,grep,6,false,"zażółć gęślą",2240397
+process-per-query,grep,6,false,"ZAŻÓŁĆ GĘŚLĄ",2427098
+process-per-query,grep,6,false,"jaźń",2946325
+process-per-query,grep,6,false,"łódź",2447446
+process-per-query,grep,6,false,"λόγος",2549728
+process-per-query,grep,6,false,"ΛΌΓΟΣ",2416779
+process-workload,grep,6,false,"*",69233490
+integrity-process,sha256sum,6,false,"*",2020453
+process-per-query,grep,7,false,"the",3741161
+process-per-query,grep,7,false,"release",5443896
+process-per-query,grep,7,false,"exact source",5329670
+process-per-query,grep,7,false,"no model",2618428
+process-per-query,grep,7,false,"plaintext",4263674
+process-per-query,grep,7,false,"not encrypted",2332530
+process-per-query,grep,7,false,"does not establish",4706057
+process-per-query,grep,7,false,"garbage collection",3750839
+process-per-query,grep,7,false,"the stack",4711116
+process-per-query,grep,7,false,"move semantics",3358110
+process-per-query,grep,7,false,"invented answer",4609185
+process-per-query,grep,7,false,"quantum banana",2566530
+process-per-query,grep,7,false,"purple elephant",2294539
+process-per-query,grep,7,false,"cargo run",2559527
+process-per-query,grep,7,false,"zażółć gęślą",2215189
+process-per-query,grep,7,false,"ZAŻÓŁĆ GĘŚLĄ",2160366
+process-per-query,grep,7,false,"jaźń",1885459
+process-per-query,grep,7,false,"łódź",1980788
+process-per-query,grep,7,false,"λόγος",2186985
+process-per-query,grep,7,false,"ΛΌΓΟΣ",2271485
+process-workload,grep,7,false,"*",64985534
+integrity-process,sha256sum,7,false,"*",2354581
+process-workload,gel-evidence,7,false,"*",89413165
+in-memory-search,gel-evidence,7,false,"the",3840849
+in-memory-search,gel-evidence,7,false,"release",3963098
+in-memory-search,gel-evidence,7,false,"exact source",4071542
+in-memory-search,gel-evidence,7,false,"no model",4098533
+in-memory-search,gel-evidence,7,false,"plaintext",3954612
+in-memory-search,gel-evidence,7,false,"not encrypted",4152394
+in-memory-search,gel-evidence,7,false,"does not establish",4185137
+in-memory-search,gel-evidence,7,false,"garbage collection",4047998
+in-memory-search,gel-evidence,7,false,"the stack",4491933
+in-memory-search,gel-evidence,7,false,"move semantics",4307166
+in-memory-search,gel-evidence,7,false,"invented answer",4174947
+in-memory-search,gel-evidence,7,false,"quantum banana",5011522
+in-memory-search,gel-evidence,7,false,"purple elephant",4254357
+in-memory-search,gel-evidence,7,false,"cargo run",4677684
+in-memory-search,gel-evidence,7,false,"zażółć gęślą",4256020
+in-memory-search,gel-evidence,7,false,"ZAŻÓŁĆ GĘŚLĄ",4359655
+in-memory-search,gel-evidence,7,false,"jaźń",4210795
+in-memory-search,gel-evidence,7,false,"łódź",4016680
+in-memory-search,gel-evidence,7,false,"λόγος",3977826
+in-memory-search,gel-evidence,7,false,"ΛΌΓΟΣ",4047507
+integrity-process,gel-evidence,7,false,"*",3035653
+process-workload,gel-evidence,8,false,"*",87014900
+in-memory-search,gel-evidence,8,false,"the",3766268
+in-memory-search,gel-evidence,8,false,"release",4036537
+in-memory-search,gel-evidence,8,false,"exact source",4128089
+in-memory-search,gel-evidence,8,false,"no model",4116698
+in-memory-search,gel-evidence,8,false,"plaintext",4012731
+in-memory-search,gel-evidence,8,false,"not encrypted",4200335
+in-memory-search,gel-evidence,8,false,"does not establish",4231934
+in-memory-search,gel-evidence,8,false,"garbage collection",4210925
+in-memory-search,gel-evidence,8,false,"the stack",4203662
+in-memory-search,gel-evidence,8,false,"move semantics",4073536
+in-memory-search,gel-evidence,8,false,"invented answer",4019926
+in-memory-search,gel-evidence,8,false,"quantum banana",4019995
+in-memory-search,gel-evidence,8,false,"purple elephant",4097602
+in-memory-search,gel-evidence,8,false,"cargo run",4245290
+in-memory-search,gel-evidence,8,false,"zażółć gęślą",4115525
+in-memory-search,gel-evidence,8,false,"ZAŻÓŁĆ GĘŚLĄ",4217307
+in-memory-search,gel-evidence,8,false,"jaźń",4047287
+in-memory-search,gel-evidence,8,false,"łódź",4007753
+in-memory-search,gel-evidence,8,false,"λόγος",3989798
+in-memory-search,gel-evidence,8,false,"ΛΌΓΟΣ",4000569
+integrity-process,gel-evidence,8,false,"*",2838412
+process-per-query,grep,8,false,"the",4053057
+process-per-query,grep,8,false,"release",4986064
+process-per-query,grep,8,false,"exact source",5063018
+process-per-query,grep,8,false,"no model",2442307
+process-per-query,grep,8,false,"plaintext",2875411
+process-per-query,grep,8,false,"not encrypted",1885899
+process-per-query,grep,8,false,"does not establish",3133548
+process-per-query,grep,8,false,"garbage collection",2311430
+process-per-query,grep,8,false,"the stack",3032457
+process-per-query,grep,8,false,"move semantics",2655107
+process-per-query,grep,8,false,"invented answer",2928302
+process-per-query,grep,8,false,"quantum banana",1637251
+process-per-query,grep,8,false,"purple elephant",1386088
+process-per-query,grep,8,false,"cargo run",1462222
+process-per-query,grep,8,false,"zażółć gęślą",1472381
+process-per-query,grep,8,false,"ZAŻÓŁĆ GĘŚLĄ",1490455
+process-per-query,grep,8,false,"jaźń",1311608
+process-per-query,grep,8,false,"łódź",1246736
+process-per-query,grep,8,false,"λόγος",1226778
+process-per-query,grep,8,false,"ΛΌΓΟΣ",1293534
+process-workload,grep,8,false,"*",47893653
+integrity-process,sha256sum,8,false,"*",1503841
+process-per-query,grep,9,false,"the",3006439
+process-per-query,grep,9,false,"release",5912367
+process-per-query,grep,9,false,"exact source",5395955
+process-per-query,grep,9,false,"no model",3039050
+process-per-query,grep,9,false,"plaintext",4071843
+process-per-query,grep,9,false,"not encrypted",2836288
+process-per-query,grep,9,false,"does not establish",4657635
+process-per-query,grep,9,false,"garbage collection",3908636
+process-per-query,grep,9,false,"the stack",4499588
+process-per-query,grep,9,false,"move semantics",4028301
+process-per-query,grep,9,false,"invented answer",4616388
+process-per-query,grep,9,false,"quantum banana",2787125
+process-per-query,grep,9,false,"purple elephant",2821219
+process-per-query,grep,9,false,"cargo run",2680094
+process-per-query,grep,9,false,"zażółć gęślą",2319946
+process-per-query,grep,9,false,"ZAŻÓŁĆ GĘŚLĄ",2251257
+process-per-query,grep,9,false,"jaźń",2146259
+process-per-query,grep,9,false,"łódź",2197676
+process-per-query,grep,9,false,"λόγος",2131411
+process-per-query,grep,9,false,"ΛΌΓΟΣ",2176175
+process-workload,grep,9,false,"*",67483652
+integrity-process,sha256sum,9,false,"*",1880018
+process-workload,gel-evidence,9,false,"*",61648442
+in-memory-search,gel-evidence,9,false,"the",2644737
+in-memory-search,gel-evidence,9,false,"release",2808055
+in-memory-search,gel-evidence,9,false,"exact source",2926238
+in-memory-search,gel-evidence,9,false,"no model",2842589
+in-memory-search,gel-evidence,9,false,"plaintext",2783329
+in-memory-search,gel-evidence,9,false,"not encrypted",2884980
+in-memory-search,gel-evidence,9,false,"does not establish",2902683
+in-memory-search,gel-evidence,9,false,"garbage collection",2821570
+in-memory-search,gel-evidence,9,false,"the stack",3032577
+in-memory-search,gel-evidence,9,false,"move semantics",2860032
+in-memory-search,gel-evidence,9,false,"invented answer",3088152
+in-memory-search,gel-evidence,9,false,"quantum banana",3017879
+in-memory-search,gel-evidence,9,false,"purple elephant",2853560
+in-memory-search,gel-evidence,9,false,"cargo run",2858169
+in-memory-search,gel-evidence,9,false,"zażółć gęślą",3134840
+in-memory-search,gel-evidence,9,false,"ZAŻÓŁĆ GĘŚLĄ",2835286
+in-memory-search,gel-evidence,9,false,"jaźń",3091578
+in-memory-search,gel-evidence,9,false,"łódź",2785733
+in-memory-search,gel-evidence,9,false,"λόγος",2783068
+in-memory-search,gel-evidence,9,false,"ΛΌΓΟΣ",2758943
+integrity-process,gel-evidence,9,false,"*",3055801
+process-workload,gel-evidence,10,false,"*",72716792
+in-memory-search,gel-evidence,10,false,"the",3737153
+in-memory-search,gel-evidence,10,false,"release",4146634
+in-memory-search,gel-evidence,10,false,"exact source",4149850
+in-memory-search,gel-evidence,10,false,"no model",4125595
+in-memory-search,gel-evidence,10,false,"plaintext",4767773
+in-memory-search,gel-evidence,10,false,"not encrypted",4295304
+in-memory-search,gel-evidence,10,false,"does not establish",4287960
+in-memory-search,gel-evidence,10,false,"garbage collection",2940344
+in-memory-search,gel-evidence,10,false,"the stack",2957065
+in-memory-search,gel-evidence,10,false,"move semantics",3245338
+in-memory-search,gel-evidence,10,false,"invented answer",2831689
+in-memory-search,gel-evidence,10,false,"quantum banana",2825427
+in-memory-search,gel-evidence,10,false,"purple elephant",2814307
+in-memory-search,gel-evidence,10,false,"cargo run",2824837
+in-memory-search,gel-evidence,10,false,"zażółć gęślą",3134459
+in-memory-search,gel-evidence,10,false,"ZAŻÓŁĆ GĘŚLĄ",2829785
+in-memory-search,gel-evidence,10,false,"jaźń",3080337
+in-memory-search,gel-evidence,10,false,"łódź",2821701
+in-memory-search,gel-evidence,10,false,"λόγος",2863970
+in-memory-search,gel-evidence,10,false,"ΛΌΓΟΣ",3164966
+integrity-process,gel-evidence,10,false,"*",3648426
+process-per-query,grep,10,false,"the",4751642
+process-per-query,grep,10,false,"release",5568800
+process-per-query,grep,10,false,"exact source",4736433
+process-per-query,grep,10,false,"no model",3160308
+process-per-query,grep,10,false,"plaintext",4064018
+process-per-query,grep,10,false,"not encrypted",2792395
+process-per-query,grep,10,false,"does not establish",4392868
+process-per-query,grep,10,false,"garbage collection",3846048
+process-per-query,grep,10,false,"the stack",4148037
+process-per-query,grep,10,false,"move semantics",4081502
+process-per-query,grep,10,false,"invented answer",4756612
+process-per-query,grep,10,false,"quantum banana",2702467
+process-per-query,grep,10,false,"purple elephant",2568925
+process-per-query,grep,10,false,"cargo run",2700562
+process-per-query,grep,10,false,"zażółć gęślą",2359140
+process-per-query,grep,10,false,"ZAŻÓŁĆ GĘŚLĄ",2375230
+process-per-query,grep,10,false,"jaźń",2457836
+process-per-query,grep,10,false,"łódź",2415866
+process-per-query,grep,10,false,"λόγος",2090233
+process-per-query,grep,10,false,"ΛΌΓΟΣ",1953887
+process-workload,grep,10,false,"*",67922809
+integrity-process,sha256sum,10,false,"*",1928309
+process-per-query,grep,11,false,"the",3904549
+process-per-query,grep,11,false,"release",5334399
+process-per-query,grep,11,false,"exact source",5103444
+process-per-query,grep,11,false,"no model",3021286
+process-per-query,grep,11,false,"plaintext",3503013
+process-per-query,grep,11,false,"not encrypted",2556972
+process-per-query,grep,11,false,"does not establish",5197282
+process-per-query,grep,11,false,"garbage collection",3886084
+process-per-query,grep,11,false,"the stack",4847774
+process-per-query,grep,11,false,"move semantics",4246462
+process-per-query,grep,11,false,"invented answer",3860315
+process-per-query,grep,11,false,"quantum banana",2557162
+process-per-query,grep,11,false,"purple elephant",2422990
+process-per-query,grep,11,false,"cargo run",2517608
+process-per-query,grep,11,false,"zażółć gęślą",2701053
+process-per-query,grep,11,false,"ZAŻÓŁĆ GĘŚLĄ",2324434
+process-per-query,grep,11,false,"jaźń",2216802
+process-per-query,grep,11,false,"łódź",2051381
+process-per-query,grep,11,false,"λόγος",2079003
+process-per-query,grep,11,false,"ΛΌΓΟΣ",2073572
+process-workload,grep,11,false,"*",66405585
+integrity-process,sha256sum,11,false,"*",1862515
+process-workload,gel-evidence,11,false,"*",74613441
+in-memory-search,gel-evidence,11,false,"the",3847100
+in-memory-search,gel-evidence,11,false,"release",4130213
+in-memory-search,gel-evidence,11,false,"exact source",4157935
+in-memory-search,gel-evidence,11,false,"no model",4136615
+in-memory-search,gel-evidence,11,false,"plaintext",4050312
+in-memory-search,gel-evidence,11,false,"not encrypted",4349546
+in-memory-search,gel-evidence,11,false,"does not establish",4330140
+in-memory-search,gel-evidence,11,false,"garbage collection",4088073
+in-memory-search,gel-evidence,11,false,"the stack",4251712
+in-memory-search,gel-evidence,11,false,"move semantics",3828635
+in-memory-search,gel-evidence,11,false,"invented answer",2848961
+in-memory-search,gel-evidence,11,false,"quantum banana",2892945
+in-memory-search,gel-evidence,11,false,"purple elephant",3240269
+in-memory-search,gel-evidence,11,false,"cargo run",2929313
+in-memory-search,gel-evidence,11,false,"zażółć gęślą",2847700
+in-memory-search,gel-evidence,11,false,"ZAŻÓŁĆ GĘŚLĄ",2815269
+in-memory-search,gel-evidence,11,false,"jaźń",2765224
+in-memory-search,gel-evidence,11,false,"łódź",2760856
+in-memory-search,gel-evidence,11,false,"λόγος",2756818
+in-memory-search,gel-evidence,11,false,"ΛΌΓΟΣ",2745828
+integrity-process,gel-evidence,11,false,"*",3309779
+process-workload,gel-evidence,12,false,"*",65156854
+in-memory-search,gel-evidence,12,false,"the",3871897
+in-memory-search,gel-evidence,12,false,"release",4096820
+in-memory-search,gel-evidence,12,false,"exact source",3785594
+in-memory-search,gel-evidence,12,false,"no model",2929273
+in-memory-search,gel-evidence,12,false,"plaintext",2817943
+in-memory-search,gel-evidence,12,false,"not encrypted",2943609
+in-memory-search,gel-evidence,12,false,"does not establish",2956594
+in-memory-search,gel-evidence,12,false,"garbage collection",2900158
+in-memory-search,gel-evidence,12,false,"the stack",2903434
+in-memory-search,gel-evidence,12,false,"move semantics",2843601
+in-memory-search,gel-evidence,12,false,"invented answer",2837350
+in-memory-search,gel-evidence,12,false,"quantum banana",2941035
+in-memory-search,gel-evidence,12,false,"purple elephant",2890399
+in-memory-search,gel-evidence,12,false,"cargo run",2851336
+in-memory-search,gel-evidence,12,false,"zażółć gęślą",2856165
+in-memory-search,gel-evidence,12,false,"ZAŻÓŁĆ GĘŚLĄ",2901170
+in-memory-search,gel-evidence,12,false,"jaźń",2792876
+in-memory-search,gel-evidence,12,false,"łódź",2779170
+in-memory-search,gel-evidence,12,false,"λόγος",2813054
+in-memory-search,gel-evidence,12,false,"ΛΌΓΟΣ",2771716
+integrity-process,gel-evidence,12,false,"*",3244135
+process-per-query,grep,12,false,"the",4140783
+process-per-query,grep,12,false,"release",5481516
+process-per-query,grep,12,false,"exact source",5676743
+process-per-query,grep,12,false,"no model",3145741
+process-per-query,grep,12,false,"plaintext",3892386
+process-per-query,grep,12,false,"not encrypted",2493733
+process-per-query,grep,12,false,"does not establish",4447661
+process-per-query,grep,12,false,"garbage collection",4387157
+process-per-query,grep,12,false,"the stack",6196192
+process-per-query,grep,12,false,"move semantics",3320359
+process-per-query,grep,12,false,"invented answer",5486175
+process-per-query,grep,12,false,"quantum banana",3294680
+process-per-query,grep,12,false,"purple elephant",2196664
+process-per-query,grep,12,false,"cargo run",1923590
+process-per-query,grep,12,false,"zażółć gęślą",3368921
+process-per-query,grep,12,false,"ZAŻÓŁĆ GĘŚLĄ",3493404
+process-per-query,grep,12,false,"jaźń",3052625
+process-per-query,grep,12,false,"łódź",3322503
+process-per-query,grep,12,false,"λόγος",2833453
+process-per-query,grep,12,false,"ΛΌΓΟΣ",2890730
+process-workload,grep,12,false,"*",75045016
+integrity-process,sha256sum,12,false,"*",2462956
+process-per-query,grep,13,false,"the",5043903
+process-per-query,grep,13,false,"release",5354467
+process-per-query,grep,13,false,"exact source",4972358
+process-per-query,grep,13,false,"no model",2834545
+process-per-query,grep,13,false,"plaintext",4533241
+process-per-query,grep,13,false,"not encrypted",2880601
+process-per-query,grep,13,false,"does not establish",4478959
+process-per-query,grep,13,false,"garbage collection",3534492
+process-per-query,grep,13,false,"the stack",4267752
+process-per-query,grep,13,false,"move semantics",3492743
+process-per-query,grep,13,false,"invented answer",4519856
+process-per-query,grep,13,false,"quantum banana",2149896
+process-per-query,grep,13,false,"purple elephant",2364389
+process-per-query,grep,13,false,"cargo run",2582540
+process-per-query,grep,13,false,"zażółć gęślą",2129918
+process-per-query,grep,13,false,"ZAŻÓŁĆ GĘŚLĄ",2272126
+process-per-query,grep,13,false,"jaźń",2215399
+process-per-query,grep,13,false,"łódź",2085044
+process-per-query,grep,13,false,"λόγος",2060067
+process-per-query,grep,13,false,"ΛΌΓΟΣ",1931355
+process-workload,grep,13,false,"*",65703651
+integrity-process,sha256sum,13,false,"*",1746527
+process-workload,gel-evidence,13,false,"*",65740042
+in-memory-search,gel-evidence,13,false,"the",3698100
+in-memory-search,gel-evidence,13,false,"release",4049862
+in-memory-search,gel-evidence,13,false,"exact source",4216064
+in-memory-search,gel-evidence,13,false,"no model",4089596
+in-memory-search,gel-evidence,13,false,"plaintext",2817192
+in-memory-search,gel-evidence,13,false,"not encrypted",2991420
+in-memory-search,gel-evidence,13,false,"does not establish",2919595
+in-memory-search,gel-evidence,13,false,"garbage collection",2825277
+in-memory-search,gel-evidence,13,false,"the stack",2886863
+in-memory-search,gel-evidence,13,false,"move semantics",2819366
+in-memory-search,gel-evidence,13,false,"invented answer",2771897
+in-memory-search,gel-evidence,13,false,"quantum banana",2786634
+in-memory-search,gel-evidence,13,false,"purple elephant",2809247
+in-memory-search,gel-evidence,13,false,"cargo run",2805450
+in-memory-search,gel-evidence,13,false,"zażółć gęślą",2927750
+in-memory-search,gel-evidence,13,false,"ZAŻÓŁĆ GĘŚLĄ",2875552
+in-memory-search,gel-evidence,13,false,"jaźń",2786724
+in-memory-search,gel-evidence,13,false,"łódź",2752450
+in-memory-search,gel-evidence,13,false,"λόγος",2764383
+in-memory-search,gel-evidence,13,false,"ΛΌΓΟΣ",2736560
+integrity-process,gel-evidence,13,false,"*",3048347
+process-workload,gel-evidence,14,false,"*",66124616
+in-memory-search,gel-evidence,14,false,"the",3692960
+in-memory-search,gel-evidence,14,false,"release",3991361
+in-memory-search,gel-evidence,14,false,"exact source",4123289
+in-memory-search,gel-evidence,14,false,"no model",4080269
+in-memory-search,gel-evidence,14,false,"plaintext",3663084
+in-memory-search,gel-evidence,14,false,"not encrypted",2922570
+in-memory-search,gel-evidence,14,false,"does not establish",2900639
+in-memory-search,gel-evidence,14,false,"garbage collection",2794479
+in-memory-search,gel-evidence,14,false,"the stack",2860052
+in-memory-search,gel-evidence,14,false,"move semantics",2879169
+in-memory-search,gel-evidence,14,false,"invented answer",2825978
+in-memory-search,gel-evidence,14,false,"quantum banana",2811742
+in-memory-search,gel-evidence,14,false,"purple elephant",2823905
+in-memory-search,gel-evidence,14,false,"cargo run",2805620
+in-memory-search,gel-evidence,14,false,"zażółć gęślą",2803155
+in-memory-search,gel-evidence,14,false,"ZAŻÓŁĆ GĘŚLĄ",2792446
+in-memory-search,gel-evidence,14,false,"jaźń",2741169
+in-memory-search,gel-evidence,14,false,"łódź",2748693
+in-memory-search,gel-evidence,14,false,"λόγος",2737803
+in-memory-search,gel-evidence,14,false,"ΛΌΓΟΣ",2718005
+integrity-process,gel-evidence,14,false,"*",2920056
+process-per-query,grep,14,false,"the",3857379
+process-per-query,grep,14,false,"release",4000399
+process-per-query,grep,14,false,"exact source",4889752
+process-per-query,grep,14,false,"no model",2556532
+process-per-query,grep,14,false,"plaintext",3628358
+process-per-query,grep,14,false,"not encrypted",2209298
+process-per-query,grep,14,false,"does not establish",4017050
+process-per-query,grep,14,false,"garbage collection",3587391
+process-per-query,grep,14,false,"the stack",4360787
+process-per-query,grep,14,false,"move semantics",3942409
+process-per-query,grep,14,false,"invented answer",4611338
+process-per-query,grep,14,false,"quantum banana",2496799
+process-per-query,grep,14,false,"purple elephant",2139767
+process-per-query,grep,14,false,"cargo run",2595865
+process-per-query,grep,14,false,"zażółć gęślą",2174713
+process-per-query,grep,14,false,"ZAŻÓŁĆ GĘŚLĄ",2106013
+process-per-query,grep,14,false,"jaźń",2236720
+process-per-query,grep,14,false,"łódź",1930152
+process-per-query,grep,14,false,"λόγος",2063865
+process-per-query,grep,14,false,"ΛΌΓΟΣ",2247570
+process-workload,grep,14,false,"*",61652157
+integrity-process,sha256sum,14,false,"*",1954659
+process-per-query,grep,15,false,"the",3678452
+process-per-query,grep,15,false,"release",4932473
+process-per-query,grep,15,false,"exact source",4811204
+process-per-query,grep,15,false,"no model",2539690
+process-per-query,grep,15,false,"plaintext",3516669
+process-per-query,grep,15,false,"not encrypted",2198859
+process-per-query,grep,15,false,"does not establish",4085699
+process-per-query,grep,15,false,"garbage collection",3569067
+process-per-query,grep,15,false,"the stack",4844097
+process-per-query,grep,15,false,"move semantics",4174427
+process-per-query,grep,15,false,"invented answer",4819200
+process-per-query,grep,15,false,"quantum banana",2385320
+process-per-query,grep,15,false,"purple elephant",2163983
+process-per-query,grep,15,false,"cargo run",2188418
+process-per-query,grep,15,false,"zażółć gęślą",2056501
+process-per-query,grep,15,false,"ZAŻÓŁĆ GĘŚLĄ",2220809
+process-per-query,grep,15,false,"jaźń",1812021
+process-per-query,grep,15,false,"łódź",1942566
+process-per-query,grep,15,false,"λόγος",1940563
+process-per-query,grep,15,false,"ΛΌΓΟΣ",1925244
+process-workload,grep,15,false,"*",61805262
+integrity-process,sha256sum,15,false,"*",1973574
+process-workload,gel-evidence,15,false,"*",65470765
+in-memory-search,gel-evidence,15,false,"the",3784101
+in-memory-search,gel-evidence,15,false,"release",4130183
+in-memory-search,gel-evidence,15,false,"exact source",4151893
+in-memory-search,gel-evidence,15,false,"no model",3810301
+in-memory-search,gel-evidence,15,false,"plaintext",3012029
+in-memory-search,gel-evidence,15,false,"not encrypted",2912481
+in-memory-search,gel-evidence,15,false,"does not establish",2933851
+in-memory-search,gel-evidence,15,false,"garbage collection",2793397
+in-memory-search,gel-evidence,15,false,"the stack",2899587
+in-memory-search,gel-evidence,15,false,"move semantics",2806412
+in-memory-search,gel-evidence,15,false,"invented answer",2766437
+in-memory-search,gel-evidence,15,false,"quantum banana",2800451
+in-memory-search,gel-evidence,15,false,"purple elephant",2821340
+in-memory-search,gel-evidence,15,false,"cargo run",2823043
+in-memory-search,gel-evidence,15,false,"zażółć gęślą",2855203
+in-memory-search,gel-evidence,15,false,"ZAŻÓŁĆ GĘŚLĄ",2810539
+in-memory-search,gel-evidence,15,false,"jaźń",2749544
+in-memory-search,gel-evidence,15,false,"łódź",2749855
+in-memory-search,gel-evidence,15,false,"λόγος",2740238
+in-memory-search,gel-evidence,15,false,"ΛΌΓΟΣ",2746519
+integrity-process,gel-evidence,15,false,"*",2342398
+process-workload,gel-evidence,16,false,"*",66299956
+in-memory-search,gel-evidence,16,false,"the",3691136
+in-memory-search,gel-evidence,16,false,"release",4008394
+in-memory-search,gel-evidence,16,false,"exact source",4342652
+in-memory-search,gel-evidence,16,false,"no model",4168876
+in-memory-search,gel-evidence,16,false,"plaintext",3555160
+in-memory-search,gel-evidence,16,false,"not encrypted",2897573
+in-memory-search,gel-evidence,16,false,"does not establish",2992251
+in-memory-search,gel-evidence,16,false,"garbage collection",2876554
+in-memory-search,gel-evidence,16,false,"the stack",2894859
+in-memory-search,gel-evidence,16,false,"move semantics",2796122
+in-memory-search,gel-evidence,16,false,"invented answer",2752690
+in-memory-search,gel-evidence,16,false,"quantum banana",2769612
+in-memory-search,gel-evidence,16,false,"purple elephant",2794779
+in-memory-search,gel-evidence,16,false,"cargo run",2789681
+in-memory-search,gel-evidence,16,false,"zażółć gęślą",2780192
+in-memory-search,gel-evidence,16,false,"ZAŻÓŁĆ GĘŚLĄ",2774531
+in-memory-search,gel-evidence,16,false,"jaźń",2734827
+in-memory-search,gel-evidence,16,false,"łódź",2733715
+in-memory-search,gel-evidence,16,false,"λόγος",2726481
+in-memory-search,gel-evidence,16,false,"ΛΌΓΟΣ",2748803
+integrity-process,gel-evidence,16,false,"*",3010355
+process-per-query,grep,16,false,"the",3921891
+process-per-query,grep,16,false,"release",5025869
+process-per-query,grep,16,false,"exact source",5221347
+process-per-query,grep,16,false,"no model",3207466
+process-per-query,grep,16,false,"plaintext",4557908
+process-per-query,grep,16,false,"not encrypted",2993033
+process-per-query,grep,16,false,"does not establish",4628931
+process-per-query,grep,16,false,"garbage collection",4146674
+process-per-query,grep,16,false,"the stack",4627730
+process-per-query,grep,16,false,"move semantics",3912112
+process-per-query,grep,16,false,"invented answer",4392847
+process-per-query,grep,16,false,"quantum banana",2364430
+process-per-query,grep,16,false,"purple elephant",3049359
+process-per-query,grep,16,false,"cargo run",3076079
+process-per-query,grep,16,false,"zażółć gęślą",2504484
+process-per-query,grep,16,false,"ZAŻÓŁĆ GĘŚLĄ",3285563
+process-per-query,grep,16,false,"jaźń",3016367
+process-per-query,grep,16,false,"łódź",2785362
+process-per-query,grep,16,false,"λόγος",2988975
+process-per-query,grep,16,false,"ΛΌΓΟΣ",3186437
+process-workload,grep,16,false,"*",72892864
+integrity-process,sha256sum,16,false,"*",2378787
+process-per-query,grep,17,false,"the",4022560
+process-per-query,grep,17,false,"release",5188384
+process-per-query,grep,17,false,"exact source",5088316
+process-per-query,grep,17,false,"no model",2617707
+process-per-query,grep,17,false,"plaintext",3958950
+process-per-query,grep,17,false,"not encrypted",2216041
+process-per-query,grep,17,false,"does not establish",4035946
+process-per-query,grep,17,false,"garbage collection",3092340
+process-per-query,grep,17,false,"the stack",4918277
+process-per-query,grep,17,false,"move semantics",3725442
+process-per-query,grep,17,false,"invented answer",4546647
+process-per-query,grep,17,false,"quantum banana",2338411
+process-per-query,grep,17,false,"purple elephant",2128987
+process-per-query,grep,17,false,"cargo run",2311931
+process-per-query,grep,17,false,"zażółć gęślą",2267437
+process-per-query,grep,17,false,"ZAŻÓŁĆ GĘŚLĄ",2174563
+process-per-query,grep,17,false,"jaźń",1802753
+process-per-query,grep,17,false,"łódź",2294178
+process-per-query,grep,17,false,"λόγος",2002559
+process-per-query,grep,17,false,"ΛΌΓΟΣ",1967894
+process-workload,grep,17,false,"*",62699323
+integrity-process,sha256sum,17,false,"*",2057973
+process-workload,gel-evidence,17,false,"*",70768776
+in-memory-search,gel-evidence,17,false,"the",3735019
+in-memory-search,gel-evidence,17,false,"release",4076061
+in-memory-search,gel-evidence,17,false,"exact source",4133760
+in-memory-search,gel-evidence,17,false,"no model",4102030
+in-memory-search,gel-evidence,17,false,"plaintext",4007002
+in-memory-search,gel-evidence,17,false,"not encrypted",4220062
+in-memory-search,gel-evidence,17,false,"does not establish",4274164
+in-memory-search,gel-evidence,17,false,"garbage collection",3538389
+in-memory-search,gel-evidence,17,false,"the stack",2952967
+in-memory-search,gel-evidence,17,false,"move semantics",2870312
+in-memory-search,gel-evidence,17,false,"invented answer",2873237
+in-memory-search,gel-evidence,17,false,"quantum banana",2850475
+in-memory-search,gel-evidence,17,false,"purple elephant",2854332
+in-memory-search,gel-evidence,17,false,"cargo run",2832040
+in-memory-search,gel-evidence,17,false,"zażółć gęślą",2838522
+in-memory-search,gel-evidence,17,false,"ZAŻÓŁĆ GĘŚLĄ",2973747
+in-memory-search,gel-evidence,17,false,"jaźń",2774342
+in-memory-search,gel-evidence,17,false,"łódź",2828994
+in-memory-search,gel-evidence,17,false,"λόγος",2749555
+in-memory-search,gel-evidence,17,false,"ΛΌΓΟΣ",2733775
+integrity-process,gel-evidence,17,false,"*",3237584
+process-workload,gel-evidence,18,false,"*",71279187
+in-memory-search,gel-evidence,18,false,"the",3701396
+in-memory-search,gel-evidence,18,false,"release",4008204
+in-memory-search,gel-evidence,18,false,"exact source",4174256
+in-memory-search,gel-evidence,18,false,"no model",4202739
+in-memory-search,gel-evidence,18,false,"plaintext",4146083
+in-memory-search,gel-evidence,18,false,"not encrypted",4294682
+in-memory-search,gel-evidence,18,false,"does not establish",4218139
+in-memory-search,gel-evidence,18,false,"garbage collection",2890850
+in-memory-search,gel-evidence,18,false,"the stack",2926177
+in-memory-search,gel-evidence,18,false,"move semantics",2867917
+in-memory-search,gel-evidence,18,false,"invented answer",2948278
+in-memory-search,gel-evidence,18,false,"quantum banana",3182208
+in-memory-search,gel-evidence,18,false,"purple elephant",2867336
+in-memory-search,gel-evidence,18,false,"cargo run",2814957
+in-memory-search,gel-evidence,18,false,"zażółć gęślą",2819066
+in-memory-search,gel-evidence,18,false,"ZAŻÓŁĆ GĘŚLĄ",2824887
+in-memory-search,gel-evidence,18,false,"jaźń",2784691
+in-memory-search,gel-evidence,18,false,"łódź",3243434
+in-memory-search,gel-evidence,18,false,"λόγος",2764233
+in-memory-search,gel-evidence,18,false,"ΛΌΓΟΣ",2785341
+integrity-process,gel-evidence,18,false,"*",3200784
+process-per-query,grep,18,false,"the",3656992
+process-per-query,grep,18,false,"release",5382300
+process-per-query,grep,18,false,"exact source",5382940
+process-per-query,grep,18,false,"no model",3109281
+process-per-query,grep,18,false,"plaintext",3727255
+process-per-query,grep,18,false,"not encrypted",2423381
+process-per-query,grep,18,false,"does not establish",4236653
+process-per-query,grep,18,false,"garbage collection",3558918
+process-per-query,grep,18,false,"the stack",4789604
+process-per-query,grep,18,false,"move semantics",3800562
+process-per-query,grep,18,false,"invented answer",4478919
+process-per-query,grep,18,false,"quantum banana",2421086
+process-per-query,grep,18,false,"purple elephant",2416548
+process-per-query,grep,18,false,"cargo run",2320116
+process-per-query,grep,18,false,"zażółć gęślą",2564166
+process-per-query,grep,18,false,"ZAŻÓŁĆ GĘŚLĄ",2175835
+process-per-query,grep,18,false,"jaźń",2049447
+process-per-query,grep,18,false,"łódź",1954308
+process-per-query,grep,18,false,"λόγος",2218866
+process-per-query,grep,18,false,"ΛΌΓΟΣ",2008921
+process-workload,grep,18,false,"*",64676098
+integrity-process,sha256sum,18,false,"*",1906859
+process-per-query,grep,19,false,"the",3903526
+process-per-query,grep,19,false,"release",6456000
+process-per-query,grep,19,false,"exact source",5341562
+process-per-query,grep,19,false,"no model",2895890
+process-per-query,grep,19,false,"plaintext",4108772
+process-per-query,grep,19,false,"not encrypted",2622816
+process-per-query,grep,19,false,"does not establish",4180889
+process-per-query,grep,19,false,"garbage collection",3562835
+process-per-query,grep,19,false,"the stack",4467127
+process-per-query,grep,19,false,"move semantics",3746541
+process-per-query,grep,19,false,"invented answer",4306355
+process-per-query,grep,19,false,"quantum banana",2141040
+process-per-query,grep,19,false,"purple elephant",2318754
+process-per-query,grep,19,false,"cargo run",2193337
+process-per-query,grep,19,false,"zażółć gęślą",2094952
+process-per-query,grep,19,false,"ZAŻÓŁĆ GĘŚLĄ",2160656
+process-per-query,grep,19,false,"jaźń",1976710
+process-per-query,grep,19,false,"łódź",2036102
+process-per-query,grep,19,false,"λόγος",2018289
+process-per-query,grep,19,false,"ΛΌΓΟΣ",2107727
+process-workload,grep,19,false,"*",64639880
+integrity-process,sha256sum,19,false,"*",1991258
+process-workload,gel-evidence,19,false,"*",85815975
+in-memory-search,gel-evidence,19,false,"the",3736031
+in-memory-search,gel-evidence,19,false,"release",4057597
+in-memory-search,gel-evidence,19,false,"exact source",4114353
+in-memory-search,gel-evidence,19,false,"no model",4081852
+in-memory-search,gel-evidence,19,false,"plaintext",3975021
+in-memory-search,gel-evidence,19,false,"not encrypted",4220332
+in-memory-search,gel-evidence,19,false,"does not establish",4218920
+in-memory-search,gel-evidence,19,false,"garbage collection",4111478
+in-memory-search,gel-evidence,19,false,"the stack",4185457
+in-memory-search,gel-evidence,19,false,"move semantics",4089376
+in-memory-search,gel-evidence,19,false,"invented answer",4036116
+in-memory-search,gel-evidence,19,false,"quantum banana",4030806
+in-memory-search,gel-evidence,19,false,"purple elephant",4067425
+in-memory-search,gel-evidence,19,false,"cargo run",4089677
+in-memory-search,gel-evidence,19,false,"zażółć gęślą",4051164
+in-memory-search,gel-evidence,19,false,"ZAŻÓŁĆ GĘŚLĄ",4044893
+in-memory-search,gel-evidence,19,false,"jaźń",3970322
+in-memory-search,gel-evidence,19,false,"łódź",3995520
+in-memory-search,gel-evidence,19,false,"λόγος",3966955
+in-memory-search,gel-evidence,19,false,"ΛΌΓΟΣ",3965312
+integrity-process,gel-evidence,19,false,"*",2970180
+process-workload,gel-evidence,20,false,"*",61207141
+in-memory-search,gel-evidence,20,false,"the",2652632
+in-memory-search,gel-evidence,20,false,"release",2849343
+in-memory-search,gel-evidence,20,false,"exact source",2875803
+in-memory-search,gel-evidence,20,false,"no model",2798216
+in-memory-search,gel-evidence,20,false,"plaintext",2730018
+in-memory-search,gel-evidence,20,false,"not encrypted",2904667
+in-memory-search,gel-evidence,20,false,"does not establish",2944832
+in-memory-search,gel-evidence,20,false,"garbage collection",2846407
+in-memory-search,gel-evidence,20,false,"the stack",3583454
+in-memory-search,gel-evidence,20,false,"move semantics",3052805
+in-memory-search,gel-evidence,20,false,"invented answer",2789200
+in-memory-search,gel-evidence,20,false,"quantum banana",2802494
+in-memory-search,gel-evidence,20,false,"purple elephant",2817512
+in-memory-search,gel-evidence,20,false,"cargo run",2810519
+in-memory-search,gel-evidence,20,false,"zażółć gęślą",2803867
+in-memory-search,gel-evidence,20,false,"ZAŻÓŁĆ GĘŚLĄ",2790712
+in-memory-search,gel-evidence,20,false,"jaźń",2745316
+in-memory-search,gel-evidence,20,false,"łódź",2741169
+in-memory-search,gel-evidence,20,false,"λόγος",2771957
+in-memory-search,gel-evidence,20,false,"ΛΌΓΟΣ",2752280
+integrity-process,gel-evidence,20,false,"*",3432540
+process-per-query,grep,20,false,"the",4511861
+process-per-query,grep,20,false,"release",5446250
+process-per-query,grep,20,false,"exact source",5158127
+process-per-query,grep,20,false,"no model",2866034
+process-per-query,grep,20,false,"plaintext",3984429
+process-per-query,grep,20,false,"not encrypted",2424523
+process-per-query,grep,20,false,"does not establish",4132077
+process-per-query,grep,20,false,"garbage collection",3419525
+process-per-query,grep,20,false,"the stack",4477867
+process-per-query,grep,20,false,"move semantics",3762401
+process-per-query,grep,20,false,"invented answer",3619201
+process-per-query,grep,20,false,"quantum banana",2573533
+process-per-query,grep,20,false,"purple elephant",2323924
+process-per-query,grep,20,false,"cargo run",2593842
+process-per-query,grep,20,false,"zażółć gęślą",2310007
+process-per-query,grep,20,false,"ZAŻÓŁĆ GĘŚLĄ",2315237
+process-per-query,grep,20,false,"jaźń",2132153
+process-per-query,grep,20,false,"łódź",1946524
+process-per-query,grep,20,false,"λόγος",2074223
+process-per-query,grep,20,false,"ΛΌΓΟΣ",1832108
+process-workload,grep,20,false,"*",63903846
+integrity-process,sha256sum,20,false,"*",2051571
+process-per-query,grep,21,false,"the",3503163
+process-per-query,grep,21,false,"release",4832384
+process-per-query,grep,21,false,"exact source",4970214
+process-per-query,grep,21,false,"no model",2455672
+process-per-query,grep,21,false,"plaintext",3727144
+process-per-query,grep,21,false,"not encrypted",2526975
+process-per-query,grep,21,false,"does not establish",4382338
+process-per-query,grep,21,false,"garbage collection",3733667
+process-per-query,grep,21,false,"the stack",4381746
+process-per-query,grep,21,false,"move semantics",3643487
+process-per-query,grep,21,false,"invented answer",4263173
+process-per-query,grep,21,false,"quantum banana",2105854
+process-per-query,grep,21,false,"purple elephant",2076859
+process-per-query,grep,21,false,"cargo run",2377043
+process-per-query,grep,21,false,"zażółć gęślą",2137823
+process-per-query,grep,21,false,"ZAŻÓŁĆ GĘŚLĄ",2111183
+process-per-query,grep,21,false,"jaźń",2516436
+process-per-query,grep,21,false,"łódź",2263549
+process-per-query,grep,21,false,"λόγος",2272377
+process-per-query,grep,21,false,"ΛΌΓΟΣ",2519302
+process-workload,grep,21,false,"*",62800389
+integrity-process,sha256sum,21,false,"*",2212734
+process-workload,gel-evidence,21,false,"*",70732948
+in-memory-search,gel-evidence,21,false,"the",3751100
+in-memory-search,gel-evidence,21,false,"release",4031247
+in-memory-search,gel-evidence,21,false,"exact source",4246762
+in-memory-search,gel-evidence,21,false,"no model",2846888
+in-memory-search,gel-evidence,21,false,"plaintext",2740697
+in-memory-search,gel-evidence,21,false,"not encrypted",3057765
+in-memory-search,gel-evidence,21,false,"does not establish",2997861
+in-memory-search,gel-evidence,21,false,"garbage collection",2840185
+in-memory-search,gel-evidence,21,false,"the stack",2913473
+in-memory-search,gel-evidence,21,false,"move semantics",3151711
+in-memory-search,gel-evidence,21,false,"invented answer",2887575
+in-memory-search,gel-evidence,21,false,"quantum banana",2815428
+in-memory-search,gel-evidence,21,false,"purple elephant",3132045
+in-memory-search,gel-evidence,21,false,"cargo run",2823144
+in-memory-search,gel-evidence,21,false,"zażółć gęślą",2839303
+in-memory-search,gel-evidence,21,false,"ZAŻÓŁĆ GĘŚLĄ",3070909
+in-memory-search,gel-evidence,21,false,"jaźń",4066142
+in-memory-search,gel-evidence,21,false,"łódź",4086921
+in-memory-search,gel-evidence,21,false,"λόγος",4057386
+in-memory-search,gel-evidence,21,false,"ΛΌΓΟΣ",4083204
+integrity-process,gel-evidence,21,false,"*",2478865
+process-workload,gel-evidence,22,false,"*",86989152
+in-memory-search,gel-evidence,22,false,"the",3676399
+in-memory-search,gel-evidence,22,false,"release",4116067
+in-memory-search,gel-evidence,22,false,"exact source",4591581
+in-memory-search,gel-evidence,22,false,"no model",4614124
+in-memory-search,gel-evidence,22,false,"plaintext",4074759
+in-memory-search,gel-evidence,22,false,"not encrypted",4650542
+in-memory-search,gel-evidence,22,false,"does not establish",4246852
+in-memory-search,gel-evidence,22,false,"garbage collection",4112019
+in-memory-search,gel-evidence,22,false,"the stack",4210725
+in-memory-search,gel-evidence,22,false,"move semantics",4080329
+in-memory-search,gel-evidence,22,false,"invented answer",4014255
+in-memory-search,gel-evidence,22,false,"quantum banana",4055833
+in-memory-search,gel-evidence,22,false,"purple elephant",4025856
+in-memory-search,gel-evidence,22,false,"cargo run",4001180
+in-memory-search,gel-evidence,22,false,"zażółć gęślą",3994628
+in-memory-search,gel-evidence,22,false,"ZAŻÓŁĆ GĘŚLĄ",3985170
+in-memory-search,gel-evidence,22,false,"jaźń",3900360
+in-memory-search,gel-evidence,22,false,"łódź",3956777
+in-memory-search,gel-evidence,22,false,"λόγος",3923975
+in-memory-search,gel-evidence,22,false,"ΛΌΓΟΣ",4019485
+integrity-process,gel-evidence,22,false,"*",2987212
+process-per-query,grep,22,false,"the",3785965
+process-per-query,grep,22,false,"release",5011582
+process-per-query,grep,22,false,"exact source",4332694
+process-per-query,grep,22,false,"no model",2670556
+process-per-query,grep,22,false,"plaintext",3744206
+process-per-query,grep,22,false,"not encrypted",2340314
+process-per-query,grep,22,false,"does not establish",4102241
+process-per-query,grep,22,false,"garbage collection",3606648
+process-per-query,grep,22,false,"the stack",4370786
+process-per-query,grep,22,false,"move semantics",3772159
+process-per-query,grep,22,false,"invented answer",4393349
+process-per-query,grep,22,false,"quantum banana",2423572
+process-per-query,grep,22,false,"purple elephant",2111784
+process-per-query,grep,22,false,"cargo run",2397362
+process-per-query,grep,22,false,"zażółć gęślą",2033587
+process-per-query,grep,22,false,"ZAŻÓŁĆ GĘŚLĄ",2016686
+process-per-query,grep,22,false,"jaźń",2006526
+process-per-query,grep,22,false,"łódź",1930583
+process-per-query,grep,22,false,"λόγος",2048075
+process-per-query,grep,22,false,"ΛΌΓΟΣ",1991638
+process-workload,grep,22,false,"*",61090313
+integrity-process,sha256sum,22,false,"*",1763679
+process-per-query,grep,23,false,"the",3465141
+process-per-query,grep,23,false,"release",5101982
+process-per-query,grep,23,false,"exact source",4893660
+process-per-query,grep,23,false,"no model",2710231
+process-per-query,grep,23,false,"plaintext",3654899
+process-per-query,grep,23,false,"not encrypted",2690854
+process-per-query,grep,23,false,"does not establish",4239108
+process-per-query,grep,23,false,"garbage collection",3496000
+process-per-query,grep,23,false,"the stack",4303820
+process-per-query,grep,23,false,"move semantics",3681148
+process-per-query,grep,23,false,"invented answer",4206496
+process-per-query,grep,23,false,"quantum banana",2106905
+process-per-query,grep,23,false,"purple elephant",2145688
+process-per-query,grep,23,false,"cargo run",2272637
+process-per-query,grep,23,false,"zażółć gęślą",2165926
+process-per-query,grep,23,false,"ZAŻÓŁĆ GĘŚLĄ",2075396
+process-per-query,grep,23,false,"jaźń",1950691
+process-per-query,grep,23,false,"łódź",1967062
+process-per-query,grep,23,false,"λόγος",2094512
+process-per-query,grep,23,false,"ΛΌΓΟΣ",1978273
+process-workload,grep,23,false,"*",61200429
+integrity-process,sha256sum,23,false,"*",1787595
+process-workload,gel-evidence,23,false,"*",78058245
+in-memory-search,gel-evidence,23,false,"the",3730231
+in-memory-search,gel-evidence,23,false,"release",4054511
+in-memory-search,gel-evidence,23,false,"exact source",4205816
+in-memory-search,gel-evidence,23,false,"no model",3798829
+in-memory-search,gel-evidence,23,false,"plaintext",4236162
+in-memory-search,gel-evidence,23,false,"not encrypted",4284283
+in-memory-search,gel-evidence,23,false,"does not establish",4219060
+in-memory-search,gel-evidence,23,false,"garbage collection",4086450
+in-memory-search,gel-evidence,23,false,"the stack",4241091
+in-memory-search,gel-evidence,23,false,"move semantics",4197530
+in-memory-search,gel-evidence,23,false,"invented answer",4090769
+in-memory-search,gel-evidence,23,false,"quantum banana",4201287
+in-memory-search,gel-evidence,23,false,"purple elephant",3297696
+in-memory-search,gel-evidence,23,false,"cargo run",2905237
+in-memory-search,gel-evidence,23,false,"zażółć gęślą",2882976
+in-memory-search,gel-evidence,23,false,"ZAŻÓŁĆ GĘŚLĄ",2795892
+in-memory-search,gel-evidence,23,false,"jaźń",3319608
+in-memory-search,gel-evidence,23,false,"łódź",2886673
+in-memory-search,gel-evidence,23,false,"λόγος",2768079
+in-memory-search,gel-evidence,23,false,"ΛΌΓΟΣ",2960582
+integrity-process,gel-evidence,23,false,"*",3286625
+process-workload,gel-evidence,24,false,"*",74801725
+in-memory-search,gel-evidence,24,false,"the",3656010
+in-memory-search,gel-evidence,24,false,"release",4137466
+in-memory-search,gel-evidence,24,false,"exact source",4121026
+in-memory-search,gel-evidence,24,false,"no model",4126326
+in-memory-search,gel-evidence,24,false,"plaintext",3961305
+in-memory-search,gel-evidence,24,false,"not encrypted",4207539
+in-memory-search,gel-evidence,24,false,"does not establish",4165188
+in-memory-search,gel-evidence,24,false,"garbage collection",4091720
+in-memory-search,gel-evidence,24,false,"the stack",4271509
+in-memory-search,gel-evidence,24,false,"move semantics",4121066
+in-memory-search,gel-evidence,24,false,"invented answer",3383538
+in-memory-search,gel-evidence,24,false,"quantum banana",2854532
+in-memory-search,gel-evidence,24,false,"purple elephant",2820759
+in-memory-search,gel-evidence,24,false,"cargo run",3196596
+in-memory-search,gel-evidence,24,false,"zażółć gęślą",2872466
+in-memory-search,gel-evidence,24,false,"ZAŻÓŁĆ GĘŚLĄ",2805560
+in-memory-search,gel-evidence,24,false,"jaźń",2891502
+in-memory-search,gel-evidence,24,false,"łódź",2787907
+in-memory-search,gel-evidence,24,false,"λόγος",2767619
+in-memory-search,gel-evidence,24,false,"ΛΌΓΟΣ",2798627
+integrity-process,gel-evidence,24,false,"*",3089615
+process-per-query,grep,24,false,"the",3611507
+process-per-query,grep,24,false,"release",5033243
+process-per-query,grep,24,false,"exact source",4973510
+process-per-query,grep,24,false,"no model",2557323
+process-per-query,grep,24,false,"plaintext",3635913
+process-per-query,grep,24,false,"not encrypted",2512759
+process-per-query,grep,24,false,"does not establish",4291857
+process-per-query,grep,24,false,"garbage collection",3778691
+process-per-query,grep,24,false,"the stack",4327795
+process-per-query,grep,24,false,"move semantics",3824889
+process-per-query,grep,24,false,"invented answer",4085088
+process-per-query,grep,24,false,"quantum banana",2254433
+process-per-query,grep,24,false,"purple elephant",2488233
+process-per-query,grep,24,false,"cargo run",2331017
+process-per-query,grep,24,false,"zażółć gęślą",2147522
+process-per-query,grep,24,false,"ZAŻÓŁĆ GĘŚLĄ",2022106
+process-per-query,grep,24,false,"jaźń",2225568
+process-per-query,grep,24,false,"łódź",2141230
+process-per-query,grep,24,false,"λόγος",1960840
+process-per-query,grep,24,false,"ΛΌΓΟΣ",1950691
+process-workload,grep,24,false,"*",62154215
+integrity-process,sha256sum,24,false,"*",1842939
+process-per-query,grep,25,false,"the",3006368
+process-per-query,grep,25,false,"release",4889222
+process-per-query,grep,25,false,"exact source",4680558
+process-per-query,grep,25,false,"no model",2518921
+process-per-query,grep,25,false,"plaintext",3775325
+process-per-query,grep,25,false,"not encrypted",2364479
+process-per-query,grep,25,false,"does not establish",4122208
+process-per-query,grep,25,false,"garbage collection",4044421
+process-per-query,grep,25,false,"the stack",4643519
+process-per-query,grep,25,false,"move semantics",4058868
+process-per-query,grep,25,false,"invented answer",4626317
+process-per-query,grep,25,false,"quantum banana",2388355
+process-per-query,grep,25,false,"purple elephant",2196794
+process-per-query,grep,25,false,"cargo run",2621664
+process-per-query,grep,25,false,"zażółć gęślą",2816571
+process-per-query,grep,25,false,"ZAŻÓŁĆ GĘŚLĄ",2345684
+process-per-query,grep,25,false,"jaźń",2142091
+process-per-query,grep,25,false,"łódź",2143734
+process-per-query,grep,25,false,"λόγος",2235327
+process-per-query,grep,25,false,"ΛΌΓΟΣ",2275963
+process-workload,grep,25,false,"*",63896389
+integrity-process,sha256sum,25,false,"*",1949559
+process-workload,gel-evidence,25,false,"*",72578932
+in-memory-search,gel-evidence,25,false,"the",4184525
+in-memory-search,gel-evidence,25,false,"release",4029514
+in-memory-search,gel-evidence,25,false,"exact source",4124181
+in-memory-search,gel-evidence,25,false,"no model",4067696
+in-memory-search,gel-evidence,25,false,"plaintext",4207378
+in-memory-search,gel-evidence,25,false,"not encrypted",4190948
+in-memory-search,gel-evidence,25,false,"does not establish",4209512
+in-memory-search,gel-evidence,25,false,"garbage collection",4062916
+in-memory-search,gel-evidence,25,false,"the stack",3110393
+in-memory-search,gel-evidence,25,false,"move semantics",2846377
+in-memory-search,gel-evidence,25,false,"invented answer",2824225
+in-memory-search,gel-evidence,25,false,"quantum banana",2856025
+in-memory-search,gel-evidence,25,false,"purple elephant",2868018
+in-memory-search,gel-evidence,25,false,"cargo run",2916900
+in-memory-search,gel-evidence,25,false,"zażółć gęślą",2914435
+in-memory-search,gel-evidence,25,false,"ZAŻÓŁĆ GĘŚLĄ",2873217
+in-memory-search,gel-evidence,25,false,"jaźń",2783849
+in-memory-search,gel-evidence,25,false,"łódź",2910427
+in-memory-search,gel-evidence,25,false,"λόγος",2826279
+in-memory-search,gel-evidence,25,false,"ΛΌΓΟΣ",2788859
+integrity-process,gel-evidence,25,false,"*",3000327
+process-workload,gel-evidence,26,false,"*",72695441
+in-memory-search,gel-evidence,26,false,"the",3736663
+in-memory-search,gel-evidence,26,false,"release",4041476
+in-memory-search,gel-evidence,26,false,"exact source",4328947
+in-memory-search,gel-evidence,26,false,"no model",4062726
+in-memory-search,gel-evidence,26,false,"plaintext",4009596
+in-memory-search,gel-evidence,26,false,"not encrypted",4196438
+in-memory-search,gel-evidence,26,false,"does not establish",4227146
+in-memory-search,gel-evidence,26,false,"garbage collection",4082784
+in-memory-search,gel-evidence,26,false,"the stack",3868290
+in-memory-search,gel-evidence,26,false,"move semantics",2932228
+in-memory-search,gel-evidence,26,false,"invented answer",2997952
+in-memory-search,gel-evidence,26,false,"quantum banana",2873288
+in-memory-search,gel-evidence,26,false,"purple elephant",2864531
+in-memory-search,gel-evidence,26,false,"cargo run",2935825
+in-memory-search,gel-evidence,26,false,"zażółć gęślą",2814757
+in-memory-search,gel-evidence,26,false,"ZAŻÓŁĆ GĘŚLĄ",2860193
+in-memory-search,gel-evidence,26,false,"jaźń",2807784
+in-memory-search,gel-evidence,26,false,"łódź",2777527
+in-memory-search,gel-evidence,26,false,"λόγος",2774682
+in-memory-search,gel-evidence,26,false,"ΛΌΓΟΣ",2810199
+integrity-process,gel-evidence,26,false,"*",3149377
+process-per-query,grep,26,false,"the",4165079
+process-per-query,grep,26,false,"release",5728140
+process-per-query,grep,26,false,"exact source",5198794
+process-per-query,grep,26,false,"no model",2779892
+process-per-query,grep,26,false,"plaintext",3460893
+process-per-query,grep,26,false,"not encrypted",2677950
+process-per-query,grep,26,false,"does not establish",4290364
+process-per-query,grep,26,false,"garbage collection",3510356
+process-per-query,grep,26,false,"the stack",4328146
+process-per-query,grep,26,false,"move semantics",3798248
+process-per-query,grep,26,false,"invented answer",4172692
+process-per-query,grep,26,false,"quantum banana",2210410
+process-per-query,grep,26,false,"purple elephant",2099762
+process-per-query,grep,26,false,"cargo run",2235136
+process-per-query,grep,26,false,"zażółć gęślą",2119369
+process-per-query,grep,26,false,"ZAŻÓŁĆ GĘŚLĄ",1994163
+process-per-query,grep,26,false,"jaźń",1893744
+process-per-query,grep,26,false,"łódź",1858338
+process-per-query,grep,26,false,"λόγος",1924131
+process-per-query,grep,26,false,"ΛΌΓΟΣ",1866473
+process-workload,grep,26,false,"*",62312080
+integrity-process,sha256sum,26,false,"*",1992810
+process-per-query,grep,27,false,"the",3336439
+process-per-query,grep,27,false,"release",4397666
+process-per-query,grep,27,false,"exact source",5192482
+process-per-query,grep,27,false,"no model",2557393
+process-per-query,grep,27,false,"plaintext",3820911
+process-per-query,grep,27,false,"not encrypted",2225288
+process-per-query,grep,27,false,"does not establish",4272110
+process-per-query,grep,27,false,"garbage collection",3877388
+process-per-query,grep,27,false,"the stack",4566424
+process-per-query,grep,27,false,"move semantics",3694853
+process-per-query,grep,27,false,"invented answer",4250780
+process-per-query,grep,27,false,"quantum banana",2109370
+process-per-query,grep,27,false,"purple elephant",2111594
+process-per-query,grep,27,false,"cargo run",2444230
+process-per-query,grep,27,false,"zażółć gęślą",1990666
+process-per-query,grep,27,false,"ZAŻÓŁĆ GĘŚLĄ",1956442
+process-per-query,grep,27,false,"jaźń",2069164
+process-per-query,grep,27,false,"łódź",2064105
+process-per-query,grep,27,false,"λόγος",2013309
+process-per-query,grep,27,false,"ΛΌΓΟΣ",1849561
+process-workload,grep,27,false,"*",60800175
+integrity-process,sha256sum,27,false,"*",1907721
+process-workload,gel-evidence,27,false,"*",86546218
+in-memory-search,gel-evidence,27,false,"the",3686598
+in-memory-search,gel-evidence,27,false,"release",3981182
+in-memory-search,gel-evidence,27,false,"exact source",4131726
+in-memory-search,gel-evidence,27,false,"no model",4052426
+in-memory-search,gel-evidence,27,false,"plaintext",4053940
+in-memory-search,gel-evidence,27,false,"not encrypted",4263264
+in-memory-search,gel-evidence,27,false,"does not establish",4221986
+in-memory-search,gel-evidence,27,false,"garbage collection",4065511
+in-memory-search,gel-evidence,27,false,"the stack",4179867
+in-memory-search,gel-evidence,27,false,"move semantics",4129131
+in-memory-search,gel-evidence,27,false,"invented answer",4046846
+in-memory-search,gel-evidence,27,false,"quantum banana",4115515
+in-memory-search,gel-evidence,27,false,"purple elephant",4089837
+in-memory-search,gel-evidence,27,false,"cargo run",4291115
+in-memory-search,gel-evidence,27,false,"zażółć gęślą",4052076
+in-memory-search,gel-evidence,27,false,"ZAŻÓŁĆ GĘŚLĄ",4065732
+in-memory-search,gel-evidence,27,false,"jaźń",3997794
+in-memory-search,gel-evidence,27,false,"łódź",4059220
+in-memory-search,gel-evidence,27,false,"λόγος",3979109
+in-memory-search,gel-evidence,27,false,"ΛΌΓΟΣ",4052336
+integrity-process,gel-evidence,27,false,"*",3206936
+process-workload,gel-evidence,28,false,"*",78833133
+in-memory-search,gel-evidence,28,false,"the",3671660
+in-memory-search,gel-evidence,28,false,"release",4039001
+in-memory-search,gel-evidence,28,false,"exact source",4109154
+in-memory-search,gel-evidence,28,false,"no model",4064420
+in-memory-search,gel-evidence,28,false,"plaintext",4107019
+in-memory-search,gel-evidence,28,false,"not encrypted",4241813
+in-memory-search,gel-evidence,28,false,"does not establish",4312356
+in-memory-search,gel-evidence,28,false,"garbage collection",4098343
+in-memory-search,gel-evidence,28,false,"the stack",4184345
+in-memory-search,gel-evidence,28,false,"move semantics",4169918
+in-memory-search,gel-evidence,28,false,"invented answer",2955131
+in-memory-search,gel-evidence,28,false,"quantum banana",2836278
+in-memory-search,gel-evidence,28,false,"purple elephant",2860323
+in-memory-search,gel-evidence,28,false,"cargo run",2911810
+in-memory-search,gel-evidence,28,false,"zażółć gęślą",3062053
+in-memory-search,gel-evidence,28,false,"ZAŻÓŁĆ GĘŚLĄ",2925876
+in-memory-search,gel-evidence,28,false,"jaźń",3190073
+in-memory-search,gel-evidence,28,false,"łódź",4337984
+in-memory-search,gel-evidence,28,false,"λόγος",4331792
+in-memory-search,gel-evidence,28,false,"ΛΌΓΟΣ",3539631
+integrity-process,gel-evidence,28,false,"*",3304930
+process-per-query,grep,28,false,"the",4132207
+process-per-query,grep,28,false,"release",5531370
+process-per-query,grep,28,false,"exact source",5325282
+process-per-query,grep,28,false,"no model",3186186
+process-per-query,grep,28,false,"plaintext",4019054
+process-per-query,grep,28,false,"not encrypted",2475508
+process-per-query,grep,28,false,"does not establish",4203962
+process-per-query,grep,28,false,"garbage collection",3547176
+process-per-query,grep,28,false,"the stack",4234229
+process-per-query,grep,28,false,"move semantics",3850096
+process-per-query,grep,28,false,"invented answer",4979151
+process-per-query,grep,28,false,"quantum banana",2419974
+process-per-query,grep,28,false,"purple elephant",2195993
+process-per-query,grep,28,false,"cargo run",2262819
+process-per-query,grep,28,false,"zażółć gęślą",1960340
+process-per-query,grep,28,false,"ZAŻÓŁĆ GĘŚLĄ",2075135
+process-per-query,grep,28,false,"jaźń",2173922
+process-per-query,grep,28,false,"łódź",2022677
+process-per-query,grep,28,false,"λόγος",2036532
+process-per-query,grep,28,false,"ΛΌΓΟΣ",2038727
+process-workload,grep,28,false,"*",64670340
+integrity-process,sha256sum,28,false,"*",2132974
+process-per-query,grep,29,false,"the",3391964
+process-per-query,grep,29,false,"release",5502596
+process-per-query,grep,29,false,"exact source",5356781
+process-per-query,grep,29,false,"no model",3139569
+process-per-query,grep,29,false,"plaintext",4136284
+process-per-query,grep,29,false,"not encrypted",2300018
+process-per-query,grep,29,false,"does not establish",4202339
+process-per-query,grep,29,false,"garbage collection",3870535
+process-per-query,grep,29,false,"the stack",4487675
+process-per-query,grep,29,false,"move semantics",3950646
+process-per-query,grep,29,false,"invented answer",4425449
+process-per-query,grep,29,false,"quantum banana",2550350
+process-per-query,grep,29,false,"purple elephant",2923081
+process-per-query,grep,29,false,"cargo run",2688810
+process-per-query,grep,29,false,"zażółć gęślą",2808396
+process-per-query,grep,29,false,"ZAŻÓŁĆ GĘŚLĄ",2546182
+process-per-query,grep,29,false,"jaźń",2184371
+process-per-query,grep,29,false,"łódź",1917889
+process-per-query,grep,29,false,"λόγος",2070727
+process-per-query,grep,29,false,"ΛΌΓΟΣ",2064225
+process-workload,grep,29,false,"*",66517887
+integrity-process,sha256sum,29,false,"*",2052292
+process-workload,gel-evidence,29,false,"*",72603719
+in-memory-search,gel-evidence,29,false,"the",3788891
+in-memory-search,gel-evidence,29,false,"release",4033782
+in-memory-search,gel-evidence,29,false,"exact source",4206727
+in-memory-search,gel-evidence,29,false,"no model",4046816
+in-memory-search,gel-evidence,29,false,"plaintext",3952128
+in-memory-search,gel-evidence,29,false,"not encrypted",4272591
+in-memory-search,gel-evidence,29,false,"does not establish",4233637
+in-memory-search,gel-evidence,29,false,"garbage collection",4147085
+in-memory-search,gel-evidence,29,false,"the stack",4158877
+in-memory-search,gel-evidence,29,false,"move semantics",3202376
+in-memory-search,gel-evidence,29,false,"invented answer",2818896
+in-memory-search,gel-evidence,29,false,"quantum banana",2845585
+in-memory-search,gel-evidence,29,false,"purple elephant",2849373
+in-memory-search,gel-evidence,29,false,"cargo run",2827170
+in-memory-search,gel-evidence,29,false,"zażółć gęślą",2813325
+in-memory-search,gel-evidence,29,false,"ZAŻÓŁĆ GĘŚLĄ",2837500
+in-memory-search,gel-evidence,29,false,"jaźń",2749715
+in-memory-search,gel-evidence,29,false,"łódź",2794309
+in-memory-search,gel-evidence,29,false,"λόγος",2754053
+in-memory-search,gel-evidence,29,false,"ΛΌΓΟΣ",2752290
+integrity-process,gel-evidence,29,false,"*",3284912
+process-workload,gel-evidence,30,false,"*",88185093
+in-memory-search,gel-evidence,30,false,"the",3725792
+in-memory-search,gel-evidence,30,false,"release",4246101
+in-memory-search,gel-evidence,30,false,"exact source",4193643
+in-memory-search,gel-evidence,30,false,"no model",4652627
+in-memory-search,gel-evidence,30,false,"plaintext",4119022
+in-memory-search,gel-evidence,30,false,"not encrypted",4340780
+in-memory-search,gel-evidence,30,false,"does not establish",4298940
+in-memory-search,gel-evidence,30,false,"garbage collection",4106488
+in-memory-search,gel-evidence,30,false,"the stack",4198682
+in-memory-search,gel-evidence,30,false,"move semantics",4098944
+in-memory-search,gel-evidence,30,false,"invented answer",4049451
+in-memory-search,gel-evidence,30,false,"quantum banana",4098684
+in-memory-search,gel-evidence,30,false,"purple elephant",4099556
+in-memory-search,gel-evidence,30,false,"cargo run",4061634
+in-memory-search,gel-evidence,30,false,"zażółć gęślą",4082053
+in-memory-search,gel-evidence,30,false,"ZAŻÓŁĆ GĘŚLĄ",4052456
+in-memory-search,gel-evidence,30,false,"jaźń",4119994
+in-memory-search,gel-evidence,30,false,"łódź",4252403
+in-memory-search,gel-evidence,30,false,"λόγος",4026808
+in-memory-search,gel-evidence,30,false,"ΛΌΓΟΣ",3999638
+integrity-process,gel-evidence,30,false,"*",2708998
+process-per-query,grep,30,false,"the",3218938
+process-per-query,grep,30,false,"release",4776339
+process-per-query,grep,30,false,"exact source",4882228
+process-per-query,grep,30,false,"no model",2932399
+process-per-query,grep,30,false,"plaintext",3628609
+process-per-query,grep,30,false,"not encrypted",2388204
+process-per-query,grep,30,false,"does not establish",4217017
+process-per-query,grep,30,false,"garbage collection",3654017
+process-per-query,grep,30,false,"the stack",4491282
+process-per-query,grep,30,false,"move semantics",3687851
+process-per-query,grep,30,false,"invented answer",4373822
+process-per-query,grep,30,false,"quantum banana",2078883
+process-per-query,grep,30,false,"purple elephant",2097207
+process-per-query,grep,30,false,"cargo run",2239846
+process-per-query,grep,30,false,"zażółć gęślą",2305559
+process-per-query,grep,30,false,"ZAŻÓŁĆ GĘŚLĄ",2056130
+process-per-query,grep,30,false,"jaźń",2044578
+process-per-query,grep,30,false,"łódź",1948588
+process-per-query,grep,30,false,"λόγος",2159254
+process-per-query,grep,30,false,"ΛΌΓΟΣ",1995275
+process-workload,grep,30,false,"*",61176026
+integrity-process,sha256sum,30,false,"*",1945351
+process-per-query,grep,31,false,"the",3284712
+process-per-query,grep,31,false,"release",4948182
+process-per-query,grep,31,false,"exact source",4785757
+process-per-query,grep,31,false,"no model",2491629
+process-per-query,grep,31,false,"plaintext",3565089
+process-per-query,grep,31,false,"not encrypted",2158984
+process-per-query,grep,31,false,"does not establish",4048118
+process-per-query,grep,31,false,"garbage collection",3402573
+process-per-query,grep,31,false,"the stack",4312576
+process-per-query,grep,31,false,"move semantics",4678134
+process-per-query,grep,31,false,"invented answer",4286988
+process-per-query,grep,31,false,"quantum banana",2150607
+process-per-query,grep,31,false,"purple elephant",2130369
+process-per-query,grep,31,false,"cargo run",2329855
+process-per-query,grep,31,false,"zażółć gęślą",2038436
+process-per-query,grep,31,false,"ZAŻÓŁĆ GĘŚLĄ",2223455
+process-per-query,grep,31,false,"jaźń",2143794
+process-per-query,grep,31,false,"łódź",2000225
+process-per-query,grep,31,false,"λόγος",2060348
+process-per-query,grep,31,false,"ΛΌΓΟΣ",2048956
+process-workload,grep,31,false,"*",61088787
+integrity-process,sha256sum,31,false,"*",1890979
+process-workload,gel-evidence,31,false,"*",80713171
+in-memory-search,gel-evidence,31,false,"the",3695635
+in-memory-search,gel-evidence,31,false,"release",4132136
+in-memory-search,gel-evidence,31,false,"exact source",4128620
+in-memory-search,gel-evidence,31,false,"no model",4108222
+in-memory-search,gel-evidence,31,false,"plaintext",4013944
+in-memory-search,gel-evidence,31,false,"not encrypted",4177262
+in-memory-search,gel-evidence,31,false,"does not establish",4200876
+in-memory-search,gel-evidence,31,false,"garbage collection",4081832
+in-memory-search,gel-evidence,31,false,"the stack",4185938
+in-memory-search,gel-evidence,31,false,"move semantics",4089676
+in-memory-search,gel-evidence,31,false,"invented answer",4068787
+in-memory-search,gel-evidence,31,false,"quantum banana",4074849
+in-memory-search,gel-evidence,31,false,"purple elephant",4049621
+in-memory-search,gel-evidence,31,false,"cargo run",4042157
+in-memory-search,gel-evidence,31,false,"zażółć gęślą",4046195
+in-memory-search,gel-evidence,31,false,"ZAŻÓŁĆ GĘŚLĄ",3556003
+in-memory-search,gel-evidence,31,false,"jaźń",2876313
+in-memory-search,gel-evidence,31,false,"łódź",2838342
+in-memory-search,gel-evidence,31,false,"λόγος",2811351
+in-memory-search,gel-evidence,31,false,"ΛΌΓΟΣ",2757489
+integrity-process,gel-evidence,31,false,"*",3264253
+process-workload,gel-evidence,32,false,"*",63338352
+in-memory-search,gel-evidence,32,false,"the",3743144
+in-memory-search,gel-evidence,32,false,"release",2963497
+in-memory-search,gel-evidence,32,false,"exact source",2941786
+in-memory-search,gel-evidence,32,false,"no model",2907612
+in-memory-search,gel-evidence,32,false,"plaintext",2774943
+in-memory-search,gel-evidence,32,false,"not encrypted",2978335
+in-memory-search,gel-evidence,32,false,"does not establish",3021646
+in-memory-search,gel-evidence,32,false,"garbage collection",3163254
+in-memory-search,gel-evidence,32,false,"the stack",2887995
+in-memory-search,gel-evidence,32,false,"move semantics",2860484
+in-memory-search,gel-evidence,32,false,"invented answer",2819797
+in-memory-search,gel-evidence,32,false,"quantum banana",2910548
+in-memory-search,gel-evidence,32,false,"purple elephant",2880361
+in-memory-search,gel-evidence,32,false,"cargo run",3017870
+in-memory-search,gel-evidence,32,false,"zażółć gęślą",2909005
+in-memory-search,gel-evidence,32,false,"ZAŻÓŁĆ GĘŚLĄ",2819466
+in-memory-search,gel-evidence,32,false,"jaźń",2807233
+in-memory-search,gel-evidence,32,false,"łódź",2789410
+in-memory-search,gel-evidence,32,false,"λόγος",2798296
+in-memory-search,gel-evidence,32,false,"ΛΌΓΟΣ",2875050
+integrity-process,gel-evidence,32,false,"*",3233666
+process-per-query,grep,32,false,"the",3962438
+process-per-query,grep,32,false,"release",5188785
+process-per-query,grep,32,false,"exact source",4842093
+process-per-query,grep,32,false,"no model",2686546
+process-per-query,grep,32,false,"plaintext",3692359
+process-per-query,grep,32,false,"not encrypted",2299899
+process-per-query,grep,32,false,"does not establish",4023132
+process-per-query,grep,32,false,"garbage collection",3580468
+process-per-query,grep,32,false,"the stack",4496643
+process-per-query,grep,32,false,"move semantics",3721454
+process-per-query,grep,32,false,"invented answer",4241673
+process-per-query,grep,32,false,"quantum banana",2165114
+process-per-query,grep,32,false,"purple elephant",2121884
+process-per-query,grep,32,false,"cargo run",2290551
+process-per-query,grep,32,false,"zażółć gęślą",1969276
+process-per-query,grep,32,false,"ZAŻÓŁĆ GĘŚLĄ",2055779
+process-per-query,grep,32,false,"jaźń",2028527
+process-per-query,grep,32,false,"łódź",1997108
+process-per-query,grep,32,false,"λόγος",1894916
+process-per-query,grep,32,false,"ΛΌΓΟΣ",1985797
+process-workload,grep,32,false,"*",61244442
+integrity-process,sha256sum,32,false,"*",1945822

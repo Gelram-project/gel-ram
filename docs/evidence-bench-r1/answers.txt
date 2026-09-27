@@ -1,0 +1,37 @@
+id	query	gel_lines	grep_lines	gel_skipped	verdict	reason
+0	the	1490	1490	0	SAME	same
+1	source	302	287	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+2	release	139	139	0	SAME	same
+3	evidence lab	38	27	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+4	exact source	9	9	0	SAME	same
+5	public main	7	4	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+6	no model	4	4	0	SAME	same
+7	fresh process	10	1	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+8	stale citation	2	1	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+9	full disk	5	1	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+10	plaintext	14	14	0	SAME	same
+11	not encrypted	4	4	0	SAME	same
+12	does not establish	6	6	0	SAME	same
+13	garbage collection	4	4	0	SAME	same
+14	ownership	18	17	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+15	the stack	3	3	0	SAME	same
+16	move semantics	0	0	0	SAME	same
+17	invented answer	1	1	0	SAME	same
+18	quantum banana	0	0	0	SAME	same
+19	purple elephant	0	0	0	SAME	same
+20	rust 1 85 0	24	0	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+21	sha 256	36	0	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+22	gel evidence	36	1	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+23	source sha256sums txt	1	0	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+24	xtask verify	19	7	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+25	cargo run	83	83	0	SAME	same
+26	locked offline	106	2	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+27	q8	151	141	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+28	four views	11	8	0	DIFFERENT	gel-splits-words-at-punctuation-and-underscore
+29	zażółć gęślą	2	2	0	SAME	same
+30	ZAŻÓŁĆ GĘŚLĄ	2	2	0	SAME	same
+31	jaźń	1	1	0	SAME	same
+32	łódź	1	1	0	SAME	same
+33	λόγος	2	2	0	SAME	same
+34	ΛΌΓΟΣ	2	2	0	SAME	same
+35	café	2	1	0	DIFFERENT	unicode-normalization-or-case

@@ -51,6 +51,36 @@ summary reports the nearest-rank median and p95, labelled as small samples; no
 deeper tail is claimed. The GEL process's peak resident set size comes from its
 own batch summary (Linux VmHWM). grep's memory is not measured.
 
+## Recorded run r1
+
+[Evidence](evidence-bench-r1/summary.txt): revision dc38282 with a clean
+working tree, GNU grep 3.11, GNU coreutils sha256sum 9.4, locale C.UTF-8,
+network isolation verified, 69 corpus files, load average 2.8 at the start and
+3.1 at the end on the owner's AMD Ryzen AI 9 HX 370 with background desktop
+processes. The manifest, the answer table and all 1,452 samples (1,320 measured,
+132 warm-up) are in
+[evidence-bench-r1](evidence-bench-r1/manifest.txt).
+
+Answers: 20 of 36 queries gave the same answer. 15 differ because GEL splits
+words at punctuation and underscores (for example "rust 1 85 0", "sha 256",
+"gel evidence", "source" in source_find); 1 differs by Unicode normalization
+(a decomposed "café"). Polish and Greek queries, including final sigma, gave
+the same answer.
+
+| Phase (20 same-answer queries) | GEL p50 / p95 | Baseline p50 / p95 | GEL ÷ baseline (p50) |
+|---|---|---|---|
+| process-workload | 72.7 / 88.2 ms | grep: 62.8 / 72.9 ms | 1.16 |
+| integrity-process | 3.13 / 3.43 ms | sha256sum: 1.95 / 2.38 ms | 1.61 |
+| in-memory-search, per query | 3.32 / 4.26 ms | — | — |
+
+On this corpus and host GEL is slower than the baseline in both compared
+phases: its whole-process run of the query set takes about 16% longer than 20
+grep processes, and loading a pinned snapshot, which also parses and checks its
+structure, takes about 61% longer than hashing the file. The in-memory search
+time is most of GEL's workload time. The GEL process's peak resident set size
+was 2.8–2.9 MB in every run. These numbers describe this small corpus on this
+host only; they establish no speed advantage.
+
 ## CI
 
 Linux CI runs `--answers-only` on every revision: it proves the comparison
