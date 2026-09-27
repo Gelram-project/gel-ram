@@ -18,6 +18,10 @@ Subsequent recorder/context fixes have not silently replaced these films.
 [Descriptive transcripts with timelines — PL / EN](TRANSCRIPTS-PL-EN.md) ·
 [Full decode checks and remaining visual-review limitations](../docs/MEDIA-DECODE-REVIEW.md).
 
+The update, restart and corrupted-copy scenario is shown as one still, not a
+film: [final screen](evidence-lab/03-update-restart-102s.png), with commands in
+the [scenario](../docs/UPDATE-RESTART-SCENARIO.md).
+
 ## Polski — co pokazują filmy
 
 Film Evidence Lab pokazuje publiczne narzędzie: dwa małe dokumenty, cytowanie,
@@ -25,6 +29,8 @@ brak trafienia, zapis i odtworzenie po restarcie. To wyszukiwanie fraz, nie
 swobodna rozmowa AI. Dwa pozostałe filmy pokazują prywatną aplikację i ograniczone
 scenariusze rozmowy. Ich silnika ani banku nie ma w publicznym repozytorium.
 Nie porównujemy czasów tych filmów z pełnym skanem milionów ORB.
+Scenariusz aktualizacji, restartu i uszkodzonej kopii pokazuje jeden zrzut
+ostatniego ekranu, nie film.
 
 [Transkrypcje opisowe PL/EN](TRANSCRIPTS-PL-EN.md) zawierają polecenia,
 odpowiedzi i momenty zdarzeń. Wszystkie wizualnie różne klatki obejrzał

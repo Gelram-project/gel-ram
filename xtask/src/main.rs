@@ -6,6 +6,7 @@ mod isolation;
 mod license_metadata;
 mod measured_sources;
 mod mutation_matrix;
+mod package;
 mod process_sequence;
 #[cfg(test)]
 mod publication_status_tests;
@@ -26,6 +27,10 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    (
+        "media/evidence-lab/03-update-restart-102s.png",
+        "d3de2029ce993457d411649bcac5a41f27f1ec1ed9586cb2f9b4dcbbc8675d14",
+    ),
     (
         "media/GEL-EVIDENCE-LAB-EN.mp4",
         "a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835",
@@ -115,7 +120,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|bench-compare|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|bench-compare|package-binaries|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -504,7 +509,46 @@ fn ci_policy() -> Result<(), String> {
             ".github/workflows/cla.yml must not check out or execute pull-request code".into(),
         );
     }
+    let binaries_path = ".github/workflows/binaries.yml";
+    let binaries = fs::read_to_string(root.join(binaries_path))
+        .map_err(|e| format!("{binaries_path}: {e}"))?;
+    require(&binaries, CHECKOUT_SHA, binaries_path)?;
+    require(&binaries, "persist-credentials: false", binaries_path)?;
+    require(&binaries, "contents: read", binaries_path)?;
+    // Only the hand-started release job may request a signing identity.
+    if binaries.matches("id-token: write").count() != 1
+        || !binaries.contains("if: github.event_name == 'workflow_dispatch'\n")
+    {
+        return Err(format!(
+            "{binaries_path}: id-token must be granted once, to the workflow_dispatch job"
+        ));
+    }
+    for (file, text) in [
+        (".github/workflows/ci.yml", &ci),
+        (binaries_path, &binaries),
+    ] {
+        pinned_actions(text, file)?;
+    }
     println!("CI_POLICY_GATE=PASS");
+    Ok(())
+}
+
+/// Every `uses:` in a workflow names a full 40-hex commit, never a movable tag.
+fn pinned_actions(text: &str, file: &str) -> Result<(), String> {
+    for line in text.lines() {
+        let Some((_, used)) = line.split_once("uses:") else {
+            continue;
+        };
+        let pinned = used.trim().rsplit_once('@').is_some_and(|(_, rev)| {
+            rev.len() == 40 && rev.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
+        });
+        if !pinned {
+            return Err(format!(
+                "{file}: action not pinned to a commit: {}",
+                used.trim()
+            ));
+        }
+    }
     Ok(())
 }
 
@@ -904,6 +948,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
+        Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("runtime-examples") => runtime_examples(),

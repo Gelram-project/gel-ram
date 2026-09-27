@@ -167,10 +167,10 @@ historyczne przewodniki; prywatne logi i silnik nie są dołączone. Zegar obejm
 komunikację z procesem, przetwarzanie i formułowanie odpowiedzi, nie pauzy czytania.
 To ograniczone reguły i szablony źródłowe, nie ogólny model językowy.
 
-Neither preview establishes general understanding, persistent learning, P2P
-operation, physical DRAM-refresh computation or chat ORB/s. Public checkout
+Neither preview establishes general understanding, persistent learning, network
+operation, hardware-level memory computation or chat ORB/s. Public checkout
 does not provide the private /chat. For reproduction, use Evidence Lab above.
 
-Podglądy nie dowodzą ogólnego rozumienia, trwałego uczenia, działania P2P,
-obliczeń fizycznym odświeżaniem DRAM ani przepustowości rozmowy w ORB/s.
+Podglądy nie dowodzą ogólnego rozumienia, trwałego uczenia, działania sieciowego,
+obliczeń na poziomie sprzętu pamięci ani przepustowości rozmowy w ORB/s.
 Publiczne repozytorium nie zawiera prywatnego /chat.

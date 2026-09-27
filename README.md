@@ -276,6 +276,12 @@ owner-authorized previews of a separate private native Rust application. The
 previews show live bounded source-frame answers and explicit UNKNOWN cases.
 They do **not** ship the private application, its engine or its bank.
 
+The [update, restart and corrupted-copy scenario](docs/UPDATE-RESTART-SCENARIO.md)
+is shown as one still of its final screen: a new process reopens the revised and
+the original snapshot with citations and refuses a copy with one flipped byte.
+
+![Final screen of the update, restart and corrupted-copy scenario: both snapshots reopened with citations, the corrupted copy refused](media/evidence-lab/03-update-restart-102s.png)
+
 The displayed reply timings belong only to those bounded routes and that recorded
 MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
 proof of unrestricted AI capability. See [the film guide](media/FILMS-GUIDE.md)

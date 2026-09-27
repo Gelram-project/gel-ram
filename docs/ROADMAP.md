@@ -69,6 +69,8 @@ states.
 | GEL search times beside the baseline | 1738220 | — | README table, author-reported | a same-task comparison (A21) before any speed-up factor |
 | Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` after 7bcca67 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
+| Still of the update, restart and corrupted-copy scenario | after 4ce332b | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
+| Binary packages for Linux, macOS and Windows, built only in CI | after 4ce332b | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
 
 ## How to read the review work list
 
@@ -109,7 +111,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A14 | DONE_SCOPED | README entry point, fresh-checkout instructions and a first-screen link to the public Evidence Lab walkthrough; main, review branches and the historical tag are distinct. | [README](../README.md) |
 | A15 | OWNER | Description and topics are repository settings. A social-preview image is prepared; uploading it is a manual settings step. | [Repository](https://github.com/Gelram-project/gel-ram) |
 | A16 | DONE_SCOPED | One film index separates the public walkthrough from private previews, with destinations and scope labels. | [Film index](../media/INDEX.md) |
-| A17 | PARTIAL | A two-process update/restart scenario and tests exist. A recording of it awaits owner review before publication. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
+| A17 | PARTIAL | A two-process update/restart scenario and tests exist. One still of the final screen of a recording of it is published; the recording itself is not. | [Update/restart scenario](UPDATE-RESTART-SCENARIO.md) |
 | A18 | PARTIAL | PL/EN descriptive transcripts exist. Human confirmation of full timeline accuracy remains open; translations are not new engine outputs. | [Transcripts](../media/TRANSCRIPTS-PL-EN.md) |
 | A19 | PARTIAL | An executable claim registry separates executable checks, separate gates, a locally measured row and deferred rows; it is not yet an exhaustive map of historical statements. | [Claims](CLAIMS.md) |
 | A20 | OPEN | Reproduction form and a [verification suite runner](REPRODUCE.md) exist. Obtain and retain an independent second-host campaign and first-use feedback. Hosted CI alone does not close this item. | [Reproduction form](../.github/ISSUE_TEMPLATE/reproduction.yml) |

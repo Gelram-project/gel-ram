@@ -61,6 +61,11 @@ not evidence that a fourth MP4 has been filmed or approved. The original
 two-document mode and three historical videos remain available and unchanged.
 No answers are substituted, and pauses are outside application timers.
 
+One [still of the final screen](../media/evidence-lab/03-update-restart-102s.png)
+of a recording of this mode is published: the second process reopens the
+revised and the original snapshot with citations and refuses the copy with one
+flipped byte. The recording itself is not published.
+
 ## Recorder failure regression
 
 `cargo test --locked --offline -p xtask --test recorder_process` compiles and

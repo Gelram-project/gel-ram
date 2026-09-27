@@ -51,7 +51,11 @@ fn load(when: &str) -> String {
 }
 
 /// SHA-256 of every produced file, relative to the output directory.
-fn hashes(dir: &Path, base: &Path, out: &mut Vec<(String, String)>) -> Result<(), String> {
+pub(crate) fn hashes(
+    dir: &Path,
+    base: &Path,
+    out: &mut Vec<(String, String)>,
+) -> Result<(), String> {
     let mut entries: Vec<PathBuf> = fs::read_dir(dir)
         .map_err(|e| e.to_string())?
         .filter_map(|e| e.ok().map(|e| e.path()))
