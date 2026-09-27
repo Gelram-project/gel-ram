@@ -9,6 +9,7 @@ mod mutation_campaign;
 mod mutation_matrix;
 mod package;
 mod process_sequence;
+mod property_map;
 #[cfg(test)]
 mod publication_status_tests;
 mod recorder_lint;
@@ -815,6 +816,10 @@ fn verify() -> Result<(), String> {
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
     mutation_matrix::check(workspace_root()?)?;
+    println!(
+        "PROPERTY_MAP_FORMAT=PASS rows={}",
+        property_map::read(workspace_root()?)?.len()
+    );
     run(
         "cargo",
         &["test", "--locked", "--offline", "--workspace", "--doc"],
