@@ -30,6 +30,13 @@ Save refuses existing targets. Paths with spaces need no quotes. `replace ID PAT
 keeps the document ID/title but replaces its text. `drop ID` removes it from RAM;
 old saved snapshots are NOT erased. Deletion is not secure forgetting.
 
+## Batch mode for scripts
+
+`gel-evidence --batch` reads the same commands from standard input, writes one
+JSON record per line to standard output and diagnostics to standard error, and
+stops at the first error. Exit code 0 means no error and no incomplete search, 3
+means an incomplete search, 2 an error. See the [schema](EVIDENCE-BATCH.md).
+
 ## Source contract
 
 - Up to 1024 documents, each nonempty UTF-8 up to 16 MiB; 64 MiB aggregate text.
