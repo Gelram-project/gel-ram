@@ -29,6 +29,10 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
+    (
+        "media/presentation/measured-progress.svg",
+        "82cf4280799997f037454f7ae7ed2cb4fd2a389b5582e526c7a418ffdf3caf8b",
+    ),
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",

@@ -114,6 +114,32 @@ Public-tool demonstrations and their reproducible evidence above retain
 their own, separate scope. No private version identifiers, source code,
 knowledge banks or credentials are included here.
 
+### New measurements: ranking improvement and source-field dialogue
+
+![Animated measured-results table: Quad top-1 improved from 77.5% to 92.75% on 400 known-slot source probes. Source-field dialogue has microsecond medians on a separate five-article pilot. Groq batches are a different task; no speedup ratio.](media/presentation/measured-progress.svg)
+
+Animation highlights rows only; it is **not execution footage or a timing scale**.
+All numbers remain visible, with a reduced-motion mode and the text table below.
+These author-run private experiments do not change the public implementation.
+
+| Experiment | Earlier result | Updated measurement | Scope |
+|:---|:---|:---|:---|
+| Quad top-1 | 310/400 (77.5%) | **371/400 (92.75%)** | Same 400 source-text probes; known 250k slot within a 1M bank |
+| Quad top-10 | 361/400 (90.25%) | **396/400 (99%)** | Not natural-question accuracy or global 1M search |
+| Single Q8 top-1 / top-10 | 368/400 / 393/400 | **379/400 / 397/400** | Single still outperforms Quad on this diagnostic |
+| Source-field dialogue | Separate task | **p50 2.054–4.819 µs** across five field questions and three runs | Five articles in RAM; finished source-bound text, not a million-record search |
+| Two-source whole-field comparison | Separate task | **p50 19.417–21.220 µs** across three runs | Exact field comparison, not unrestricted reasoning |
+| Transfer to four new articles | No latency measurement | **6 source-field answers, 2 quotations, 1 limited comparison, 3 UNHANDLED, 1 UNKNOWN** | 13 PL questions; not 9/13 accuracy |
+
+The timing pilot used 1,000 warm repetitions **per question per run**.
+The slowest retained warm observation was **711.017 µs**; medians are not
+worst-case guarantees. Newer quotation/list support was not timed in that
+campaign. A quotation is not a verified semantic decision.
+
+[All 13 timing rows, provenance and limitations](docs/MEASURED-PROGRESS.md).
+The Groq table below remains a separate supplied-source decision diagnostic;
+**no GEL/Groq speedup ratio follows from these different tasks**.
+
 ### Same supplied-source task: GEL adapter and models served by Groq
 
 Twelve development claims (six PL, six EN), with the same supplied Wikipedia
