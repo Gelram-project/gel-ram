@@ -1,8 +1,9 @@
-# Evidence Lab — merged into public main (PR #9), not a final release
+# Evidence Lab — merged in PR #9 (as 0.4.0-rc.1), part of the 0.4.0 version line
 
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
-The owner authorized public main integration after checks, without a final release. The workspace is now
-`0.4.0-rc.1`; no tag or release was created. Root licensing
+The owner authorized public main integration after checks. The workspace was then
+`0.4.0-rc.1` and no tag was created at that point; the feature belongs to the
+[v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md). Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
 Local integration review also includes public documentation updates through

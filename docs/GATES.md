@@ -34,8 +34,8 @@ A release candidate is green only when all applicable gates pass on the same sou
 22. runtime demonstrations: `verify` runs the source, collection, Q8 and Live Lab
     examples, including gel-evidence --demo; Windows/macOS CI runs the fail-fast
     `xtask runtime-examples` sequence.
-23. CI only: a physically full 1 MiB tmpfs publication check and the pinned
-    Ocean archive tests (Linux), and the per-platform CI evidence report
+23. CI only: a physically full 1 MiB tmpfs publication check (Linux), and the
+    per-platform CI evidence report
     (`xtask ci-evidence`) on Linux, Windows and macOS.
 
 Performance results are evidence, not correctness substitutes.
@@ -58,7 +58,7 @@ Any new performance claim for the current V3 comparison
 requires new timing evidence with effective budgets and fallback counts.
 macOS/Windows CI executes workspace tests, documentation tests, the fail-fast
 runtime demonstrations and the independent integrity audit; the full `verify`
-gate, pinned Ocean archive tests and the full-disk tmpfs check run on Linux only.
+gate and the full-disk tmpfs check run on Linux only.
 
 ## Binary-core hardening checks
 

@@ -31,7 +31,7 @@ the core-path tests of gel-source, gel-store and gel-live-lab again in the
 release profile, documentation tests and the saved R1 rechecker (release). The
 release pass repeats tests already counted in the debug pass; its executions are
 a separate profile check, not additional coverage. This is not a fresh R1 timing
-campaign or a report of every workflow step. It excludes archive Ocean tests,
+campaign or a report of every workflow step. It excludes
 examples outside this command list, visual review and hardware experiments.
 Each test command must produce at least one well-formed summary line with zero
 failures; a malformed summary fails the report. The documentation tests run the

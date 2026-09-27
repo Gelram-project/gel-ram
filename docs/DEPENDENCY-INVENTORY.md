@@ -12,7 +12,7 @@ upstream license text governs; a binary/vendored release needs its own notices
 review. The historical metadata spelling `MIT/Apache-2.0` is preserved verbatim.
 Toolchain, OS libraries and CI actions are not Cargo dependencies and are not
 included in these twelve rows. CI action revisions are pinned in the workflow.
-The separate unchanged Ocean research archives include their own vendored
+The Ocean research archives that were on main before 0.4.0 carried their own vendored
 dependencies and inventories; these rows describe the root workspace only.
 
 | Package | Version | Declared license | Upstream |

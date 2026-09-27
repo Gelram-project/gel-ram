@@ -5,15 +5,16 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- Tagged `v0.3.0` remains an immutable earlier release.
-- Ocean Scale R3 is on `main`: numerical 1M/10M evidence, bounded offline
-  verification and Linux-only research persistence/mapping. See [scope](OCEAN-SCALE.md).
+- The 0.4.0 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.3.0` remains an earlier release.
+- Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
+  its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
   exact source quotations, Unicode/CR regressions and runtime CI on three OSes.
 - [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
   in PR #5. [Evidence Lab](EVIDENCE-LAB.md) was merged into main through
-  PR #9 (71142a2, workspace 0.4.0-rc.1). The PR #10 review repairs follow it;
-  no v0.4.0 tag or release exists ([status](../CANDIDATE-STATUS.md)).
+  PR #9 (71142a2, workspace 0.4.0-rc.1); the PR #10 review repairs followed as
+  0c17f6e and the version line is now 0.4.0 ([status](../CANDIDATE-STATUS.md)).
 ## Public main — already delivered
 
 The following capabilities are present on public `main`:
@@ -26,8 +27,8 @@ The following capabilities are present on public `main`:
 - Offline GEL Live Lab for caller-selected UTF-8 documents.
 - Synthetic Q8 records with four reversible coordinate views and exact inverse checks.
 - Independent byte/numeric/ranking audit.
-- Ocean Scale R3 with reproducible 1M/10M synthetic numerical evidence,
-  persistence/replay research and raw measurements.
+- Recorded Ocean Scale 1M/10M synthetic full-scan measurements (historical;
+  the research archive was withdrawn in 0.4.0).
 - Linux verification plus Windows/macOS workspace/runtime checks.
 - Evidence Lab (0.4.0-rc.1, PR #9): multi-document collection, exact citations,
   stale-result rejection, GELSET01 snapshots and fresh-process reopen; native
@@ -43,7 +44,7 @@ The following capabilities are present on public `main`:
    directory-sync checks remain platform-specific, not portable guarantees.
 3. Provide one-command local reporting with raw output, resource/timing scope and
    failures retained. Never infer robust performance from a single UI timing.
-4. Reproduce numeric Q8/Ocean evidence on an independent second host, including
+4. Reproduce numeric Q8 evidence on an independent second host, including
    regressions and complete memory costs. Keep addressed readout and full scan
    distinct; coordinate views are not independent information.
 5. Evaluate knowledge retrieval only after defining a redistributable corpus,
@@ -68,6 +69,8 @@ run attempt, reviewer and remaining exclusions. A second-host reproduction must
 identify its independent operator rather than invent one.
 
 ## Review work list and next acceptance
+
+Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 
 | ID | State | Work and next acceptance condition | Evidence / entry point |
 |---|---|---|---|
@@ -94,7 +97,7 @@ identify its independent operator rather than invent one.
 | A21 | PARTIAL | Scoped author-reported component measurements are published. An identical-task, end-to-end comparison with the exact baseline remains open. | [Component scope](GEL-EXPERIMENTAL-MEASUREMENTS.md) |
 | A22 | OPEN | Implement a public execution-identity gate only within approved disclosure scope. Substituting the full-scan baseline must fail that gate even when results match. | [Baseline boundaries](OCEAN-SCALE.md), [claims](CLAIMS.md) |
 | A23 | OPEN | Adaptive precision needs a declared error budget, independent oracle, full metadata costs and stable task decisions, including weak-signal failures. | [Codec scope](CODEC-SCOPE.md) |
-| A24 | DONE_SCOPED | PR #10 was built in small commits, each with the source manifest, full verify and a leak scan; later PRs follow the same practice. A green job implies no merge, release or disclosure. | [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) |
+| A24 | DONE_SCOPED | PR #10 was built in small commits, each with the source manifest, full verify and a leak scan; later PRs follow the same practice. A green job alone does not authorize a merge, release or disclosure. | [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) |
 
 ## Execution order and dependencies
 
@@ -154,7 +157,7 @@ green job.
 
 ## Published baseline and longer-term direction
 The tagged `v0.3.0` release remains an earlier immutable release point. Public
-`main` contains additional reviewed work that has not yet been cut as a new tag.
+`main` has advanced since; later tagged releases are listed on the Releases page.
 
 ## Public performance boundary
 
@@ -171,7 +174,7 @@ this baseline. Any such claim requires an exact public reproduction package.
 
 ## Next public acceptance gates
 
-1. **Independent reproduction on a second host.** Re-run the public Ocean/Q8 and
+1. **Independent reproduction on a second host.** Re-run the public Q8 and
    source-integrity evidence on different hardware. Publish slow cases and
    failures, not only best runs.
 2. **Larger statistical campaigns.** Where performance claims need tail latency,
@@ -193,14 +196,13 @@ this baseline. Any such claim requires an exact public reproduction package.
 
 The most useful independent work is currently:
 
-- Ocean Scale R3 on a second Linux host;
 - public workspace verification on additional CPU families;
 - corruption/restart/concurrency edge cases;
 - Unicode/source-boundary cases for the document reader;
 - complete memory-cost measurements;
 - slower or negative performance results that help identify the real limits.
 
-Start with [TRY-IT](TRY-IT.md), [Ocean Scale](OCEAN-SCALE.md) and
+Start with [TRY-IT](TRY-IT.md) and
 [VERIFIED RESULTS](VERIFIED-RESULTS.md). A benchmark report does not require a
 code contribution or a CLA; code intended for merge follows [CONTRIBUTING](../CONTRIBUTING.md).
 

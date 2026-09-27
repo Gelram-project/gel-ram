@@ -2,9 +2,9 @@
 
 **Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
 
-> PUBLIC INTEGRATION CANDIDATE — approved for main integration, not a final release.
-> Workspace: **0.4.0-rc.1**, targeting v0.4.0. [Candidate release notes](RELEASE-NOTES-v0.4.0-RC.md).
-> [New scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md). Existing release and films remain historical.
+> Workspace: **0.4.0** — Evidence Lab and the review repairs are on main.
+> [Release notes](RELEASE-NOTES-v0.4.0.md) · [scope and checks](RELEASE-NOTES-EVIDENCE-LAB.md) ·
+> [tagged releases](https://github.com/Gelram-project/gel-ram/releases). Earlier films remain historical.
 
 ## Evidence Lab: your documents, exact citations, a real restart
 
@@ -13,14 +13,19 @@
 [Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
 [per-revision CI evidence](docs/CI-EVIDENCE.md).
 
-First install the pinned Rust 1.85.0 toolchain and run `cargo fetch --locked`
-with network access. The command below then runs offline with cached dependencies:
+Try it in a few minutes. You need Git and [rustup](https://rustup.rs); the first
+three commands need network access, the last one runs offline:
 
 ```sh
-cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
+git clone https://github.com/Gelram-project/gel-ram.git && cd gel-ram
+rustup toolchain install 1.85.0 --profile minimal
+cargo fetch --locked
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
 ```
 
-Type `add PATH` for each UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
+The scripted demonstration ends with `GEL_EVIDENCE_DEMO=PASS`. Run the same
+command without `-- --demo` for the interactive prompt: type `add PATH` for each
+UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
 Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
 `load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate previous results.
 No text crosses document boundaries. Nothing is uploaded or automatically saved.
@@ -28,21 +33,22 @@ No text crosses document boundaries. Nothing is uploaded or automatically saved.
 [Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
 This is phrase retrieval from plaintext sources, not a general chatbot or private vault.
-**Check this candidate:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
+**Verify it yourself:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
 See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
 for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
 
-The tagged `v0.3.0` release remains an immutable historical release point.
-Current-main capabilities and candidate checks are not automatically part of
-that tag. See [codec boundaries](docs/CODEC-SCOPE.md) before interpreting Q labels.
+This tree is the 0.4.0 version line ([release notes](RELEASE-NOTES-v0.4.0.md));
+tagged releases are listed on the [Releases page](https://github.com/Gelram-project/gel-ram/releases),
+and the earlier `v0.3.0` release is unchanged. See [codec boundaries](docs/CODEC-SCOPE.md)
+before interpreting Q labels.
 
 ## What GEL RAM is
 
-GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles, integrity gates, and large synthetic Ocean measurements.
+GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles and integrity gates. Earlier large synthetic Ocean measurements remain documented as historical results.
 
 The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
 
-## Previously published capabilities
+## What is publicly available
 
 | Capability | Public status |
 |---|---|
@@ -51,7 +57,7 @@ The public repository is **not the complete private research system**. Some expe
 | GELSRC01 no-replace save + independently pinned reopen | **AVAILABLE** |
 | Offline GEL Live Lab | **AVAILABLE** |
 | Synthetic Q8 reversible coordinate views | **AVAILABLE** |
-| Ocean Scale 1M / 10M evidence | **AVAILABLE** |
+| Ocean Scale 1M / 10M measurements | **HISTORICAL** (archive withdrawn in 0.4.0) |
 | Independent byte / numeric / ranking checks | **AVAILABLE** |
 | Linux / macOS / Windows verification | **AVAILABLE** |
 | Private next-generation RAM execution path | **NOT PUBLICLY DESCRIBED** |
@@ -59,7 +65,7 @@ The public repository is **not the complete private research system**. Some expe
 
 ## Important performance distinction
 
-The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are useful as a reproducible comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
+The published 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
 
 Separate [author-reported GEL component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md)
 cover compact-sketch search and phase evolution. Their tasks, sizes and timing
@@ -81,7 +87,7 @@ These numbers deliberately expose the cost of the public full-scan path. They ar
 
 Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
 
-[Ocean Scale source, raw evidence and limits](docs/OCEAN-SCALE.md)
+[Ocean Scale recorded measurements and limits](docs/OCEAN-SCALE.md)
 
 **Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 
@@ -121,19 +127,14 @@ Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN
 This is bounded token-phrase extraction, not a conversational model, semantic
 search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
 
-## Reproducible Ocean Scale research bundle
+## Ocean Scale measurements (historical)
 
-[Download the Rust source + raw evidence bundle](research/ocean-scale-r3.tar.gz)
-or start with the [Ocean Scale guide](docs/OCEAN-SCALE.md).
-It includes the experimental reader, incremental snapshot/journal recovery,
-sealed-copy mapping, vendored dependencies and a verifier that runs **111 tests**.
-
-On the measured Ryzen AI 9 HX 370 host, full **10M-record scan + top10 + decision**
+On the measured Ryzen AI 9 HX 370 host, a full **10M-record scan + top10 + decision**
 had EXACT p50 **615–705 ms** in two longer 24-worker runs (100 observations each).
-All raw runs, including slower ones, are included. This is synthetic numerical
-readout, **not semantic AI accuracy** or microsecond search across the Ocean.
-The research code is separate from the stable public workspace; it does not
-replace the v0.3.0 reader or claim a new tagged release.
+This is synthetic numerical readout, **not semantic AI accuracy** or microsecond
+search across the Ocean. The research archive behind these numbers is not part
+of the public tree from 0.4.0 onward; the results remain as historical
+author-reported measurements ([Ocean Scale](docs/OCEAN-SCALE.md)).
 
 ![GEL public readout: one carrier, four equivalent views and a separate source integrity gate](docs/images/public-readout.svg)
 
@@ -152,11 +153,10 @@ cargo run --locked --offline -p xtask -- verify
 ```
 
 Expected: `GEL_VERIFY_ALL=PASS`. These are the public `main` verification
-instructions. Evidence Lab (workspace 0.4.0-rc.1) has been on public main since
-[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) was merged as 71142a2;
-no v0.4.0 tag or release exists. The review repairs in
-[PR #10](https://github.com/Gelram-project/gel-ram/pull/10) are part of main once
-that PR is merged; its GitHub page shows the current state. No model or private bank is needed.
+instructions. Evidence Lab has been on public main since
+[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) (71142a2) and the review
+repairs since [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) (0c17f6e);
+the workspace version is 0.4.0. No model or private bank is needed.
 
 ### Change the numeric input
 

@@ -29,10 +29,10 @@ the Linux, macOS, Windows and core-release counts from the
 
 At this revision six Unix-only tests were absent on Windows: two SIGKILL cases, symlink rejection
 and Unix permission checks. They are not counted as Windows passes; later
-revisions declare and check each one in the [CI evidence report](CI-EVIDENCE.md). Ocean's
-Linux-specific mapping/persistence remains Linux-specific. This table records
+revisions declare and check each one in the [CI evidence report](CI-EVIDENCE.md).
+This table records
 the linked revision, not an unqualified guarantee of compatibility.
-For later revisions, inspect the checks of the PR that contains them (currently [PR #10](https://github.com/Gelram-project/gel-ram/pull/10/checks)) and its CI evidence report.
+For later revisions, inspect the checks of the PR or push run that tested them and the [recorded CI evidence](evidence-ci/README.md).
 
 ## Same source and toolchain on every host
 
@@ -60,8 +60,8 @@ An archive is identified by its content manifest, not a fabricated Git commit.
 
 Do not equate cross-compilation, Wine, skipped jobs or Linux runs with native
 Windows/macOS results. Unix SIGKILL/permission tests are conditional: report the
-actual executed count instead of copying Linux's number. Linux-only Ocean
-mapping/persistence remains Linux-only. Power-loss durability is unproven on
+actual executed count instead of copying Linux's number.
+Power-loss durability is unproven on
 every platform; non-Unix directory sync is not implemented by this path.
 
 ## Approval record

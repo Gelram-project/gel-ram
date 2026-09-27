@@ -106,31 +106,19 @@ Try:
 phase 128
 mask 3
 noise 100
-view 3
 show
 quit
 ```
 
 Four reversible coordinate views describe one stored carrier. They do not create
-four independent memories.
+four independent memories. To highlight one view row, use `view 0..3` inside
+[Live Lab](LIVE-LAB.md); the playground has no view command.
 
-## 6. Verify the Ocean Scale R3 research package
+## 6. Read the recorded Ocean Scale measurements
 
-Linux only for the bundled Ocean research verifier:
-
-```sh
-printf '%s\n' 'b712a6c6c4afb241e02d560d673eafb6bfce78049b498a8478f785508b8dcf48  research/ocean-scale-r3.tar.gz' | sha256sum --check -
-ocean_run="$(mktemp -d)"
-tar -xzf research/ocean-scale-r3.tar.gz -C "$ocean_run"
-package="$ocean_run/p2-m1-c1-review-r3"
-rustc +1.85.0 --edition=2021 "$package/tools/verify_review.rs" -o "$ocean_run/verify-ocean"
-"$ocean_run/verify-ocean" "$package" "$ocean_run/evidence"
-```
-
-This verifies the pinned source/evidence package and its small offline suite.
-It does **not** allocate and rerun the full 10M campaign by default.
-
-For the opt-in large campaigns and their RAM requirements, follow
+The Ocean Scale research archive is not part of the public tree from 0.4.0
+onward, so there is nothing to run for this step. Its 1M/10M full-scan numbers
+remain documented as historical author-reported measurements in
 [Ocean Scale](OCEAN-SCALE.md).
 
 ## 7. Share a useful independent result

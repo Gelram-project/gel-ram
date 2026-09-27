@@ -2,7 +2,7 @@
 
 [Watch the 70-second English recording](GEL-EVIDENCE-LAB-EN.mp4).
 
-This film demonstrates the **public-candidate source code**, not the private
+This film demonstrates the **public source code**, not the private
 conversational prototype shown by the two older films. It is a real xterm window
 on an isolated Xvfb desktop, recorded by FFmpeg. The user's personal desktop was
 not captured. Commands are scripted; every response and printed time comes from
