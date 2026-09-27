@@ -28,7 +28,9 @@ Restart and use `load RETAINED_SHA256 /YOUR/OWN/DIRECTORY/new.gelset`.
 No dependency on the original files is required to reopen the snapshot.
 Save refuses existing targets. Paths with spaces need no quotes. `replace ID PATH`
 keeps the document ID/title but replaces its text. `drop ID` removes it from RAM;
-old saved snapshots are NOT erased. Deletion is not secure forgetting.
+old saved snapshots are NOT erased. Deletion is not secure forgetting. `clear` empties
+the in-memory collection only. For backups, restore, withdrawal and pinned
+deletion of saved snapshots, see [backup](BACKUP.md).
 
 ## Batch mode for scripts
 

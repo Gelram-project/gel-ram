@@ -11,7 +11,7 @@ use std::{
     time::Instant,
 };
 
-const HELP: &str = "add PATH | replace ID PATH | drop ID | list | find PHRASE | proof N | save NEW_PATH | load TRUSTED_SHA256 PATH | exit\nExact source phrases, not semantic AI. All files plaintext. Paths with spaces need no quotes.";
+const HELP: &str = "add PATH | replace ID PATH | drop ID | clear | list | find PHRASE | proof N | save NEW_PATH | load TRUSTED_SHA256 PATH | exit\nExact source phrases, not semantic AI. All files plaintext. Paths with spaces need no quotes.";
 /// Output schema of `--batch`; see docs/EVIDENCE-BATCH.md.
 const SCHEMA: &str = "gel-evidence/1";
 const COMMAND_LIMIT: u64 = 4096;
@@ -46,6 +46,9 @@ enum Outcome {
     },
     Replaced {
         id: u64,
+    },
+    Cleared {
+        documents: usize,
     },
     Removed {
         id: u64,
@@ -112,6 +115,12 @@ impl Session {
                 self.bank.remove(id)?;
                 self.hits.clear();
                 Outcome::Removed { id }
+            }
+            "clear" if arg.is_empty() => {
+                let documents = self.bank.documents().count();
+                self.bank = Collection::new();
+                self.hits.clear();
+                Outcome::Cleared { documents }
             }
             "list" if arg.is_empty() => Outcome::Listed(
                 self.bank
@@ -209,6 +218,9 @@ fn human(outcome: &Outcome) {
         Outcome::Added { id, bytes } => println!("ADDED id={id} bytes={bytes}"),
         Outcome::Replaced { id } => println!("REPLACED id={id}; previous citations invalidated"),
         Outcome::Removed { id } => println!("REMOVED id={id}; old snapshots remain on disk"),
+        Outcome::Cleared { documents } => println!(
+            "CLEARED documents={documents}; memory only, saved snapshots and backups are unchanged"
+        ),
         Outcome::Listed(rows) => {
             for r in rows {
                 println!(
@@ -342,6 +354,10 @@ fn record(seq: u64, command: &str, outcome: &Outcome) -> (&'static str, String) 
         Outcome::Removed { id } => {
             o.value("id", id)
                 .value("old_snapshots_remain_on_disk", true);
+        }
+        Outcome::Cleared { documents } => {
+            o.value("documents", documents)
+                .value("files_unchanged", true);
         }
         Outcome::Listed(rows) => {
             o.raw(

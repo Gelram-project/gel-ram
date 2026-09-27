@@ -5,7 +5,7 @@ gel-evidence --batch < commands.txt > results.jsonl
 ```
 
 Batch mode reads the same commands as the interactive prompt, one per line
-(add, replace, drop, list, find, proof, save, load, help, exit). It prints no
+(add, replace, drop, clear, list, find, proof, save, load, help, exit). It prints no
 prompt and no banner.
 
 - **stdout carries only data:** one JSON object per line (JSON Lines).
@@ -19,7 +19,7 @@ prompt and no banner.
 
 | Status | Meaning |
 |---|---|
-| OK | The command completed (add, replace, drop, list, proof, save, load, help, exit). |
+| OK | The command completed (add, replace, drop, clear, list, proof, save, load, help, exit). |
 | HIT | find matched at least one line and skipped no line. |
 | UNKNOWN | find examined every line and matched none. This is a valid answer, not a failure. |
 | INCOMPLETE | find skipped at least one over-long line, so a match may be missing. |
@@ -51,6 +51,7 @@ fields that depend on the command:
 | add | id, bytes |
 | replace | id, previous_citations_invalidated |
 | drop | id, old_snapshots_remain_on_disk |
+| clear | documents (count removed from memory), files_unchanged |
 | list | documents: [{id, title, bytes, sha256}] |
 | find | documents_examined, matching_lines, shown, skipped_long_lines, search_ns, results |
 | proof | document_sha256, collection_sha256, correspondence_not_truth |

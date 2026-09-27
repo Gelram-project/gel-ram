@@ -169,6 +169,42 @@ fn over_long_and_non_utf8_commands_are_errors_not_silent_skips() {
 }
 
 #[test]
+fn clear_forgets_memory_only_and_saved_snapshots_still_reopen() {
+    let s = Scratch::new();
+    let a = s.file("a.txt", "RAM is volatile.\n");
+    let bank = s.0.join("bank");
+    let run = batch(
+        format!(
+            "add {}\nsave {}\nclear\nlist\nfind ram is volatile\n",
+            a.display(),
+            bank.display()
+        )
+        .as_bytes(),
+    );
+    assert_eq!(run.code, 0, "{}", run.stderr);
+    assert!(
+        run.stdout[3].contains(
+            "\"command\":\"clear\",\"status\":\"OK\",\"documents\":1,\"files_unchanged\":true"
+        ),
+        "{}",
+        run.stdout[3]
+    );
+    assert!(
+        run.stdout[4].contains("\"documents\":[]"),
+        "{}",
+        run.stdout[4]
+    );
+    assert!(run.stdout[5].contains("\"status\":\"UNKNOWN\""));
+    let pin = hex(&digest(&fs::read(&bank).unwrap()));
+    let run = batch(format!("load {pin} {}\nfind ram is volatile\n", bank.display()).as_bytes());
+    assert!(
+        run.stdout[2].contains("\"status\":\"HIT\""),
+        "{}",
+        run.stdout[2]
+    );
+}
+
+#[test]
 fn saved_collections_reopen_by_pin_in_batch_mode() {
     let s = Scratch::new();
     let a = s.file("a.txt", "RAM is volatile.\n");

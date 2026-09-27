@@ -9,6 +9,7 @@ struct SourceBuilderGuide;
 #[cfg(doctest)]
 #[doc = include_str!("../../../docs/COLLECTION-BUILDER.md")]
 struct CollectionBuilderGuide;
+pub mod backup;
 mod builder;
 mod bundle;
 pub mod collection;

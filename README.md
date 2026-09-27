@@ -31,6 +31,7 @@ Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
 No text crosses document boundaries. Nothing is uploaded or automatically saved.
 For scripts, `--batch` reads the same commands from standard input and writes
 JSON Lines with separate UNKNOWN, INCOMPLETE and ERROR states ([schema](docs/EVIDENCE-BATCH.md)).
+Saved collections can be backed up and restored with `gel-backup` ([backup](docs/BACKUP.md)).
 
 [Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
 [Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
