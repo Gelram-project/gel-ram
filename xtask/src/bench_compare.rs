@@ -82,10 +82,27 @@ fn line_of(text: &str, start: usize) -> usize {
 
 fn gel_answer(bank: &Collection, docs: &[Doc], query: &str) -> Result<Answer, String> {
     let found = bank.search(query)?;
+    // Collection previews are capped (four per document, sixteen overall).
+    // Enumerate every LF-addressed matching line outside the timed section.
     let mut lines = Vec::new();
+    let mut skipped = 0;
+    for (index, doc) in docs.iter().enumerate() {
+        for (line, text) in doc.text.split_inclusive('\n').enumerate() {
+            let scan = gel_source::document::search(text, query)?;
+            skipped += scan.skipped_long_lines;
+            // Several CR-separated matches in one LF line stay distinct;
+            // grep's different line-count contract is not silently normalized.
+            lines.extend(std::iter::repeat((index, line + 1)).take(scan.matching_lines));
+        }
+    }
+    if lines.len() != found.matching_lines || skipped != found.skipped_long_lines {
+        return Err("complete line inventory disagrees with collection search".into());
+    }
     for h in &found.hits {
         let index = (h.document_id() - 1) as usize;
-        lines.push((index, line_of(&docs[index].text, h.span().start)));
+        if !lines.contains(&(index, line_of(&docs[index].text, h.span().start))) {
+            return Err("preview hit missing from complete line inventory".into());
+        }
     }
     Ok(Answer {
         count: found.matching_lines,
@@ -111,7 +128,7 @@ fn grep_answer(docs: &[Doc], out: &Output) -> Result<Answer, String> {
             String::from_utf8_lossy(&out.stderr)
         ));
     }
-    let text = String::from_utf8_lossy(&out.stdout);
+    let text = std::str::from_utf8(&out.stdout).map_err(|_| "grep returned non-UTF8 output")?;
     let mut lines = Vec::new();
     for row in text.lines() {
         let (path, rest) = docs
@@ -129,6 +146,9 @@ fn grep_answer(docs: &[Doc], out: &Output) -> Result<Answer, String> {
             .ok_or_else(|| format!("no line number: {row}"))?;
         lines.push((path, number));
     }
+    if (out.status.code() == Some(1)) != lines.is_empty() {
+        return Err("grep exit status disagrees with its output".into());
+    }
     Ok(Answer {
         count: lines.len(),
         skipped: 0,
@@ -136,14 +156,18 @@ fn grep_answer(docs: &[Doc], out: &Output) -> Result<Answer, String> {
     })
 }
 
-/// Same answer: equal line counts, nothing skipped, and every line GEL shows
-/// is also listed by grep. Otherwise the most likely reason is named.
+/// Same answer requires complete identical line inventories, not containment
+/// of a capped preview. Reasons for differences are heuristic descriptions.
 fn compare(query: &str, gel: &Answer, grep: &Answer) -> (bool, &'static str) {
     if gel.skipped > 0 {
         return (false, "gel-skipped-long-line");
     }
-    let contained = gel.lines.iter().all(|l| grep.lines.contains(l));
-    if gel.count == grep.count && contained {
+    let mut gel_lines = gel.lines.clone();
+    let mut grep_lines = grep.lines.clone();
+    gel_lines.sort_unstable();
+    grep_lines.sort_unstable();
+    let complete = gel.lines.len() == gel.count && grep.lines.len() == grep.count;
+    if complete && gel.count == grep.count && grep.skipped == 0 && gel_lines == grep_lines {
         return (true, "same");
     }
     if !query.is_ascii() {
@@ -203,6 +227,30 @@ fn field<'a>(line: &'a str, key: &str) -> Option<&'a str> {
     Some(&rest[..rest.find([',', '}'])?])
 }
 
+fn search_times(stdout: &[u8], expected: usize) -> Result<Vec<u128>, String> {
+    let text = std::str::from_utf8(stdout).map_err(|_| "non-UTF8 batch timing output")?;
+    let finds: Vec<_> = text
+        .lines()
+        .filter(|line| line.contains("\"command\":\"find\""))
+        .collect();
+    if finds.len() != expected {
+        return Err("missing or extra batch search observations".into());
+    }
+    finds
+        .into_iter()
+        .map(|line| {
+            field(line, "search_ns")
+                .and_then(|v| v.parse().ok())
+                .ok_or_else(|| "missing or invalid search_ns".into())
+        })
+        .collect()
+}
+
+fn hash_output(success: bool, stdout: &[u8], pin: &str) -> bool {
+    success
+        && std::str::from_utf8(stdout).is_ok_and(|text| text.split_whitespace().next() == Some(pin))
+}
+
 fn timed(mut c: Command) -> Result<(u128, Output), String> {
     let start = Instant::now();
     let out = c.output().map_err(|e| e.to_string())?;
@@ -237,9 +285,8 @@ fn gel_batch(binary: &Path, input: &str) -> Result<(u128, Output), String> {
 
 fn corpus(root: &Path, out: &Path) -> Result<Vec<Doc>, String> {
     let mut paths = vec![root.join("README.md")];
-    let mut docs_dir: Vec<PathBuf> = fs::read_dir(root.join("docs"))
-        .map_err(|e| e.to_string())?
-        .filter_map(|e| e.ok().map(|e| e.path()))
+    let mut docs_dir: Vec<PathBuf> = super::audit_io::paths(&root.join("docs"))?
+        .into_iter()
         .filter(|p| p.extension().is_some_and(|x| x == "md"))
         .collect();
     // The page reporting this comparison is not part of its own corpus.
@@ -269,10 +316,40 @@ fn percentile(sorted: &[u128], p: f64) -> u128 {
     sorted[rank - 1]
 }
 
-struct Samples(Vec<(String, String, usize, bool, String, u128)>);
-impl Samples {
-    fn add(&mut self, phase: &str, tool: &str, rep: usize, query: &str, value: u128) {
-        self.0.push((
+type Sample = (String, String, usize, bool, String, u128);
+struct Samples<W: std::io::Write> {
+    values: Vec<Sample>,
+    journal: W,
+}
+impl<W: std::io::Write> Samples<W> {
+    fn new(mut journal: W) -> Result<Self, String> {
+        journal
+            .write_all(b"phase,tool,rep,warmup,query,value_ns\n")
+            .map_err(|e| e.to_string())?;
+        Ok(Self {
+            values: Vec::new(),
+            journal,
+        })
+    }
+    fn add(
+        &mut self,
+        phase: &str,
+        tool: &str,
+        rep: usize,
+        query: &str,
+        value: u128,
+    ) -> Result<(), String> {
+        // Persist completed observations outside the timed interval, before
+        // another process can fail. flush is not a power-loss durability claim.
+        writeln!(
+            self.journal,
+            "{phase},{tool},{rep},{},\"{}\",{value}",
+            rep < WARMUP,
+            query.replace('"', "\"\"")
+        )
+        .and_then(|_| self.journal.flush())
+        .map_err(|e| format!("cannot preserve timing observation: {e}"))?;
+        self.values.push((
             phase.into(),
             tool.into(),
             rep,
@@ -280,10 +357,11 @@ impl Samples {
             query.into(),
             value,
         ));
+        Ok(())
     }
     fn measured(&self, phase: &str, tool: &str) -> Vec<u128> {
         let mut v: Vec<u128> = self
-            .0
+            .values
             .iter()
             .filter(|s| s.0 == phase && s.1 == tool && !s.3)
             .map(|s| s.5)
@@ -293,16 +371,24 @@ impl Samples {
     }
 }
 
+fn options(args: &[String]) -> Result<(&str, bool, usize), String> {
+    match args {
+        [dir] => Ok((dir, false, DEFAULT_REPS)),
+        [dir, flag] if flag == "--answers-only" => Ok((dir, true, DEFAULT_REPS)),
+        [dir, flag, n] if flag == "--reps" => {
+            let n: usize = n.parse().map_err(|_| "invalid repetition count")?;
+            if !(1..=10_000).contains(&n) {
+                return Err("repetitions must be 1..=10000".into());
+            }
+            Ok((dir, false, n))
+        }
+        _ => Err("invalid comparison arguments".into()),
+    }
+}
+
 pub fn run(args: &[String]) -> Result<(), String> {
     let usage = "usage: cargo run -p xtask -- bench-compare NEW_DIR_OUTSIDE_CHECKOUT [--answers-only | --reps N]";
-    let (dir, mode) = match args {
-        [dir] => (dir, None),
-        [dir, flag] if flag == "--answers-only" => (dir, Some(0)),
-        [dir, flag, n] if flag == "--reps" => (dir, Some(n.parse::<usize>().map_err(|_| usage)?)),
-        _ => return Err(usage.into()),
-    };
-    let answers_only = mode == Some(0);
-    let reps = mode.filter(|n| *n > 0).unwrap_or(DEFAULT_REPS);
+    let (dir, answers_only, reps) = options(args).map_err(|e| format!("{usage}: {e}"))?;
     let root = super::workspace_root()?
         .canonicalize()
         .map_err(|e| e.to_string())?;
@@ -367,6 +453,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
         );
     }
 
+    fs::write(out.join("manifest.txt"), &manifest).map_err(|e| e.to_string())?;
     let mut answers =
         String::from("id\tquery\tgel_lines\tgrep_lines\tgel_skipped\tverdict\treason\n");
     let mut same = Vec::new();
@@ -400,6 +487,9 @@ pub fn run(args: &[String]) -> Result<(), String> {
         return Ok(());
     }
 
+    if same.is_empty() {
+        return Err("no queries with complete answer agreement; timing comparison refused".into());
+    }
     let snapshot_arg = snapshot.display().to_string();
     let mut workload = format!("load {pin} {snapshot_arg}\n");
     for id in &same {
@@ -407,63 +497,49 @@ pub fn run(args: &[String]) -> Result<(), String> {
     }
     workload.push_str("exit\n");
     let load_only = format!("load {pin} {snapshot_arg}\nexit\n");
-    let mut samples = Samples(Vec::new());
+    let journal = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(out.join("samples.csv"))
+        .map_err(|e| e.to_string())?;
+    let mut samples = Samples::new(journal)?;
     let mut rss = Vec::new();
     for rep in 0..WARMUP + reps {
         // Alternate which tool runs first in each repetition.
         for turn in 0..2 {
             if (rep + turn) % 2 == 0 {
                 let (ns, output) = gel_batch(&binary, &workload)?;
-                samples.add("process-workload", "gel-evidence", rep, "*", ns);
+                samples.add("process-workload", "gel-evidence", rep, "*", ns)?;
                 let stdout = String::from_utf8_lossy(&output.stdout);
-                let finds = stdout
-                    .lines()
-                    .filter(|l| l.contains("\"command\":\"find\""));
-                for (id, line) in same.iter().zip(finds) {
-                    let ns = field(line, "search_ns")
-                        .and_then(|v| v.parse().ok())
-                        .ok_or("missing search_ns")?;
-                    samples.add("in-memory-search", "gel-evidence", rep, QUERIES[*id], ns);
+                let times = search_times(&output.stdout, same.len())?;
+                for (id, ns) in same.iter().zip(times) {
+                    samples.add("in-memory-search", "gel-evidence", rep, QUERIES[*id], ns)?;
                 }
                 if let Some(kb) = stdout.lines().last().and_then(|l| field(l, "peak_rss_kb")) {
                     rss.push(kb.to_string());
                 }
                 let (ns, _) = gel_batch(&binary, &load_only)?;
-                samples.add("integrity-process", "gel-evidence", rep, "*", ns);
+                samples.add("integrity-process", "gel-evidence", rep, "*", ns)?;
             } else {
                 let mut total = 0;
                 for id in &same {
                     let (ns, output) = timed(grep_command("grep", &docs, QUERIES[*id]))?;
                     grep_answer(&docs, &output)?;
-                    samples.add("process-per-query", "grep", rep, QUERIES[*id], ns);
+                    samples.add("process-per-query", "grep", rep, QUERIES[*id], ns)?;
                     total += ns;
                 }
-                samples.add("process-workload", "grep", rep, "*", total);
+                samples.add("process-workload", "grep", rep, "*", total)?;
                 let mut c = Command::new("sha256sum");
                 c.arg(&snapshot);
                 let (ns, output) = timed(c)?;
-                if !String::from_utf8_lossy(&output.stdout).starts_with(&pin) {
+                if !hash_output(output.status.success(), &output.stdout, &pin) {
                     return Err("sha256sum disagrees with the snapshot pin".into());
                 }
-                samples.add("integrity-process", "sha256sum", rep, "*", ns);
+                samples.add("integrity-process", "sha256sum", rep, "*", ns)?;
             }
         }
     }
 
-    let mut csv = String::from("phase,tool,rep,warmup,query,value_ns\n");
-    for s in &samples.0 {
-        let _ = writeln!(
-            csv,
-            "{},{},{},{},\"{}\",{}",
-            s.0,
-            s.1,
-            s.2,
-            s.3,
-            s.4.replace('"', "\"\""),
-            s.5
-        );
-    }
-    fs::write(out.join("samples.csv"), csv).map_err(|e| e.to_string())?;
     let mut summary = format!("{agreement} warmup={WARMUP} reps={reps}\n");
     for (phase, tools) in [
         ("process-workload", ["gel-evidence", "grep"]),
@@ -566,5 +642,105 @@ mod tests {
         assert_eq!(field(line, "search_ns"), Some("123"));
         assert_eq!(field(line, "peak_rss_kb"), Some("null"));
         assert_eq!(field(line, "missing"), None);
+    }
+    #[test]
+    fn capped_preview_and_equal_counts_do_not_prove_answer_equality() {
+        assert!(
+            !compare(
+                "a",
+                &answer(2, 0, &[(0, 3)]),
+                &answer(2, 0, &[(0, 3), (0, 9)])
+            )
+            .0
+        );
+        assert!(
+            !compare(
+                "a",
+                &answer(2, 0, &[(0, 3), (0, 4)]),
+                &answer(2, 0, &[(0, 3), (0, 9)])
+            )
+            .0
+        );
+        assert!(
+            compare(
+                "a",
+                &answer(2, 0, &[(0, 4), (0, 3)]),
+                &answer(2, 0, &[(0, 3), (0, 4)])
+            )
+            .0
+        );
+    }
+    #[test]
+    fn full_match_inventory_extends_beyond_both_preview_limits() {
+        let text = "sample needle\n".repeat(40);
+        let docs = vec![Doc {
+            title: "sample".into(),
+            path: PathBuf::from("sample"),
+            text: text.clone(),
+        }];
+        let mut bank = Collection::new();
+        bank.add("sample", &text).unwrap();
+        let found = gel_answer(&bank, &docs, "needle").unwrap();
+        assert_eq!(found.count, 40);
+        assert_eq!(found.lines.len(), 40);
+        assert_eq!(found.lines.last(), Some(&(0, 40)));
+    }
+    #[test]
+    fn repetition_count_is_bounded_and_zero_is_not_answers_only() {
+        for value in ["0", "-1", "10001", "18446744073709551615", "bad"] {
+            assert!(options(&["out".into(), "--reps".into(), value.into()]).is_err());
+        }
+        assert_eq!(
+            options(&["out".into(), "--reps".into(), "1".into()]).unwrap(),
+            ("out", false, 1)
+        );
+        assert!(options(&["out".into(), "--answers-only".into()]).unwrap().1);
+    }
+    #[test]
+    fn process_observations_cannot_be_missing_duplicated_or_partial() {
+        let one = br#"{"command":"find","search_ns":123,"status":"HIT"}"#;
+        assert_eq!(search_times(one, 1).unwrap(), vec![123]);
+        assert!(search_times(one, 2).is_err());
+        assert!(search_times(one, 0).is_err());
+        assert!(search_times(br#"{"command":"find","status":"HIT"}"#, 1).is_err());
+        assert!(search_times(&[255], 1).is_err());
+        let pin = "a".repeat(64);
+        let valid = format!("{pin}  snapshot.gelset\n");
+        assert!(hash_output(true, valid.as_bytes(), &pin));
+        assert!(!hash_output(false, valid.as_bytes(), &pin));
+        assert!(!hash_output(
+            true,
+            format!("{pin}f  snapshot").as_bytes(),
+            &pin
+        ));
+        assert!(!hash_output(true, &[255], &pin));
+    }
+    #[test]
+    fn raw_observations_are_preserved_before_the_next_process() {
+        let mut samples = Samples::new(Vec::new()).unwrap();
+        samples
+            .add("process-workload", "gel-evidence", 3, "quoted \"q\"", 42)
+            .unwrap();
+        let text = String::from_utf8(samples.journal.clone()).unwrap();
+        assert!(text.contains("3,false,\"quoted \"\"q\"\"\",42\n"));
+        assert_eq!(
+            samples.measured("process-workload", "gel-evidence"),
+            vec![42]
+        );
+        struct FailedWrite;
+        impl std::io::Write for FailedWrite {
+            fn write(&mut self, _: &[u8]) -> std::io::Result<usize> {
+                Err(std::io::Error::from(std::io::ErrorKind::WriteZero))
+            }
+            fn flush(&mut self) -> std::io::Result<()> {
+                Ok(())
+            }
+        }
+        let mut failed = Samples {
+            values: Vec::new(),
+            journal: FailedWrite,
+        };
+        assert!(failed.add("phase", "tool", 3, "q", 42).is_err());
+        assert!(failed.values.is_empty());
     }
 }

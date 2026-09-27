@@ -5,8 +5,9 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- The 0.5.0 version line contains everything below; tagged releases are listed on
-  the Releases page. Tagged `v0.4.0` and `v0.3.0` remain earlier releases.
+- This page separates the delivered 0.5.0 version line from open review and future
+  research work below. It does not claim that every listed task is implemented.
+  Tagged releases are listed on the Releases page; `v0.4.0` and `v0.3.0` remain earlier releases.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -42,8 +43,9 @@ The following capabilities are present on public `main`:
    validation. Single-document import/read/save/reopen belongs to the earlier published base.
 2. Keep per-platform CI evidence for every revision. Unix permission and
    directory-sync checks remain platform-specific, not portable guarantees.
-3. Provide one-command local reporting with raw output, resource/timing scope and
-   failures retained. Never infer robust performance from a single UI timing.
+3. Independently review the implemented one-command reporting, including raw
+   output, resource/timing scope and retained failures. A single UI timing is not
+   a robust performance measurement.
 4. Reproduce numeric Q8 evidence on an independent second host, including
    regressions and complete memory costs. Keep addressed readout and full scan
    distinct; coordinate views are not independent information.
@@ -70,7 +72,7 @@ states.
 | Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` in 4cbfff5 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
 | Still of the update, restart and corrupted-copy scenario | 3c088cc | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
-| Binary packages for Linux, macOS and Windows, built only in CI | 3c088cc | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
+| Binary packages for Linux, macOS and Windows, built only in CI | 3c088cc | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | verify the exact release revision, archive hashes and build attestations; packages are unsigned and checked only on their build runners |
 | Fresh paired timing and fresh-process RSS of one mutation (A09) | 306c7f1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
 | Private previews described only by scope and limits | 1f7693c, ffa85b6 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md) and [film guide](../media/FILMS-GUIDE.md); the public Evidence Lab film keeps its full transcript | — |
 | Property-to-test map (A07) | fc5cf90 | `xtask ci-evidence` | [map](PROPERTY-TESTS.md): 35 properties, 71 tests, one `PROPERTY` line per row in each platform report | properties without a row are not claimed untested; a row shows the tests ran, not full coverage |
@@ -97,7 +99,7 @@ identify its independent operator rather than invent one.
 
 ## Review work list and next acceptance
 
-Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
+Summary: 14 DONE_SCOPED · 6 PARTIAL · 3 OPEN · 1 OWNER.
 
 | ID | State | Work and next acceptance condition | Evidence / entry point |
 |---|---|---|---|
@@ -107,7 +109,7 @@ Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
 | A04 | DONE_SCOPED | Runtime-example sequencing checks each native exit status, including first/middle failures and misleading PASS output. | [Process tests](../xtask/tests/process_sequence.rs) |
 | A05 | PARTIAL | Decode report and an AI review of every visually distinct frame of all three films exist. A human start-to-finish review remains open. | [Media review](MEDIA-DECODE-REVIEW.md) |
 | A06 | DONE_SCOPED | The recorder fails closed on split UTF-8, EOF, failed writes, missing markers and child exit; a lint gate forbids 14 lints and rejects 10 probes. | [Recorder safety](RECORDER-SAFETY.md) |
-| A07 | DONE_SCOPED | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 2 partial branches, and a strict cross-platform diff checks them. A property-to-test map of 35 documented properties and 71 uniquely named tests is checked on every CI platform; it is not an exhaustive map of every statement. | [CI evidence](CI-EVIDENCE.md), [property map](PROPERTY-TESTS.md) |
+| A07 | DONE_SCOPED | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 3 partial branches, and a strict cross-platform diff checks them. A property-to-test map of 35 documented properties and 71 uniquely named tests is checked on every CI platform; it is not an exhaustive map of every statement. | [CI evidence](CI-EVIDENCE.md), [property map](PROPERTY-TESTS.md) |
 | A08 | DONE_SCOPED | Structural, admission and OS-level publication faults (permission denial, SIGKILL, full disk on a bounded tmpfs) keep the previous snapshot; possible publication before a directory-sync error is documented. | [Publication fault tests](PUBLICATION-FAULT-TESTS.md) |
 | A09 | DONE_SCOPED | Allocations, user-space copies and peak additional heap per mutation are measured locally (DHAT, heaptrack). A fresh paired timing comparison and the resident-set peak of one mutation in fresh processes, with the peak reset before the mutation, are recorded on one host; a second host remains open. | [Mutation comparison](MUTATION-COMPARISON.md), [builder](COLLECTION-BUILDER.md) |
 | A10 | PARTIAL | A comparison protocol (input, profile, clock boundary, warmup, order, host metadata) exists and governs the [grep comparison](BENCHMARK-GREP.md); historical campaigns are not re-run under it. | [Campaign protocol](EVIDENCE-CAMPAIGN.md) |
