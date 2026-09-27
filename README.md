@@ -16,18 +16,83 @@ reopen pinned snapshots. Local Rust tools, without an LLM.
 
 ## See it in action
 
-**Add → find → prove source correspondence → save → restart → reopen.**
+**Actual public-tool runs, presented as six edited log replays.**
+[Static view](media/gifs/STATIC.md) · [Full gallery and transcripts](media/gifs/README.md) · [Source and hashes](media/gifs/MANIFEST.txt)
 
-[![Public Evidence Lab: the saved collection reopened in a second process. Select the image to open the original film.](media/evidence-lab/02-reopened-56s.png)](media/GEL-EVIDENCE-LAB-EN.mp4)
+Each animation lasts 12 seconds. Card pacing is editorial, not execution time.
+Light and dark variants match the README theme; these are not product UI screenshots.
 
-**[Watch the public walkthrough, 70 seconds](media/GEL-EVIDENCE-LAB-EN.mp4)** ·
-[Commands and both process logs](media/EVIDENCE-LAB-GUIDE.md) ·
-[Descriptive transcript, English / Polish](media/TRANSCRIPTS-PL-EN.md)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.gif">
+  <img alt="Exact quotes. Verified restart." src="media/gifs/01-evidence-light.gif" width="1000">
+</picture>
 
-This is an existing terminal recording on two documents with 308 input bytes,
-not a new v0.5.0 recording or a performance benchmark. The image above is a
-clickable still, not a GIF. The film predates later context-rendering changes;
-its [review scope and open human review](docs/MEDIA-DECODE-REVIEW.md) remain explicit.
+[Read the full source/restart transcript](media/gifs/01-evidence.txt)
+
+<details>
+<summary><strong>2. Changed source. Old citation refused.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/02-stale-dark.gif">
+  <img alt="Changed source. Old citation refused." src="media/gifs/02-stale-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/02-stale.txt) · [Full-size animation](media/gifs/02-stale-light.gif)
+
+</details>
+
+<details>
+<summary><strong>3. Backup. Inspect. Restore to a new path.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/03-backup-dark.gif">
+  <img alt="Backup. Inspect. Restore to a new path." src="media/gifs/03-backup-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/03-backup.txt) · [Full-size animation](media/gifs/03-backup-light.gif)
+
+</details>
+
+<details>
+<summary><strong>4. One command. Inspect every result.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/04-reproduce-dark.gif">
+  <img alt="One command. Inspect every result." src="media/gifs/04-reproduce-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/04-reproduce.txt) · [Full-size animation](media/gifs/04-reproduce-light.gif)
+
+</details>
+
+<details>
+<summary><strong>5. One changed byte. Trusted pin rejects it.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif">
+  <img alt="One changed byte. Trusted pin rejects it." src="media/gifs/05-integrity-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/05-integrity.txt) · [Full-size animation](media/gifs/05-integrity-light.gif)
+
+</details>
+
+<details>
+<summary><strong>6. GEL and grep. Compare answers first.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/06-compare-dark.gif">
+  <img alt="GEL and grep. Compare answers first." src="media/gifs/06-compare-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/06-compare.txt) · [Full-size animation](media/gifs/06-compare-light.gif)
+
+</details>
+
+The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
+its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
+[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
+The new replays do not close that review.
 
 ### What you can inspect
 

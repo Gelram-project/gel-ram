@@ -1,3 +1,10 @@
+# Animated workflow gallery
+
+[Six edited public CLI replays](gifs/README.md) · [Static accessible view](gifs/STATIC.md) · [Provenance](gifs/MANIFEST.txt)
+
+Light/dark cards are derived from newly executed public CLI logs. They are not
+new film recordings or latency measurements. The original films below are unchanged.
+
 # Three films, two distinct scopes
 
 Start with the public Evidence Lab. All films are silent; elapsed times in an
