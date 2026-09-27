@@ -258,12 +258,12 @@ The logical ranking bank contains **1M fragments across four 250k slots**;
 these probes do **not** search all 1M candidates. One empty probe remains in
 the quality denominator. Integrity controls use a separate 1,000-fragment
 PL/EN catalog, not the million-record bank. The gate is an experimental
-CPU adapter, tested offline in a Linux sandbox, not a deployed API hybrid.
+CPU adapter, tested offline in a Linux sandbox, not a deployed service.
 
 Percentiles use nearest-rank; with N=40, p99 is the maximum. These are
 single-host diagnostic runs, not independently replicated measurements.
 Matching source bytes does not establish truth or understanding.
-Neither physical DRAM-refresh computation nor a speedup over LLMs is
+Neither hardware-level memory computation nor a speedup over LLMs is
 established by these tests.
 
 The underlying logs and private harness remain outside this checkout.
@@ -294,7 +294,7 @@ Its microsecond times measure parsing and abstention, not successful semantic
 decisions; the 2/6 agreement is the always-UNKNOWN baseline.
 Groq times include HTTP/network and generation. There is **no justified
 GEL/LLM speedup multiplier** here, and N=1 does not support latency percentiles.
-The adapter is not the full GEL chat or an Ocean retrieval benchmark.
+The adapter is not a complete GEL application or an Ocean retrieval benchmark.
 
 Earlier 20B and 120B PL attempts were incomplete at the 1024-token limit
 (1383.914 ms and 2407.528 ms). They are retained in the

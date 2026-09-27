@@ -43,7 +43,7 @@ Technical PASS does not grant merge or release approval.
 ## Limits
 
 Not semantic QA, a speaker, multimedia understanding, encrypted personal memory,
-an anti-rollback protocol or hardware DRAM synchronization. Q reference and source
+an anti-rollback protocol or hardware-level memory computation. Q reference and source
 lookup are separate; they do not prove fourfold independent storage. The collection
 snapshot includes full text and metadata, not compressed ORBs. Mutation rehashes
 the entire snapshot; it is not an incremental index or constant-time update.

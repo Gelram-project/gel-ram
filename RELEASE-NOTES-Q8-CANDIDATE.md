@@ -33,6 +33,6 @@ OS-visible memory. No historical numeric results or private application code cha
 - Retain exact score checks, masks, weights, existing file formats and PolyForm license.
 
 No private application, encoder, bank, model or conversations are shipped.
-No claim of semantic99%, fourfold independent capacity or physical RAM fingerprint.
+No claim of semantic99%, fourfold independent capacity or hardware identity.
 See [results and limitations](docs/Q8-EVIDENCE-CANDIDATE.md) and
 [validation](docs/Q8-CANDIDATE-VALIDATION.md).

@@ -31,5 +31,5 @@ Output fixture files belong outside the checkout and public archive.
 Every comparison failure or benchmark failure stops the runner. Reference
 worker fallback prevents reporting that run as an ordinary full-worker result.
 The runner does not isolate the host, authenticate its environment, or measure
-power, thermal throttling, hardware refresh, peak RSS or semantic accuracy.
+power, thermal throttling, hardware-level memory effects, peak RSS or semantic accuracy.
 Sample timing ranges are not confidence intervals.

@@ -97,7 +97,7 @@ arbitrary knowledge. The benchmark holds both banks simultaneously for checking.
 Only matching transforms of the same contents qualify for shared scoring.
 Four genuinely different contents still require their own evaluation.
 No new semantic Top1/Top10, full-knowledge gate, response-evidence gate,
-physical analog RAM mechanism, macOS/Windows runtime or GPU result is claimed.
+hardware-level memory computation, macOS/Windows runtime or GPU result is claimed.
 
 ## Historical local verification status (051/052)
 

@@ -97,5 +97,5 @@ bool masks and occupy 8192 bytes per four-view group. Grid tables, query
 indices, outputs and benchmark-side duplicate banks also consume memory.
 The example prints both denominators, not just the more impressive number.
 
-No physical analog RAM resonance, autonomous inference, 99% knowledge
+No hardware-level memory computation, autonomous inference, 99% knowledge
 retrieval or universal hardware speedup is established by this experiment.

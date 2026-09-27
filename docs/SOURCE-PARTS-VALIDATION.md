@@ -30,5 +30,5 @@ remote execution of this candidate is pending publication approval. Local
 Linux success must not be presented as three-platform certification.
 
 No new speedup, compression ratio, independent storage capacity, semantic
-accuracy or physical RAM synchronization result is claimed. Existing timing
+accuracy or hardware-level memory computation result is claimed. Existing timing
 tables describe their original revisions, not a new measurement of this API.

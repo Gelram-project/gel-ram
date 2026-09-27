@@ -51,7 +51,7 @@ directory must not exist. See [validation](docs/SOURCE-CANDIDATE-VALIDATION.md).
 ## Not included or claimed
 
 No new Q8 scoring formula, semantic accuracy result, compression claim, private
-encoder, speaker, multimedia bank, P2P service or physical DRAM synchronization.
+encoder, speaker, multimedia bank, P2P service or hardware-level memory computation.
 Real text readout and numeric Q8 views remain separate demonstrations. Earlier
 performance results belong to their recorded revisions and inputs, not a new
 speedup of the multipart API. No claim of general security or legal certification.
