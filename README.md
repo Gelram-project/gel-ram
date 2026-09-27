@@ -11,7 +11,7 @@
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
 quotations, stale-citation refusal and independently pinned snapshots.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests on every CI platform, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
 
 [Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
