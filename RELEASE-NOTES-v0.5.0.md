@@ -82,8 +82,11 @@ not code-signed or notarized and are checked only on their build runners.
 
 ## Documentation
 
-- The README opens with a light and dark header and six short replays of
-  recorded public workflows ([gallery](media/gifs/README.md)); each is labelled
+- The README opens with a light and dark header, an animated diagram of the
+  citation check (drawn, not recorded; it stops under reduced motion), a strip
+  of checked facts whose numbers the builder reads from the property map and
+  the mutation matrix, and six short replays of recorded public workflows with
+  colour-coded badges ([gallery](media/gifs/README.md)); each replay is labelled
   as an edited log replay, not wall time. A script-free full-page edition,
   [README-MULTIMEDIA.html](README-MULTIMEDIA.html), opens from a checkout without
   network access ([presentation guide](docs/README-PRESENTATION.md)).
