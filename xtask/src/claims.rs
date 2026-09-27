@@ -17,6 +17,14 @@ enum Evidence {
     Deferred(&'static str),
 }
 
+/// The only open states a row may carry; none of them is a PASS.
+const DEFERRED_MODES: &[&str] = &[
+    "SEPARATE_GATE",
+    "MEASURED_LOCAL",
+    "NOT_VERIFIED",
+    "NOT_ESTABLISHED",
+];
+
 const CLAIMS: &[Claim] = &[
     Claim {
         id: "source-roundtrip",
@@ -127,6 +135,106 @@ const CLAIMS: &[Claim] = &[
         counterexample: "a panic or partial COMPLETE after an I/O failure",
         source: "docs/RECORDER-SAFETY.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "batch-contract",
+        dimension: "interface",
+        scope: "gel-evidence --batch, schema gel-evidence/1",
+        input: "HIT, UNKNOWN, an over-long line, a first ERROR and later commands",
+        expected: "data on stdout only, exit 0/3/2, the first ERROR stops and later commands count as not run",
+        counterexample: "an INCOMPLETE search or an ERROR reported as a clean exit",
+        source: "docs/EVIDENCE-BATCH.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "backup-restore",
+        dimension: "persistence",
+        scope: "gel-backup directory with MANIFEST",
+        input: "interrupted, tampered, foreign, withdrawn and complete backups",
+        expected: "only a complete, not withdrawn backup restores, and only to a path that does not exist",
+        counterexample: "a backup without a committed manifest restored, or a restore replacing a file",
+        source: "docs/BACKUP.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "network-isolation",
+        dimension: "environment",
+        scope: "xtask isolation-check on Linux",
+        input: "networked CI runner and an unprivileged network namespace",
+        expected: "fails on the runner, passes in the namespace; only network-unreachable counts as blocked",
+        counterexample: "Cargo offline flags presented as proof that nothing used the network",
+        source: "docs/REPRODUCE-ISOLATED.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "format-mutations",
+        dimension: "structure",
+        scope: "GELSET01, GELSRC01 and Q8DEMO01 fixtures",
+        input: "a finite matrix of 179 mutants and a lenient-reader control",
+        expected: "every mutant rejected or its acceptance explained; report equal to the recorded matrix",
+        counterexample: "an unexplained accepted mutant, or a lenient reader passing the control",
+        source: "docs/MUTATION-MATRIX.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "binary-packages",
+        dimension: "distribution",
+        scope: "CI-built packages for three targets",
+        input: "license files against the inventory, build-path scan, smoke run per platform",
+        expected: "package refused on any failure; attestation only on a hand-started run",
+        counterexample: "a package presented as code-signed, reproducible or tested beyond its build runner",
+        source: "docs/BINARIES.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "property-map",
+        dimension: "test-scope",
+        scope: "35 documented properties mapped to 71 tests",
+        input: "per-platform ci-evidence TESTS.txt",
+        expected: "each mapped test ran and passed once, or is a declared Unix-only exclusion",
+        counterexample: "a passing row read as full coverage of its property",
+        source: "docs/PROPERTY-TESTS.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "grep-comparison",
+        dimension: "comparison",
+        scope: "36 public queries against grep and sha256sum, one host",
+        input: "the same public corpus, answers compared before any timing",
+        expected: "time compared only for same-answer queries; GEL slower on this corpus",
+        counterexample: "timing queries whose answers differ, or a speed-up drawn from them",
+        source: "docs/BENCHMARK-GREP.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "mutation-timing",
+        dimension: "timing",
+        scope: "one collection mutation, stream versus historical",
+        input: "30 pairs per size and operation with identical results",
+        expected: "paired ratio recorded with its run-to-run variation",
+        counterexample: "absolute times from a mixed-core host compared across runs",
+        source: "docs/MUTATION-COMPARISON.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "gel-sketch-search",
+        dimension: "timing",
+        scope: "private engine, 128-byte sketches, three replays",
+        input: "201 measured batches per size with raw CSV",
+        expected: "author-reported per-scan p50; not reproducible from this checkout",
+        counterexample: "divided by a full-scan row to claim a speed-up",
+        source: "docs/GEL-EXPERIMENTAL-MEASUREMENTS.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "ocean-full-scan",
+        dimension: "timing",
+        scope: "historical 1M/10M full scans",
+        input: "two seeds, 100 queries each, 24 workers",
+        expected: "author-reported baseline; not re-runnable from this checkout",
+        counterexample: "presented as addressed-read latency or as GEL's own search path",
+        source: "docs/OCEAN-SCALE.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
         id: "media-full-review",
@@ -257,7 +365,8 @@ pub fn check(root: &Path) -> Result<(), String> {
                     return Err(format!("claim counterexample failed: {}", c.id));
                 }
             }
-            Evidence::Deferred(s) => s,
+            Evidence::Deferred(s) if DEFERRED_MODES.contains(&s) => s,
+            Evidence::Deferred(s) => return Err(format!("unknown evidence mode {s}: {}", c.id)),
         };
         println!(
             "{}\t{}\t{status}\t{}\t{}\t{}\t{}\t{}",
@@ -293,6 +402,15 @@ mod tests {
                 assert!(f().unwrap(), "{}", c.id);
             }
         }
+    }
+    #[test]
+    fn every_open_row_uses_an_allowed_mode() {
+        for c in CLAIMS {
+            if let Evidence::Deferred(s) = c.evidence {
+                assert!(DEFERRED_MODES.contains(&s), "{}", c.id);
+            }
+        }
+        assert!(!DEFERRED_MODES.contains(&"PASS"));
     }
     #[test]
     fn documentation_and_registry_agree() {

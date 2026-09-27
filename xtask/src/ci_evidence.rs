@@ -481,6 +481,18 @@ pub fn report(args: &[String]) -> Result<(), String> {
             report.push_str(&format!("PLATFORM_EXCLUSIONS=MISMATCH {e}\n"));
         }
     }
+    // Every test named in the property map ran and passed once, or is a
+    // declared Unix-only test on another platform.
+    let excluded_here = |name: &str| !cfg!(unix) && EXCLUSIONS.iter().any(|(n, _)| *n == name);
+    match super::property_map::read(&root).and_then(|rows| {
+        super::property_map::check(&rows, |n| workspace_counts(&tests, n), excluded_here)
+    }) {
+        Ok(lines) => report.push_str(&lines),
+        Err(e) => {
+            success = false;
+            report.push_str(&format!("PROPERTY_MAP=MISMATCH {e}\n"));
+        }
+    }
     if identity(&root)? != sha {
         return Err("checkout changed during evidence collection".into());
     }

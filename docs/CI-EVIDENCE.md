@@ -21,7 +21,10 @@ Files:
   path-bearing doctests). Then one `PLATFORM_EXCLUSION` line per whole test that
   is compiled only on Unix and one `PARTIAL_PLATFORM_BRANCH` line per test with
   an extra platform-only assertion block; its branch field says whether that
-  block was active on the recording platform (active or inactive).
+  block was active on the recording platform (active or inactive). Then one
+  `PROPERTY` line per row of the [property-to-test map](PROPERTY-TESTS.md) and a
+  `PROPERTY_MAP=CHECKED` total; a mapped test that did not run and pass exactly
+  once, other than a declared Unix-only test elsewhere, withholds COMPLETE.
 - TESTS.txt (generated): strict ASCII test identifiers and their standard statuses.
 - SHA256SUMS.txt (generated): checksums of those two files.
 - `COMPLETE`: emitted only after all commands and evidence writes succeed.
