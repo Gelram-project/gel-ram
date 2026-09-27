@@ -45,6 +45,8 @@ jobs:
           # Ubuntu may restrict unprivileged user namespaces through AppArmor.
           sudo sysctl -q -w kernel.apparmor_restrict_unprivileged_userns=0 || true
           unshare --user --map-root-user --net target/debug/xtask isolation-check
+      - name: Answer agreement with grep (no timing)
+        run: cargo run --locked --offline -p xtask -- bench-compare "${{ runner.temp }}/gel-bench-answers-${{ github.run_id }}-${{ github.run_attempt }}" --answers-only
       - name: Physically full filesystem publication (dedicated 1 MiB tmpfs)
         shell: bash
         run: |

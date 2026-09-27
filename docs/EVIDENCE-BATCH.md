@@ -73,8 +73,12 @@ vary between runs.
 The last record is the summary:
 
 ```json
-{"schema":"gel-evidence/1","record":"summary","executed":6,"not_run":0,"statuses":{"OK":3,"HIT":2,"UNKNOWN":1,"INCOMPLETE":0,"ERROR":0},"exit_code":0}
+{"schema":"gel-evidence/1","record":"summary","executed":6,"not_run":0,"statuses":{"OK":3,"HIT":2,"UNKNOWN":1,"INCOMPLETE":0,"ERROR":0},"exit_code":0,"peak_rss_kb":4312}
 ```
+
+peak_rss_kb is the process's peak resident set size when the summary is written
+(Linux VmHWM), or null where it is not measured. It describes this run on this
+host, not a property of the format.
 
 ## Compatibility
 

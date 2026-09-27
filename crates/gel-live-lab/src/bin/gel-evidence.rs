@@ -476,6 +476,21 @@ fn count_remaining(input: &mut impl BufRead) -> Result<u64, String> {
 
 const STATUSES: [&str; 5] = ["OK", "HIT", "UNKNOWN", "INCOMPLETE", "ERROR"];
 
+/// Peak resident set size of this process so far (Linux VmHWM), or JSON null
+/// where it is not measured.
+fn peak_rss_kb() -> String {
+    std::fs::read_to_string("/proc/self/status")
+        .ok()
+        .and_then(|status| {
+            status
+                .lines()
+                .find_map(|l| l.strip_prefix("VmHWM:"))
+                .and_then(|v| v.trim().strip_suffix("kB"))
+                .and_then(|v| v.trim().parse::<u64>().ok())
+        })
+        .map_or_else(|| "null".into(), |kb| kb.to_string())
+}
+
 /// Non-interactive mode: commands on stdin, JSON Lines on stdout, diagnostics
 /// on stderr. Stops at the first ERROR. Returns the process exit code.
 fn batch(s: &mut Session, input: &mut impl BufRead, out: &mut impl Write) -> Result<i32, String> {
@@ -554,6 +569,7 @@ fn batch(s: &mut Session, input: &mut impl BufRead, out: &mut impl Write) -> Res
             .value("not_run", not_run)
             .raw("statuses", &statuses.finish())
             .value("exit_code", exit)
+            .raw("peak_rss_kb", &peak_rss_kb())
             .finish(),
     )?;
     Ok(exit)

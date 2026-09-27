@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+mod bench_compare;
 mod ci_evidence;
 mod claims;
 mod isolation;
@@ -113,7 +114,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|isolation-check|mutation-matrix|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|isolation-check|mutation-matrix|bench-compare|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -900,6 +901,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("report") => reproduce::report(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
+        Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("runtime-examples") => runtime_examples(),

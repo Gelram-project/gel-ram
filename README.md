@@ -89,6 +89,8 @@ EXACT full scan → top10 → decision, 24 CPU workers:
 These numbers deliberately expose the cost of the public full-scan path. They are **baseline evidence**, not a claim that GEL RAM's private research path works this way.
 
 Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
+A paired comparison with grep and sha256sum on the same public corpus, including where
+GEL is slower, is in [BENCHMARK-GREP](docs/BENCHMARK-GREP.md).
 
 [Ocean Scale recorded measurements and limits](docs/OCEAN-SCALE.md)
 
