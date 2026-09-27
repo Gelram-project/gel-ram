@@ -3,7 +3,7 @@
 <!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200">
+  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check. Animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>

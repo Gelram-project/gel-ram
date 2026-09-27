@@ -37,18 +37,18 @@ const SCENES: &[(&str, &str, &str)] = &[
     ),
 ];
 const SVG: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="228" viewBox="0 0 1200 228" role="img" aria-labelledby="title desc">
-<title id="title">GEL RAM | Evidence Lab</title><desc id="desc">Your documents. Exact quotes. A restart you can check. Public Rust tools with source-linked evidence.</desc>
+<title id="title">GEL RAM | Evidence Lab</title><desc id="desc">Your documents. Exact quotes. A restart you can check. Public Rust tools with source-linked evidence. Animated logo: document sheets settle into a translucent GEL cube as source cells, a query lights one exact cell and a pin seal appears. Drawn, not recorded.</desc>
+<style>
+__LOGO_STYLE__
+</style>
 <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="__BG1__"/><stop offset="1" stop-color="__BG2__"/></linearGradient></defs>
 <rect x="1" y="1" width="1198" height="226" rx="24" fill="url(#bg)" stroke="__LINE__"/>
 <path d="M680 0Q755 180 1200 92V0Z" fill="__ACCENT__" opacity=".06"/><path d="M560 228Q850 38 1200 156V228Z" fill="__ACCENT__" opacity=".05"/>
-<g transform="translate(36 48)" fill="none" stroke="__INK__" stroke-width="5" stroke-linejoin="round">
-<path d="M51 0 94 25V76L51 101 8 76V25Z"/><path d="M8 25 51 50 94 25M51 50V101"/>
-<path d="M51 27 72 39V63L51 75 30 63V39Z" fill="__ACCENT__"/><path d="M30 39 51 51 72 39M51 51V75"/>
-</g>
+__LOGO__
 <g font-family="Arial,Helvetica,sans-serif" fill="__INK__">
-<text x="162" y="86" font-size="46" font-weight="700" letter-spacing="1">GEL RAM</text>
-<text x="163" y="128" font-size="30" font-weight="600">Evidence Lab</text>
-<text x="42" y="192" font-size="23">Your documents. Exact quotes. A restart you can check.</text>
+<text x="252" y="86" font-size="46" font-weight="700" letter-spacing="1">GEL RAM</text>
+<text x="253" y="128" font-size="30" font-weight="600">Evidence Lab</text>
+<text x="253" y="192" font-size="23">Your documents. Exact quotes. A restart you can check.</text>
 <text x="814" y="76" font-size="16" font-weight="700" letter-spacing="2" fill="__ACCENT__">PUBLIC RUST TOOLS</text>
 <text x="814" y="108" font-size="21">Source-linked evidence.</text>
 <text x="814" y="137" font-size="21">Inspect it. Reproduce it.</text>
@@ -128,7 +128,7 @@ const HTML: &str = r####"<!doctype html>
 <style>
 :root{color-scheme:light dark;--bg:#f6f9ff;--paper:#fff;--ink:#102949;--muted:#485e77;--line:#cbdcf0;--blue:#0969da;--soft:#e9f3ff;--shadow:0 18px 48px #24497112}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 95% 0%,#d8eaff 0,transparent 55%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}a:focus-visible,label:focus-visible{outline:3px solid var(--blue);outline-offset:5px}img{max-width:100%;height:auto;display:block}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(34px,4.3vw,57px);letter-spacing:-.05em;line-height:1.07;margin-bottom:22px}h2{font-size:29px;letter-spacing:-.025em;line-height:1.2}h3{font-size:18px;line-height:1.35}code,pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:20px}code{overflow-wrap:anywhere}.page{max-width:1220px;padding:32px 32px 0;margin:auto}.brand-row{display:flex;justify-content:space-between;gap:28px;align-items:center}.brand{display:flex;align-items:center;gap:18px}.brand svg{width:66px;flex:none;color:var(--ink)}.brand-name{font-size:33px;letter-spacing:-.03em;line-height:1.12;font-weight:780}.brand-name small{display:block;font-size:23px;letter-spacing:0}.strap{margin:10px 0 0;font-size:14px;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:750;color:var(--blue);margin-bottom:14px}.header-right{text-align:right;max-width:355px}.header-right p{font-size:17px;margin:0 0 10px}.chips{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.chip{border:1px solid var(--line);padding:3px 10px;border-radius:6px;font-size:12px;background:var(--paper);color:var(--muted)}nav{display:flex;gap:26px;flex-wrap:wrap;padding:18px 0;margin:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:600;font-size:14px}nav a{text-decoration:none}.hero{display:grid;grid-template-columns:1.18fr 1fr;gap:36px;align-items:center;padding:30px;background:linear-gradient(135deg,var(--soft),var(--paper));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero>*{min-width:0}.hero figure{margin:0}.media-link{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);text-decoration:none;box-shadow:var(--shadow)}.hero figcaption{font-size:12px;color:var(--muted);margin-top:13px}.hero-lead{font-size:17px}.checks{list-style:none;padding:0;margin:20px 0}.checks li{margin:8px 0;font-size:14px}.checks li::before{content:'✓';font-weight:800;color:var(--blue);margin-right:10px}.buttons{display:flex;flex-wrap:wrap;gap:10px}.button{display:inline-block;background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:10px;padding:10px 17px;text-decoration:none;font-weight:650;font-size:14px}.button.secondary{background:var(--paper);color:var(--blue);border-color:var(--line)}.boundary{margin:19px 0 0;color:var(--muted);font-size:12px}.section{margin:44px 0}.section-heading{text-align:center;max-width:760px;margin:0 auto 24px}.section-heading p{color:var(--muted);font-size:14px;margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.card{padding:17px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.card .num{font-size:11px;letter-spacing:.14em;color:var(--blue);font-weight:750;margin-bottom:8px}.card h3{min-height:49px;margin-bottom:12px}.card p{color:var(--muted);font-size:13px;margin:14px 0 12px}.card .links{font-size:12px;display:flex;gap:12px;flex-wrap:wrap}.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border-block:1px solid var(--line);padding:24px 0;margin-top:34px}.trust strong{display:block;margin-bottom:5px;font-size:16px}.trust p{font-size:13px;color:var(--muted);margin:0}.columns{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}.columns>section{min-width:0}.columns h2{font-size:23px}.columns p,.columns li{font-size:14px;color:var(--muted)}.doclinks{padding:0;list-style:none}.doclinks li{margin:9px 0}.scope{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px;font-size:13px}.scope h2{font-size:20px}.scope p:last-child{margin-bottom:0}footer{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}footer p{margin:0}.poster{display:none}.motion-control{position:absolute;left:-9999px}.view-tools{display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:12px;margin:0 0 18px;color:var(--muted)}.view-tools label{cursor:pointer;border:1px solid var(--line);border-radius:7px;background:var(--paper);padding:6px 10px}.motion-control:focus-visible~.page label[for=still-mode]{outline:3px solid var(--blue)}.motion-control:checked~.page .motion{display:none}.motion-control:checked~.page .poster{display:block}.motion-control:checked~.page label[for=still-mode]{background:var(--soft);outline:2px solid var(--blue)}.skip{position:absolute;left:12px;top:-80px;padding:8px 12px;background:var(--paper);z-index:5}.skip:focus{top:10px}
+a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}a:focus-visible,label:focus-visible{outline:3px solid var(--blue);outline-offset:5px}img{max-width:100%;height:auto;display:block}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(34px,4.3vw,57px);letter-spacing:-.05em;line-height:1.07;margin-bottom:22px}h2{font-size:29px;letter-spacing:-.025em;line-height:1.2}h3{font-size:18px;line-height:1.35}code,pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:20px}code{overflow-wrap:anywhere}.page{max-width:1220px;padding:32px 32px 0;margin:auto}.brand-row{display:flex;justify-content:space-between;gap:28px;align-items:center}.brand{display:flex;align-items:center;gap:18px}.brand>.motion,.brand>.poster{flex:none}.brand img{width:84px}.brand-name{font-size:33px;letter-spacing:-.03em;line-height:1.12;font-weight:780}.brand-name small{display:block;font-size:23px;letter-spacing:0}.strap{margin:10px 0 0;font-size:14px;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:750;color:var(--blue);margin-bottom:14px}.header-right{text-align:right;max-width:355px}.header-right p{font-size:17px;margin:0 0 10px}.chips{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.chip{border:1px solid var(--line);padding:3px 10px;border-radius:6px;font-size:12px;background:var(--paper);color:var(--muted)}nav{display:flex;gap:26px;flex-wrap:wrap;padding:18px 0;margin:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:600;font-size:14px}nav a{text-decoration:none}.hero{display:grid;grid-template-columns:1.18fr 1fr;gap:36px;align-items:center;padding:30px;background:linear-gradient(135deg,var(--soft),var(--paper));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero>*{min-width:0}.hero figure{margin:0}.media-link{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);text-decoration:none;box-shadow:var(--shadow)}.hero figcaption{font-size:12px;color:var(--muted);margin-top:13px}.hero-lead{font-size:17px}.checks{list-style:none;padding:0;margin:20px 0}.checks li{margin:8px 0;font-size:14px}.checks li::before{content:'✓';font-weight:800;color:var(--blue);margin-right:10px}.buttons{display:flex;flex-wrap:wrap;gap:10px}.button{display:inline-block;background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:10px;padding:10px 17px;text-decoration:none;font-weight:650;font-size:14px}.button.secondary{background:var(--paper);color:var(--blue);border-color:var(--line)}.boundary{margin:19px 0 0;color:var(--muted);font-size:12px}.section{margin:44px 0}.section-heading{text-align:center;max-width:760px;margin:0 auto 24px}.section-heading p{color:var(--muted);font-size:14px;margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.card{padding:17px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.card .num{font-size:11px;letter-spacing:.14em;color:var(--blue);font-weight:750;margin-bottom:8px}.card h3{min-height:49px;margin-bottom:12px}.card p{color:var(--muted);font-size:13px;margin:14px 0 12px}.card .links{font-size:12px;display:flex;gap:12px;flex-wrap:wrap}.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border-block:1px solid var(--line);padding:24px 0;margin-top:34px}.trust strong{display:block;margin-bottom:5px;font-size:16px}.trust p{font-size:13px;color:var(--muted);margin:0}.columns{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}.columns>section{min-width:0}.columns h2{font-size:23px}.columns p,.columns li{font-size:14px;color:var(--muted)}.doclinks{padding:0;list-style:none}.doclinks li{margin:9px 0}.scope{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px;font-size:13px}.scope h2{font-size:20px}.scope p:last-child{margin-bottom:0}footer{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:25px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}footer p{margin:0}.poster{display:none}.motion-control{position:absolute;left:-9999px}.view-tools{display:flex;gap:20px;justify-content:flex-end;align-items:center;font-size:12px;margin:0 0 18px;color:var(--muted)}.view-tools label{cursor:pointer;border:1px solid var(--line);border-radius:7px;background:var(--paper);padding:6px 10px}.motion-control:focus-visible~.page label[for=still-mode]{outline:3px solid var(--blue)}.motion-control:checked~.page .motion{display:none}.motion-control:checked~.page .poster{display:block}.motion-control:checked~.page label[for=still-mode]{background:var(--soft);outline:2px solid var(--blue)}.skip{position:absolute;left:12px;top:-80px;padding:8px 12px;background:var(--paper);z-index:5}.skip:focus{top:10px}
 @media(prefers-color-scheme:dark){:root{--bg:#0d1117;--paper:#151b23;--ink:#e6edf3;--muted:#a9b9ce;--line:#303d50;--blue:#79c0ff;--soft:#16253a;--shadow:0 18px 45px #0003}body{background:radial-gradient(ellipse at 95% 0%,#1a3555 0,transparent 55%),var(--bg)}.button{color:#081322}.button.secondary{color:var(--blue)}}
 @media(max-width:920px){.hero{grid-template-columns:1fr;gap:24px}.hero figure{order:2}.hero h1{max-width:680px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr 1fr}.columns>section:first-child{grid-column:1/-1}.header-right{max-width:290px}.brand-name{font-size:28px}.brand-name small{font-size:20px}.page{padding:24px 22px 0}}
 @media(max-width:580px){.page{padding:20px 16px 0}.brand-row{display:block}.header-right{text-align:left;max-width:none;margin-top:18px}.header-right p{font-size:15px}.chips{justify-content:flex-start}.hero{padding:19px}.hero h1{font-size:38px}.grid,.columns{grid-template-columns:1fr}.card h3{min-height:0}.trust{grid-template-columns:1fr 1fr}.view-tools{justify-content:flex-start;flex-wrap:wrap;gap:10px}nav{gap:16px;font-size:13px}.section{margin:32px 0}}
@@ -141,7 +141,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <input id="still-mode" class="motion-control" type="checkbox" aria-label="Show still images instead of moving previews">
 <div class="page">
 <header><div class="brand-row"><div><div class="brand">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 110" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" aria-hidden="true"><path d="M52 4 96 29V80L52 106 8 80V29Z"/><path d="M8 29 52 54 96 29M52 54V106"/><path d="M52 30 74 43V68L52 81 30 68V43Z" fill="#218bff"/><path d="M30 43 52 56 74 43M52 56V81"/></svg>
+__BRAND_LOGO__
 <div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Your documents. Exact quotes. A restart you can check.</p></div>
 <div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">Local CLI</span><span class="chip">Source-linked media</span></div></div></div>
 <nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
@@ -175,7 +175,7 @@ const NATIVE: &str = r####"# GEL RAM
 <!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check." src="media/presentation/header-light.svg" width="1200">
+  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check. Animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
 __FLOW__
@@ -306,9 +306,9 @@ or a general model ranking. Private code, banks and API credentials stay private
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner, an animated 3D scene of the citation check, a strip of checked
-facts, colour-coded workflow badges, six real GIF previews and two 3D graphics
-of the public checks. The adjacent
+an SVG banner with the animated GEL logo, an animated 3D scene of the citation
+check, a strip of checked facts, colour-coded workflow badges, six real GIF
+previews and two 3D graphics of the public checks. The adjacent
 README-MULTIMEDIA.html is a script-free local document with the full responsive
 panel layout, theme-aware backgrounds, a still-image control and links to the
 public documentation. Open it from the checkout in a browser. GitHub's file
@@ -320,6 +320,12 @@ quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
 new process that reopens it with the same pin, and a copy with one changed byte
 that is refused. It is drawn, not recorded, and its timing is not a
 measurement. Under reduced motion it shows its final state.
+
+The logo in the banner and in the full-page brand is the GEL RAM cube drawn in
+3D: document sheets settle into a translucent cube as three layers of source
+cells around the accent core, a query lights one exact cell and a pin seal
+appears. It pictures the public workflow, not how the engine works inside, and
+it is not a claim of general AI; under reduced motion it shows its final state.
 
 The builder draws the facts strip and the two check graphics from the property
 map, the Unix-only exclusion list of the CI evidence collector and the committed
@@ -359,7 +365,7 @@ The Rust-only presentation builder is tools/readme_presentation.rs. It refuses
 unexpected input headings and pre-existing output paths, verifies the original
 media pins before and after its edits, archives the actual preceding README and
 adds exact pins only for the files it generates. It does not allow arbitrary SVG or
-HTML files. The source manifest is then refreshed and the complete tree must
+HTML files. The source manifest is then regenerated and the complete tree must
 pass xtask verify. Normal three-platform CI is read separately for the final head.
 
 The presentation was built once with Rust 1.85.0 and committed by its author;
@@ -407,7 +413,35 @@ fn header(dark: bool) -> String {
     {
         s = s.replace(&format!("__{key}__"), val);
     }
-    s
+    let (o, a) = ((120.0, 118.0), 86.0);
+    let logo = gel_logo(theme(dark), values[3], o, a) + &gel_sheets(theme(dark), values[3], o, a);
+    s.replace("__LOGO_STYLE__", LOGO_STYLE)
+        .replace("__LOGO__", &logo)
+}
+/// The logo alone, for the brand of the full-page edition: animated, or still
+/// in its final state for the page's still-image control and for print.
+fn logo(dark: bool, animated: bool) -> String {
+    let (t, accent) = (theme(dark), if dark { "#79c0ff" } else { "#0969da" });
+    let (o, a) = ((96.0, 108.0), 76.0);
+    let (label, style, body) = if animated {
+        (
+            "GEL RAM animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears",
+            format!("<style>\n{LOGO_STYLE}\n</style>\n"),
+            gel_logo(t, accent, o, a) + &gel_sheets(t, accent, o, a),
+        )
+    } else {
+        (
+            "GEL RAM logo: a translucent cube of source cells with one exact cell lit and a pin seal",
+            String::new(),
+            gel_logo(t, accent, o, a),
+        )
+    };
+    format!(
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="{label}">
+{style}{body}
+</svg>
+"#
+    )
 }
 fn fill(template: &str, pairs: &[(&str, &str)]) -> String {
     let mut s = template.to_string();
@@ -934,6 +968,160 @@ fn bars(dark: bool, e: &Evidence) -> String {
         &body,
     )
 }
+const LOGO_STYLE: &str = r#".sheet,.l0,.l1,.l2,.hit,.ray,.seal{transform-box:fill-box;transform-origin:center}
+.sa{animation:sa 12s infinite}.sb{animation:sb 12s infinite}.sc{animation:sc 12s infinite}
+.l0{animation:l0 12s infinite}.l1{animation:l1 12s infinite}.l2{animation:l2 12s infinite}
+.ray{animation:ray 12s infinite}.hit{animation:hit 12s infinite}.seal{animation:seal 12s infinite}
+@keyframes sa{0%{opacity:0;transform:translateY(-26px)}3%{opacity:1}10%{opacity:1;transform:translateY(34px) scale(.7)}13%,100%{opacity:0;transform:translateY(40px) scale(.4)}}
+@keyframes sb{0%,12%{opacity:0;transform:translateY(-26px)}15%{opacity:1}22%{opacity:1;transform:translateY(34px) scale(.7)}25%,100%{opacity:0;transform:translateY(40px) scale(.4)}}
+@keyframes sc{0%,24%{opacity:0;transform:translateY(-26px)}27%{opacity:1}34%{opacity:1;transform:translateY(34px) scale(.7)}37%,100%{opacity:0;transform:translateY(40px) scale(.4)}}
+@keyframes l0{0%,9%{opacity:0;transform:scale(.3)}13%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes l1{0%,21%{opacity:0;transform:scale(.3)}25%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes l2{0%,33%{opacity:0;transform:scale(.3)}37%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes ray{0%,44%{opacity:0;stroke-dashoffset:60}46%{opacity:1}52%,80%{opacity:1;stroke-dashoffset:0}86%,100%{opacity:0;stroke-dashoffset:0}}
+@keyframes hit{0%,51%{opacity:0;transform:scale(.6)}55%{opacity:1;transform:scale(1.25)}59%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes seal{0%,60%{opacity:0;transform:scale(.4)}64%{opacity:1;transform:scale(1.15)}67%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none;opacity:0}.l0,.l1,.l2,.ray,.hit,.seal{animation:none;opacity:1}}"#;
+/// The GEL RAM logo as an animated 3D drawing: a translucent cube (the
+/// collection) around the logo's accent core. Document sheets settle into it
+/// as three layers of source cells, a query ray lights one exact cell and a
+/// pin seal appears. `o` is the cube centre and `a` its side. Drawn, not
+/// recorded: it pictures the public workflow, not how the engine works inside.
+fn gel_logo(t: &Theme, accent: &str, o: Point, a: f64) -> String {
+    let q = |x, y, z| iso(o, x, y, z);
+    let mut s = format!(
+        r#"<ellipse cx="{:.1}" cy="{:.1}" rx="{:.1}" ry="{:.1}" fill="{}" opacity=".12"/>"#,
+        o.0,
+        o.1 + a + 4.0,
+        0.75 * a,
+        0.1 * a,
+        t.ink
+    );
+    // Back edges, seen through the cube.
+    let back = q(0.0, 0.0, 0.0);
+    for e in [q(a, 0.0, 0.0), q(0.0, a, 0.0), q(0.0, 0.0, a)] {
+        s.push_str(&format!(
+            r#"<line x1="{:.1}" y1="{:.1}" x2="{:.1}" y2="{:.1}" stroke="{}" stroke-width="2" stroke-dasharray="4 5" opacity=".45"/>"#,
+            back.0, back.1, e.0, e.1, t.ink
+        ));
+    }
+    // Three layers of source cells; the centre of the middle layer is the core.
+    let step = a / 3.0;
+    let (cell, core) = (a / 8.2, a / 3.2);
+    let at = |n: usize, size: f64| (n as f64 + 0.5) * step - size / 2.0;
+    for k in 0..3 {
+        s.push_str(&format!(r#"<g class="l{k}">"#));
+        for i in 0..3 {
+            for j in (0..3).filter(|j| (i, *j, k) != (1, 1, 1)) {
+                let p = (at(i, cell), at(j, cell), at(k, cell));
+                s.push_str(&iso_box(o, p, (cell, cell, cell), t.paper, t.line));
+            }
+        }
+        s.push_str("</g>");
+        if k == 1 {
+            let p = (at(1, core), at(1, core), at(1, core));
+            s.push_str(&iso_box(o, p, (core, core, core), t.blue, t.ink));
+        }
+    }
+    // The exact cell a query finds, at the upper right edge.
+    let big = cell + 4.0;
+    let p = (at(2, big), at(0, big), at(2, big));
+    s.push_str(&format!(
+        r#"<g class="hit">{}</g>"#,
+        iso_box(o, p, (big, big, big), t.green, t.ink)
+    ));
+    // Translucent faces over the cells, then the outline and the front edges.
+    for (face, opacity) in [
+        (
+            [q(0.0, 0.0, a), q(a, 0.0, a), q(a, a, a), q(0.0, a, a)],
+            ".10",
+        ),
+        (
+            [q(0.0, a, 0.0), q(a, a, 0.0), q(a, a, a), q(0.0, a, a)],
+            ".16",
+        ),
+        (
+            [q(a, 0.0, 0.0), q(a, a, 0.0), q(a, a, a), q(a, 0.0, a)],
+            ".24",
+        ),
+    ] {
+        s.push_str(&polygon(&face, accent, &format!(r#" opacity="{opacity}""#)));
+    }
+    let outline = [
+        q(0.0, 0.0, a),
+        q(a, 0.0, a),
+        q(a, 0.0, 0.0),
+        q(a, a, 0.0),
+        q(0.0, a, 0.0),
+        q(0.0, a, a),
+    ];
+    let edge = format!(
+        r#" stroke="{}" stroke-width="4" stroke-linejoin="round""#,
+        t.ink
+    );
+    s.push_str(&polygon(&outline, "none", &edge));
+    let front = q(a, a, a);
+    let mut d = String::new();
+    for e in [q(a, 0.0, a), q(0.0, a, a), q(a, a, 0.0)] {
+        d.push_str(&format!(
+            "M{:.1} {:.1}L{:.1} {:.1}",
+            front.0, front.1, e.0, e.1
+        ));
+    }
+    s.push_str(&format!(
+        r#"<path d="{d}" stroke="{}" stroke-width="4" stroke-linecap="round"/>"#,
+        t.ink
+    ));
+    // Glass highlight along the upper edges.
+    let (h1, h2, h3) = (q(0.0, a, a), q(0.0, 0.0, a), q(a, 0.0, a));
+    s.push_str(&format!(
+        r##"<path d="M{:.1} {:.1}L{:.1} {:.1}L{:.1} {:.1}" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".7"/>"##,
+        h1.0 + 6.0,
+        h1.1 + 1.0,
+        h2.0,
+        h2.1 + 6.0,
+        h3.0 - 6.0,
+        h3.1 + 1.0
+    ));
+    // The query ray from the upper right to the exact cell.
+    let target = q(2.5 * step, 0.5 * step, 2.5 * step + cell / 2.0);
+    s.push_str(&format!(
+        r#"<path class="ray" d="M{:.1} {:.1}L{:.1} {:.1}" stroke="{accent}" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" fill="none"/>"#,
+        o.0 + 1.22 * a,
+        o.1 - 1.2 * a,
+        target.0 + 2.0,
+        target.1 - 3.0
+    ));
+    // The pin seal at the lower right.
+    let (x, y) = (o.0 + 0.95 * a, o.1 + 0.62 * a);
+    s.push_str(&format!(
+        r##"<g class="seal"><circle cx="{x:.1}" cy="{y:.1}" r="15" fill="{}" stroke="{}" stroke-width="2.5"/><path d="M{:.1} {y:.1}l5 5 9-10" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>"##,
+        t.green[1],
+        t.ink,
+        x - 7.0
+    ));
+    s
+}
+/// The three document sheets that drop into the cube; only the animated logo
+/// draws them, so a still logo carries no hidden elements.
+fn gel_sheets(t: &Theme, accent: &str, o: Point, a: f64) -> String {
+    let mut s = String::new();
+    for (class, dx, dy) in [("sa", -34.0, 6.0), ("sb", 0.0, -6.0), ("sc", 32.0, 4.0)] {
+        let (x, y) = (o.0 + dx - 11.0, o.1 - 1.3 * a + dy);
+        s.push_str(&format!(
+            r#"<g class="sheet {class}"><rect x="{x:.1}" y="{y:.1}" width="22" height="28" rx="2" fill="{}" stroke="{}" stroke-width="1.5"/><path d="M{:.1} {:.1}h13M{:.1} {:.1}h13M{:.1} {:.1}h9" stroke="{accent}" stroke-width="1.5"/></g>"#,
+            t.paper[0],
+            t.ink,
+            x + 4.5,
+            y + 8.0,
+            x + 4.5,
+            y + 14.0,
+            x + 4.5,
+            y + 20.0
+        ));
+    }
+    s
+}
 fn facts(dark: bool, (props, tests, mutants): (usize, usize, usize)) -> String {
     let v = if dark {
         [
@@ -1015,6 +1203,24 @@ fn wall_picture() -> String {
         1200,
     )
 }
+/// The logo in the brand of the full-page edition, animated or still like the
+/// previews, so the still-image control and print stop it too. The brand name
+/// next to it carries the text, so the image is decorative.
+fn logo_picture() -> String {
+    let img = |name: &str| {
+        themed(
+            &format!("media/presentation/{name}-light.svg"),
+            &format!("media/presentation/{name}-dark.svg"),
+            "",
+            84,
+        )
+    };
+    format!(
+        r#"<div class="motion">{}</div><div class="poster">{}</div>"#,
+        img("logo"),
+        img("logo-still")
+    )
+}
 fn bars_picture() -> String {
     themed(
         "media/presentation/bars-light.svg",
@@ -1044,6 +1250,8 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((path("facts"), facts(dark, counts)));
         out.push((path("wall"), wall(dark, &evidence)));
         out.push((path("bars"), bars(dark, &evidence)));
+        out.push((path("logo"), logo(dark, true)));
+        out.push((path("logo-still"), logo(dark, false)));
     }
     for i in 0..CHIPS.len() {
         for dark in [false, true] {
@@ -1061,6 +1269,7 @@ fn page() -> String {
         cards.push_str(&format!(r#"<article class="card"><div class="num">{}</div><h3>{title}</h3><a class="media-link" href="media/gifs/{id}-light.gif" aria-label="Open {title} at full size">{}</a><p>{desc}</p><div class="links"><a href="media/gifs/{id}.txt">Full transcript</a><a href="media/gifs/{id}-dark.gif">Dark full size</a></div></article>"#,chip_picture(i),pair(id,title)));
     }
     HTML.replace("__HERO__", &pair(SCENES[0].0, SCENES[0].1))
+        .replace("__BRAND_LOGO__", &logo_picture())
         .replace("__CARDS__", &cards)
         .replace("__FLOW__", &flow_picture())
         .replace("__FACTS__", &facts_picture())
@@ -1176,6 +1385,7 @@ fn check_page(text: &str) -> Result<()> {
         "__facts__",
         "__wall__",
         "__bars__",
+        "__brand_logo__",
         "__hero_chip__",
         "__hero_id__",
     ] {
@@ -1191,7 +1401,7 @@ fn check_page(text: &str) -> Result<()> {
         }
     }
     let mut needed = Vec::new();
-    for name in ["flow", "facts", "wall", "bars"] {
+    for name in ["flow", "facts", "wall", "bars", "logo", "logo-still"] {
         for theme in ["light", "dark"] {
             needed.push(format!("media/presentation/{name}-{theme}.svg"));
         }
@@ -1332,7 +1542,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 10 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 14 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -1344,6 +1554,7 @@ mod tests {
                 "__FACTS__",
                 "__WALL__",
                 "__BARS__",
+                "__BRAND_LOGO__",
                 "__HERO_CHIP__",
                 "__HERO_ID__",
                 "__HERO__",
@@ -1416,6 +1627,8 @@ mod tests {
         for dark in [false, true] {
             for s in [
                 scene(dark),
+                header(dark),
+                logo(dark, true),
                 facts(dark, (1, 1, 1)),
                 wall(dark, &e),
                 bars(dark, &e),
@@ -1424,6 +1637,47 @@ mod tests {
             }
         }
         assert!(native_intro().contains("05-integrity"));
+    }
+    #[test]
+    fn logo_keeps_its_core_and_a_final_state() {
+        for dark in [false, true] {
+            let s = logo(dark, true);
+            // The still variant draws the same logo without any animation.
+            let still = logo(dark, false);
+            assert!(!still.contains("animation") && !still.contains("<style"));
+            assert!(!still.contains("class=\"sheet"));
+            assert!(still.contains(&gel_logo(
+                theme(dark),
+                if dark { "#79c0ff" } else { "#0969da" },
+                (96.0, 108.0),
+                76.0
+            )));
+            // The accent core is drawn outside every animated group.
+            let core = iso_box(
+                (96.0, 108.0),
+                (
+                    1.5 * 76.0 / 3.0 - 76.0 / 6.4,
+                    1.5 * 76.0 / 3.0 - 76.0 / 6.4,
+                    1.5 * 76.0 / 3.0 - 76.0 / 6.4,
+                ),
+                (76.0 / 3.2, 76.0 / 3.2, 76.0 / 3.2),
+                theme(dark).blue,
+                theme(dark).ink,
+            );
+            let at = s.find(&core).expect("core drawn");
+            let before = &s[..at];
+            assert_eq!(
+                before.matches("<g class=").count(),
+                before.matches("</g>").count()
+            );
+            assert!(s.contains(".l0,.l1,.l2,.ray,.hit,.seal{animation:none;opacity:1}"));
+            assert!(header(dark).contains(&gel_logo(
+                theme(dark),
+                if dark { "#79c0ff" } else { "#0969da" },
+                (120.0, 118.0),
+                86.0
+            )));
+        }
     }
     #[test]
     fn keeps_technical_tail() {
@@ -1448,6 +1702,17 @@ mod tests {
         assert!(page().contains("prefers-reduced-motion"));
         assert!(page().contains("id=\"still-mode\""));
         assert_eq!(page().matches("<article class=\"card\"").count(), 6);
+        // The still-image control also stops the animated brand logo.
+        let brand = page()
+            .split("<div class=\"brand\">")
+            .nth(1)
+            .and_then(|s| s.split("<div class=\"brand-name\">").next())
+            .unwrap()
+            .to_string();
+        assert!(brand.trim_start().starts_with("<div class=\"motion\">"));
+        assert!(brand.contains("logo-light.svg") && brand.contains("logo-dark.svg"));
+        assert!(brand.contains("<div class=\"poster\">"));
+        assert!(brand.contains("logo-still-light.svg") && brand.contains("logo-still-dark.svg"));
     }
     #[test]
     fn native_is_not_one_big_image() {
