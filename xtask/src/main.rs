@@ -650,15 +650,37 @@ fn ci_policy() -> Result<(), String> {
         );
         let text = fs::read_to_string(path).map_err(|e| format!("{file}: {e}"))?;
         pinned_actions(&text, &file)?;
-        let writes = text.lines().filter(|l| l.contains(": write")).count();
-        if file != binaries_path && writes != 0 || text.contains("contents: write") {
+        let allowed: &[&str] = if file == binaries_path {
+            &["id-token: write", "attestations: write"]
+        } else {
+            &[]
+        };
+        if let Some(grant) = write_grants(&text)
+            .into_iter()
+            .find(|g| !allowed.contains(&g.as_str()))
+        {
             return Err(format!(
-                "{file}: write permission outside the binaries release job"
+                "{file}: write permission outside the binaries release job: {grant}"
             ));
         }
     }
     println!("CI_POLICY_GATE=PASS workflows={}", workflows.len());
     Ok(())
+}
+
+/// Workflow lines that grant a write permission, trimmed and lowercased,
+/// including the `write-all` shorthand and flow mappings; comments are ignored.
+fn write_grants(text: &str) -> Vec<String> {
+    text.lines()
+        .map(|l| {
+            l.split('#')
+                .next()
+                .unwrap_or("")
+                .trim()
+                .to_ascii_lowercase()
+        })
+        .filter(|l| l.contains(": write") || l.contains("write-all"))
+        .collect()
 }
 
 /// Every `uses:` in a workflow names a full 40-hex commit, never a movable tag.
@@ -1263,6 +1285,28 @@ mod tests {
         assert_eq!(code_spans("no spans ` here"), Vec::<&str>::new());
         assert_eq!(strip_span_padding(" one.md "), "one.md");
         assert_eq!(strip_span_padding("  "), "  ");
+    }
+
+    #[test]
+    fn every_workflow_write_grant_is_found() {
+        assert_eq!(
+            write_grants("permissions: write-all"),
+            ["permissions: write-all"]
+        );
+        assert_eq!(
+            write_grants("permissions: { contents: write }"),
+            ["permissions: { contents: write }"]
+        );
+        assert_eq!(
+            write_grants("    Id-Token: Write # signing"),
+            ["id-token: write"]
+        );
+        assert!(write_grants("permissions:\n  contents: read\n# contents: write").is_empty());
+        let root = workspace_root().unwrap();
+        for name in ["ci.yml", "cla.yml", "readme-presentation.yml"] {
+            let text = fs::read_to_string(root.join(".github/workflows").join(name)).unwrap();
+            assert!(write_grants(&text).is_empty(), "{name}");
+        }
     }
 
     #[test]

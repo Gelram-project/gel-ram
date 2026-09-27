@@ -1,22 +1,9 @@
 name: readme-presentation
 # Static documentation checks. No write token, generation commit or deployment.
+# Runs on every change, so no generated file can drift outside a path filter.
 on:
   push:
-    paths:
-      - tools/readme_presentation.rs
-      - .github/workflows/readme-presentation.yml
-      - README.md
-      - README-MULTIMEDIA.html
-      - media/presentation/**
-      - media/gifs/**
   pull_request:
-    paths:
-      - tools/readme_presentation.rs
-      - .github/workflows/readme-presentation.yml
-      - README.md
-      - README-MULTIMEDIA.html
-      - media/presentation/**
-      - media/gifs/**
 permissions:
   contents: read
 concurrency:
