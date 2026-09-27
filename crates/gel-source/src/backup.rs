@@ -60,6 +60,16 @@ pub enum RestoreError {
 }
 
 #[derive(Debug, PartialEq, Eq)]
+pub enum CreateError {
+    /// No complete backup was published; the directory may hold partial files.
+    NotCreated(String),
+    /// MANIFEST was published and the backup inspects as complete, but a later
+    /// step (directory sync or temporary cleanup) failed, so the durability of
+    /// its name is not confirmed.
+    CreatedUnconfirmed(String),
+}
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum DeleteError {
     /// Nothing was removed.
     Refused(String),
@@ -122,19 +132,29 @@ fn verified_snapshot(path: &Path, pin: Hash) -> Result<(Vec<u8>, Collection), St
     Ok((bytes, collection))
 }
 
+/// Tells "no backup" apart from "complete backup, name not yet durable" after
+/// the manifest publication failed, by inspecting what is actually on disk.
+fn classify_created(dir: &Path, pin: Hash, error: String) -> CreateError {
+    match state(dir, pin) {
+        Ok(State::Complete { .. }) => CreateError::CreatedUnconfirmed(error),
+        _ => CreateError::NotCreated(error),
+    }
+}
+
 /// Copies a pinned snapshot into a new backup directory; the manifest is
 /// published last and is the only commit point.
-pub fn create(snapshot: &Path, pin: Hash, dir: &Path) -> Result<State, String> {
-    let (bytes, collection) = verified_snapshot(snapshot, pin)?;
-    fs::create_dir(dir).map_err(|e| format!("BACKUP_DIR {e}"))?;
-    sync_dir(parent(dir)).map_err(|e| format!("BACKUP_DIR_SYNC {e}"))?;
+pub fn create(snapshot: &Path, pin: Hash, dir: &Path) -> Result<State, CreateError> {
+    let failed = CreateError::NotCreated;
+    let (bytes, collection) = verified_snapshot(snapshot, pin).map_err(failed)?;
+    fs::create_dir(dir).map_err(|e| failed(format!("BACKUP_DIR {e}")))?;
+    sync_dir(parent(dir)).map_err(|e| failed(format!("BACKUP_DIR_SYNC {e}")))?;
     write_bytes_new(&dir.join(SNAPSHOT), &bytes)
-        .map_err(|e| format!("SNAPSHOT_COPY {}", io_text(&e)))?;
+        .map_err(|e| failed(format!("SNAPSHOT_COPY {}", io_text(&e))))?;
     let documents = collection.documents().count();
     let revision = collection.revision();
     let text = manifest(bytes.len(), &pin, documents, revision);
     write_bytes_new(&dir.join(MANIFEST), text.as_bytes())
-        .map_err(|e| format!("MANIFEST {}", io_text(&e)))?;
+        .map_err(|e| classify_created(dir, pin, format!("MANIFEST {}", io_text(&e))))?;
     Ok(State::Complete {
         bytes: bytes.len(),
         documents,
@@ -445,6 +465,25 @@ mod tests {
             classify(&other, pin, "e".into()),
             RestoreError::NotPublished(_)
         ));
+    }
+
+    #[test]
+    fn a_manifest_published_before_an_error_is_created_unconfirmed() {
+        let s = Scratch::new();
+        let (snap, pin) = snapshot(&s);
+        let dir = s.0.join("backup");
+        create(&snap, pin, &dir).unwrap();
+        assert_eq!(
+            classify_created(&dir, pin, "sync".into()),
+            CreateError::CreatedUnconfirmed("sync".into())
+        );
+        let partial = s.0.join("partial");
+        fs::create_dir(&partial).unwrap();
+        fs::copy(&snap, partial.join(SNAPSHOT)).unwrap();
+        assert_eq!(
+            classify_created(&partial, pin, "e".into()),
+            CreateError::NotCreated("e".into())
+        );
     }
 
     #[test]

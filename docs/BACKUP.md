@@ -52,6 +52,12 @@ from the files alone:
 files an interrupted publication left behind. Those files are never part of a
 backup.
 
+If publishing MANIFEST reports an error, `create` inspects the directory before
+answering: BACKUP=CREATED_UNCONFIRMED (exit 4) means the manifest is in place
+and the backup inspects as COMPLETE, but a later step (directory sync or
+temporary cleanup) failed, so the durability of its name is not confirmed. Any
+other failure leaves no complete backup and exits 2.
+
 ## Restore
 
 `restore` accepts only a COMPLETE, not withdrawn backup, and writes only to a

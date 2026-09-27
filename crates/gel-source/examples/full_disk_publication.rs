@@ -17,7 +17,7 @@ fn main() -> Result<(), String> {
 #[cfg(target_os = "linux")]
 mod linux {
     use gel_source::{
-        backup::{self, RestoreError, State},
+        backup::{self, CreateError, RestoreError, State},
         collection::Collection,
         import_text, load_bundle, write_bundle_new, BundleError, EncodedCorpus,
     };
@@ -228,12 +228,17 @@ mod linux {
         let snapshot = dir.join("bank.gelset");
         let pin = bank.save_new(&snapshot)?;
         let complete = dir.join("backup ok");
-        backup::create(&snapshot, pin, &complete)?;
+        backup::create(&snapshot, pin, &complete).map_err(|e| format!("{e:?}"))?;
         let (guard, _, _) = fill(dir, "filler2.bin")?;
         let unfinished = dir.join("backup full");
         let create_error = match backup::create(&snapshot, pin, &unfinished) {
             Ok(_) => return Err("backup created on a full device".into()),
-            Err(e) => e,
+            Err(CreateError::CreatedUnconfirmed(why)) => {
+                return Err(format!(
+                    "backup reported as created on a full device: {why}"
+                ))
+            }
+            Err(CreateError::NotCreated(why)) => why,
         };
         if unfinished.exists() && backup::inspect(&unfinished, pin)?.state != State::Incomplete {
             return Err("interrupted backup is not INCOMPLETE".into());
