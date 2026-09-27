@@ -1,378 +1,274 @@
 # GEL RAM
 
-**Load your UTF-8 documents, retrieve source-bound passages, reject stale evidence and reopen pinned snapshots — locally in Rust, without an LLM.** Experimental software, with reproducible numerical benchmarks and explicit limits.
+### Evidence Lab
 
-> **Development toward v0.5.0 — not released.** Batch mode, backup and restore, the format
-> mutation matrix, the grep comparison and the reproduction runner described here belong to
-> the work branch `work/v0.5.0`. Follow these instructions on that branch and record the
-> commit you tested (`git rev-parse HEAD`); a default-branch checkout is not equivalent.
-> The latest tagged release and its own instructions are on the
-> [Releases page](https://github.com/Gelram-project/gel-ram/releases) ·
-> [v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md). Earlier films remain historical.
+**Your documents. Exact quotes. A restart you can check.**
 
-## Evidence Lab: your documents, exact citations, a real restart
+Load UTF-8 documents, retrieve source-bound passages, reject stale citations and
+reopen pinned snapshots. Local Rust tools, without an LLM.
 
-[Watch the public walkthrough or distinguish the private previews](media/INDEX.md) ·
-[Post-freeze document assessment](docs/ASSESSMENT-REVIEW.md) ·
-[Windows/macOS record for the PR #9 head and instructions](docs/PLATFORM-REVIEW.md) ·
-[per-revision CI evidence](docs/CI-EVIDENCE.md).
+[Quick start](#quick-start) · [See it in action](#see-it-in-action) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
-Try it in a few minutes. You need Git and [rustup](https://rustup.rs); cloning,
-installing the toolchain and fetching need network access, the last command runs offline:
+> **Development toward v0.5.0. Not a tagged release.**
+> The instructions below target `work/v0.5.0`, not the default branch. This work
+> branch still carries workspace version 0.4.0. Record the exact commit you test.
+> [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases) · [Work-branch CI](https://github.com/Gelram-project/gel-ram/actions?query=branch%3Awork%2Fv0.5.0)
+
+## See it in action
+
+**Actual public-tool runs, presented as six edited log replays.**
+[Static view](media/gifs/STATIC.md) · [Full gallery and transcripts](media/gifs/README.md) · [Source and hashes](media/gifs/MANIFEST.txt)
+
+Each animation lasts 12 seconds. Card pacing is editorial, not execution time.
+Light and dark variants match the README theme; these are not product UI screenshots.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/01-evidence-dark.gif">
+  <img alt="Exact quotes. Verified restart." src="media/gifs/01-evidence-light.gif" width="1000">
+</picture>
+
+[Read the full source/restart transcript](media/gifs/01-evidence.txt)
+
+<details>
+<summary><strong>2. Changed source. Old citation refused.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/02-stale-dark.gif">
+  <img alt="Changed source. Old citation refused." src="media/gifs/02-stale-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/02-stale.txt) · [Full-size animation](media/gifs/02-stale-light.gif)
+
+</details>
+
+<details>
+<summary><strong>3. Backup. Inspect. Restore to a new path.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/03-backup-dark.gif">
+  <img alt="Backup. Inspect. Restore to a new path." src="media/gifs/03-backup-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/03-backup.txt) · [Full-size animation](media/gifs/03-backup-light.gif)
+
+</details>
+
+<details>
+<summary><strong>4. One command. Inspect every result.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/04-reproduce-dark.gif">
+  <img alt="One command. Inspect every result." src="media/gifs/04-reproduce-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/04-reproduce.txt) · [Full-size animation](media/gifs/04-reproduce-light.gif)
+
+</details>
+
+<details>
+<summary><strong>5. One changed byte. Trusted pin rejects it.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif">
+  <img alt="One changed byte. Trusted pin rejects it." src="media/gifs/05-integrity-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/05-integrity.txt) · [Full-size animation](media/gifs/05-integrity-light.gif)
+
+</details>
+
+<details>
+<summary><strong>6. GEL and grep. Compare answers first.</strong></summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="media/gifs/06-compare-dark.gif">
+  <img alt="GEL and grep. Compare answers first." src="media/gifs/06-compare-light.gif" width="1000">
+</picture>
+
+[Complete transcript](media/gifs/06-compare.txt) · [Full-size animation](media/gifs/06-compare-light.gif)
+
+</details>
+
+The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
+its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
+[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
+The new replays do not close that review.
+
+### What you can inspect
+
+| Source-bound retrieval | Explicit failure states | Save and reopen |
+|:---|:---|:---|
+| Original UTF-8 quotations, document identifiers and byte ranges. | UNKNOWN is different from an incomplete search or an error. | Save to a new path and reopen with an independently retained SHA-256 pin. |
+| [Readout contract](docs/DOCUMENT-READOUT.md) | [Batch schema and exit codes](docs/EVIDENCE-BATCH.md) | [Collection guide](docs/EVIDENCE-LAB.md) |
+
+A citation check establishes correspondence to the retained source bytes.
+**It does not establish that the source is true.** Search is bounded token-phrase
+retrieval, not unrestricted question answering. Snapshots and backups contain
+plaintext; hash verification is not encryption or a signature.
+
+### Update, restart and reject a corrupted copy
+
+<details>
+<summary><strong>Open the recorded final screen and the executable scenario</strong></summary>
+
+[![Recorded final screen of the public update, restart and corrupted-copy scenario. This is one still image, not a film or a new run.](media/evidence-lab/03-update-restart-102s.png)](media/evidence-lab/03-update-restart-102s.png)
+
+[Scenario, commands and checks](docs/UPDATE-RESTART-SCENARIO.md).
+The still does not prove that every intermediate step was reviewed.
+
+</details>
+
+[All media and their scope](media/INDEX.md). Historical private previews show a
+separate application and are not instructions for running this public checkout.
+No generated terminal mockup or illustrative timing is used as execution evidence.
+
+## Quick start
+
+Use a new checkout. Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs)
+first. Cloning, toolchain installation and dependency fetching need a network;
+the final command uses locked offline dependencies. Run each line separately,
+including in Windows PowerShell.
 
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
 git checkout work/v0.5.0
-rustup toolchain install 1.85.0 --profile minimal
+git rev-parse HEAD
+rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo
 ```
 
-The scripted demonstration ends with `GEL_EVIDENCE_DEMO=PASS`. Run the same
-command without `-- --demo` for the interactive prompt: type `add PATH` for each
-UTF-8 file, then `list`, `find PHRASE` and `proof 1`.
-Use `save NEW_PATH`, retain the displayed SHA256, exit, and reopen with
-`load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate previous results.
-No text crosses document boundaries. Nothing is uploaded or automatically saved.
-For scripts, `--batch` reads the same commands from standard input and writes
-JSON Lines with separate UNKNOWN, INCOMPLETE and ERROR states ([schema](docs/EVIDENCE-BATCH.md)).
-Saved collections can be backed up and restored with `gel-backup` ([backup](docs/BACKUP.md)).
+Expected completion marker: `GEL_EVIDENCE_DEMO=PASS`.
+This is an expected result to check, not a claim about a run you have not performed.
 
-[Step-by-step guide, limits and format](docs/EVIDENCE-LAB.md) ·
-[Measurements and independent recheck](docs/EVIDENCE-CAMPAIGN.md).
-This is phrase retrieval from plaintext sources, not a general chatbot or an encrypted store.
-**Verify it yourself:** [one-command verification, expected outputs and failure cases](docs/CANDIDATE-QUICKCHECK.md).
-See the [executable claim registry and explicitly unverified claims](docs/CLAIMS.md)
-for scoped checks rather than interpreting a global PASS as a guarantee of every feature.
+For the interactive prompt, run:
 
-This work branch still carries the 0.4.0 workspace version
-([release notes](RELEASE-NOTES-v0.4.0.md)); the move to 0.5.0 happens only with the
-owner's release decision. Tagged releases are listed on the
-[Releases page](https://github.com/Gelram-project/gel-ram/releases), and the earlier
-`v0.3.0` release is unchanged. See [codec boundaries](docs/CODEC-SCOPE.md)
-before interpreting Q labels.
-
-## What GEL RAM is
-
-GEL RAM is an independent experimental memory/readout project written in Rust. The public repository focuses on mechanisms that can be independently inspected and reproduced: exact source provenance, deterministic numeric readout, persistent source bundles and integrity gates. Earlier large synthetic Ocean measurements remain documented as historical results.
-
-The public repository is **not the complete private research system**. Some experimental memory mechanisms, implementation details and current private performance work are intentionally withheld until the project owner decides they are ready for publication.
-
-## What is publicly available
-
-| Capability | Public status |
-|---|---|
-| Rust public core | **AVAILABLE** |
-| Exact source-bound readout with SHA-256 provenance | **AVAILABLE** |
-| GELSRC01 no-replace save + independently pinned reopen | **AVAILABLE** |
-| Offline GEL Live Lab | **AVAILABLE** |
-| Synthetic Q8 reversible coordinate views | **AVAILABLE** |
-| Ocean Scale 1M / 10M measurements | **HISTORICAL** (archive withdrawn in 0.4.0) |
-| Independent byte / numeric / ranking checks | **AVAILABLE** |
-| Linux / macOS / Windows verification | **AVAILABLE** |
-| Private next-generation RAM execution path | **NOT PUBLICLY DESCRIBED** |
-| Physical memory-side compute claim | **NOT ESTABLISHED** |
-
-## Important performance distinction
-
-The recorded 1M/10M Ocean timings are a **conventional CPU/RAM full-scan baseline**; they are historical, author-reported and cannot be re-run from this checkout. They measure records resident in memory while CPU workers scan, score, rank and select results. They are a recorded comparison point, but they **must not be interpreted as the performance ceiling or the intended final GEL RAM execution model**.
-
-
-### Historical CPU/RAM full-scan baseline (author-reported)
-
-EXACT full scan → top10 → decision, 24 CPU workers:
-
-| Ocean | seed | N | p50 | p95 | p99 | max |
-|---|---:|---:|---:|---:|---:|---:|
-| 1M | 41119 | 100 | 72.427 ms | 81.018 ms | 82.859 ms | 90.949 ms |
-| 1M | 61141 | 100 | 71.962 ms | 79.860 ms | 80.576 ms | 88.227 ms |
-| 10M | 41119 | 100 | 615.428 ms | 684.888 ms | 710.313 ms | 734.085 ms |
-| 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |
-
-These historical numbers show the cost of a conventional full scan. They are **author-reported baseline evidence** that cannot be re-run from this checkout, not a claim that GEL RAM's private research path works this way.
-
-### GEL's own search path — author-reported, a different task
-
-Minimum-distance sketch search without a supplied result address, **3 CPU workers**.
-Replayed on 26 September 2026; the engine remains private.
-
-| GEL sketches | Bytes per sketch | Run 1 p50 | Run 2 p50 | Run 3 p50 |
-|---:|---:|---:|---:|---:|
-| 16,384 | 128 B | 21.310 µs | 15.521 µs | 17.918 µs |
-| 131,072 | 128 B | 337.910 µs | 279.205 µs | 269.472 µs |
-| 294,378 | 128 B | 885.044 µs | 750.340 µs | 728.198 µs |
-| 500,000 | 128 B | 1.440327 ms | 1.326322 ms | 1.264046 ms |
-
-Each p50 summarizes **201 measured batches** after three warm-up rounds.
-Times are amortized per scan (batch wall time divided by scans per batch),
-not cold single-request latency. Synthetic data and the query were reused.
-All three runs passed the numerical oracle; this is not semantic recall.
-
-The rows answer different questions on different data: a sketch is 128 bytes,
-not a 1152-byte Q8 record; the sketch search returns one minimum-distance
-sketch, not a ranked top-10 with a HIT/UNKNOWN decision; the sizes differ; and
-the sketch engine is private, so its numbers cannot be reproduced from this
-repository. **Do not divide one row by another.** A same-task comparison —
-identical corpus, queries and top-k, answers checked against the full scan,
-with preparation, updates and memory counted — is open work
-([roadmap A21](docs/ROADMAP.md)); until it exists, no speed-up factor is
-claimed. No 1M/10M sketch replay is established here. See
-[the component measurements](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md) for method
-and raw data.
-
-Compare timings only under the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md): phrase lookup, saving with sync and a full scan are different operations, and a small-sample “p99” is usually the maximum.
-A paired comparison with grep and sha256sum on the same public corpus, including where
-GEL is slower, is in [BENCHMARK-GREP](docs/BENCHMARK-GREP.md).
-
-[Ocean Scale recorded measurements and limits](docs/OCEAN-SCALE.md)
-
-**Start here:** [5-minute project map](docs/START-HERE.md) · [run it yourself](docs/TRY-IT.md) · [verified public evidence](docs/VERIFIED-RESULTS.md) · [roadmap](docs/ROADMAP.md) · [report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
-
-[![Public Evidence Lab walkthrough: add, cite, save, restart and reload a pinned snapshot](media/evidence-lab/02-reopened-56s.png)](media/GEL-EVIDENCE-LAB-EN.mp4)
-
-▶ **[Watch the public, reproducible Evidence Lab walkthrough (70 s)](media/GEL-EVIDENCE-LAB-EN.mp4)** · private application previews: [90-second native demo](media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4), [60-second continuous chat](media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) · [Film index and transcripts](media/INDEX.md) · [Publication status](CANDIDATE-STATUS.md)
-
-The two private previews show a separate private native Rust application: bounded source-frame answers, contextual follow-up and explicit UNKNOWN cases; they do **not** publish the private engine, private bank or other unreleased components. The Evidence Lab walkthrough shows the public gel-evidence tool from this repository.
-
-## Try GEL Live Lab on your own text
-
-```text
-cargo run --locked --offline --release -p gel-live-lab
+```sh
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence
 ```
 
-Start with `find cryptographic digest`, then change `phase 128` or `view 3`.
-Import your UTF-8 file with `open PATH`, use `find PHRASE` and `match N`,
-save to a **new** path with `save PATH`, retain the displayed bundle SHA256,
-exit and reopen with `load SHA256 PATH`. [Full guide](docs/LIVE-LAB.md).
-Install the toolchain and fetch dependencies first using the instructions below.
-
-This public Rust program runs offline without an LLM. The source panel and
-synthetic Q8 panel are explicitly separate; the text is not encoded by those
-four views. Saved source bundles are plaintext, not encrypted.
-The two private-preview films show a different, private application; the
-Evidence Lab film shows the public gel-evidence tool, not this Live Lab.
-
-## Try the document readout
+Then enter these commands inside Evidence Lab:
 
 ```text
-cargo run --locked --offline -p gel-source --example source_find -- "garbage collection"
+add crates/gel-source/fixtures/evidence-lab/memory.txt
+find ram is volatile
+proof 1
 ```
 
-An actual pinned Rust Book excerpt → original UTF-8 quote and source SHA256
-→ measured validation/search time → rejection of modified source bytes.
-Try `"ownership"` or `"a nonexistent phrase"` to see multiple matches or UNKNOWN.
-This is bounded token-phrase extraction, not a conversational model, semantic
-search, encrypted storage or Ocean throughput. [Contract and reproduction](docs/DOCUMENT-READOUT.md).
+For your own UTF-8 files, use `add PATH`, `list`, `find PHRASE` and `proof 1`.
+Use `save NEW_PATH`, retain the printed SHA-256 independently, exit, and reopen
+with `load SHA256 PATH`. `replace ID PATH` and `drop ID` invalidate earlier
+results. Nothing is uploaded or automatically saved by Evidence Lab.
 
-## Ocean Scale measurements (historical)
+[Full guide and limits](docs/EVIDENCE-LAB.md) · [More examples](docs/TRY-IT.md) ·
+[Binary packaging and publication conditions](docs/BINARIES.md)
 
-On the measured Ryzen AI 9 HX 370 host, a full **10M-record scan + top10 + decision**
-had EXACT p50 **615–705 ms** in two longer 24-worker runs (100 observations each).
-This is synthetic numerical readout, **not semantic AI accuracy** or microsecond
-search across the Ocean. The research archive behind these numbers is not part
-of the public tree from 0.4.0 onward; the results remain as historical
-author-reported measurements ([Ocean Scale](docs/OCEAN-SCALE.md)).
+## Three practical workflows
 
-![GEL public readout: one carrier, four equivalent views and a separate source integrity gate](docs/images/public-readout.svg)
+| Goal | Public interface | Contract and evidence |
+|:---|:---|:---|
+| Integrate with scripts or CI | `gel-evidence --batch` produces JSON Lines, with separate status and diagnostic channels. | [Versioned schema, exit codes and limits](docs/EVIDENCE-BATCH.md) |
+| Keep and recover a collection | `gel-backup` creates and inspects backups, restores to a new path and distinguishes withdrawal from deletion. | [Backup and restore](docs/BACKUP.md) |
+| Challenge the parser | Run the finite format-mutation campaign against pinned fixtures. | [Mutation matrix and exclusions](docs/MUTATION-MATRIX.md) |
 
-## Run it yourself
+A missing committed backup manifest is not a complete backup. Restore must not
+overwrite an existing snapshot. Directory durability is platform-specific;
+`clear`, `drop`, withdrawal and file deletion do not erase all existing copies.
+Read the backup contract before using these operations on important data.
 
-Requires Git and Rust via rustup. Use a new checkout; initial installation and
-dependency fetching need internet. Subsequent commands use locked offline builds.
-The repository pins Rust 1.85.0.
+## Reproduce the checks
 
-```text
-git clone https://github.com/Gelram-project/gel-ram.git
-cd gel-ram
-git checkout work/v0.5.0
-rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
-cargo fetch --locked
+After the quick-start setup, choose a new output directory outside the checkout:
+
+```sh
 cargo run --locked --offline -p xtask -- verify
+cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new
 ```
 
-Expected: `GEL_VERIFY_ALL=PASS`. These instructions verify the `work/v0.5.0`
-development branch; name the commit you tested. Evidence Lab has been on public main since
-[PR #9](https://github.com/Gelram-project/gel-ram/pull/9) (71142a2) and the review
-repairs since [PR #10](https://github.com/Gelram-project/gel-ram/pull/10) (0c17f6e);
-the workspace version on this branch is still 0.4.0. No model or private bank is needed.
+Expected markers include `GEL_VERIFY_ALL=PASS` and `REPRODUCTION=PASS` within
+their declared scope. Read the report for failed, skipped and unmeasured steps;
+a final marker is not proof of every feature or an independent second-host result.
 
-### Change the numeric input
+Cargo's offline flag is not a system-wide network barrier. For the Linux
+namespace procedure and `--require-isolation`, follow the
+[reproduction guide](docs/REPRODUCE.md) and [isolation contract](docs/REPRODUCE-ISOLATED.md).
+Windows and macOS limitations are recorded rather than counted as Linux checks.
 
-```text
+[Per-platform CI evidence](docs/CI-EVIDENCE.md) · [Executable claim registry](docs/CLAIMS.md) ·
+[Report an independent reproduction](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
+
+Reports and test data stay local unless you share them. Review paths, diagnostics
+and source content before publishing a report. Keep slower runs and failures.
+
+## Evidence, not a universal speed claim
+
+| Evidence | What it establishes | Where to inspect it |
+|:---|:---|:---|
+| Public grep / SHA-256 comparison | A scoped comparison on a declared corpus, including cases where GEL is slower. Matching rules and timed work are not identical. | [Method, disagreement cases and raw results](docs/BENCHMARK-GREP.md) |
+| Collection update measurements | Declared mutation-time and memory measurements, with measurement boundaries and exclusions. | [Mutation comparison](docs/MUTATION-COMPARISON.md) |
+| F32, F16 and affine Q1 to Q16 reference | Separate byte, numerical-error and ranking checks on public fixtures. Not integration with every reader or private format. | [Precision matrix](docs/PRECISION-MATRIX.md) · [Codec scope](docs/CODEC-SCOPE.md) |
+| Historical Ocean measurements | Author-reported CPU/RAM full scans; the research archive is not in this checkout. | [Historical results and limitations](docs/OCEAN-SCALE.md) |
+| Author-reported GEL component measurements | Separate tasks whose private implementations cannot be reproduced from this repository. Not an end-to-end speedup over Ocean. | [Method and retained public observations](docs/GEL-EXPERIMENTAL-MEASUREMENTS.md) |
+
+Do not divide timings from different tasks to claim a speedup. Numerical checks
+are not semantic recall. Use the [measurement protocol](docs/MEASUREMENT-PROTOCOL.md)
+and the [roadmap](docs/ROADMAP.md) to distinguish implemented checks, local
+measurements, independent acceptance and open research.
+
+<details>
+<summary><strong>Explore the public numerical readout and source formats</strong></summary>
+
+[Public architecture](docs/ARCHITECTURE.md) · [Q8 contract](docs/Q8-QUAD.md) ·
+[Source readout](docs/SOURCE-READOUT.md) · [Multipart sources](docs/SOURCE-PARTS.md) ·
+[Source building](docs/SOURCE-BUILDER.md) · [Storage format](docs/FORMAT.md)
+
+The source panel and synthetic Q8 panel are separate. Four reversible coordinate
+views are not four independent datasets; a Q label alone says nothing about
+natural-language quality. The public numerical demonstration is available through:
+
+```sh
 cargo run --locked --offline --release -p gel-phase-quad --example quad_playground -- --interactive
 ```
 
-Try `phase 128`, `mask 3`, `noise 100`, `show`, then `quit`.
-See each of four independently evaluated reference views, the shared score,
-inverse checks and one-read timing. A phase shift of 128 gives an opposite
-phase for the dense noiseless fixture; `mask 0` makes the body inactive.
-`--demo` runs without interaction. This is a synthetic numeric experiment,
-not four independent answers or a benchmark of conversation quality.
+[Illustrated guide, English / Polish](docs/ILLUSTRATED-GUIDE.md) ·
+[Live Lab](docs/LIVE-LAB.md) · [Real-source fixture and provenance](docs/REAL-SOURCE-DEMO.md)
 
-### Read a quote and reject a modification
+</details>
 
-```text
-cargo run --locked --offline --release -p gel-source --example source_readout -- "Demo vessel"
-```
+## Documentation
 
-Expected: title → exact quote → source entry/section/byte range → original
-SHA-256 pins → rejection when 2 bar is changed to 9 bar. Final marker:
-`SOURCE_E2E=PASS`. This built-in synthetic fixture is not real-world knowledge.
-Pins prove correspondence to approved bytes, not truth or relevance.
+| Start and use | Inspect and reproduce | Project and history |
+|:---|:---|:---|
+| [Project map](docs/START-HERE.md) | [Verified results and scope](docs/VERIFIED-RESULTS.md) | [Public roadmap](docs/ROADMAP.md) |
+| [Evidence Lab](docs/EVIDENCE-LAB.md) | [Publication fault tests](docs/PUBLICATION-FAULT-TESTS.md) | [Publication status](CANDIDATE-STATUS.md) |
+| [Batch interface](docs/EVIDENCE-BATCH.md) | [Source bundle verification](docs/SOURCE-BUNDLE.md) | [Media index](media/INDEX.md) |
+| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Earlier README and results](README-HISTORY-R2.md) |
 
-### Read an introduction split into parts
-
-```text
-cargo run --locked --offline -p gel-source --example source_parts
-```
-
-Synthetic PL/EN examples return numbered parts in order, each with its own
-exact quote, address, byte range, hash and source generation. Gaps, duplicate
-numbers and ambiguous titles are rejected. Detecting a missing final part
-requires an independently known expected count. Final marker:
-`SOURCE_PARTS_E2E=PASS`. [Contract and limitations](docs/SOURCE-PARTS.md).
-
-### Read real source material offline
-
-```text
-cargo run --locked --offline -p gel-source --example source_real -- "Rust ownership"
-```
-
-Three actual paragraphs from the MIT-licensed Rust Book, pinned to an upstream
-revision: ordered quotes, source URL, byte ranges and rejection of modified
-text/catalog. Expected: `SOURCE_REAL_E2E=PASS`. No model or private bank needed.
-This demonstrates approved-source integrity, not semantic understanding or Q8
-encoding. [Provenance, license and limits](docs/REAL-SOURCE-DEMO.md).
-
-### Generate a complete local report
-
-Choose a NEW directory outside the checkout, with an existing parent:
-
-```text
-cargo run --locked --offline -p xtask -- report ../gel-report-new
-```
-
-For a reviewed source archive without Git metadata, append its independently
-approved manifest pin:
-
-```text
-cargo run --locked --offline -p xtask -- report ../gel-report-new REVIEWED_MANIFEST_SHA256
-```
-
-Archive mode validates the complete source inventory before and after the run;
-it records Git revision as unavailable instead of inventing one. A checkout can
-also supply the pin. Without it, Git metadata is not a complete content snapshot.
-
-The Rust runner records toolchain, revision, working-tree changes, available
-parallelism, correctness and every configured timing run, including slow cases.
-Linux additionally reports CPU model and system memory; other systems explicitly
-mark those fields unmeasured. It stops on failure or reference fallback, retains
-partial logs and writes the COMPLETE.txt marker only after success. No automatic upload.
-Review logs for local paths before sharing. [Protocol and scope](docs/PUBLIC-DEMO.md).
-
-Maintainers can also [check and copy an exact reviewed source snapshot](docs/SOURCE-BUNDLE.md)
-with a separately recorded SHA-256 manifest pin. This never uploads files or
-approves a legal claim; private data and licensing still require review.
-
-## Native demonstration films
-
-The repository includes three silent English terminal films: the public,
-reproducible [Evidence Lab walkthrough](media/EVIDENCE-LAB-GUIDE.md) and two
-owner-authorized previews of a separate private native Rust application. The
-previews show live bounded source-frame answers and explicit UNKNOWN cases.
-They do **not** ship the private application, its engine or its bank.
-
-The [update, restart and corrupted-copy scenario](docs/UPDATE-RESTART-SCENARIO.md)
-is shown as one still of its final screen: a new process reopens the revised and
-the original snapshot with citations and refuses a copy with one flipped byte.
-
-![Final screen of the update, restart and corrupted-copy scenario: both snapshots reopened with citations, the corrupted copy refused](media/evidence-lab/03-update-restart-102s.png)
-
-The displayed reply timings belong only to those bounded routes and that recorded
-MINISFORUM AI X1 Pro run. They are not token/s figures, general LLM benchmarks or
-proof of unrestricted AI capability. See [the film guide](media/FILMS-GUIDE.md)
-and [media rights](media/RIGHTS.md).
-
-## What was measured
-
-![All eight R2 canonical-baseline cells, with ratios above and below one](docs/images/q8-r2-results.svg)
-
-R2, MINISFORUM AI X1 Pro (owner-reported model and 128 GB installed RAM),
-Ryzen AI 9 HX 370, Linux, Rust 1.85.0, shared host. The OS reported about
-93.91 GiB total usable RAM, not installed capacity or free memory.
-[Hardware provenance and measurement limits](docs/HARDWARE.md).
-On the private 768-record
-input, median FourViews/Shared was **3.627×** BodyActivity and **3.953×** Archive.
-Against a single canonical reader the medians were 1.145× and 1.174×; the
-BodyActivity range includes **0.993×**, a slower Shared run. Small 32-record
-fixtures favor the single reader. No universal speedup is claimed.
-
-All 8,355,840 V2 and 2,509,056 canonical-baseline comparisons passed in R2.
-These repeat the same numeric datasets; they are not independent semantic questions.
-Timing ratios are independently recomputed from raw timed rounds, not trusted
-from summary fields. [All values, ranges and raw logs](docs/Q8-CANDIDATE-R2-AUDIT.md).
-
-## What “four views” means
-
-The public Q8 record has 1024 phase bytes plus 128 mask bytes: **1152 bytes**.
-Four reversible coordinate views share one stored carrier and one score when
-matching transforms are applied to query and candidate. This avoids repeated
-work; it does not store four unrelated files in the same capacity.
-Q8 means 256 phase levels, not a 256-bit record. Runtime tables and buffers cost
-additional memory. The playground distinguishes payload sizes from process RSS
-(Linux only); its single-read timing is not a robust performance benchmark.
-
-No private encoder, media bank, conversation, LLM, hardware binding or
-network service is included. The source catalog is separate from the
-numeric Q8 demonstration; no hidden text-to-Q8 encoder is implied.
-
-### Illustrated guide / przewodnik graficzny
-
-[![One Q8 record, four reversible views, not four independent datasets](docs/images/q8-four-views-en.png)](docs/ILLUSTRATED-GUIDE.md)
-
-The hand-drawn artwork is AI-assisted educational illustration, not a RAM
-photograph, measurement or working graphical interface. The dots are illustrative,
-not a bit-by-bit map. [English and Polish illustrations, explanation and evidence limits](docs/ILLUSTRATED-GUIDE.md).
-
-## Evidence and development
-
-1. [Historical reporting fixes and demos (2026-09-11)](docs/PUBLIC-DEMO.md)
-2. [Historical source-readout candidate notes](RELEASE-NOTES-SOURCE-CANDIDATE.md)
-3. [Historical source-candidate validation](docs/SOURCE-CANDIDATE-VALIDATION.md)
-4. [Q8 contract](docs/Q8-QUAD.md) · [Source readout](docs/SOURCE-READOUT.md)
-5. [Initial candidate results](docs/Q8-EVIDENCE-CANDIDATE.md) · [R2 audit](docs/Q8-CANDIDATE-R2-AUDIT.md)
-6. [Historical README and results](README-HISTORY-R2.md) · [Roadmap](docs/ROADMAP.md)
-7. [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
-
-CI executes workspace tests on Linux, Windows and macOS. Linux also validates the
-complete source SHA-256 manifest, runs full verification and an independent integrity
-audit. CI correctness is separate from the recorded hardware timing campaigns.
-New PR changes must pass new CI.
-
-Independent reproduction, Unicode edge cases and platform regression tests are
-especially useful contributions. Include revision, hardware, commands, all raw
-results and failures — not only the fastest measurement.
+The complete README immediately before this layout change is preserved unchanged
+in [README-HISTORY-PRE-VISUAL.md](README-HISTORY-PRE-VISUAL.md), from commit
+`ffa85b639e58ad0e70d45f322a375080ccc41258`. It is a historical snapshot, not an
+additional current entry point. Existing detailed reports and raw evidence remain
+in their original locations.
 
 ## About and licensing
 
-GEL RAM is an independent hobby project by RR, developed with AI assistance
-including OpenAI Codex. Evidence and explicit limitations matter more than labels.
+GEL RAM is an independent hobby and research project by RR, developed with AI
+assistance. This public repository is not the complete private research system.
 
-The active public license for GEL RAM-owned material in this distribution is
-**GEL RAM Noncommercial Reciprocal License 1.0**. Noncommercial use, modification,
-sharing and free non-production Evaluation are permitted on its terms. Any
-Monetized Use requires a separate written Commercial Agreement. [License](LICENSE) ·
-[Licensing details](LICENSING.md) · [Commercial licensing](COMMERCIAL-LICENSE.md).
+GEL RAM-owned material uses **GEL RAM Noncommercial Reciprocal License 1.0**.
+It is source-available, not an OSI-approved open-source license. Noncommercial
+use and non-production Evaluation are governed by that license; Monetized Use
+requires a separate signed Commercial Agreement. This README adds no rights.
 
-The included Rust Book excerpt remains MIT-licensed; third-party rights remain
-separate. Project-owned films and screenshots follow [media/RIGHTS.md](media/RIGHTS.md).
-The historical `docs/licensing-next/` directory is not an additional active grant.
+[LICENSE](LICENSE) · [Licensing guide](LICENSING.md) · [Commercial terms](COMMERCIAL-LICENSE.md) ·
+[Third-party notices](THIRD-PARTY-NOTICES.md) · [Media rights](media/RIGHTS.md)
 
-Public attribution remains RR — GEL RAM Project, a pseudonym. Contractual and
-CLA matters use the project email privately; completed personal records do not
-belong in this repository. See [publication status](CANDIDATE-STATUS.md).
+Third-party material retains its own terms, including the MIT-licensed Rust Book
+fixture. Historical grants are not rewritten. The historical proposal directory
+identified in the licensing guide is not an additional active license.
 
-Historical v0.2.x grants remain historical grants and are not rewritten by the
-v0.3.0 public baseline. Private archival copies preserve that history without
-making the old Git history part of the current public repository.
+[Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [CLA privacy](CLA-PRIVACY.md)
+
+Public attribution: **RR, GEL RAM Project**. Contract and CLA enquiries use
+`gelram.licensing@gmail.com`; completed agreements and personal records stay private.

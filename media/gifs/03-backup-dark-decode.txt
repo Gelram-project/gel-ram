@@ -1,0 +1,4 @@
+width=1000
+height=460
+nb_read_frames=3
+duration=12.000000
