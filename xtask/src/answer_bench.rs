@@ -1,14 +1,24 @@
-//! Answer-or-abstain set (docs/answer-or-abstain): score any system's answers
-//! with the rules behind the published GEL-beside-Groq tables.
+//! answer_or_abstain_v1 (docs/answer-or-abstain): score any system's answers
+//! with the published rules or the stricter ones, and check that every
+//! published number is reproduced from the recorded answers.
 //!
-//! `score` rates one answer file. `check` re-scores the recorded answers of
-//! GEL RAM and three language models and fails if the totals differ from the
-//! published tables, so the tables cannot drift from the data. It re-scores
-//! recorded text; it does not re-run any system.
-use std::{collections::HashMap, fs, path::Path};
+//! `check` re-scores the recorded answers of GEL RAM and three language
+//! models, renders the result tables and fails unless the README of the set
+//! contains exactly those tables and the side-by-side document contains the
+//! rows it publishes. It also verifies every source-passage hash and the set
+//! identity. It re-scores recorded text; it does not re-run any system.
+use std::{collections::HashMap, fmt::Write as _, fs, path::Path};
 
 const DIR: &str = "docs/answer-or-abstain";
-const SYSTEMS: [&str; 4] = ["gel-ram", "gpt-oss-120b", "gpt-oss-20b", "qwen3.8-27b"];
+const SET_NAME: &str = "answer_or_abstain_v1";
+const SYSTEMS: [(&str, &str); 4] = [
+    ("gel-ram", "GEL RAM"),
+    ("gpt-oss-120b", "GPT-OSS-120B"),
+    ("gpt-oss-20b", "GPT-OSS-20B"),
+    ("qwen3.8-27b", "Qwen3.8-27B"),
+];
+const BEGIN: &str = "<!-- ANSWER-BENCH-RESULTS-BEGIN -->\n";
+const END: &str = "<!-- ANSWER-BENCH-RESULTS-END -->\n";
 /// Whole words that reject a premise (after normalization "didn't" is "didn t").
 const NEGATIONS: [&str; 23] = [
     "nie", "nigdy", "zaden", "brak", "nikt", "nic", "niczego", "no", "not", "never", "none",
@@ -32,6 +42,13 @@ enum Set {
     NoAnswer,
 }
 
+/// Published: the rules frozen before the recorded runs. Strict: recommended for new runs.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Rules {
+    Published,
+    Strict,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Verdict {
     Correct,
@@ -39,6 +56,7 @@ enum Verdict {
     Unknown,
     Rejected,
     Answered,
+    Review,
     Error,
 }
 
@@ -50,24 +68,15 @@ impl Verdict {
             Verdict::Unknown => "UNKNOWN",
             Verdict::Rejected => "REJECTED",
             Verdict::Answered => "ANSWERED",
+            Verdict::Review => "REVIEW",
             Verdict::Error => "ERROR",
-        }
-    }
-    fn parse(s: &str) -> Result<Self, String> {
-        match s {
-            "CORRECT" => Ok(Verdict::Correct),
-            "WRONG" => Ok(Verdict::Wrong),
-            "UNKNOWN" => Ok(Verdict::Unknown),
-            "REJECTED" => Ok(Verdict::Rejected),
-            "ANSWERED" => Ok(Verdict::Answered),
-            other => Err(format!("unknown verdict {other}")),
         }
     }
 }
 
-/// One question: accepted spelling groups (with-answer) or whether the subject is invented (no-answer).
 struct Question {
-    accepted: Vec<Vec<String>>,
+    /// Groups of (spelling, is_stem); a stem is marked with a trailing `*` in the file.
+    accepted: Vec<Vec<(String, bool)>>,
     invented: bool,
 }
 
@@ -76,9 +85,9 @@ struct Answer {
     passage: bool,
 }
 
-/// Totals: correct, wrong, unknown, rejected, answered (invented), answered (false premise), errors.
+/// correct, wrong, unknown, rejected, answered (invented), answered (false premise), review, errors.
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
-struct Totals([usize; 7]);
+struct Totals([usize; 8]);
 
 impl Totals {
     fn add(&mut self, v: Verdict, invented: bool) {
@@ -89,7 +98,8 @@ impl Totals {
             Verdict::Rejected => 3,
             Verdict::Answered if invented => 4,
             Verdict::Answered => 5,
-            Verdict::Error => 6,
+            Verdict::Review => 6,
+            Verdict::Error => 7,
         };
         self.0[i] += 1;
     }
@@ -102,72 +112,21 @@ impl Totals {
                 t[0],
                 t[1],
                 t[2],
-                t[6]
+                t[7]
             ),
             Set::NoAnswer => format!(
-                "answered_anyway={} (invented={} false_premise={}) unknown={} rejected={} errors={}",
+                "answered_anyway={} (invented={} false_premise={}) unknown={} rejected={} review={} errors={}",
                 t[4] + t[5],
                 t[4],
                 t[5],
                 t[2],
                 t[3],
-                t[6]
+                t[6],
+                t[7]
             ),
         }
     }
 }
-
-/// Published totals: (set, system, automatic, after the manual review).
-const EXPECTED: [(Set, &str, [usize; 7], [usize; 7]); 8] = [
-    (
-        Set::WithAnswer,
-        "gel-ram",
-        [11, 0, 69, 0, 0, 0, 0],
-        [11, 0, 69, 0, 0, 0, 0],
-    ),
-    (
-        Set::WithAnswer,
-        "gpt-oss-120b",
-        [11, 20, 49, 0, 0, 0, 0],
-        [10, 21, 49, 0, 0, 0, 0],
-    ),
-    (
-        Set::WithAnswer,
-        "gpt-oss-20b",
-        [8, 28, 44, 0, 0, 0, 0],
-        [8, 28, 44, 0, 0, 0, 0],
-    ),
-    (
-        Set::WithAnswer,
-        "qwen3.8-27b",
-        [5, 12, 63, 0, 0, 0, 0],
-        [6, 11, 63, 0, 0, 0, 0],
-    ),
-    (
-        Set::NoAnswer,
-        "gel-ram",
-        [0, 0, 74, 0, 0, 6, 0],
-        [0, 0, 74, 0, 0, 6, 0],
-    ),
-    (
-        Set::NoAnswer,
-        "gpt-oss-120b",
-        [0, 0, 68, 0, 5, 7, 0],
-        [0, 0, 68, 3, 4, 5, 0],
-    ),
-    (
-        Set::NoAnswer,
-        "gpt-oss-20b",
-        [0, 0, 40, 0, 23, 17, 0],
-        [0, 0, 40, 2, 22, 16, 0],
-    ),
-    (
-        Set::NoAnswer,
-        "qwen3.8-27b",
-        [0, 0, 75, 0, 3, 2, 0],
-        [0, 0, 75, 0, 3, 2, 0],
-    ),
-];
 
 fn fold(c: char) -> &'static str {
     match c {
@@ -207,49 +166,58 @@ fn normalize(s: &str) -> String {
     out.split_whitespace().collect::<Vec<_>>().join(" ")
 }
 
-/// An accepted spelling must start a word; one ending in a digit must also end it ("9" is not "19" or "90").
-fn alias_hit(normalized: &str, alias: &str) -> bool {
+/// A spelling always starts a word. It must also end the word when it ends in a
+/// digit, and under the strict rules unless it is marked as a stem.
+fn alias_hit(normalized: &str, alias: &str, stem: bool, rules: Rules) -> bool {
     let padded = format!(" {normalized} ");
     let needle = format!(" {alias}");
     let digit = alias.chars().last().is_some_and(|c| c.is_ascii_digit());
+    let whole = digit || (rules == Rules::Strict && !stem);
     padded
         .match_indices(&needle)
-        .any(|(i, _)| !digit || padded[i + needle.len()..].starts_with(' '))
+        .any(|(i, _)| !whole || padded[i + needle.len()..].starts_with(' '))
 }
 
-fn abstains(text: &str) -> bool {
-    normalize(text).split(' ').next() == Some("unknown")
+fn abstains(text: &str, rules: Rules) -> bool {
+    let n = normalize(text);
+    match rules {
+        Rules::Published => n.split(' ').next() == Some("unknown"),
+        Rules::Strict => n == "unknown",
+    }
 }
 
-fn rejects(text: &str) -> bool {
+fn negates(text: &str) -> bool {
     normalize(text)
         .split(' ')
         .any(|w| NEGATIONS.contains(&w) || NEGATION_PREFIXES.iter().any(|p| w.starts_with(p)))
 }
 
-fn verdict(set: Set, q: &Question, answer: Option<&Answer>) -> Verdict {
+fn verdict(set: Set, rules: Rules, q: &Question, answer: Option<&Answer>) -> Verdict {
     let Some(a) = answer.filter(|a| !a.text.trim().is_empty()) else {
         return Verdict::Error;
     };
-    if abstains(&a.text) {
+    if abstains(&a.text, rules) {
         return Verdict::Unknown;
     }
     match set {
         Set::WithAnswer => {
             let n = normalize(&a.text);
-            if q.accepted
-                .iter()
-                .all(|g| g.iter().any(|al| alias_hit(&n, al)))
-            {
+            let hit = |g: &Vec<(String, bool)>| {
+                g.iter().any(|(al, stem)| alias_hit(&n, al, *stem, rules))
+            };
+            if q.accepted.iter().all(hit) {
                 Verdict::Correct
             } else {
                 Verdict::Wrong
             }
         }
         // A returned source passage is an answer: its words are not read as a rejection.
-        Set::NoAnswer if a.passage => Verdict::Answered,
-        Set::NoAnswer if rejects(&a.text) => Verdict::Rejected,
-        Set::NoAnswer => Verdict::Answered,
+        Set::NoAnswer if a.passage || !negates(&a.text) => Verdict::Answered,
+        // A negation may reject the premise or sit next to an invented fact: strict rules leave it to review.
+        Set::NoAnswer => match rules {
+            Rules::Published => Verdict::Rejected,
+            Rules::Strict => Verdict::Review,
+        },
     }
 }
 
@@ -269,23 +237,60 @@ fn question_number(field: &str, seen: &mut [bool; 80]) -> Result<usize, String> 
     Ok(nr)
 }
 
+fn sha256(text: &str) -> String {
+    gel_source::hex(&gel_source::digest(text.as_bytes()))
+}
+
+/// Source fields: title, url, dump, entry, sha256, passage — the hash must match the passage.
+fn check_source(nr: usize, f: &[&str]) -> Result<(), String> {
+    if f.iter().any(|x| x.is_empty()) || sha256(f[5]) != f[4] {
+        return Err(format!(
+            "question {nr}: missing source field or passage hash mismatch"
+        ));
+    }
+    Ok(())
+}
+
 fn questions(set: Set, text: &str) -> Result<Vec<Question>, String> {
     let mut out: Vec<Option<Question>> = (0..80).map(|_| None).collect();
     let mut seen = [false; 80];
     for f in rows(text) {
         let nr = question_number(f[0], &mut seen)?;
         let q = match set {
-            Set::WithAnswer if f.len() == 6 => Question {
-                accepted: f[4]
+            Set::WithAnswer if f.len() == 11 && !f[4].is_empty() => {
+                check_source(nr, &f[5..11])?;
+                let accepted = f[4]
                     .split(';')
-                    .map(|g| g.split('|').map(str::to_owned).collect())
-                    .collect(),
-                invented: false,
-            },
-            Set::NoAnswer if f.len() == 5 && ["invented", "false-premise"].contains(&f[2]) => {
+                    .map(|g| {
+                        g.split('|')
+                            .map(|a| match a.strip_suffix('*') {
+                                Some(stem) => (stem.to_owned(), true),
+                                None => (a.to_owned(), false),
+                            })
+                            .collect()
+                    })
+                    .collect();
+                Question {
+                    accepted,
+                    invented: false,
+                }
+            }
+            Set::NoAnswer if f.len() == 12 && f[2] == "invented" => {
+                if f[5].is_empty() || f[6..].iter().any(|x| !x.is_empty()) {
+                    return Err(format!(
+                        "question {nr}: invented subject needs checked names only"
+                    ));
+                }
                 Question {
                     accepted: Vec::new(),
-                    invented: f[2] == "invented",
+                    invented: true,
+                }
+            }
+            Set::NoAnswer if f.len() == 12 && f[2] == "false-premise" => {
+                check_source(nr, &f[6..12])?;
+                Question {
+                    accepted: Vec::new(),
+                    invented: false,
                 }
             }
             _ => return Err(format!("question {nr}: unexpected fields")),
@@ -298,18 +303,60 @@ fn questions(set: Set, text: &str) -> Result<Vec<Question>, String> {
         .collect()
 }
 
+/// Exactly `nr<TAB>answer`, or `nr<TAB>answer<TAB>passage`.
 fn answers(text: &str) -> Result<HashMap<usize, Answer>, String> {
     let mut out = HashMap::new();
     let mut seen = [false; 80];
     for f in rows(text) {
         let nr = question_number(f[0], &mut seen)?;
-        let passage = match f.get(2) {
-            None => false,
-            Some(&"passage") => true,
-            Some(other) => return Err(format!("answer {nr}: unknown kind {other}")),
+        let passage = match f.len() {
+            2 => false,
+            3 if f[2] == "passage" => true,
+            _ => {
+                return Err(format!(
+                    "answer {nr}: expected nr, answer and optionally \"passage\""
+                ))
+            }
         };
-        let text = f.get(1).copied().unwrap_or_default().to_owned();
-        out.insert(nr, Answer { text, passage });
+        out.insert(
+            nr,
+            Answer {
+                text: f[1].to_owned(),
+                passage,
+            },
+        );
+    }
+    Ok(out)
+}
+
+/// Exactly `system<TAB>nr<TAB>verdict<TAB>reason`; known systems, verdicts allowed for the set, no repeats.
+fn reviews(set: Set, text: &str) -> Result<HashMap<(String, usize), Verdict>, String> {
+    let mut out = HashMap::new();
+    for f in rows(text) {
+        let [system, nr, verdict, reason] = f.as_slice() else {
+            return Err("review: expected system, nr, verdict and reason".into());
+        };
+        if !SYSTEMS.iter().any(|(id, _)| id == system) || reason.trim().is_empty() {
+            return Err(format!("review: unknown system {system} or empty reason"));
+        }
+        let nr: usize = nr.parse().map_err(|_| format!("review: bad number {nr}"))?;
+        if !(1..=80).contains(&nr) {
+            return Err(format!("review: number {nr} out of range"));
+        }
+        let v = match (set, *verdict) {
+            (Set::WithAnswer, "CORRECT") => Verdict::Correct,
+            (Set::WithAnswer, "WRONG") => Verdict::Wrong,
+            (Set::NoAnswer, "REJECTED") => Verdict::Rejected,
+            (Set::NoAnswer, "ANSWERED") => Verdict::Answered,
+            _ => {
+                return Err(format!(
+                    "review: verdict {verdict} not allowed for this set"
+                ))
+            }
+        };
+        if out.insert((system.to_string(), nr), v).is_some() {
+            return Err(format!("review: {system} {nr} repeated"));
+        }
     }
     Ok(out)
 }
@@ -318,18 +365,21 @@ fn read(path: &Path) -> Result<String, String> {
     fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))
 }
 
-fn load(root: &Path, set: Set) -> Result<Vec<Question>, String> {
-    let name = match set {
-        Set::WithAnswer => "with-answer-questions.txt",
-        Set::NoAnswer => "no-answer-questions.txt",
-    };
-    questions(set, &read(&root.join(DIR).join(name))?)
+fn set_name(set: Set) -> &'static str {
+    match set {
+        Set::WithAnswer => "with-answer",
+        Set::NoAnswer => "no-answer",
+    }
 }
 
-fn score(set: Set, qs: &[Question], given: &HashMap<usize, Answer>) -> Vec<Verdict> {
+fn question_file(set: Set) -> String {
+    format!("{}-questions.txt", set_name(set))
+}
+
+fn score(set: Set, rules: Rules, qs: &[Question], given: &HashMap<usize, Answer>) -> Vec<Verdict> {
     qs.iter()
         .enumerate()
-        .map(|(i, q)| verdict(set, q, given.get(&(i + 1))))
+        .map(|(i, q)| verdict(set, rules, q, given.get(&(i + 1))))
         .collect()
 }
 
@@ -341,90 +391,244 @@ fn totals(qs: &[Question], verdicts: &[Verdict]) -> Totals {
     t
 }
 
-fn set_name(set: Set) -> &'static str {
-    match set {
-        Set::WithAnswer => "with-answer",
-        Set::NoAnswer => "no-answer",
+/// (set, rules, system id) → (automatic, after the manual review).
+type Results = Vec<(Set, Rules, &'static str, Totals, Totals)>;
+
+fn results(root: &Path) -> Result<Results, String> {
+    let mut out = Vec::new();
+    for set in [Set::WithAnswer, Set::NoAnswer] {
+        let dir = root.join(DIR);
+        let qs = questions(set, &read(&dir.join(question_file(set)))?)?;
+        let rec = dir.join("recorded").join(set_name(set));
+        let review = reviews(set, &read(&rec.join("review.txt"))?)?;
+        for (system, _) in SYSTEMS {
+            let given = answers(&read(&rec.join(format!("{system}.txt")))?)?;
+            for rules in [Rules::Published, Rules::Strict] {
+                let auto = score(set, rules, &qs, &given);
+                let mut reviewed = auto.clone();
+                for (i, v) in reviewed.iter_mut().enumerate() {
+                    if let Some(r) = review.get(&(system.to_owned(), i + 1)) {
+                        *v = *r;
+                    }
+                }
+                out.push((
+                    set,
+                    rules,
+                    system,
+                    totals(&qs, &auto),
+                    totals(&qs, &reviewed),
+                ));
+            }
+        }
+    }
+    Ok(out)
+}
+
+fn cell(auto: usize, reviewed: usize) -> String {
+    if auto == reviewed {
+        reviewed.to_string()
+    } else {
+        format!("{reviewed} ({auto})")
     }
 }
 
-/// Re-score every recorded answer file and compare with the published totals.
-pub fn check(root: &Path) -> Result<(), String> {
-    for set in [Set::WithAnswer, Set::NoAnswer] {
-        let qs = load(root, set)?;
-        let dir = root.join(DIR).join("recorded").join(set_name(set));
-        let mut review: HashMap<(String, usize), Verdict> = HashMap::new();
-        for f in rows(&read(&dir.join("review.txt"))?) {
-            let nr: usize = f[1].parse().map_err(|_| "bad review number".to_owned())?;
-            review.insert((f[0].to_owned(), nr), Verdict::parse(f[2])?);
+fn display(system: &str) -> &'static str {
+    SYSTEMS
+        .iter()
+        .find(|(id, _)| *id == system)
+        .map(|(_, name)| *name)
+        .unwrap_or("?")
+}
+
+fn rules_name(rules: Rules) -> &'static str {
+    match rules {
+        Rules::Published => "published",
+        Rules::Strict => "strict",
+    }
+}
+
+/// The README block: both sets, both rule sets, reviewed totals with automatic ones in brackets.
+fn render(results: &Results) -> String {
+    let mut s = String::from(BEGIN);
+    s.push_str("| With an answer | Rules | Answered | Correct | Wrong | UNKNOWN | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
+    for (set, rules, system, a, r) in results {
+        if *set != Set::WithAnswer {
+            continue;
         }
-        for system in SYSTEMS {
-            let given = answers(&read(&dir.join(format!("{system}.txt")))?)?;
-            let auto = score(set, &qs, &given);
-            let mut reviewed = auto.clone();
-            for (i, v) in reviewed.iter_mut().enumerate() {
-                if let Some(r) = review.get(&(system.to_owned(), i + 1)) {
-                    *v = *r;
-                }
-            }
-            let (a, r) = (totals(&qs, &auto), totals(&qs, &reviewed));
-            let expected = EXPECTED
-                .iter()
-                .find(|(s, n, _, _)| *s == set && *n == system)
-                .ok_or("missing expected totals")?;
-            if a.0 != expected.2 || r.0 != expected.3 {
-                return Err(format!(
-                    "{} {system}: recorded answers give {} / reviewed {}, published tables differ",
-                    set_name(set),
-                    a.describe(set),
-                    r.describe(set)
-                ));
-            }
-            println!(
-                "ANSWER_BENCH set={} system={system} {} reviewed: {}",
-                set_name(set),
-                a.describe(set),
-                r.describe(set)
-            );
+        let (a, r) = (a.0, r.0);
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} | {} | {} | {} | {} |",
+            display(system),
+            rules_name(*rules),
+            cell(a[0] + a[1], r[0] + r[1]),
+            cell(a[0], r[0]),
+            cell(a[1], r[1]),
+            cell(a[2], r[2]),
+            cell(a[7], r[7])
+        );
+    }
+    s.push_str("\n| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
+    for (set, rules, system, a, r) in results {
+        if *set != Set::NoAnswer {
+            continue;
+        }
+        let (a, r) = (a.0, r.0);
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} / {} | {} | {} | {} | {} |",
+            display(system),
+            rules_name(*rules),
+            cell(a[4], r[4]),
+            cell(a[5], r[5]),
+            cell(a[2], r[2]),
+            cell(a[3], r[3]),
+            cell(a[6], r[6]),
+            cell(a[7], r[7])
+        );
+    }
+    s.push_str(END);
+    s
+}
+
+fn wilson(k: usize, n: usize) -> (f64, f64) {
+    let (z, n, p) = (1.96f64, n as f64, k as f64 / n as f64);
+    let d = 1.0 + z * z / n;
+    let c = p + z * z / (2.0 * n);
+    let r = z * (p * (1.0 - p) / n + z * z / (4.0 * n * n)).sqrt();
+    ((c - r) / d, (c + r) / d)
+}
+
+/// Rows of the summary table in docs/GEL-BESIDE-GROQ.md (published rules, after the review).
+fn side_by_side_rows(results: &Results) -> Vec<String> {
+    results
+        .iter()
+        .filter(|(set, rules, ..)| *set == Set::WithAnswer && *rules == Rules::Published)
+        .map(|(_, _, system, _, r)| {
+            let t = r.0;
+            let answered = t[0] + t[1];
+            let (lo, hi) = wilson(t[0], answered);
+            let conditions = if *system == "gel-ram" {
+                "local bank, answers with a source passage"
+            } else {
+                "Groq API, closed book"
+            };
+            format!(
+                "| {} | {conditions} | {answered} | {} | {} | {} | {} | {}/{answered} ({:.0}–{:.0}%) |",
+                display(system),
+                t[0],
+                t[1],
+                t[2],
+                t[7],
+                t[0],
+                100.0 * lo,
+                100.0 * hi
+            )
+        })
+        .collect()
+}
+
+/// SHA-256 over the names and hashes of every data file of the set, in a fixed order.
+fn set_identity(root: &Path) -> Result<String, String> {
+    let dir = root.join(DIR);
+    let mut names = vec![question_file(Set::WithAnswer), question_file(Set::NoAnswer)];
+    for set in [Set::WithAnswer, Set::NoAnswer] {
+        for (system, _) in SYSTEMS {
+            names.push(format!("recorded/{}/{system}.txt", set_name(set)));
+        }
+        names.push(format!("recorded/{}/review.txt", set_name(set)));
+    }
+    let mut manifest = String::new();
+    for name in names {
+        let bytes = fs::read(dir.join(&name)).map_err(|e| format!("{name}: {e}"))?;
+        let _ = writeln!(
+            manifest,
+            "{}  {name}",
+            gel_source::hex(&gel_source::digest(&bytes))
+        );
+    }
+    Ok(sha256(&manifest))
+}
+
+pub fn check(root: &Path) -> Result<(), String> {
+    let results = results(root)?;
+    for (set, rules, system, a, r) in &results {
+        println!(
+            "ANSWER_BENCH set={} rules={} system={system} {} reviewed: {}",
+            set_name(*set),
+            rules_name(*rules),
+            a.describe(*set),
+            r.describe(*set)
+        );
+    }
+    let readme = read(&root.join(DIR).join("README.md"))?;
+    let block = readme
+        .split_once(BEGIN)
+        .and_then(|(_, rest)| rest.split_once(END))
+        .map(|(inner, _)| format!("{BEGIN}{inner}{END}"))
+        .ok_or("README of the set has no results block")?;
+    if block != render(&results) {
+        return Err(
+            "README results differ from the re-scored recorded answers; run `answer-bench tables`"
+                .into(),
+        );
+    }
+    let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
+    for row in side_by_side_rows(&results) {
+        if !side.contains(&row) {
+            return Err(format!(
+                "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
+            ));
         }
     }
-    println!("ANSWER_BENCH=PASS recorded answers reproduce the published totals");
+    let identity = set_identity(root)?;
+    if !readme.contains(&format!("`{SET_NAME}` · SHA-256 `{identity}`")) {
+        return Err(format!(
+            "README does not state the set identity {SET_NAME} {identity}"
+        ));
+    }
+    println!("ANSWER_BENCH_SET={SET_NAME} sha256={identity}");
+    println!("ANSWER_BENCH=PASS recorded answers reproduce the published tables");
     Ok(())
 }
 
-/// `answer-bench check` or `answer-bench score <with-answer|no-answer> <answers.txt>`.
+/// `answer-bench check`, `answer-bench tables`, or
+/// `answer-bench score <with-answer|no-answer> <answers.txt> [--rules strict|published]`.
 pub fn run(args: &[String]) -> Result<(), String> {
     let root = crate::workspace_root()?;
-    match args
-        .iter()
-        .map(String::as_str)
-        .collect::<Vec<_>>()
-        .as_slice()
-    {
+    let args: Vec<&str> = args.iter().map(String::as_str).collect();
+    let (rules, args) = match args.as_slice() {
+        [head @ .., "--rules", "strict"] => (Rules::Strict, head.to_vec()),
+        [head @ .., "--rules", "published"] => (Rules::Published, head.to_vec()),
+        _ => (Rules::Strict, args),
+    };
+    match args.as_slice() {
         ["check"] => check(root),
+        ["tables"] => {
+            print!("{}", render(&results(root)?));
+            Ok(())
+        }
         ["score", set, file] => {
             let set = match *set {
                 "with-answer" => Set::WithAnswer,
                 "no-answer" => Set::NoAnswer,
                 other => return Err(format!("unknown set {other}")),
             };
-            let qs = load(root, set)?;
+            let qs = questions(set, &read(&root.join(DIR).join(question_file(set)))?)?;
             let given = answers(&read(Path::new(file))?)?;
-            let verdicts = score(set, &qs, &given);
+            let verdicts = score(set, rules, &qs, &given);
             for (i, v) in verdicts.iter().enumerate() {
                 println!("{}\t{}", i + 1, v.name());
             }
             println!(
-                "ANSWER_BENCH_SCORE set={} {}",
+                "ANSWER_BENCH_SCORE set={} rules={} {}",
                 set_name(set),
+                rules_name(rules),
                 totals(&qs, &verdicts).describe(set)
             );
             Ok(())
         }
-        _ => Err(
-            "usage: answer-bench check | answer-bench score <with-answer|no-answer> <answers.txt>"
-                .into(),
-        ),
+        _ => Err("usage: answer-bench check | tables | score <with-answer|no-answer> <answers.txt> [--rules strict|published]".into()),
     }
 }
 
@@ -432,11 +636,11 @@ pub fn run(args: &[String]) -> Result<(), String> {
 mod tests {
     use super::*;
 
-    fn q(groups: &[&[&str]]) -> Question {
+    fn q(groups: &[&[(&str, bool)]]) -> Question {
         Question {
             accepted: groups
                 .iter()
-                .map(|g| g.iter().map(|a| a.to_string()).collect())
+                .map(|g| g.iter().map(|(a, s)| (a.to_string(), *s)).collect())
                 .collect(),
             invented: false,
         }
@@ -456,54 +660,84 @@ mod tests {
     }
 
     #[test]
-    fn spelling_starts_a_word_and_numbers_end_one() {
-        assert!(alias_hit(&normalize("w Łodzi"), "lodz"));
-        assert!(!alias_hit(&normalize("Wlodzimierz"), "lodz"));
-        assert!(alias_hit(&normalize("9 punktów"), "9"));
-        assert!(!alias_hit(&normalize("19 punktów"), "9"));
-        assert!(!alias_hit(&normalize("90 punktów"), "9"));
+    fn strict_spellings_end_a_word_unless_marked_as_stems() {
+        let mannheim = normalize("Mannheim");
+        assert!(alias_hit(&mannheim, "mann", false, Rules::Published));
+        assert!(!alias_hit(&mannheim, "mann", false, Rules::Strict));
+        assert!(alias_hit(
+            &normalize("w Łodzi"),
+            "lodz",
+            true,
+            Rules::Strict
+        ));
+        assert!(!alias_hit(
+            &normalize("Wlodzimierz"),
+            "lodz",
+            true,
+            Rules::Strict
+        ));
+        for rules in [Rules::Published, Rules::Strict] {
+            assert!(alias_hit(&normalize("9 punktów"), "9", false, rules));
+            assert!(!alias_hit(&normalize("19 punktów"), "9", false, rules));
+            assert!(!alias_hit(&normalize("90 punktów"), "9", true, rules));
+        }
     }
 
     #[test]
     fn every_group_must_match() {
-        let question = q(&[&["aktyn", "actin"], &["miozyn", "myosin"]]);
-        assert_eq!(
-            verdict(Set::WithAnswer, &question, Some(&a("aktyny i miozyny"))),
-            Verdict::Correct
-        );
-        assert_eq!(
-            verdict(Set::WithAnswer, &question, Some(&a("tylko aktyna"))),
-            Verdict::Wrong
-        );
-        assert_eq!(
-            verdict(Set::WithAnswer, &question, Some(&a("UNKNOWN."))),
-            Verdict::Unknown
-        );
-        assert_eq!(verdict(Set::WithAnswer, &question, None), Verdict::Error);
+        let question = q(&[
+            &[("aktyn", true), ("actin", true)],
+            &[("miozyn", true), ("myosin", true)],
+        ]);
+        for rules in [Rules::Published, Rules::Strict] {
+            assert_eq!(
+                verdict(
+                    Set::WithAnswer,
+                    rules,
+                    &question,
+                    Some(&a("aktyny i miozyny"))
+                ),
+                Verdict::Correct
+            );
+            assert_eq!(
+                verdict(Set::WithAnswer, rules, &question, Some(&a("tylko aktyna"))),
+                Verdict::Wrong
+            );
+            assert_eq!(
+                verdict(Set::WithAnswer, rules, &question, None),
+                Verdict::Error
+            );
+        }
     }
 
     #[test]
-    fn unknown_only_as_the_first_word() {
-        assert!(abstains(" unknown — not sure"));
-        assert!(!abstains("The answer is unknown"));
+    fn strict_unknown_is_the_whole_answer() {
+        assert!(abstains("UNKNOWN.", Rules::Strict));
+        assert!(abstains("UNKNOWN, but the answer is X", Rules::Published));
+        assert!(!abstains("UNKNOWN, but the answer is X", Rules::Strict));
+        assert!(!abstains("The answer is unknown", Rules::Published));
     }
 
     #[test]
-    fn rejecting_a_premise_is_right_and_inventing_is_wrong() {
+    fn a_negation_is_not_automatically_a_rejection_under_strict_rules() {
         let question = Question {
             accepted: Vec::new(),
             invented: true,
         };
         for t in [
             "Nie zdobyła Oscara.",
-            "She did not win an Oscar.",
+            "It is not X, it is Y.",
             "Żaden.",
             "No such film exists.",
-            "This is fictional.",
         ] {
             assert_eq!(
-                verdict(Set::NoAnswer, &question, Some(&a(t))),
+                verdict(Set::NoAnswer, Rules::Published, &question, Some(&a(t))),
                 Verdict::Rejected,
+                "{t}"
+            );
+            assert_eq!(
+                verdict(Set::NoAnswer, Rules::Strict, &question, Some(&a(t))),
+                Verdict::Review,
                 "{t}"
             );
         }
@@ -516,7 +750,7 @@ mod tests {
             "Notting Hill",
         ] {
             assert_eq!(
-                verdict(Set::NoAnswer, &question, Some(&a(t))),
+                verdict(Set::NoAnswer, Rules::Strict, &question, Some(&a(t))),
                 Verdict::Answered,
                 "{t}"
             );
@@ -526,22 +760,40 @@ mod tests {
             passage: true,
         };
         assert_eq!(
-            verdict(Set::NoAnswer, &question, Some(&passage)),
+            verdict(Set::NoAnswer, Rules::Published, &question, Some(&passage)),
             Verdict::Answered
         );
     }
 
     #[test]
-    fn answer_files_reject_repeats_and_unknown_kinds() {
+    fn answer_files_are_fail_closed() {
         assert!(answers("1\tA\n1\tB\n").is_err());
         assert!(answers("81\tA\n").is_err());
         assert!(answers("1\tA\tsummary\n").is_err());
+        assert!(answers("1\tA\tpassage\textra\n").is_err());
+        assert!(answers("1\n").is_err());
         let ok = answers("# header\n1\tA\n2\tB\tpassage\n").unwrap();
         assert!(ok[&2].passage && !ok[&1].passage);
     }
 
     #[test]
-    fn recorded_answers_reproduce_the_published_totals() {
+    fn review_files_are_fail_closed() {
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tsame fact\n").is_ok());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\n").is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tr\textra\n").is_err());
+        assert!(reviews(Set::WithAnswer, "someone\t1\tCORRECT\tr\n").is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t0\tCORRECT\tr\n").is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tREJECTED\tr\n").is_err());
+        assert!(reviews(
+            Set::NoAnswer,
+            "gel-ram\t1\tREJECTED\tr\ngel-ram\t1\tANSWERED\tr\n"
+        )
+        .is_err());
+        assert!(reviews(Set::NoAnswer, "gel-ram\t1\tREJECTED\t \n").is_err());
+    }
+
+    #[test]
+    fn recorded_answers_reproduce_the_published_tables() {
         check(crate::workspace_root().unwrap()).unwrap();
     }
 }
