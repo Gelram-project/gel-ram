@@ -82,3 +82,66 @@ The SVG contains static figures and CSS row highlights, no scripts, external
 resources, tracking or private code. The full table stays visible when
 animation is unsupported or reduced motion is requested. Animation pacing
 does not represent measured execution. Existing repository licensing applies.
+
+## Answer verdict — measured after the v0.5.0 release
+
+Same private implementation and the same 1M PL/EN bank (four 250k slots) as the
+ranking section above. A verdict answers only when the best passage leads the
+runner-up by more than δ = 0.06484 per active dimension; δ was fixed in advance
+from a different corpus and never tuned on these probes. Correct means the
+answer comes from the same article as the probe passage. Probes are stored
+passages read back and ranked within their own slot, sampled at a fixed step.
+
+| Stage (each measured separately) | Passages per slot | Probes | Answered | Correct answers | Wrong among all probes | UNKNOWN |
+|---|---:|---:|---:|---:|---:|---:|
+| Original bank | 250,000 | 10,000 | 77.0% | 97.7% | 1.78% | 23.1% |
+| Identical passages (also ones the encoder cannot tell apart) stored once, all sources and variants kept | 231,033 | 10,000 | 83.7% | 98.6% | 1.17% | 16.3% |
+| Reference, link and bibliography sections left out | 167,854 | 10,000 | 88.5% | 98.8% | 1.04% | 11.5% |
+| Encoder keeps numbers and short words (selection sample) | 167,854 | 10,000 | 92.8% | 99.94% | 0.06% | 7.2% |
+| Same, validation sample | 167,854 | 9,600 | 93.1% | 99.96% | 0.04% | 6.9% |
+| Same, large sample | 167,854 | 50,000 | 92.8% | 99.95% | 0.046% | 7.2% |
+
+The encoder setting was chosen among three variants named before the run, on
+the selection sample; the validation and large samples use different probe
+steps. Large sample per slot: correct answers 0.9997, 0.9991, 0.9998, 0.9993;
+95% Wilson lower bounds 0.9993, 0.9984, 0.9994, 0.9986. At equal bank size, a
+control with the reference sections kept reached 83.8% answered and 1.26% wrong,
+so the gain from that stage is not an effect of the smaller bank. Leaving those
+sections out changes the scope of the answer bank (Polish slots −27%, English
+−3–5%); they remain available as sources.
+
+## Natural questions on the same bank
+
+80 questions (40 PL, 40 EN), written by the developer as paraphrases for
+passages sampled with a fixed seed, frozen by SHA-256 before any run. The
+question is not told which slot to search. A separate set of 80 calibration
+questions, sampled from other passages, fixed the verification settings (128
+candidates, lead threshold 0.12902: the largest lead of a wrong winner in
+calibration); the test set was then run once.
+
+| Metric | Without verification | With source verification |
+|---|---:|---:|
+| Top-1 from the right article | 27/80 | 40/80 |
+| Right passage among the 128 candidates | — | 61/80 |
+| Answers given | 9 (8 correct) | 11 (11 correct) |
+| UNKNOWN | 71 | 69 |
+
+Calibration at the chosen threshold: 14 answers, 14 correct. 11/11 on the test
+set has a 95% Wilson lower bound of about 0.74; this small developer-written set
+is not an independent benchmark and supports no precision rate. The open
+problem is coverage: 14% of the questions are answered.
+
+## Evidence identities — answer verdict
+
+Retained privately; SHA-256 pins identify artifacts, they do not make absent
+data reproducible.
+
+| Artifact | SHA-256 |
+|---|---|
+| Original bank, 10,000 probes | fda0ee049c1c9007e6494dcf9ade020553e98f4af8a39cd42963a0a98fdfcf8f |
+| Final bank, validation sample | 892613f7c0447834f110e6a394c2fa4fceca6a29b4c340b0031027e22157839e |
+| Final bank, 50,000 probes | 7292c0360fc4d3c1786c7301a898ed777d126c00fae0d2f3510afcea25b60eb2 |
+| Test questions with reference passages | 9a1b13450bb4767bfdb43071d00ed0506e0a7ca718fb780b41c5ee35bb103e4a |
+| Calibration questions with reference passages | 9dd133b7eacb8e52ade3f36ac85205e551da36527c2ad41b06b27d6a8fe1d3c6 |
+| Calibration answers (128 candidates) | 119fd25af3e4d6cd34ee920e4c6d6b9c72afd7783a9f60c5c7699c027c05c1fa |
+| Test answers with verification | 50714466b576a525a4627b24165740bbc1734d5bff9ab1710e5fd6fc6469797e |
