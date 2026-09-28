@@ -358,8 +358,12 @@ models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
 
 The two sides do different jobs: GEL looks facts up in a bank it holds, the
 models answer from training. On 10 of GEL's 11 answers no model was correct; on
-12 other questions a model was correct where GEL said UNKNOWN. Times are
-recorded, not compared. [All 80 answers, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
+12 other questions a model was correct where GEL said UNKNOWN. The visible model
+answers were two words at the median; the GPT-OSS models also generated 51 and
+154 hidden reasoning tokens per question on average. GEL returns the stored
+source passage (33 words at the median). Times are recorded, not compared: GEL
+0.25 s for all 80 locally, the models 59–371 ms per question at the median over
+the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
 · [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
 
 ### Same supplied-source task: GEL adapter and models served by Groq

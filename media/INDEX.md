@@ -9,8 +9,8 @@ new film recordings or latency measurements. The original films below are unchan
 
 # GEL beside three language models
 
-[All 80 questions, 5 min 7 s](beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4) ·
-[Summary, 30 s](beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4) ·
+[All 80 questions, 5 min 27 s](beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4) ·
+[Summary, 48 s](beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4) ·
 [Conditions, answers and limits](../docs/GEL-BESIDE-GROQ.md)
 
 Replays rendered from the files of one recorded run on 2026-09-28, not screen

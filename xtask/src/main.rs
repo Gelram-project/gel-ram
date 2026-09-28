@@ -257,11 +257,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // GEL beside three language models: replays rendered from one recorded run.
     (
         "media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4",
-        "a4fbb241c48dcc0f4728dee24c8ad9d3f3b552edc1c2b6933257dd9bc854d20a",
+        "e96ebea496c445a4bdd2fbe00d72bc4b2caca6b84037a06f782f5398dbab47fc",
     ),
     (
         "media/beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4",
-        "f48bd312c3502ae326aee6e6382212f11e9236d1873faf61dc35fde7886c0a61",
+        "21f0616fc6d2854d383e10c7eada1034c50ed19ac4643e248c363398ec515584",
     ),
     (
         "media/beside-groq/all-80-answers.png",
@@ -270,6 +270,10 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/beside-groq/scoreboard.png",
         "bac896d45ec9a2790fa21ac39464e3865050d537fd89df2a2fd5832961a57689",
+    ),
+    (
+        "media/beside-groq/response-times.png",
+        "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
     ),
     (
         "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
