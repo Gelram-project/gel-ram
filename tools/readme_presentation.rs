@@ -331,14 +331,40 @@ slot.
 | Answers given | 9 (1 wrong) | **11 (all correct)** |
 | UNKNOWN | 71 | 69 |
 
-The questions were written by the developer for randomly sampled passages and
-frozen before any run. Verification compares a question with the stored
-sources of 128 candidates; its threshold was set on a separate calibration set
-of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
+The questions were written by the project's AI coding assistant for randomly
+sampled passages and frozen before any run. Verification compares a question
+with the stored sources of 128 candidates; its threshold was set on a separate
+calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions (14% answered) remains the
 open problem.
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
+
+### Side by side with three language models
+
+The same 80 frozen questions went to GEL RAM and, closed book, to three
+language models on the Groq API, in one recorded run with one scoring rule.
+GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
+models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
+
+| Same 80 questions | Answered | Correct | Wrong | UNKNOWN |
+|:---|---:|---:|---:|---:|
+| GEL RAM (local bank, answers with the source passage) | 11 | 11 | **0** | 69 |
+| GPT-OSS-120B (Groq API, closed book) | 31 | 10 | 21 | 49 |
+| GPT-OSS-20B (Groq API, closed book) | 36 | 8 | 28 | 44 |
+| Qwen3.8-27B (Groq API, closed book) | 17 | 6 | 11 | 63 |
+
+[![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong. GPT-OSS-20B: 8 correct, 28 wrong. Qwen3.8-27B: 6 correct, 11 wrong.](media/beside-groq/all-80-answers.png)](docs/GEL-BESIDE-GROQ.md)
+
+The two sides do different jobs: GEL looks facts up in a bank it holds, the
+models answer from training. On 10 of GEL's 11 answers no model was correct; on
+12 other questions a model was correct where GEL said UNKNOWN. The visible model
+answers were two words at the median; the GPT-OSS models also generated 51 and
+154 hidden reasoning tokens per question on average. GEL returns the stored
+source passage (33 words at the median). Times are recorded, not compared: GEL
+0.25 s for all 80 locally, the models 59–371 ms per question at the median over
+the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
+· [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
 
 ### Same supplied-source task: GEL adapter and models served by Groq
 
