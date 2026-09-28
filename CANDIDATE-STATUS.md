@@ -1,14 +1,16 @@
-# GEL RAM 0.5.0 — publication and release status
+# GEL RAM 0.5.1 — publication and release status
 
-Updated 2026-09-27. Evidence Lab, originally prepared from published commit
+Updated 2026-09-28. Evidence Lab, originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`, was merged into public `main` through
 PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`; the review repairs followed
 through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`, and the 0.4.0
 version line through PR #12 as `fc1df7cf60577ab9bda33cd1e2fc16fdae96bcd2`, which
-the owner published as the v0.4.0 GitHub Release on 2026-09-27. All merges passed
-the required checks and were authorized by the owner. The version line is now
-0.5.0. The owner publishes the v0.5.0 GitHub Release from the merge commit of
-this version cutover; the Releases page shows whether that has happened.
+the owner published as the v0.4.0 GitHub Release on 2026-09-27. The v0.5.0 GitHub
+Release was published on 2026-09-28 from `d15966e0de59181f01937b97a2aee0121b0f0036`.
+All merges passed the required checks and were authorized by the owner. The
+version line is now 0.5.1. The owner publishes the v0.5.1 GitHub Release from
+the merge commit of this version cutover; the Releases page shows whether that
+has happened.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -18,7 +20,7 @@ PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
 MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2,PR_10_MERGED_AS_0C17F6E,PR_12_MERGED_AS_FC1DF7C
 RELEASE_APPROVED=BY_OWNER_PUBLICATION
-SNAPSHOT_KIND=VERSION_CUTOVER_0_5_0
+SNAPSHOT_KIND=VERSION_CUTOVER_0_5_1
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
@@ -27,9 +29,10 @@ CURRENT_TEST_COUNTS=SEE_PER_PLATFORM_CI_EVIDENCE_REPORT
 OCEAN_RESEARCH_ARCHIVE=WITHDRAWN_IN_0_4_0
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
-VERSION_LINE=0.5.0
-TARGET_RELEASE=0.5.0
-V0_5_0_TAGGED_RELEASE=SEE_RELEASES_PAGE
+VERSION_LINE=0.5.1
+TARGET_RELEASE=0.5.1
+V0_5_1_TAGGED_RELEASE=SEE_RELEASES_PAGE
+V0_5_0_TAGGED_RELEASE=PUBLISHED
 V0_4_0_TAGGED_RELEASE=PUBLISHED_WITHOUT_SOURCE_ARCHIVE_ASSET
 V0_3_0_VERSION_METADATA=APPROVED
 V0_3_0_TAGGED_RELEASE=PUBLISHED
@@ -39,16 +42,16 @@ PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version is 0.5.0. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
+The workspace version is 0.5.1. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
 the release is approved by the owner's act of publishing the GitHub Release for
-tag v0.5.0; the tag exists only after that act, and until then this is the
+tag v0.5.1; the tag exists only after that act, and until then this is the
 prepared release commit. The
 [Releases page](https://github.com/Gelram-project/gel-ram/releases) is
 authoritative for that state. The v0.4.0 release was published without the
 source archive asset its notes mention; its release description gives the
 SHA-256 of its source manifest instead. The v0.3.0 fields describe an earlier
-release. See the [v0.5.0 release notes](RELEASE-NOTES-v0.5.0.md); the roadmap's
-v0.5.0 section lists each change with its commit and remaining acceptance.
+release. See the [v0.5.1 release notes](RELEASE-NOTES-v0.5.1.md); the roadmap's
+v0.5.1 and v0.5.0 sections list each change with its commit and remaining acceptance.
 
 Technical checks report the approval flags without changing them. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.
