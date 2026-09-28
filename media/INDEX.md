@@ -7,6 +7,16 @@
 Light/dark cards are derived from newly executed public CLI logs. They are not
 new film recordings or latency measurements. The original films below are unchanged.
 
+# GEL beside three language models
+
+[All 80 questions, 5 min 7 s](beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4) ·
+[Summary, 30 s](beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4) ·
+[Conditions, answers and limits](../docs/GEL-BESIDE-GROQ.md)
+
+Replays rendered from the files of one recorded run on 2026-09-28, not screen
+captures. Every answer, verdict and time on screen comes from those files; the
+pacing is not execution time.
+
 # Three films, two distinct scopes
 
 Start with the public Evidence Lab. All films are silent; elapsed times in an

@@ -254,6 +254,23 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "media/evidence-lab/02-reopened-56s.png",
         "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
     ),
+    // GEL beside three language models: replays rendered from one recorded run.
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4",
+        "a4fbb241c48dcc0f4728dee24c8ad9d3f3b552edc1c2b6933257dd9bc854d20a",
+    ),
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4",
+        "f48bd312c3502ae326aee6e6382212f11e9236d1873faf61dc35fde7886c0a61",
+    ),
+    (
+        "media/beside-groq/all-80-answers.png",
+        "c904d775a1105628faa58e17291b51ac07aea0bc16e15b6f2c6a6f248403e017",
+    ),
+    (
+        "media/beside-groq/scoreboard.png",
+        "bac896d45ec9a2790fa21ac39464e3865050d537fd89df2a2fd5832961a57689",
+    ),
     (
         "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
         "3b568bebdef34d34931970ce1f86ae0c521dba9e9ef6f7d050c5363357b63064",

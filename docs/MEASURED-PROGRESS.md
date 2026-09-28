@@ -112,8 +112,9 @@ sections out changes the scope of the answer bank (Polish slots −27%, English
 
 ## Natural questions on the same bank
 
-80 questions (40 PL, 40 EN), written by the developer as paraphrases for
-passages sampled with a fixed seed, frozen by SHA-256 before any run. The
+80 questions (40 PL, 40 EN), written by the project's AI coding assistant as
+paraphrases for passages sampled with a fixed seed, frozen by SHA-256 before
+any run. The
 question is not told which slot to search. A separate set of 80 calibration
 questions, sampled from other passages, fixed the verification settings (128
 candidates, lead threshold 0.12902: the largest lead of a wrong winner in
@@ -127,9 +128,13 @@ calibration); the test set was then run once.
 | UNKNOWN | 71 | 69 |
 
 Calibration at the chosen threshold: 14 answers, 14 correct. 11/11 on the test
-set has a 95% Wilson lower bound of about 0.74; this small developer-written set
+set has a 95% Wilson lower bound of about 0.74; this small assistant-written set
 is not an independent benchmark and supports no precision rate. The open
 problem is coverage: 14% of the questions are answered.
+
+The same 80 questions were later put, closed book, to three language models on
+the Groq API in one recorded run with one scoring rule:
+[GEL beside three language models](GEL-BESIDE-GROQ.md).
 
 ## Evidence identities — answer verdict
 

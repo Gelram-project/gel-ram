@@ -117,6 +117,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-groq-closed-book",
+        dimension: "comparison",
+        scope: "the same 80 frozen PL/EN questions, one run: GEL from its bank, three Groq models closed book",
+        input: "one scoring rule for all (expected fact from the source passage); UNKNOWN counted separately",
+        expected: "GEL 11 correct, 0 wrong, 69 UNKNOWN; models 6-10 correct and 11-28 wrong answers each",
+        counterexample: "read as a speed comparison, an engine ranking or superiority over language models",
+        source: "docs/GEL-BESIDE-GROQ.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
