@@ -53,12 +53,15 @@ The following capabilities are present on public `main`:
 
 ## v0.5.1
 
-A documentation and version release; public tools, formats and dependencies are
-unchanged from v0.5.0.
+A documentation and version release; public file formats and dependencies are
+unchanged from v0.5.0. `xtask verify` gains one documentation check (the summary
+of the review work list below).
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | Answer-verdict and natural-question results of the private implementation, registered as `MEASURED_LOCAL` claims | 739c452 | `xtask claims` | [measured progress](MEASURED-PROGRESS.md) | independent reproduction; a larger, independently written question set |
+| GEL beside three language models (closed book) on the same 80 frozen questions, one run, registered as a `MEASURED_LOCAL` claim | b85ce20 (PR #29) | `xtask claims` | [side by side](GEL-BESIDE-GROQ.md) | independent reproduction; a larger question set |
+| Review work list summary recounted from its table on every verify run | this release's fix commit | `xtask roadmap` | [review work list](#review-work-list-and-next-acceptance) | none beyond the check itself |
 
 ## v0.5.0
 
@@ -106,7 +109,7 @@ identify its independent operator rather than invent one.
 
 ## Review work list and next acceptance
 
-Summary: 12 DONE_SCOPED · 8 PARTIAL · 3 OPEN · 1 OWNER.
+Summary: 14 DONE_SCOPED · 6 PARTIAL · 3 OPEN · 1 OWNER.
 
 | ID | State | Work and next acceptance condition | Evidence / entry point |
 |---|---|---|---|
