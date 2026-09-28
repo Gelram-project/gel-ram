@@ -6,6 +6,25 @@
   <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check. Animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. 80 natural questions, one recorded run: 11 correct answers with their source passages, 0 wrong, 69 UNKNOWN. Separate experiment, not questions: 99.95% correct answers when 50,000 stored passages are read back." src="media/presentation/glance-light.svg" width="1200"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-41-dark.svg"><img alt="Question 41: Why was the 1963 Sudbury and Woodbridge by-election held? GEL RAM returned the source passage; the three models answered with a reason the source does not give." src="media/presentation/example-41-light.svg" width="1200"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN" src="media/presentation/answer-dots-light.svg" width="1200"></picture>
+
+| Try to break GEL | What the public tool does | Watch it |
+|:---|:---|:---|
+| Change one byte of a saved copy | refuses it against the pin you kept | [Changed byte refused](media/gifs/05-integrity-light.gif) |
+| Change the source after citing it | refuses the old citation | [Stale citation refused](media/gifs/02-stale-light.gif) |
+| Restart and reopen the snapshot | returns the same citation under the same pin | [Verified restart](media/gifs/01-evidence-light.gif) |
+| Back up, then restore to a new path | checks the restored copy equal | [Backup restored](media/gifs/03-backup-light.gif) |
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 11 SEPARATE_GATE, 15 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED. None is marked as independently reproduced." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/goals-dark.svg"><img alt="Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction." src="media/presentation/goals-light.svg" width="1200"></picture>
+
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
 **Find the passage. Check the source.** Local Rust tools for exact source-bound

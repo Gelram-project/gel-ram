@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="160" viewBox="0 0 1200 160" role="img" aria-labelledby="t d">
+<title id="t">What happens to a question</title>
+<desc id="d">Question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence: source, hash and recorded run.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#102949}
+.mono{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace;fill:#486380}
+.kick{font-size:13px;font-weight:700;letter-spacing:2px;fill:#0969da}
+.mut{fill:#486380}.b{font-weight:700}
+</style>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f7fbff"/><stop offset="1" stop-color="#deedff"/></linearGradient>
+<clipPath id="card"><rect x="1" y="1" width="1198" height="158" rx="24"/></clipPath></defs>
+<rect x="1" y="1" width="1198" height="158" rx="24" fill="url(#bg)" stroke="#cbdcf0"/>
+<text class="kick" x="40" y="44">WHAT HAPPENS TO A QUESTION</text><rect x="40" y="64" width="200" height="72" rx="14" fill="#f7fbff" stroke="#cbdcf0" stroke-width="2"/><text x="140" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">QUESTION</text><text x="140" y="120" font-size="13" class="mut" text-anchor="middle">in natural language</text><path d="M244 100H266 M260 94L267 100L260 106" stroke="#486380" stroke-width="2" fill="none"/><rect x="272" y="64" width="200" height="72" rx="14" fill="#f7fbff" stroke="#cbdcf0" stroke-width="2"/><text x="372" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">RETRIEVAL</text><text x="372" y="120" font-size="13" class="mut" text-anchor="middle">search the whole bank</text><path d="M476 100H498 M492 94L499 100L492 106" stroke="#486380" stroke-width="2" fill="none"/><rect x="504" y="64" width="200" height="72" rx="14" fill="#f7fbff" stroke="#cbdcf0" stroke-width="2"/><text x="604" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">SOURCE</text><text x="604" y="120" font-size="13" class="mut" text-anchor="middle">one stored passage</text><path d="M708 100H730 M724 94L731 100L724 106" stroke="#486380" stroke-width="2" fill="none"/><rect x="736" y="64" width="200" height="72" rx="14" fill="#f7fbff" stroke="#0969da" stroke-width="2"/><text x="836" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">ANSWER / UNKNOWN</text><text x="836" y="120" font-size="13" class="mut" text-anchor="middle">answer only when it is clear</text><path d="M940 100H962 M956 94L963 100L956 106" stroke="#486380" stroke-width="2" fill="none"/><rect x="968" y="64" width="200" height="72" rx="14" fill="#f7fbff" stroke="#cbdcf0" stroke-width="2"/><text x="1068" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">EVIDENCE</text><text x="1068" y="120" font-size="13" class="mut" text-anchor="middle">source, hash, recorded run</text>
+</svg>

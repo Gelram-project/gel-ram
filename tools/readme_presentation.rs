@@ -178,6 +178,8 @@ const NATIVE: &str = r####"# GEL RAM
   <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check. Animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
+__RESULTS__
+
 __FLOW__
 
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
@@ -1323,6 +1325,450 @@ fn bars_picture() -> String {
         1200,
     )
 }
+/// The recorded side-by-side run, read from the published evidence file: one
+/// verdict letter per question (C correct, W wrong, U UNKNOWN, E error) for each
+/// system, and question 41 as the worked example.
+struct Recorded {
+    systems: Vec<(&'static str, Vec<u8>)>,
+    question: String,
+    passage: String,
+    answers: Vec<(&'static str, String, u8)>,
+}
+const RECORDED: &str = "docs/evidence-side-by-side/side-by-side.txt";
+const RECORDED_SYSTEMS: [(&str, &str); 4] = [
+    ("GEL RAM", "GEL"),
+    ("GPT-OSS-120B", "gpt-oss-120b"),
+    ("GPT-OSS-20B", "gpt-oss-20b"),
+    ("Qwen3.8-27B", "qwen3.8-27b"),
+];
+impl Recorded {
+    fn read() -> Result<Recorded> {
+        let text = fs::read_to_string(RECORDED)?;
+        let header: Vec<&str> = text
+            .lines()
+            .find_map(|l| l.strip_prefix("# nr\t"))
+            .ok_or("missing evidence header")?
+            .split('\t')
+            .collect();
+        let col = |name: &str| {
+            header
+                .iter()
+                .position(|h| *h == name)
+                .map(|i| i + 1)
+                .ok_or(format!("missing evidence column {name}"))
+        };
+        let rows: Vec<Vec<&str>> = text
+            .lines()
+            .filter(|l| !l.starts_with('#') && !l.is_empty())
+            .map(|l| l.split('\t').collect())
+            .collect();
+        if rows.len() != 80
+            || rows
+                .iter()
+                .enumerate()
+                .any(|(i, r)| r[0] != (i + 1).to_string())
+        {
+            return Err("the evidence file must hold questions 1 to 80 in order".into());
+        }
+        let letter = |v: &str| match v {
+            "CORRECT" => b'C',
+            "WRONG" => b'W',
+            "UNKNOWN" => b'U',
+            _ => b'E',
+        };
+        let mut systems = Vec::new();
+        for (name, id) in RECORDED_SYSTEMS {
+            let c = col(id)?;
+            systems.push((name, rows.iter().map(|r| letter(r[c])).collect()));
+        }
+        let ex = &rows[40];
+        let mut answers = Vec::new();
+        for (name, id) in RECORDED_SYSTEMS.iter().skip(1) {
+            answers.push((
+                *name,
+                ex[col(&format!("{id}_answer"))?].to_string(),
+                letter(ex[col(id)?]),
+            ));
+        }
+        Ok(Recorded {
+            systems,
+            question: ex[col("question")?].to_string(),
+            passage: ex[col("GEL_source_excerpt")?].to_string(),
+            answers,
+        })
+    }
+    /// Correct, wrong and UNKNOWN answers of one system.
+    fn counts(&self, i: usize) -> (usize, usize, usize) {
+        let v = &self.systems[i].1;
+        let n = |c: u8| v.iter().filter(|x| **x == c).count();
+        (n(b'C'), n(b'W'), n(b'U'))
+    }
+}
+/// Probes, answered and correct shares of the large read-back sample in docs/MEASURED-PROGRESS.md.
+fn readback() -> Result<(String, String, String)> {
+    let text = fs::read_to_string("docs/MEASURED-PROGRESS.md")?;
+    let row = text
+        .lines()
+        .find(|l| l.starts_with("| Same, large sample |"))
+        .ok_or("missing large read-back row")?;
+    let f: Vec<&str> = row.split('|').map(str::trim).collect();
+    Ok((f[3].to_string(), f[4].to_string(), f[5].to_string()))
+}
+/// How many claims the registry in docs/CLAIMS.md holds in each evidence mode.
+fn statuses() -> Result<Vec<(&'static str, usize)>> {
+    let text = fs::read_to_string("docs/CLAIMS.md")?;
+    let table = text
+        .split_once("<!-- REGISTRY-BEGIN -->")
+        .and_then(|(_, rest)| rest.split_once("<!-- REGISTRY-END -->"))
+        .ok_or("missing claim registry")?
+        .0;
+    let modes: Vec<&str> = table
+        .lines()
+        .filter(|l| l.starts_with("| ") && !l.starts_with("| ID"))
+        .filter_map(|l| l.split('|').nth(3).map(str::trim))
+        .collect();
+    let order = [
+        "EXECUTABLE_CHECK",
+        "SEPARATE_GATE",
+        "MEASURED_LOCAL",
+        "NOT_VERIFIED",
+        "NOT_ESTABLISHED",
+    ];
+    if modes.is_empty() || modes.iter().any(|m| !order.contains(m)) {
+        return Err("unexpected claim registry mode".into());
+    }
+    Ok(order
+        .iter()
+        .map(|m| (*m, modes.iter().filter(|x| *x == m).count()))
+        .collect())
+}
+fn esc(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+}
+/// Greedy word wrap into at most `lines` lines; the last line ends with "…" when cut.
+fn wrap(s: &str, width: usize, lines: usize) -> Vec<String> {
+    let mut out: Vec<String> = vec![String::new()];
+    for word in s.split_whitespace() {
+        let last = out.last_mut().unwrap_or_else(|| unreachable!());
+        if !last.is_empty() && last.chars().count() + 1 + word.chars().count() > width {
+            out.push(word.to_string());
+        } else {
+            if !last.is_empty() {
+                last.push(' ');
+            }
+            last.push_str(word);
+        }
+    }
+    if out.len() > lines {
+        out.truncate(lines);
+        if let Some(l) = out.last_mut() {
+            l.push('…');
+        }
+    }
+    out
+}
+fn wilson_low(k: usize, n: usize) -> f64 {
+    let (z, n, p) = (1.96f64, n as f64, k as f64 / n as f64);
+    let c = p + z * z / (2.0 * n);
+    let r = z * (p * (1.0 - p) / n + z * z / (4.0 * n * n)).sqrt();
+    (c - r) / (1.0 + z * z / n)
+}
+const RESULT_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}";
+fn result_card(dark: bool, h: u32, text: (&str, &str), body: &str) -> String {
+    let t = theme(dark);
+    card(
+        (1200, h),
+        t,
+        text,
+        &RESULT_STYLE.replace("MUTED", t.muted),
+        body,
+    )
+}
+fn glance(dark: bool, r: &Recorded, rb: &(String, String, String)) -> String {
+    let t = theme(dark);
+    let (ok, wrong, unknown) = r.counts(0);
+    let low = wilson_low(ok, ok + wrong);
+    let blocks = [
+        (
+            format!("{ok} / 80"),
+            t.accent,
+            "correct answers",
+            "each with its source passage".to_string(),
+        ),
+        (
+            wrong.to_string(),
+            t.good,
+            "wrong answers",
+            format!(
+                "among the {} answers · 95% Wilson lower bound {low:.2}",
+                ok + wrong
+            ),
+        ),
+        (
+            unknown.to_string(),
+            t.ink,
+            "UNKNOWN",
+            "said instead of guessing".to_string(),
+        ),
+    ];
+    let mut body = String::from(
+        r#"<text class="kick" x="48" y="56">ANSWER OR ABSTAIN · 80 NATURAL QUESTIONS · ONE RECORDED RUN</text><text x="48" y="100" font-size="34" class="b">Evidence you can inspect</text>"#,
+    );
+    for (i, (big, colour, label, note)) in blocks.iter().enumerate() {
+        let x = 48 + i * 384;
+        body.push_str(&format!(r#"<text x="{x}" y="180" font-size="60" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="214" font-size="19" class="b">{label}</text><text x="{x}" y="240" font-size="15" class="mut">{note}</text>"#));
+    }
+    body.push_str(&format!(r#"<path d="M48 266H1152" stroke="{}"/><text x="48" y="298" font-size="15" class="mut">Separate experiment, not questions: {} correct answers when {} stored passages are read back ({} answered).</text>"#, t.line, rb.2, rb.0, rb.1));
+    result_card(dark, 330, ("Evidence you can inspect", &format!("On 80 natural questions GEL RAM gave {ok} correct answers, {wrong} wrong and {unknown} UNKNOWN.")), &body)
+}
+fn path_card(dark: bool) -> String {
+    let t = theme(dark);
+    let steps = [
+        ("QUESTION", "in natural language"),
+        ("RETRIEVAL", "search the whole bank"),
+        ("SOURCE", "one stored passage"),
+        ("ANSWER / UNKNOWN", "answer only when it is clear"),
+        ("EVIDENCE", "source, hash, recorded run"),
+    ];
+    let mut body =
+        String::from(r#"<text class="kick" x="40" y="44">WHAT HAPPENS TO A QUESTION</text>"#);
+    for (i, (name, note)) in steps.iter().enumerate() {
+        let x = 40 + i * 232;
+        let stroke = if i == 3 { t.accent } else { t.line };
+        body.push_str(&format!(r#"<rect x="{x}" y="64" width="200" height="72" rx="14" fill="{}" stroke="{stroke}" stroke-width="2"/><text x="{}" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">{name}</text><text x="{}" y="120" font-size="13" class="mut" text-anchor="middle">{note}</text>"#, t.bg[0], x + 100, x + 100));
+        if i < steps.len() - 1 {
+            let a = x + 204;
+            body.push_str(&format!(r#"<path d="M{a} 100H{} M{} 94L{} 100L{} 106" stroke="{}" stroke-width="2" fill="none"/>"#, a + 22, a + 16, a + 23, a + 16, t.muted));
+        }
+    }
+    result_card(dark, 160, ("What happens to a question", "Question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence: source, hash and recorded run."), &body)
+}
+fn pill(x: usize, y: usize, verdict: u8, t: &Theme) -> String {
+    let (label, colour) = match verdict {
+        b'C' => ("CORRECT", t.green[2]),
+        b'W' => ("WRONG", t.red[2]),
+        b'U' => ("UNKNOWN", t.muted),
+        _ => ("ERROR", t.amber[2]),
+    };
+    format!(
+        r##"<rect x="{x}" y="{y}" width="96" height="24" rx="12" fill="{colour}"/><text x="{}" y="{}" font-size="12" class="b" text-anchor="middle" style="fill:#ffffff" letter-spacing="1">{label}</text>"##,
+        x + 48,
+        y + 16
+    )
+}
+fn example(dark: bool, r: &Recorded) -> String {
+    let t = theme(dark);
+    let mut body = String::from(
+        r#"<text class="kick" x="48" y="50">ONE QUESTION, FOUR SYSTEMS · QUESTION 41 OF 80 · RECORDED RUN</text>"#,
+    );
+    body.push_str(&format!(
+        r#"<text x="48" y="92" font-size="24" class="b">{}</text>"#,
+        esc(&r.question)
+    ));
+    body.push_str(&format!(
+        r#"<text x="48" y="140" font-size="18" class="b">GEL RAM</text>{}"#,
+        pill(48, 152, r.systems[0].1[40], t)
+    ));
+    body.push_str(
+        r#"<text x="240" y="140" font-size="14" class="mut">Source passage it returned:</text>"#,
+    );
+    for (i, line) in wrap(&r.passage, 104, 3).iter().enumerate() {
+        body.push_str(&format!(
+            r#"<text x="240" y="{}" font-size="16">{}</text>"#,
+            164 + i * 22,
+            esc(line)
+        ));
+    }
+    for (i, (name, answer, verdict)) in r.answers.iter().enumerate() {
+        let y = 256 + i * 58;
+        body.push_str(&format!(r#"<text x="48" y="{y}" font-size="18" class="b">{name}</text>{}<text x="240" y="{}" font-size="16">{}</text>"#, pill(48, y + 10, *verdict, t), y + 14, esc(&wrap(answer, 104, 1)[0])));
+    }
+    body.push_str(r#"<text x="48" y="438" font-size="13" class="mut">Passage from Wikipedia (CC BY-SA 4.0). Models called through the Groq API, closed book. Full record: docs/GEL-BESIDE-GROQ.md</text>"#);
+    result_card(dark, 460, ("One question, four systems", &format!("Question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &body)
+}
+fn dots(dark: bool, r: &Recorded) -> String {
+    let t = theme(dark);
+    let mut body = String::from(
+        r#"<text class="kick" x="48" y="50">ANSWER OR ABSTAIN · SAME 80 QUESTIONS, SAME RULE · ONE RECORDED RUN</text>"#,
+    );
+    for (row, (name, verdicts)) in r.systems.iter().enumerate() {
+        let (ok, wrong, unknown) = r.counts(row);
+        let y = 96 + row * 54;
+        body.push_str(&format!(r#"<text x="48" y="{y}" font-size="17" class="b">{name}</text><text x="48" y="{}" font-size="13" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 20));
+        for (i, v) in verdicts.iter().enumerate() {
+            let cx = 336.0 + i as f64 * 10.4 + if i >= 40 { 8.0 } else { 0.0 };
+            let cy = y as f64 + 2.0;
+            body.push_str(&match v {
+                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.green[1]),
+                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.red[1]),
+                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="3.6" fill="none" stroke="{}" stroke-width="1.2"/>"#, t.muted),
+                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.amber[1]),
+            });
+        }
+    }
+    body.push_str(&format!(r#"<circle cx="54" cy="316" r="4.2" fill="{}"/><text x="66" y="321" font-size="13" class="mut">correct</text><circle cx="140" cy="316" r="4.2" fill="{}"/><text x="152" y="321" font-size="13" class="mut">wrong</text><circle cx="214" cy="316" r="3.6" fill="none" stroke="{}" stroke-width="1.2"/><text x="226" y="321" font-size="13" class="mut">UNKNOWN</text><text x="336" y="321" font-size="13" class="mut">one dot per question · 1–40 Polish, 41–80 English · models via the Groq API, closed book</text>"#, t.green[1], t.red[1], t.muted));
+    let desc = r
+        .systems
+        .iter()
+        .enumerate()
+        .map(|(i, (name, _))| {
+            let (a, b, c) = r.counts(i);
+            format!("{name}: {a} correct, {b} wrong, {c} UNKNOWN")
+        })
+        .collect::<Vec<_>>()
+        .join(". ");
+    result_card(dark, 344, ("Answer or abstain", &desc), &body)
+}
+fn surface(dark: bool, s: &[(&str, usize)]) -> String {
+    let t = theme(dark);
+    let meaning = |m: &str| match m {
+        "EXECUTABLE_CHECK" => ("run against the library", "in CI on every change"),
+        "SEPARATE_GATE" => ("checked by its own", "gate or report"),
+        "MEASURED_LOCAL" => ("measured by the owner;", "not re-runnable here"),
+        "NOT_VERIFIED" => ("open:", "not verified yet"),
+        _ => ("not shown,", "so not claimed"),
+    };
+    let mut body = String::from(
+        r#"<text class="kick" x="40" y="48">TRUTH SURFACE · EVERY CLAIM IN THE REGISTRY HAS ONE STATUS</text>"#,
+    );
+    for (i, (mode, n)) in s.iter().enumerate() {
+        let x = 40 + i * 228;
+        let (a, b) = meaning(mode);
+        body.push_str(&format!(r#"<rect x="{x}" y="68" width="212" height="132" rx="14" fill="{}" stroke="{}"/><text x="{}" y="116" font-size="40" class="b">{n}</text><text x="{}" y="142" font-size="12" class="mono">{mode}</text><text x="{}" y="166" font-size="13" class="mut">{a}</text><text x="{}" y="184" font-size="13" class="mut">{b}</text>"#, t.bg[0], t.line, x + 18, x + 18, x + 18, x + 18));
+    }
+    body.push_str(r#"<text x="40" y="232" font-size="14" class="mut">No claim is marked as independently reproduced: none has been. The registry is docs/CLAIMS.md.</text>"#);
+    let desc = s
+        .iter()
+        .map(|(m, n)| format!("{n} {m}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    result_card(dark, 256, ("Truth surface", &format!("Claims in the registry by status: {desc}. None is marked as independently reproduced.")), &body)
+}
+fn goals(dark: bool, r: &Recorded) -> String {
+    let t = theme(dark);
+    let (ok, wrong, _) = r.counts(0);
+    let rows = [
+        (
+            "Natural questions",
+            format!("{} of 80 answered, {wrong} wrong", ok + wrong),
+            "most of a new, frozen, held-out set answered, still 0 wrong",
+        ),
+        (
+            "Answer form",
+            "the whole source passage".to_string(),
+            "a short answer taken from the passage, scored by the models' rule",
+        ),
+        (
+            "No correct answer",
+            "no public control yet".to_string(),
+            "UNKNOWN on invented subjects and false premises, on a frozen set",
+        ),
+        (
+            "Reproduction",
+            "no independent run recorded".to_string(),
+            "a first external run of xtask verify, published as it comes",
+        ),
+    ];
+    let mut body = String::from(
+        r#"<text class="kick" x="48" y="50">OPEN QUESTIONS · GOALS, NOT RESULTS</text>"#,
+    );
+    body.push_str(&format!(r#"<text x="330" y="88" font-size="13" class="mut" letter-spacing="1">MEASURED NOW (PUBLIC)</text><text x="680" y="88" font-size="13" letter-spacing="1" style="fill:{}">GOAL — NOT ACHIEVED YET</text>"#, t.accent));
+    for (i, (name, now, goal)) in rows.iter().enumerate() {
+        let y = 126 + i * 58;
+        body.push_str(&format!(r#"<path d="M48 {}H1152" stroke="{}"/><text x="48" y="{y}" font-size="17" class="b">{name}</text><text x="330" y="{y}" font-size="16">{}</text>"#, y - 26, t.line, esc(now)));
+        for (j, line) in wrap(goal, 66, 2).iter().enumerate() {
+            body.push_str(&format!(
+                r#"<text x="680" y="{}" font-size="16" style="fill:{}">{}</text>"#,
+                y + j * 20,
+                t.accent,
+                esc(line)
+            ));
+        }
+    }
+    body.push_str(r#"<text x="48" y="376" font-size="14" class="mut">A goal becomes a result only when it is published with its frozen protocol and evidence.</text>"#);
+    result_card(dark, 400, ("Open questions and goals", "Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction."), &body)
+}
+fn result_path(name: &str, dark: bool) -> String {
+    format!(
+        "media/presentation/{name}-{}.svg",
+        if dark { "dark" } else { "light" }
+    )
+}
+/// The result graphics in README order: file stem, light body, dark body and an alternative text read from the same data.
+fn results() -> Result<Vec<(&'static str, String, String, String)>> {
+    let r = Recorded::read()?;
+    let (ok, wrong, unknown) = r.counts(0);
+    let rb = readback()?;
+    let s = statuses()?;
+    let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
+    let mut out = Vec::new();
+    let (l, d) = both(&|dark| glance(dark, &r, &rb));
+    out.push(("glance", l, d, format!("Evidence you can inspect. 80 natural questions, one recorded run: {ok} correct answers with their source passages, {wrong} wrong, {unknown} UNKNOWN. Separate experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)));
+    let (l, d) = both(&path_card);
+    out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
+    let (l, d) = both(&|dark| example(dark, &r));
+    out.push(("example-41", l, d, format!("Question 41: {} GEL RAM returned the source passage; the three models answered with a reason the source does not give.", r.question)));
+    let (l, d) = both(&|dark| dots(dark, &r));
+    out.push((
+        "answer-dots",
+        l,
+        d,
+        r.systems
+            .iter()
+            .enumerate()
+            .map(|(i, (n, _))| {
+                let (a, b, c) = r.counts(i);
+                format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN")
+            })
+            .collect::<Vec<_>>()
+            .join(". "),
+    ));
+    let (l, d) = both(&|dark| surface(dark, &s));
+    out.push((
+        "truth-surface",
+        l,
+        d,
+        format!(
+            "Claims by status: {}. None is marked as independently reproduced.",
+            s.iter()
+                .map(|(m, n)| format!("{n} {m}"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    ));
+    let (l, d) = both(&|dark| goals(dark, &r));
+    out.push(("goals", l, d, "Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.".to_string()));
+    Ok(out)
+}
+/// The README block of result pictures, from the same data as the graphics.
+fn results_block() -> Result<String> {
+    let mut s = String::new();
+    for (i, (name, _, _, alt)) in results()?.iter().enumerate() {
+        if i > 0 {
+            s.push_str("\n\n");
+        }
+        s.push_str(&themed(
+            &result_path(name, false),
+            &result_path(name, true),
+            &esc(alt),
+            1200,
+        ));
+        if *name == "answer-dots" {
+            s.push_str("\n\n");
+            s.push_str(TRY_TO_BREAK);
+        }
+    }
+    Ok(s)
+}
+const TRY_TO_BREAK: &str = "| Try to break GEL | What the public tool does | Watch it |
+|:---|:---|:---|
+| Change one byte of a saved copy | refuses it against the pin you kept | [Changed byte refused](media/gifs/05-integrity-light.gif) |
+| Change the source after citing it | refuses the old citation | [Stale citation refused](media/gifs/02-stale-light.gif) |
+| Restart and reopen the snapshot | returns the same citation under the same pin | [Verified restart](media/gifs/01-evidence-light.gif) |
+| Back up, then restore to a new path | checks the restored copy equal | [Backup restored](media/gifs/03-backup-light.gif) |";
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
     let evidence = Evidence::read()?;
@@ -1346,6 +1792,10 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((path("bars"), bars(dark, &evidence)));
         out.push((path("logo"), logo(dark, true)));
         out.push((path("logo-still"), logo(dark, false)));
+    }
+    for (name, light, dark, _) in results()? {
+        out.push((result_path(name, false), light));
+        out.push((result_path(name, true), dark));
     }
     for i in 0..CHIPS.len() {
         for dark in [false, true] {
@@ -1396,6 +1846,10 @@ fn native_intro() -> String {
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
+        .replace(
+            "__RESULTS__",
+            &results_block().unwrap_or_else(|e| format!("__RESULTS_ERROR__ {e}")),
+        )
 }
 fn rewrite_readme(before: &str) -> Result<String> {
     let marker = "### What you can inspect\n";
@@ -1636,7 +2090,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 14 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 26 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -1653,6 +2107,7 @@ mod tests {
                 "__HERO_ID__",
                 "__HERO__",
                 "__GRID__",
+                "__RESULTS__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
@@ -1697,6 +2152,42 @@ mod tests {
             assert!(w.contains("must run and pass exactly once"));
             assert!(!w.contains("passed"), "a drawn cell is not a CI result");
         }
+    }
+    #[test]
+    fn results_follow_the_recorded_answers() {
+        let r = Recorded::read().unwrap();
+        let (ok, wrong, unknown) = r.counts(0);
+        assert_eq!(ok + wrong + unknown, 80);
+        let rb = readback().unwrap();
+        let g = glance(false, &r, &rb);
+        assert!(g.contains(&format!(">{ok} / 80<")));
+        assert!(g.contains(&format!(">{wrong}<")) && g.contains(&format!(">{unknown}<")));
+        assert!(g.contains("Separate experiment, not questions"));
+        assert!(g.contains(&rb.2) && g.contains(&rb.0));
+        let d = dots(true, &r);
+        assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
+        let e = example(false, &r);
+        assert!(r.question.contains("Sudbury") && e.contains("House of Lords"));
+        assert!(
+            r.answers.iter().all(|a| a.2 == b'W'),
+            "question 41 is the published example"
+        );
+    }
+    #[test]
+    fn goals_are_labelled_and_claims_are_counted() {
+        let r = Recorded::read().unwrap();
+        let s = statuses().unwrap();
+        for dark in [false, true] {
+            let g = goals(dark, &r);
+            assert!(g.contains("GOALS, NOT RESULTS") && g.contains("NOT ACHIEVED YET"));
+            assert!(surface(dark, &s).contains("none has been"));
+        }
+        let rows = fs::read_to_string("docs/CLAIMS.md")
+            .unwrap()
+            .lines()
+            .filter(|l| l.starts_with("| ") && !l.starts_with("| ID"))
+            .count();
+        assert_eq!(s.iter().map(|(_, n)| n).sum::<usize>(), rows);
     }
     #[test]
     fn bars_show_a_mismatch() {

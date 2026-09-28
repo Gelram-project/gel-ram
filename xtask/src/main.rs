@@ -91,6 +91,54 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "0863d48ebe5fbb4199e9947f29518f6f3224250142cb4d4eb4c3c9f68926a132",
     ),
     (
+        "media/presentation/glance-light.svg",
+        "358696a2a5ac8a93c7d5b0d6281812cd4189c7fa61161d2d1ee969dcf69e294e",
+    ),
+    (
+        "media/presentation/glance-dark.svg",
+        "f6df6aa7941ccc7502872334c747dc35422268f246763ee8a148cdef12acbd4c",
+    ),
+    (
+        "media/presentation/question-path-light.svg",
+        "5935821b5291b84d5846a00127e3999c310c32946e1c5ba56abbe27567aa0e57",
+    ),
+    (
+        "media/presentation/question-path-dark.svg",
+        "60ed03b63cc8693372e34f6d29fe5288f622bdee2d2d00e369bebd75aec4d31a",
+    ),
+    (
+        "media/presentation/example-41-light.svg",
+        "6e4c921fef4ab074cebed46156ed91b27d292d75f23c97a35db2caf1f4d7bec8",
+    ),
+    (
+        "media/presentation/example-41-dark.svg",
+        "2a29f6e2331b0d0c01723a2403598bc7179ac9ad76ce84512221bf60b27055a4",
+    ),
+    (
+        "media/presentation/answer-dots-light.svg",
+        "c099b65665c906045b11d8cf8c56bea61e90dcf2e2d4c45946c21ef66db847e5",
+    ),
+    (
+        "media/presentation/answer-dots-dark.svg",
+        "5f9a77ac81d180823caf70d99c70fabeb08e0dae868a167fff2fa3058941d0c6",
+    ),
+    (
+        "media/presentation/truth-surface-light.svg",
+        "faabd69665c8ae86058553dd17c740933924613045cfa343796550c9a086b2fd",
+    ),
+    (
+        "media/presentation/truth-surface-dark.svg",
+        "2f2d075152c06aab72cb0179dbcc1fad65aa533f1de991c93db2e62a7fd7664a",
+    ),
+    (
+        "media/presentation/goals-light.svg",
+        "5dfde284be436b0a4c75ae51e49534921354e6d43e2f6f36a54d66ab18363f57",
+    ),
+    (
+        "media/presentation/goals-dark.svg",
+        "61ca19f94d1123906692909b2979e8da97545b86f802ff84b647deef635caff8",
+    ),
+    (
         "media/presentation/chips/01-light.svg",
         "d4207f2334a255e66fc3a92cfeba06ff3ee66dd50b045496c41005c4694f3fc2",
     ),
