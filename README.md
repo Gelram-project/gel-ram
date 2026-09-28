@@ -207,6 +207,7 @@ source passage (33 words at the median). Times are recorded, not compared: GEL
 0.25 s for all 80 locally, the models 59–371 ms per question at the median over
 the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
 · [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
+· [Try your own system on the same questions](docs/answer-or-abstain/README.md)
 
 ### Same supplied-source task: GEL adapter and models served by Groq
 

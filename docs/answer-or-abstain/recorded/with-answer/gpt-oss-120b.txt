@@ -1,0 +1,81 @@
+# gpt-oss-120b: answers as returned in one run (run 2026-09-28, Groq API closed book); line breaks and tabs replaced by spaces. nr, answer.
+1	UNKNOWN
+2	UNKNOWN
+3	Od imienia Adalhard, oznaczającego „szlachetny, mocny”.
+4	Botafogo.
+5	Rodzaj brekcji – skała z ostrych, zrośniętych fragmentów.
+6	UNKNOWN
+7	UNKNOWN
+8	78
+9	UNKNOWN
+10	Robin Atkin Downes
+11	UNKNOWN
+12	actin i myosin
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	UNKNOWN
+17	2006
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	0 zabitych, 2 rannych.
+23	Józef Kałuża.
+24	UNKNOWN
+25	Doyle’s Delight.
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	UNKNOWN
+30	UNKNOWN
+31	UNKNOWN
+32	UNKNOWN
+33	UNKNOWN
+34	Howard Hughes
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	przy studni na pustyni Beerseb
+39	UNKNOWN
+40	UNKNOWN
+41	Because the incumbent MP died, triggering a by‑election.
+42	UNKNOWN
+43	C‑130H Hercules.
+44	6
+45	CBC.
+46	St. Louis Cardinals
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	Polo Grounds, New York.
+51	UNKNOWN
+52	UNKNOWN
+53	Sir Edward Clarke
+54	Giovanni de’ Medici (future Pope Leo X).
+55	UNKNOWN
+56	UNKNOWN
+57	William H. Adams
+58	UNKNOWN
+59	UNKNOWN
+60	UNKNOWN
+61	Rochester.
+62	Easy Goer
+63	Sir Cahir O'Doherty.
+64	The Vampyre.
+65	19 March 1923
+66	Måløy, Norway.
+67	UNKNOWN
+68	UNKNOWN
+69	Jack Hobbs
+70	Joe Kuharich
+71	UNKNOWN
+72	UNKNOWN
+73	UNKNOWN
+74	UNKNOWN
+75	Jimmy Collins.
+76	0
+77	UNKNOWN
+78	UNKNOWN
+79	UNKNOWN
+80	UNKNOWN

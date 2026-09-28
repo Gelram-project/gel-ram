@@ -247,6 +247,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "answer-bench-rescoring",
+        dimension: "scoring",
+        scope: "answer-or-abstain set: 80 questions with an answer, 80 without, recorded answers of four systems",
+        input: "xtask answer-bench check re-scores every recorded answer with the published rules",
+        expected: "the automatic and reviewed totals equal the published tables; any drift fails verify",
+        counterexample: "re-scoring read as re-running GEL or the models",
+        source: "docs/answer-or-abstain/README.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "backup-restore",
         dimension: "persistence",
         scope: "gel-backup directory with MANIFEST",
