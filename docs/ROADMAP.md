@@ -5,8 +5,8 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- The 0.5.0 version line contains everything below; tagged releases are listed on
-  the Releases page. Tagged `v0.4.0` and `v0.3.0` remain earlier releases.
+- The 0.5.1 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.5.0`, `v0.4.0` and `v0.3.0` remain earlier releases.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -50,6 +50,15 @@ The following capabilities are present on public `main`:
 5. Evaluate knowledge retrieval only after defining a redistributable corpus,
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
+
+## v0.5.1
+
+A documentation and version release; public tools, formats and dependencies are
+unchanged from v0.5.0.
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Answer-verdict and natural-question results of the private implementation, registered as `MEASURED_LOCAL` claims | 739c452 | `xtask claims` | [measured progress](MEASURED-PROGRESS.md) | independent reproduction; a larger, independently written question set |
 
 ## v0.5.0
 

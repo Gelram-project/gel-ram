@@ -29,14 +29,10 @@ const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
-    (
-        "media/presentation/measured-progress.svg",
-        "cdfdfd4c7c85c07c09f7968ecb1273672f6c9bfd4aad337f5ebab51fd91dd40f",
-    ),
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "6c6f9523ef83c17c30350bed75f3ee2d4a14962298e7a5ef72abdee232536250",
+        "c4b1238bf275239861a377ecaa374798ad0761b21ca2e72a4da26fede9277f75",
     ),
     (
         "media/presentation/header-light.svg",
@@ -141,6 +137,10 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/chips/06-dark.svg",
         "e64e325af468f9803365e27c18f269821ad94be8a718b163759b587d47c55bba",
+    ),
+    (
+        "media/presentation/measured-progress.svg",
+        "cdfdfd4c7c85c07c09f7968ecb1273672f6c9bfd4aad337f5ebab51fd91dd40f",
     ),
     (
         "media/gifs/01-evidence-light.gif",

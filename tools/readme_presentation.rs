@@ -3,7 +3,7 @@
 use std::{fs, io::Write, path::Path, process::Command};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// The release whose sources the page links to and checks out.
-const RELEASE: &str = "v0.5.0";
+const RELEASE: &str = "v0.5.1";
 const SCENES: &[(&str, &str, &str)] = &[
     (
         "01-evidence",
@@ -187,9 +187,9 @@ __FACTS__
 
 [Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
-> **Version 0.5.0.** The instructions below use the `v0.5.0` tag. Record the exact
+> **Version 0.5.1.** The instructions below use the `v0.5.1` tag. Record the exact
 > commit you test.
-> [Release notes](RELEASE-NOTES-v0.5.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+> [Release notes](RELEASE-NOTES-v0.5.1.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
 **Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
 Open that file from this checkout in a browser for the responsive blue-panel layout,
