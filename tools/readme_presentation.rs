@@ -36,24 +36,6 @@ const SCENES: &[(&str, &str, &str)] = &[
         "See matching and differing answers. No universal speedup is claimed.",
     ),
 ];
-const SVG: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="228" viewBox="0 0 1200 228" role="img" aria-labelledby="title desc">
-<title id="title">GEL RAM | Evidence Lab</title><desc id="desc">Your documents. Exact quotes. A restart you can check. Public Rust tools with source-linked evidence. Animated logo: document sheets settle into a translucent GEL cube as source cells, a query lights one exact cell and a pin seal appears. Drawn, not recorded.</desc>
-<style>
-__LOGO_STYLE__
-</style>
-<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="__BG1__"/><stop offset="1" stop-color="__BG2__"/></linearGradient></defs>
-<rect x="1" y="1" width="1198" height="226" rx="24" fill="url(#bg)" stroke="__LINE__"/>
-<path d="M680 0Q755 180 1200 92V0Z" fill="__ACCENT__" opacity=".06"/><path d="M560 228Q850 38 1200 156V228Z" fill="__ACCENT__" opacity=".05"/>
-__LOGO__
-<g font-family="Arial,Helvetica,sans-serif" fill="__INK__">
-<text x="252" y="86" font-size="46" font-weight="700" letter-spacing="1">GEL RAM</text>
-<text x="253" y="128" font-size="30" font-weight="600">Evidence Lab</text>
-<text x="253" y="192" font-size="23">Your documents. Exact quotes. A restart you can check.</text>
-<text x="814" y="76" font-size="16" font-weight="700" letter-spacing="2" fill="__ACCENT__">PUBLIC RUST TOOLS</text>
-<text x="814" y="108" font-size="21">Source-linked evidence.</text>
-<text x="814" y="137" font-size="21">Inspect it. Reproduce it.</text>
-</g></svg>
-"####;
 /// Four checked facts; the counts are read from the repository by `fact_counts`.
 const FACTS: &str = r####"<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="128" viewBox="0 0 1200 128" role="img" aria-labelledby="t d">
 <title id="t">Checked facts about this release</title>
@@ -174,8 +156,10 @@ const NATIVE: &str = r####"# GEL RAM
 
 <!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
 <picture>
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/presentation/header-still-dark.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/header-still-light.svg">
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM Evidence Lab. Your documents. Exact quotes. A restart you can check. Animated logo: document sheets settle into a translucent cube, a query lights one exact cell and a pin seal appears." src="media/presentation/header-light.svg" width="1200">
+  <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
 __RESULTS__
@@ -402,7 +386,9 @@ or a general model ranking. Private code, banks and API credentials stay private
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner with the animated GEL logo, an animated 3D scene of the citation
+an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
+reduced motion is requested), result panels drawn from the recorded
+side-by-side run and the claim registry, an animated 3D scene of the citation
 check, a strip of checked facts, colour-coded workflow badges, six real GIF
 previews and two 3D graphics of the public checks. The adjacent
 README-MULTIMEDIA.html is a script-free local document with the full responsive
@@ -496,23 +482,13 @@ fn pair(id: &str, title: &str) -> String {
         picture(id, title, true)
     )
 }
+/// The opening banner: the logo as a large turning glass cube with the name and what it does.
 fn header(dark: bool) -> String {
-    let values = if dark {
-        ["#101d31", "#0d1117", "#303d50", "#79c0ff", "#e6edf3"]
-    } else {
-        ["#f7fbff", "#deedff", "#cbdcf0", "#0969da", "#102949"]
-    };
-    let mut s = SVG.to_string();
-    for (key, val) in ["BG1", "BG2", "LINE", "ACCENT", "INK"]
-        .into_iter()
-        .zip(values)
-    {
-        s = s.replace(&format!("__{key}__"), val);
-    }
-    let (o, a) = ((120.0, 118.0), 86.0);
-    let logo = gel_logo(theme(dark), values[3], o, a) + &gel_sheets(theme(dark), values[3], o, a);
-    s.replace("__LOGO_STYLE__", LOGO_STYLE)
-        .replace("__LOGO__", &logo)
+    hero(dark, true)
+}
+/// The banner without motion, for readers who ask for reduced motion.
+fn header_still(dark: bool) -> String {
+    hero(dark, false)
 }
 /// The logo alone, for the brand of the full-page edition: animated, or still
 /// in its final state for the page's still-image control and for print.
@@ -1491,7 +1467,7 @@ fn glance(dark: bool, r: &Recorded, rb: &(String, String, String)) -> String {
     let t = theme(dark);
     let (ok, wrong, unknown) = r.counts(0);
     let low = wilson_low(ok, ok + wrong);
-    let blocks = [
+    let cols = [
         (
             format!("{ok} / 80"),
             t.accent,
@@ -1501,11 +1477,8 @@ fn glance(dark: bool, r: &Recorded, rb: &(String, String, String)) -> String {
         (
             wrong.to_string(),
             t.good,
-            "wrong answers",
-            format!(
-                "among the {} answers · 95% Wilson lower bound {low:.2}",
-                ok + wrong
-            ),
+            "wrong among answered",
+            format!("of {} answers · Wilson 95% ≥ {low:.2}", ok + wrong),
         ),
         (
             unknown.to_string(),
@@ -1515,14 +1488,14 @@ fn glance(dark: bool, r: &Recorded, rb: &(String, String, String)) -> String {
         ),
     ];
     let mut body = String::from(
-        r#"<text class="kick" x="48" y="56">ANSWER OR ABSTAIN · 80 NATURAL QUESTIONS · ONE RECORDED RUN</text><text x="48" y="100" font-size="34" class="b">Evidence you can inspect</text>"#,
+        r#"<text class="kick" x="40" y="48">80 NATURAL QUESTIONS · 40 POLISH, 40 ENGLISH · ONE RECORDED RUN</text>"#,
     );
-    for (i, (big, colour, label, note)) in blocks.iter().enumerate() {
-        let x = 48 + i * 384;
-        body.push_str(&format!(r#"<text x="{x}" y="180" font-size="60" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="214" font-size="19" class="b">{label}</text><text x="{x}" y="240" font-size="15" class="mut">{note}</text>"#));
+    for (i, (big, colour, label, note)) in cols.iter().enumerate() {
+        let x = 40 + i * 285;
+        body.push_str(&format!(r#"<text x="{x}" y="118" font-size="52" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="150" font-size="18" class="b">{label}</text><text x="{x}" y="174" font-size="14" class="mut">{note}</text>"#));
     }
-    body.push_str(&format!(r#"<path d="M48 266H1152" stroke="{}"/><text x="48" y="298" font-size="15" class="mut">Separate experiment, not questions: {} correct answers when {} stored passages are read back ({} answered).</text>"#, t.line, rb.2, rb.0, rb.1));
-    result_card(dark, 330, ("Evidence you can inspect", &format!("On 80 natural questions GEL RAM gave {ok} correct answers, {wrong} wrong and {unknown} UNKNOWN.")), &body)
+    body.push_str(&format!(r#"<path d="M890 76V182" stroke="{}"/><text x="920" y="118" font-size="52" class="b" style="fill:{}">{}</text><text x="920" y="150" font-size="18" class="b">stored-passage read-back</text><text x="920" y="174" font-size="14" class="mut">{} probes · not questions</text>"#, t.line, t.accent, rb.2, rb.0));
+    result_card(dark, 206, ("Evidence you can inspect", &format!("On 80 natural questions GEL RAM gave {ok} correct answers, {wrong} wrong and {unknown} UNKNOWN. A different experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)), &body)
 }
 fn path_card(dark: bool) -> String {
     let t = theme(dark);
@@ -1559,57 +1532,107 @@ fn pill(x: usize, y: usize, verdict: u8, t: &Theme) -> String {
         y + 16
     )
 }
+/// A rounded inner panel of a two-column card.
+fn panel(x: usize, w: usize, h: usize, t: &Theme) -> String {
+    format!(
+        r#"<rect x="{x}" y="20" width="{w}" height="{h}" rx="16" fill="{}" fill-opacity=".6" stroke="{}"/>"#,
+        t.bg[0], t.line
+    )
+}
 fn example(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
-    let mut body = String::from(
-        r#"<text class="kick" x="48" y="50">ONE QUESTION, FOUR SYSTEMS · QUESTION 41 OF 80 · RECORDED RUN</text>"#,
+    let mut b = panel(20, 570, 420, t) + &panel(610, 570, 420, t);
+    b.push_str(
+        r#"<text class="kick" x="44" y="56">REAL EXAMPLE · REAL SOURCE · QUESTION 41 OF 80</text>"#,
     );
-    body.push_str(&format!(
-        r#"<text x="48" y="92" font-size="24" class="b">{}</text>"#,
-        esc(&r.question)
-    ));
-    body.push_str(&format!(
-        r#"<text x="48" y="140" font-size="18" class="b">GEL RAM</text>{}"#,
-        pill(48, 152, r.systems[0].1[40], t)
-    ));
-    body.push_str(
-        r#"<text x="240" y="140" font-size="14" class="mut">Source passage it returned:</text>"#,
-    );
-    for (i, line) in wrap(&r.passage, 104, 3).iter().enumerate() {
-        body.push_str(&format!(
-            r#"<text x="240" y="{}" font-size="16">{}</text>"#,
-            164 + i * 22,
-            esc(line)
+    for (i, l) in wrap(&r.question, 50, 2).iter().enumerate() {
+        b.push_str(&format!(
+            r#"<text x="44" y="{}" font-size="20" class="b">{}</text>"#,
+            94 + i * 26,
+            esc(l)
         ));
     }
-    for (i, (name, answer, verdict)) in r.answers.iter().enumerate() {
-        let y = 256 + i * 58;
-        body.push_str(&format!(r#"<text x="48" y="{y}" font-size="18" class="b">{name}</text>{}<text x="240" y="{}" font-size="16">{}</text>"#, pill(48, y + 10, *verdict, t), y + 14, esc(&wrap(answer, 104, 1)[0])));
+    b.push_str(&format!(
+        r#"<text x="44" y="164" font-size="17" class="b">GEL RAM</text>{}"#,
+        pill(134, 148, r.systems[0].1[40], t)
+    ));
+    b.push_str(r#"<text x="44" y="196" font-size="13" class="mut">returned this stored source passage:</text>"#);
+    for (i, l) in wrap(&r.passage, 64, 7).iter().enumerate() {
+        b.push_str(&format!(
+            r#"<text x="44" y="{}" font-size="15">{}</text>"#,
+            222 + i * 22,
+            esc(l)
+        ));
     }
-    body.push_str(r#"<text x="48" y="438" font-size="13" class="mut">Passage from Wikipedia (CC BY-SA 4.0). Models called through the Groq API, closed book. Full record: docs/GEL-BESIDE-GROQ.md</text>"#);
-    result_card(dark, 460, ("One question, four systems", &format!("Question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &body)
+    b.push_str(r#"<text x="44" y="418" font-size="12" class="mut">Wikipedia passage (CC BY-SA 4.0) as stored in the GEL bank</text>"#);
+    b.push_str(
+        r#"<text class="kick" x="634" y="56">SAME QUESTION · THREE MODELS, CLOSED BOOK</text>"#,
+    );
+    for (i, (name, answer, v)) in r.answers.iter().enumerate() {
+        let y = 104 + i * 88;
+        b.push_str(&format!(
+            r#"<text x="634" y="{y}" font-size="17" class="b">{name}</text>{}"#,
+            pill(1060, y - 17, *v, t)
+        ));
+        for (j, l) in wrap(answer, 62, 2).iter().enumerate() {
+            b.push_str(&format!(
+                r#"<text x="634" y="{}" font-size="15">{}</text>"#,
+                y + 28 + j * 20,
+                esc(l)
+            ));
+        }
+    }
+    b.push_str(r#"<text x="634" y="392" font-size="14" class="mut">All three give a reason the source does not give.</text><text x="634" y="414" font-size="14" class="mut">GEL returns the passage that states it.</text>"#);
+    result_card(dark, 460, ("One question, four systems", &format!("Question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
 }
+const BREAK: [(&str, &str, &str); 4] = [
+    (
+        "Change one byte of a saved copy",
+        "the pin you kept no longer matches",
+        "REFUSED",
+    ),
+    (
+        "Change the source after citing it",
+        "the old citation is out of date",
+        "REFUSED",
+    ),
+    (
+        "Restart and reopen the snapshot",
+        "a new process, the same pin",
+        "SAME CITATION",
+    ),
+    (
+        "Back up, restore to a new path",
+        "the restored copy is compared",
+        "CHECKED EQUAL",
+    ),
+];
 fn dots(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
-    let mut body = String::from(
-        r#"<text class="kick" x="48" y="50">ANSWER OR ABSTAIN · SAME 80 QUESTIONS, SAME RULE · ONE RECORDED RUN</text>"#,
-    );
+    let mut b = panel(20, 720, 360, t) + &panel(760, 420, 360, t);
+    b.push_str(r#"<text class="kick" x="44" y="56">ANSWER OR ABSTAIN · SAME 80 QUESTIONS, SAME RULE</text>"#);
     for (row, (name, verdicts)) in r.systems.iter().enumerate() {
         let (ok, wrong, unknown) = r.counts(row);
-        let y = 96 + row * 54;
-        body.push_str(&format!(r#"<text x="48" y="{y}" font-size="17" class="b">{name}</text><text x="48" y="{}" font-size="13" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 20));
+        let y = 104 + row * 62;
+        b.push_str(&format!(r#"<text x="44" y="{y}" font-size="16" class="b">{name}</text><text x="44" y="{}" font-size="12" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 19));
         for (i, v) in verdicts.iter().enumerate() {
-            let cx = 336.0 + i as f64 * 10.4 + if i >= 40 { 8.0 } else { 0.0 };
+            let cx = 252.0 + i as f64 * 5.6 + if i >= 40 { 6.0 } else { 0.0 };
             let cy = y as f64 + 2.0;
-            body.push_str(&match v {
-                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.green[1]),
-                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.red[1]),
-                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="3.6" fill="none" stroke="{}" stroke-width="1.2"/>"#, t.muted),
-                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="4.2" fill="{}"/>"#, t.amber[1]),
+            b.push_str(&match v {
+                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.green[1]),
+                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.red[1]),
+                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2" fill="none" stroke="{}" stroke-width="1"/>"#, t.muted),
+                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.amber[1]),
             });
         }
     }
-    body.push_str(&format!(r#"<circle cx="54" cy="316" r="4.2" fill="{}"/><text x="66" y="321" font-size="13" class="mut">correct</text><circle cx="140" cy="316" r="4.2" fill="{}"/><text x="152" y="321" font-size="13" class="mut">wrong</text><circle cx="214" cy="316" r="3.6" fill="none" stroke="{}" stroke-width="1.2"/><text x="226" y="321" font-size="13" class="mut">UNKNOWN</text><text x="336" y="321" font-size="13" class="mut">one dot per question · 1–40 Polish, 41–80 English · models via the Groq API, closed book</text>"#, t.green[1], t.red[1], t.muted));
+    b.push_str(&format!(r#"<circle cx="50" cy="352" r="4" fill="{}"/><text x="60" y="357" font-size="12" class="mut">correct</text><circle cx="124" cy="352" r="4" fill="{}"/><text x="134" y="357" font-size="12" class="mut">wrong</text><circle cx="190" cy="352" r="3.4" fill="none" stroke="{}" stroke-width="1.2"/><text x="200" y="357" font-size="12" class="mut">UNKNOWN · 1–40 Polish, 41–80 English · models via the Groq API, closed book</text>"#, t.green[1], t.red[1], t.muted));
+    b.push_str(r#"<text class="kick" x="784" y="56">TRY TO BREAK GEL · PUBLIC TOOL</text>"#);
+    for (i, (what, why, outcome)) in BREAK.iter().enumerate() {
+        let y = 104 + i * 62;
+        b.push_str(&format!(r#"<text x="784" y="{y}" font-size="15" class="b">{what}</text><text x="784" y="{}" font-size="12" class="mut">{why}</text><text x="1156" y="{}" font-size="12" class="b" text-anchor="end" letter-spacing="1" style="fill:{}">{outcome}</text>"#, y + 19, y + 19, t.good));
+    }
+    b.push_str(r#"<text x="784" y="357" font-size="12" class="mut">Each is recorded; the recordings are linked below.</text>"#);
     let desc = r
         .systems
         .iter()
@@ -1620,76 +1643,59 @@ fn dots(dark: bool, r: &Recorded) -> String {
         })
         .collect::<Vec<_>>()
         .join(". ");
-    result_card(dark, 344, ("Answer or abstain", &desc), &body)
+    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("{desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
 }
-fn surface(dark: bool, s: &[(&str, usize)]) -> String {
+fn surface(dark: bool, s: &[(&str, usize)], r: &Recorded) -> String {
     let t = theme(dark);
-    let meaning = |m: &str| match m {
-        "EXECUTABLE_CHECK" => ("run against the library", "in CI on every change"),
-        "SEPARATE_GATE" => ("checked by its own", "gate or report"),
-        "MEASURED_LOCAL" => ("measured by the owner;", "not re-runnable here"),
-        "NOT_VERIFIED" => ("open:", "not verified yet"),
-        _ => ("not shown,", "so not claimed"),
-    };
-    let mut body = String::from(
-        r#"<text class="kick" x="40" y="48">TRUTH SURFACE · EVERY CLAIM IN THE REGISTRY HAS ONE STATUS</text>"#,
-    );
+    let (ok, wrong, _) = r.counts(0);
+    let mut b = panel(20, 540, 400, t) + &panel(580, 600, 400, t);
+    b.push_str(r#"<text class="kick" x="44" y="56">TRUTH SURFACE · CLAIMS BY STATUS</text>"#);
     for (i, (mode, n)) in s.iter().enumerate() {
-        let x = 40 + i * 228;
-        let (a, b) = meaning(mode);
-        body.push_str(&format!(r#"<rect x="{x}" y="68" width="212" height="132" rx="14" fill="{}" stroke="{}"/><text x="{}" y="116" font-size="40" class="b">{n}</text><text x="{}" y="142" font-size="12" class="mono">{mode}</text><text x="{}" y="166" font-size="13" class="mut">{a}</text><text x="{}" y="184" font-size="13" class="mut">{b}</text>"#, t.bg[0], t.line, x + 18, x + 18, x + 18, x + 18));
+        let (colour, meaning) = match *mode {
+            "EXECUTABLE_CHECK" => (t.green[1], "run against the library in CI"),
+            "SEPARATE_GATE" => (t.blue[1], "checked by its own gate or report"),
+            "MEASURED_LOCAL" => (t.amber[1], "measured by the owner; not re-runnable here"),
+            "NOT_VERIFIED" => (t.muted, "open: not verified yet"),
+            _ => (t.muted, "not shown, so not claimed"),
+        };
+        let y = 100 + i * 56;
+        b.push_str(&format!(r#"<circle cx="54" cy="{}" r="8" fill="{colour}"/><text x="74" y="{y}" font-size="13" class="mono">{mode}</text><text x="74" y="{}" font-size="12" class="mut">{meaning}</text><text x="530" y="{}" font-size="26" class="b" text-anchor="end">{n}</text>"#, y - 4, y + 19, y + 8));
     }
-    body.push_str(r#"<text x="40" y="232" font-size="14" class="mut">No claim is marked as independently reproduced: none has been. The registry is docs/CLAIMS.md.</text>"#);
+    b.push_str(r#"<text x="44" y="400" font-size="13" class="mut">None is marked as independently reproduced: none has been.</text>"#);
+    b.push_str(r#"<text class="kick" x="604" y="56">OPEN QUESTIONS · GOALS, NOT RESULTS</text>"#);
+    let items = [
+        (
+            "Natural question coverage",
+            format!("now {} of 80 answered, {wrong} wrong", ok + wrong),
+            "most of a new frozen set answered, still 0 wrong",
+        ),
+        (
+            "Answer form",
+            "now the whole source passage".to_string(),
+            "a short answer taken from that passage",
+        ),
+        (
+            "Questions without an answer",
+            "now no public control".to_string(),
+            "UNKNOWN on invented subjects and false premises",
+        ),
+        (
+            "Independent reproduction",
+            "now none recorded".to_string(),
+            "a first external run of xtask verify",
+        ),
+    ];
+    for (i, (title, now, goal)) in items.iter().enumerate() {
+        let y = 98 + i * 72;
+        b.push_str(&format!(r#"<circle cx="616" cy="{}" r="13" fill="none" stroke="{}" stroke-width="2"/><text x="616" y="{}" font-size="13" class="b" text-anchor="middle">{}</text><text x="642" y="{y}" font-size="15" class="b">{title}</text><text x="642" y="{}" font-size="13" class="mut">{}</text><text x="642" y="{}" font-size="13" style="fill:{}">goal: {} · not achieved yet</text>"#, y - 5, t.accent, y, i + 1, y + 20, esc(now), y + 39, t.accent, esc(goal)));
+    }
+    b.push_str(r#"<text x="604" y="400" font-size="13" class="mut">A goal becomes a result only when published with its frozen protocol and evidence.</text>"#);
     let desc = s
         .iter()
         .map(|(m, n)| format!("{n} {m}"))
         .collect::<Vec<_>>()
         .join(", ");
-    result_card(dark, 256, ("Truth surface", &format!("Claims in the registry by status: {desc}. None is marked as independently reproduced.")), &body)
-}
-fn goals(dark: bool, r: &Recorded) -> String {
-    let t = theme(dark);
-    let (ok, wrong, _) = r.counts(0);
-    let rows = [
-        (
-            "Natural questions",
-            format!("{} of 80 answered, {wrong} wrong", ok + wrong),
-            "most of a new, frozen, held-out set answered, still 0 wrong",
-        ),
-        (
-            "Answer form",
-            "the whole source passage".to_string(),
-            "a short answer taken from the passage, scored by the models' rule",
-        ),
-        (
-            "No correct answer",
-            "no public control yet".to_string(),
-            "UNKNOWN on invented subjects and false premises, on a frozen set",
-        ),
-        (
-            "Reproduction",
-            "no independent run recorded".to_string(),
-            "a first external run of xtask verify, published as it comes",
-        ),
-    ];
-    let mut body = String::from(
-        r#"<text class="kick" x="48" y="50">OPEN QUESTIONS · GOALS, NOT RESULTS</text>"#,
-    );
-    body.push_str(&format!(r#"<text x="330" y="88" font-size="13" class="mut" letter-spacing="1">MEASURED NOW (PUBLIC)</text><text x="680" y="88" font-size="13" letter-spacing="1" style="fill:{}">GOAL — NOT ACHIEVED YET</text>"#, t.accent));
-    for (i, (name, now, goal)) in rows.iter().enumerate() {
-        let y = 126 + i * 58;
-        body.push_str(&format!(r#"<path d="M48 {}H1152" stroke="{}"/><text x="48" y="{y}" font-size="17" class="b">{name}</text><text x="330" y="{y}" font-size="16">{}</text>"#, y - 26, t.line, esc(now)));
-        for (j, line) in wrap(goal, 66, 2).iter().enumerate() {
-            body.push_str(&format!(
-                r#"<text x="680" y="{}" font-size="16" style="fill:{}">{}</text>"#,
-                y + j * 20,
-                t.accent,
-                esc(line)
-            ));
-        }
-    }
-    body.push_str(r#"<text x="48" y="376" font-size="14" class="mut">A goal becomes a result only when it is published with its frozen protocol and evidence.</text>"#);
-    result_card(dark, 400, ("Open questions and goals", "Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction."), &body)
+    result_card(dark, 440, ("Truth surface, open questions and goals", &format!("Claims in the registry by status: {desc}; none is marked as independently reproduced. Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.")), &b)
 }
 fn result_path(name: &str, dark: bool) -> String {
     format!(
@@ -1706,41 +1712,15 @@ fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
     let mut out = Vec::new();
     let (l, d) = both(&|dark| glance(dark, &r, &rb));
-    out.push(("glance", l, d, format!("Evidence you can inspect. 80 natural questions, one recorded run: {ok} correct answers with their source passages, {wrong} wrong, {unknown} UNKNOWN. Separate experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)));
+    out.push(("glance", l, d, format!("Evidence you can inspect. 80 natural questions, one recorded run: {ok} correct answers with their source passages, {wrong} wrong, {unknown} UNKNOWN. A different experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)));
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example-41", l, d, format!("Question 41: {} GEL RAM returned the source passage; the three models answered with a reason the source does not give.", r.question)));
+    out.push(("example-41", l, d, format!("Question 41: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
     let (l, d) = both(&|dark| dots(dark, &r));
-    out.push((
-        "answer-dots",
-        l,
-        d,
-        r.systems
-            .iter()
-            .enumerate()
-            .map(|(i, (n, _))| {
-                let (a, b, c) = r.counts(i);
-                format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN")
-            })
-            .collect::<Vec<_>>()
-            .join(". "),
-    ));
-    let (l, d) = both(&|dark| surface(dark, &s));
-    out.push((
-        "truth-surface",
-        l,
-        d,
-        format!(
-            "Claims by status: {}. None is marked as independently reproduced.",
-            s.iter()
-                .map(|(m, n)| format!("{n} {m}"))
-                .collect::<Vec<_>>()
-                .join(", ")
-        ),
-    ));
-    let (l, d) = both(&|dark| goals(dark, &r));
-    out.push(("goals", l, d, "Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.".to_string()));
+    out.push(("answer-dots", l, d, format!("{}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
+    let (l, d) = both(&|dark| surface(dark, &s, &r));
+    out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
 }
 /// The README block of result pictures, from the same data as the graphics.
@@ -1757,18 +1737,181 @@ fn results_block() -> Result<String> {
             1200,
         ));
         if *name == "answer-dots" {
-            s.push_str("\n\n");
-            s.push_str(TRY_TO_BREAK);
+            s.push_str("\n\nRecordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)");
         }
     }
+    s.push_str("\n\n[Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)");
     Ok(s)
 }
-const TRY_TO_BREAK: &str = "| Try to break GEL | What the public tool does | Watch it |
-|:---|:---|:---|
-| Change one byte of a saved copy | refuses it against the pin you kept | [Changed byte refused](media/gifs/05-integrity-light.gif) |
-| Change the source after citing it | refuses the old citation | [Stale citation refused](media/gifs/02-stale-light.gif) |
-| Restart and reopen the snapshot | returns the same citation under the same pin | [Verified restart](media/gifs/01-evidence-light.gif) |
-| Back up, then restore to a new path | checks the restored copy equal | [Backup restored](media/gifs/03-backup-light.gif) |";
+/// Points of a quad as SVG text.
+fn quad(p: &[Point; 4]) -> String {
+    p.iter()
+        .map(|(x, y)| format!("{x:.1},{y:.1}"))
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+/// A point of the cube frame (±1 on each axis) turned by `yaw` about the vertical axis and seen from
+/// above at `pitch`: screen position and depth towards the viewer.
+fn turn(p: [f64; 3], yaw: f64, pitch: f64, c: Point, s: f64) -> (Point, f64) {
+    let x = p[0] * yaw.cos() + p[2] * yaw.sin();
+    let z = -p[0] * yaw.sin() + p[2] * yaw.cos();
+    let y = p[1] * pitch.cos() - z * pitch.sin();
+    let depth = p[1] * pitch.sin() + z * pitch.cos();
+    ((c.0 + s * x, c.1 - s * y), depth)
+}
+/// Side faces and the top of a cube: corner indices (bit 0 = +x, bit 1 = +y, bit 2 = +z) and the outward normal.
+const CUBE: [([usize; 4], [f64; 3]); 5] = [
+    ([4, 5, 7, 6], [0.0, 0.0, 1.0]),
+    ([5, 1, 3, 7], [1.0, 0.0, 0.0]),
+    ([1, 0, 2, 3], [0.0, 0.0, -1.0]),
+    ([0, 4, 6, 2], [-1.0, 0.0, 0.0]),
+    ([6, 7, 3, 2], [0.0, 1.0, 0.0]),
+];
+fn corner(i: usize) -> [f64; 3] {
+    let s = |bit: usize| if i & bit != 0 { 1.0 } else { -1.0 };
+    [s(1), s(2), s(4)]
+}
+/// Face `f` of a cube of half-size `s` at every key angle: points and how much it faces the viewer.
+fn face_frames(f: usize, yaws: &[f64], pitch: f64, c: Point, s: f64) -> Vec<(String, f64)> {
+    let (idx, n) = CUBE[f];
+    yaws.iter()
+        .map(|&yaw| {
+            let pts = idx.map(|k| turn(corner(k), yaw, pitch, c, s).0);
+            let facing = turn(n, yaw, pitch, (0.0, 0.0), 1.0).1;
+            (quad(&pts), facing)
+        })
+        .collect()
+}
+fn animate(attr: &str, values: &[String]) -> String {
+    format!(
+        r#"<animate attributeName="{attr}" dur="24s" repeatCount="indefinite" values="{}"/>"#,
+        values.join(";")
+    )
+}
+/// A turning glass cube: faces turned away are drawn first and faintly, faces towards the viewer on top.
+/// Hidden faces fade out, so no depth sorting is needed for a convex cube.
+fn glass_cube(
+    yaws: &[f64],
+    animated: bool,
+    pitch: f64,
+    c: Point,
+    s: f64,
+    colour: &str,
+    strength: f64,
+) -> (String, String) {
+    let (mut back, mut front) = (String::new(), String::new());
+    for f in 0..CUBE.len() {
+        let frames = face_frames(f, yaws, pitch, c, s);
+        let fade = |x: f64| (x * 5.0).clamp(0.0, 1.0);
+        let op_front: Vec<String> = frames
+            .iter()
+            .map(|(_, v)| format!("{:.2}", fade(*v)))
+            .collect();
+        let op_back: Vec<String> = frames
+            .iter()
+            .map(|(_, v)| format!("{:.2}", 0.5 * fade(-*v)))
+            .collect();
+        let pts: Vec<String> = frames.iter().map(|(p, _)| p.clone()).collect();
+        let (anim_f, anim_b) = if animated {
+            (
+                animate("points", &pts) + &animate("opacity", &op_front),
+                animate("points", &pts) + &animate("opacity", &op_back),
+            )
+        } else {
+            (String::new(), String::new())
+        };
+        back.push_str(&format!(r#"<polygon points="{}" fill="{colour}" fill-opacity="{:.2}" stroke="{colour}" stroke-width="1.5" stroke-dasharray="5 6" opacity="{}">{anim_b}</polygon>"#, pts[0], 0.05 * strength, op_back[0]));
+        let fill = if f == 4 { 0.2 } else { 0.12 + 0.04 * f as f64 };
+        front.push_str(&format!(r#"<polygon points="{}" fill="{colour}" fill-opacity="{:.2}" stroke="{colour}" stroke-width="2.2" stroke-linejoin="round" opacity="{}">{anim_f}</polygon>"#, pts[0], fill * strength, op_front[0]));
+    }
+    (back, front)
+}
+/// The opening logo: a large glass cube of source cells that turns slowly, its cells brightening in rings
+/// from the accent core, above soft rings on the floor. Drawn, not recorded; `animated` false gives the still.
+fn hero(dark: bool, animated: bool) -> String {
+    let t = theme(dark);
+    let (c, s, pitch) = ((320.0, 206.0), 104.0, 0.42);
+    let start = 0.62;
+    let yaws: Vec<f64> = (0..=24)
+        .map(|k| start + k as f64 * std::f64::consts::TAU / 24.0)
+        .collect();
+    let yaws = if animated { yaws } else { vec![start] };
+    let mut b = format!(
+        r#"<defs><radialGradient id="glow"><stop offset="0" stop-color="{0}" stop-opacity=".32"/><stop offset="1" stop-color="{0}" stop-opacity="0"/></radialGradient></defs><ellipse cx="{1}" cy="{2}" rx="250" ry="210" fill="url(#glow)"/>"#,
+        t.accent, c.0, c.1
+    );
+    // Soft rings spreading on the floor.
+    let floor = c.1 + s * 1.55;
+    for k in 0..3 {
+        let ring = if animated {
+            format!(
+                r#"<animate attributeName="rx" dur="6s" begin="{0}s" repeatCount="indefinite" values="30;230"/><animate attributeName="ry" dur="6s" begin="{0}s" repeatCount="indefinite" values="7;52"/><animate attributeName="opacity" dur="6s" begin="{0}s" repeatCount="indefinite" values=".55;0"/>"#,
+                -2 * k
+            )
+        } else {
+            String::new()
+        };
+        let rx = 80.0 + 60.0 * k as f64;
+        b.push_str(&format!(r#"<ellipse cx="{}" cy="{floor:.1}" rx="{rx}" ry="{:.1}" fill="none" stroke="{}" stroke-width="1.6" opacity="{:.2}">{ring}</ellipse>"#, c.0, rx * 0.22, t.accent, 0.45 - 0.12 * k as f64));
+    }
+    let bob = if animated {
+        r#"<animateTransform attributeName="transform" type="translate" dur="6s" repeatCount="indefinite" values="0 0;0 -9;0 0" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>"#
+    } else {
+        ""
+    };
+    let (back, front) = glass_cube(&yaws, animated, pitch, c, s, t.accent, 1.0);
+    b.push_str(&format!(r#"<g>{bob}{back}"#));
+    // Three layers of source cells; they brighten in rings spreading out from the core.
+    let step = 2.0 / 3.0;
+    let cell = 0.13 * s;
+    for layer in [-1.0, 0.0, 1.0] {
+        for i in [-1.0, 0.0, 1.0] {
+            for j in [-1.0, 0.0, 1.0] {
+                if (i, layer, j) == (0.0, 0.0, 0.0) {
+                    continue;
+                }
+                let p = [i * step, layer * step, j * step];
+                let pos: Vec<Point> = yaws
+                    .iter()
+                    .map(|&yaw| turn(p, yaw, pitch, c, s).0)
+                    .collect();
+                let hit = (i, layer, j) == (1.0, 1.0, 1.0);
+                let colour = if hit { t.accent } else { t.paper[0] };
+                let anim = if animated {
+                    let xs: Vec<String> = pos
+                        .iter()
+                        .map(|q| format!("{:.1}", q.0 - cell / 2.0))
+                        .collect();
+                    let ys: Vec<String> = pos
+                        .iter()
+                        .map(|q| format!("{:.1}", q.1 - cell / 2.0))
+                        .collect();
+                    let delay = (i * i + layer * layer + j * j).sqrt() * 0.7;
+                    animate("x", &xs)
+                        + &animate("y", &ys)
+                        + &format!(
+                            r#"<animate attributeName="opacity" dur="4.2s" begin="-{delay:.2}s" repeatCount="indefinite" values=".35;1;.35"/>"#
+                        )
+                } else {
+                    String::new()
+                };
+                b.push_str(&format!(r#"<rect x="{:.1}" y="{:.1}" width="{cell:.1}" height="{cell:.1}" rx="2.5" fill="{colour}" stroke="{}" stroke-width="1.2" opacity=".85">{anim}</rect>"#, pos[0].0 - cell / 2.0, pos[0].1 - cell / 2.0, if hit { t.accent } else { t.line }));
+            }
+        }
+    }
+    let (core_back, core_front) = glass_cube(&yaws, animated, pitch, c, 0.22 * s, t.blue[1], 3.0);
+    b.push_str(&core_back);
+    b.push_str(&core_front);
+    b.push_str(&front);
+    b.push_str("</g>");
+    b.push_str(&format!(r#"<text x="640" y="196" font-size="86" class="b" letter-spacing="2">GEL RAM</text><text x="644" y="248" font-size="32">Evidence you can inspect</text><text x="644" y="296" font-size="22" style="fill:{}">Ask. Retrieve. Verify. Or say you don't know.</text><text x="644" y="336" font-size="15" class="mut">Exact source quotes · pinned snapshots · answer or UNKNOWN</text>"#, t.accent));
+    let desc = if animated {
+        "Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core and soft rings spread beneath it."
+    } else {
+        "The logo, still: a large glass cube of source cells around an accent core."
+    };
+    result_card(dark, 440, ("GEL RAM — Evidence you can inspect", desc), &b)
+}
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
     let evidence = Evidence::read()?;
@@ -1781,6 +1924,14 @@ fn assets() -> Result<Vec<(String, String)>> {
         (
             "media/presentation/header-dark.svg".to_string(),
             header(true),
+        ),
+        (
+            "media/presentation/header-still-light.svg".to_string(),
+            header_still(false),
+        ),
+        (
+            "media/presentation/header-still-dark.svg".to_string(),
+            header_still(true),
         ),
     ];
     for dark in [false, true] {
@@ -2162,7 +2313,7 @@ mod tests {
         let g = glance(false, &r, &rb);
         assert!(g.contains(&format!(">{ok} / 80<")));
         assert!(g.contains(&format!(">{wrong}<")) && g.contains(&format!(">{unknown}<")));
-        assert!(g.contains("Separate experiment, not questions"));
+        assert!(g.contains("stored-passage read-back") && g.contains("not questions"));
         assert!(g.contains(&rb.2) && g.contains(&rb.0));
         let d = dots(true, &r);
         assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
@@ -2178,9 +2329,9 @@ mod tests {
         let r = Recorded::read().unwrap();
         let s = statuses().unwrap();
         for dark in [false, true] {
-            let g = goals(dark, &r);
-            assert!(g.contains("GOALS, NOT RESULTS") && g.contains("NOT ACHIEVED YET"));
-            assert!(surface(dark, &s).contains("none has been"));
+            let g = surface(dark, &s, &r);
+            assert!(g.contains("GOALS, NOT RESULTS") && g.contains("none has been"));
+            assert_eq!(g.matches("· not achieved yet").count(), 4);
         }
         let rows = fs::read_to_string("docs/CLAIMS.md")
             .unwrap()
@@ -2210,9 +2361,10 @@ mod tests {
     fn motion_can_be_reduced() {
         let e = Evidence::read().unwrap();
         for dark in [false, true] {
+            // The banner moves with SMIL, which CSS cannot stop: README shows the still file instead.
+            assert!(header(dark).contains("<animate") && !header_still(dark).contains("<animate"));
             for s in [
                 scene(dark),
-                header(dark),
                 logo(dark, true),
                 facts(dark, (1, 1, 1)),
                 wall(dark, &e),
@@ -2222,6 +2374,9 @@ mod tests {
             }
         }
         assert!(native_intro().contains("05-integrity"));
+        assert!(native_intro().contains(
+            r#"<source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/header-still-light.svg">"#
+        ));
     }
     #[test]
     fn logo_keeps_its_core_and_a_final_state() {
@@ -2256,12 +2411,11 @@ mod tests {
                 before.matches("</g>").count()
             );
             assert!(s.contains(".l0,.l1,.l2,.ray,.hit,.seal{animation:none;opacity:1}"));
-            assert!(header(dark).contains(&gel_logo(
-                theme(dark),
-                if dark { "#79c0ff" } else { "#0969da" },
-                (120.0, 118.0),
-                86.0
-            )));
+            for banner in [header(dark), header_still(dark)] {
+                assert!(
+                    banner.contains(">GEL RAM<") && banner.contains(">Evidence you can inspect<")
+                );
+            }
         }
     }
     #[test]
