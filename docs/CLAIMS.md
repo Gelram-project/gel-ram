@@ -24,6 +24,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-answer-verdict-self-read | retrieval | MEASURED_LOCAL |
 | gel-natural-question-answers | retrieval | MEASURED_LOCAL |
 | gel-beside-groq-closed-book | comparison | MEASURED_LOCAL |
+| gel-beside-groq-no-answer | comparison | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |
