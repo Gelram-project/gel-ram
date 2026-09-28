@@ -298,6 +298,48 @@ campaign. A quotation is not a verified semantic decision.
 The Groq table below remains a separate supplied-source decision diagnostic;
 **no GEL/Groq speedup ratio follows from these different tasks**.
 
+### Answer verdict: answer only when the lead is clear
+
+Measured after the v0.5.0 release on the same private 1M bank as the ranking
+rows above. GEL answers only when its best passage leads the runner-up by a
+threshold fixed in advance (0.06484, set on a different corpus); otherwise it
+returns UNKNOWN. Three changes were applied and measured one at a time:
+
+1. identical passages, including ones the encoder cannot tell apart, are stored
+   once, with every source and text variant kept;
+2. reference, link and bibliography sections stay available as sources but are
+   left out of the answer bank (Polish slots −27%, English −3–5%);
+3. the private encoder keeps numbers and short words, so passages that differ
+   only by a year or a score stay apart.
+
+| Stored passages read back (ranked within their slot) | Original bank | After the three changes |
+|:---|---:|---:|
+| Probes | 10,000 | 50,000 |
+| Answered | 77.0% | 92.8% |
+| Correct answers (same article) | 97.7% | **99.95%** (23 wrong of 46,376) |
+| Wrong answers among all probes | 1.78% | **0.046%** |
+| UNKNOWN | 23.1% | 7.2% |
+
+Two of the four slots reach a 95% Wilson lower bound of at least 0.999 (0.9993
+and 0.9994); the other two reach 0.9984 and 0.9986. The probes are stored
+passages, not questions; after the changes the bank holds 167,854 passages per
+slot.
+
+| 80 natural questions (40 PL, 40 EN), all slots searched | Without verification | With source verification |
+|:---|---:|---:|
+| Top-1 from the right article | 27 (34%) | **40 (50%)** |
+| Answers given | 9 (1 wrong) | **11 (all correct)** |
+| UNKNOWN | 71 | 69 |
+
+The questions were written by the developer for randomly sampled passages and
+frozen before any run. Verification compares a question with the stored
+sources of 128 candidates; its threshold was set on a separate calibration set
+of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
+not a precision claim. Answering natural questions (14% answered) remains the
+open problem.
+
+[Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
+
 ### Same supplied-source task: GEL adapter and models served by Groq
 
 Twelve development claims (six PL, six EN), with the same supplied Wikipedia
