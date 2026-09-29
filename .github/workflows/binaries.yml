@@ -4,24 +4,10 @@ name: binaries
 # read-only token. A package is archived, attested and uploaded only when the
 # owner starts this workflow by hand.
 on:
+  # Packaging also depends on manifests, notices, workspace metadata and helpers.
+  # Run on every change rather than maintain an incomplete path list.
   push:
-    paths:
-      - ".github/workflows/binaries.yml"
-      - "xtask/src/package.rs"
-      - "crates/gel-live-lab/**"
-      - "crates/gel-source/**"
-      - "crates/gel-phase-quad/**"
-      - "Cargo.lock"
-      - "docs/DEPENDENCY-INVENTORY.md"
   pull_request:
-    paths:
-      - ".github/workflows/binaries.yml"
-      - "xtask/src/package.rs"
-      - "crates/gel-live-lab/**"
-      - "crates/gel-source/**"
-      - "crates/gel-phase-quad/**"
-      - "Cargo.lock"
-      - "docs/DEPENDENCY-INVENTORY.md"
   workflow_dispatch:
 
 permissions:

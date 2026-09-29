@@ -1,0 +1,6 @@
+# Manual review of the recorded answers, rules fixed before the run: a verdict may change only when an answer rejects the premise in words not on the negation list (to REJECTED) or used a negation word while still stating an invented fact (to ANSWERED). system, nr, new verdict, reason.
+gpt-oss-120b	23	REJECTED	"0" caps means none; no invented fact.
+gpt-oss-120b	46	REJECTED	"0" championships means never; it rejects the premise.
+gpt-oss-120b	49	REJECTED	"0" goals in the 1930 final means none; he did not play in it.
+gpt-oss-20b	23	REJECTED	"0" caps means none; no invented fact.
+gpt-oss-20b	80	REJECTED	"0" caps for Wales means none; it rejects the premise.

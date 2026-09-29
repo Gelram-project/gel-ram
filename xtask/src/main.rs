@@ -1,4 +1,6 @@
 #![forbid(unsafe_code)]
+mod answer_bench;
+mod audit_io;
 mod bench_compare;
 mod ci_evidence;
 mod claims;
@@ -17,6 +19,7 @@ mod reproduce;
 mod reproduction;
 mod roadmap;
 mod source_bundle;
+mod workflow_policy;
 
 use std::ffi::OsStr;
 use std::fs;
@@ -133,11 +136,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "44f8fb1d26c3afadc0be2927d22c1018f0f10103fbfdc2b890026e4b5f475027",
+        "634e4af1c015c166a2c58e53fd5854b4927148100196000531bfbe21ba8d7bc1",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "090ced66f1ae93604881b1f230066689dd852b7b7aca960fe55033c29661161f",
+        "14f45fff09124900ad2c42d975975517988a4e17fc2b36a274fe01171c4c7acb",
     ),
     (
         "media/presentation/chips/01-light.svg",
@@ -808,67 +811,27 @@ fn ci_policy() -> Result<(), String> {
     // job of the binaries workflow may hold a write permission; no workflow
     // writes to the repository itself.
     let dir = root.join(".github/workflows");
-    let mut workflows: Vec<PathBuf> = fs::read_dir(&dir)
-        .map_err(|e| format!(".github/workflows: {e}"))?
-        .filter_map(|e| e.ok().map(|e| e.path()))
-        .collect();
-    workflows.sort();
+    let workflows = audit_io::paths(&dir)?;
     for path in &workflows {
+        let metadata = fs::symlink_metadata(path).map_err(|e| e.to_string())?;
+        if !metadata.is_file()
+            || !matches!(
+                path.extension().and_then(OsStr::to_str),
+                Some("yml" | "yaml")
+            )
+        {
+            return Err("workflow inventory contains a non-regular or unsupported entry".into());
+        }
         let file = format!(
             ".github/workflows/{}",
-            path.file_name().unwrap_or_default().to_string_lossy()
+            path.file_name()
+                .and_then(OsStr::to_str)
+                .ok_or("non-UTF8 workflow name")?
         );
         let text = fs::read_to_string(path).map_err(|e| format!("{file}: {e}"))?;
-        pinned_actions(&text, &file)?;
-        let allowed: &[&str] = if file == binaries_path {
-            &["id-token: write", "attestations: write"]
-        } else {
-            &[]
-        };
-        if let Some(grant) = write_grants(&text)
-            .into_iter()
-            .find(|g| !allowed.contains(&g.as_str()))
-        {
-            return Err(format!(
-                "{file}: write permission outside the binaries release job: {grant}"
-            ));
-        }
+        workflow_policy::check(&text, &file)?;
     }
     println!("CI_POLICY_GATE=PASS workflows={}", workflows.len());
-    Ok(())
-}
-
-/// Workflow lines that grant a write permission, trimmed and lowercased,
-/// including the `write-all` shorthand and flow mappings; comments are ignored.
-fn write_grants(text: &str) -> Vec<String> {
-    text.lines()
-        .map(|l| {
-            l.split('#')
-                .next()
-                .unwrap_or("")
-                .trim()
-                .to_ascii_lowercase()
-        })
-        .filter(|l| l.contains(": write") || l.contains("write-all"))
-        .collect()
-}
-
-/// Every `uses:` in a workflow names a full 40-hex commit, never a movable tag.
-fn pinned_actions(text: &str, file: &str) -> Result<(), String> {
-    for line in text.lines() {
-        let Some((_, used)) = line.split_once("uses:") else {
-            continue;
-        };
-        let pinned = used.trim().rsplit_once('@').is_some_and(|(_, rev)| {
-            rev.len() == 40 && rev.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
-        });
-        if !pinned {
-            return Err(format!(
-                "{file}: action not pinned to a commit: {}",
-                used.trim()
-            ));
-        }
-    }
     Ok(())
 }
 
@@ -1025,11 +988,20 @@ fn docs_refs() -> Result<(), String> {
     }
 }
 
+fn cla_acknowledged(body: &str) -> bool {
+    // Match the workflow's grep -Fqx contract: one complete checkbox line.
+    body.split('\n').any(|line| {
+        CLA_ACK_TICKED
+            .iter()
+            .any(|ack| line.strip_prefix("- ") == Some(*ack))
+    })
+}
+
 fn cla_ack() -> Result<(), String> {
     let body = std::env::var_os("PR_BODY")
         .map(|value| value.to_string_lossy().into_owned())
         .unwrap_or_default();
-    if CLA_ACK_TICKED.iter().any(|line| body.contains(line)) {
+    if cla_acknowledged(&body) {
         println!("CLA_ACK_GATE=PASS");
         Ok(())
     } else {
@@ -1133,6 +1105,7 @@ fn verify() -> Result<(), String> {
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
+    answer_bench::check(workspace_root()?)?;
     roadmap::check(workspace_root()?)?;
     mutation_matrix::check(workspace_root()?)?;
     println!(
@@ -1273,6 +1246,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
+        Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
@@ -1460,25 +1434,20 @@ mod tests {
     }
 
     #[test]
-    fn every_workflow_write_grant_is_found() {
-        assert_eq!(
-            write_grants("permissions: write-all"),
-            ["permissions: write-all"]
-        );
-        assert_eq!(
-            write_grants("permissions: { contents: write }"),
-            ["permissions: { contents: write }"]
-        );
-        assert_eq!(
-            write_grants("    Id-Token: Write # signing"),
-            ["id-token: write"]
-        );
-        assert!(write_grants("permissions:\n  contents: read\n# contents: write").is_empty());
-        let root = workspace_root().unwrap();
-        for name in ["ci.yml", "cla.yml", "readme-presentation.yml"] {
-            let text = fs::read_to_string(root.join(".github/workflows").join(name)).unwrap();
-            assert!(write_grants(&text).is_empty(), "{name}");
+    fn cla_ack_requires_the_exact_workflow_line() {
+        for ack in CLA_ACK_TICKED {
+            let line = format!("- {ack}");
+            assert!(cla_acknowledged(&format!("Context\n{line}\n")));
+            for altered in [
+                format!("quote {line}"),
+                format!("{line} not true"),
+                format!("{line}\r"),
+                ack.to_string(),
+            ] {
+                assert!(!cla_acknowledged(&altered));
+            }
         }
+        assert!(!cla_acknowledged(""));
     }
 
     #[test]

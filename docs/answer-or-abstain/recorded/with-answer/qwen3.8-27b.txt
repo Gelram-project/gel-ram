@@ -1,0 +1,81 @@
+# qwen3.8-27b: answers as returned in one run (run 2026-09-28, Groq API closed book); line breaks and tabs replaced by spaces. nr, answer.
+1	UNKNOWN
+2	UNKNOWN
+3	Od hebrajskiego abel, co oznaczało „dym”.
+4	UNKNOWN
+5	Blasteza to szczelina w skale wypełniona krzemieniem.
+6	UNKNOWN
+7	UNKNOWN
+8	UNKNOWN
+9	Powiat Bad Dürkheim
+10	Ralph Fiennes
+11	UNKNOWN
+12	Aktyny i miozyny
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	Lürssen
+17	UNKNOWN
+18	1930
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	UNKNOWN
+23	UNKNOWN
+24	Zbigniew Wodecki
+25	Victoria
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	Hotel Beverly Hilton
+30	UNKNOWN
+31	UNKNOWN
+32	UNKNOWN
+33	UNKNOWN
+34	Howarda Hughesa
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	Przy studni na pustyni
+39	UNKNOWN
+40	UNKNOWN
+41	The death of the sitting Member of Parliament.
+42	UNKNOWN
+43	C-130H Hercules
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	UNKNOWN
+53	UNKNOWN
+54	UNKNOWN
+55	UNKNOWN
+56	UNKNOWN
+57	UNKNOWN
+58	UNKNOWN
+59	UNKNOWN
+60	UNKNOWN
+61	UNKNOWN
+62	UNKNOWN
+63	UNKNOWN
+64	The Vampyre
+65	UNKNOWN
+66	UNKNOWN
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	Joe Bailor
+71	UNKNOWN
+72	UNKNOWN
+73	UNKNOWN
+74	UNKNOWN
+75	UNKNOWN
+76	UNKNOWN
+77	UNKNOWN
+78	UNKNOWN
+79	UNKNOWN
+80	They were dissolved.
