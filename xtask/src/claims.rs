@@ -137,6 +137,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "store-kill-during-learning",
+        dimension: "persistence",
+        scope: "private knowledge store growing while it learns: 100 + 100 random kills (consolidated every 25 batches or after every batch) and 7 fixed stop points",
+        input: "SIGKILL at a seeded random time between 0.1 and 6 s or at a fixed point; reopen and check, then resume",
+        expected: "0 of 235,712 confirmed records lost; every reopen check passed; every resume equal to the run without a kill",
+        counterexample: "read as power-loss durability, as a large-store result, or as reproducible from this checkout",
+        source: "docs/MEASURED-PROGRESS.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
@@ -244,6 +254,16 @@ const CLAIMS: &[Claim] = &[
         expected: "controlled RECORDING_FAILED/REFUSED, no panic, no COMPLETE",
         counterexample: "a panic or partial COMPLETE after an I/O failure",
         source: "docs/RECORDER-SAFETY.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "crash-series-no-acknowledged-loss",
+        dimension: "persistence",
+        scope: "public gel-evidence: 24 documents added one at a time, a new snapshot after each, killed at a random moment",
+        input: "xtask crash-series: SIGKILL after a seeded random time; xtask verify runs 5 trials on Unix",
+        expected: "every acknowledged snapshot reloads with its pin and exact bytes; no partial snapshot; a fresh process resumes to the uninterrupted result",
+        counterexample: "an acknowledged snapshot missing or different, a partial snapshot, or the series read as power-loss durability",
+        source: "docs/CRASH-SERIES.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
