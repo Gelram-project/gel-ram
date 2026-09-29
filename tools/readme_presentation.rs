@@ -236,6 +236,40 @@ committed report; `xtask verify` regenerates it and fails on any difference.
 Both images are drawn from these files when the presentation is built, and the
 read-only presentation check fails if they drift.
 
+## What is different here
+
+Three properties, each with its evidence and its limit:
+
+- **It answers with its source, or says it does not know.** On 80 frozen
+  questions it gave 11 answers, all correct, and 69 UNKNOWN, where three
+  language models answering closed book gave 11–28 wrong answers each. On 80
+  questions without a correct answer it still answered 6 of the 40 with a false
+  premise, so it does not always refuse.
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+- **Knowledge is printed, not trained.** New knowledge is written into memory;
+  no fine-tuning or LoRA run is involved. In the public tools this is the
+  collection you build from your own files: add a document and cite it exactly;
+  replace it and the old citation is refused.
+- **A restart should lose nothing.** The public snapshot tools keep the previous
+  copy through injected I/O failures, permission denial, SIGKILL and a full disk
+  ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). Power-loss durability is not
+  established.
+
+## What you can check without the private code
+
+GEL's own answers come from a private implementation and its bank, so they
+cannot be re-run from this checkout. Everything around them can:
+
+| What | How | You need |
+|:---|:---|:---|
+| The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
+| The scoring of every recorded answer, GEL's and the models' | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
+| The language models' side of the comparisons | send the published questions and prompts to the same models, then score your answers with `answer-bench score` ([set and method](docs/answer-or-abstain/README.md)) | a free Groq account |
+| That a private result was not changed after publication | each result lists the SHA-256 of its private evidence ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
+
+An independent run of the public tools on a second machine is still missing
+([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
+
 ## Measured GEL results — scope matters
 
 These are **author-run measurements of a separate private implementation**,
@@ -311,7 +345,7 @@ returns UNKNOWN. Three changes were applied and measured one at a time:
 |:---|---:|---:|
 | Probes | 10,000 | 50,000 |
 | Answered | 77.0% | 92.8% |
-| Correct answers (same article) | 97.7% | **99.95%** (23 wrong of 46,376) |
+| Of the answers given, correct (same article) | 97.7% | **99.95%** (23 wrong of 46,376) |
 | Wrong answers among all probes | 1.78% | **0.046%** |
 | UNKNOWN | 23.1% | 7.2% |
 

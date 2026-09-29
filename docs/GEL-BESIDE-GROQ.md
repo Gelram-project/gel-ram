@@ -5,6 +5,13 @@ bank are private, and the model calls need a Groq account, so this cannot be
 re-run from this checkout. The [claim registry](CLAIMS.md) lists it as
 `MEASURED_LOCAL`.
 
+**What this shows.** Not which side knows more: GEL looks facts up in a bank it
+holds, the models answer from training. It shows what each does when it does
+not know the answer: say so, or answer anyway. **The model side can be re-run
+by anyone:** the questions, prompts and settings are below, and
+`answer-bench score` scores your own answers with the same rule
+([set and method](answer-or-abstain/README.md)). GEL's side is recorded.
+
 [![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN.](../media/beside-groq/all-80-answers.png)](../media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
 
 ## What was compared
