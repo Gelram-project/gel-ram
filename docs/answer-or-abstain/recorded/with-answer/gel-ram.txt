@@ -1,0 +1,81 @@
+# GEL RAM: answers recorded in one run (run 2026-09-28, Groq API closed book). nr, answer, kind (passage = a stored source passage returned as the answer; absent = text). UNKNOWN = abstained.
+1	UNKNOWN
+2	UNKNOWN
+3	UNKNOWN
+4	UNKNOWN
+5	UNKNOWN
+6	UNKNOWN
+7	UNKNOWN
+8	UNKNOWN
+9	Altenglan (ujednoznacznienie) Altenglan (ujednoznacznienie) Niemcy: Altenglan – gmina w kraju związkowym Nadrenia-Palatynat, w powiecie Kusel Altenglan – dawna gmina związkowa w kraju związkowym Nadrenia-Palatynat, w powiecie Kusel Zobacz też: Kusel-Altenglan	passage
+10	UNKNOWN
+11	UNKNOWN
+12	Aktomiozyna Aktomiozyna Aktomiozyna – nierozpuszczalny w wodzie kompleks dwóch białek: aktyny i miozyny. Powstaje w czasie skurczu mięśnia, jest zaliczana do białek kurczliwych. Jest enzymem rozkładającym ATP.	passage
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	UNKNOWN
+17	UNKNOWN
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	UNKNOWN
+23	UNKNOWN
+24	UNKNOWN
+25	UNKNOWN
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	66. ceremonia wręczenia nagród Gildii Amerykańskich Reżyserów 66. ceremonia wręczenia nagród Gildii Amerykańskich Reżyserów 66. ceremonia wręczenia nagród Gildii Amerykańskich Reżyserów odbyła się 25 stycznia 2014 r. w Hyatt Regency Century Plaza, w Century City w stanie Kalifornia.	passage
+30	Był współtwórcą porównawczej metody badania liturgii. W latach 1919–1930 był profesorem honorowym na uniwersytecie w Bonn, w 1923 w Nijmegen, 1926-1940 w Utrechcie a w okresie 1930-1935 w Münster.	passage
+31	Mazowszanka Pruszków → W ramach Pucharu Europy (późniejsza Euroliga) w sezonie 1997/98 ASVEL spotkał się z Mazowszanką Pruszków w rozgrywkach grupowych. 16 września 1997 roku, Villeurbanne – ASVEL wygrywa 83:65	passage
+32	Jej związki z rodem Werlów poświadczone zostały przez XIV-wiecznego kronikarza Ernesta Kirchberga, który na kartach swej kroniki napisał o małżeństwie księżniczki szczecińskiej z Henrykiem II, synem Henryka I, księcia meklemburskiego na Güstrowie. Wspomniana księżniczka była wymieniona bezimiennie, jednak śladem jej identyfikacji było wymienienie przez kronikarza syna Barnima, który imię miał otrzymać po swym dziadzie	passage
+33	UNKNOWN
+34	UNKNOWN
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	UNKNOWN
+39	UNKNOWN
+40	UNKNOWN
+41	1963 Sudbury and Woodbridge by-election 1963 Sudbury and Woodbridge by-election The 1963 Sudbury and Woodbridge by-election was held in 1963 after the previous Conservative MP, John Hare was elevated to the House of Lords. The seat was held by the Conservative Party. Sudbury and Woodbridge by-election, 1963	passage
+42	UNKNOWN
+43	UNKNOWN
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	The deciders were played on 9 and 26 June 1955. Team 1 Score Team 2 FC Red Star Zürich 1–0 US Pro Daro US Pro Daro 2–0 FC Red Star Zürich The result was 2–2 on aggregate, therefore a replay was required. This was played on 3 July in Lucerne. Team 1 Score Team 2 FC Red Star Zürich 2–1 US Pro Daro FC Red Star Zürich win and remain in division. US Pro Daro continue in the play-outs against relegation.	passage
+53	When a general election was held in the following year, Straus again faced Levy-Lawson at Mile End and managed to unseat him to become Member of Parliament. Straus General election 1906: Mile End	passage
+54	UNKNOWN
+55	UNKNOWN
+56	UNKNOWN
+57	UNKNOWN
+58	UNKNOWN
+59	UNKNOWN
+60	UNKNOWN
+61	UNKNOWN
+62	UNKNOWN
+63	UNKNOWN
+64	UNKNOWN
+65	11 January – Sérgio Porto, writer (died 1968) 22 January – Marcus Vinícius Dias, basketball player (died 1992) 19 April – Lygia Fagundes Telles, novelist and writer (died 2022)	passage
+66	UNKNOWN
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	UNKNOWN
+71	UNKNOWN
+72	UNKNOWN
+73	The Tigers' season was highlighted by a three-game set against Yale in Pittsburgh where Princeton came away with an even split. Princeton was forced to forfeit the game against Harvard on January 23 due to the Tigers being unable to participate.	passage
+74	UNKNOWN
+75	UNKNOWN
+76	UNKNOWN
+77	UNKNOWN
+78	UNKNOWN
+79	UNKNOWN
+80	UNKNOWN

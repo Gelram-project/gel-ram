@@ -1,0 +1,81 @@
+# GEL RAM: answers recorded in one run (no-answer control run 2026-09-28, Groq API closed book, neutral prompt). nr, answer, kind (passage = a stored source passage returned as the answer; absent = text). UNKNOWN = abstained.
+1	UNKNOWN
+2	UNKNOWN
+3	UNKNOWN
+4	UNKNOWN
+5	UNKNOWN
+6	UNKNOWN
+7	UNKNOWN
+8	UNKNOWN
+9	UNKNOWN
+10	UNKNOWN
+11	UNKNOWN
+12	UNKNOWN
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	UNKNOWN
+17	UNKNOWN
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	UNKNOWN
+23	UNKNOWN
+24	UNKNOWN
+25	UNKNOWN
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	UNKNOWN
+30	UNKNOWN
+31	UNKNOWN
+32	UNKNOWN
+33	UNKNOWN
+34	UNKNOWN
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	UNKNOWN
+39	UNKNOWN
+40	UNKNOWN
+41	UNKNOWN
+42	UNKNOWN
+43	W 1829 roku, po ukończneiu Technicznej Akademii Wojskowej rozpoczął służbę w 9. Pułku Huzarów. W 1831 roku awansował na stopień podporucznika (niem. Leutnant). W trackie Wiosny Ludów jako kapitan	passage
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	UNKNOWN
+53	UNKNOWN
+54	UNKNOWN
+55	Ptolemeusz IV Filopator. Odcięte i złożone bogom w ofierze włosy Bereniki po szczęśliwym powrocie Ptolemeusza III z wyprawy do Azji dały nazwę gwiazdozbiorowi Warkocza Bereniki	passage
+56	UNKNOWN
+57	UNKNOWN
+58	UNKNOWN
+59	UNKNOWN
+60	Antioch z Lepreosu Antioch z Lepreosu Antioch z Lepreosu (gr. Ἀντίοχος) – żyjący na przełomie V i IV wieku p.n.e. grecki atleta, olimpijczyk. Pochodził z Lepreosu w Arkadii. W 400 roku p.n.e. zwyciężył w pankrationie na igrzyskach olimpijskich. Dwukrotnie zdobywał także wieniec w pięcioboju na igrzyskach istmijskich i na igrzyskach nemejskich	passage
+61	UNKNOWN
+62	UNKNOWN
+63	UNKNOWN
+64	UNKNOWN
+65	General election results Party Candidate Votes % Republican Gene B. McClellan 2,584 55.71% Democratic David L. Jones 2,054 44.29% Total votes 4,638 100.00% Republican gain from Democratic	passage
+66	UNKNOWN
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	UNKNOWN
+71	UNKNOWN
+72	1010 (disambiguation) 1010 (disambiguation) 1010 is the year AD 1010. 1010 may also refer to October 10 10:10, a climate change campaign 1O1O, a brand of Hong Kong mobile network operator CSL Mobile	passage
+73	UNKNOWN
+74	UNKNOWN
+75	UNKNOWN
+76	Ding Yanping is a friend of Luo Yi's, and he was also the teacher of Luo Cheng when Luo Cheng was very young. When Yang Lin attacks Wagang Fort, he invites Deng Yanping to help him. When he is on his way to Yang Lin's camp, Deng Yanping comes across Luo Cheng. He had not seen Luo Cheng for several years, so he does not know Luo Cheng is already allied to Wagang Fort. Knowing Ding Yanping is to fight for Yang Lin, Luo Cheng gains the military plans from Ding Yanping by cheating. Ding Yanping and Yang Lin do not realize the truth until they lose several battles. At last, Ding Yanping realizes that his student is his opponent. He is extremely sad and leaves the camp alone one evening. He neither goes to Wagang Fort nor returns to Yang Lin's camp. No one knows where he went, and he has never been seen since.	passage
+77	UNKNOWN
+78	UNKNOWN
+79	UNKNOWN
+80	UNKNOWN

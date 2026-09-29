@@ -1,0 +1,3 @@
+# Manual review of the recorded answers, rules fixed before the run: a verdict may change only when an answer states the expected fact in other words (to CORRECT) or matched an accepted spelling while contradicting the source (to WRONG). system, nr, new verdict, reason.
+gpt-oss-120b	38	WRONG	Only the generic word "well" matched; the answer names Beersheba, the source names Beer-lahai-roi.
+qwen3.8-27b	25	CORRECT	"Victoria" is the short name of Victoria Peak, one of the two summits the source names.
