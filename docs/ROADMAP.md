@@ -51,6 +51,17 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
+## On main after v0.5.1
+
+Merged after the v0.5.1 tag; they belong to the next release.
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Public evidence and CI hardening: fail-closed workflow permission and action-pin checks, full benchmark answer inventories, 40,000 bounded format mutants | 7a4d237 (PR #19) | `xtask verify` | [hardening audit](AUDIT-HARDENING.md) | independent second-host acceptance; human visual review; power-loss guarantees |
+| Answer-or-abstain set: 160 frozen questions with the recorded answers of GEL and three models, re-scored under strict and published rules, registered as a `SEPARATE_GATE` claim | 5c6342d (PR #31) | `xtask answer-bench` | [set and method](answer-or-abstain/README.md) | the answers are recorded, not re-run; a larger, independently written question set |
+| No-answer control: 80 questions with no correct answer, GEL beside three language models, one run, registered as a `MEASURED_LOCAL` claim | 57acddf (PR #30) | `xtask claims` | [no-answer control](GEL-BESIDE-GROQ-NO-ANSWER.md) | GEL answered 6 of 40 false premises; independent reproduction |
+| README "Evidence you can inspect": figures drawn from the recorded public data, goals labelled as not achieved | fd7a469 (PR #32) | `tools/readme_presentation.rs`, workflow `readme-presentation` | [README](../README.md) | a human review of the rendered page |
+
 ## v0.5.1
 
 A documentation and version release; public file formats and dependencies are
