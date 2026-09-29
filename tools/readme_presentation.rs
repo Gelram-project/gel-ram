@@ -1727,7 +1727,7 @@ fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let (l, d) = both(&|dark| dots(dark, &r));
     out.push(("answer-dots", l, d, format!("{}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
     let (l, d) = both(&|dark| surface(dark, &s, &r));
-    out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
+    out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
 }
 /// The README block of result pictures, from the same data as the graphics.
