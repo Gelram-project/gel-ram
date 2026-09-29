@@ -12,6 +12,10 @@ by anyone:** the questions, prompts and settings are below, and
 `answer-bench score` scores your own answers with the same rule
 ([set and method](answer-or-abstain/README.md)). GEL's side is recorded.
 
+**A larger frozen set.** On 2026-09-29 the same four systems answered 394 new
+frozen questions in one run: GEL 59 correct and 4 wrong of 63 answers, the
+models 80–233 wrong answers each. [Set v2](answer-or-abstain-v2/README.md).
+
 [![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN.](../media/beside-groq/all-80-answers.png)](../media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
 
 ## What was compared

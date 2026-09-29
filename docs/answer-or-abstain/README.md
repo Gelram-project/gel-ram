@@ -15,8 +15,9 @@ cannot.
 
 **Status: public diagnostic.** Once published, these 160 questions are no longer
 held out. A system tuned on them and then scored on them proves nothing about
-new questions. Changes to GEL will be measured on a new frozen set (v2) that is
-not used for tuning. The identity above is the SHA-256 of a list of the hashes
+new questions. Changes to GEL are measured on a new frozen set that is not used
+for tuning: [v2](../answer-or-abstain-v2/README.md), 394 questions, recorded on
+2026-09-29. The identity above is the SHA-256 of a list of the hashes
 of every data file of the set; `answer-bench check` recomputes it.
 
 ## Files

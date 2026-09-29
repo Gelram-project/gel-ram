@@ -9,8 +9,31 @@
 //! identity. It re-scores recorded text; it does not re-run any system.
 use std::{collections::HashMap, fmt::Write as _, fs, path::Path};
 
-const DIR: &str = "docs/answer-or-abstain";
-const SET_NAME: &str = "answer_or_abstain_v1";
+/// One published set: its folder, identity name, parts and questions per part.
+struct SetDef {
+    dir: &'static str,
+    name: &'static str,
+    parts: &'static [Set],
+    count: usize,
+    /// Whether docs/GEL-BESIDE-GROQ.md publishes rows re-scored from this set.
+    side_by_side: bool,
+}
+
+const V1: SetDef = SetDef {
+    dir: "docs/answer-or-abstain",
+    name: "answer_or_abstain_v1",
+    parts: &[Set::WithAnswer, Set::NoAnswer],
+    count: 80,
+    side_by_side: true,
+};
+const V2: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v2",
+    name: "answer_or_abstain_v2",
+    parts: &[Set::WithAnswer],
+    count: 394,
+    side_by_side: false,
+};
+const SETS: [&SetDef; 2] = [&V1, &V2];
 const SYSTEMS: [(&str, &str); 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),
@@ -227,11 +250,11 @@ fn rows(text: &str) -> impl Iterator<Item = Vec<&str>> {
         .map(|l| l.split('\t').collect())
 }
 
-fn question_number(field: &str, seen: &mut [bool; 80]) -> Result<usize, String> {
+fn question_number(field: &str, seen: &mut [bool]) -> Result<usize, String> {
     let nr: usize = field
         .parse()
         .map_err(|_| format!("bad question number {field}"))?;
-    if !(1..=80).contains(&nr) || std::mem::replace(&mut seen[nr - 1], true) {
+    if !(1..=seen.len()).contains(&nr) || std::mem::replace(&mut seen[nr - 1], true) {
         return Err(format!("question number {nr} out of range or repeated"));
     }
     Ok(nr)
@@ -251,9 +274,9 @@ fn check_source(nr: usize, f: &[&str]) -> Result<(), String> {
     Ok(())
 }
 
-fn questions(set: Set, text: &str) -> Result<Vec<Question>, String> {
-    let mut out: Vec<Option<Question>> = (0..80).map(|_| None).collect();
-    let mut seen = [false; 80];
+fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String> {
+    let mut out: Vec<Option<Question>> = (0..count).map(|_| None).collect();
+    let mut seen = vec![false; count];
     for f in rows(text) {
         let nr = question_number(f[0], &mut seen)?;
         let q = match set {
@@ -304,9 +327,9 @@ fn questions(set: Set, text: &str) -> Result<Vec<Question>, String> {
 }
 
 /// Exactly `nr<TAB>answer`, or `nr<TAB>answer<TAB>passage`.
-fn answers(text: &str) -> Result<HashMap<usize, Answer>, String> {
+fn answers(text: &str, count: usize) -> Result<HashMap<usize, Answer>, String> {
     let mut out = HashMap::new();
-    let mut seen = [false; 80];
+    let mut seen = vec![false; count];
     for f in rows(text) {
         let nr = question_number(f[0], &mut seen)?;
         let passage = match f.len() {
@@ -330,7 +353,11 @@ fn answers(text: &str) -> Result<HashMap<usize, Answer>, String> {
 }
 
 /// Exactly `system<TAB>nr<TAB>verdict<TAB>reason`; known systems, verdicts allowed for the set, no repeats.
-fn reviews(set: Set, text: &str) -> Result<HashMap<(String, usize), Verdict>, String> {
+fn reviews(
+    set: Set,
+    text: &str,
+    count: usize,
+) -> Result<HashMap<(String, usize), Verdict>, String> {
     let mut out = HashMap::new();
     for f in rows(text) {
         let [system, nr, verdict, reason] = f.as_slice() else {
@@ -340,7 +367,7 @@ fn reviews(set: Set, text: &str) -> Result<HashMap<(String, usize), Verdict>, St
             return Err(format!("review: unknown system {system} or empty reason"));
         }
         let nr: usize = nr.parse().map_err(|_| format!("review: bad number {nr}"))?;
-        if !(1..=80).contains(&nr) {
+        if !(1..=count).contains(&nr) {
             return Err(format!("review: number {nr} out of range"));
         }
         let v = match (set, *verdict) {
@@ -394,15 +421,15 @@ fn totals(qs: &[Question], verdicts: &[Verdict]) -> Totals {
 /// (set, rules, system id) → (automatic, after the manual review).
 type Results = Vec<(Set, Rules, &'static str, Totals, Totals)>;
 
-fn results(root: &Path) -> Result<Results, String> {
+fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
     let mut out = Vec::new();
-    for set in [Set::WithAnswer, Set::NoAnswer] {
-        let dir = root.join(DIR);
-        let qs = questions(set, &read(&dir.join(question_file(set)))?)?;
+    for &set in def.parts {
+        let dir = root.join(def.dir);
+        let qs = questions(set, &read(&dir.join(question_file(set)))?, def.count)?;
         let rec = dir.join("recorded").join(set_name(set));
-        let review = reviews(set, &read(&rec.join("review.txt"))?)?;
+        let review = reviews(set, &read(&rec.join("review.txt"))?, def.count)?;
         for (system, _) in SYSTEMS {
-            let given = answers(&read(&rec.join(format!("{system}.txt")))?)?;
+            let given = answers(&read(&rec.join(format!("{system}.txt")))?, def.count)?;
             for rules in [Rules::Published, Rules::Strict] {
                 let auto = score(set, rules, &qs, &given);
                 let mut reviewed = auto.clone();
@@ -468,24 +495,26 @@ fn render(results: &Results) -> String {
             cell(a[7], r[7])
         );
     }
-    s.push_str("\n| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
-    for (set, rules, system, a, r) in results {
-        if *set != Set::NoAnswer {
-            continue;
+    if results.iter().any(|(set, ..)| *set == Set::NoAnswer) {
+        s.push_str("\n| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
+        for (set, rules, system, a, r) in results {
+            if *set != Set::NoAnswer {
+                continue;
+            }
+            let (a, r) = (a.0, r.0);
+            let _ = writeln!(
+                s,
+                "| {} | {} | {} / {} | {} | {} | {} | {} |",
+                display(system),
+                rules_name(*rules),
+                cell(a[4], r[4]),
+                cell(a[5], r[5]),
+                cell(a[2], r[2]),
+                cell(a[3], r[3]),
+                cell(a[6], r[6]),
+                cell(a[7], r[7])
+            );
         }
-        let (a, r) = (a.0, r.0);
-        let _ = writeln!(
-            s,
-            "| {} | {} | {} / {} | {} | {} | {} | {} |",
-            display(system),
-            rules_name(*rules),
-            cell(a[4], r[4]),
-            cell(a[5], r[5]),
-            cell(a[2], r[2]),
-            cell(a[3], r[3]),
-            cell(a[6], r[6]),
-            cell(a[7], r[7])
-        );
     }
     s.push_str(END);
     s
@@ -529,10 +558,10 @@ fn side_by_side_rows(results: &Results) -> Vec<String> {
 }
 
 /// SHA-256 over the names and hashes of every data file of the set, in a fixed order.
-fn set_identity(root: &Path) -> Result<String, String> {
-    let dir = root.join(DIR);
-    let mut names = vec![question_file(Set::WithAnswer), question_file(Set::NoAnswer)];
-    for set in [Set::WithAnswer, Set::NoAnswer] {
+fn set_identity(root: &Path, def: &SetDef) -> Result<String, String> {
+    let dir = root.join(def.dir);
+    let mut names: Vec<String> = def.parts.iter().map(|&set| question_file(set)).collect();
+    for &set in def.parts {
         for (system, _) in SYSTEMS {
             names.push(format!("recorded/{}/{system}.txt", set_name(set)));
         }
@@ -550,50 +579,89 @@ fn set_identity(root: &Path) -> Result<String, String> {
     Ok(sha256(&manifest))
 }
 
+/// The label printed for a part: the plain part name for v1, `set:part` for later sets.
+fn label(def: &SetDef, set: Set) -> String {
+    if def.name == V1.name {
+        set_name(set).to_owned()
+    } else {
+        format!("{}:{}", def.name, set_name(set))
+    }
+}
+
 pub fn check(root: &Path) -> Result<(), String> {
-    let results = results(root)?;
-    for (set, rules, system, a, r) in &results {
-        println!(
-            "ANSWER_BENCH set={} rules={} system={system} {} reviewed: {}",
-            set_name(*set),
-            rules_name(*rules),
-            a.describe(*set),
-            r.describe(*set)
-        );
-    }
-    let readme = read(&root.join(DIR).join("README.md"))?;
-    let block = readme
-        .split_once(BEGIN)
-        .and_then(|(_, rest)| rest.split_once(END))
-        .map(|(inner, _)| format!("{BEGIN}{inner}{END}"))
-        .ok_or("README of the set has no results block")?;
-    if block != render(&results) {
-        return Err(
-            "README results differ from the re-scored recorded answers; run `answer-bench tables`"
-                .into(),
-        );
-    }
-    let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
-    for row in side_by_side_rows(&results) {
-        if !side.contains(&row) {
+    for def in SETS {
+        let results = results(root, def)?;
+        for (set, rules, system, a, r) in &results {
+            println!(
+                "ANSWER_BENCH set={} rules={} system={system} {} reviewed: {}",
+                label(def, *set),
+                rules_name(*rules),
+                a.describe(*set),
+                r.describe(*set)
+            );
+        }
+        let readme = read(&root.join(def.dir).join("README.md"))?;
+        let block = readme
+            .split_once(BEGIN)
+            .and_then(|(_, rest)| rest.split_once(END))
+            .map(|(inner, _)| format!("{BEGIN}{inner}{END}"))
+            .ok_or("README of the set has no results block")?;
+        if block != render(&results) {
             return Err(format!(
-                "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
+                "{}: README results differ from the re-scored recorded answers; run `answer-bench tables`",
+                def.name
             ));
         }
+        if def.side_by_side {
+            let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
+            for row in side_by_side_rows(&results) {
+                if !side.contains(&row) {
+                    return Err(format!(
+                        "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
+                    ));
+                }
+            }
+        }
+        let identity = set_identity(root, def)?;
+        if !readme.contains(&format!("`{}` · SHA-256 `{identity}`", def.name)) {
+            return Err(format!(
+                "README does not state the set identity {} {identity}",
+                def.name
+            ));
+        }
+        println!("ANSWER_BENCH_SET={} sha256={identity}", def.name);
     }
-    let identity = set_identity(root)?;
-    if !readme.contains(&format!("`{SET_NAME}` · SHA-256 `{identity}`")) {
-        return Err(format!(
-            "README does not state the set identity {SET_NAME} {identity}"
-        ));
-    }
-    println!("ANSWER_BENCH_SET={SET_NAME} sha256={identity}");
     println!("ANSWER_BENCH=PASS recorded answers reproduce the published tables");
     Ok(())
 }
 
-/// `answer-bench check`, `answer-bench tables`, or
-/// `answer-bench score <with-answer|no-answer> <answers.txt> [--rules strict|published]`.
+/// A set definition by name: the full identity (`answer_or_abstain_v2`) or its suffix (`v2`).
+fn find_set(name: &str) -> Result<&'static SetDef, String> {
+    SETS.iter()
+        .copied()
+        .find(|d| d.name == name || d.name.ends_with(&format!("_{name}")))
+        .ok_or_else(|| format!("unknown set {name}"))
+}
+
+/// `with-answer` and `no-answer` name the parts of v1; `v2:with-answer` a part of another set.
+fn find_part(spec: &str) -> Result<(&'static SetDef, Set), String> {
+    let (def, part) = match spec.split_once(':') {
+        Some((name, part)) => (find_set(name)?, part),
+        None => (&V1, spec),
+    };
+    let set = match part {
+        "with-answer" => Set::WithAnswer,
+        "no-answer" => Set::NoAnswer,
+        other => return Err(format!("unknown set part {other}")),
+    };
+    if !def.parts.contains(&set) {
+        return Err(format!("{} has no {part} part", def.name));
+    }
+    Ok((def, set))
+}
+
+/// `answer-bench check`, `answer-bench tables [SET]`, or
+/// `answer-bench score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]`.
 pub fn run(args: &[String]) -> Result<(), String> {
     let root = crate::workspace_root()?;
     let args: Vec<&str> = args.iter().map(String::as_str).collect();
@@ -605,30 +673,34 @@ pub fn run(args: &[String]) -> Result<(), String> {
     match args.as_slice() {
         ["check"] => check(root),
         ["tables"] => {
-            print!("{}", render(&results(root)?));
+            print!("{}", render(&results(root, &V1)?));
             Ok(())
         }
-        ["score", set, file] => {
-            let set = match *set {
-                "with-answer" => Set::WithAnswer,
-                "no-answer" => Set::NoAnswer,
-                other => return Err(format!("unknown set {other}")),
-            };
-            let qs = questions(set, &read(&root.join(DIR).join(question_file(set)))?)?;
-            let given = answers(&read(Path::new(file))?)?;
+        ["tables", name] => {
+            print!("{}", render(&results(root, find_set(name)?)?));
+            Ok(())
+        }
+        ["score", spec, file] => {
+            let (def, set) = find_part(spec)?;
+            let qs = questions(
+                set,
+                &read(&root.join(def.dir).join(question_file(set)))?,
+                def.count,
+            )?;
+            let given = answers(&read(Path::new(file))?, def.count)?;
             let verdicts = score(set, rules, &qs, &given);
             for (i, v) in verdicts.iter().enumerate() {
                 println!("{}\t{}", i + 1, v.name());
             }
             println!(
                 "ANSWER_BENCH_SCORE set={} rules={} {}",
-                set_name(set),
+                label(def, set),
                 rules_name(rules),
                 totals(&qs, &verdicts).describe(set)
             );
             Ok(())
         }
-        _ => Err("usage: answer-bench check | tables | score <with-answer|no-answer> <answers.txt> [--rules strict|published]".into()),
+        _ => Err("usage: answer-bench check | tables [SET] | score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]".into()),
     }
 }
 
@@ -767,29 +839,30 @@ mod tests {
 
     #[test]
     fn answer_files_are_fail_closed() {
-        assert!(answers("1\tA\n1\tB\n").is_err());
-        assert!(answers("81\tA\n").is_err());
-        assert!(answers("1\tA\tsummary\n").is_err());
-        assert!(answers("1\tA\tpassage\textra\n").is_err());
-        assert!(answers("1\n").is_err());
-        let ok = answers("# header\n1\tA\n2\tB\tpassage\n").unwrap();
+        assert!(answers("1\tA\n1\tB\n", 80).is_err());
+        assert!(answers("81\tA\n", 80).is_err());
+        assert!(answers("1\tA\tsummary\n", 80).is_err());
+        assert!(answers("1\tA\tpassage\textra\n", 80).is_err());
+        assert!(answers("1\n", 80).is_err());
+        let ok = answers("# header\n1\tA\n2\tB\tpassage\n", 80).unwrap();
         assert!(ok[&2].passage && !ok[&1].passage);
     }
 
     #[test]
     fn review_files_are_fail_closed() {
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tsame fact\n").is_ok());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\n").is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tr\textra\n").is_err());
-        assert!(reviews(Set::WithAnswer, "someone\t1\tCORRECT\tr\n").is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t0\tCORRECT\tr\n").is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tREJECTED\tr\n").is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tsame fact\n", 80).is_ok());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tr\textra\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, "someone\t1\tCORRECT\tr\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t0\tCORRECT\tr\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tREJECTED\tr\n", 80).is_err());
         assert!(reviews(
             Set::NoAnswer,
-            "gel-ram\t1\tREJECTED\tr\ngel-ram\t1\tANSWERED\tr\n"
+            "gel-ram\t1\tREJECTED\tr\ngel-ram\t1\tANSWERED\tr\n",
+            80
         )
         .is_err());
-        assert!(reviews(Set::NoAnswer, "gel-ram\t1\tREJECTED\t \n").is_err());
+        assert!(reviews(Set::NoAnswer, "gel-ram\t1\tREJECTED\t \n", 80).is_err());
     }
 
     #[test]
