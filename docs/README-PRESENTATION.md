@@ -1,7 +1,9 @@
 # Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner with the animated GEL logo, an animated 3D scene of the citation
+an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
+reduced motion is requested), result panels drawn from the recorded
+side-by-side run and the claim registry, an animated 3D scene of the citation
 check, a strip of checked facts, colour-coded workflow badges, six real GIF
 previews and two 3D graphics of the public checks. The adjacent
 README-MULTIMEDIA.html is a script-free local document with the full responsive

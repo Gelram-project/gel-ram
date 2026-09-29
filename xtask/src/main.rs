@@ -40,11 +40,19 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/header-light.svg",
-        "aebb4116f74028bb9f7bd76eaa79d9f3f348980901cd78642fd3ffe5225991e8",
+        "057c5624f51ecdcd55d89de6c48ee74b2339d1ae0a503995622ee34d1ec61960",
     ),
     (
         "media/presentation/header-dark.svg",
-        "3d09088fefcaf6b8caadb732ff45e89a2fe9d1cf561084c1d20b904b2b7714b8",
+        "e55b9bd61e16b9d47f69a2603f08601f521029adbaa567c27d90c27147a452bc",
+    ),
+    (
+        "media/presentation/header-still-light.svg",
+        "72f2b39ea9de21c4d1e9b64512c206a98423fa264f88c7b565f5284b0b9a75f3",
+    ),
+    (
+        "media/presentation/header-still-dark.svg",
+        "69066b779b281b0f1b705bd93239febbe417d28c3ef6babf03a4cf8df15c2e9d",
     ),
     (
         "media/presentation/flow-light.svg",
@@ -93,6 +101,46 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/logo-still-dark.svg",
         "0863d48ebe5fbb4199e9947f29518f6f3224250142cb4d4eb4c3c9f68926a132",
+    ),
+    (
+        "media/presentation/glance-light.svg",
+        "0aa32650c4ea29a15adbb88723d7c53e2ba293df3bf0b7caae8e2b70b49e1d64",
+    ),
+    (
+        "media/presentation/glance-dark.svg",
+        "11631ec6415ebaa51d0ec3e46e36912add61f890be29707371d4705d0f7a144c",
+    ),
+    (
+        "media/presentation/question-path-light.svg",
+        "5935821b5291b84d5846a00127e3999c310c32946e1c5ba56abbe27567aa0e57",
+    ),
+    (
+        "media/presentation/question-path-dark.svg",
+        "60ed03b63cc8693372e34f6d29fe5288f622bdee2d2d00e369bebd75aec4d31a",
+    ),
+    (
+        "media/presentation/example-41-light.svg",
+        "f1680fd64e64b80f6b7f7488a3ec20ad2dcee9c9b1c2ab094f349b4a1e98c6e9",
+    ),
+    (
+        "media/presentation/example-41-dark.svg",
+        "2378553f3458f54ef0b1700c5b4640c9162dc1d1e7596c8ec0ec16f809a457ff",
+    ),
+    (
+        "media/presentation/answer-dots-light.svg",
+        "cdfd2540e085d63408c0fec74c9ed9449fdd044486470d9ee93eb1745cc4d0e2",
+    ),
+    (
+        "media/presentation/answer-dots-dark.svg",
+        "6e3443197cf371a6409ef9dd8935a1f9e5767a9f47ecc23658dca1364ee6ee77",
+    ),
+    (
+        "media/presentation/truth-surface-light.svg",
+        "57b44b679b96bc65dfcbb58f9d5d4e4977a7adca8604744dc6c0a98685ece131",
+    ),
+    (
+        "media/presentation/truth-surface-dark.svg",
+        "e0c37339e4a2468ecc6771665c8c85fbb61b263a8a82139a896c081aef64dbf7",
     ),
     (
         "media/presentation/chips/01-light.svg",
