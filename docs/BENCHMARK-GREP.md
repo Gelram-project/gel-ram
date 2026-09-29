@@ -29,12 +29,24 @@ different questions.
 ## How answers are compared
 
 For each of 36 fixed queries (common, rare, absent, multi-word, punctuation,
-Unicode) the answer is the number of matching lines, and every line GEL shows
-(at most 16 per query) must also be listed by grep. Both tools give the same
-answer only if the counts are equal, GEL skipped no line and every shown line
-is contained. Otherwise the answer is DIFFERENT with the most likely reason.
-**Times are compared only for queries with the same answer.** The different
-queries stay in the answer table.
+Unicode), the checker enumerates **all** matching line addresses outside the
+clocked section. It cross-checks their total against collection search, including
+skipped lines, and requires complete identical line inventories before SAME.
+The four-per-document and sixteen-per-collection display limits do not limit
+this comparison. CR-separated matches on one LF-addressed line are kept distinct;
+the tools' different line semantics are not silently reconciled.
+Otherwise the answer is DIFFERENT with a heuristic reason, not a proven cause.
+**Times are compared only for queries with complete answer agreement.**
+The different queries stay in the answer table. No comparable queries means a
+refused timing run, not an empty percentile or a successful comparison.
+The optional repetition count is bounded to 1 through 10000; zero is invalid
+and is not an alias for the explicitly named answers-only mode.
+
+**Historical qualification:** retained r1 and the original multimedia replays
+used equal total counts plus containment of the displayed preview. That weaker
+check did not establish equality of unshown matches. Their raw results remain
+unchanged, but are not retrospectively certified by the stronger checker.
+New recordings or timing campaigns must retain their own source and corpus pins.
 
 ## What is timed
 
@@ -50,6 +62,12 @@ Three warm-up repetitions are recorded and excluded; 30 are measured. The
 summary reports the nearest-rank median and p95, labelled as small samples; no
 deeper tail is claimed. The GEL process's peak resident set size comes from its
 own batch summary (Linux VmHWM). grep's memory is not measured.
+
+The corpus manifest is written before comparison and completed observations are
+appended to samples.csv outside each timed interval. Later process failure keeps
+earlier samples and does not produce COMPLETE. This is not a power-loss
+durability guarantee for the benchmark report. Missing or extra batch search
+records and failed hash-producing processes are errors, not partial success.
 
 ## Recorded run r1
 

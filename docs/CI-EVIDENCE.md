@@ -67,7 +67,7 @@ On Linux/macOS each must appear exactly once in the debug workspace pass as
 `ok` (`here=RAN_PASSED`); on Windows each must be absent
 (`here=EXCLUDED_NOT_COUNTED`). Any other combination — missing, repeated,
 ignored, or present where excluded — fails the report, so a stale declaration
-cannot pass and an exclusion is never counted as a Windows success. Two tests
+cannot pass and an exclusion is never counted as a Windows success. Three tests
 that run everywhere but contain an extra Unix- or Linux-only assertion block
 must run and pass once on every platform (`PARTIAL_PLATFORM_BRANCH … here=RAN_PASSED`).
 Platform reports are separate; do not add them into one number of unique tests.
@@ -120,3 +120,10 @@ paid runner, cache or storage purchase is enabled by this change. Therefore a
 downloadable Actions artifact is still **NOT_ENABLED**, not falsely marked
 complete. Logs have platform retention limits; archive reviewed evidence before
 expiry when producing a release.
+
+## Additional audit regression
+
+The report-inventory regression runs on every platform. Its symlink rejection
+assertion is Unix-only and is declared separately in the partial-platform map;
+it is never reported as a Windows symlink test. Workflow policy and roadmap
+consistency regressions run as ordinary workspace tests on all platforms.
