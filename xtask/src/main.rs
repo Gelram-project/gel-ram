@@ -136,11 +136,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "634e4af1c015c166a2c58e53fd5854b4927148100196000531bfbe21ba8d7bc1",
+        "57b44b679b96bc65dfcbb58f9d5d4e4977a7adca8604744dc6c0a98685ece131",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "14f45fff09124900ad2c42d975975517988a4e17fc2b36a274fe01171c4c7acb",
+        "e0c37339e4a2468ecc6771665c8c85fbb61b263a8a82139a896c081aef64dbf7",
     ),
     (
         "media/presentation/chips/01-light.svg",

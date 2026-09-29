@@ -1683,8 +1683,8 @@ fn surface(dark: bool, s: &[(&str, usize)], r: &Recorded) -> String {
         ),
         (
             "Questions without an answer",
-            "now no public control".to_string(),
-            "UNKNOWN on invented subjects and false premises",
+            "public control: 0/40 invented, 6/40 false premises answered".to_string(),
+            "0 answered in both groups on a new frozen control",
         ),
         (
             "Independent reproduction",
@@ -1702,7 +1702,7 @@ fn surface(dark: bool, s: &[(&str, usize)], r: &Recorded) -> String {
         .map(|(m, n)| format!("{n} {m}"))
         .collect::<Vec<_>>()
         .join(", ");
-    result_card(dark, 440, ("Truth surface, open questions and goals", &format!("Claims in the registry by status: {desc}; none is marked as independently reproduced. Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, UNKNOWN when there is no correct answer, and an independent reproduction.")), &b)
+    result_card(dark, 440, ("Truth surface, open questions and goals", &format!("Claims in the registry by status: {desc}; none is marked as independently reproduced. Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.")), &b)
 }
 fn result_path(name: &str, dark: bool) -> String {
     format!(
