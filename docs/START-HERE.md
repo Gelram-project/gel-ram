@@ -5,8 +5,10 @@ project without reading the entire repository.
 
 ## In one paragraph
 
-GEL RAM is an independent Rust research project exploring RAM-resident knowledge,
-exact source-bound readout and alternative memory execution models. The public
+GEL RAM is an independent Rust research project. Its goal is a speaking AI
+whose knowledge is printed into memory rather than trained into model weights,
+with a cold copy on disk so that a restart or a crash loses nothing; that goal
+is not a result of this repository. The public
 repository contains the reproducible subset: source provenance, integrity gates,
 Q8 numeric experiments, persistent source bundles, an offline Live Lab, the
 multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
@@ -17,13 +19,15 @@ Fastest try, after the setup in [TRY-IT](TRY-IT.md):
 `cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`
 (expected last marker: `GEL_EVIDENCE_DEMO=PASS`).
 
-## Five useful entry points
+## Six useful entry points
 
 1. **See what exists:** [README](../README.md)
 2. **Run it yourself:** [TRY-IT](TRY-IT.md)
 3. **Check the evidence:** [VERIFIED RESULTS](VERIFIED-RESULTS.md)
-4. **Inspect the recorded 1M/10M measurements:** [Ocean Scale](OCEAN-SCALE.md)
-5. **See what comes next publicly:** [Roadmap](ROADMAP.md)
+4. **See the author-run question results:** [Measured progress](MEASURED-PROGRESS.md),
+   [side by side with three language models](GEL-BESIDE-GROQ.md)
+5. **Inspect the recorded 1M/10M measurements:** [Ocean Scale](OCEAN-SCALE.md)
+6. **See what comes next publicly:** [Roadmap](ROADMAP.md)
 
 ## The most important performance distinction
 
@@ -46,6 +50,8 @@ package is ready.
 - no-replace source-bundle persistence and fresh-process reopen;
 - Q8 inverse/exactness checks;
 - independent byte/numeric/ranking audit;
+- re-scoring of the recorded answers of GEL and three language models
+  (`xtask answer-bench`, [set and method](answer-or-abstain/README.md));
 - Linux/macOS/Windows public-core checks.
 
 ## What would help the project most

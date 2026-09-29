@@ -22,6 +22,22 @@ retains its own license terms.
 | Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or encrypted storage |
 | Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec; timing not measured |
 | Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
+| Workflow and benchmark hardening (PR #19) | Fail-closed workflow permission and action-pin checks, full benchmark answer inventories and 40,000 bounded format mutants ([hardening audit](AUDIT-HARDENING.md)) | Not independent second-host acceptance |
+| Answer-or-abstain re-scoring (PR #31) | `xtask answer-bench` re-scores the recorded answers of GEL and three language models on 160 frozen questions under strict and published rules, and checks the published tables and passage hashes in every verify run ([set and method](answer-or-abstain/README.md)) | Re-scores recorded answers; it does not re-run GEL or the models |
+
+## Author-run measurements of the private implementation
+
+These results come from the separate private implementation and its bank. They
+cannot be re-run from this checkout; the [claim registry](CLAIMS.md) lists them
+as `MEASURED_LOCAL`, and the linked pages give the protocol and evidence
+identities.
+
+| Result | Recorded numbers | Boundary | Details |
+|---|---|---|---|
+| Answer verdict on stored passages | 50,000 probes: 92.8% answered, 99.95% correct answers, 0.046% wrong answers | Stored passages, not questions; the answer bank changed in scope | [Measured progress](MEASURED-PROGRESS.md) |
+| Natural questions | 80 frozen questions: right article first for 40; 11 answers, all correct; 69 UNKNOWN | Too small a set for a precision rate | [Measured progress](MEASURED-PROGRESS.md) |
+| Beside three language models, closed book | GEL 11 correct, 0 wrong, 69 UNKNOWN; the models 10, 8 and 6 correct with 21, 28 and 11 wrong | One run; not a speed comparison or an engine ranking | [Side by side](GEL-BESIDE-GROQ.md) |
+| No-answer control | GEL answered 0 of 40 invented subjects and 6 of 40 false premises; the models 3–22 and 2–16 | One run; GEL does not always refuse | [No-answer control](GEL-BESIDE-GROQ-NO-ANSWER.md) |
 
 ## Recorded Ocean full-scan baseline (historical)
 
