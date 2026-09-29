@@ -1,6 +1,6 @@
 # Public hardening audit
 
-Review baseline: `9e1b63dc847875a44f78241f10f46f1791835be0`.
+Original audit baseline: `9e1b63dc847875a44f78241f10f46f1791835be0`. The repair branch was synchronized with `dc276102b3539c553f0a7c7cf3813433531cfde9`; newer main behavior is retained unless explicitly listed below.
 This repair is separate from release approval. It changes no license grant,
 private implementation, historic media bytes or retained measurement data.
 

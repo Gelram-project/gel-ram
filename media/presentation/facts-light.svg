@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="128" viewBox="0 0 1200 128" role="img" aria-labelledby="t d">
+<title id="t">Checked facts about this release</title>
+<desc id="d">35 documented properties mapped to 71 tests, checked on every CI platform with declared Unix-only exclusions; 3 CI platforms; 179 format mutants each rejected or explained; network isolation verified in the strict reproduction.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.num{font-size:36px;font-weight:800}
+.lab{font-size:14px;fill:#486380}
+.tile{fill:#ffffff;stroke:#cbdcf0;stroke-width:2}
+.t1,.t2,.t3,.t4{animation:rise 1.2s ease-out both;transform-box:fill-box}
+.t2{animation-delay:.25s}.t3{animation-delay:.5s}.t4{animation-delay:.75s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.t1,.t2,.t3,.t4{animation:none}}
+</style>
+<g class="t1"><rect class="tile" x="2" y="2" width="288" height="124" rx="16"/><rect x="2" y="2" width="8" height="124" rx="4" fill="#0969da"/>
+<text class="num" x="28" y="54" fill="#0969da">35 → 71</text><text class="lab" x="28" y="82">properties mapped to tests, checked</text><text class="lab" x="28" y="102">per CI platform, Unix-only declared</text></g>
+<g class="t2"><rect class="tile" x="306" y="2" width="288" height="124" rx="16"/><rect x="306" y="2" width="8" height="124" rx="4" fill="#8250df"/>
+<text class="num" x="332" y="54" fill="#8250df">3</text><text class="lab" x="332" y="82">CI platforms:</text><text class="lab" x="332" y="102">Linux · macOS · Windows</text></g>
+<g class="t3"><rect class="tile" x="610" y="2" width="288" height="124" rx="16"/><rect x="610" y="2" width="8" height="124" rx="4" fill="#bc4c00"/>
+<text class="num" x="636" y="54" fill="#bc4c00">179</text><text class="lab" x="636" y="82">format mutants, each rejected</text><text class="lab" x="636" y="102">or its acceptance explained</text></g>
+<g class="t4"><rect class="tile" x="914" y="2" width="284" height="124" rx="16"/><rect x="914" y="2" width="8" height="124" rx="4" fill="#1a7f37"/>
+<text class="num" x="940" y="54" fill="#1a7f37">offline</text><text class="lab" x="940" y="82">network isolation verified</text><text class="lab" x="940" y="102">in the strict reproduction</text></g>
+</svg>

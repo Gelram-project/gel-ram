@@ -5,9 +5,8 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- This page separates the delivered 0.5.0 version line from open review and future
-  research work below. It does not claim that every listed task is implemented.
-  Tagged releases are listed on the Releases page; `v0.4.0` and `v0.3.0` remain earlier releases.
+- The 0.5.1 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.5.0`, `v0.4.0` and `v0.3.0` remain earlier releases.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -43,15 +42,26 @@ The following capabilities are present on public `main`:
    validation. Single-document import/read/save/reopen belongs to the earlier published base.
 2. Keep per-platform CI evidence for every revision. Unix permission and
    directory-sync checks remain platform-specific, not portable guarantees.
-3. Independently review the implemented one-command reporting, including raw
-   output, resource/timing scope and retained failures. A single UI timing is not
-   a robust performance measurement.
+3. Provide one-command local reporting with raw output, resource/timing scope and
+   failures retained. Never infer robust performance from a single UI timing.
 4. Reproduce numeric Q8 evidence on an independent second host, including
    regressions and complete memory costs. Keep addressed readout and full scan
    distinct; coordinate views are not independent information.
 5. Evaluate knowledge retrieval only after defining a redistributable corpus,
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
+
+## v0.5.1
+
+A documentation and version release; public file formats and dependencies are
+unchanged from v0.5.0. `xtask verify` gains one documentation check (the summary
+of the review work list below).
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Answer-verdict and natural-question results of the private implementation, registered as `MEASURED_LOCAL` claims | 739c452 | `xtask claims` | [measured progress](MEASURED-PROGRESS.md) | independent reproduction; a larger, independently written question set |
+| GEL beside three language models (closed book) on the same 80 frozen questions, one run, registered as a `MEASURED_LOCAL` claim | b85ce20 (PR #29) | `xtask claims` | [side by side](GEL-BESIDE-GROQ.md) | independent reproduction; a larger question set |
+| Review work list summary recounted from its table on every verify run | PR #33 | `xtask roadmap` | [review work list](#review-work-list-and-next-acceptance) | none beyond the check itself |
 
 ## v0.5.0
 
@@ -72,13 +82,13 @@ states.
 | Public verification suite runner | 80f91d7 to 133d225; counts and `--strict` in 4cbfff5 | `xtask reproduce` | REPRODUCTION.txt of an owner run at 133d225: 3 of 3 steps passed, isolation verified | an independent operator on a second host (A20) |
 | Documentation review fixes: work branch, historical baseline, security surface | 7bcca67 | — | README, TRY-IT, REPRODUCE, SECURITY | — |
 | Still of the update, restart and corrupted-copy scenario | 3c088cc | — | [screenshot](../media/evidence-lab/03-update-restart-102s.png), final screen of an AI-reviewed recording; the recording is not published | — |
-| Binary packages for Linux, macOS and Windows, built only in CI | 3c088cc | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | verify the exact release revision, archive hashes and build attestations; packages are unsigned and checked only on their build runners |
+| Binary packages for Linux, macOS and Windows, built only in CI | 3c088cc | `xtask package-binaries`, workflow `binaries` | [binaries](BINARIES.md): license files checked against the inventory, build-path scan, per-platform smoke run, checksums; provenance attestation on a hand-started run | first owner-started run; packages are unsigned and checked only on their build runners |
 | Fresh paired timing and fresh-process RSS of one mutation (A09) | 306c7f1 | `xtask mutation-campaign` | [campaign r1](evidence-mutation-campaign-r1/CAMPAIGN.txt), [results and limits](MUTATION-COMPARISON.md) | one host, 10 processes per combination; a second host |
 | Private previews described only by scope and limits | 1f7693c, ffa85b6 | — | [transcript](../media/TRANSCRIPTS-PL-EN.md) and [film guide](../media/FILMS-GUIDE.md); the public Evidence Lab film keeps its full transcript | — |
 | Property-to-test map (A07) | fc5cf90 | `xtask ci-evidence` | [map](PROPERTY-TESTS.md): 35 properties, 71 tests, one `PROPERTY` line per row in each platform report | properties without a row are not claimed untested; a row shows the tests ran, not full coverage |
 | Claim registry for the v0.5.0 tools and every README timing table (A19) | 118e86d | `xtask claims` | [claims](CLAIMS.md) | not an exhaustive map of historical statements |
 | README visual entry: six edited log replays of recorded public workflows | 034cd33 (PR #14) | `tools/readme_media.rs` | [gallery](../media/gifs/README.md), [source and hashes](../media/gifs/MANIFEST.txt) | edited replays, not wall time; the one-off publishing workflow is not part of the release |
-| Multimedia README and script-free full-page edition | this change | `tools/readme_presentation.rs`, workflow `readme-presentation` (read-only check) | [presentation guide](README-PRESENTATION.md), [full-page edition](../README-MULTIMEDIA.html) | built locally and rechecked in CI; a human review of the rendered page in browsers |
+| Multimedia README, animated citation diagram, checked facts and workflow badges; script-free full-page edition | 9e1b63d (PR #16), b8ed840 (PR #17) and the animated-graphics pull request | `tools/readme_presentation.rs`, workflow `readme-presentation` (read-only check) | [presentation guide](README-PRESENTATION.md), [full-page edition](../README-MULTIMEDIA.html) | built locally and rechecked in CI; a human review of the rendered page in browsers |
 
 ## How to read the review work list
 
@@ -109,7 +119,7 @@ Summary: 14 DONE_SCOPED · 6 PARTIAL · 3 OPEN · 1 OWNER.
 | A04 | DONE_SCOPED | Runtime-example sequencing checks each native exit status, including first/middle failures and misleading PASS output. | [Process tests](../xtask/tests/process_sequence.rs) |
 | A05 | PARTIAL | Decode report and an AI review of every visually distinct frame of all three films exist. A human start-to-finish review remains open. | [Media review](MEDIA-DECODE-REVIEW.md) |
 | A06 | DONE_SCOPED | The recorder fails closed on split UTF-8, EOF, failed writes, missing markers and child exit; a lint gate forbids 14 lints and rejects 10 probes. | [Recorder safety](RECORDER-SAFETY.md) |
-| A07 | DONE_SCOPED | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 3 partial branches, and a strict cross-platform diff checks them. A property-to-test map of 35 documented properties and 71 uniquely named tests is checked on every CI platform; it is not an exhaustive map of every statement. | [CI evidence](CI-EVIDENCE.md), [property map](PROPERTY-TESTS.md) |
+| A07 | DONE_SCOPED | Reports sum cargo's test results per profile, list 7 declared Unix-only tests and 2 partial branches, and a strict cross-platform diff checks them. A property-to-test map of 35 documented properties and 71 uniquely named tests is checked on every CI platform; it is not an exhaustive map of every statement. | [CI evidence](CI-EVIDENCE.md), [property map](PROPERTY-TESTS.md) |
 | A08 | DONE_SCOPED | Structural, admission and OS-level publication faults (permission denial, SIGKILL, full disk on a bounded tmpfs) keep the previous snapshot; possible publication before a directory-sync error is documented. | [Publication fault tests](PUBLICATION-FAULT-TESTS.md) |
 | A09 | DONE_SCOPED | Allocations, user-space copies and peak additional heap per mutation are measured locally (DHAT, heaptrack). A fresh paired timing comparison and the resident-set peak of one mutation in fresh processes, with the peak reset before the mutation, are recorded on one host; a second host remains open. | [Mutation comparison](MUTATION-COMPARISON.md), [builder](COLLECTION-BUILDER.md) |
 | A10 | PARTIAL | A comparison protocol (input, profile, clock boundary, warmup, order, host metadata) exists and governs the [grep comparison](BENCHMARK-GREP.md); historical campaigns are not re-run under it. | [Campaign protocol](EVIDENCE-CAMPAIGN.md) |

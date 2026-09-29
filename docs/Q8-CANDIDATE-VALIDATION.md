@@ -54,7 +54,8 @@ Separate, untimed-campaign Linux `/usr/bin/time -v` probes on the final binary:
 Both had exit 0. These are single process high-water observations, not memory
 requirements for an optimized deployed reader. The diagnostic deliberately
 holds both canonical and four-view banks plus input bytes and output buffers.
-No GPU, PUF, physical refresh measurement, energy or sustained full-CPU result.
+No GPU, hardware identity, hardware-level memory measurement, energy or
+sustained full-CPU result.
 
 ## Remaining release decisions
 

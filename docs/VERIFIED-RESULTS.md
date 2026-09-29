@@ -85,7 +85,7 @@ The public repository does not claim that it proves:
 - unrestricted semantic AI accuracy;
 - 30M queries/s or any conversion from internal update-rate measurements to queries/s;
 - stable extreme-tail latency without sufficient observations;
-- physical memory-side compute or hardware-level memory synchronization;
+- physical memory-side compute or other hardware-level memory computation;
 - production power-loss durability;
 - fourfold independent capacity from four reversible views.
 

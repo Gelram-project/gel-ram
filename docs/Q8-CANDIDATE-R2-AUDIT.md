@@ -73,7 +73,7 @@ All raw numerical logs and final [source/binary fingerprints](evidence-q8-r2/MEA
 are included. Binaries and the private 768-record input are not included. The
 old fingerprint file belongs to the old campaign, before the R2 input fix.
 Neither campaign measures four independent memories, media understanding,
-physical DRAM signatures, native reasoning or semantic 99% accuracy.
+hardware identity, native reasoning or semantic 99% accuracy.
 
 ## Publication gate
 

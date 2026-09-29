@@ -5,7 +5,10 @@ Polish raster sketches were the respective edit targets; no private code or
 corpus was supplied. Outputs were visually reviewed before release. These
 prompts are production notes, not executable instructions or test results.
 The project uses the resulting PNG files, not runtime image generation.
-Private version labels in these notes are generalized; the released artwork is unchanged.
+Private version labels in these notes are generalized. On 2026-09-27 the fourth
+"not established" row of both evidence-and-limits images was replaced by a local
+edit (new wording and icon); the prompts below quote that current wording. The
+rest of the released artwork is unchanged.
 
 ## Q8 four views
 
@@ -20,7 +23,7 @@ Each panel has the same exact caption: "Pełny rekord w innych współrzędnych"
 Below center, prominent two-line text: "Ta sama transformacja zapytania i rekordu" / "Zachowana zgodność wyniku odczytu".
 Bottom two clear callouts: "4 widoki ≠ 4 niezależne dane" and "Q8: 256 poziomów fazy".
 Bottom footer exact: "Schemat koncepcyjny · nie obraz fizycznego RAM".
-Do NOT include any other text from the original, no phases positive-only or negative-only, no independent truths, no claims of 4x capacity or 4x speed, no physical-wave measurement claim, no PASS seal, no internal schema, no private implementation details. Blue/red dots are decorative phase symbols only, not parity nodes. Use readable accurate Polish accents. This is an educational raster illustration, not a measurement chart.
+Do NOT include any other text from the original, no phases positive-only or negative-only, no independent truths, no claims of 4x capacity or 4x speed, no hardware-level memory claim, no PASS seal, no internal schema, no private implementation details. Blue/red dots are decorative phase symbols only, not parity nodes. Use readable accurate Polish accents. This is an educational raster illustration, not a measurement chart.
 ```
 
 ## Evidence and limits
@@ -41,10 +44,10 @@ Right four rows with simple caution icons:
 "Pełnego rozumienia wiedzy"
 "Czterokrotnej niezależnej pojemności"
 "Uniwersalnego przyspieszenia"
-"Sprzętowych fal RAM ani PUF"
+"Obliczeń sprzętowych w pamięci"
 Center or bottom highlighted callout: "Zgodność danych ≠ prawdziwość informacji"
 Footer: "Ilustracja edukacyjna · dowody i zakres testów w dokumentacji"
-No claims of independent external validation, identical benchmark times, GPU superiority, production P2P or real physical wave manipulation. No exact unknown numerical results. No hidden architecture, private data or source code. Preserve clarity and Polish accents.
+No claims of independent external validation, identical benchmark times, GPU superiority, production P2P or real hardware-level memory manipulation. No exact unknown numerical results. No hidden architecture, private data or source code. Preserve clarity and Polish accents.
 ```
 
 ## Review notes
@@ -93,7 +96,7 @@ Right rows:
 "Full semantic understanding"
 "Fourfold independent capacity"
 "Universal speedup"
-"Physical RAM waves or PUF"
+"Hardware-level memory computation"
 Center callout: "Data integrity ≠ factual truth"
 Footer: "Educational illustration · evidence and test scope in the documentation"
 Remove every Polish word. No added performance numbers, no new claims of external independent validation, GPU experiments, private architecture or a deployed network. Retain the caution icon style; the CPU label and limits must stay explicit. Full uncropped landscape.

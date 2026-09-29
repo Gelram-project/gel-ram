@@ -3,6 +3,7 @@
 > **Historical document** from the v0.2.x period, kept as written. Where it says
 > "this public tree" or names the license, it describes that earlier tree. The
 > current tree's license is [LICENSE](LICENSE); see [LICENSING](LICENSING.md).
+> On 2026-09-27 one limitation phrase was reworded in general terms.
 
 ## Local Q8 evidence candidate — not a tagged release
 
@@ -71,8 +72,8 @@ flowchart LR
 ```
 
 Matching reversible transforms are applied to both query and candidate.
-This diagram describes equivalent readouts, not four independent facts or a
-physical analog-wave circuit.
+This diagram describes equivalent readouts, not four independent facts or
+hardware-level memory computation.
 
 | Record payload | One canonical Q8 record | Shared Q8 Quad | Four packed copies |
 | :--- | ---: | ---: | ---: |

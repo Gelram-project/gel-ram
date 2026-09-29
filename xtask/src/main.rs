@@ -3,7 +3,6 @@ mod audit_io;
 mod bench_compare;
 mod ci_evidence;
 mod claims;
-mod docs_contracts;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
@@ -17,6 +16,7 @@ mod publication_status_tests;
 mod recorder_lint;
 mod reproduce;
 mod reproduction;
+mod roadmap;
 mod source_bundle;
 mod workflow_policy;
 
@@ -35,15 +35,115 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "221a74e1cb108eae10aeb599ef105c82ad3ebede4b0c35c624652655e9d3e67b",
+        "c4b1238bf275239861a377ecaa374798ad0761b21ca2e72a4da26fede9277f75",
     ),
     (
         "media/presentation/header-light.svg",
-        "96ccef92c92ea16bef19ef0fb2b50c038a8fc8761edaa4fb7c3fbdd01d3b0c6e",
+        "aebb4116f74028bb9f7bd76eaa79d9f3f348980901cd78642fd3ffe5225991e8",
     ),
     (
         "media/presentation/header-dark.svg",
-        "34543ac9a1841597b77c9003dcc6951bdd67d0c36015da208ec67231c75acf0a",
+        "3d09088fefcaf6b8caadb732ff45e89a2fe9d1cf561084c1d20b904b2b7714b8",
+    ),
+    (
+        "media/presentation/flow-light.svg",
+        "f69dccd7b004f5b95d36fbc4773e8c962b2c39be1a5c23186b152991d1274f5a",
+    ),
+    (
+        "media/presentation/facts-light.svg",
+        "93624f881d896900e63d1694c1cc4219150d48b5ef95461ccedcb353ba89a44e",
+    ),
+    (
+        "media/presentation/wall-light.svg",
+        "1587f805345b09c171b74af481190f74ac49a78c54f373ccda7142cd0f273d83",
+    ),
+    (
+        "media/presentation/bars-light.svg",
+        "d83fb2f2e9abaa13e7371fd9d6df1a2f7bc50bc92f6bda61a43404b6121e05e0",
+    ),
+    (
+        "media/presentation/logo-light.svg",
+        "0bfa881db2ea8d988c385664eb840f8faef1c5e931e37a7e8d6d3f101b67b0b5",
+    ),
+    (
+        "media/presentation/logo-still-light.svg",
+        "2cb1b673a1c1791b5cdd30b7194f6b2bf4f3f9c7d909c939470e2de7c79f26e4",
+    ),
+    (
+        "media/presentation/flow-dark.svg",
+        "4248e73198f4274634098a70f0b6739f981da45f040f20a8444e8051dc005032",
+    ),
+    (
+        "media/presentation/facts-dark.svg",
+        "9f12978745d6dc6cb1298fd5bd1b85f032e670b0401b5a9f8ab5326a6675a2a5",
+    ),
+    (
+        "media/presentation/wall-dark.svg",
+        "db451d62af58b85ac21d9f9f68822b709e85c48a9a34a4eff1109a3dddebb3ff",
+    ),
+    (
+        "media/presentation/bars-dark.svg",
+        "ff0e0e44a62c8d17f7ba8017fafcca308b9510738085194d11166039fa36e5f4",
+    ),
+    (
+        "media/presentation/logo-dark.svg",
+        "1bb4a8be9ff7c951a62e1a18e1ee7ba6d9861213df7cd7ca4e1f64413286be6b",
+    ),
+    (
+        "media/presentation/logo-still-dark.svg",
+        "0863d48ebe5fbb4199e9947f29518f6f3224250142cb4d4eb4c3c9f68926a132",
+    ),
+    (
+        "media/presentation/chips/01-light.svg",
+        "d4207f2334a255e66fc3a92cfeba06ff3ee66dd50b045496c41005c4694f3fc2",
+    ),
+    (
+        "media/presentation/chips/01-dark.svg",
+        "68bbe4c1bed153874c101d9e5d751637f2bcbf4068c8778dfbd2e041ed303b1f",
+    ),
+    (
+        "media/presentation/chips/02-light.svg",
+        "4e399c79f4e0bfa56bdf4a86b551191a5534fd499d51de414e5b0d31cd63b3aa",
+    ),
+    (
+        "media/presentation/chips/02-dark.svg",
+        "e03c7ac8e5a4a2794180cd22913477ed7e54e5d32dde3066f0089c1cf5465ce3",
+    ),
+    (
+        "media/presentation/chips/03-light.svg",
+        "865090b3f865e2682231124d870338099a17ec37e9407e5be3973c8571f079d9",
+    ),
+    (
+        "media/presentation/chips/03-dark.svg",
+        "88c6121b08bc8a95f8666d9a02af346ffc0776e5ece865a605e323ef11599c86",
+    ),
+    (
+        "media/presentation/chips/04-light.svg",
+        "058fafbbe1bc80d77cd2b24f506674b3e8940b70e40ef2ce7f8500f0506f770d",
+    ),
+    (
+        "media/presentation/chips/04-dark.svg",
+        "458ebc39c0b25944f5fe249fa709f7fb011bb4359afc6721c2289d9aa1b91177",
+    ),
+    (
+        "media/presentation/chips/05-light.svg",
+        "f6696cfb93f899c380b24988cd3473fd8987f2c71b156752355407e9aae76a70",
+    ),
+    (
+        "media/presentation/chips/05-dark.svg",
+        "256f86e09deaee7505000945f5c67eec176fcdfbeebe17666701bbf6d4e9d804",
+    ),
+    (
+        "media/presentation/chips/06-light.svg",
+        "e96efa2ff68822e546332a5b20933d6feca51181833995a4f618b9ea5802ea75",
+    ),
+    (
+        "media/presentation/chips/06-dark.svg",
+        "e64e325af468f9803365e27c18f269821ad94be8a718b163759b587d47c55bba",
+    ),
+    (
+        "media/presentation/measured-progress.svg",
+        "cdfdfd4c7c85c07c09f7968ecb1273672f6c9bfd4aad337f5ebab51fd91dd40f",
     ),
     (
         "media/gifs/01-evidence-light.gif",
@@ -157,6 +257,27 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "media/evidence-lab/02-reopened-56s.png",
         "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
     ),
+    // GEL beside three language models: replays rendered from one recorded run.
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4",
+        "e96ebea496c445a4bdd2fbe00d72bc4b2caca6b84037a06f782f5398dbab47fc",
+    ),
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4",
+        "21f0616fc6d2854d383e10c7eada1034c50ed19ac4643e248c363398ec515584",
+    ),
+    (
+        "media/beside-groq/all-80-answers.png",
+        "c904d775a1105628faa58e17291b51ac07aea0bc16e15b6f2c6a6f248403e017",
+    ),
+    (
+        "media/beside-groq/scoreboard.png",
+        "bac896d45ec9a2790fa21ac39464e3865050d537fd89df2a2fd5832961a57689",
+    ),
+    (
+        "media/beside-groq/response-times.png",
+        "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
+    ),
     (
         "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
         "3b568bebdef34d34931970ce1f86ae0c521dba9e9ef6f7d050c5363357b63064",
@@ -203,7 +324,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "docs/images/evidence-limits-en.png",
-        "0e675a58bb6955a16bde7b413e82094faabda951d60dff078735e30e052c58c2",
+        "6a6b9af2ea626591863d56b6d082613794d52ae1b8f825244ba0b62fecd8b9fd",
     ),
     (
         "docs/images/q8-four-views-pl.png",
@@ -211,7 +332,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "docs/images/evidence-limits-pl.png",
-        "040cf00b6577d7bb7f399e8f7aa112db2dd678119cab919629d3ec0531cc7d53",
+        "5913962e08810b86e253d046b6be8a0628b9affcd0d8beddef87fae0cdde9392",
     ),
 ];
 const ALLOWED_EXTENSIONLESS: &[&str] = &[
@@ -234,7 +355,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -925,7 +1046,6 @@ fn verify() -> Result<(), String> {
     licensing()?;
     ci_policy()?;
     docs_refs()?;
-    docs_contracts::check(workspace_root()?)?;
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
     recorder_lint::check(workspace_root()?)?;
@@ -936,6 +1056,7 @@ fn verify() -> Result<(), String> {
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
+    roadmap::check(workspace_root()?)?;
     mutation_matrix::check(workspace_root()?)?;
     println!(
         "PROPERTY_MAP_FORMAT=PASS rows={}",
@@ -1079,6 +1200,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
+        Some("roadmap") => roadmap::check(workspace_root()?),
         Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),

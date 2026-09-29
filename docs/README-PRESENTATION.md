@@ -1,19 +1,40 @@
 # Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
-an SVG banner and six real GIF previews. The adjacent README-MULTIMEDIA.html is a
-script-free local document with the full responsive panel layout, theme-aware
-backgrounds, a still-image control and links to the public documentation.
-Open it from the checkout in a browser. GitHub's file viewer does not host it as
-a web page; no Pages deployment or new public service is configured.
+an SVG banner with the animated GEL logo, an animated 3D scene of the citation
+check, a strip of checked facts, colour-coded workflow badges, six real GIF
+previews and two 3D graphics of the public checks. The adjacent
+README-MULTIMEDIA.html is a script-free local document with the full responsive
+panel layout, theme-aware backgrounds, a still-image control and links to the
+public documentation. Open it from the checkout in a browser. GitHub's file
+viewer does not host it as a web page; no Pages deployment or new public service
+is configured.
+
+The animated scene illustrates the flow the six recordings show: an exact
+quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
+new process that reopens it with the same pin, and a copy with one changed byte
+that is refused. It is drawn, not recorded, and its timing is not a
+measurement. Under reduced motion it shows its final state.
+
+The logo in the banner and in the full-page brand is the GEL RAM cube drawn in
+3D: document sheets settle into a translucent cube as three layers of source
+cells around the accent core, a query lights one exact cell and a pin seal
+appears. It pictures the public workflow, not how the engine works inside, and
+it is not a claim of general AI; under reduced motion it shows its final state.
+
+The builder draws the facts strip and the two check graphics from the property
+map, the Unix-only exclusion list of the CI evidence collector and the committed
+mutation matrix report. The property-map graphic shows the rule the collector
+enforces on each CI platform, not the result of a particular run. A change to
+any of these sources makes the read-only check fail until the images are rebuilt.
 
 ## Preservation and source
 
-The presentation belongs to the v0.5.0 source. The exact prior README is
+The presentation belongs to the v0.5.1 source. The exact prior README is
 retained as [README-HISTORY-PRE-MULTIMEDIA.md](../README-HISTORY-PRE-MULTIMEDIA.md).
 The already existing pre-visual history also remains untouched. The new README
 keeps its technical content below the presentation unchanged, including the
-quick-start checkout of the v0.5.0 tag.
+quick-start checkout of the v0.5.1 tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
@@ -38,8 +59,8 @@ external documentation links needs a network; opening the local presentation doe
 The Rust-only presentation builder is tools/readme_presentation.rs. It refuses
 unexpected input headings and pre-existing output paths, verifies the original
 media pins before and after its edits, archives the actual preceding README and
-adds only three exact presentation-asset pins. It does not allow arbitrary SVG or
-HTML files. The source manifest is then refreshed and the complete tree must
+adds exact pins only for the files it generates. It does not allow arbitrary SVG or
+HTML files. The source manifest is then regenerated and the complete tree must
 pass xtask verify. Normal three-platform CI is read separately for the final head.
 
 The presentation was built once with Rust 1.85.0 and committed by its author;

@@ -25,7 +25,7 @@ executes two actual `gel-evidence` processes through their command interface:
 7. Check that neither historical snapshot was modified.
 
 This exercises phrase readout, source correspondence and persisted state, not
-natural-language understanding, hardware refresh computation or physical power
+natural-language understanding, hardware-level memory computation or physical power
 loss. The test is portable; separate Unix-only tests exercise SIGKILL. It does
 not replace a new filmed demonstration or full visual review of old films.
 

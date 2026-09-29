@@ -50,7 +50,7 @@ Four colored rows show the first 16 phase codes in four reversible coordinate
 views. `view 0..3` highlights a row, `phase 0..255` shifts the body phase,
 `mask 0..1024` changes active-mask stride (0 disables all body dimensions), and
 `noise 0..1024` perturbs that many dimensions. All four inverses are checked.
-Each color is a deterministic display of a phase code, not a measured RAM waveform.
+Each color is a deterministic display of a phase code, not a hardware measurement.
 
 The public Record occupies 1152 bytes (1024 phase bytes plus 128 mask bytes).
 256 means the number of phase levels, **not the record's bit length**. The displayed
