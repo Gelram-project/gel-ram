@@ -63,3 +63,11 @@ Expected failure cases have checked nonzero exits. Full human visual acceptance 
 
 [Complete transcript](06-compare.txt) · [Full-size animation](06-compare-light.gif)
 
+
+## Historical comparison boundary
+
+The sixth replay retains the answer classification produced at its recorded
+source revision. That checker used counts plus a capped preview, not complete
+line-set equality. The current checker is stronger; the original replay and
+transcript are unchanged and are not a new benchmark. See the
+[comparison contract](../../docs/BENCHMARK-GREP.md).

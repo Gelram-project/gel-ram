@@ -56,23 +56,35 @@ pub(crate) fn hashes(
     base: &Path,
     out: &mut Vec<(String, String)>,
 ) -> Result<(), String> {
-    let mut entries: Vec<PathBuf> = fs::read_dir(dir)
-        .map_err(|e| e.to_string())?
-        .filter_map(|e| e.ok().map(|e| e.path()))
-        .collect();
-    entries.sort();
+    let entries = super::audit_io::paths(dir)?;
     for path in entries {
         let meta = fs::symlink_metadata(&path).map_err(|e| e.to_string())?;
         if meta.is_dir() {
             hashes(&path, base, out)?;
         } else if meta.is_file() {
             let bytes = fs::read(&path).map_err(|e| e.to_string())?;
-            let name = path
+            let relative = path
                 .strip_prefix(base)
-                .unwrap_or(&path)
-                .to_string_lossy()
+                .map_err(|_| "report path outside inventory root")?;
+            for component in relative.components() {
+                let part = component
+                    .as_os_str()
+                    .to_str()
+                    .ok_or("non-UTF8 report path")?;
+                if part.contains('\\') {
+                    return Err("ambiguous backslash in report filename".into());
+                }
+            }
+            let name = relative
+                .to_str()
+                .ok_or("non-UTF8 report path")?
                 .replace('\\', "/");
+            if name.chars().any(char::is_control) {
+                return Err("control character in report path".into());
+            }
             out.push((hex(&digest(&bytes)), name));
+        } else {
+            return Err("report inventory contains a symlink or non-regular entry".into());
         }
     }
     Ok(())
@@ -250,5 +262,28 @@ mod tests {
             classify(Err("first\nsecond".into()), false),
             ("FAIL", " error=first".to_string())
         );
+    }
+    #[test]
+    fn report_inventory_rejects_links_and_preserves_complete_hashes() {
+        let dir = std::env::temp_dir().join(format!(
+            "gel-report-inventory-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir(&dir).unwrap();
+        fs::write(dir.join("one.txt"), "one").unwrap();
+        let mut entries = Vec::new();
+        hashes(&dir, &dir, &mut entries).unwrap();
+        assert_eq!(entries, vec![(hex(&digest(b"one")), "one.txt".into())]);
+        assert!(hashes(&dir, &dir.join("wrong-root"), &mut Vec::new()).is_err());
+        #[cfg(unix)]
+        {
+            std::os::unix::fs::symlink(dir.join("one.txt"), dir.join("link.txt")).unwrap();
+            assert!(hashes(&dir, &dir, &mut Vec::new()).is_err());
+        }
+        fs::remove_dir_all(&dir).unwrap();
     }
 }

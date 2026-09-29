@@ -64,6 +64,15 @@ fn unreachable(target: &str, attempt: io::Result<()>) -> Result<(), String> {
     }
 }
 
+#[cfg(any(target_os = "linux", test))]
+fn optional_proc(result: io::Result<String>) -> Result<String, String> {
+    match result {
+        Ok(text) => Ok(text),
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(String::new()),
+        Err(e) => Err(format!("cannot establish optional IPv6 state: {e}")),
+    }
+}
+
 #[cfg(target_os = "linux")]
 fn evidence() -> Result<(), String> {
     use std::{fs, net::SocketAddr, time::Duration};
@@ -71,10 +80,9 @@ fn evidence() -> Result<(), String> {
     let dev = read("/proc/self/net/dev")?;
     let route4 = read("/proc/self/net/route")?;
     // Absent when IPv6 is disabled; then there is no IPv6 route to check.
-    let route6 = fs::read_to_string("/proc/self/net/ipv6_route").unwrap_or_default();
+    let route6 = optional_proc(fs::read_to_string("/proc/self/net/ipv6_route"))?;
     passive(&dev, &route4, &route6)?;
-    let ipv6 = !fs::read_to_string("/proc/self/net/if_inet6")
-        .unwrap_or_default()
+    let ipv6 = !optional_proc(fs::read_to_string("/proc/self/net/if_inet6"))?
         .trim()
         .is_empty();
     for target in PROBES.iter().take(if ipv6 { 2 } else { 1 }) {
@@ -196,5 +204,20 @@ mod tests {
         // outcome, not opened: inside a fresh network namespace even loopback
         // is down, and the test must pass there too.
         assert!(unreachable("t", Ok(())).is_err());
+    }
+    #[test]
+    fn ipv6_read_failures_are_not_an_empty_routing_table() {
+        assert_eq!(
+            optional_proc(Err(io::Error::from(io::ErrorKind::NotFound))).unwrap(),
+            ""
+        );
+        assert_eq!(optional_proc(Ok("lo".into())).unwrap(), "lo");
+        for kind in [
+            io::ErrorKind::PermissionDenied,
+            io::ErrorKind::InvalidData,
+            io::ErrorKind::Interrupted,
+        ] {
+            assert!(optional_proc(Err(io::Error::from(kind))).is_err());
+        }
     }
 }
