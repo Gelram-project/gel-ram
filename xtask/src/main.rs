@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+mod answer_bench;
 mod audit_io;
 mod bench_compare;
 mod ci_evidence;
@@ -1069,6 +1070,7 @@ fn verify() -> Result<(), String> {
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
+    answer_bench::check(workspace_root()?)?;
     roadmap::check(workspace_root()?)?;
     mutation_matrix::check(workspace_root()?)?;
     println!(
@@ -1209,6 +1211,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
+        Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),

@@ -1,0 +1,81 @@
+# gpt-oss-20b: answers as returned in one run (no-answer control run 2026-09-28, Groq API closed book, neutral prompt); line breaks and tabs replaced by spaces. nr, answer.
+1	Jerzy Matuszkiewicz.
+2	Piotrków County.
+3	UNKNOWN
+4	1970
+5	alpha i beta subskładniki.
+6	1,000.
+7	Józef Wybicki.
+8	UNKNOWN
+9	1925
+10	1288 m.
+11	UNKNOWN
+12	UNKNOWN
+13	Ca₃SiO₅
+14	Jerzy Turek.
+15	III liga.
+16	Vistula
+17	Tomik 1.
+18	Gdańsk Główny – Kościerzyna.
+19	Gdańsk.
+20	UNKNOWN
+21	UNKNOWN
+22	Herefordshire.
+23	0
+24	Pemberton‑Ashe PA‑8.
+25	UNKNOWN
+26	BBC Three
+27	Houston Astros
+28	UNKNOWN
+29	UNKNOWN
+30	William G. Conner
+31	UNKNOWN
+32	UNKNOWN
+33	Kvarnsund Speedway Stadium.
+34	UNKNOWN
+35	Jack Hobbs
+36	UNKNOWN
+37	UNKNOWN
+38	UNKNOWN
+39	UNKNOWN
+40	UNKNOWN
+41	UNKNOWN
+42	UNKNOWN
+43	Z powodu sprzeciwu wobec reżimu monarchicznego.
+44	Pope John Paul II.
+45	2021
+46	UNKNOWN
+47	UNKNOWN
+48	1. Pułk Kawalerii (1. Pułk Kawalerii).
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	Operacja Bagracja.
+53	Hamburg.
+54	2006.
+55	UNKNOWN
+56	200
+57	Księga wierszy.
+58	UNKNOWN
+59	UNKNOWN
+60	720 BC
+61	Because his car failed technical inspection.
+62	UNKNOWN
+63	Jorge de Souza.
+64	UNKNOWN
+65	UNKNOWN
+66	UNKNOWN
+67	UNKNOWN
+68	The Merchant of Venice.
+69	2 votes.
+70	UNKNOWN
+71	UNKNOWN
+72	2015
+73	UNKNOWN
+74	UNKNOWN
+75	UNKNOWN
+76	UNKNOWN
+77	UNKNOWN
+78	UNKNOWN
+79	Game 5.
+80	0

@@ -1,0 +1,81 @@
+# gpt-oss-20b: answers as returned in one run (run 2026-09-28, Groq API closed book); line breaks and tabs replaced by spaces. nr, answer.
+1	UNKNOWN
+2	UNKNOWN
+3	Abel – „oddech, para” (z hebrajskiego słowa oznaczającego „oddech”).
+4	UNKNOWN
+5	UNKNOWN
+6	UNKNOWN
+7	UNKNOWN
+8	30
+9	Kreis Bad Dürkheim.
+10	UNKNOWN
+11	6-0
+12	Actomyosin consists of actin and myosin proteins.
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	UNKNOWN
+17	2001
+18	1920
+19	UNKNOWN
+20	UNKNOWN
+21	3-2 aggregate.
+22	1,000 zabitych i 2,000 rannych.
+23	Giuseppe Viani.
+24	Czesław Niemen.
+25	Doyle's Delight, 1,124 m.
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	Los Angeles.
+30	Uniwersytet Warszawski i Uniwersytet Jagielloński.
+31	UNKNOWN
+32	UNKNOWN
+33	UNKNOWN
+34	Howard Hughes.
+35	2015
+36	UNKNOWN
+37	Anthony Hamilton: amerykański wokalista soul (1979) i amerykański piłkarz (football) (1975).
+38	w pustyni.
+39	UNKNOWN
+40	UNKNOWN
+41	Because the sitting MP died.
+42	UNKNOWN
+43	C‑130H.
+44	4
+45	CBC Television.
+46	Houston Astros
+47	UNKNOWN
+48	Stanimir Stoyanov
+49	UNKNOWN
+50	Cleveland (Eastern Conference playoff) and Los Angeles Memorial Coliseum (NFL Championship).
+51	UNKNOWN
+52	UNKNOWN
+53	UNKNOWN
+54	UNKNOWN
+55	UNKNOWN
+56	UNKNOWN
+57	UNKNOWN
+58	John H. Smith
+59	UNKNOWN
+60	UNKNOWN
+61	Rochester.
+62	Cigar
+63	UNKNOWN
+64	The Vampyre.
+65	1923
+66	Gävle, Sweden.
+67	UNKNOWN
+68	UNKNOWN
+69	Jack Hobbs.
+70	Mike McCormack
+71	UNKNOWN
+72	1st Night Bomber Division
+73	Because Princeton used an ineligible player.
+74	UNKNOWN
+75	UNKNOWN
+76	UNKNOWN
+77	UNKNOWN
+78	UNKNOWN
+79	Isiah Thomas.
+80	UNKNOWN

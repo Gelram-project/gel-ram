@@ -157,6 +157,10 @@ frame also shows the answer length, the output tokens and the time.
 
 ## Evidence
 
+The questions, accepted spellings and recorded answers are also in the
+[answer-or-abstain set](answer-or-abstain/README.md), with a scorer for other
+systems.
+
 The full record — question, expected answer, GEL verdict with the source
 excerpt and passage length, and each model's verdict, answer, time, server time,
 output and reasoning tokens and answer length — is
