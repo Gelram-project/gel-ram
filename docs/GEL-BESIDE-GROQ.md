@@ -149,6 +149,9 @@ frame also shows the answer length, the output tokens and the time.
 - Times are recorded values under different conditions: GEL ran locally in one
   batch, the models were called over the network one question at a time. They
   are not a speed comparison.
+- A [no-answer control](GEL-BESIDE-GROQ-NO-ANSWER.md) asks 80 questions that have no
+  correct answer: GEL answered none of 40 invented subjects and 6 of 40 false
+  premises.
 - Not claimed: general question answering, semantic understanding, superiority
   over language models, or a speed advantage.
 

@@ -353,6 +353,12 @@ the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE
 · [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
 · [Try your own system on the same questions](docs/answer-or-abstain/README.md)
 
+**No-answer control.** 80 more questions have no correct answer: 40 ask about
+invented subjects, 40 carry a false premise about an entry in the bank. GEL
+answered none of the invented ones and 6 of the false premises; it can still
+return a passage that matches a question without answering it. The models
+answered 3–22 and 2–16. [No-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+
 ### Same supplied-source task: GEL adapter and models served by Groq
 
 Twelve development claims (six PL, six EN), with the same supplied Wikipedia

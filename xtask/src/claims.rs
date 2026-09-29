@@ -127,6 +127,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-groq-no-answer",
+        dimension: "comparison",
+        scope: "80 frozen PL/EN questions with no correct answer: 40 invented subjects, 40 false premises about bank entries",
+        input: "right reply is UNKNOWN or rejecting the premise; answering anyway is wrong, including a GEL passage",
+        expected: "GEL answered 0 of 40 invented and 6 of 40 false premises; models 3-22 and 2-16",
+        counterexample: "read as GEL never answering a question without an answer, or as better than every model",
+        source: "docs/GEL-BESIDE-GROQ-NO-ANSWER.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
