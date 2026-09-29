@@ -97,6 +97,11 @@ const EXCLUSIONS: &[(&str, &str)] = &[
 /// Each must run and pass exactly once on every platform.
 const PARTIAL_BRANCHES: &[(&str, &str, &str)] = &[
     (
+        "reproduction::tests::report_inventory_rejects_links_and_preserves_complete_hashes",
+        "unix",
+        "report symlink rejection assertion",
+    ),
+    (
         "persisted_roundtrip_and_no_temporary_files",
         "unix",
         "0600 file mode assertion",
@@ -513,6 +518,7 @@ pub fn report(args: &[String]) -> Result<(), String> {
     println!("CI_EVIDENCE=PASS");
     Ok(())
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
