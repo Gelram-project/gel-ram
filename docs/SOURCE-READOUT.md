@@ -6,7 +6,7 @@ fragment hashes, byte ranges, UTF-8 boundaries, duplicate addresses and source
 generation. Exact title lookup returns all matching node IDs: callers must
 not silently pick one when a title is ambiguous.
 
-This is NOT a language model, a semantic search engine, a truth verifier, or
+This readout module is NOT a language model, a semantic search engine, a truth verifier, or
 proof that an ORB encodes the claimed text. Pins must come from a trusted
 manifest, not from the same untrusted response as the data. Hashes alone are
 not signatures. No network, conversation, media or answer generation is included.
