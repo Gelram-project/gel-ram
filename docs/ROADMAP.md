@@ -63,7 +63,7 @@ Merged after the v0.5.1 tag; they belong to the next release.
 | README "Evidence you can inspect": figures drawn from the recorded public data, goals labelled as not achieved | fd7a469 (PR #32) | `tools/readme_presentation.rs`, workflow `readme-presentation` | [README](../README.md) | a human review of the rendered page |
 | The project goal stated as a goal, not a result | 0dc4c64 (PR #34) | `tools/readme_presentation.rs` | [README](../README.md) | — |
 | What is different here and what can be checked without the private code; pages brought up to date after an external review | 7367313 (PR #35) | `xtask docs-refs`, `xtask answer-bench` | [README](../README.md), [verified results](VERIFIED-RESULTS.md) | an independent reading by a second reviewer |
-| Crash series: a growing collection in the public tool killed at random moments; acknowledged snapshots, partial snapshots and resume checked, registered as a `SEPARATE_GATE` claim; the author-run series on the private store registered as `MEASURED_LOCAL` | this pull request | `xtask crash-series` (5 trials in `xtask verify` on Unix) | [crash series](CRASH-SERIES.md) | a power-loss test; runs by independent operators |
+| Crash series: a growing collection in the public tool killed at random moments; acknowledged snapshots, partial snapshots and resume checked, registered as a `SEPARATE_GATE` claim; the author-run series on the private store registered as `MEASURED_LOCAL` | PR #36 | `xtask crash-series` (5 trials in `xtask verify` on Unix) | [crash series](CRASH-SERIES.md) | a power-loss test; runs by independent operators |
 
 ## v0.5.1
 
