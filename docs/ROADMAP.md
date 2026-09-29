@@ -64,6 +64,7 @@ Merged after the v0.5.1 tag; they belong to the next release.
 | The project goal stated as a goal, not a result | 0dc4c64 (PR #34) | `tools/readme_presentation.rs` | [README](../README.md) | — |
 | What is different here and what can be checked without the private code; pages brought up to date after an external review | 7367313 (PR #35) | `xtask docs-refs`, `xtask answer-bench` | [README](../README.md), [verified results](VERIFIED-RESULTS.md) | an independent reading by a second reviewer |
 | Crash series: a growing collection in the public tool killed at random moments; acknowledged snapshots, partial snapshots and resume checked, registered as a `SEPARATE_GATE` claim; the author-run series on the private store registered as `MEASURED_LOCAL` | PR #36 | `xtask crash-series` (5 trials in `xtask verify` on Unix) | [crash series](CRASH-SERIES.md) | a power-loss test; runs by independent operators |
+| Answer-or-abstain set v2: 394 new frozen questions, GEL beside three language models in one run, re-scored by `answer-bench`; registered as a `MEASURED_LOCAL` claim | PR #37 | `xtask answer-bench` | [set v2](answer-or-abstain-v2/README.md) | a question set written independently of the project; an independent reproduction |
 
 ## v0.5.1
 

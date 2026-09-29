@@ -23,7 +23,8 @@ retains its own license terms.
 | Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec; timing not measured |
 | Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |
 | Workflow and benchmark hardening (PR #19) | Fail-closed workflow permission and action-pin checks, full benchmark answer inventories and 40,000 bounded format mutants ([hardening audit](AUDIT-HARDENING.md)) | Not independent second-host acceptance |
-| Answer-or-abstain re-scoring (PR #31) | `xtask answer-bench` re-scores the recorded answers of GEL and three language models on 160 frozen questions under strict and published rules, and checks the published tables and passage hashes in every verify run ([set and method](answer-or-abstain/README.md)) | Re-scores recorded answers; it does not re-run GEL or the models |
+| Answer-or-abstain re-scoring (PR #31) | `xtask answer-bench` re-scores the recorded answers of GEL and three language models on the 160 questions of v1 and the 394 of v2 under strict and published rules, and checks the published tables and passage hashes in every verify run ([v1](answer-or-abstain/README.md), [v2](answer-or-abstain-v2/README.md)) | Re-scores recorded answers; it does not re-run GEL or the models |
+| Crash series (PR #36) | `xtask crash-series` kills the public `gel-evidence` at random moments while a collection grows; acknowledged snapshots, partial snapshots and resume are checked ([crash series](CRASH-SERIES.md)) | A process kill, not a power cut |
 
 ## Author-run measurements of the private implementation
 
@@ -38,6 +39,8 @@ identities.
 | Natural questions | 80 frozen questions: right article first for 40; 11 answers, all correct; 69 UNKNOWN | Too small a set for a precision rate | [Measured progress](MEASURED-PROGRESS.md) |
 | Beside three language models, closed book | GEL 11 correct, 0 wrong, 69 UNKNOWN; the models 10, 8 and 6 correct with 21, 28 and 11 wrong | One run; not a speed comparison or an engine ranking | [Side by side](GEL-BESIDE-GROQ.md) |
 | No-answer control | GEL answered 0 of 40 invented subjects and 6 of 40 false premises; the models 3–22 and 2–16 | One run; GEL does not always refuse | [No-answer control](GEL-BESIDE-GROQ-NO-ANSWER.md) |
+| Larger frozen set v2 | 394 questions: GEL 63 answers, 59 correct and 4 wrong; the models 80–233 wrong answers each | One run; questions written by the project's AI coding assistant | [Set v2](answer-or-abstain-v2/README.md) |
+| Kill during learning, private store | 207 trials: 0 of 235,712 confirmed records lost; every reopen check passed; every resume equal to a run without a kill | A process kill, not a power cut; a small store | [Measured progress](MEASURED-PROGRESS.md#kill-during-learning--the-private-knowledge-store) |
 
 ## Recorded Ocean full-scan baseline (historical)
 

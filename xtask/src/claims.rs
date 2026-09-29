@@ -147,6 +147,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-groq-v2",
+        dimension: "comparison",
+        scope: "394 frozen PL/EN questions drawn at random (answer_or_abstain_v2), one run: GEL from its bank, three Groq models closed book",
+        input: "questions, accepted spellings, prompts and protocol fixed by SHA-256 before any system ran; one rule for all; the manual review listed",
+        expected: "GEL 63 answers, 59 correct, 4 wrong, 331 UNKNOWN; models 80-233 wrong answers each",
+        counterexample: "read as GEL never answering wrongly, as a speed comparison, or as independent of the question writer",
+        source: "docs/answer-or-abstain-v2/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
@@ -279,9 +289,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "answer-bench-rescoring",
         dimension: "scoring",
-        scope: "answer-or-abstain set: 80 questions with an answer, 80 without, recorded answers of four systems",
+        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer; recorded answers of four systems",
         input: "xtask answer-bench check re-scores every recorded answer with the published and strict rules",
-        expected: "the set README and the side-by-side table equal the re-scored results; passage hashes and set identity match",
+        expected: "each set README and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
         counterexample: "re-scoring read as re-running GEL or the models",
         source: "docs/answer-or-abstain/README.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),

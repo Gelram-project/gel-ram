@@ -26,6 +26,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-beside-groq-closed-book | comparison | MEASURED_LOCAL |
 | gel-beside-groq-no-answer | comparison | MEASURED_LOCAL |
 | store-kill-during-learning | persistence | MEASURED_LOCAL |
+| gel-beside-groq-v2 | comparison | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |

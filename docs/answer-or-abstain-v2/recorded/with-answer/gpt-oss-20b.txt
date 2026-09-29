@@ -1,0 +1,395 @@
+# gpt-oss-20b: answers as returned in one run (run 2026-09-29, Groq API closed book); line breaks and tabs replaced by spaces. nr, answer.
+1	12th place.
+2	Benjamin McKenzie zagrał seryjnego mordercę o imieniu John.
+3	UNKNOWN
+4	UNKNOWN
+5	12. wiek.
+6	Karl Ludwig von Borcke.
+7	12th place.
+8	UNKNOWN
+9	Kraków.
+10	Plymouth, Vermont.
+11	1945
+12	2
+13	Anioł z mieczem ognistym.
+14	UNKNOWN
+15	CCC Team.
+16	UNKNOWN
+17	Wydawnictwo Turystyczne.
+18	mięta pieprzowa
+19	12–14 mm.
+20	Occitanie.
+21	UNKNOWN
+22	William C. DeMille
+23	UNKNOWN
+24	1949
+25	12th place.
+26	UNKNOWN
+27	UNKNOWN
+28	Stark County.
+29	krajobrazy.
+30	Hershey Bears.
+31	Faculty of Law and Administration.
+32	Alaska Aviation Heritage Museum.
+33	London
+34	1925
+35	UNKNOWN
+36	Jan z Habsburga.
+37	UNKNOWN
+38	Zagreb.
+39	UNKNOWN
+40	defender
+41	UNKNOWN
+42	Szczecin.
+43	UNKNOWN
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	The Design of Everyday Things.
+48	Wakko's Wish
+49	44th place.
+50	Mateusz Sawicki.
+51	Ivan the Terrible.
+52	44th place.
+53	Sofia.
+54	Solid‑fuel rocket motor.
+55	Życie i doświadczenia autora.
+56	4th place.
+57	UNKNOWN
+58	King Æthelfrith.
+59	kash‑pot
+60	John Gould.
+61	Tricuspid (atrioventricular) valve.
+62	UNKNOWN
+63	Octonions.
+64	UNKNOWN
+65	2005
+66	czerwone
+67	Order of Polonia Restituta (Knight's Cross).
+68	UNKNOWN
+69	1905
+70	Betelgeuse: Księga Cieni
+71	UNKNOWN
+72	UNKNOWN
+73	12
+74	1944‑06‑04.
+75	11 August 1984
+76	State of the United Provinces of Central America.
+77	Warszawa, Polska.
+78	Royal Shakespeare Company.
+79	Friedrich von der Gracht.
+80	UNKNOWN
+81	12,000 cavalry.
+82	Władysław Kaczmarek.
+83	60 km
+84	The Last King of Scotland.
+85	Bitwa o Trzech Królów.
+86	protruding zgryz (overbite)
+87	Mureș (Mureș County)
+88	Aspiryna.
+89	1931
+90	ska punk.
+91	UNKNOWN
+92	Order of the Red Banner of Labour.
+93	Kościół Mariacki (parafia św. Marii) w Poznaniu.
+94	Europa i Azja
+95	UNKNOWN
+96	Gottlob Frege.
+97	UNKNOWN
+98	UNKNOWN
+99	Rammstein (2019)
+100	L5.
+101	białe
+102	Dogę.
+103	Wzgórze Złotego Potoku.
+104	Poligon w Kęty.
+105	627 hp.
+106	Berlin Recycling Volleys.
+107	tuberculosis
+108	Hammarby IF.
+109	Bormida.
+110	1950.
+111	UNKNOWN
+112	UNKNOWN
+113	Jordan
+114	4
+115	Juventus.
+116	private events
+117	Golan Heights.
+118	UNKNOWN
+119	UNKNOWN
+120	Ajax.
+121	Józef Górny.
+122	UNKNOWN
+123	Warszawa.
+124	FK Vëllaznimi.
+125	UNKNOWN
+126	alokacja wielka
+127	UNKNOWN
+128	1990
+129	2024
+130	Bohaterowie.
+131	New York City.
+132	UNKNOWN
+133	Tadeusz Różewicz
+134	Paris
+135	26 June 1944
+136	Prince of Orange.
+137	Tenis.
+138	UNKNOWN
+139	UNKNOWN
+140	UNKNOWN
+141	UNKNOWN
+142	Józef Górski.
+143	New Zealand
+144	UNKNOWN
+145	UNKNOWN
+146	UNKNOWN
+147	Zofia Nałkowska.
+148	Księga.
+149	Techniczna Szkoła Lotnicza.
+150	Górnik Zabrze.
+151	Do rażenia celów lądowych, w tym obiektów i ludzi.
+152	El Tren.
+153	UNKNOWN
+154	Söderhamn.
+155	Archidiecezja São Paulo.
+156	Osage.
+157	Pachnoda grandis grandis.
+158	2015
+159	6
+160	2005
+161	Jujuy.
+162	0
+163	Kraków.
+164	1975
+165	El Pájaro.
+166	UNKNOWN
+167	University of Pennsylvania.
+168	UNKNOWN
+169	2014
+170	UNKNOWN
+171	1975
+172	UNKNOWN
+173	European U16 Championship gold.
+174	Benešová
+175	8.0‑litrowy, czterokrotno‑turbo W16.
+176	stone
+177	St Andrews
+178	Vega 1.
+179	UNKNOWN
+180	Astereae.
+181	1 832 000 mieszkańców.
+182	After the Quake (Po trzęsieniu ziemi).
+183	Atmosfera techniczna jest jednostką miary ciśnienia.
+184	UNKNOWN
+185	UNKNOWN
+186	Action‑role‑playing (hack‑and‑slash) game.
+187	UNKNOWN
+188	Boogie‑woogie.
+189	Uniwersytet Warszawski.
+190	UNKNOWN
+191	ul. Słowackiego 1.
+192	UNKNOWN
+193	UNKNOWN
+194	12 000 (approximately)
+195	UNKNOWN
+196	The White Ribbon.
+197	5
+198	UNKNOWN
+199	Levski Sofia.
+200	CBC Television
+201	Sir William Henry Gage.
+202	4–1
+203	UNKNOWN
+204	Associated Press and United Press International.
+205	Celtic.
+206	Sir Robert Peel.
+207	UNKNOWN
+208	5 years.
+209	UNKNOWN
+210	South Adelaide.
+211	.32 Long
+212	Leoforos Alexandras Stadium in Athens.
+213	Oxfordshire.
+214	Atlantic County.
+215	Nukuʻalofa, Tonga.
+216	UNKNOWN
+217	Pavane pour une infante défunte.
+218	18 March 1733
+219	Aston Villa.
+220	UNKNOWN
+221	UNKNOWN
+222	UNKNOWN
+223	Frank Kush
+224	Rubber-soled shoes.
+225	1 seat.
+226	John Thomas
+227	Der Morgen
+228	Yeshaq I.
+229	John McCarthy of St Patrick's Athletic.
+230	UNKNOWN
+231	The Confessions of Nat Turner by William Styron
+232	W. G. Grace.
+233	Henry Montagu Butler.
+234	The Little Man.
+235	John McGraw
+236	Bill Diedrick
+237	UNKNOWN
+238	12
+239	UNKNOWN
+240	Non‑USAC members (foreign drivers) were ineligible for points.
+241	UNKNOWN
+242	The Adventures of Ozzie and Harriet
+243	Unknown.
+244	12
+245	New York.
+246	Low‑interest loans for housing, farming and small business.
+247	Wigan Athletic.
+248	John O'Connor
+249	0
+250	UNKNOWN
+251	Fiat 1100
+252	Cyclone Stadium in Ames, Iowa.
+253	Detroit, Michigan.
+254	Texas A&M Aggies.
+255	31 total fatalities.
+256	UNKNOWN
+257	0
+258	Greencastle, Indiana.
+259	UNKNOWN
+260	Dundee.
+261	UNKNOWN
+262	UNKNOWN
+263	Steaua București.
+264	The Artillery Ground, London.
+265	UNKNOWN
+266	UNKNOWN
+267	James Wong.
+268	Pskov.
+269	William de Burgh.
+270	Notts County.
+271	Billboard.
+272	St Mirren.
+273	Archie Griffin
+274	Bobby Brown
+275	John Hill
+276	UNKNOWN
+277	Sir Henry Harben.
+278	UNKNOWN
+279	May 4, 1899.
+280	100
+281	4
+282	John P. McGee
+283	UNKNOWN
+284	UNKNOWN
+285	John O'Connor.
+286	Grigory Shelikhov.
+287	SKA Baku
+288	UNKNOWN
+289	John H. "Jack" McDonald.
+290	Jim Beauchamp
+291	UNKNOWN
+292	12
+293	Sainte‑Famille on Île d'Orléans.
+294	Giles Fletcher the elder.
+295	William J. McGuire.
+296	Irena Szewińska
+297	Croke Park, Dublin.
+298	UNKNOWN
+299	UNKNOWN
+300	Conservative.
+301	30
+302	The Exorcist.
+303	The Secret of My Success.
+304	James J. Corbett
+305	John Mackey (Michigan)
+306	USAT Dorchester.
+307	UNKNOWN
+308	Copenhagen.
+309	2008
+310	UNKNOWN
+311	John James Fraser
+312	John Christian Schultz
+313	UNKNOWN
+314	UNKNOWN
+315	UNKNOWN
+316	UNKNOWN
+317	June 1, 1960
+318	12
+319	Czechoslovakia.
+320	UNKNOWN
+321	Corio Oval.
+322	Belgian Revolution (1830–31)
+323	Jimmy Connors.
+324	UNKNOWN
+325	12
+326	Labour.
+327	15
+328	John McCarty
+329	UNKNOWN
+330	Hector Berlioz.
+331	2D platformer.
+332	UNKNOWN
+333	156
+334	Wrexham.
+335	Sir Henry St John‑Mildmay.
+336	Sir John Thomas.
+337	UNKNOWN
+338	Reggio Calabria.
+339	UNKNOWN
+340	UNKNOWN
+341	1,000 deaths.
+342	The Green.
+343	34 points.
+344	UNKNOWN
+345	Sandra Haynie
+346	31st Primetime Emmy Awards.
+347	Columbus, Ohio.
+348	1725
+349	UNKNOWN
+350	UNKNOWN
+351	Freiburg im Breisgau.
+352	UNKNOWN
+353	Yomiuri Giants.
+354	Amphicoelias
+355	Gary Smith
+356	Paris.
+357	Lord Nelson
+358	Franz Xaver Gruber.
+359	UNKNOWN
+360	1320
+361	Mercedes.
+362	Labour.
+363	The “foul ball” rule.
+364	Sir William Henry.
+365	UNKNOWN
+366	Toronto Hockey Club.
+367	Jack Smith
+368	John J. McCarty
+369	CD Mallorca
+370	12
+371	Botev Plovdiv
+372	985 mbar
+373	0
+374	UNKNOWN
+375	Sir Henry Brinley Richards.
+376	Henry Kendall.
+377	Inner main-belt.
+378	92nd Air Refueling Squadron
+379	Blazer.
+380	Edward Robinson.
+381	UNKNOWN
+382	UNKNOWN
+383	Italian Socialist Party.
+384	Sir Joseph Ward.
+385	Benjamin Disraeli.
+386	UNKNOWN
+387	Soviet Union
+388	UNKNOWN
+389	UNKNOWN
+390	Ivan III.
+391	The New York Times.
+392	UNKNOWN
+393	UNKNOWN
+394	Hugh Addonizio.

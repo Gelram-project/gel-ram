@@ -242,10 +242,12 @@ Three properties, each with its evidence and its limit:
 
 - **It answers with its source, or says it does not know.** On 80 frozen
   questions it gave 11 answers, all correct, and 69 UNKNOWN, where three
-  language models answering closed book gave 11–28 wrong answers each. On 80
+  language models answering closed book gave 11–28 wrong answers each. On 394
+  new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
+  from another article; the models gave 80–233 wrong answers each. On 80
   questions without a correct answer it still answered 6 of the 40 with a false
   premise, so it does not always refuse.
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -404,6 +406,22 @@ invented subjects, 40 carry a false premise about an entry in the bank. GEL
 answered none of the invented ones and 6 of the false premises; it can still
 return a passage that matches a question without answering it. The models
 answered 3–22 and 2–16. [No-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+
+**A larger frozen set (v2).** 394 new questions (198 PL, 196 EN), drawn at
+random from the bank and frozen before any system ran, went to the same four
+systems in one run on 2026-09-29. GEL answered 63 and said UNKNOWN to 331:
+**59 correct and 4 wrong** — each wrong answer a passage from another article,
+three of them disambiguation pages, all four in Polish. The models answered
+123–283 and gave **80–233 wrong answers each**.
+
+| Same 394 questions (v2) | Answered | Correct | Wrong | UNKNOWN |
+|:---|---:|---:|---:|---:|
+| GEL RAM (local bank, answers with the source passage) | 63 | 59 | **4** | 331 |
+| GPT-OSS-120B (Groq API, closed book) | 223 | 92 | 131 | 171 |
+| GPT-OSS-20B (Groq API, closed book) | 283 | 50 | 233 | 111 |
+| Qwen3.8-27B (Groq API, closed book) | 123 | 43 | 80 | 271 |
+
+[Set v2: every question, answer and review decision](docs/answer-or-abstain-v2/README.md)
 
 ### Same supplied-source task: GEL adapter and models served by Groq
 

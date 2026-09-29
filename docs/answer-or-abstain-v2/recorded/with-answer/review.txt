@@ -1,0 +1,32 @@
+# Manual review of the recorded answers, rules fixed before the run: a verdict may change only when an answer states the expected fact in other words (to CORRECT) or matched an accepted spelling while contradicting the source or guessing several options (to WRONG). system, nr, verdict, reason.
+gpt-oss-120b	55	CORRECT	"Życie i doświadczenia autora" states the source's "tematem jest własne życie autora"; the spelling list only matched the contiguous "zycie autora".
+gpt-oss-120b	62	CORRECT	"Justin II" is the English form of "Justyn II, cesarz bizantyjski" named in the source, and "justyn ii" alone is an accepted spelling.
+gpt-oss-120b	63	CORRECT	"Octoniony" is a spelling variant of the source's "ściśle niełączne algebry, takie jak oktoniony"; the list only had "oktoniony".
+gpt-oss-120b	76	CORRECT	"Gran Colombia" is the Spanish/English name of the source's "doprowadził do rozpadu Wielkiej Kolumbii".
+gpt-oss-120b	102	CORRECT	"Dogę, głowę Republiki Weneckiej" names the doge, matching the source's "dokonywało wyboru doży"; the list only had "doża" forms.
+gpt-oss-120b	113	CORRECT	"Jordan" is the English name of the source's "Kerak (Jordania)".
+gpt-oss-120b	136	CORRECT	"William III of Orange" is the English form of the source's "Wilhelm Orański osobiście poprowadził potężne kontrnatarcie".
+gpt-oss-120b	156	CORRECT	"Osage" is the English name of the source's "terytorium plemienia Osedżów".
+gpt-oss-120b	178	CORRECT	"Vega 1" is the English transliteration of the source's "Radziecka sonda Wega 1 przeleciała obok Komety Halleya".
+gpt-oss-120b	182	CORRECT	"Kafka on the Shore" is the English title of the source's "Haruki Murakami – Kafka nad morzem (Umibe no Kafuka)".
+gpt-oss-120b	196	CORRECT	"The White Ribbon" is the English title of the source's "Michael Haneke – Biała wstążka".
+gpt-oss-120b	322	CORRECT	"Portuguese Liberal Wars" is the other established name of the source's "Portuguese Civil War" (Pedro IV vs Miguel I disputing the crown).
+gpt-oss-120b	135	WRONG	"1 lutego 1936 r." contradicts the source's "ur. 16 lutego 1936"; only the year "1936" matched.
+gpt-oss-20b	55	CORRECT	"Życie i doświadczenia autora" is the source's "tematem jest własne życie autora" in other words; the spelling list only had contiguous forms like "zycie autora".
+gpt-oss-20b	58	CORRECT	"King Æthelfrith" is the same person as the source's "została żoną Etelfryda z Bernicji"; the spelling list had "aethelfrith" but not the "Æ" ligature form.
+gpt-oss-20b	61	CORRECT	"Tricuspid (atrioventricular) valve" is the English translation of the source's "Zabieg naprawczy na zastawce trójdzielnej".
+gpt-oss-20b	63	CORRECT	"Octonions" is the English translation of the source's "ściśle niełączne algebry, takie jak oktoniony".
+gpt-oss-20b	75	CORRECT	"11 August 1984" is the English form of the source's "11 sierpnia 1984 Finał".
+gpt-oss-20b	102	CORRECT	"Dogę" is the doge (Italian/English "doge", declined in Polish), the same office as the source's "dokonywało wyboru doży".
+gpt-oss-20b	113	CORRECT	"Jordan" is the English name for the source's "Kerak (Jordania)".
+gpt-oss-20b	116	CORRECT	"private events" is the English radical-behaviorism term for the source's "Zachowania prywatne (wewnętrzne) są dostępne jedynie osobie, która je przeżywa".
+gpt-oss-20b	136	CORRECT	"Prince of Orange" is the English for "książę Orański", the person in the source's "Wilhelm Orański osobiście poprowadził potężne kontrnatarcie".
+gpt-oss-20b	156	CORRECT	"Osage" is the English name of the tribe in the source's "terytorium plemienia Osedżów".
+gpt-oss-20b	178	CORRECT	"Vega 1" is the English spelling of the source's "Radziecka sonda Wega 1 przeleciała obok Komety Halleya".
+gpt-oss-20b	196	CORRECT	"The White Ribbon" is the English title of the source's "Michael Haneke – Biała wstążka".
+gpt-oss-20b	90	WRONG	"ska punk" contradicts the source, which gives the band's genre as "melodyjną, prostą odmianę punk rocka – street punk, oi!"; the match came only from the word "punk".
+qwen3.8-27b	62	CORRECT	"Justin II" is the English spelling of "Justyn II, cesarz bizantyjski" named in the source, and the spelling list accepts "justyn ii" on its own.
+qwen3.8-27b	86	CORRECT	"Nożyce" names the scissor bite the source gives ("zgryz nożycowy"); the spelling list only had adjective forms such as "nozycowy".
+qwen3.8-27b	102	CORRECT	"Doga" is a foreign-derived form of doge, the office the source says the arengo elected ("dokonywało wyboru doży"); the spelling list only had forms of "doża".
+qwen3.8-27b	136	CORRECT	"William III" is the English name of Wilhelm III Orański, who per the source "osobiście poprowadził potężne kontrnatarcie"; the spelling list only had Polish forms such as "wilhelm iii".
+qwen3.8-27b	182	CORRECT	"Kafka na brzegu" translates the English title (Kafka on the Shore) of the book the source lists as "Kafka nad morzem (Umibe no Kafuka)"; the spelling list only had the Polish and romanized titles.

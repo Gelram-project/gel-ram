@@ -1,0 +1,395 @@
+# GEL RAM: answers recorded in one run (run 2026-09-29, set answer_or_abstain_v2). nr, answer, kind (passage = a stored source passage returned as the answer; absent = text). UNKNOWN = abstained.
+1	UNKNOWN
+2	UNKNOWN
+3	Imiesłów przejmuje po części funkcję rzeczownika, po części czasownika – twierdził Donat. Po rzeczowniku dziedziczy rodzaj i przypadki, natomiast po czasowniku czasy, znaczenie, liczbę i kształt. Odmiana imiesłowu została omówiona na przykładzie legens („czytając”)	passage
+4	Jan Luksemburski i Beatrycze Bourbon mieli dwoje dzieci: Wacław I (ur. 25 lutego 1337, zm. 7 grudnia 1383) Bonna (rok urodzenia i śmierci nieznany)	passage
+5	Bogdana (imię) Bogdana (imię) Bogdana – staropolskie imię żeńskie, złożone z członu Bog- („Bóg”, „Boga”, ale pierwotnie „los, dola, szczęście”) i -dana („dana”). Imię to mogło oznaczać „dana przez los”, później „dana przez Boga”. W źródłach polskich poświadczone od XIII wieku. Męskie odpowiedniki: Bogudan, Bogodan, Bogdan, Bohdan, Bodan. W Polsce pozostaje rzadkie. W 1994 roku wykazano 1206 kobiet o imieniu Bogdana	passage
+6	UNKNOWN
+7	UNKNOWN
+8	UNKNOWN
+9	Rodzina szlachecka przejściowo osiadła w Kętrzynie, utożsamiana przez to (błędnie) z Kętrzyńskimi herbu Cietrzew i własnego (Kętrzyński). Do Baumgartenów z koroną w herbie należeli na pewno wojskowi: Peter Christoph von Baumgarten, major pruski w 1756 oraz jego dwóch synów, poruczników i inny Baumgarten, zdymisjonowany w 1809 (lub 1806) do stopnia majora.	passage
+10	UNKNOWN
+11	UNKNOWN
+12	UNKNOWN
+13	UNKNOWN
+14	UNKNOWN
+15	CCC Development Team w sezonie 2020 CCC Development Team w sezonie 2020 CCC Development Team w sezonie 2020 – podsumowanie występów zawodowej grupy kolarskiej CCC Development Team w sezonie 2020. Od sezonu 2019 firma CCC została głównym sponsorem grupy kolarskiej BMC Racing Team, zarządzanej przez firmę Continuum Sports, tworząc drużynę CCC Team, która, będąc kontynuatorem BMC, w sezonach 2019 i 2020 występowała w dywizji UCI WorldTeams	passage
+16	Wyspa Wilkickiego na Morzu Karskim Wyspa Wilkickiego w grupie Wysp De Longa Cieśnina Wilkickiego – cieśnina pomiędzy Ziemią Północną i półwyspem Tajmyr Zalew Wilkickiego – zatoka w północno-zachodniej Nowej Ziemi Wyspy Wilkickiego – grupa wysp w archipelagu Nordenskiölda Wyspy Wilkickiego w archipelagu Wysp Komsomolskiej Prawdy	passage
+17	UNKNOWN
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	UNKNOWN
+23	Informacje o nim zbierał rosyjski szpieg porucznik Kramer, pracujący dla rosyjskiego wywiadu warszawskiego okręgu wojskowego. Odkrył on, iż Redl był osobą homoseksualną	passage
+24	UNKNOWN
+25	UNKNOWN
+26	BKS Stal BKS Stal BKS Stal Bielsko-Biała – polski klub sportowy BKS Stal Bielsko-Biała – polski klub piłkarski BKS Alupfor Bielsko-Biała – polski klub siatkarski kobiet BKS II Stal Bielsko-Biała – polski klub siatkarski kobiet Stadion Miejski w Bielsku-Białej – były stadion BKS Stal w Bielsku-Białej	passage
+27	UNKNOWN
+28	UNKNOWN
+29	Balthasar van der Ast malował początkowo pod wpływem szwagra przede wszystkim kwiaty. Później skoncentrował się na martwych naturach z owocami i egzotycznymi muszlami	passage
+30	UNKNOWN
+31	UNKNOWN
+32	UNKNOWN
+33	Ćwierćfinały Wielka Brytania–Australia Wielka Brytania 1 NSW Tennis Centre, Sydney 9 stycznia 2020 Twarda Australia 2 1 2 3 1 Cameron Norrie Nick Kyrgios 2 6 2 6 2 Daniel Evans Alex de Minaur 7	passage
+34	UNKNOWN
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	Crawford studiował na University of California w Los Angeles, gdzie w latach 2006–2008 grał w drużynie uniwersyteckiej UCLA Bruins. W 2006 wraz z reprezentacją Stanów Zjednoczonych zdobył złoty medal na uniwersjadzie w Hawanie	passage
+39	UNKNOWN
+40	UNKNOWN
+41	UNKNOWN
+42	UNKNOWN
+43	UNKNOWN
+44	UNKNOWN
+45	Akcja Komitatów Akcja Komitatów Akcja Komitatów – masowa akcja uchwalania w 1831 przez szlachtę poszczególnych dzielnic węgierskich (komitatów) petycji do austriackiego cesarza Franciszka II Habsburga, w których formułowano żądanie opowiedzenia się po stronie walczącej z Rosją Polski (powstanie listopadowe)	passage
+46	UNKNOWN
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	Car Iwan Groźny Car Iwan Groźny Iwan IV Groźny Car Iwan Groźny (film) Car Iwan Groźny i jego syn Iwan 16 listopada 1581 roku	passage
+52	UNKNOWN
+53	UNKNOWN
+54	UNKNOWN
+55	Autobiografia Autobiografia Okładka pierwszego wydania autobiografii Benjamina Franklina z roku 1793 Autobiografia (gr. autós „sam” + bíos „życie” + gráphō „piszę”) – utwór piśmienniczy, którego tematem jest własne życie autora, jego koleje losów i czyny, zdarzenia, których był świadkiem, doświadczenia, które nabywał, ewolucja zapatrywań i postawy wobec świata. Innymi słowy: biografia jakiejś osoby (całościowa lub fragmentaryczna) przez nią samą napisana.	passage
+56	UNKNOWN
+57	Alpi Graie (22) na mapie Alp z podziałem Partizione delle Alpi Tradycyjny francusko-włoski podział Alp, Partizione delle Alpi, z 1924 (wprowadzony 1926) wymienia Alpy Graickie, jako Alpi Graie (nr 22)	passage
+58	UNKNOWN
+59	UNKNOWN
+60	UNKNOWN
+61	UNKNOWN
+62	UNKNOWN
+63	Algebra alternatywna Algebra alternatywna Algebra alternatywna – algebra, w której mnożenie nie musi być łączne, ale tylko alternatywne. Czyli x ( x y ) = ( x x ) y {\displaystyle x(xy)=(xx)y} ( y x ) x = y ( x x ) {\displaystyle (yx)x=y(xx)} dla dowolnych x , y {\displaystyle x,y} należących do algebry. Każda algebra łączna jest w sposób trywialny alternatywna, ale są nimi także pewne ściśle niełączne algebry, takie jak oktoniony. Z kolei sedeniony nie są alternatywne.	passage
+64	UNKNOWN
+65	UNKNOWN
+66	UNKNOWN
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	UNKNOWN
+71	UNKNOWN
+72	UNKNOWN
+73	UNKNOWN
+74	UNKNOWN
+75	UNKNOWN
+76	UNKNOWN
+77	UNKNOWN
+78	UNKNOWN
+79	Konrad Sturmhoefel, König Albert von Sachsen. Ein Lebensbild. Voigtländer, Leipzig 1898. Georg von Schimpff, König Albert: Fünfzig Jahre Soldat. Baensch, Dresden 1893. Ernst von Körner, König Albert von Sachsen: der Soldat und Feldherr. Oestergaard, Berlin-Schöneberg 1936. Bernd Rüdiger, Wahre Geschichten um König Albert, Taucha: Tauchaer Verl., 1994.	passage
+80	13 marca przedstawiciel Komendy Głównej Związku Walki Zbrojnej, płk Leopold Okulicki, wydał rozkaz demobilizacji Oddziału Wydzielonego Wojska Polskiego mjr. Hubala	passage
+81	UNKNOWN
+82	Jan Jucha (1951–2021) – polski twórca ludowy, autor rzeźb oraz haftów o tematyce sakralnej, odznaczony honorową odznaką „Zasłużony dla Kultury Polskiej”	passage
+83	UNKNOWN
+84	UNKNOWN
+85	UNKNOWN
+86	UNKNOWN
+87	Armășeni Armășeni W Rumunii Armășeni – wieś w okręgu Vaslui, w gminie Băcești Armășeni – wieś w okręgu Vaslui, w gminie Bunești-Averești Armășeni – wieś w okręgu Harghita, w gminie Ciucsângeorgiu	passage
+88	UNKNOWN
+89	UNKNOWN
+90	UNKNOWN
+91	UNKNOWN
+92	UNKNOWN
+93	UNKNOWN
+94	UNKNOWN
+95	UNKNOWN
+96	Asercja (logika) Asercja (logika) Asercja – uznanie jakiegoś zdania za prawdziwe. Pojęcie asercji wprowadzone zostało do logiki przez Gottloba Fregego	passage
+97	UNKNOWN
+98	UNKNOWN
+99	UNKNOWN
+100	UNKNOWN
+101	UNKNOWN
+102	UNKNOWN
+103	Na Wilczej Górze w Złotym Potoku (okolice ul. Polnej) znajduje się kapliczka upamiętniająca powstańców styczniowych. W 1983 roku umieszczono na niej tablicę poświęconą św. Adamowi Chmielowskiemu, który był ranny w bitwie pod Mełchowem	passage
+104	Dywizje Korpusu przebywające w lecie 1956 na poligonie w Biedrusku zostały użyte do akcji przeciw demonstrantom podczas tzw. wydarzeń czerwcowych w Poznaniu. 28 czerwca 1956 o 11.30. czasowo pełniący obowiązki dowódcy 2 Korpusu Pancernego otrzymał od szefa Sztabu Generalnego Jerzego Bordziłowskiego zarządzenie nakazujące ogłoszenie alarmu bojowego dla oddziałów korpusu i postawienie ich w stan gotowości bojowej. Płk Lach ogłosił alarm, a jednostki 10 i 19 DPanc o 14:00 28 czerwca 1956 osiągnęły gotowość bojową	passage
+105	UNKNOWN
+106	UNKNOWN
+107	UNKNOWN
+108	UNKNOWN
+109	UNKNOWN
+110	UNKNOWN
+111	UNKNOWN
+112	UNKNOWN
+113	UNKNOWN
+114	UNKNOWN
+115	UNKNOWN
+116	UNKNOWN
+117	UNKNOWN
+118	UNKNOWN
+119	UNKNOWN
+120	UNKNOWN
+121	UNKNOWN
+122	UNKNOWN
+123	UNKNOWN
+124	UNKNOWN
+125	UNKNOWN
+126	UNKNOWN
+127	UNKNOWN
+128	UNKNOWN
+129	Już w październiku 2007 roku ówczesny szef Renault zdradził w jednym z wywiadów, że francuska marka planuje powrócić na rynek lekkich samochodów sportowych sygnowanych logiem Alpine. Wstępnie do powrotu marki miało dojść po 2010 roku	passage
+130	UNKNOWN
+131	UNKNOWN
+132	UNKNOWN
+133	Ballada o dwóch siostrach Ballada o dwóch siostrach Ballada o dwóch siostrach – wiersz Konstantego Ildefonsa Gałczyńskiego. Wiersz pochodzi z poematu Kolczyki Izoldy z 1946 roku	passage
+134	UNKNOWN
+135	UNKNOWN
+136	UNKNOWN
+137	UNKNOWN
+138	UNKNOWN
+139	UNKNOWN
+140	UNKNOWN
+141	UNKNOWN
+142	UNKNOWN
+143	UNKNOWN
+144	UNKNOWN
+145	UNKNOWN
+146	UNKNOWN
+147	UNKNOWN
+148	UNKNOWN
+149	1 lutego Techniczna Oficerska Szkoła Wojsk Lotniczych w Oleśnicy została przeformowana w Centralny Ośrodek Szkolenia Specjalistów Technicznych Wojsk Lotniczych według etatu Nr 74/041	passage
+150	UNKNOWN
+151	Bomba odłamkowa Bomba odłamkowa Bomba odłamkowa – bomba lotnicza o grubej skorupie rozrywającej się na liczne ciężkie odłamki lub o cienkiej skorupie napełnionej odłamkami; używana jest do rażenia wojsk, transportu samochodowego, sprzętu lotniczego itp	passage
+152	UNKNOWN
+153	UNKNOWN
+154	UNKNOWN
+155	UNKNOWN
+156	UNKNOWN
+157	UNKNOWN
+158	Baobab Glencoe Baobab Glencoe Baobab Glencoe – najgrubszy i drugi co do wielkości baobab (Adansonia digitata) w południowej Afryce i prawdopodobnie najgrubsze drzewo na świecie. Drzewo to znajduje się na farmie Glencoe, nieopodal Hoedspruit w Prowincji Limpopo. Drzewo jest podzielone na kilka pni w pobliżu ziemi. Główny pień zapadł się w ziemię dawno temu. W listopadzie 2009 roku drzewo pękło na dwie części, pokazując dużą wypróchniałość pnia	passage
+159	UNKNOWN
+160	UNKNOWN
+161	UNKNOWN
+162	UNKNOWN
+163	UNKNOWN
+164	Losy wojenne Pawelec opisał w książkach pt. „Wspomnienia z lat młodości i II Wojny Światowej 1934 – 1945” (Lututów – Wieluń 2006) oraz „Wspomnienia z lat dojrzałości w czasach powojennych 1945-1957” (2015).	passage
+165	Bernardo „Manolete” Hernández Villaseñor (ur. 1942) – meksykański piłkarz, reprezentant kraju Bernardo Hernández de León (ur. 1993) – meksykański piłkarz	passage
+166	UNKNOWN
+167	UNKNOWN
+168	Ben Davis Ben Davis Ben Davis (ur. 1961) – brytyjski operator filmowy Ben Davis (ur. 1972) – amerykański koszykarz Ben Davis (ur. 1977) – amerykański baseballista	passage
+169	UNKNOWN
+170	UNKNOWN
+171	W 1953 roku otrzymał Order Świętego Olafa 1. klasy oraz w 1964 uzyskał Komandora Z Gwiazdą. Inne odznaczenia, które uzyskał, to medale za służbę podczas II wojny światowej.	passage
+172	UNKNOWN
+173	UNKNOWN
+174	UNKNOWN
+175	Bugatti Mistral – tył Bugatti Mistral – sylwetka W sierpniu 2022 Bugatti zaprezentowało swój kolejny w ostatnich latach model specjalny w postaci hipersamochodu Mistral, który odegrał szczególnie istotną rolę w historii rozwoju technologicznego firmy jako ostatni klasyczny spalinowy model wyposażony w sztandarowy silnik W16	passage
+176	UNKNOWN
+177	UNKNOWN
+178	UNKNOWN
+179	UNKNOWN
+180	UNKNOWN
+181	UNKNOWN
+182	UNKNOWN
+183	UNKNOWN
+184	UNKNOWN
+185	UNKNOWN
+186	UNKNOWN
+187	UNKNOWN
+188	UNKNOWN
+189	UNKNOWN
+190	UNKNOWN
+191	UNKNOWN
+192	UNKNOWN
+193	UNKNOWN
+194	UNKNOWN
+195	UNKNOWN
+196	UNKNOWN
+197	UNKNOWN
+198	Biała Dama (malowidło) Biała Dama (malowidło) Biała Dama Biała Dama Biała Dama z Brandbergu (ang. The White Lady, niem. Weiße Dame) – malowidło naskalne w masywie Brandberg w zachodniej Namibii, odkryte przez niemieckiego geologa Reinharda Maacka w 1918 roku.	passage
+199	UNKNOWN
+200	UNKNOWN
+201	UNKNOWN
+202	UNKNOWN
+203	UNKNOWN
+204	UNKNOWN
+205	UNKNOWN
+206	UNKNOWN
+207	UNKNOWN
+208	During the campaign process, several charges were leveled against Mirabeau Lamar. First, in June 1838, Lamar's opponents claimed that he was constitutionally ineligible for the office of the presidency because he had not been a citizen of Texas for at least three years.	passage
+209	UNKNOWN
+210	UNKNOWN
+211	UNKNOWN
+212	UNKNOWN
+213	The antenna of the Empire State Building in New York City is added to the building. Nikolaus Pevsner publishes the first in his Buildings of England series for Penguin Books, the volume on Nottinghamshire. Norman Jewson publishes his autobiographical By Chance I did Rove.	passage
+214	UNKNOWN
+215	UNKNOWN
+216	UNKNOWN
+217	UNKNOWN
+218	UNKNOWN
+219	UNKNOWN
+220	UNKNOWN
+221	UNKNOWN
+222	UNKNOWN
+223	Frank Kush, who was coaching in his final collegiate game, was carried onto the field before the game and then off of the field following Arizona State's upset.	passage
+224	UNKNOWN
+225	UNKNOWN
+226	UNKNOWN
+227	March — The Shanghai radical paper The Alarm Bell is shut down under German pressure March 31 - The British Indian Army and the Qing dynasty garrison troops in charge of Qumei Xingu exchanged fire. The British Indian Army slaughtered more than 700 people with machine guns and artillery.	passage
+228	UNKNOWN
+229	UNKNOWN
+230	UNKNOWN
+231	UNKNOWN
+232	UNKNOWN
+233	UNKNOWN
+234	UNKNOWN
+235	UNKNOWN
+236	UNKNOWN
+237	UNKNOWN
+238	UNKNOWN
+239	UNKNOWN
+240	UNKNOWN
+241	UNKNOWN
+242	UNKNOWN
+243	UNKNOWN
+244	UNKNOWN
+245	UNKNOWN
+246	The Social Credit Party ran a campaign advocating for the provincial government to provide low-interest loans to Albertans for housing, farming and small business purposes.	passage
+247	UNKNOWN
+248	UNKNOWN
+249	UNKNOWN
+250	UNKNOWN
+251	UNKNOWN
+252	UNKNOWN
+253	UNKNOWN
+254	UNKNOWN
+255	UNKNOWN
+256	UNKNOWN
+257	UNKNOWN
+258	UNKNOWN
+259	UNKNOWN
+260	UNKNOWN
+261	UNKNOWN
+262	UNKNOWN
+263	UNKNOWN
+264	UNKNOWN
+265	In December 2004, Stonewall News Northwest reviewer Christopher Lawrence criticized the acting and improvisation in 10 Attitudes as "border[line] shallow"; he also criticized the sound quality and the use of "home video camera" cinematography.	passage
+266	UNKNOWN
+267	UNKNOWN
+268	UNKNOWN
+269	UNKNOWN
+270	UNKNOWN
+271	The album received praise from music critics, with Billboard describing the album as Harris's "most surefire bid to step out of the “Produced By” shadows and become a recognizable U.S. pop artist on his own".	passage
+272	UNKNOWN
+273	UNKNOWN
+274	UNKNOWN
+275	Scene from Samuel Foote's satire Taste with the playwright cross-dressed as Lady Pentweazel (painting by Robert Smirke) January 4 – The Paper War of 1752–1753 begins with the first issue of The Covent-Garden Journal, where Henry Fielding starts a long quarrel with John Hill by declaring war against hack writers.	passage
+276	UNKNOWN
+277	UNKNOWN
+278	UNKNOWN
+279	UNKNOWN
+280	UNKNOWN
+281	UNKNOWN
+282	In the Western Produce Stakes trainer Jim Morgan owned and trained the first three home, Happy Harry relegated sister Hiver Whitenose and brother Harrys Oppo to the minor placings.	passage
+283	UNKNOWN
+284	UNKNOWN
+285	UNKNOWN
+286	Aleksey Antropov (1716–1795) - painter Ivan Betskoy (1704–1795) - education reformer Gerasim Izmailov (circa 1745 - 1795 or after) - navigator Grand Duchess Olga Pavlovna of Russia - daughter of Paul I of Russia Mark Poltoratsky (1729–1795) - singer, founder of Poltoratsky family Grigory Shelikhov (1747–1795) - merchant who founded first permanent Russian settlement in North America	passage
+287	UNKNOWN
+288	In 1892 and 1893, the Nederlandsche-Zuid-Afrikaansche Spoorweg-Maatschappij of the Zuid-Afrikaansche Republiek (Transvaal Republic) placed twenty 3 ft 6 in (1,067 mm) Cape gauge 0-6-2T locomotives in mainline service. Since the railway classified its locomotives according to their weight, these locomotives were known as the 40 Tonners.	passage
+289	UNKNOWN
+290	UNKNOWN
+291	UNKNOWN
+292	UNKNOWN
+293	UNKNOWN
+294	UNKNOWN
+295	UNKNOWN
+296	UNKNOWN
+297	UNKNOWN
+298	UNKNOWN
+299	UNKNOWN
+300	UNKNOWN
+301	UNKNOWN
+302	The following table lists known worldwide gross revenue figures for several high-grossing films that originally released in 1973. Note that this list is incomplete and is therefore not representative of the highest-grossing films worldwide in 1973. This list also includes gross revenue from later re-releases. Title Worldwide gross Country Ref The Exorcist $441,306,145	passage
+303	UNKNOWN
+304	UNKNOWN
+305	UNKNOWN
+306	As the Battle of Midway was well underway on 4 June 1942, 1,432 Nisei of the Hawaii National Guard boarded the U.S. Army transport USAT Maui, formerly a Matson liner, under the cover of night and were shipped to the mainland without saying goodbye to their family or loved ones. Under the title "Hawaiian Provisional Infantry Battalion" the week-long zigzag journey took them to a port in Oakland where they were designated the 100th Infantry Battalion (Separate) on 12 June 1942.	passage
+307	UNKNOWN
+308	14–15 August – The 1896 ICA Track Cycling World Championships are held in Copenhagen. Denmark wins a silver medal and a bronze medal at the amateur event.	passage
+309	UNKNOWN
+310	UNKNOWN
+311	UNKNOWN
+312	UNKNOWN
+313	UNKNOWN
+314	UNKNOWN
+315	UNKNOWN
+316	March – The Journal of Design and Manufactures is established by Henry Cole. May – The Seven Lamps of Architecture by John Ruskin is published.	passage
+317	UNKNOWN
+318	UNKNOWN
+319	UNKNOWN
+320	UNKNOWN
+321	UNKNOWN
+322	UNKNOWN
+323	UNKNOWN
+324	UNKNOWN
+325	UNKNOWN
+326	UNKNOWN
+327	UNKNOWN
+328	UNKNOWN
+329	UNKNOWN
+330	UNKNOWN
+331	UNKNOWN
+332	UNKNOWN
+333	UNKNOWN
+334	UNKNOWN
+335	1878 East Somerset by-election 1878 East Somerset by-election The 1878 East Somerset by-election was held on 20 March 1878. The by-election was held due to the death of the incumbent Conservative MP, Richard Bright. It was won by the unopposed	passage
+336	UNKNOWN
+337	UNKNOWN
+338	The 'Ndrangheta has expanded its operations into Northern Italy, primarily for drug trafficking and investment in legitimate businesses, which can be used for money laundering. In May 2007, twenty individuals identified as 'Ndrangheta members were arrested in Milan.	passage
+339	1959 Mahasu by-election 1959 Mahasu by-election On June 3, 1959, a by-election was held for one of the Mahasu seats in the Lok Sabha (the lower house of the Parliament of India).	passage
+340	(a,b,0) class of distributions (a,b,0) class of distributions In probability theory, a member of the (a, b, 0) class of distributions is any distribution of a discrete random variable N whose values are nonnegative integers whose probability mass function satisfies the recurrence formula p k p k − 1 = a + b k , k = 1 , 2 , 3 , … {\displaystyle {\frac {p_{k}}{p_{k-1}}}=a+{\frac {b}{k}},\qquad k=1,2,3,\dots } for some real numbers a and b, where p k = P ( N = k ) {\displaystyle p_{k}=P(N=k)} . The (a,b,0) class of distributions is also known as the Panjer,	passage
+341	UNKNOWN
+342	West Calder v Broxburn Shamrock 15 September 1888 West Calder 2–1Broxburn ShamrockWest Calder Stadium: Burngrange Park Notes ^ A-Match declared void after the referee failed to appear. ^ B-Match abandoned after 80 minutes. A replay was ordered. ^ C-Shamrock Park was unusable so Broxburn Shamrock had made arrangements to play their replayed tie with West Calder at Uphall. However, West Calder refused to play the tie away from Broxburn and protested to the SFA. It was decided to play the tie over at West Calder.	passage
+343	UNKNOWN
+344	Ramos Lleida v Algeciras 16 April 1967 Round 29 Lleida 2 – 0 Algeciras Lleida Vallejo 37' Cifré 75' Stadium: Camp d'Esports Referee: Segrelles del Pilar Mallorca v Lleida 23 April 1967 Round 30 Mallorca 0 – 0 Lleida Palma de Mallorca Stadium: Lluís Sitjar Referee: Franco Martínez	passage
+345	Sunday, June 23, 1968 Defending champion Kathy Whitworth sank a three-foot (0.9 m) putt on the final hole to tie Sandra Post and force a Monday playoff. Both shot even-par 73 on Sunday to finish at 294 (+2).	passage
+346	UNKNOWN
+347	UNKNOWN
+348	UNKNOWN
+349	UNKNOWN
+350	10 — The United States Supreme Court issues its ruling in Baker v. Nelson, in which the plaintiffs sought to have Minnesota's restriction of marriage to different-sex couples declared unconstitutional. The Court dismisses the case "for want of a substantial federal question".	passage
+351	1968 Black Forest tornado 1968 Black Forest tornado The 1968 Black Forest tornado, also called "Pforzheimer Tornado", was a powerful and long-lived F4 tornado that damaged about 3700 buildings in Pforzheim and the surrounding municipalities in Germany.	passage
+352	UNKNOWN
+353	UNKNOWN
+354	UNKNOWN
+355	UNKNOWN
+356	UNKNOWN
+357	19 April – The Perseverance, leaves Sydney looking for flax trading possibilities in the south of the South Island. During the trip she is the first ship known to have entered Bluff Harbour.	passage
+358	UNKNOWN
+359	UNKNOWN
+360	UNKNOWN
+361	UNKNOWN
+362	UNKNOWN
+363	February 17 – The Missouri Court of Appeals holds that a fan injured by a foul ball at a 1910 Kansas City Blues game was not entitled to damages from the team since he had chosen to sit in a seat unprotected by a screen when such seats were available, establishing the Baseball Rule in United States tort law.	passage
+364	UNKNOWN
+365	UNKNOWN
+366	UNKNOWN
+367	UNKNOWN
+368	UNKNOWN
+369	UNKNOWN
+370	UNKNOWN
+371	UNKNOWN
+372	UNKNOWN
+373	UNKNOWN
+374	UNKNOWN
+375	UNKNOWN
+376	UNKNOWN
+377	UNKNOWN
+378	The 117th Operations Group consists of the following units: 106th Air Refueling Squadron 99th Air Refueling Squadron (attached) The 99th Air Refueling Squadron is an active duty associate unit that supports and flies the group's aircraft. 117th Operations Support Flight	passage
+379	UNKNOWN
+380	John Kitto, a writer and biblical scholar, documented details of the earthquakes in his 1841 book Palestine: the Physical Geography and Natural History of the Holy Land and listed first hand details of the events that were provided to him by the Scottish surgeon and naturalist Patrick Russell via his brother (also a doctor) and the Royal Society. Russell had worked as the physician at the British factory in Aleppo for many years, and followed his brother, Dr. Alexander Russel, in that position.	passage
+381	UNKNOWN
+382	UNKNOWN
+383	UNKNOWN
+384	UNKNOWN
+385	UNKNOWN
+386	UNKNOWN
+387	UNKNOWN
+388	UNKNOWN
+389	UNKNOWN
+390	UNKNOWN
+391	100 Neediest Cases 100 Neediest Cases The 100 Neediest Cases is an annual charitable campaign jointly sponsored by the St. Louis Post-Dispatch and the local chapter of the United Way. The campaign selects 100 families and individuals that are profiled in the Post-Dispatch during November and December. Local students participate in contests for the selection of companion illustrations in the profiles.	passage
+392	UNKNOWN
+393	UNKNOWN
+394	UNKNOWN

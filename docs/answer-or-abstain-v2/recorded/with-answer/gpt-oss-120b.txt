@@ -1,0 +1,395 @@
+# gpt-oss-120b: answers as returned in one run (run 2026-09-29, Groq API closed book); line breaks and tabs replaced by spaces. nr, answer.
+1	UNKNOWN
+2	Detective Nick.
+3	UNKNOWN
+4	UNKNOWN
+5	XIII wiek.
+6	UNKNOWN
+7	5‑te miejsce.
+8	UNKNOWN
+9	UNKNOWN
+10	Plymouth Notch, Vermont.
+11	1947
+12	2
+13	cherubim
+14	UNKNOWN
+15	UCI ProTeam.
+16	Półwysep Czukocki
+17	Wydawnictwo Książka i Wiedza.
+18	UNKNOWN
+19	UNKNOWN
+20	Occitanie.
+21	UNKNOWN
+22	Darryl F. Zanuck.
+23	UNKNOWN
+24	1922
+25	UNKNOWN
+26	UNKNOWN
+27	UNKNOWN
+28	Paulding County.
+29	UNKNOWN
+30	Manchester Monarchs
+31	UNKNOWN
+32	Alaska Aviation Museum
+33	Brisbane.
+34	UNKNOWN
+35	UNKNOWN
+36	z bratem Vladisławem I.
+37	Mount Hombori.
+38	İzmir
+39	The Wyatt Family.
+40	UNKNOWN
+41	Neil Jordan
+42	Szczecin.
+43	Margaret H. H.
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	The Design of Everyday Things.
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	Iwana Groźnego (cara Iwana IV).
+52	UNKNOWN
+53	Dr. Elsa Schneider
+54	solid‑propellant rocket motor
+55	Życie i doświadczenia autora.
+56	UNKNOWN
+57	4
+58	UNKNOWN
+59	kash‑pot
+60	Charles Lucien Bonaparte.
+61	Zastawka trójdzielna.
+62	Justin II.
+63	Octoniony.
+64	UNKNOWN
+65	UNKNOWN
+66	czerwone.
+67	Order of Polonia Restituta.
+68	1979
+69	UNKNOWN
+70	UNKNOWN
+71	UNKNOWN
+72	Scypion Afrykański.
+73	UNKNOWN
+74	13 września 1939.
+75	11 sierpnia 1984 roku.
+76	Gran Colombia.
+77	UNKNOWN
+78	Royal Shakespeare Company.
+79	UNKNOWN
+80	UNKNOWN
+81	UNKNOWN
+82	UNKNOWN
+83	UNKNOWN
+84	Amélie.
+85	UNKNOWN
+86	UNKNOWN
+87	Harghita.
+88	UNKNOWN
+89	1942
+90	UNKNOWN
+91	Olaus Rudbeck.
+92	UNKNOWN
+93	UNKNOWN
+94	Europa
+95	UNKNOWN
+96	UNKNOWN
+97	UNKNOWN
+98	wschodnia.
+99	Reise, Reise.
+100	L5.
+101	białą.
+102	Dogę, głowę Republiki Weneckiej.
+103	UNKNOWN
+104	UNKNOWN
+105	635 KM (467 kW)﻿
+106	Berlin Recycling Volleys.
+107	UNKNOWN
+108	UNKNOWN
+109	Bormida.
+110	UNKNOWN
+111	UNKNOWN
+112	Ignacy Skorzyński.
+113	Jordan
+114	4 cylindry.
+115	Juventus.
+116	prywatne zdarzenia.
+117	UNKNOWN
+118	UNKNOWN
+119	UNKNOWN
+120	FC Amsterdam
+121	Wiktor Paweł Skworc.
+122	UNKNOWN
+123	UNKNOWN
+124	UNKNOWN
+125	UNKNOWN
+126	alokazja wielka
+127	UNKNOWN
+128	1991
+129	2021
+130	Młodość.
+131	Manhattan, New York City.
+132	UNKNOWN
+133	Jan Brzechwa.
+134	Strasbourg.
+135	1 lutego 1936 r.
+136	William III of Orange.
+137	tenis
+138	UNKNOWN
+139	UNKNOWN
+140	UNKNOWN
+141	UNKNOWN
+142	UNKNOWN
+143	UNKNOWN
+144	UNKNOWN
+145	UNKNOWN
+146	Johann Jakob Kaup.
+147	UNKNOWN
+148	UNKNOWN
+149	Szkoła Oficerska Sił Powietrznych w Oleśnicy.
+150	Jagiellonia Białystok.
+151	celów osobowych oraz sprzętu
+152	Sirope.
+153	UNKNOWN
+154	Gothenburg.
+155	Archidiecezji São Luís do Maranhão.
+156	Osage.
+157	Carabus bogatensis japonicus
+158	UNKNOWN
+159	UNKNOWN
+160	UNKNOWN
+161	Salta.
+162	UNKNOWN
+163	Garnizon w Lwowie.
+164	UNKNOWN
+165	UNKNOWN
+166	UNKNOWN
+167	St. John’s University.
+168	UNKNOWN
+169	UNKNOWN
+170	1865
+171	UNKNOWN
+172	UNKNOWN
+173	UNKNOWN
+174	Benešová
+175	8,0‑litrowy quad‑turbo W16.
+176	UNKNOWN
+177	UNKNOWN
+178	Vega 1.
+179	UNKNOWN
+180	Eupatorieae.
+181	1 883 425 mieszkańców.
+182	Kafka on the Shore.
+183	Jednostka ciśnienia.
+184	UNKNOWN
+185	Hiroaki Sakurai.
+186	Soulslike.
+187	UNKNOWN
+188	blues
+189	UNKNOWN
+190	UNKNOWN
+191	ul. Nowy Świat.
+192	UNKNOWN
+193	Józef Piłsudski.
+194	UNKNOWN
+195	UNKNOWN
+196	The White Ribbon.
+197	4
+198	UNKNOWN
+199	UNKNOWN
+200	CBC Sports
+201	Sir Frank Souter.
+202	UNKNOWN
+203	February 27, 1857.
+204	Associated Press and United Press International.
+205	Celtic.
+206	Edwin Chadwick.
+207	UNKNOWN
+208	Three years.
+209	John T. McManus
+210	South Adelaide Football Club.
+211	.320 Short
+212	Leoforos Alexandras Stadium.
+213	Surrey
+214	UNKNOWN
+215	Teufaiva Sport Ground, Nukuʻalofa, Tonga.
+216	UNKNOWN
+217	Miroirs
+218	10 March 1733
+219	Wolverhampton Wanderers.
+220	UNKNOWN
+221	UNKNOWN
+222	UNKNOWN
+223	Frank Kush
+224	Rubber galoshes.
+225	UNKNOWN
+226	UNKNOWN
+227	UNKNOWN
+228	Yeshaq I.
+229	Mick Leech.
+230	Bob Ferguson.
+231	The Keepers of the House.
+232	W. G. Grace.
+233	Herbert Edward.
+234	Mickey
+235	Denny Mack.
+236	Erk Russell.
+237	UNKNOWN
+238	24 members.
+239	UNKNOWN
+240	UNKNOWN
+241	UNKNOWN
+242	The Twilight Zone.
+243	Wilhelm Marx.
+244	Four hostages.
+245	Minnesota.
+246	Low‑interest loans for housing, farming and small‑business development.
+247	Wrexham.
+248	John O'Neill.
+249	2
+250	UNKNOWN
+251	Ferrari 250 MM
+252	Clyde Williams Field
+253	Washington, D.C.
+254	Baylor.
+255	UNKNOWN
+256	Putney Heath, London.
+257	UNKNOWN
+258	Greencastle, Indiana.
+259	Mike Simm
+260	Dundee United.
+261	UNKNOWN
+262	UNKNOWN
+263	Steaua București.
+264	Moulsey Hurst.
+265	UNKNOWN
+266	UNKNOWN
+267	UNKNOWN
+268	UNKNOWN
+269	Stephen de Fulbourn.
+270	Blackburn Rovers.
+271	The Guardian.
+272	Rangers.
+273	Archie Griffin.
+274	UNKNOWN
+275	John Hill
+276	UNKNOWN
+277	UNKNOWN
+278	UNKNOWN
+279	UNKNOWN
+280	UNKNOWN
+281	UNKNOWN
+282	UNKNOWN
+283	Luis Ramírez Zapata
+284	Jack Vest.
+285	Thomas Moore (words) and John Stevenson (music)
+286	Grigory Shelikhov
+287	UNKNOWN
+288	M class locomotives.
+289	UNKNOWN
+290	Steve Rogers
+291	Oliver Wolcott
+292	30 members.
+293	Quebec City.
+294	Giles Fletcher the elder.
+295	UNKNOWN
+296	UNKNOWN
+297	Croke Park, Dublin.
+298	UNKNOWN
+299	UNKNOWN
+300	UNKNOWN
+301	UNKNOWN
+302	The Exorcist.
+303	The Goonies.
+304	Paddy Ryan.
+305	Steve Craig
+306	USAT Dorchester
+307	UNKNOWN
+308	Copenhagen.
+309	2008
+310	UNKNOWN
+311	UNKNOWN
+312	John Christian Schultz
+313	UNKNOWN
+314	UNKNOWN
+315	Hotham
+316	UNKNOWN
+317	June 1, 1960
+318	16 teams
+319	Czechoslovakia
+320	UNKNOWN
+321	Corio Oval.
+322	Portuguese Liberal Wars.
+323	Stan Smith.
+324	St Mirren.
+325	13
+326	UNKNOWN
+327	15
+328	UNKNOWN
+329	UNKNOWN
+330	Hector Berlioz.
+331	Platformer.
+332	John McGowan
+333	156
+334	Swindon Town.
+335	UNKNOWN
+336	UNKNOWN
+337	UNKNOWN
+338	Reggio Calabria.
+339	UNKNOWN
+340	Pearson Type I distribution.
+341	Two deaths.
+342	West Calder Park.
+343	UNKNOWN
+344	UNKNOWN
+345	Sandra Haynie
+346	31st
+347	Columbus.
+348	1705
+349	Raymond Lambert.
+350	Baker v. Nelson.
+351	Freiburg im Breisgau.
+352	UNKNOWN
+353	Yomiuri Giants.
+354	UNKNOWN
+355	UNKNOWN
+356	Bruges.
+357	Governor Bligh.
+358	Franz Xaver Gruber.
+359	UNKNOWN
+360	1257
+361	Rolls‑Royce.
+362	UNKNOWN
+363	Assumption of risk for spectators.
+364	UNKNOWN
+365	UNKNOWN
+366	Winnipeg Victorias.
+367	Rube Marquard.
+368	John H. McCarty
+369	UNKNOWN
+370	9 games
+371	UNKNOWN
+372	UNKNOWN
+373	5 saves.
+374	May 22, 1917
+375	UNKNOWN
+376	Henry Kendall.
+377	Eos family.
+378	99th Air Refueling Squadron
+379	Power suits.
+380	Edward Robinson.
+381	UNKNOWN
+382	UNKNOWN
+383	Italian Socialist Party.
+384	UNKNOWN
+385	On the advice of Prime Minister Benjamin Disraeli.
+386	UNKNOWN
+387	England
+388	UNKNOWN
+389	UNKNOWN
+390	Ivan III.
+391	The Seattle Times.
+392	Paul Hines.
+393	Dominica
+394	Hugh Addonizio.
