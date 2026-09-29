@@ -109,7 +109,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-natural-question-answers",
         dimension: "retrieval",
-        scope: "80 developer-written PL/EN questions frozen before the run, all slots searched",
+        scope: "80 PL/EN questions written by the project's AI coding assistant, frozen before the run, all slots searched",
         input: "source verification of 128 candidates; threshold from a separate 80-question calibration set",
         expected: "top-1 right article 40/80; 11 answers, all correct; 69 UNKNOWN",
         counterexample: "11 of 11 reported as a precision rate or the set treated as an independent benchmark",
