@@ -17,6 +17,11 @@ Replays rendered from the files of one recorded run on 2026-09-28, not screen
 captures. Every answer, verdict and time on screen comes from those files; the
 pacing is not execution time.
 
+No-answer control (80 questions without a correct answer):
+[all 80, 5 min 27 s](beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-80-EN.mp4) ·
+[summary, 48 s](beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-SUMMARY-EN.mp4) ·
+[conditions and limits](../docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+
 # Three films, two distinct scopes
 
 Start with the public Evidence Lab. All films are silent; elapsed times in an

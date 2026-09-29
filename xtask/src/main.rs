@@ -275,6 +275,19 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "media/beside-groq/scoreboard.png",
         "bac896d45ec9a2790fa21ac39464e3865050d537fd89df2a2fd5832961a57689",
     ),
+    // No-answer control: replays rendered from one recorded run.
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-80-EN.mp4",
+        "a4b3dd46f2bac69550b1962bef26f4082f588cc63ab5d932fe38b4ffa11d33a5",
+    ),
+    (
+        "media/beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-SUMMARY-EN.mp4",
+        "1dd0c3a66d339556e1c4962484878a1cc8e5973ce5a38697e275a6c7f014b33f",
+    ),
+    (
+        "media/beside-groq/no-answer-replies.png",
+        "29a4970928751e8565226b2ef2245b5c74bcfc0bc24515cf9b39b299148d9b30",
+    ),
     (
         "media/beside-groq/response-times.png",
         "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
