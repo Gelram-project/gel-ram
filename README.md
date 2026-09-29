@@ -18,7 +18,7 @@
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 12 SEPARATE_GATE, 16 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 17 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
 
 [Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
 
@@ -123,8 +123,10 @@ Three properties, each with its evidence and its limit:
   collection you build from your own files: add a document and cite it exactly;
   replace it and the old citation is refused.
 - **A restart should lose nothing.** The public snapshot tools keep the previous
-  copy through injected I/O failures, permission denial, SIGKILL and a full disk
-  ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). Power-loss durability is not
+  copy through injected I/O failures, permission denial and a full disk
+  ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)), and a growing collection
+  killed at random moments loses no acknowledged snapshot
+  ([crash series](docs/CRASH-SERIES.md)). Power-loss durability is not
   established.
 
 ## What you can check without the private code
@@ -135,6 +137,7 @@ cannot be re-run from this checkout. Everything around them can:
 | What | How | You need |
 |:---|:---|:---|
 | The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
+| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on Linux or macOS |
 | The scoring of every recorded answer, GEL's and the models' | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
 | The language models' side of the comparisons | send the published questions and prompts to the same models, then score your answers with `answer-bench score` ([set and method](docs/answer-or-abstain/README.md)) | a free Groq account |
 | That a private result was not changed after publication | each result lists the SHA-256 of its private evidence ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |

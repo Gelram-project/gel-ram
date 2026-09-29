@@ -150,3 +150,42 @@ data reproducible.
 | Calibration questions with reference passages | 9dd133b7eacb8e52ade3f36ac85205e551da36527c2ad41b06b27d6a8fe1d3c6 |
 | Calibration answers (128 candidates) | 119fd25af3e4d6cd34ee920e4c6d6b9c72afd7783a9f60c5c7699c027c05c1fa |
 | Test answers with verification | 50714466b576a525a4627b24165740bbc1734d5bff9ab1710e5fd6fc6469797e |
+
+## Kill during learning — the private knowledge store
+
+Author-run on 2026-09-29 on the separate private implementation, so it cannot be
+re-run from this checkout; the [crash series](CRASH-SERIES.md) runs the same kind
+of test on the public tool, and anyone can run it. The plan, the script and the
+instrument were fixed by SHA-256 before the first trial; the claim registry
+lists the result as `MEASURED_LOCAL`.
+
+The private store grows while it learns: new records are confirmed in batches
+and consolidated on disk, every 25 batches (series A) or after every batch
+(series B). The learning process was killed with SIGKILL at a random moment
+between 0.1 and 6 s; the store was then reopened from disk and checked, and the
+same learning was resumed to the end and compared with a run without a kill.
+Series C stopped the process at seven fixed points inside writing and
+consolidation.
+
+| Series | Trials | Killed while learning | Confirmed records | Confirmed records lost | Reopen check failed | Result after resume ≠ run without a kill | Killed inside an atomic write | Reopen and check, median / max |
+|:---|---:|---:|---:|---:|---:|---:|---:|:---|
+| A — consolidated every 25 batches | 100 | 84 | 213,216 | **0** | 0 | 0 | 12 | 559 / 678 ms |
+| B — consolidated after every batch | 100 | 98 | 22,320 | **0** | 0 | 0 | 56 | 472 / 685 ms |
+| C — stopped at 7 fixed points | 7 | 5 (2 more in consolidation) | 176 | **0** | 0 | 0 | 1 | 321–451 ms |
+
+A process kill is not a power cut: caches of the operating system and the disk
+are not tested. The store is small (8,000 base and 4,000 learned records per
+run), on one machine and one file system. In series B the kills fell in the
+first 6 s of a 47 s learning run, as fixed in the plan; later consolidation
+points are covered only by series C. Fifteen kills of series A came after
+learning had finished. Reopen times include process start and varied with the
+load of the machine.
+
+| Artifact | SHA-256 |
+|---|---|
+| Plan, fixed before the first trial | dcd55153b9d1a0f4ec197d465054ddc9e734ba1dbec4fd2c59f2ab0a2d9ebf29 |
+| Series script | 388a7aafb7b2fe4e2fa8316bc581748498036f44c154b4e35f85cb8fa85dbafa |
+| Instrument binary | 97e53d542d31f8980d12a5bfe9ec2d5c9a01629a8d7505aaa2eadc8687611d1b |
+| Input data checksums | 5a6d507c5fd561ca905b3a7db10aa54b92b6d3787139b389acab6b9045080c37 |
+| Per-trial results | 2af61a16c2cb71020994945d83abeca523370127fd536bdabc1a61a29c47c624 |
+| Summary | 999a42304dc5578bacd4d1b4b112c8d9e4b7b7f6a1d9eea2ecf02e8eb5378516 |

@@ -25,6 +25,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-natural-question-answers | retrieval | MEASURED_LOCAL |
 | gel-beside-groq-closed-book | comparison | MEASURED_LOCAL |
 | gel-beside-groq-no-answer | comparison | MEASURED_LOCAL |
+| store-kill-during-learning | persistence | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |
@@ -36,6 +37,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
+| crash-series-no-acknowledged-loss | persistence | SEPARATE_GATE |
 | batch-contract | interface | SEPARATE_GATE |
 | answer-bench-rescoring | scoring | SEPARATE_GATE |
 | backup-restore | persistence | SEPARATE_GATE |

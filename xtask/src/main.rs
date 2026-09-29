@@ -4,6 +4,7 @@ mod audit_io;
 mod bench_compare;
 mod ci_evidence;
 mod claims;
+mod crash_series;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
@@ -136,11 +137,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "57b44b679b96bc65dfcbb58f9d5d4e4977a7adca8604744dc6c0a98685ece131",
+        "674dae96e61aa121ed17458fffb71c6cd0521e7a37f719f946822429790fa143",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "e0c37339e4a2468ecc6771665c8c85fbb61b263a8a82139a896c081aef64dbf7",
+        "181bbbe337c7ed6effd8293f11d1102f7354ea4e4a044831cbfb4fe0968a3157",
     ),
     (
         "media/presentation/chips/01-light.svg",
@@ -417,7 +418,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -1120,6 +1121,12 @@ fn verify() -> Result<(), String> {
     claims::check(workspace_root()?)?;
     answer_bench::check(workspace_root()?)?;
     roadmap::check(workspace_root()?)?;
+    if cfg!(unix) {
+        let report = crash_series::run(&gel_evidence_binary(workspace_root()?), 5, 20_260_929)?;
+        println!("{}", report.lines().last().unwrap_or(""));
+    } else {
+        println!("CRASH_SERIES=SKIPPED not a Unix host");
+    }
     mutation_matrix::check(workspace_root()?)?;
     println!(
         "PROPERTY_MAP_FORMAT=PASS rows={}",
@@ -1265,6 +1272,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("roadmap") => roadmap::check(workspace_root()?),
+        Some("crash-series") => crash_series_cmd(&args[1..]),
         Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
@@ -1517,4 +1525,39 @@ mod tests {
         }
         assert_eq!(CLA_ACK_TICKED[0][4..], CLA_ACK_TICKED[1][4..]);
     }
+}
+
+fn gel_evidence_binary(root: &Path) -> PathBuf {
+    std::env::var_os("CARGO_TARGET_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| root.join("target"))
+        .join("release")
+        .join(format!("gel-evidence{}", std::env::consts::EXE_SUFFIX))
+}
+
+/// `crash-series [TRIALS] [SEED]`: builds the release `gel-evidence` and prints the full report.
+fn crash_series_cmd(args: &[String]) -> Result<(), String> {
+    let number = |i: usize, default: u64| -> Result<u64, String> {
+        args.get(i)
+            .map_or(Ok(default), |s| s.parse().map_err(|e| format!("{s}: {e}")))
+    };
+    let (trials, seed) = (number(0, 200)? as usize, number(1, 20_260_929)?);
+    run(
+        "cargo",
+        &[
+            "build",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            "gel-live-lab",
+            "--bin",
+            "gel-evidence",
+        ],
+    )?;
+    print!(
+        "{}",
+        crash_series::run(&gel_evidence_binary(workspace_root()?), trials, seed)?
+    );
+    Ok(())
 }
