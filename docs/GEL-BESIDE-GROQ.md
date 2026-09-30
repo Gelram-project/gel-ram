@@ -1,5 +1,9 @@
 # GEL RAM beside three language models — 80 frozen questions
 
+> **Private measurement.** GEL RAM ran on the separate private implementation;
+> this repository cannot run it on these questions. The recorded answers can be
+> re-scored with `xtask answer-bench check`.
+
 Recorded on 2026-09-28 in one run. Author-run: the GEL implementation and its
 bank are private, and the model calls need a Groq account, so this cannot be
 re-run from this checkout. The [claim registry](CLAIMS.md) lists it as
