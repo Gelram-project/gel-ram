@@ -1,0 +1,52 @@
+name: Break it — a failure you found
+description: Show GEL RAM doing the wrong thing — refusing too little, answering when it should not, losing data, or a check that cannot fail.
+title: "break-it: "
+labels: ["break-it"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Failures are the most useful reports. Please give enough to run it again. Do not include private data or unpublished private mechanisms. Reporting needs no CLA.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What did you try?
+      options:
+        - Changed bytes of a pinned file or snapshot
+        - Replaced or edited a source after citing it
+        - Killed or interrupted a process, then restarted
+        - Asked about an invented subject or with a false premise
+        - Unicode, line endings or other unusual input
+        - A check or gate that passes when it should fail
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or release tag
+      description: The exact commit SHA or release tag tested.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Commands and input
+      description: The exact commands, in order, and the input files or text (or how to create them).
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened
+      description: Paste the output. Read it first — an error may contain a local path.
+      render: text
+    validations:
+      required: true

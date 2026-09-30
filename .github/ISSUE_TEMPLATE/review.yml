@@ -1,0 +1,32 @@
+name: Review evidence
+description: Your independent reading of a result, a protocol or a claim.
+title: "review: "
+labels: ["review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A second reader is one of the open acceptance items. Say what you read, what holds and what does not. Reporting needs no CLA.
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Who is reviewing?
+      options:
+        - Independent — no involvement in GEL RAM development
+        - Contributor or otherwise affiliated with the project
+    validations:
+      required: true
+  - type: input
+    id: subject
+    attributes:
+      label: What you reviewed
+      description: The document, claim ID or pull request, and the commit.
+    validations:
+      required: true
+  - type: textarea
+    id: findings
+    attributes:
+      label: Findings
+      description: What holds, what does not, and what you could not check.
+    validations:
+      required: true

@@ -2,6 +2,21 @@
 
 GEL RAM remains Rust-only unless the project explicitly changes that engineering rule.
 
+## You do not need to write code to help
+
+Reporting needs no CLA; only code intended for merge follows the steps below.
+
+| Path | What you do | Start here |
+|---|---|---|
+| **Reproduce** | run `cargo run --locked --offline -p xtask -- reproduce NEW_DIR` on your machine and post REPRODUCTION.txt | [reproduction form](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml), [how to run it](docs/REPRODUCE.md) |
+| **Break it** | make a public tool refuse too little, lose data, or pass a check that should fail | [break-it form](https://github.com/Gelram-project/gel-ram/issues/new?template=break-it.yml) |
+| **Bring a corpus** | propose redistributable documents or questions for a public evaluation | [corpus form](https://github.com/Gelram-project/gel-ram/issues/new?template=corpus.yml) |
+| **Review evidence** | read a result, protocol or claim and say what holds | [review form](https://github.com/Gelram-project/gel-ram/issues/new?template=review.yml), [claim registry](docs/CLAIMS.md) |
+
+An independent reproduction on a second machine is the most needed report of all:
+[issue #20](https://github.com/Gelram-project/gel-ram/issues/20). Evidence that does not hold up goes to the
+[evidence integrity form](https://github.com/Gelram-project/gel-ram/issues/new?template=evidence-integrity.yml); see [SECURITY.md](SECURITY.md) for what to report privately.
+
 ## Before opening a pull request
 
 External contributors must:
