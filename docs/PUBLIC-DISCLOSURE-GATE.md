@@ -11,7 +11,13 @@ the tree (not `target` or `.git`; binary files are skipped) and fails on any of:
   list is kept by the owner outside the repository, so the gate itself names
   nothing. A finding is reported by an 8-character hash prefix.
 - **Network addresses**: IPv4 addresses outside loopback and the documentation
-  ranges 192.0.2.0/24, 198.51.100.0/24 and 203.0.113.0/24.
+  ranges 192.0.2.0/24, 198.51.100.0/24 and 203.0.113.0/24. One exception: in the
+  question files of the answer-or-abstain sets, an address found only inside the
+  last column is not a finding. That column quotes a Wikipedia passage byte for
+  byte and `answer-bench check` verifies it by SHA-256; a race time written
+  as four dot-separated numbers in a quoted results table has the shape of an
+  address. Every other
+  column and every other check applies to those files as usual.
 - **Credentials**: strings shaped like GitHub, Groq, OpenAI-style, Slack or AWS
   keys, and private key blocks.
 - **E-mail addresses** other than the published contacts
