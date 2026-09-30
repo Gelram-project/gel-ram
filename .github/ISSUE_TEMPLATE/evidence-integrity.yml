@@ -1,0 +1,43 @@
+name: Evidence integrity report
+description: A published number, hash, claim status or method that does not hold up.
+title: "evidence: "
+labels: ["evidence-integrity"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when evidence does not match what the documentation says. A security vulnerability goes to the private channel in SECURITY.md instead; personal data found in the repository goes to the private e-mail address, not to a public issue. Reporting needs no CLA.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What does not hold up?
+      options:
+        - A SHA-256 or pin that does not match the file
+        - A published number that re-scoring or re-running does not reproduce
+        - A claim whose status or scope is wrong (docs/CLAIMS.md)
+        - A document that contradicts its own evidence
+        - A flaw in the method of a benchmark or comparison
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: claim
+    attributes:
+      label: Claim ID or document
+      description: The claim ID from docs/CLAIMS.md, or the file and section.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or release tag
+    validations:
+      required: true
+  - type: textarea
+    id: check
+    attributes:
+      label: How you checked
+      description: The commands you ran and their output, or the reasoning for a method flaw.
+      render: text
+    validations:
+      required: true

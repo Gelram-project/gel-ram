@@ -1,0 +1,28 @@
+name: Bring a corpus
+description: Propose a redistributable document collection or question set for public evaluation.
+title: "corpus: "
+labels: ["corpus"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Knowledge retrieval can only be evaluated publicly on material everyone may redistribute. Link to the material; do not attach private or personal data. Reporting needs no CLA.
+  - type: input
+    id: source
+    attributes:
+      label: Where the material is published
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License or terms that allow redistribution
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Size, languages and what it would test
+      description: Documents, questions with answers, questions without an answer, false premises.
+    validations:
+      required: true

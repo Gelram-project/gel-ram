@@ -6,3 +6,6 @@ contact_links:
   - name: Commercial licensing and CLA
     url: mailto:gelram.licensing@gmail.com
     about: Contact the project privately for commercial licensing or a contributor agreement.
+  - name: Personal data found in the repository
+    url: mailto:gelram.licensing@gmail.com
+    about: Report personal or private data privately; do not quote it in a public issue.

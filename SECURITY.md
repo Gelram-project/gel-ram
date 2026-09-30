@@ -1,5 +1,18 @@
 # Security
 
+## What to report where
+
+This project publishes evidence, so a report is not only about code execution.
+
+| What you found | Where to report it |
+|---|---|
+| A security vulnerability (for example in a parser or a file-writing path) | privately, as described under [Reporting](#reporting) |
+| Personal or private data in the repository | privately, to `gelram.licensing@gmail.com`; do not quote it in public |
+| An integrity bug: a hash, pin or snapshot check that is wrong | [Evidence integrity report](https://github.com/Gelram-project/gel-ram/issues/new?template=evidence-integrity.yml) |
+| An incorrect claim or a published number that does not reproduce | [Evidence integrity report](https://github.com/Gelram-project/gel-ram/issues/new?template=evidence-integrity.yml) |
+| A flaw in the method of a benchmark or comparison | [Evidence integrity report](https://github.com/Gelram-project/gel-ram/issues/new?template=evidence-integrity.yml) |
+| A failure you can trigger: wrong answer, data loss, a check that cannot fail | [Break it](https://github.com/Gelram-project/gel-ram/issues/new?template=break-it.yml) |
+
 ## Fix policy
 
 Fixes, when made, land only on current public `main` (version line 0.5.1) and reach users through a later release. Tagged releases are not moved or patched in place. No fix, response time or support is promised.
