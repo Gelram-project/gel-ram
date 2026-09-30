@@ -1,5 +1,8 @@
 # Measured progress — author-run diagnostics
 
+> **Private measurement — not runnable from this repository.** Every result on
+> this page was produced by the author on the separate private implementation.
+
 These measurements concern a separate private implementation, not this public
 checkout. Private source, banks and credentials are not included. This is an
 aggregate disclosure, not a publicly reproducible benchmark or an LLM leaderboard.
@@ -87,7 +90,7 @@ does not represent measured execution. Existing repository licensing applies.
 
 Same private implementation and the same 1M PL/EN bank (four 250k slots) as the
 ranking section above. A verdict answers only when the best passage leads the
-runner-up by more than δ = 0.06484 per active dimension; δ was fixed in advance
+runner-up by more than a threshold that was fixed in advance
 from a different corpus and never tuned on these probes. Correct means the
 answer comes from the same article as the probe passage. Probes are stored
 passages read back and ranked within their own slot, sampled at a fixed step.
@@ -116,14 +119,14 @@ sections out changes the scope of the answer bank (Polish slots −27%, English
 paraphrases for passages sampled with a fixed seed, frozen by SHA-256 before
 any run. The
 question is not told which slot to search. A separate set of 80 calibration
-questions, sampled from other passages, fixed the verification settings (128
-candidates, lead threshold 0.12902: the largest lead of a wrong winner in
+questions, sampled from other passages, fixed the verification settings (how
+many candidates are checked and the lead threshold: the largest lead of a wrong winner in
 calibration); the test set was then run once.
 
 | Metric | Without verification | With source verification |
 |---|---:|---:|
 | Top-1 from the right article | 27/80 | 40/80 |
-| Right passage among the 128 candidates | — | 61/80 |
+| Right passage among the verified candidates | — | 61/80 |
 | Answers given | 9 (8 correct) | 11 (11 correct) |
 | UNKNOWN | 71 | 69 |
 
@@ -148,44 +151,39 @@ data reproducible.
 | Final bank, 50,000 probes | 7292c0360fc4d3c1786c7301a898ed777d126c00fae0d2f3510afcea25b60eb2 |
 | Test questions with reference passages | 9a1b13450bb4767bfdb43071d00ed0506e0a7ca718fb780b41c5ee35bb103e4a |
 | Calibration questions with reference passages | 9dd133b7eacb8e52ade3f36ac85205e551da36527c2ad41b06b27d6a8fe1d3c6 |
-| Calibration answers (128 candidates) | 119fd25af3e4d6cd34ee920e4c6d6b9c72afd7783a9f60c5c7699c027c05c1fa |
+| Calibration answers | 119fd25af3e4d6cd34ee920e4c6d6b9c72afd7783a9f60c5c7699c027c05c1fa |
 | Test answers with verification | 50714466b576a525a4627b24165740bbc1734d5bff9ab1710e5fd6fc6469797e |
 
 ## Kill during learning — the private knowledge store
 
-Author-run on 2026-09-29 on the separate private implementation, so it cannot be
-re-run from this checkout; the [crash series](CRASH-SERIES.md) runs the same kind
-of test on the public tool, and anyone can run it. The plan, the script and the
-instrument were fixed by SHA-256 before the first trial; the claim registry
-lists the result as `MEASURED_LOCAL`.
+> **Private measurement.** Author-run on 2026-09-29 on the separate private
+> implementation; it cannot be re-run from this checkout. The
+> [crash series](CRASH-SERIES.md) runs the same kind of test on the public tool,
+> and anyone can run it. The claim registry lists this result as `MEASURED_LOCAL`.
 
-The private store grows while it learns: new records are confirmed in batches
-and consolidated on disk, every 25 batches (series A) or after every batch
-(series B). The learning process was killed with SIGKILL at a random moment
-between 0.1 and 6 s; the store was then reopened from disk and checked, and the
-same learning was resumed to the end and compared with a run without a kill.
-Series C stopped the process at seven fixed points inside writing and
-consolidation.
+The private store grows while it learns and writes what it has confirmed to
+disk. The learning process was killed with SIGKILL at a seeded random moment
+(series A and B, which differ in how often the store writes to disk) or stopped
+at seven fixed points inside writing (series C). The store was then reopened
+from disk and checked, and the same learning was resumed to the end and
+compared with a run without a kill. The plan and the script were fixed before
+the first trial.
 
-| Series | Trials | Killed while learning | Confirmed records | Confirmed records lost | Reopen check failed | Result after resume ≠ run without a kill | Killed inside an atomic write | Reopen and check, median / max |
-|:---|---:|---:|---:|---:|---:|---:|---:|:---|
-| A — consolidated every 25 batches | 100 | 84 | 213,216 | **0** | 0 | 0 | 12 | 559 / 678 ms |
-| B — consolidated after every batch | 100 | 98 | 22,320 | **0** | 0 | 0 | 56 | 472 / 685 ms |
-| C — stopped at 7 fixed points | 7 | 5 (2 more in consolidation) | 176 | **0** | 0 | 0 | 1 | 321–451 ms |
+| Series | Trials | Killed while learning | Confirmed records lost | Reopen check failed | Result after resume ≠ run without a kill | Killed inside an atomic write |
+|:---|---:|---:|---:|---:|---:|---:|
+| A | 100 | 84 | **0** | 0 | 0 | 12 |
+| B | 100 | 98 | **0** | 0 | 0 | 56 |
+| C — 7 fixed points | 7 | 5 (2 more while writing) | **0** | 0 | 0 | 1 |
+
+In total 235,712 confirmed records were checked after the kills; none was lost.
 
 A process kill is not a power cut: caches of the operating system and the disk
-are not tested. The store is small (8,000 base and 4,000 learned records per
-run), on one machine and one file system. In series B the kills fell in the
-first 6 s of a 47 s learning run, as fixed in the plan; later consolidation
-points are covered only by series C. Fifteen kills of series A came after
-learning had finished. Reopen times include process start and varied with the
-load of the machine.
+are not tested. The store is small, on one machine and one file system; the
+random kills fell within the first seconds of each run, so later writing points are
+covered only by series C.
 
-| Artifact | SHA-256 |
-|---|---|
-| Plan, fixed before the first trial | dcd55153b9d1a0f4ec197d465054ddc9e734ba1dbec4fd2c59f2ab0a2d9ebf29 |
-| Series script | 388a7aafb7b2fe4e2fa8316bc581748498036f44c154b4e35f85cb8fa85dbafa |
-| Instrument binary | 97e53d542d31f8980d12a5bfe9ec2d5c9a01629a8d7505aaa2eadc8687611d1b |
-| Input data checksums | 5a6d507c5fd561ca905b3a7db10aa54b92b6d3787139b389acab6b9045080c37 |
-| Per-trial results | 2af61a16c2cb71020994945d83abeca523370127fd536bdabc1a61a29c47c624 |
-| Summary | 999a42304dc5578bacd4d1b4b112c8d9e4b7b7f6a1d9eea2ecf02e8eb5378516 |
+Evidence identity: `fc66b40594cbdc18476620f5c88891785c8dfda31fe12de8a6baa730ae86aa08`,
+the SHA-256 of the six SHA-256 hashes of the private artifacts (plan, series
+script, instrument, input checksums, per-trial results, summary), one lowercase
+hash per line in that order. It shows later tampering; it does not make the
+private data reproducible.

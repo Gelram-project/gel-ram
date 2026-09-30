@@ -149,6 +149,11 @@ An independent run of the public tools on a second machine is still missing
 
 ## Measured GEL results — scope matters
 
+> **PRIVATE MEASUREMENT — not runnable from this repository.** The GEL answers
+> and timings in this section come from the separate private implementation and
+> its private bank. What you can run yourself: the [public checks](#what-the-public-checks-cover)
+> and a re-scoring of every recorded answer (`xtask answer-bench check`).
+
 These are **author-run measurements of a separate private implementation**,
 not benchmarks of this public checkout or an LLM leaderboard.
 They are reported here without publishing the private engine.
@@ -208,7 +213,7 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 
 Measured after the v0.5.0 release on the same private 1M bank as the ranking
 rows above. GEL answers only when its best passage leads the runner-up by a
-threshold fixed in advance (0.06484, set on a different corpus); otherwise it
+threshold fixed in advance (set on a different corpus); otherwise it
 returns UNKNOWN. Three changes were applied and measured one at a time:
 
 1. identical passages, including ones the encoder cannot tell apart, are stored
@@ -239,7 +244,7 @@ slot.
 
 The questions were written by the project's AI coding assistant for randomly
 sampled passages and frozen before any run. Verification compares a question
-with the stored sources of 128 candidates; its threshold was set on a separate
+with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions (14% answered) remains the
 open problem.

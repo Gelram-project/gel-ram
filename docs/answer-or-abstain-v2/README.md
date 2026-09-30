@@ -2,6 +2,11 @@
 
 `answer_or_abstain_v2` · SHA-256 `c782b45054da7c4fa1648d2f746f643cef523323f47eaabd88042b35fe514ab9`
 
+> **Private measurement, public re-scoring.** GEL RAM answered these questions
+> once, on the separate private implementation; this repository cannot run GEL on
+> them. You can re-score every recorded answer (`xtask answer-bench check`) and
+> score your own run of the models' side (`answer-bench score v2:with-answer FILE`).
+
 394 questions (198 Polish, 196 English), each about a fact stated in one
 Wikipedia passage of the GEL bank, and the answers GEL RAM and three language
 models gave in one recorded run on 2026-09-29. This is the new frozen set the
