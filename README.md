@@ -40,9 +40,9 @@ exactly what has been checked so far.
 
 [Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
 
-> **Version 0.5.1.** The instructions below use the `v0.5.1` tag. Record the exact
+> **Version 0.5.2.** The instructions below use the `v0.5.2` tag. Record the exact
 > commit you test.
-> [Release notes](RELEASE-NOTES-v0.5.1.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+> [Release notes](RELEASE-NOTES-v0.5.2.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
 **Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
 Open that file from this checkout in a browser for the responsive blue-panel layout,
@@ -371,7 +371,7 @@ including in Windows PowerShell.
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout v0.5.1
+git checkout v0.5.2
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked

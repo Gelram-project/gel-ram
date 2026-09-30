@@ -5,8 +5,8 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- The 0.5.1 version line contains everything below; tagged releases are listed on
-  the Releases page. Tagged `v0.5.0`, `v0.4.0` and `v0.3.0` remain earlier releases.
+- The 0.5.2 version line contains everything below; tagged releases are listed on
+  the Releases page. Tagged `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0` remain earlier releases.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -51,9 +51,11 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## On main after v0.5.1
+## v0.5.2
 
-Merged after the v0.5.1 tag; they belong to the next release.
+A documentation and evidence release; public file formats and third-party dependencies
+are unchanged from v0.5.1. `xtask` gains `answer-bench` (re-scoring the recorded answers
+of the v1 to v4 sets), `crash-series` and the public disclosure gate `disclosure`.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
@@ -63,10 +65,13 @@ Merged after the v0.5.1 tag; they belong to the next release.
 | README "Evidence you can inspect": figures drawn from the recorded public data, goals labelled as not achieved | fd7a469 (PR #32) | `tools/readme_presentation.rs`, workflow `readme-presentation` | [README](../README.md) | a human review of the rendered page |
 | The project goal stated as a goal, not a result | 0dc4c64 (PR #34) | `tools/readme_presentation.rs` | [README](../README.md) | — |
 | What is different here and what can be checked without the private code; pages brought up to date after an external review | 7367313 (PR #35) | `xtask docs-refs`, `xtask answer-bench` | [README](../README.md), [verified results](VERIFIED-RESULTS.md) | an independent reading by a second reviewer |
-| Crash series: a growing collection in the public tool killed at random moments; acknowledged snapshots, partial snapshots and resume checked, registered as a `SEPARATE_GATE` claim; the author-run series on the private store registered as `MEASURED_LOCAL` | PR #36 | `xtask crash-series` (5 trials in `xtask verify` on Unix) | [crash series](CRASH-SERIES.md) | a power-loss test; runs by independent operators |
-| Answer-or-abstain set v2: 394 new frozen questions, GEL beside three language models in one run, re-scored by `answer-bench`; registered as a `MEASURED_LOCAL` claim | PR #37 | `xtask answer-bench` | [set v2](answer-or-abstain-v2/README.md) | a question set written independently of the project; an independent reproduction |
-| Answer-or-abstain set v3: 979 new frozen questions; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank, all four GEL runs on the set published; `answer-bench` also checks precision with Wilson intervals, the split by language and paired exact tests; registered as a `MEASURED_LOCAL` claim | PR #42 | `xtask answer-bench` | [set v3](answer-or-abstain-v3/README.md) | a clean held-out set for the final GEL build; a tuned BM25 baseline; an independent reproduction |
-| Answer-or-abstain set v4: 985 new questions written after the tested change was fixed, frozen before any run; passages searched with their article title and section heading; GEL at two settings beside Tantivy BM25 and SQLite FTS5 on the same bank and on the v3 bank; registered as a `MEASURED_LOCAL` claim | PR #43 | `xtask answer-bench` | [set v4](answer-or-abstain-v4/README.md) | a released build; a tuned BM25 baseline; an independent reproduction |
+| Crash series: a growing collection in the public tool killed at random moments; acknowledged snapshots, partial snapshots and resume checked, registered as a `SEPARATE_GATE` claim; the author-run series on the private store registered as `MEASURED_LOCAL` | 1075225 (PR #36) | `xtask crash-series` (5 trials in `xtask verify` on Unix) | [crash series](CRASH-SERIES.md) | a power-loss test; runs by independent operators |
+| Answer-or-abstain set v2: 394 new frozen questions, GEL beside three language models in one run, re-scored by `answer-bench`; registered as a `MEASURED_LOCAL` claim | 1f27a89 (PR #37) | `xtask answer-bench` | [set v2](answer-or-abstain-v2/README.md) | a question set written independently of the project; an independent reproduction |
+| Answer-or-abstain set v3: 979 new frozen questions; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank, all four GEL runs on the set published; `answer-bench` also checks precision with Wilson intervals, the split by language and paired exact tests; registered as a `MEASURED_LOCAL` claim | 4690933 (PR #42) | `xtask answer-bench` | [set v3](answer-or-abstain-v3/README.md) | a clean held-out set for the final GEL build; a tuned BM25 baseline; an independent reproduction |
+| Public/private boundary: author-run measurements of the private implementation labelled as such on every results page, engine telemetry removed from public pages | 0a0c089 (PR #38) | `xtask docs-refs` | [measured progress](MEASURED-PROGRESS.md) | an independent reading of the boundary |
+| Public disclosure gate in `xtask verify`: private paths, internal names (compared by hash), network addresses, credentials and e-mail addresses other than the published contacts | 2f7876a (PR #39) | `xtask disclosure` | [gate](PUBLIC-DISCLOSURE-GATE.md) | a review of meaning; the gate finds only what it is told to look for |
+| Paths for people who do not write code: break it, evidence integrity, corpus and review, with issue forms and labels | 579032d (PR #40) | — | [contributing](../CONTRIBUTING.md) | first outside reports |
+| Answer-or-abstain set v4: 985 new questions written after the tested change was fixed, frozen before any run; passages searched with their article title and section heading; GEL at two settings beside Tantivy BM25 and SQLite FTS5 on the same bank and on the v3 bank; registered as a `MEASURED_LOCAL` claim | 0190687 (PR #43) | `xtask answer-bench` | [set v4](answer-or-abstain-v4/README.md) | a released build; a tuned BM25 baseline; an independent reproduction |
 
 ## v0.5.1
 
