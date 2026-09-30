@@ -8,7 +8,7 @@
   <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. 80 natural questions, one recorded run: 11 correct answers with their source passages, 0 wrong, 69 UNKNOWN. A different experiment, not questions: 99.95% correct answers when 50,000 stored passages are read back." src="media/presentation/glance-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. 985 new frozen questions, one recorded run: 405 correct answers with their source passages, 18 wrong, 562 UNKNOWN; two BM25 search engines on the same bank: 531–558 correct and 40–41 wrong. A different experiment, not questions: 99.95% correct answers when 50,000 stored passages are read back." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
@@ -18,7 +18,7 @@
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 19 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 20 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
 
 [Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
 
@@ -118,8 +118,11 @@ Three properties, each with its evidence and its limit:
   new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
   from another article; the models gave 80–233 wrong answers each. On 80
   questions without a correct answer it still answered 6 of the 40 with a false
-  premise, so it does not always refuse.
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  premise, so it does not always refuse. On 985 newer frozen questions, written
+  after the latest change, a development build answered 423: 405 correct and 18
+  wrong; two BM25 search engines on the same bank found more (531–558 correct)
+  and gave more wrong answers (40–41).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [set v4](docs/answer-or-abstain-v4/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;

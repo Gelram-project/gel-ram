@@ -72,6 +72,7 @@ set. The decision to change GEL, however, and part of the diagnosis behind it,
 came from the first run on this set. For `gel-ram-prototype` and `gel-ram`
 this set is therefore a re-test after a fix, not an untouched held-out set.
 Only a new frozen set can give a clean held-out check of the final build.
+[v4](../answer-or-abstain-v4/README.md) records this build again on new questions (`gel-ram-v3-build`).
 
 For diagnosis only, the rankings of the first run and of the prototype were
 also read at other thresholds, including none. No setting was chosen from
@@ -142,11 +143,11 @@ sign test (McNemar's exact test) on those questions.
 | SQLite FTS5, threshold | 89.6% (85.4–92.7%) | 2.9% (2.0–4.1%) | 153 / 174 | 88 / 95 |
 | SQLite FTS5, always top 1 | 46.9% (43.8–50.0%) | 53.1% (50.0–56.2%) | 246 / 488 | 213 / 491 |
 
-| GEL RAM beside, the same questions | Correct only in GEL RAM / only in the other | Wrong only in GEL RAM / only in the other |
+| The same questions: first beside second | Correct only in the first / only in the second | Wrong only in the first / only in the second |
 |---|---:|---:|
-| GEL RAM, first run | 131 / 9 (p < 0.001) | 9 / 2 (p = 0.065) |
-| Tantivy BM25, threshold | 37 / 95 (p < 0.001) | 9 / 26 (p = 0.006) |
-| SQLite FTS5, threshold | 36 / 97 (p < 0.001) | 9 / 26 (p = 0.006) |
+| GEL RAM beside GEL RAM, first run | 131 / 9 (p < 0.001) | 9 / 2 (p = 0.065) |
+| GEL RAM beside Tantivy BM25, threshold | 37 / 95 (p < 0.001) | 9 / 26 (p = 0.006) |
+| GEL RAM beside SQLite FTS5, threshold | 36 / 97 (p < 0.001) | 9 / 26 (p = 0.006) |
 <!-- ANSWER-BENCH-RESULTS-END -->
 
 After the review, every verdict is the same under the strict rules as under

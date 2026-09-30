@@ -175,6 +175,34 @@ fn scan(text: &str, forbidden: &HashSet<&str>, users: &HashSet<&str>) -> Vec<Str
     found
 }
 
+/// Frozen answer-or-abstain question files quote Wikipedia passages byte for byte in their last
+/// column, and `answer-bench check` verifies each passage against its SHA-256. A race time
+/// written as four dot-separated numbers in a quoted results table has the shape of an IPv4 address. Only in those files,
+/// and only for that check, an address found solely inside the quoted passages is not a finding;
+/// every other column and every other check is read as usual.
+fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
+    let Some(addr) = finding.strip_prefix("network address ") else {
+        return false;
+    };
+    if !(name.starts_with("docs/answer-or-abstain") && name.ends_with("-questions.txt")) {
+        return false;
+    }
+    let outside = text
+        .lines()
+        .map(|l| {
+            if l.starts_with('#') {
+                l
+            } else {
+                l.rsplit_once('\t').map_or(l, |(head, _)| head)
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    !outside
+        .split(|c: char| !(c.is_ascii_digit() || c == '.'))
+        .any(|part| part == addr)
+}
+
 /// Scans every file of the tree (not `target` or `.git`); binary files are skipped.
 pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
     let forbidden: HashSet<&str> = FORBIDDEN.iter().copied().collect();
@@ -195,6 +223,9 @@ pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
             .display()
             .to_string();
         for finding in scan(&text, &forbidden, &users) {
+            if quoted_only_address(&name, &text, &finding) {
+                continue;
+            }
             bad.push(format!("{name}: {finding}"));
         }
     }
@@ -269,6 +300,23 @@ mod tests {
         assert!(run(&format!("task-{}", "b".repeat(30))).is_empty());
         let block = format!("-----BEGIN {} KEY-----", "PRIVATE");
         assert_eq!(run(&block).len(), 1);
+    }
+
+    #[test]
+    fn quoted_passages_are_not_read_as_addresses() {
+        let time = ["1", "15", "23", "6"].join(".");
+        let finding = format!("network address {time}");
+        let file = "docs/answer-or-abstain-v4/with-answer-questions.txt";
+        let quoted = format!("# header\n1\ten\tWho won?\tX\tx\tresults {time} X\n");
+        assert!(quoted_only_address(file, &quoted, &finding));
+        let asked = format!("1\ten\tWhat is {time}?\tX\tx\tresults {time} X\n");
+        assert!(!quoted_only_address(file, &asked, &finding));
+        assert!(!quoted_only_address("docs/NOTES.md", &quoted, &finding));
+        assert!(!quoted_only_address(
+            file,
+            &quoted,
+            "internal name (sha256 00000000)"
+        ));
     }
 
     #[test]

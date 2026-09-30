@@ -246,8 +246,11 @@ Three properties, each with its evidence and its limit:
   new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
   from another article; the models gave 80–233 wrong answers each. On 80
   questions without a correct answer it still answered 6 of the 40 with a false
-  premise, so it does not always refuse.
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  premise, so it does not always refuse. On 985 newer frozen questions, written
+  after the latest change, a development build answered 423: 405 correct and 18
+  wrong; two BM25 search engines on the same bank found more (531–558 correct)
+  and gave more wrong answers (40–41).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [set v4](docs/answer-or-abstain-v4/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -1539,39 +1542,118 @@ fn result_card(dark: bool, h: u32, text: (&str, &str), body: &str) -> String {
         body,
     )
 }
-fn glance(dark: bool, r: &Recorded, rb: &(String, String, String)) -> String {
+/// The headline set: the newest frozen question set, read from its README results block,
+/// which `answer-bench check` compares number by number with the recorded answers.
+struct Headline {
+    questions: usize,
+    pl: usize,
+    en: usize,
+    answered: usize,
+    correct: usize,
+    wrong: usize,
+    unknown: usize,
+    /// (correct, wrong) of the two search engines at the same selection rule.
+    engines: [(usize, usize); 2],
+}
+const HEADLINE_DIR: &str = "docs/answer-or-abstain-v4";
+impl Headline {
+    fn read() -> Result<Headline> {
+        let readme = fs::read_to_string(format!("{HEADLINE_DIR}/README.md"))?;
+        let row = |name: &str| -> Result<Vec<usize>> {
+            let prefix = format!("| {name} | published |");
+            let line = readme
+                .lines()
+                .find(|l| l.starts_with(&prefix))
+                .ok_or(format!("missing results row {name}"))?;
+            let mut out = Vec::new();
+            for cell in line[prefix.len()..].split('|').map(str::trim) {
+                if let Some(n) = cell.split_whitespace().next() {
+                    out.push(n.parse::<usize>()?);
+                }
+            }
+            Ok(out)
+        };
+        let g = row("GEL RAM")?;
+        let (t, f) = (
+            row("Tantivy BM25, threshold")?,
+            row("SQLite FTS5, threshold")?,
+        );
+        let text = fs::read_to_string(format!("{HEADLINE_DIR}/with-answer-questions.txt"))?;
+        let langs: Vec<&str> = text
+            .lines()
+            .filter(|l| !l.starts_with('#') && !l.is_empty())
+            .filter_map(|l| l.split('\t').nth(1))
+            .collect();
+        let pl = langs.iter().filter(|l| **l == "pl").count();
+        let en = langs.iter().filter(|l| **l == "en").count();
+        let [answered, correct, wrong, unknown, 0] = g[..] else {
+            return Err(
+                "GEL RAM row: expected answered, correct, wrong, UNKNOWN and 0 errors".into(),
+            );
+        };
+        if answered != correct + wrong
+            || answered + unknown != pl + en
+            || t.len() < 3
+            || f.len() < 3
+        {
+            return Err("headline numbers do not add up".into());
+        }
+        Ok(Headline {
+            questions: pl + en,
+            pl,
+            en,
+            answered,
+            correct,
+            wrong,
+            unknown,
+            engines: [(t[1], t[2]), (f[1], f[2])],
+        })
+    }
+    fn engines(&self) -> String {
+        let [(a, x), (b, y)] = self.engines;
+        format!(
+            "{}–{} correct and {}–{} wrong",
+            a.min(b),
+            a.max(b),
+            x.min(y),
+            x.max(y)
+        )
+    }
+}
+fn glance(dark: bool, h: &Headline, rb: &(String, String, String)) -> String {
     let t = theme(dark);
-    let (ok, wrong, unknown) = r.counts(0);
-    let low = wilson_low(ok, ok + wrong);
+    let low = wilson_low(h.correct, h.answered);
+    let precision = 100.0 * h.correct as f64 / h.answered as f64;
     let cols = [
         (
-            format!("{ok} / 80"),
+            format!("{} / {}", h.correct, h.questions),
             t.accent,
             "correct answers",
             "each with its source passage".to_string(),
         ),
         (
-            wrong.to_string(),
-            t.good,
+            h.wrong.to_string(),
+            t.ink,
             "wrong among answered",
-            format!("of {} answers · Wilson 95% ≥ {low:.2}", ok + wrong),
+            format!("precision {precision:.1}% · Wilson ≥ {:.1}%", 100.0 * low),
         ),
         (
-            unknown.to_string(),
+            h.unknown.to_string(),
             t.ink,
             "UNKNOWN",
             "said instead of guessing".to_string(),
         ),
     ];
-    let mut body = String::from(
-        r#"<text class="kick" x="40" y="48">80 NATURAL QUESTIONS · 40 POLISH, 40 ENGLISH · ONE RECORDED RUN</text>"#,
+    let mut body = format!(
+        r#"<text class="kick" x="40" y="48">{} NEW FROZEN QUESTIONS · {} POLISH, {} ENGLISH · ONE RECORDED RUN</text>"#,
+        h.questions, h.pl, h.en
     );
     for (i, (big, colour, label, note)) in cols.iter().enumerate() {
         let x = 40 + i * 285;
         body.push_str(&format!(r#"<text x="{x}" y="118" font-size="52" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="150" font-size="18" class="b">{label}</text><text x="{x}" y="174" font-size="14" class="mut">{note}</text>"#));
     }
     body.push_str(&format!(r#"<path d="M890 76V182" stroke="{}"/><text x="920" y="118" font-size="52" class="b" style="fill:{}">{}</text><text x="920" y="150" font-size="18" class="b">stored-passage read-back</text><text x="920" y="174" font-size="14" class="mut">{} probes · not questions</text>"#, t.line, t.accent, rb.2, rb.0));
-    result_card(dark, 206, ("Evidence you can inspect", &format!("On 80 natural questions GEL RAM gave {ok} correct answers, {wrong} wrong and {unknown} UNKNOWN. A different experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)), &body)
+    result_card(dark, 206, ("Evidence you can inspect", &format!("On {} new frozen questions GEL RAM gave {} correct answers, {} wrong and {} UNKNOWN; two BM25 search engines on the same bank gave {}. A different experiment, not questions: {} correct answers when {} stored passages are read back.", h.questions, h.correct, h.wrong, h.unknown, h.engines(), rb.2, rb.0)), &body)
 }
 fn path_card(dark: bool) -> String {
     let t = theme(dark);
@@ -1721,9 +1803,8 @@ fn dots(dark: bool, r: &Recorded) -> String {
         .join(". ");
     result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("{desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
 }
-fn surface(dark: bool, s: &[(&str, usize)], r: &Recorded) -> String {
+fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
     let t = theme(dark);
-    let (ok, wrong, _) = r.counts(0);
     let mut b = panel(20, 540, 400, t) + &panel(580, 600, 400, t);
     b.push_str(r#"<text class="kick" x="44" y="56">TRUTH SURFACE · CLAIMS BY STATUS</text>"#);
     for (i, (mode, n)) in s.iter().enumerate() {
@@ -1742,7 +1823,10 @@ fn surface(dark: bool, s: &[(&str, usize)], r: &Recorded) -> String {
     let items = [
         (
             "Natural question coverage",
-            format!("now {} of 80 answered, {wrong} wrong", ok + wrong),
+            format!(
+                "now {} of {} correct on a new frozen set, {} wrong",
+                h.correct, h.questions, h.wrong
+            ),
             "most of a new frozen set answered, still 0 wrong",
         ),
         (
@@ -1782,20 +1866,20 @@ fn result_path(name: &str, dark: bool) -> String {
 /// The result graphics in README order: file stem, light body, dark body and an alternative text read from the same data.
 fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let r = Recorded::read()?;
-    let (ok, wrong, unknown) = r.counts(0);
+    let h = Headline::read()?;
     let rb = readback()?;
     let s = statuses()?;
     let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
     let mut out = Vec::new();
-    let (l, d) = both(&|dark| glance(dark, &r, &rb));
-    out.push(("glance", l, d, format!("Evidence you can inspect. 80 natural questions, one recorded run: {ok} correct answers with their source passages, {wrong} wrong, {unknown} UNKNOWN. A different experiment, not questions: {} correct answers when {} stored passages are read back.", rb.2, rb.0)));
+    let (l, d) = both(&|dark| glance(dark, &h, &rb));
+    out.push(("glance", l, d, format!("Evidence you can inspect. {} new frozen questions, one recorded run: {} correct answers with their source passages, {} wrong, {} UNKNOWN; two BM25 search engines on the same bank: {}. A different experiment, not questions: {} correct answers when {} stored passages are read back.", h.questions, h.correct, h.wrong, h.unknown, h.engines(), rb.2, rb.0)));
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
     out.push(("example-41", l, d, format!("Question 41: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
     let (l, d) = both(&|dark| dots(dark, &r));
     out.push(("answer-dots", l, d, format!("{}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
-    let (l, d) = both(&|dark| surface(dark, &s, &r));
+    let (l, d) = both(&|dark| surface(dark, &s, &h));
     out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
 }
@@ -2386,9 +2470,11 @@ mod tests {
         let (ok, wrong, unknown) = r.counts(0);
         assert_eq!(ok + wrong + unknown, 80);
         let rb = readback().unwrap();
-        let g = glance(false, &r, &rb);
-        assert!(g.contains(&format!(">{ok} / 80<")));
-        assert!(g.contains(&format!(">{wrong}<")) && g.contains(&format!(">{unknown}<")));
+        let h = Headline::read().unwrap();
+        assert_eq!(h.answered + h.unknown, h.questions);
+        let g = glance(false, &h, &rb);
+        assert!(g.contains(&format!(">{} / {}<", h.correct, h.questions)));
+        assert!(g.contains(&format!(">{}<", h.wrong)) && g.contains(&format!(">{}<", h.unknown)));
         assert!(g.contains("stored-passage read-back") && g.contains("not questions"));
         assert!(g.contains(&rb.2) && g.contains(&rb.0));
         let d = dots(true, &r);
@@ -2402,10 +2488,10 @@ mod tests {
     }
     #[test]
     fn goals_are_labelled_and_claims_are_counted() {
-        let r = Recorded::read().unwrap();
+        let h = Headline::read().unwrap();
         let s = statuses().unwrap();
         for dark in [false, true] {
-            let g = surface(dark, &s, &r);
+            let g = surface(dark, &s, &h);
             assert!(g.contains("GOALS, NOT RESULTS") && g.contains("none has been"));
             assert_eq!(g.matches("· not achieved yet").count(), 4);
         }
