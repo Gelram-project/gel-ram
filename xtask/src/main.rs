@@ -5,6 +5,7 @@ mod bench_compare;
 mod ci_evidence;
 mod claims;
 mod crash_series;
+mod disclosure;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
@@ -608,6 +609,13 @@ fn rust_only_at(root: &Path) -> Result<(), String> {
     }
 }
 
+fn disclosure() -> Result<(), String> {
+    let root = workspace_root()?;
+    let mut files = Vec::new();
+    walk(root, &mut files).map_err(|e| e.to_string())?;
+    disclosure::check(root, &files)
+}
+
 fn rust_only() -> Result<(), String> {
     rust_only_at(workspace_root()?)
 }
@@ -1109,6 +1117,7 @@ fn verify() -> Result<(), String> {
     licensing()?;
     ci_policy()?;
     docs_refs()?;
+    disclosure()?;
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
     recorder_lint::check(workspace_root()?)?;
@@ -1280,6 +1289,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("licensing") => licensing(),
         Some("ci-policy") => ci_policy(),
         Some("docs-refs") => docs_refs(),
+        Some("disclosure") => disclosure(),
         Some("cla-ack") => cla_ack(),
         Some("fmt") => run("cargo", FMT_CHECK_ARGS),
         Some("clippy") => run("cargo", CLIPPY_ARGS),
