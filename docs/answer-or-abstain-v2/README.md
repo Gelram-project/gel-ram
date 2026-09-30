@@ -41,6 +41,7 @@ data file of the set; `answer-bench check` recomputes it.
 | [with-answer-questions.txt](with-answer-questions.txt) | question, expected answer, accepted spellings, source title, URL, dump, entry, passage hash, passage |
 | `recorded/with-answer/<system>.txt` | answers recorded in one run on 2026-09-29: `gel-ram`, `gpt-oss-120b`, `gpt-oss-20b`, `qwen3.8-27b` |
 | [recorded/with-answer/review.txt](recorded/with-answer/review.txt) | the manual review of those answers, with reasons |
+| [verdicts-with-answer.txt](verdicts-with-answer.txt) | the verdict of each system for each question after the review (published rules): the data of the README map; written by `answer-bench verdicts v2` and checked by `answer-bench check` |
 
 All files are tab-separated text; lines starting with `#` are comments. The
 provenance, prompts, scoring rules and the way we compare are the same as for

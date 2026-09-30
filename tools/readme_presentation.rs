@@ -162,12 +162,12 @@ const NATIVE: &str = r####"# GEL RAM
   <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-__RESULTS__
+**Knowledge you can inspect.** `SOURCE → ANSWER or UNKNOWN → EVIDENCE`: every answer
+carries its source passage, or GEL says it does not know.
 
-__FLOW__
+__HEADLINE__
 
-**Find the passage. Check the source.** Local Rust tools for exact source-bound
-quotations, stale-citation refusal and independently pinned snapshots.
+**[TRY TO BREAK IT](#dont-trust-gel-break-it)** · **[RUN THE EVIDENCE LAB](#quick-start)** · **[INSPECT EVERY CLAIM](docs/CLAIMS.md)**
 
 **What GEL RAM is building.** A speaking AI whose knowledge is printed into
 memory rather than trained into model weights, so adding knowledge needs no
@@ -177,6 +177,63 @@ speaker answers from it or says it does not know. As the memory grows, a cold
 copy is kept on disk, so that a restart or a crash loses nothing. **This is the
 goal, not a result of this repository**: the tools and measurements below state
 exactly what has been checked so far.
+
+## Don't trust GEL. Break it.
+
+Each row is a check you can run or a recorded result you can re-score. The last
+row is where GEL still fails.
+
+| Try this | What happens | Check it yourself |
+|:---|:---|:---|
+| **Change one byte** of a pinned snapshot | **REFUSED**: the pin no longer matches | [recording](media/gifs/05-integrity-light.gif) · `cargo run --locked --offline -p xtask -- verify` |
+| **Replace a source** after citing it | **OLD CITATION INVALID** | [recording](media/gifs/02-stale-light.gif) |
+| **Kill the process** while it writes | **ACKNOWLEDGED SNAPSHOTS SURVIVE**: 200 trials, 0 lost | `cargo run --locked --offline -p xtask -- crash-series` · [crash series](docs/CRASH-SERIES.md) |
+| **Ask about an invented subject** | **0 of 40 answered** (private measurement) | [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md) · `xtask answer-bench check` |
+| **Ask with a false premise** | **6 of 40 answered: GEL still fails here** (private measurement) | [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md) |
+
+**[Find another failure →](https://github.com/Gelram-project/gel-ram/issues/new?template=break-it.yml)**
+
+## 394 questions, every answer recorded
+
+__MAP_V2__
+
+[Inspect all 394 questions and every recorded answer](docs/answer-or-abstain-v2/README.md);
+`cargo run --locked --offline -p xtask -- answer-bench check` re-scores them.
+
+### Four failures worth studying
+
+In each of GEL's four wrong answers it returned a passage that names the subject
+of the question but belongs to another page. All four questions are Polish; in
+English GEL gave 29 answers, all correct.
+
+| # | Question (translated) | Expected | What GEL returned |
+|---:|:---|:---|:---|
+| 4 | How many children did Bonna of Luxembourg and John II have? | eleven | a passage about another couple, John of Luxembourg and Beatrice of Bourbon: "two children" |
+| 26 | What name did the volleyball club BKS Stal Bielsko-Biała take in 2006? | BKS Aluprof Bielsko-Biała | the disambiguation page "BKS Stal": a list of clubs |
+| 51 | The mood after the assassination of which tsar led Repin to paint *Ivan the Terrible and His Son Ivan*? | Alexander II | the disambiguation page "Car Iwan Groźny": a list of titles |
+| 168 | Whom is the cinematographer Ben Davis married to? | Camille Griffin | the disambiguation page "Ben Davis": a list of people |
+
+The open problem they show: a passage that only names the subject, or lists pages
+of the same name, must not count as an answer.
+
+## Kill it while it writes
+
+__CRASH__
+
+`cargo run --locked --offline -p xtask -- crash-series` runs it on your machine;
+[what each trial checks](docs/CRASH-SERIES.md).
+
+## Set v1 and the claim registry
+
+The first set of 80 questions, now a public diagnostic, beside three language
+models; then every claim of this repository by its status.
+
+__RESULTS__
+
+__FLOW__
+
+**Find the passage. Check the source.** Local Rust tools for exact source-bound
+quotations, stale-citation refusal and independently pinned snapshots.
 
 __FACTS__
 
@@ -1780,6 +1837,240 @@ fn result_path(name: &str, dark: bool) -> String {
     )
 }
 /// The result graphics in README order: file stem, light body, dark body and an alternative text read from the same data.
+/// Per-question verdicts of set v2 after the manual review, written and checked by `xtask answer-bench`.
+const MAP_V2: &str = "docs/answer-or-abstain-v2/verdicts-with-answer.txt";
+/// The recorded public crash series; its last line carries the totals.
+const CRASH: &str = "docs/evidence-crash/crash-series-linux.txt";
+/// GEL's wrong answers in set v2, each explained in the README table; a changed map stops the build.
+const V2_FAILURES: [usize; 4] = [4, 26, 51, 168];
+const V2_SYSTEMS: [&str; 4] = ["GEL RAM", "GPT-OSS-120B", "GPT-OSS-20B", "Qwen3.8-27B"];
+
+/// The verdict map of set v2: one row per system, one letter per question.
+struct Map {
+    rows: Vec<Vec<u8>>,
+}
+impl Map {
+    fn read() -> Result<Map> {
+        let text = fs::read_to_string(MAP_V2)?;
+        let mut rows = vec![Vec::new(); V2_SYSTEMS.len()];
+        for (i, line) in text.lines().filter(|l| !l.starts_with('#')).enumerate() {
+            let f: Vec<&str> = line.split('\t').collect();
+            if f.len() != 1 + V2_SYSTEMS.len()
+                || f[0] != (i + 1).to_string()
+                || f[1..].iter().any(|v| v.len() != 1)
+            {
+                return Err(format!("{MAP_V2}: bad line {}", i + 1).into());
+            }
+            for (s, v) in f[1..].iter().enumerate() {
+                rows[s].push(v.as_bytes()[0]);
+            }
+        }
+        let wrong: Vec<usize> = rows[0]
+            .iter()
+            .enumerate()
+            .filter(|(_, v)| **v == b'W')
+            .map(|(i, _)| i + 1)
+            .collect();
+        if wrong != V2_FAILURES {
+            return Err(format!(
+                "GEL's wrong answers in {MAP_V2} are {wrong:?}; update the failures table"
+            )
+            .into());
+        }
+        Ok(Map { rows })
+    }
+    fn count(&self, system: usize, verdict: u8) -> usize {
+        self.rows[system].iter().filter(|v| **v == verdict).count()
+    }
+    fn len(&self) -> usize {
+        self.rows[0].len()
+    }
+}
+/// Totals of the recorded public crash series: trials, acknowledged, lost, partial, resumed.
+fn crash_totals() -> Result<[usize; 5]> {
+    let text = fs::read_to_string(CRASH)?;
+    let line = text
+        .lines()
+        .rev()
+        .find(|l| l.starts_with("CRASH_SERIES=PASS "))
+        .ok_or("no CRASH_SERIES=PASS line in the recorded series")?;
+    let get = |key: &str| -> Result<usize> {
+        let v = line
+            .split(' ')
+            .find_map(|kv| kv.strip_prefix(&format!("{key}=")[..]))
+            .ok_or(format!("no {key} in the recorded series"))?;
+        Ok(v.parse()?)
+    };
+    Ok([
+        get("trials")?,
+        get("acknowledged")?,
+        get("acknowledged_lost")?,
+        get("partial")?,
+        get("resumed")?,
+    ])
+}
+/// 2683 → 2,683.
+fn thousands(n: usize) -> String {
+    let s = n.to_string();
+    let mut out = String::new();
+    for (i, c) in s.chars().enumerate() {
+        if i > 0 && (s.len() - i) % 3 == 0 {
+            out.push(',');
+        }
+        out.push(c);
+    }
+    out
+}
+/// A shade that reads on the card: light on the dark theme, deep on the light one.
+fn strong(dark: bool, shades: [&'static str; 3]) -> &'static str {
+    if dark {
+        shades[0]
+    } else {
+        shades[2]
+    }
+}
+fn headline(dark: bool, m: &Map) -> (String, String) {
+    let t = theme(dark);
+    let (c, w, u, n) = (
+        m.count(0, b'C'),
+        m.count(0, b'W'),
+        m.count(0, b'U'),
+        m.len(),
+    );
+    let model_wrong: Vec<usize> = (1..V2_SYSTEMS.len()).map(|s| m.count(s, b'W')).collect();
+    let (lo, hi) = (
+        model_wrong.iter().min().copied().unwrap_or(0),
+        model_wrong.iter().max().copied().unwrap_or(0),
+    );
+    let mut b = panel(20, 1160, 210, t);
+    b.push_str(&format!(
+        r#"<text class="kick" x="44" y="56">{n} FROZEN QUESTIONS · DRAWN AT RANDOM · ONE RECORDED RUN</text>"#
+    ));
+    for (x, value, label, colour) in [
+        (44, c, "correct", strong(dark, t.green)),
+        (244, w, "wrong", strong(dark, t.red)),
+        (384, u, "UNKNOWN", t.muted),
+    ] {
+        b.push_str(&format!(
+            r#"<text x="{x}" y="134" font-size="64" class="b" style="fill:{colour}">{value}</text><text x="{x}" y="162" font-size="15" class="mut">{label}</text>"#
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text x="660" y="100" font-size="21" class="b">GEL RAM answered {} of {n}.</text><text x="660" y="128" font-size="15" class="mut">Each answer is a stored source passage; otherwise UNKNOWN.</text><text x="660" y="152" font-size="15" class="mut">Three language models, closed book: {lo}–{hi} wrong answers.</text>"#,
+        c + w
+    ));
+    b.push_str(r#"<text x="44" y="208" font-size="13" class="mut">Private measurement · questions from the GEL bank · models closed book · not a neutral leaderboard</text>"#);
+    let alt = format!("{n} frozen questions drawn at random, one recorded run. GEL RAM answered {}: {c} correct, {w} wrong, {u} UNKNOWN. Three language models, closed book: {lo} to {hi} wrong answers. Private measurement; questions from the GEL bank; not a neutral leaderboard.", c + w);
+    (
+        result_card(dark, 250, ("GEL RAM on 394 frozen questions", &alt), &b),
+        alt,
+    )
+}
+fn map_v2(dark: bool, m: &Map) -> (String, String) {
+    let t = theme(dark);
+    let n = m.len();
+    let per_line = n.div_ceil(2);
+    let mut b = panel(20, 1160, 310, t);
+    b.push_str(&format!(
+        r#"<text class="kick" x="44" y="56">ANSWER OR ABSTAIN v2 · SAME {n} QUESTIONS, SAME RULE · ONE DOT PER QUESTION</text>"#
+    ));
+    let mut alt = Vec::new();
+    for (s, name) in V2_SYSTEMS.iter().enumerate() {
+        let (c, w, u) = (m.count(s, b'C'), m.count(s, b'W'), m.count(s, b'U'));
+        alt.push(format!("{name}: {c} correct, {w} wrong, {u} UNKNOWN"));
+        let y = 100 + s * 60;
+        b.push_str(&format!(
+            r#"<text x="44" y="{y}" font-size="16" class="b">{name}</text><text x="44" y="{}" font-size="12" class="mut">{c} correct · {w} wrong · {u} UNKNOWN</text>"#,
+            y + 18
+        ));
+        for (i, v) in m.rows[s].iter().enumerate() {
+            let cx = 252.0 + (i % per_line) as f64 * 4.58;
+            let cy = (y - 4 + (i / per_line) * 12) as f64;
+            b.push_str(&match v {
+                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.9" fill="{}"/>"#, t.green[1]),
+                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.9" fill="{}"/>"#, t.red[1]),
+                b'U' => format!(
+                    r#"<circle cx="{cx:.1}" cy="{cy}" r="1.5" fill="none" stroke="{}" stroke-width="0.8"/>"#,
+                    t.muted
+                ),
+                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.9" fill="{}"/>"#, t.amber[1]),
+            });
+        }
+    }
+    b.push_str(&format!(
+        r#"<circle cx="50" cy="318" r="4" fill="{}"/><text x="60" y="323" font-size="12" class="mut">correct</text><circle cx="124" cy="318" r="4" fill="{}"/><text x="134" y="323" font-size="12" class="mut">wrong</text><circle cx="190" cy="318" r="3.4" fill="none" stroke="{}" stroke-width="1"/><text x="200" y="323" font-size="12" class="mut">UNKNOWN</text><text x="1156" y="323" font-size="12" class="mut" text-anchor="end">Re-scored from the recorded answers by xtask answer-bench</text>"#,
+        t.green[1], t.red[1], t.muted
+    ));
+    let alt = format!(
+        "Answer or abstain v2: the same {n} questions, one dot per question. {}.",
+        alt.join(". ")
+    );
+    (
+        result_card(dark, 350, ("Every answer of set v2", &alt), &b),
+        alt,
+    )
+}
+fn crash_card(dark: bool, [trials, acked, lost, partial, resumed]: [usize; 5]) -> (String, String) {
+    let t = theme(dark);
+    let mut b = panel(20, 1160, 190, t);
+    b.push_str(r#"<text class="kick" x="44" y="56">KILL IT WHILE IT WRITES · PUBLIC TOOL · ANYONE CAN RUN IT</text>"#);
+    for (x, value, label, colour) in [
+        (44, thousands(trials), "trials", t.ink),
+        (184, thousands(acked), "acknowledged snapshots", t.ink),
+        (424, lost.to_string(), "lost", strong(dark, t.green)),
+        (514, partial.to_string(), "partial", strong(dark, t.green)),
+        (
+            624,
+            format!("{resumed}/{trials}"),
+            "resumed",
+            strong(dark, t.green),
+        ),
+    ] {
+        b.push_str(&format!(
+            r#"<text x="{x}" y="118" font-size="44" class="b" style="fill:{colour}">{value}</text><text x="{x}" y="144" font-size="14" class="mut">{label}</text>"#
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text x="1156" y="100" font-size="17" class="b" text-anchor="end">Restart. Verify. Continue.</text><text x="1156" y="130" font-size="17" class="b" text-anchor="end" style="fill:{}">PROCESS KILL IS NOT POWER LOSS</text><text x="44" y="188" font-size="13" class="mut">SIGKILL at seeded random moments while a collection grows; every acknowledged snapshot must reload exactly, none may be partial.</text>"#,
+        strong(dark, t.amber)
+    ));
+    let alt = format!("Kill it while it writes: {trials} trials of the public tool killed at random moments while it writes; {} acknowledged snapshots, {lost} lost, {partial} partial, {resumed} of {trials} resumed. A process kill is not a power cut.", thousands(acked));
+    (
+        result_card(dark, 230, ("Kill it while it writes", &alt), &b),
+        alt,
+    )
+}
+/// The v2 and crash pictures: (name, light, dark, alt).
+fn extras() -> Result<Vec<(&'static str, String, String, String)>> {
+    let m = Map::read()?;
+    let crash = crash_totals()?;
+    let mut out = Vec::new();
+    let ((l, alt), (d, _)) = (headline(false, &m), headline(true, &m));
+    out.push(("headline-v2", l, d, alt));
+    let ((l, alt), (d, _)) = (map_v2(false, &m), map_v2(true, &m));
+    out.push(("answers-v2", l, d, alt));
+    let ((l, alt), (d, _)) = (crash_card(false, crash), crash_card(true, crash));
+    out.push(("crash-series", l, d, alt));
+    Ok(out)
+}
+/// The README picture of one extra, or an error marker that the check then reports.
+fn extra_picture(name: &str) -> String {
+    match extras() {
+        Ok(v) => v
+            .iter()
+            .find(|(n, ..)| *n == name)
+            .map(|(n, _, _, alt)| {
+                themed(
+                    &result_path(n, false),
+                    &result_path(n, true),
+                    &esc(alt),
+                    1200,
+                )
+            })
+            .unwrap_or_else(|| format!("__EXTRA_ERROR__ {name}")),
+        Err(e) => format!("__EXTRA_ERROR__ {e}"),
+    }
+}
 fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let r = Recorded::read()?;
     let (ok, wrong, unknown) = r.counts(0);
@@ -2020,7 +2311,7 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((path("logo"), logo(dark, true)));
         out.push((path("logo-still"), logo(dark, false)));
     }
-    for (name, light, dark, _) in results()? {
+    for (name, light, dark, _) in results()?.into_iter().chain(extras()?) {
         out.push((result_path(name, false), light));
         out.push((result_path(name, true), dark));
     }
@@ -2073,6 +2364,9 @@ fn native_intro() -> String {
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
+        .replace("__HEADLINE__", &extra_picture("headline-v2"))
+        .replace("__MAP_V2__", &extra_picture("answers-v2"))
+        .replace("__CRASH__", &extra_picture("crash-series"))
         .replace(
             "__RESULTS__",
             &results_block().unwrap_or_else(|e| format!("__RESULTS_ERROR__ {e}")),
@@ -2317,7 +2611,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 26 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 32 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -2335,10 +2629,26 @@ mod tests {
                 "__HERO__",
                 "__GRID__",
                 "__RESULTS__",
+                "__HEADLINE__",
+                "__MAP_V2__",
+                "__CRASH__",
+                "__EXTRA_ERROR__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
         }
+    }
+    #[test]
+    fn v2_map_and_crash_series_are_read_from_the_repository() {
+        let m = Map::read().unwrap();
+        assert_eq!(m.len(), 394);
+        assert_eq!(
+            (m.count(0, b'C'), m.count(0, b'W'), m.count(0, b'U')),
+            (59, 4, 331)
+        );
+        assert_eq!(crash_totals().unwrap(), [200, 2683, 0, 0, 200]);
+        assert_eq!(thousands(2683), "2,683");
+        assert_eq!(thousands(235712), "235,712");
     }
     #[test]
     fn facts_are_read_from_the_repository() {

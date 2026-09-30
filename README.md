@@ -8,6 +8,72 @@
   <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
+**Knowledge you can inspect.** `SOURCE → ANSWER or UNKNOWN → EVIDENCE`: every answer
+carries its source passage, or GEL says it does not know.
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/headline-v2-dark.svg"><img alt="394 frozen questions drawn at random, one recorded run. GEL RAM answered 63: 59 correct, 4 wrong, 331 UNKNOWN. Three language models, closed book: 80 to 233 wrong answers. Private measurement; questions from the GEL bank; not a neutral leaderboard." src="media/presentation/headline-v2-light.svg" width="1200"></picture>
+
+**[TRY TO BREAK IT](#dont-trust-gel-break-it)** · **[RUN THE EVIDENCE LAB](#quick-start)** · **[INSPECT EVERY CLAIM](docs/CLAIMS.md)**
+
+**What GEL RAM is building.** A speaking AI whose knowledge is printed into
+memory rather than trained into model weights, so adding knowledge needs no
+fine-tuning or LoRA training. Its brain is that printed knowledge in RAM, with a
+printer that writes it in and a reader that finds it again with its source; its
+speaker answers from it or says it does not know. As the memory grows, a cold
+copy is kept on disk, so that a restart or a crash loses nothing. **This is the
+goal, not a result of this repository**: the tools and measurements below state
+exactly what has been checked so far.
+
+## Don't trust GEL. Break it.
+
+Each row is a check you can run or a recorded result you can re-score. The last
+row is where GEL still fails.
+
+| Try this | What happens | Check it yourself |
+|:---|:---|:---|
+| **Change one byte** of a pinned snapshot | **REFUSED**: the pin no longer matches | [recording](media/gifs/05-integrity-light.gif) · `cargo run --locked --offline -p xtask -- verify` |
+| **Replace a source** after citing it | **OLD CITATION INVALID** | [recording](media/gifs/02-stale-light.gif) |
+| **Kill the process** while it writes | **ACKNOWLEDGED SNAPSHOTS SURVIVE**: 200 trials, 0 lost | `cargo run --locked --offline -p xtask -- crash-series` · [crash series](docs/CRASH-SERIES.md) |
+| **Ask about an invented subject** | **0 of 40 answered** (private measurement) | [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md) · `xtask answer-bench check` |
+| **Ask with a false premise** | **6 of 40 answered: GEL still fails here** (private measurement) | [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md) |
+
+**[Find another failure →](https://github.com/Gelram-project/gel-ram/issues/new?template=break-it.yml)**
+
+## 394 questions, every answer recorded
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answers-v2-dark.svg"><img alt="Answer or abstain v2: the same 394 questions, one dot per question. GEL RAM: 59 correct, 4 wrong, 331 UNKNOWN. GPT-OSS-120B: 92 correct, 131 wrong, 171 UNKNOWN. GPT-OSS-20B: 50 correct, 233 wrong, 111 UNKNOWN. Qwen3.8-27B: 43 correct, 80 wrong, 271 UNKNOWN." src="media/presentation/answers-v2-light.svg" width="1200"></picture>
+
+[Inspect all 394 questions and every recorded answer](docs/answer-or-abstain-v2/README.md);
+`cargo run --locked --offline -p xtask -- answer-bench check` re-scores them.
+
+### Four failures worth studying
+
+In each of GEL's four wrong answers it returned a passage that names the subject
+of the question but belongs to another page. All four questions are Polish; in
+English GEL gave 29 answers, all correct.
+
+| # | Question (translated) | Expected | What GEL returned |
+|---:|:---|:---|:---|
+| 4 | How many children did Bonna of Luxembourg and John II have? | eleven | a passage about another couple, John of Luxembourg and Beatrice of Bourbon: "two children" |
+| 26 | What name did the volleyball club BKS Stal Bielsko-Biała take in 2006? | BKS Aluprof Bielsko-Biała | the disambiguation page "BKS Stal": a list of clubs |
+| 51 | The mood after the assassination of which tsar led Repin to paint *Ivan the Terrible and His Son Ivan*? | Alexander II | the disambiguation page "Car Iwan Groźny": a list of titles |
+| 168 | Whom is the cinematographer Ben Davis married to? | Camille Griffin | the disambiguation page "Ben Davis": a list of people |
+
+The open problem they show: a passage that only names the subject, or lists pages
+of the same name, must not count as an answer.
+
+## Kill it while it writes
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/crash-series-dark.svg"><img alt="Kill it while it writes: 200 trials of the public tool killed at random moments while it writes; 2,683 acknowledged snapshots, 0 lost, 0 partial, 200 of 200 resumed. A process kill is not a power cut." src="media/presentation/crash-series-light.svg" width="1200"></picture>
+
+`cargo run --locked --offline -p xtask -- crash-series` runs it on your machine;
+[what each trial checks](docs/CRASH-SERIES.md).
+
+## Set v1 and the claim registry
+
+The first set of 80 questions, now a public diagnostic, beside three language
+models; then every claim of this repository by its status.
+
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. 80 natural questions, one recorded run: 11 correct answers with their source passages, 0 wrong, 69 UNKNOWN. A different experiment, not questions: 99.95% correct answers when 50,000 stored passages are read back." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
@@ -26,15 +92,6 @@ Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale 
 
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
 quotations, stale-citation refusal and independently pinned snapshots.
-
-**What GEL RAM is building.** A speaking AI whose knowledge is printed into
-memory rather than trained into model weights, so adding knowledge needs no
-fine-tuning or LoRA training. Its brain is that printed knowledge in RAM, with a
-printer that writes it in and a reader that finds it again with its source; its
-speaker answers from it or says it does not know. As the memory grows, a cold
-copy is kept on disk, so that a restart or a crash loses nothing. **This is the
-goal, not a result of this repository**: the tools and measurements below state
-exactly what has been checked so far.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
 
