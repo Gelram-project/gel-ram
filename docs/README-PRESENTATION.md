@@ -32,11 +32,11 @@ any of these sources makes the read-only check fail until the images are rebuilt
 
 ## Preservation and source
 
-The presentation belongs to the v0.5.1 source. The exact prior README is
+The presentation belongs to the v0.5.2 source. The exact prior README is
 retained as [README-HISTORY-PRE-MULTIMEDIA.md](../README-HISTORY-PRE-MULTIMEDIA.md).
 The already existing pre-visual history also remains untouched. The new README
 keeps its technical content below the presentation unchanged, including the
-quick-start checkout of the v0.5.1 tag.
+quick-start checkout of the v0.5.2 tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.

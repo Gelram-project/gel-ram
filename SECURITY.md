@@ -15,14 +15,14 @@ This project publishes evidence, so a report is not only about code execution.
 
 ## Fix policy
 
-Fixes, when made, land only on current public `main` (version line 0.5.1) and reach users through a later release. Tagged releases are not moved or patched in place. No fix, response time or support is promised.
+Fixes, when made, land only on current public `main` (version line 0.5.2) and reach users through a later release. Tagged releases are not moved or patched in place. No fix, response time or support is promised.
 
 ## Supported versions
 
 | Version | Security fixes |
 |---|---|
 | current `main` (0.5 line) | best effort, in a later release |
-| earlier tags (v0.5.0 and older) | none |
+| earlier tags (v0.5.1 and older) | none |
 
 ## Attack surface
 
