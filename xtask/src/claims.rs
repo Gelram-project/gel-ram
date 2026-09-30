@@ -157,6 +157,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-bm25-v3",
+        dimension: "comparison",
+        scope: "979 frozen PL/EN questions drawn at random (answer_or_abstain_v3): GEL beside Tantivy BM25 and SQLite FTS5 on the same bank of 671,416 passages; all four GEL runs on the set published",
+        input: "questions, accepted spellings, plan and one selection rule fixed by SHA-256 before any run; settings of every system chosen on v1 + v2; one scoring rule for all; the manual review listed",
+        expected: "GEL 191 answers, 180 correct, 11 wrong; BM25 engines with thresholds 238-241 correct, 28 wrong each; paired: engines more correct, GEL fewer wrong",
+        counterexample: "read as GEL finding more answers than BM25, as a held-out result for the final build, or as a tuned BM25 baseline",
+        source: "docs/answer-or-abstain-v3/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
@@ -289,9 +299,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "answer-bench-rescoring",
         dimension: "scoring",
-        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer; recorded answers of four systems",
+        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979 with an answer; recorded answers of four systems (v1, v2) and eight (v3)",
         input: "xtask answer-bench check re-scores every recorded answer with the published and strict rules",
-        expected: "each set README and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
+        expected: "each set README, including the v3 precision and paired tables, and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
         counterexample: "re-scoring read as re-running GEL or the models",
         source: "docs/answer-or-abstain/README.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
