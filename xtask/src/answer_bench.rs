@@ -24,8 +24,8 @@ struct SetDef {
     systems: &'static [System],
     /// Whether the README also shows precision and language splits with Wilson intervals.
     precision: bool,
-    /// Systems compared question by question with the first system (paired exact test).
-    paired: &'static [&'static str],
+    /// Pairs of systems compared question by question (paired exact test).
+    paired: &'static [(&'static str, &'static str)],
 }
 
 const V1: SetDef = SetDef {
@@ -65,9 +65,41 @@ const V3: SetDef = SetDef {
         ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
     ],
     precision: true,
-    paired: &["gel-ram-first-run", "tantivy-bm25", "sqlite-fts5"],
+    paired: &[
+        ("gel-ram", "gel-ram-first-run"),
+        ("gel-ram", "tantivy-bm25"),
+        ("gel-ram", "sqlite-fts5"),
+    ],
 };
-const SETS: [&SetDef; 3] = [&V1, &V2, &V3];
+const V4: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v4",
+    name: "answer_or_abstain_v4",
+    parts: &[Set::WithAnswer],
+    count: 985,
+    side_by_side: false,
+    systems: &[
+        ("gel-ram", "GEL RAM"),
+        ("gel-ram-precise", "GEL RAM, precise setting"),
+        ("gel-ram-v3-build", "GEL RAM, v3 build"),
+        ("tantivy-bm25", "Tantivy BM25, threshold"),
+        ("tantivy-bm25-strict", "Tantivy BM25, strict threshold"),
+        ("tantivy-bm25-top1", "Tantivy BM25, always top 1"),
+        ("sqlite-fts5", "SQLite FTS5, threshold"),
+        ("sqlite-fts5-strict", "SQLite FTS5, strict threshold"),
+        ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
+        ("tantivy-bm25-v3-bank", "Tantivy BM25, v3 bank"),
+        ("sqlite-fts5-v3-bank", "SQLite FTS5, v3 bank"),
+    ],
+    precision: true,
+    paired: &[
+        ("gel-ram", "gel-ram-v3-build"),
+        ("gel-ram", "tantivy-bm25"),
+        ("gel-ram", "sqlite-fts5"),
+        ("gel-ram-precise", "tantivy-bm25-strict"),
+        ("gel-ram-precise", "sqlite-fts5-strict"),
+    ],
+};
+const SETS: [&SetDef; 4] = [&V1, &V2, &V3, &V4];
 const SYSTEMS: [System; 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),
@@ -620,31 +652,31 @@ fn share(k: usize, n: usize) -> String {
     )
 }
 
-/// The first system of the set beside each paired one, question by question (published rules,
-/// after the review): how many questions only one of the two answered correctly, and how many
-/// only one answered wrongly, with the two-sided exact sign test on those questions.
+/// Each listed pair of systems, question by question (published rules, after the review): how
+/// many questions only one of the two answered correctly, and how many only one answered
+/// wrongly, with the two-sided exact sign test on those questions.
 fn paired_table(def: &SetDef, results: &Results) -> String {
     let published = |system: &str| {
         results
             .iter()
             .find(|r| r.set == Set::WithAnswer && r.rules == Rules::Published && r.system == system)
     };
-    let first = display(def, def.systems[0].0);
-    let mut s = format!("\n| {first} beside, the same questions | Correct only in {first} / only in the other | Wrong only in {first} / only in the other |\n|---|---:|---:|\n");
-    let Some(base) = published(def.systems[0].0) else {
-        return s;
-    };
-    for other in def.paired.iter().filter_map(|id| published(id)) {
+    let mut s = String::from("\n| The same questions: first beside second | Correct only in the first / only in the second | Wrong only in the first / only in the second |\n|---|---:|---:|\n");
+    for (first, second) in def.paired {
+        let (Some(a), Some(b)) = (published(first), published(second)) else {
+            continue;
+        };
         let only = |v: Verdict| {
-            let pairs = base.verdicts.iter().zip(&other.verdicts);
-            let mine = pairs.clone().filter(|(a, b)| **a == v && **b != v).count();
-            let theirs = pairs.filter(|(a, b)| **a != v && **b == v).count();
+            let pairs = a.verdicts.iter().zip(&b.verdicts);
+            let mine = pairs.clone().filter(|(x, y)| **x == v && **y != v).count();
+            let theirs = pairs.filter(|(x, y)| **x != v && **y == v).count();
             format!("{mine} / {theirs} ({})", p_text(sign_test(mine, theirs)))
         };
         let _ = writeln!(
             s,
-            "| {} | {} | {} |",
-            display(def, other.system),
+            "| {} beside {} | {} | {} |",
+            display(def, first),
+            display(def, second),
             only(Verdict::Correct),
             only(Verdict::Wrong)
         );
@@ -1081,8 +1113,10 @@ mod tests {
     #[test]
     fn every_paired_system_is_recorded() {
         for def in SETS {
-            for id in def.paired {
-                assert!(def.systems[1..].iter().any(|(s, _)| s == id), "{id}");
+            for (a, b) in def.paired {
+                for id in [a, b] {
+                    assert!(def.systems.iter().any(|(s, _)| s == id), "{id}");
+                }
             }
         }
     }
