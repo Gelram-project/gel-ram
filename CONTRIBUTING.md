@@ -27,7 +27,7 @@ External contributors must:
 4. ensure employer, client, university, sponsor, or other rights-holder permission is in place when applicable;
 5. identify all third-party material and its license or permission;
 6. disclose material AI-assisted or automated code generation as required by CLA 2.0;
-7. remove credentials, secrets, personal data, private datasets, and confidential information;
+7. remove credentials, secrets, personal data, private datasets, and confidential information (the [public disclosure gate](docs/PUBLIC-DISCLOSURE-GATE.md), `cargo run --locked --offline -p xtask -- disclosure`, catches private paths, network addresses, credential-like strings and unlisted e-mail addresses; `xtask verify` runs it);
 8. after changing tracked files, regenerate `SOURCE-SHA256SUMS.txt` the way the [CI manifest check](.github/workflows/ci.yml) builds it, then run `cargo run --locked --offline -p xtask -- verify`.
 
 Only after those steps should a pull request intended for merge be opened.
