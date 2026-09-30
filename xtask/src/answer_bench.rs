@@ -17,6 +17,8 @@ struct SetDef {
     count: usize,
     /// Whether docs/GEL-BESIDE-GROQ.md publishes rows re-scored from this set.
     side_by_side: bool,
+    /// Whether the set publishes a per-question verdict map (the data of the README map).
+    verdict_map: bool,
 }
 
 const V1: SetDef = SetDef {
@@ -25,6 +27,7 @@ const V1: SetDef = SetDef {
     parts: &[Set::WithAnswer, Set::NoAnswer],
     count: 80,
     side_by_side: true,
+    verdict_map: false,
 };
 const V2: SetDef = SetDef {
     dir: "docs/answer-or-abstain-v2",
@@ -32,6 +35,7 @@ const V2: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 394,
     side_by_side: false,
+    verdict_map: true,
 };
 const SETS: [&SetDef; 2] = [&V1, &V2];
 const SYSTEMS: [(&str, &str); 4] = [
@@ -588,6 +592,60 @@ fn label(def: &SetDef, set: Set) -> String {
     }
 }
 
+/// File of the per-question verdict map of one part of a set.
+fn map_file(def: &SetDef, set: Set) -> std::path::PathBuf {
+    Path::new(def.dir).join(format!("verdicts-{}.txt", set_name(set)))
+}
+
+/// One letter per verdict in the map.
+fn letter(v: Verdict) -> char {
+    match v {
+        Verdict::Correct => 'C',
+        Verdict::Wrong => 'W',
+        Verdict::Unknown => 'U',
+        Verdict::Rejected => 'R',
+        Verdict::Answered => 'A',
+        Verdict::Review => 'V',
+        Verdict::Error => 'E',
+    }
+}
+
+/// Per-question verdicts of every system after the manual review, published rules: the data of
+/// the README map, so the figure is drawn from re-scored answers, not from hand-made numbers.
+fn verdict_map(root: &Path, def: &SetDef, set: Set) -> Result<String, String> {
+    let dir = root.join(def.dir);
+    let qs = questions(set, &read(&dir.join(question_file(set)))?, def.count)?;
+    let rec = dir.join("recorded").join(set_name(set));
+    let review = reviews(set, &read(&rec.join("review.txt"))?, def.count)?;
+    let mut columns = Vec::new();
+    for (system, _) in SYSTEMS {
+        let given = answers(&read(&rec.join(format!("{system}.txt")))?, def.count)?;
+        let mut v = score(set, Rules::Published, &qs, &given);
+        for (i, x) in v.iter_mut().enumerate() {
+            if let Some(r) = review.get(&(system.to_owned(), i + 1)) {
+                *x = *r;
+            }
+        }
+        columns.push(v);
+    }
+    let names: Vec<&str> = SYSTEMS.iter().map(|(s, _)| *s).collect();
+    let mut out = format!(
+        "# {} {}: verdict of each system for each question, after the manual review, published rules. Written and checked by `xtask answer-bench`. nr, then {}. C correct, W wrong, U UNKNOWN, R rejected the premise, A answered anyway, V review, E error.\n",
+        def.name,
+        set_name(set),
+        names.join(", ")
+    );
+    for i in 0..qs.len() {
+        out.push_str(&(i + 1).to_string());
+        for c in &columns {
+            out.push('\t');
+            out.push(letter(c[i]));
+        }
+        out.push('\n');
+    }
+    Ok(out)
+}
+
 pub fn check(root: &Path) -> Result<(), String> {
     for def in SETS {
         let results = results(root, def)?;
@@ -628,6 +686,18 @@ pub fn check(root: &Path) -> Result<(), String> {
                 "README does not state the set identity {} {identity}",
                 def.name
             ));
+        }
+        if def.verdict_map {
+            for &set in def.parts {
+                let path = map_file(def, set);
+                if read(&root.join(&path))? != verdict_map(root, def, set)? {
+                    return Err(format!(
+                        "{} differs from the re-scored answers; run `answer-bench verdicts {}`",
+                        path.display(),
+                        def.name
+                    ));
+                }
+            }
         }
         println!("ANSWER_BENCH_SET={} sha256={identity}", def.name);
     }
@@ -680,6 +750,13 @@ pub fn run(args: &[String]) -> Result<(), String> {
             print!("{}", render(&results(root, find_set(name)?)?));
             Ok(())
         }
+        ["verdicts", name] => {
+            let def = find_set(name)?;
+            for &set in def.parts {
+                print!("{}", verdict_map(root, def, set)?);
+            }
+            Ok(())
+        }
         ["score", spec, file] => {
             let (def, set) = find_part(spec)?;
             let qs = questions(
@@ -700,7 +777,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
             );
             Ok(())
         }
-        _ => Err("usage: answer-bench check | tables [SET] | score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]".into()),
+        _ => Err("usage: answer-bench check | tables [SET] | verdicts SET | score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]".into()),
     }
 }
 

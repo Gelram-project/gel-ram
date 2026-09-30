@@ -144,6 +144,30 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "617c8997c03e747181341dddc230b7bdb85afc7ab4950f971532319ae1a26762",
     ),
     (
+        "media/presentation/headline-v2-light.svg",
+        "713b67efdc1065ab11208a16df48f3782967011e41428e06bf7686d8d7fc3c05",
+    ),
+    (
+        "media/presentation/headline-v2-dark.svg",
+        "685969473d5271e0e2721ec5a6e3b13f7f89118c676b4c0056245d9d70dd3e1a",
+    ),
+    (
+        "media/presentation/answers-v2-light.svg",
+        "1a6dc8c04277567a8b9514385783cad91c5ea52738e87255d26992a7ef9755fe",
+    ),
+    (
+        "media/presentation/answers-v2-dark.svg",
+        "07801689ae5909d9faefa9d0440b0dcda88829add2d558a81c255ec9502235e8",
+    ),
+    (
+        "media/presentation/crash-series-light.svg",
+        "72d679d76d03d9f0605ee93f04019e188dab6184ec958eb0d4c6667f079e7c6c",
+    ),
+    (
+        "media/presentation/crash-series-dark.svg",
+        "84bb4980c5c42c95b30873e65dbef8f00513b9a79b5005b021fdd257a9023617",
+    ),
+    (
         "media/presentation/chips/01-light.svg",
         "d4207f2334a255e66fc3a92cfeba06ff3ee66dd50b045496c41005c4694f3fc2",
     ),
