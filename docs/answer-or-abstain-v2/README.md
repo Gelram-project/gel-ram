@@ -11,7 +11,8 @@
 Wikipedia passage of the GEL bank, and the answers GEL RAM and three language
 models gave in one recorded run on 2026-09-29. This is the new frozen set the
 [v1 set](../answer-or-abstain/README.md) announced: nothing in GEL was tuned on
-it before the run.
+it before the run. The next set, [v3](../answer-or-abstain-v3/README.md), puts GEL
+beside two BM25 search engines on the same bank.
 
 **What changed from v1**
 

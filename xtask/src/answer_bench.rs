@@ -1,13 +1,16 @@
-//! answer_or_abstain_v1 (docs/answer-or-abstain): score any system's answers
-//! with the published rules or the stricter ones, and check that every
-//! published number is reproduced from the recorded answers.
+//! answer_or_abstain_v1, v2 and v3 (docs/answer-or-abstain*): score any
+//! system's answers with the published rules or the stricter ones, and check
+//! that every published number is reproduced from the recorded answers.
 //!
-//! `check` re-scores the recorded answers of GEL RAM and three language
-//! models, renders the result tables and fails unless the README of the set
-//! contains exactly those tables and the side-by-side document contains the
-//! rows it publishes. It also verifies every source-passage hash and the set
-//! identity. It re-scores recorded text; it does not re-run any system.
+//! `check` re-scores the recorded answers of every system of every set,
+//! renders the result tables and fails unless the README of the set contains
+//! exactly those tables and the side-by-side document contains the rows it
+//! publishes. It also verifies every source-passage hash and the set identity.
+//! It re-scores recorded text; it does not re-run any system.
 use std::{collections::HashMap, fmt::Write as _, fs, path::Path};
+
+/// A recorded system: file name and the name printed in the tables.
+type System = (&'static str, &'static str);
 
 /// One published set: its folder, identity name, parts and questions per part.
 struct SetDef {
@@ -17,6 +20,12 @@ struct SetDef {
     count: usize,
     /// Whether docs/GEL-BESIDE-GROQ.md publishes rows re-scored from this set.
     side_by_side: bool,
+    /// The systems whose answers the set records, in table order.
+    systems: &'static [System],
+    /// Whether the README also shows precision and language splits with Wilson intervals.
+    precision: bool,
+    /// Systems compared question by question with the first system (paired exact test).
+    paired: &'static [&'static str],
 }
 
 const V1: SetDef = SetDef {
@@ -25,6 +34,9 @@ const V1: SetDef = SetDef {
     parts: &[Set::WithAnswer, Set::NoAnswer],
     count: 80,
     side_by_side: true,
+    systems: &SYSTEMS,
+    precision: false,
+    paired: &[],
 };
 const V2: SetDef = SetDef {
     dir: "docs/answer-or-abstain-v2",
@@ -32,9 +44,31 @@ const V2: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 394,
     side_by_side: false,
+    systems: &SYSTEMS,
+    precision: false,
+    paired: &[],
 };
-const SETS: [&SetDef; 2] = [&V1, &V2];
-const SYSTEMS: [(&str, &str); 4] = [
+const V3: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v3",
+    name: "answer_or_abstain_v3",
+    parts: &[Set::WithAnswer],
+    count: 979,
+    side_by_side: false,
+    systems: &[
+        ("gel-ram", "GEL RAM"),
+        ("gel-ram-first-run", "GEL RAM, first run"),
+        ("gel-ram-v2-build", "GEL RAM, v1/v2 build"),
+        ("gel-ram-prototype", "GEL RAM, prototype"),
+        ("tantivy-bm25", "Tantivy BM25, threshold"),
+        ("tantivy-bm25-top1", "Tantivy BM25, always top 1"),
+        ("sqlite-fts5", "SQLite FTS5, threshold"),
+        ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
+    ],
+    precision: true,
+    paired: &["gel-ram-first-run", "tantivy-bm25", "sqlite-fts5"],
+};
+const SETS: [&SetDef; 3] = [&V1, &V2, &V3];
+const SYSTEMS: [System; 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),
     ("gpt-oss-20b", "GPT-OSS-20B"),
@@ -101,6 +135,8 @@ struct Question {
     /// Groups of (spelling, is_stem); a stem is marked with a trailing `*` in the file.
     accepted: Vec<Vec<(String, bool)>>,
     invented: bool,
+    /// Language of the question: `pl` or `en`.
+    lang: String,
 }
 
 struct Answer {
@@ -279,6 +315,10 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
     let mut seen = vec![false; count];
     for f in rows(text) {
         let nr = question_number(f[0], &mut seen)?;
+        let lang = match f.get(1) {
+            Some(l @ (&"pl" | &"en")) => l.to_string(),
+            _ => return Err(format!("question {nr}: language must be pl or en")),
+        };
         let q = match set {
             Set::WithAnswer if f.len() == 11 && !f[4].is_empty() => {
                 check_source(nr, &f[5..11])?;
@@ -296,6 +336,7 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
                 Question {
                     accepted,
                     invented: false,
+                    lang,
                 }
             }
             Set::NoAnswer if f.len() == 12 && f[2] == "invented" => {
@@ -307,6 +348,7 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
                 Question {
                     accepted: Vec::new(),
                     invented: true,
+                    lang,
                 }
             }
             Set::NoAnswer if f.len() == 12 && f[2] == "false-premise" => {
@@ -314,6 +356,7 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
                 Question {
                     accepted: Vec::new(),
                     invented: false,
+                    lang,
                 }
             }
             _ => return Err(format!("question {nr}: unexpected fields")),
@@ -355,6 +398,7 @@ fn answers(text: &str, count: usize) -> Result<HashMap<usize, Answer>, String> {
 /// Exactly `system<TAB>nr<TAB>verdict<TAB>reason`; known systems, verdicts allowed for the set, no repeats.
 fn reviews(
     set: Set,
+    systems: &[System],
     text: &str,
     count: usize,
 ) -> Result<HashMap<(String, usize), Verdict>, String> {
@@ -363,7 +407,7 @@ fn reviews(
         let [system, nr, verdict, reason] = f.as_slice() else {
             return Err("review: expected system, nr, verdict and reason".into());
         };
-        if !SYSTEMS.iter().any(|(id, _)| id == system) || reason.trim().is_empty() {
+        if !systems.iter().any(|(id, _)| id == system) || reason.trim().is_empty() {
             return Err(format!("review: unknown system {system} or empty reason"));
         }
         let nr: usize = nr.parse().map_err(|_| format!("review: bad number {nr}"))?;
@@ -418,8 +462,20 @@ fn totals(qs: &[Question], verdicts: &[Verdict]) -> Totals {
     t
 }
 
-/// (set, rules, system id) → (automatic, after the manual review).
-type Results = Vec<(Set, Rules, &'static str, Totals, Totals)>;
+/// One system scored on one part of a set under one rule set.
+struct Scored {
+    set: Set,
+    rules: Rules,
+    system: &'static str,
+    auto: Totals,
+    reviewed: Totals,
+    /// Verdicts after the manual review, one per question.
+    verdicts: Vec<Verdict>,
+    /// Totals after the review for the Polish and for the English questions.
+    by_lang: [Totals; 2],
+}
+
+type Results = Vec<Scored>;
 
 fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
     let mut out = Vec::new();
@@ -427,8 +483,8 @@ fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
         let dir = root.join(def.dir);
         let qs = questions(set, &read(&dir.join(question_file(set)))?, def.count)?;
         let rec = dir.join("recorded").join(set_name(set));
-        let review = reviews(set, &read(&rec.join("review.txt"))?, def.count)?;
-        for (system, _) in SYSTEMS {
+        let review = reviews(set, def.systems, &read(&rec.join("review.txt"))?, def.count)?;
+        for &(system, _) in def.systems {
             let given = answers(&read(&rec.join(format!("{system}.txt")))?, def.count)?;
             for rules in [Rules::Published, Rules::Strict] {
                 let auto = score(set, rules, &qs, &given);
@@ -438,13 +494,19 @@ fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
                         *v = *r;
                     }
                 }
-                out.push((
+                let mut by_lang = [Totals::default(); 2];
+                for (q, v) in qs.iter().zip(&reviewed) {
+                    by_lang[usize::from(q.lang == "en")].add(*v, q.invented);
+                }
+                out.push(Scored {
                     set,
                     rules,
                     system,
-                    totals(&qs, &auto),
-                    totals(&qs, &reviewed),
-                ));
+                    auto: totals(&qs, &auto),
+                    reviewed: totals(&qs, &reviewed),
+                    verdicts: reviewed,
+                    by_lang,
+                });
             }
         }
     }
@@ -459,8 +521,8 @@ fn cell(auto: usize, reviewed: usize) -> String {
     }
 }
 
-fn display(system: &str) -> &'static str {
-    SYSTEMS
+fn display(def: &SetDef, system: &str) -> &'static str {
+    def.systems
         .iter()
         .find(|(id, _)| *id == system)
         .map(|(_, name)| *name)
@@ -474,50 +536,142 @@ fn rules_name(rules: Rules) -> &'static str {
     }
 }
 
-/// The README block: both sets, both rule sets, reviewed totals with automatic ones in brackets.
-fn render(results: &Results) -> String {
+/// The README block: every part, both rule sets, reviewed totals with automatic ones in
+/// brackets; for the sets that ask for them also precision and the paired comparison.
+fn render(def: &SetDef, results: &Results) -> String {
     let mut s = String::from(BEGIN);
     s.push_str("| With an answer | Rules | Answered | Correct | Wrong | UNKNOWN | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
-    for (set, rules, system, a, r) in results {
-        if *set != Set::WithAnswer {
-            continue;
-        }
-        let (a, r) = (a.0, r.0);
+    for r in results.iter().filter(|r| r.set == Set::WithAnswer) {
+        let (a, v) = (r.auto.0, r.reviewed.0);
         let _ = writeln!(
             s,
             "| {} | {} | {} | {} | {} | {} | {} |",
-            display(system),
-            rules_name(*rules),
-            cell(a[0] + a[1], r[0] + r[1]),
-            cell(a[0], r[0]),
-            cell(a[1], r[1]),
-            cell(a[2], r[2]),
-            cell(a[7], r[7])
+            display(def, r.system),
+            rules_name(r.rules),
+            cell(a[0] + a[1], v[0] + v[1]),
+            cell(a[0], v[0]),
+            cell(a[1], v[1]),
+            cell(a[2], v[2]),
+            cell(a[7], v[7])
         );
     }
-    if results.iter().any(|(set, ..)| *set == Set::NoAnswer) {
+    if results.iter().any(|r| r.set == Set::NoAnswer) {
         s.push_str("\n| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
-        for (set, rules, system, a, r) in results {
-            if *set != Set::NoAnswer {
-                continue;
-            }
-            let (a, r) = (a.0, r.0);
+        for r in results.iter().filter(|r| r.set == Set::NoAnswer) {
+            let (a, v) = (r.auto.0, r.reviewed.0);
             let _ = writeln!(
                 s,
                 "| {} | {} | {} / {} | {} | {} | {} | {} |",
-                display(system),
-                rules_name(*rules),
-                cell(a[4], r[4]),
-                cell(a[5], r[5]),
-                cell(a[2], r[2]),
-                cell(a[3], r[3]),
-                cell(a[6], r[6]),
-                cell(a[7], r[7])
+                display(def, r.system),
+                rules_name(r.rules),
+                cell(a[4], v[4]),
+                cell(a[5], v[5]),
+                cell(a[2], v[2]),
+                cell(a[3], v[3]),
+                cell(a[6], v[6]),
+                cell(a[7], v[7])
             );
         }
     }
+    if def.precision {
+        s.push_str(&precision_table(def, results));
+    }
+    if !def.paired.is_empty() {
+        s.push_str(&paired_table(def, results));
+    }
     s.push_str(END);
     s
+}
+
+/// Published rules after the review: precision and wrong answers among all questions, each
+/// with its 95% Wilson interval, and correct / answered for each language.
+fn precision_table(def: &SetDef, results: &Results) -> String {
+    let mut s = String::from("\n| Published rules, after the review | Precision (95% Wilson) | Wrong among all questions (95% Wilson) | Polish: correct / answered | English: correct / answered |\n|---|---|---|---:|---:|\n");
+    for r in results
+        .iter()
+        .filter(|r| r.set == Set::WithAnswer && r.rules == Rules::Published)
+    {
+        let t = r.reviewed.0;
+        let [pl, en] = r
+            .by_lang
+            .map(|l| format!("{} / {}", l.0[0], l.0[0] + l.0[1]));
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} | {pl} | {en} |",
+            display(def, r.system),
+            share(t[0], t[0] + t[1]),
+            share(t[1], t.iter().sum())
+        );
+    }
+    s
+}
+
+/// `k` of `n` as a percentage with its 95% Wilson interval.
+fn share(k: usize, n: usize) -> String {
+    if n == 0 {
+        return "—".into();
+    }
+    let (lo, hi) = wilson(k, n);
+    format!(
+        "{:.1}% ({:.1}–{:.1}%)",
+        100.0 * k as f64 / n as f64,
+        100.0 * lo,
+        100.0 * hi
+    )
+}
+
+/// The first system of the set beside each paired one, question by question (published rules,
+/// after the review): how many questions only one of the two answered correctly, and how many
+/// only one answered wrongly, with the two-sided exact sign test on those questions.
+fn paired_table(def: &SetDef, results: &Results) -> String {
+    let published = |system: &str| {
+        results
+            .iter()
+            .find(|r| r.set == Set::WithAnswer && r.rules == Rules::Published && r.system == system)
+    };
+    let first = display(def, def.systems[0].0);
+    let mut s = format!("\n| {first} beside, the same questions | Correct only in {first} / only in the other | Wrong only in {first} / only in the other |\n|---|---:|---:|\n");
+    let Some(base) = published(def.systems[0].0) else {
+        return s;
+    };
+    for other in def.paired.iter().filter_map(|id| published(id)) {
+        let only = |v: Verdict| {
+            let pairs = base.verdicts.iter().zip(&other.verdicts);
+            let mine = pairs.clone().filter(|(a, b)| **a == v && **b != v).count();
+            let theirs = pairs.filter(|(a, b)| **a != v && **b == v).count();
+            format!("{mine} / {theirs} ({})", p_text(sign_test(mine, theirs)))
+        };
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} |",
+            display(def, other.system),
+            only(Verdict::Correct),
+            only(Verdict::Wrong)
+        );
+    }
+    s
+}
+
+/// Two-sided exact sign test (McNemar's exact test) of `a` against `b` discordant questions.
+fn sign_test(a: usize, b: usize) -> f64 {
+    let n = a + b;
+    let mut ln_choose = 0.0f64;
+    let mut tail = 0.0f64;
+    for i in 0..=a.min(b) {
+        if i > 0 {
+            ln_choose += ((n - i + 1) as f64).ln() - (i as f64).ln();
+        }
+        tail += (ln_choose - n as f64 * std::f64::consts::LN_2).exp();
+    }
+    (2.0 * tail).min(1.0)
+}
+
+fn p_text(p: f64) -> String {
+    if p < 0.001 {
+        "p < 0.001".into()
+    } else {
+        format!("p = {p:.3}")
+    }
 }
 
 fn wilson(k: usize, n: usize) -> (f64, f64) {
@@ -529,22 +683,22 @@ fn wilson(k: usize, n: usize) -> (f64, f64) {
 }
 
 /// Rows of the summary table in docs/GEL-BESIDE-GROQ.md (published rules, after the review).
-fn side_by_side_rows(results: &Results) -> Vec<String> {
+fn side_by_side_rows(def: &SetDef, results: &Results) -> Vec<String> {
     results
         .iter()
-        .filter(|(set, rules, ..)| *set == Set::WithAnswer && *rules == Rules::Published)
-        .map(|(_, _, system, _, r)| {
-            let t = r.0;
+        .filter(|r| r.set == Set::WithAnswer && r.rules == Rules::Published)
+        .map(|r| {
+            let t = r.reviewed.0;
             let answered = t[0] + t[1];
             let (lo, hi) = wilson(t[0], answered);
-            let conditions = if *system == "gel-ram" {
+            let conditions = if r.system == "gel-ram" {
                 "local bank, answers with a source passage"
             } else {
                 "Groq API, closed book"
             };
             format!(
                 "| {} | {conditions} | {answered} | {} | {} | {} | {} | {}/{answered} ({:.0}–{:.0}%) |",
-                display(system),
+                display(def, r.system),
                 t[0],
                 t[1],
                 t[2],
@@ -562,7 +716,7 @@ fn set_identity(root: &Path, def: &SetDef) -> Result<String, String> {
     let dir = root.join(def.dir);
     let mut names: Vec<String> = def.parts.iter().map(|&set| question_file(set)).collect();
     for &set in def.parts {
-        for (system, _) in SYSTEMS {
+        for (system, _) in def.systems {
             names.push(format!("recorded/{}/{system}.txt", set_name(set)));
         }
         names.push(format!("recorded/{}/review.txt", set_name(set)));
@@ -591,13 +745,14 @@ fn label(def: &SetDef, set: Set) -> String {
 pub fn check(root: &Path) -> Result<(), String> {
     for def in SETS {
         let results = results(root, def)?;
-        for (set, rules, system, a, r) in &results {
+        for r in &results {
             println!(
-                "ANSWER_BENCH set={} rules={} system={system} {} reviewed: {}",
-                label(def, *set),
-                rules_name(*rules),
-                a.describe(*set),
-                r.describe(*set)
+                "ANSWER_BENCH set={} rules={} system={} {} reviewed: {}",
+                label(def, r.set),
+                rules_name(r.rules),
+                r.system,
+                r.auto.describe(r.set),
+                r.reviewed.describe(r.set)
             );
         }
         let readme = read(&root.join(def.dir).join("README.md"))?;
@@ -606,7 +761,7 @@ pub fn check(root: &Path) -> Result<(), String> {
             .and_then(|(_, rest)| rest.split_once(END))
             .map(|(inner, _)| format!("{BEGIN}{inner}{END}"))
             .ok_or("README of the set has no results block")?;
-        if block != render(&results) {
+        if block != render(def, &results) {
             return Err(format!(
                 "{}: README results differ from the re-scored recorded answers; run `answer-bench tables`",
                 def.name
@@ -614,7 +769,7 @@ pub fn check(root: &Path) -> Result<(), String> {
         }
         if def.side_by_side {
             let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
-            for row in side_by_side_rows(&results) {
+            for row in side_by_side_rows(def, &results) {
                 if !side.contains(&row) {
                     return Err(format!(
                         "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
@@ -673,11 +828,12 @@ pub fn run(args: &[String]) -> Result<(), String> {
     match args.as_slice() {
         ["check"] => check(root),
         ["tables"] => {
-            print!("{}", render(&results(root, &V1)?));
+            print!("{}", render(&V1, &results(root, &V1)?));
             Ok(())
         }
         ["tables", name] => {
-            print!("{}", render(&results(root, find_set(name)?)?));
+            let def = find_set(name)?;
+            print!("{}", render(def, &results(root, def)?));
             Ok(())
         }
         ["score", spec, file] => {
@@ -715,6 +871,7 @@ mod tests {
                 .map(|g| g.iter().map(|(a, s)| (a.to_string(), *s)).collect())
                 .collect(),
             invented: false,
+            lang: "pl".into(),
         }
     }
     fn a(text: &str) -> Answer {
@@ -795,6 +952,7 @@ mod tests {
         let question = Question {
             accepted: Vec::new(),
             invented: true,
+            lang: "pl".into(),
         };
         for t in [
             "Nie zdobyła Oscara.",
@@ -850,19 +1008,83 @@ mod tests {
 
     #[test]
     fn review_files_are_fail_closed() {
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tsame fact\n", 80).is_ok());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\n", 80).is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tCORRECT\tr\textra\n", 80).is_err());
-        assert!(reviews(Set::WithAnswer, "someone\t1\tCORRECT\tr\n", 80).is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t0\tCORRECT\tr\n", 80).is_err());
-        assert!(reviews(Set::WithAnswer, "gel-ram\t1\tREJECTED\tr\n", 80).is_err());
+        assert!(reviews(
+            Set::WithAnswer,
+            &SYSTEMS,
+            "gel-ram\t1\tCORRECT\tsame fact\n",
+            80
+        )
+        .is_ok());
+        assert!(reviews(Set::WithAnswer, &SYSTEMS, "gel-ram\t1\tCORRECT\n", 80).is_err());
+        assert!(reviews(
+            Set::WithAnswer,
+            &SYSTEMS,
+            "gel-ram\t1\tCORRECT\tr\textra\n",
+            80
+        )
+        .is_err());
+        assert!(reviews(Set::WithAnswer, &SYSTEMS, "someone\t1\tCORRECT\tr\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, &SYSTEMS, "gel-ram\t0\tCORRECT\tr\n", 80).is_err());
+        assert!(reviews(Set::WithAnswer, &SYSTEMS, "gel-ram\t1\tREJECTED\tr\n", 80).is_err());
         assert!(reviews(
             Set::NoAnswer,
+            &SYSTEMS,
             "gel-ram\t1\tREJECTED\tr\ngel-ram\t1\tANSWERED\tr\n",
             80
         )
         .is_err());
-        assert!(reviews(Set::NoAnswer, "gel-ram\t1\tREJECTED\t \n", 80).is_err());
+        assert!(reviews(Set::NoAnswer, &SYSTEMS, "gel-ram\t1\tREJECTED\t \n", 80).is_err());
+        let v3 = reviews(
+            Set::WithAnswer,
+            V3.systems,
+            "tantivy-bm25\t1\tWRONG\tr\n",
+            979,
+        );
+        assert!(v3.is_ok());
+        assert!(reviews(
+            Set::WithAnswer,
+            V3.systems,
+            "gpt-oss-20b\t1\tWRONG\tr\n",
+            979
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn questions_need_a_known_language() {
+        let passage = "a b";
+        let row = |lang: &str| {
+            format!(
+                "1\t{lang}\tq\te\ta\tt\tu\td\tz\t{}\t{passage}\n",
+                sha256(passage)
+            )
+        };
+        assert_eq!(
+            questions(Set::WithAnswer, &row("en"), 1).unwrap()[0].lang,
+            "en"
+        );
+        assert!(questions(Set::WithAnswer, &row("de"), 1).is_err());
+    }
+
+    #[test]
+    fn exact_sign_test_and_wilson_shares() {
+        assert!((sign_test(0, 5) - 0.0625).abs() < 1e-12);
+        assert!((sign_test(8, 2) - 0.109375).abs() < 1e-12);
+        assert_eq!(sign_test(1, 1), 1.0);
+        assert_eq!(sign_test(0, 0), 1.0);
+        assert_eq!(p_text(0.0004), "p < 0.001");
+        assert_eq!(p_text(0.0625), "p = 0.062");
+        assert_eq!(share(0, 0), "—");
+        assert_eq!(share(59, 63), "93.7% (84.8–97.5%)");
+    }
+
+    #[test]
+    fn every_paired_system_is_recorded() {
+        for def in SETS {
+            for id in def.paired {
+                assert!(def.systems[1..].iter().any(|(s, _)| s == id), "{id}");
+            }
+        }
     }
 
     #[test]
