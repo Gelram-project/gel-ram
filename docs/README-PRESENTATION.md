@@ -33,10 +33,10 @@ any of these sources makes the read-only check fail until the images are rebuilt
 
 ## Preservation and source
 
-The presentation belongs to the v0.5.2 source. Earlier README versions are
+The presentation belongs to the v0.5.3 source. Earlier README versions are
 no longer kept in the tree; they remain in the git history. The README keeps its
 technical content below the presentation unchanged, including the quick-start
-checkout of the v0.5.2 tag.
+checkout of the v0.5.3 tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.

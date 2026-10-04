@@ -1,4 +1,4 @@
-# GEL RAM 0.5.2 — publication and release status
+# GEL RAM 0.5.3 — publication and release status
 
 Updated 2026-10-04. Evidence Lab, originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`, was merged into public `main` through
@@ -7,12 +7,14 @@ through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`, and the 0.4.0
 version line through PR #12 as `fc1df7cf60577ab9bda33cd1e2fc16fdae96bcd2`, which
 the owner published as the v0.4.0 GitHub Release on 2026-09-27. The v0.5.0 GitHub
 Release was published on 2026-09-28 from `d15966e0de59181f01937b97a2aee0121b0f0036`; the v0.5.1 tag points to
-`dc276102b3539c553f0a7c7cf3813433531cfde9`.
+`dc276102b3539c553f0a7c7cf3813433531cfde9`, and the v0.5.2 tag to
+`0ff4bcec09ca077e02f1ff6fb3b01683a89ff7b2`.
 All merges passed the required checks and were authorized by the owner. The
-version line is now 0.5.2. The owner published the v0.5.2 GitHub Release on
-2026-09-30. On 2026-10-04 the owner removed the GitHub Releases of v0.3.0,
-v0.4.0, v0.5.0 and v0.5.1 from the Releases page; their tags remain, and v0.5.2
-is the current release.
+owner published the v0.5.2 GitHub Release on 2026-09-30. On 2026-10-04 the owner
+removed the GitHub Releases of v0.3.0, v0.4.0, v0.5.0 and v0.5.1 from the
+Releases page; their tags remain. The version line is now 0.5.3. The owner
+publishes the v0.5.3 GitHub Release from the merge commit of this version
+cutover; the Releases page shows whether that has happened.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -22,7 +24,7 @@ PUBLICATION_SCOPE=PUBLIC_MAIN_INTEGRATION
 MERGE_APPROVED=YES
 MERGE_APPROVED_FOR=PR_9_MERGED_AS_71142A2,PR_10_MERGED_AS_0C17F6E,PR_12_MERGED_AS_FC1DF7C
 RELEASE_APPROVED=BY_OWNER_PUBLICATION
-SNAPSHOT_KIND=VERSION_CUTOVER_0_5_2
+SNAPSHOT_KIND=VERSION_CUTOVER_0_5_3
 LOCAL_VALIDATION_WINDOWS_TESTED=NO
 LOCAL_VALIDATION_MACOS_TESTED=NO
 EXACT_REVISION_PLATFORM_RESULTS=SEE_PINNED_CI_RECORD
@@ -31,30 +33,30 @@ CURRENT_TEST_COUNTS=SEE_PER_PLATFORM_CI_EVIDENCE_REPORT
 OCEAN_RESEARCH_ARCHIVE=WITHDRAWN_IN_0_4_0
 ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
-VERSION_LINE=0.5.2
-TARGET_RELEASE=0.5.2
-V0_5_2_TAGGED_RELEASE=SEE_RELEASES_PAGE
-V0_5_1_TAGGED_RELEASE=SEE_RELEASES_PAGE
-V0_5_0_TAGGED_RELEASE=PUBLISHED
-V0_4_0_TAGGED_RELEASE=PUBLISHED_WITHOUT_SOURCE_ARCHIVE_ASSET
+VERSION_LINE=0.5.3
+TARGET_RELEASE=0.5.3
+V0_5_3_TAGGED_RELEASE=SEE_RELEASES_PAGE
+V0_5_2_TAGGED_RELEASE=PUBLISHED
+V0_5_1_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
+V0_5_0_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
+V0_4_0_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
 V0_3_0_VERSION_METADATA=APPROVED
-V0_3_0_TAGGED_RELEASE=PUBLISHED
+V0_3_0_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
 CI_REQUIRED_FOR_VERSION_CUTOVER=YES
 LEGAL_APPROVED=NO
 PUBLIC_PSEUDONYM_CONFIRMED=YES
 PAID_SERVICES_AUTHORIZED=NO
 ```
 
-The workspace version is 0.5.2. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
+The workspace version is 0.5.3. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
 the release is approved by the owner's act of publishing the GitHub Release for
-tag v0.5.2; the tag exists only after that act, and until then this is the
+tag v0.5.3; the tag exists only after that act, and until then this is the
 prepared release commit. The
 [Releases page](https://github.com/Gelram-project/gel-ram/releases) is
 authoritative for that state. The v0.4.0 release was published without the
-source archive asset its notes mention; its release description gives the
-SHA-256 of its source manifest instead. The v0.3.0 fields describe an earlier
-release. See the [v0.5.2 release notes](RELEASE-NOTES-v0.5.2.md); the roadmap's
-v0.5.2 and v0.5.1 sections list each change with its commit and remaining acceptance.
+source archive asset its notes mention; its release page has since been
+removed, and its tag remains. The v0.3.0 fields describe an earlier release. See the [v0.5.3 release notes](RELEASE-NOTES-v0.5.3.md); the roadmap's
+v0.5.3 and v0.5.2 sections list each change with its commit and remaining acceptance.
 
 Technical checks report the approval flags without changing them. A successful verification never supplies publication permission.
 The active root license is unchanged; no new licensing policy is activated.

@@ -1,7 +1,7 @@
 # Try GEL RAM on your hardware
 
 This guide is the shortest reproducible path through the public core as it stands
-at the v0.5.2 tag.
+at the v0.5.3 tag.
 It uses public source, deterministic fixtures and caller-selected text. It does
 not require the private application, a private knowledge bank or an external LLM.
 
@@ -10,7 +10,7 @@ not require the private application, a private knowledge bank or an external LLM
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout v0.5.2
+git checkout v0.5.3
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 git rev-parse HEAD
