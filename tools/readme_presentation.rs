@@ -172,10 +172,11 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v4); the example and
+this checkout. The first card is the newest frozen question set (v5); the example and
 the answer grid show an earlier run on question set v1, the 80 questions also put to
 three language models. Every question is published with its expected answer
-and source passage: [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
+and source passage: [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
+[the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
 and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
 every recorded answer, and `xtask answer-bench check` re-scores them on each
 verify run. Free conversation has not been measured yet.
@@ -261,8 +262,10 @@ Three properties, each with its evidence and its limit:
   premise, so it does not always refuse. On 985 newer frozen questions, written
   after the latest change, a development build answered 423: 405 correct and 18
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
-  and gave more wrong answers (40–41).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  and gave more wrong answers (40–41). On 987 more frozen questions the same
+  build answered 432: 416 correct and 16 wrong, and the engines again found
+  more (567–597 correct) with more wrong answers (43–47).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -388,7 +391,8 @@ sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md).
+answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md)
+and 44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
@@ -477,7 +481,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v4 and v1 and from the claim registry, each panel naming its set, an
+frozen question sets v5 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1558,7 +1562,9 @@ struct Headline {
     precise: (usize, usize),
     strict: [(usize, usize); 2],
 }
-const HEADLINE_DIR: &str = "docs/answer-or-abstain-v4";
+const HEADLINE_DIR: &str = "docs/answer-or-abstain-v5";
+/// The question set the first card shows, as named in the README.
+const HEADLINE_SET: &str = "v5";
 impl Headline {
     fn read() -> Result<Headline> {
         let readme = fs::read_to_string(format!("{HEADLINE_DIR}/README.md"))?;
@@ -1607,8 +1613,8 @@ impl Headline {
         }
         // The first card states both comparisons in words; refuse to draw it if the data disagree.
         let more_and_worse = [&t, &f].iter().all(|r| r[1] > correct && r[2] > wrong);
-        let strict_ahead = [&ts, &fs_].iter().all(|r| r[1] > p[1] && r[2] <= p[2]);
-        if !more_and_worse || !strict_ahead {
+        let strict_more = [&ts, &fs_].iter().all(|r| r[1] > p[1]);
+        if !more_and_worse || !strict_more {
             return Err("the comparison stated on the first card no longer holds".into());
         }
         Ok(Headline {
@@ -1636,7 +1642,13 @@ fn span(a: usize, b: usize) -> String {
 /// What the first result card says, as its description and as the README alternative text.
 fn glance_text(h: &Headline) -> String {
     let [(a, x), (b, y)] = h.strict;
-    format!("Private development build, frozen question set v4: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, so there the engines are ahead. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
+    // Engines with more correct answers and no more wrong ones are ahead; otherwise only "more answers" is stated.
+    let verdict = if x <= h.precise.1 && y <= h.precise.1 {
+        "so there the engines are ahead"
+    } else {
+        "so there the engines find more answers"
+    };
+    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
 }
 fn glance(dark: bool, h: &Headline) -> String {
     let t = theme(dark);
@@ -1663,8 +1675,11 @@ fn glance(dark: bool, h: &Headline) -> String {
         ),
     ];
     let mut body = format!(
-        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET V4 · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
-        h.questions, h.pl, h.en
+        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
+        HEADLINE_SET.to_uppercase(),
+        h.questions,
+        h.pl,
+        h.en
     );
     for (i, (big, colour, label, note)) in cols.iter().enumerate() {
         let x = 40 + i * 285;
@@ -1850,7 +1865,7 @@ fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
         (
             "Natural question coverage",
             format!(
-                "now {} of {} correct on question set v4, {} wrong",
+                "now {} of {} correct on question set {HEADLINE_SET}, {} wrong",
                 h.correct, h.questions, h.wrong
             ),
             "most of a new frozen set answered, still 0 wrong",
@@ -2502,16 +2517,19 @@ mod tests {
         let h = Headline::read().unwrap();
         assert_eq!(h.answered + h.unknown, h.questions);
         assert!(
-            HEADLINE_DIR.ends_with("-v4"),
-            "the first card names question set v4"
+            HEADLINE_DIR.ends_with(&format!("-{HEADLINE_SET}")),
+            "the first card names the set it is drawn from"
         );
         let g = glance(false, &h);
         assert!(g.contains(&format!(">{} / {}<", h.correct, h.questions)));
         assert!(g.contains(&format!(">{}<", h.wrong)) && g.contains(&format!(">{}<", h.unknown)));
-        assert!(g.contains("PRIVATE DEVELOPMENT BUILD · QUESTION SET V4"));
+        assert!(g.contains(&format!(
+            "PRIVATE DEVELOPMENT BUILD · QUESTION SET {}",
+            HEADLINE_SET.to_uppercase()
+        )));
         let [(a, _), (b, _)] = h.engines;
         assert!(g.contains(&format!(">{}<", span(a, b))));
-        assert!(g.contains("so there the engines are ahead"));
+        assert!(g.contains("At the precise setting") && g.contains("so there the engines"));
         assert!(
             !g.contains("read-back"),
             "stored passages read back are not questions and stay off the question card"

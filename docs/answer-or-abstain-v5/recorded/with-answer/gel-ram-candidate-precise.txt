@@ -1,0 +1,988 @@
+# GEL RAM with the same candidate change, the same run with the setting chosen on v1 + v2 at precision >= 0.99. nr, answer, kind (passage = a stored source passage returned as the answer). UNKNOWN = abstained.
+1	UNKNOWN
+2	UNKNOWN
+3	UNKNOWN
+4	UNKNOWN
+5	László Bódi – wokal, fortepian Csaba Boros – gitara basowa, gitara, wokal, wokal wspierający László Attila Nagy – perkusja Tamás Patai – gitary, wokal wspierający Zoltán Tóth – gitary, fortepian, keyboard, wokal, wokal wspierający	passage
+6	UNKNOWN
+7	UNKNOWN
+8	UNKNOWN
+9	UNKNOWN
+10	UNKNOWN
+11	UNKNOWN
+12	UNKNOWN
+13	Sapporo – 17 stycznia 1998 (3. miejsce) Sapporo – 11 stycznia 2002 (1. miejsce) Sapporo – 12 stycznia 2002 (2. miejsce) Sapporo – 11 stycznia 2003 (3. miejsce) Zaō – 12 marca 2003 (1. miejsce) Sapporo – 10 stycznia 2004 (1. miejsce) Sapporo – 11 stycznia 2004 (1. miejsce) Sapporo – 14 stycznia 2007 (1. miejsce) Sapporo – 10 stycznia 2010 (1. miejsce)	passage
+14	Bateria Lindemann Bateria Lindemann Jedno z dział baterii Lindemann w trakcie budowy. Bateria Lindemann – niemiecka bateria artylerii nadbrzeżnej umieszczona nad kanałem La Manche, w okolicy miasta Sangatte, na zachód od Calais. Zbudowana w 1942 roku, była jedną z trzech najsilniej uzbrojonych baterii na Wale Atlantyckim. Umieszczono tu trzy działa kalibru 406 mm typu C/34, przeniesione ze zlikwidowanej baterii Schleswig-Holstein zbudowanej w latach 1940–41 w okolicy Helu	passage
+15	UNKNOWN
+16	W drugiej połowie XIX wieku wraz z rozwojem miasta zwiększało się zapotrzebowanie na usługi szpitala, w związku z czym postanowiono znaleźć nową lokalizację dla rozrastającego się Instytutu Oftalmicznego	passage
+17	Série A1 Campeonato Pernambucano podzielony jest na dwa turnieje – Taça Tabocas e Guararapes i Taça Confederação do Equador. Oba rozgrywane są według tego samego szablonu – każdy klub gra z każdym po jednym meczu. Klub, który wygra oba turnieje zostaje mistrzem stanu. Jeśli jednak każdy z tych turniejów zostanie wygrany przez różne kluby, zwycięzcy obu turniejów grają ze sobą mecz i rewanż decydujące o mistrzostwie stanu. Dwa ostatnie kluby w tabeli sumarycznej (łączącej wyniki obu turniejów) spadają do drugiej ligi (Série A2). W brazylijskich rozgrywkach ligowych format ulega częstym zmianom.	passage
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	UNKNOWN
+22	mają być prowadzone na terytorium Australii, ASIS powinna zlecić je ASIO lub policji. agencja podlega nadzorowi specjalnej komisji parlamentarnej (wspólnej dla wszystkich służb specjalnych) W Australii zbieranie materiałów wywiadowczych jest ściśle oddzielone od ich przetwarzania. ASIS zajmuje się wyłącznie pierwszym z tych zadań. Główną służbą tworzącą na podstawie zebranych informacji analizy wywiadowcze jest Office of National Assessments (ONA).	passage
+23	UNKNOWN
+24	W Kolnicy stoi zabytkowa wozownia (błędnie zwana przez mieszkańców pałacykiem), którą postawiono w drugiej połowie XIX wieku za czasów ówczesnych dziedziców, Kępińskich. Przy wozowni umiejscowiono park. Obecnie budynek należy do gminy Brudzew, która w najbliższym czasie zamierza przeprowadzić gruntowny remont podupadającego obiektu.	passage
+25	UNKNOWN
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	UNKNOWN
+30	UNKNOWN
+31	UNKNOWN
+32	Wręczenia sztandaru dokonano 25 maja 1947 w Lubaniu. Sztandar z rąk I zastępcy ministra obrony narodowej gen. dyw. Mariana Spychalskiego przejął ówczesny dowódca 1 Łużyckiego Oddziału Ochrony Pogranicza ppłk Eugeniusz Buchwałow. W drzewce sztandaru wbito 65 gwoździ pamiątkowych	passage
+33	UNKNOWN
+34	UNKNOWN
+35	Shea’s Performing Arts Center i Buffalo Kleinhans Music Hall Nickel City Opera (znana również jako NC Opera Buffalo i NCO) – amerykańska opera w Buffalo w stanie Nowy Jork będąca jednym z wiodących teatrów operowych w USA, a także jednym z największych na świecie (3019 miejsc)	passage
+36	UNKNOWN
+37	UNKNOWN
+38	Piłka jest zrobiona z poliestru, który jest w 100% pozyskiwany z recyklingu, a tusz na bazie wody jest wykonany z materiałów pochodzenia biologicznego. Każda warstwa piłki zawiera włókna kukurydziane, trzcinę cukrową, miazgę drzewną i gumę	passage
+39	UNKNOWN
+40	UNKNOWN
+41	W reprezentacji Armenii Jedigarian zadebiutował 25 maja 2010 roku w wygranym 3:1 towarzyskim meczu z Uzbekistanem. Obecnie rywalizuje z Armenią o awans do Euro 2012.	passage
+42	UNKNOWN
+43	UNKNOWN
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	Od 1997 numer 42 zastrzeżony jest przez całą ligę ku pamięci Jackie Robinsona, który jako pierwszy Afroamerykanin przełamał bariery rasowe w Major League Baseball	passage
+48	Wiesław Prządka – akordeon, bandoneon Orkiestra Kameralna Polskiego Radia AMADEUS - orkiestra Anna Duczmal-Mróz – dyrygent Aranżacja utworów: Wiesław Prządka (1, 6, 8), Bernard Chmielarz (2, 3, 4, 5), Mateusz Wysłucha (7), Bohdan Jarmołowicz (9, 10) Realizacja nagrań i mastering: Zbigniew Kusiak	passage
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	UNKNOWN
+53	UNKNOWN
+54	Najczęściej używanym przydomkiem Milanu jest rossoneri – „czerwono-czarni”, co związane jest z klubowymi barwami mediolańskiego zespołu. Drugim przydomkiem, który jest obecnie używany, jest diavolo – „diabeł”. W ten sposób Herbert Kilpin, jeszcze przed założeniem Milanu, określił drużynę którą miał zamiar utworzyć. To ostatnie zwycięstwo Genui, wkrótce będę w Mediolanie i zrobię z nich drużynę prawdziwych diabłów, przed którymi będziecie drżeć!	passage
+55	UNKNOWN
+56	UNKNOWN
+57	UNKNOWN
+58	UNKNOWN
+59	UNKNOWN
+60	UNKNOWN
+61	W reprezentacji Brazylii Araty zadebiutował 6 kwietnia 1952 w wygranym 2-0 meczu z reprezentacją Meksyku, podczas Mistrzostw Panamerykańskich, które Brazylia wygrała. Był to jego jedyny występ w reprezentacji.	passage
+62	UNKNOWN
+63	UNKNOWN
+64	UNKNOWN
+65	UNKNOWN
+66	UNKNOWN
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	Na początku czerwca około 2800 jeńców przyprowadzono do Chocimia. W wyniku pertraktacji komisarzy Stanisława Fredry i Adama Tarło Gazi Gerej zwrócił tych jeńców stronie polskiej	passage
+71	UNKNOWN
+72	UNKNOWN
+73	UNKNOWN
+74	Aidem Media zaczęło także produkować programy telewizyjne dla TVP. Były to teleturnieje rodzinne łączące technikę telewizyjną z multimedialną, takie jak: Poszukiwacze zaginionych tajemnic, Królestwo Maciusia, czy Kodołamacze. Firma była także odpowiedzialna za wyprodukowanie kilku pomniejszych animacji w formie przerywników dla TVP	passage
+75	W czasach zaborów folwark w gminie Kucewicze, w powiecie oszmiańskim, w guberni wileńskiej Imperium Rosyjskiego. W 1905 roku liczył 15 mieszkańców, 43 dziesięcin, należał do Małaszkiewiczów	passage
+76	4 lipca wojska Frontu Zachodniego Michaiła Tuchaczewskiego przeszły ofensywy. W ciągu kilkunastu godzin przełamały obronę polskiej 1 Armii i ruszyły do pościgu. O 10.00 po przygotowaniu artyleryjskim, sowiecka 18 Dywizja Strzelców uderzyła na ugrupowanie obronne 155 pułku piechoty w Szadziewszczyźnie	passage
+77	Anna Benicewicz-Miazga jest absolwentką XXXIX Liceum Ogólnokształcącego w Warszawie. Studiowała na Uniwersytecie Warszawskim, Politechnice Świętokrzyskiej oraz w Wyższej Szkole Handlowej im. Bolesława Markowskiego w Kielcach. Związana ze świętokrzyskim środowiskiem fotograficznym, mieszka i pracuje w Kielcach	passage
+78	6to4 6to4 Mechanizm automatycznych tuneli 6to4 pozwala podłączyć się do sieci IPv6 każdemu, kto dysponuje choćby jednym publicznym adresem IPv4. Przy uruchamianiu tunelu nie są konieczne żadne formalności. Ważne jest jednak by poprzez sieć usługodawcy osiągalny był adres 192.88.99.1 oraz możliwa była transmisja pakietów IPv4 oznaczonych protokołem 41 (dziesiętnie). Dokładny opis zawarty jest w RFC 3056 ↓.	passage
+79	UNKNOWN
+80	UNKNOWN
+81	Czaszka amargazaura Pysk dikreozaurydów przypominał pysk diplodoka. Długie zauropodzie czaszki o wycofanych nozdrzach zewnętrznych i cylindrycznych zębach określa się mianem czaszek typu diplodoka. Prócz diplodoków i dikreozaurów występowały one również u tytanozaurów	passage
+82	UNKNOWN
+83	Do sądów skierowano 19 aktów oskarżenia, 330 osobom postawiono zarzuty, a 50 aresztowano. Według prokuratury w nadużycia paliwowe zamieszane były 1263 firmy. W jednym tylko śledztwie prowadzonym przez krakowską prokuraturę straty Skarbu Państwa z tytułu uszczuplonej akcyzy wyceniono na ponad miliard zł. Generał Policji Mieczysław K. został w 2016 roku prawomocnie uniewinniony od wszystkich stawianych mu zarzutów. W 2018 roku krakowski Sąd Okręgowy nieprawomocnie uniewinnił Jana Bobreka i Zdzisława Marszałka od zarzucanych im czynów.	passage
+84	UNKNOWN
+85	W czasach zaborów zaścianek w gminie Mołodeczno, w powiecie wilejskim, w guberni wileńskiej Imperium Rosyjskiego. W 1865 roku należał do dóbr Helenowo	passage
+86	Richard Arin Ilejay urodził się w mieście Ventura w Kalifornii. Jego ojcem jest Ric Ilejay o amerykańskich, filipińskich i meksykańskich korzeniach, a jego matką jest Charlotte Tuttle o amerykańskich, holenderskich i niemieckich korzeniach. Obydwoje rodzice Arina zajmują się muzyką - ojciec jest profesjonalnym gitarzystą, a matka śpiewa w chórze gospel. Arin zaczął grać na perkusji w wieku 9 lat.	passage
+87	W 2016 roku w Schlesinger Library w Bostonie została zorganizowana wystawa Women of the Blackwell Family: Resilience and Change. Pokazano na niej historię nie tylko Alice, ale jej matki, babki i ciotek	passage
+88	Baijnath Baijnath Baijnath może dotyczyć: Baijnath – miasto w północnych Indiach, w stanie Himachal Pradesh, na pogórzu Himalajów Małych Baijnath – miasto w północnych Indiach, w stanie Uttarakhand, na pogórzu Himalajów Wysokich	passage
+89	UNKNOWN
+90	UNKNOWN
+91	UNKNOWN
+92	UNKNOWN
+93	UNKNOWN
+94	UNKNOWN
+95	UNKNOWN
+96	Polska nazwa błędny rycerz jest szeroko przyjętym tłumaczeniem francuskiego chevalier errant i często jest błędnie rozumiane jako rycerz dopuszczający się szalonych czynów. To przekonanie związane jest ze współczesnym znaczeniem słowa błędny (w staropolszczyźnie oznaczające błądzący	passage
+97	UNKNOWN
+98	Solovjovs był zawodnikiem wszystkich młodzieżowym reprezentacji Łotwy, w tym U-17, U-19 i U-21. 25 marca 2017 zadebiutował w pierwszej reprezentacji w meczu ze Szwajcarią	passage
+99	UNKNOWN
+100	UNKNOWN
+101	UNKNOWN
+102	Urodził się w Łatgalii (obecnie wschodnia Łotwa, wówczas należącej do Imperium Rosyjskiego), zamieszkanej przez duże skupisko mniejszości polskiej. Studiował teologię i filozofię w Seminarium Duchownym w Rydze, a następnie prawo kanoniczne na Katolickim Uniwersytecie Lubelskim w Lublinie	passage
+103	UNKNOWN
+104	UNKNOWN
+105	Biblioteka Ojców Kościoła Biblioteka Ojców Kościoła Biblioteka Ojców Kościoła – seria źródeł dotyczących antyku chrześcijańskiego ukazująca się w Krakowie od 1992 roku nakładem Wydawnictwa M. Jej redaktorem jest ksiądz prof. Józef Naumowicz.	passage
+106	Branch Rickey w latach 1901–1904 studiował na Ohio Wesleyan University, gdzie grał w koszykówkę, baseball i futbol, a także był trenerem baseballowej drużyny uniwersyteckiej	passage
+107	UNKNOWN
+108	UNKNOWN
+109	ADempiere rozwijane jest na bazie technologii Java EE, ze szczególnym wykorzystaniem serwera aplikacji JBOSS. Na chwilę obecną wspierane są systemy bazodanowe Oracle i PostgreSQL	passage
+110	UNKNOWN
+111	Był związany z żoliborską grupą organizacji samokształceniowej PET, skąd trafił do Szarych Szeregów. W 1941 wraz ze swoim przyjacielem Zbigniewem Gęsickim „Juno” ukończył Liceum Telekomunikacyjne i podjął pracę na kolei	passage
+112	500 000 amerykańskich właścicieli gruntów na Kubie przed wybuchem wojny amerykańsko-hiszpańskiej utworzyło projekt wykupienia Kuby od Hiszpanii, by przyłączyć ją do Stanów. W 1859 senator John Slidell przeprowadził ustawę, która przekazywała trzydzieści milionów dolarów do rąk prezydenta, które miały być wykorzystane na zakup Kuby od Hiszpanii	passage
+113	Baligówka Baligówka Baligówka – część wsi w gminie Jabłonka Baligówka (polana) – polana w miejscowości Witów Baligówka (torfowisko) – torfowisko w miejscowości Czarny Dunajec na Kotlinie Nowotarskiej	passage
+114	UNKNOWN
+115	UNKNOWN
+116	Od poniedziałku do soboty pociągi kursują co 15 minut do Penarth przez Cardiff Central i co 15 minut do Bargoed, a jeden pociąg na cztery kursuje do Rhymney. Wieczorami pociągi kursują co godzinę na północ i co półgodziny na południe, niektóre pociągi z Cardiff kończą się i zaczynają tutaj swój bieg. W niedziele pociągi kursują co dwie godziny w każdym kierunku, a pociągi na południe kursują na wyspę Barry.	passage
+117	UNKNOWN
+118	UNKNOWN
+119	UNKNOWN
+120	UNKNOWN
+121	W sprawie przebiegu Uralidów w Polsce i krajach przyległych, Materiały do znajomości budowy podłoża Polski północno-wschodniej, O przebiegu jednostek reglowych w dorzeczu Suchej Wody w Tatrach Dyluwialne zlodowacenia północnych stoków Tatr, O żwirach antropogenicznych w Karpatach, Z zagadnień stratygrafii plejstocenu na Niżu Europejskim, Czwartorzęd Karpat, Podstawowe profile czwartorzędu w dorzeczu Niemna, O geomorfologicznej metodzie wykrywania organogenicznych osadów interglacjalnych i jej konsekwencjach.	passage
+122	Świątynia neorenesansowa, jednonawowa, z kaplicami bocznymi po obu stronach nawy. Ma długość 39 m, szerokość 19 m i wysokość 17 m. Fasadę zdobią mozaiki, rozeta i portal główny z bogato dekorowanymi drzwiami, z wyrzeźbionymi wizerunkami postaci biblijnych, aniołów i Matki Bożej	passage
+123	Kibuc Be’erot Jicchak Hodowla bydła w Be’erot Jicchak Wjazd do kibucu Be’erot Jicchak Kibuc został nazwany na cześć rabina Jicchaka Nisanboima. Nazwa nawiązuje także do osoby patriarchy Izaaka, który posiadał w tym rejonie studnię	passage
+124	UNKNOWN
+125	UNKNOWN
+126	UNKNOWN
+127	UNKNOWN
+128	UNKNOWN
+129	UNKNOWN
+130	UNKNOWN
+131	UNKNOWN
+132	UNKNOWN
+133	UNKNOWN
+134	Większość wyznań chrześcijańskich potępia aborcję, która jest traktowana jako morderstwo, a jedynym dopuszczalnym warunkiem jej dokonania jest ciąża, która jednoznacznie prowadzi do śmierci matki (np. ciąża pozamaciczna). Kościół katolicki nie dopuszcza aborcji	passage
+135	UNKNOWN
+136	Bernard Bzdawka był synem Pawła, rolnika, i Anny z domu Wysockiej. W 1947 roku ożenił się z Janiną Gallas (ur. w 1923 roku), z którą miał troje dzieci: Andrzeja (ur. w 1948 roku), Tomasza (ur. w 1950 roku) i Ewę (ur. w 1953 roku).	passage
+137	UNKNOWN
+138	UNKNOWN
+139	Rodzaj zdefiniował w 1816 roku francuski przyrodnik i zoolog Georges Cuvier w publikacji własnego autorstwa poświęconej systematyce królestwa zwierząt	passage
+140	UNKNOWN
+141	UNKNOWN
+142	W 2000 roku AMA (Amerykańskie Stowarzyszenie Motocyklistów) stworzyło Nagrodę pamiątkową im. Bessie Stringfield w ramach uznania ponadprzeciętnych osiągnięć motocyklistki. W 2002 Bessie została upamiętniona w muzeum Motorcycle Hall of Fame	passage
+143	UNKNOWN
+144	UNKNOWN
+145	UNKNOWN
+146	Chajes B., Kompendium higieny społecznej, nakł. Ksiegarni Ludwika Fiszera, 1924, Seifert O., Diagnostyka lekarsko-kliniczna, Wydawnictwo Naukowe „Wiedza”, 1925, Matthes M., Podręcznik diagnostyki różniczkowej chorób wewnętrzych, Wydawnictwo Naukowe „Wiedza”, 1930, Mering J., Podręcznik chorób wewnętrznych, tom I-II,1927 (tłum. wspólnie z Józefem Luxenburgiem).	passage
+147	UNKNOWN
+148	UNKNOWN
+149	UNKNOWN
+150	UNKNOWN
+151	UNKNOWN
+152	Po raz pierwszy na arenie międzynarodowej pojawiła się 25 lutego 2012 roku, podczas zawodów juniorskich w słoweńskiej miejscowości Kranj/ Pokljuka, gdzie wygrała zawody na dystansie 5 km stylem dowolnym ze startu masowego. W Pucharze Świata zadebiutowała 24 stycznia 2016 roku w Nové Město na Moravě, gdzie uplasowała się na 7. miejscu w biegu sztafetowym w drugim składzie Niemiec	passage
+153	UNKNOWN
+154	UNKNOWN
+155	UNKNOWN
+156	UNKNOWN
+157	UNKNOWN
+158	UNKNOWN
+159	Przedsiębiorstwo zostało założone w 1797 roku jako Boulton and Paul Ltd. i specjalizowało się w konstrukcjach stalowych, prefabrykacji budynków oraz wyrobach stolarskich	passage
+160	Giełda brukselska, miejsce pierwszych sukcesów finansowych Langranda-Dumonceau Urodził się 5 grudnia 1826 jako André Langrand w Vossem niedaleko Liège	passage
+161	Sudański minister spraw wewnętrznych, Ibrahim Mahmoud Hamad zobowiązał się to postanowienia agresorów przed trybunałem sprawiedliwości. Powiedział, że potrzebne jest podjęcie kroków, które na celu miałyby rozbrojenie ludności plemiennej. Misja ONZ w Sudanie wszczęła dochodzenie ws. walk. Sudańskie władze poprosiły plemiona, by przeniosły się na odległość co najmniej 5 km od siebie, by zapobiec nowym walkom. Mimo to sytuacja pozostaje napięta	passage
+162	UNKNOWN
+163	UNKNOWN
+164	UNKNOWN
+165	20 marca w Warszawie zmarł generał brygady Mikołaj Kostecki 23 marca Minister Spraw Wojskowych mianował pułkownika dyplomowanego Rudolfa Dreszera dowódcą Brygady Kawalerii „Suwałki”	passage
+166	UNKNOWN
+167	UNKNOWN
+168	Utwór „Broken Glass” został zainspirowany marszem kobiet ze stycznia 2017. Piosenkarka nazwała utwór feministycznym hymnem i powiedziała: „Nauczyłam się, że w życiu nawet w najtrudniejszych momentach zawsze jest światło. „Broken Glass” to mój bojowy okrzyk uwolnienia, uzdrowienia, podekscytowania, nadziei i radości – to świętowanie mocy kobiet – naszej jedności, siły, zaciekłości i po prostu tego, jakie jesteśmy wspaniałe. Jesteśmy wojownicze na swój sposób, a razem nie do zatrzymania”	passage
+169	UNKNOWN
+170	Bad Griesbach Bad Griesbach Niemcy: Bad Griesbach im Rottal – miasto w kraju związkowym Bawaria, w powiecie Pasawa Bad Griesbach im Schwarzwald – dzielnica gminy Bad Peterstal-Griesbach w kraju związkowym Badenia-Wirtembergia, w powiecie Ortenau Zobacz też: Griesbach	passage
+171	UNKNOWN
+172	UNKNOWN
+173	UNKNOWN
+174	UNKNOWN
+175	UNKNOWN
+176	Nikiel obecny jest w różnych stężeniach w wielu potrawach. Narażenie na alergen przez dietę może skutkować zapoczątkowaniem (systemowej) alergii kontaktowej na nikiel. Dorośli powinni spożywać mniej niż 150 μg niklu dziennie, oraz unikać potraw takich jak: czekolada, granola, mąka owsiana i fasola	passage
+177	UNKNOWN
+178	Lavigne jest powiązana z wieloma fundacjami charytatywnymi – m.in. Make Some Noise, Amnesty International, Erase MS, Music Clearing Minefields oraz U.S. Campaign for Burma. Pojawiła się także w reklamach ALDO z YouthAIDS, aby zebrać pieniądze przeznaczone na edukowanie ludzi na całym świecie na temat HIV i AIDS. 28 listopada 2007 wystąpiła na koncercie charytatywnym Unite Against AIDS w Montrealu	passage
+179	UNKNOWN
+180	Była członkinią rad dyrektorów tanzańskich korporacji, w tym m.in.: Tanzania Railways Corporation (TRC), National Bank of Commerce (NBC), Texco, Legal Corporation, Tanesco, Mwatex, Mutex, Mbeya Tex, Engineers Registration Board and Bora Shoes Company	passage
+181	UNKNOWN
+182	UNKNOWN
+183	2 lutego – pojawiła się kometa X/1106 C1. 22 marca – wojska króla niemieckiego Henryka V zostały rozbite przez Lotaryńczyków w bitwie pod Visé. Filip I zrezygnował z biskupiej inwestytury. Henryk I pokonał księcia Normandii Roberta i włączył jego księstwo do swojego królestwa. Henryk V uznany powszechnie za króla Niemiec.	passage
+184	UNKNOWN
+185	UNKNOWN
+186	UNKNOWN
+187	Altocumulus castellanus Altocumulus castellanus Altocumulus castellanus Altocumulus castellanus – gatunek chmur Altocumulus. Ma postać niewielkich, kłębiastych wieżyczek lub baszt o wspólnej podstawie, co nadaje im ząbkowany wygląd	passage
+188	(Dicționarul limbii române). Słownik ten został jednak poddany miażdżącej krytyce środowisk naukowych, zwłaszcza młodorumuńskich, i ostatecznie przyczynił się do upadku szkoły latynistycznej.	passage
+189	UNKNOWN
+190	UNKNOWN
+191	UNKNOWN
+192	UNKNOWN
+193	UNKNOWN
+194	Urodził się w rodzinie Aleksandra, majora wojsk węgierskich, i Polki Heleny z Antoniewiczów, nauczycielki rysunków i języka niemieckiego. W 1905 roku jego rodzice rozwiedli się i matka wraz z synem wróciła do kraju	passage
+195	Wykorzystywany głównie w produkcji owoców konserwowych dla niemowląt i w wyrobach cukierniczych dla dzieci. Zagęszcza i stabilizuje produkty. Jest również rozpuszczalnikiem.	passage
+196	Albert Nowicki (Yippee-ki-yay!) pisał: "Doszlifowana choreografia i piękne lokacje zdjęciowe nie budują udanego projektu. Klęska filmu – o której spokojnie można mówić – jest logiczną konsekwencją jego licznych wad. Najbardziej kardynalna z nich to nieciekawy, usłany schematyzmem scenariusz."	passage
+197	UNKNOWN
+198	UNKNOWN
+199	Specjalny personel, zależny jedynie od ministra i stanowiący osobny korpus. Pełnił w imieniu Ministra Spraw Wojskowych kontrolę administracji sił zbrojnych. Stał on na straży interesów skarbu państwa i praw osobistych oraz nadzorował stosowanie we wszystkich służbach odnośnych ustaw, dekretów, regulaminów i rozporządzeń.	passage
+200	UNKNOWN
+201	UNKNOWN
+202	Na początku 2008 roku zespół C:Real podpisał kontrakt płytowy z wytwórnią Heaven Music. 31 marca ukazała się szósta płyta studyjna grupy zatytułowana Invain	passage
+203	UNKNOWN
+204	UNKNOWN
+205	UNKNOWN
+206	UNKNOWN
+207	Borys III z Adolfem Hitlerem, 1943 rok Po wybuchu II wojny światowej Borys III pragnął zachować neutralność swojego kraju (o neutralność Bułgarii zabiegała także Wielka Brytania	passage
+208	UNKNOWN
+209	UNKNOWN
+210	Adolf Friedrich von Bassewitz Adolf Friedrich von Bassewitz Adolf Friedrich von Bassewitz, Adolf Friedrich auf Neuhof (ur. 1681, zm. 1740) – hanowerski wojskowy i dyplomata. Był krewnym potężnego rodu Bernstorff, nad jego karierą czuwał Andreas Gottlieb Bernstorff (1640-1726) hanowerski polityk, najważniejszy minister Jerzego I Hanowerskiego. W wojsku elektorskim doszedł do stopnia pułkownika. W latach 1719–1728 minister-plenipotent Elektora Hanoweru na dworze szwedzkim.	passage
+211	UNKNOWN
+212	Syn Samoańczyka Stevena Faoagali i Polki Moniki Plodzickiej-Faoagali (z Polski do Australii wyemigrowali oboje jej rodzice). Początkowo trenował rugby union i rugby league, jednak za namową ojca wybrał boks. Na Samoa mieszkał w Siumu i Tuanaʻi. Obecnie mieszka w Sydney, w Australii	passage
+213	UNKNOWN
+214	UNKNOWN
+215	UNKNOWN
+216	UNKNOWN
+217	UNKNOWN
+218	UNKNOWN
+219	UNKNOWN
+220	W Amalce znajduje się wyciąg narciarski. Długość stoku to 260 m, różnica wzniesień wynosi 33 m, średni kąt pochylenia 16-17%. Dwa wyciągi orczykowe położone są równolegle. Stok sztucznie naśnieżany i oświetlony. Na wyposażeniu ratrak.	passage
+221	UNKNOWN
+222	UNKNOWN
+223	UNKNOWN
+224	UNKNOWN
+225	UNKNOWN
+226	UNKNOWN
+227	UNKNOWN
+228	Actio vi bonorum raptorum Actio vi bonorum raptorum Actio vi bonorum raptorum – w prawie rzymskim powództwo poszkodowanego przeciwko sprawcy rabunku (rapina).	passage
+229	zostały pokonane w bitwie pod Sievershausen. Co prawda zginął w niej Maurycy saski, jednak siły związku wyparły Albrechta z Frankonii, niszcząc zamek Plassenburg. Po kolejnej porażce Albrecht został zmuszony do ucieczki do Francji. Wrócił z niej w 1556 z nowymi planami, jednak wkrótce potem zmarł. Jego dobra przypadły jego bratankowi Jerzemu Fryderykowi, który odbudował Plassenburg.	passage
+230	Po premierze Azyl Arkham stał się sukcesem kasowym, sprawiając, że nazwiska Morrisona i McKeana stały się popularne w branży komiksowej. Redaktorka DC Comics Karen Berger ujawniła, że do 2004 roku sprzedało się „blisko pół miliona egzemplarzy”, co czyni tytuł najlepiej sprzedającym się oryginalnym komiksem superbohaterskim w Stanach Zjednoczonych	passage
+231	UNKNOWN
+232	Spiętrzenie szczytowe Baby porastają (zwłaszcza od strony północnej) rozrzucone łany kosodrzewiny, natomiast sam wierzchołek i przedwierzchołek południowy są generalnie porośnięte roślinnością halną. Cały masyw Baby leży na terenie Parku Narodowego Niżne Tatry.	passage
+233	Stany urządzeń D0-D3 zależą od typu zastosowanego urządzenia: D0, W pełni działający, Fully-On jest stanem zwykłego działania urządzenia. D1 i D2 są pośrednimi stanami zasilania, różnie definiowanymi dla poszczególnych urządzeń. D3, Wyłączony, Off, jest stanem, w którym urządzenie jest wyłączone i nie reaguje na sygnały dochodzące z magistrali.	passage
+234	UNKNOWN
+235	UNKNOWN
+236	UNKNOWN
+237	W reprezentacji Chile Valentini zadebiutował 18 grudnia 1960 w wygranym 4-1 towarzyskim spotkaniu z Paragwajem. W 1966 roku został powołany przez selekcjonera Luisa Álamosa do kadry na Mistrzostwa Świata w Anglii. Na Mundialu Prieto wystąpił w dwóch meczach z KRLD i ZSRR, który był jego ostatnim meczem w reprezentacji. Od 1960 do 1966 roku rozegrał w kadrze narodowej 19 spotkań.	passage
+238	UNKNOWN
+239	Żaby C. cyaneospila zostały zbadane w 1949 roku i opisane, po czym nie obserwowano ich przez następne 62 lata. Istniały obawy, że wieloletnie niepokoje (m.in. wojny domowe w Kongu i wojna domowa w Burundi) oraz wzrost liczby ludności, skutkujący utratą naturalnych siedlisk zwierząt, doprowadziły do wyginięcia tego gatunku. Dopiero w grudniu 2011 roku wyprawa amerykańskich herpetologów odkryła pojedynczy okaz C. cyaneospila, słyszane były także głosy wielu innych osobników, co wskazuje na istnienie tam licznej populacji	passage
+240	Moszaw został założony w 1946 przez zdemobilizowanych żydowskich żołnierzy Brytyjskich Sił Zbrojnych. Nazwano go na cześć irackiego miasta Basra, w którym przebywali ci żołnierze podczas II wojny światowej	passage
+241	UNKNOWN
+242	UNKNOWN
+243	UNKNOWN
+244	UNKNOWN
+245	UNKNOWN
+246	Muzyka w tej czołówce została wykonana przez Craig Handy. Jest utrzymana w stylu Post-bop. Do jej wykonania użyto saksofonu, fortepianu, organów, gitary basowej i tamburynu. W tle słychać też odgłosy publiczności. W sezonie szóstym za aktorami stoi ogromnie zdjęcie na którym przedstawiony jest gmach Apollo Theater znajdujący się w Nowym Jorku. W tej czołówce odeszło się od zasady, zgodnie z którą Bill Cosby tańczył z każdym aktorem. Od tej pory razem występują tylko aktorzy, którzy w serialu są małżeństwem z wyjątkiem nowo wprowadzonych aktorów, z którymi nadal tańczy Bill Cosby, np. Raven-Symoné Christina Pearman oraz Erika Alexander (Erikę Alexander wprowadzono do serialu dopiero w siódmym sezonie). Nowo wprowadzeni aktorzy mający partnerów z Billem Cosbym nie występowali, np: Joseph C. Phillips (jedyny przykład w tej sytuacji). Aktorzy są ubrani w stroje wieczorowe, lecz w przeciwieństwie do sezonu czwartego stroje te są w stylu z przełomu lat 80 i 90. Do serialu w tym sezonie powróciła Lisa Bonet, której postać powróciła z Afryki zamężna z przybraną córką. Na końcu czołówki odeszło się od zwyczaju pokazywania twarzy Billa Cosby’ego, teraz wypowiada on następujące słowa podchodząc w stronę zdjęcia: „This is the best elevator music I've ever heard!”.	passage
+247	Biedroń Biedroń Franciszek Biedroń - poeta, dramatopisarz, żołnierz II i III Brygady Legionów Polskich Jan Biedroń – ksiądz rzymskokatolicki Robert Biedroń – polski działacz społeczny, publicysta, poseł na Sejm, prezydent Słupska w latach 2014–2018 Wojciech Biedroń – polski reżyser, aktor, scenarzysta i producent	passage
+248	UNKNOWN
+249	Swoją karierę piłkarską Aloui rozpoczął w klubie Espérance Tunis. W sezonie 1993/1994 wywalczył z nim mistrzostwo Tunezji oraz zdobył Puchar Mistrzów. W 1994 roku odszedł do CS Hammam-Lif, w którym spędził dwa lata. W sezonie 1994/1995 był królem strzelców pierwszej ligi tunezyjskiej z 18 strzelonymi bramkami. W 1996 roku przeszedł do Club Africain. W sezonie 1997/1998 był z niego wypożyczony do CO Medenine. W latach 1999–2002 ponownie grał w CS Hammam-Lif, w którym zakończył swoją karierę.	passage
+250	Planicy. W pierwszej próbie uzyskał 217,5 m i z niewielką przewagą prowadził w konkursie, a po drugim skoku, na 215 m, spadł na drugie miejsce. Dzień później lądował na 211 m i 211,5 m, tym samym kończąc mistrzostwa na czwartym miejscu ze stratą 0,4 pkt do trzeciego Andersa Jacobsena.	passage
+251	Po raz pierwszy zgodnie z zasadami nazewnictwa binominalnego gatunek ten opisał Johann Friedrich Gmelin w 1789 w 13. edycji Systema Naturae. Nowemu gatunkowi nadał nazwę Ardea cinnamonea, a jako miejsce typowe wskazał Chiny	passage
+252	UNKNOWN
+253	Białko NCgl1221 Białko NCgl1221 Zamknięta struktura MscS E. coli Białko NCgl1221 - eksporter kwasu L-glutaminowego kodowany przez gen NCgl1221 w Corynebacterium glutamicum. Posiada domenę N-końcową (1-286 aminokwasów) homologiczną do MscS Escherichia coli, która jest niezbędna i wystarczająca do wytworzenia L-glutaminianu oraz długą domenę C-końcową (287-533 aminokwasów) o nieznanej funkcji	passage
+254	UNKNOWN
+255	UNKNOWN
+256	Algebra nad ciałem Algebra nad ciałem Algebra nad ciałem (algebra liniowa) – przestrzeń liniowa wyposażona w dwuliniowe (wewnętrzne) działanie dwuargumentowe, nazywane mnożeniem (wektorów), które czyni z niej pierścień	passage
+257	Stan na 19 lipca 2016 Zawodnik Gole Mecze Francesco Totti 250 619 Roberto Pruzzo 106 240 Rodolfo Volk 103 157 Amedeo Amadei 100 216 Vincenzo Montella 83 180 Abel Balbo 78 149 Pedro Manfredini 76 130 Dino da Costa 71 149 Marco Delvecchio 62 231 Cesare Augusto Fasanelli 60 167 Arturo Chini Ludueña 56 163 Carlo Galli 53 123 Agostino Di Bartolomei 50 237 Fulvio Bernardini 49 286 Giuseppe Giannini 49 318	passage
+258	UNKNOWN
+259	UNKNOWN
+260	Od 1946 funkcjonowało Biuro Konsularne ZSRR (Konsularbüro) przy Radzieckiej Administracji Wojskowej w Niemczech (Sowjetische Militäradministration in Deutschland, Советская военная администрация в Германии) w Berlin-Karlshorst.	passage
+261	Amfiteatr w Ostródzie Amfiteatr w Ostródzie Amfiteatr w Ostródzie Amfiteatr w Ostródzie – amfiteatr zlokalizowany w Ostródzie przy ul. Mickiewicza 17 A. Położony nad wschodnim brzegiem jeziora Drwęckiego. Widownia amfiteatru liczy 2500 miejsc siedzących. Obiekt jest w pełni zadaszony. Odbywają się w nim koncerty muzyczne, spektakle teatralne, wszelkiego rodzaju prezentacje, występy kabaretów i inne imprezy masowe. Zarządcą amfiteatru jest Centrum Kultury w Ostródzie	passage
+262	UNKNOWN
+263	UNKNOWN
+264	UNKNOWN
+265	Crisis Core: Final Fantasy VII – Cissnei Mermaid Melody Pichi Pichi Pitch Mermaid Melody Pichi Pichi Pitch (jap. ぴちぴちパーティ) Mermaid Melody Pichi Pichi Pitch (jap. ぴちぴちっとライブスタート!) Last Alive (jap. ラスト・アライブ)	passage
+266	UNKNOWN
+267	UNKNOWN
+268	UNKNOWN
+269	UNKNOWN
+270	UNKNOWN
+271	UNKNOWN
+272	UNKNOWN
+273	UNKNOWN
+274	UNKNOWN
+275	UNKNOWN
+276	UNKNOWN
+277	W styczniu 1935 roku na bazie 5 batalionu saperów w Krakowie została sformowana 23 kompania saperów. Kompania stacjonowała w garnizonie Katowice, w koszarach 73 pułku piechoty, na terenie Okręgu Korpusu Nr V. Z dniem 1 lutego 1935 roku zostali przeniesieni z 5 batalionu saperów: kapitan Kazimierz Jania na stanowisko dowódcy kompanii oraz podporucznicy Jan V Piotrowski, Tadeusz Pisowicz i Włodzimierz Józef Siwiński na stanowiska dowódców plutonów	passage
+278	UNKNOWN
+279	UNKNOWN
+280	UNKNOWN
+281	W 2019 roku Thorn postawiła sobie za cel przeczytać Dzieła Zebrane Szekspira, aby zebrać pieniądze dla Samarytan, brytyjskiej organizacji charytatywnej, która pomaga ludziom w trudnej sytuacji emocjonalnej. Thorn wybrała tę organizację, ponieważ powiedziała, że jej telefon zaufania „uratował [jej] życie, gdy rozważała samobójstwo”	passage
+282	UNKNOWN
+283	19 lipca 2023 roku Byeon został obsadzony w swojej pierwszej głównej roli jako Ryu Sun-jae w romantycznym serialu telewizyjnym o podróżach w czasie Lovely Runner od tvN, w którym wystąpił u boku Kim Hye-Yoon	passage
+284	Po ukończeniu szkoły powszechnej od 1908 do 1911 uczył się w Wojskowej Szkole Kadetów – Pionierów w Hainburgu w Austrii. Po ukończeniu szkoły w 1911 został przydzielony do służby w kompanii pionierów armii austriackiej. Po wybuchu I wojny światowej w sierpniu 1914 dowodził kompanią saperów. Brał udział w walkach na froncie rosyjskim. W 1917 został ranny i przebywał na leczeniu szpitalnym. Następnie walczył na froncie albańskim, potem froncie włoskim. Od listopada 1918 w Wojsku Polskim. Brał udział w organizowaniu Dowództwa Okręgu Generalnego	passage
+285	UNKNOWN
+286	UNKNOWN
+287	UNKNOWN
+288	Zwalczanie szkodników z użyciem insektycydów o szerokim działaniu prowadzi do niszczenia zarówno samych szkodników, jak i stawonogów będących ich naturalnymi wrogami. Dane z lat 1990 2010 zebrane z sześciu prowincji Chin pokazują wyraźny wzrost liczebności drapieżnych stawonogów. Pochodzące z pól bawełny Bt drapieżniki są korzystne dla znajdujących się w pobliżu upraw kukurydzy, orzeszków ziemnych i soi	passage
+289	UNKNOWN
+290	Akwatinta solna to technika polegająca na rozsypaniu soli kuchennej na płytce pokrytej werniksem akwafortowym, którą następnie podgrzewa się, a po ostudzeniu spłukuje wodą. Odsłonięte w ten sposób punkty są trawione. Odbitka prezentuje efekt odwrotny, niż w przypadku stosowania kalafonii, tj. ciemne punkty na jasnym tle	passage
+291	UNKNOWN
+292	UNKNOWN
+293	UNKNOWN
+294	UNKNOWN
+295	Witold Lutosławski podczas pobytu w Finlandii (marzec 1965). W tym samym roku Lutosławski skomponował aleatoryczne „Paroles tissées” dedykowane Peterowi Pearsowi. Poniższa lista przedstawia wybranych kompozytorów stosujących technikę aleatoryczną wraz z ewentualnymi przykładami w postaci dzieł muzycznych: Luciano Berio	passage
+296	UNKNOWN
+297	UNKNOWN
+298	UNKNOWN
+299	McDonald swoją przygodę z europejską koszykówką rozpoczął w klubach w Belgii (Braine Castors) i Słowenii (Interier Krsko). W tym drugim klubie spotkał się z Tomo Mahoriciem, który odkrył jego talent	passage
+300	UNKNOWN
+301	UNKNOWN
+302	UNKNOWN
+303	UNKNOWN
+304	UNKNOWN
+305	UNKNOWN
+306	UNKNOWN
+307	UNKNOWN
+308	Ukończyła studia z zakresu porównawczego prawa administracyjnego na Uniwersytecie Florenckim, a także studia podyplomowe w Kolegium Europejskim w Brugii	passage
+309	UNKNOWN
+310	UNKNOWN
+311	UNKNOWN
+312	UNKNOWN
+313	UNKNOWN
+314	UNKNOWN
+315	Projekt został rozpoczęty w 2002 roku i początkowo działał w oparciu o sieć Gnutella. Po kilku miesiącach twórcy postanowili stworzyć własną zdecentralizowaną sieć wymiany plików. Ares pozwala w określonych sytuacjach na wymianę plików, nawet jeżeli użytkownicy są umieszczeni za zaporą sieciową	passage
+316	Anna Mendak Anna Mendak Anna Mendak (ur. w 1980 we Wrocławiu) – polska tancerka i instruktor tańca flamenco, z wykształcenia psycholog. Członek zespołu Danza del Fuego.	passage
+317	Był synem poety urodzonego w Jabłonkowie Adama Sikory. Absolwent gimnazjum w Cieszynie, pracował jako księgarz, a później księgowy w Towarzystwie Oszczędności i Zaliczek. Należał m.in. do Macierzy Szkolnej dla Księstwa Cieszyńskiego oraz Czytelni Polskiej. Był jednym ze współzałożycieli regionalnego koła Polskiego Towarzystwa Gimnastycznego „Sokół” w Cieszynie. 24 października 1891 roku uczestniczył w pierwszym walnym zebraniu Towarzystwa Gimnastycznego „Sokół” w Cieszynie, którego został skarbnikiem	passage
+318	UNKNOWN
+319	Białka morfogenetyczne kości Białka morfogenetyczne kości Białka morfogenetyczne kości (BMP, z ang. bone morphogenetic protein) – białka z grupy cytokin należące do nadrodziny TGF-β; również znane jako czynniki wzrostu. BMP biorą udział w regulacji wzrostu i różnicowania osteoblastów i chondroblastów. Indukują tworzenie kości w miejscach ektopowych. Znanych jest kilkanaście białek należących do BMP. W użyciu klinicznym są: BMP-2 BMP-7 - OP-1	passage
+320	UNKNOWN
+321	UNKNOWN
+322	UNKNOWN
+323	Akcja filmu rozgrywa się w roku 50 p.n.e. Galia zostaje okupowana przez Rzymian, ale jedna osada oparła się najeźdźcom. Wielki wódz i dożywotni dyktator Rzymu – Juliusz Cezar postanawia wypróbować wobec niepokornych nową taktykę. Cesarz rozkazuje więc wybudować obok wioski „Osiedle Bogów” – kolonię luksusowych posiadłości dla bogatych Rzymian. Na szczęście dwóch dzielnych Galów, Asterix i Obelix robią wszystko, aby pokrzyżować Juliuszowi Cezarowi plany.	passage
+324	UNKNOWN
+325	UNKNOWN
+326	UNKNOWN
+327	Pick'n'roll w schemacie 4-1 Zawodnik nr 1 podaje do nr 2. Nr 2 podaje do zawodnika nr 4 i po podaniu nr 2 wykonuje zasłonę do piłki i rozgrywa „pick'n'roll” z zawodnikiem nr 4. Nr 4 może podać do nr 2, lub do wybiegającego po zasłonie zawodnika nr 3.	passage
+328	Poezje... częścią przekładane, częścią oryginalne w XII tomach, wydał autor; (Oddz. 1): t. 1-5, Warszawa 1840-1841; Oddz. 2: t. 6-8, Warszawa 1843; zobacz Ważniejsze dzieła poz. 13.	passage
+329	W wyniku doświadczeń związanych z chorobą, 25 marca 2008 roku założył fundację – Sir Bobby Robson Foundation, mającą na celu wsparcie w walce z chorobą	passage
+330	UNKNOWN
+331	UNKNOWN
+332	Ben zadebiutował w narodowej reprezentacji Izraela do lat 21 7 października 2006 r. w zremisowanym z Francją U-21 w meczu playoff eliminacji młodzieżowych mistrzostw Europy. 7 lutego 2007 Sahar w meczu przeciwko Ukrainie zadebiutował w dorosłej reprezentacji Izraela, stając się najmłodszym reprezentantem swojego kraju. 28 marca 2007 strzelił swojego pierwszego gola w kadrze, pokonując bramkarza Estonii, w meczu kwalifikacji do EURO 2008.	passage
+333	Marzeniem Borsa było zostać jeszcze księciem Ferrary. Gdy więc papież Pius II 17 maja 1459 roku przejeżdżał przez Ferrarę, w drodze do Mantui, gdzie przygotowywał wyprawę przeciw Turkom, Borso obiecał papieżowi 300.000 florenów na ten cel	passage
+334	Na tej stronie monety znajduje się lewy profil kobiety z rozpuszczonymi włosami, na jej głowie symbol graficzny, dookoła napis „MIĘDZYNARODOWY ROK KOBIET”	passage
+335	UNKNOWN
+336	UNKNOWN
+337	UNKNOWN
+338	UNKNOWN
+339	Antología de la literatura guineana Antología de la literatura guineana Antología de la literatura guineana – antologia literacka poświęcona autorom z Gwinei Równikowej opublikowana w 1984	passage
+340	22 lutego 2008 z okazji 220. rocznicy urodzin Schopenhauera prezydent Gdańska Paweł Adamowicz odsłonił tablicę pamiątkową dłuta Tomasza Radziewicza na domu przy ulicy Świętego Ducha 45/47 (pierwsza tablica ku czci Schopenhauera zawisła w tym miejscu w 1888	passage
+341	UNKNOWN
+342	Andrianowa Andrianowa Andrianowa (ros. Андрианова) – żeńska forma rosyjskiego nazwiska Andrianow Marija Iwanowna Andrianowa (1920–2001) – radziecka aktorka Olga Aleksandrowna Andrianowa (ur. 1952) – rosyjska trenerka curlingu Tatjana Walerjewna Andrianowa (ur. 1979) – rosyjska lekkoatletka, specjalizująca się w biegu na 800 metrów	passage
+343	Jezioro jest zasilane przez niewielkie, okresowe cieki wodne i stanowi zasadniczo zbiornik bezodpływowy, silnie reagujący (wraz z sąsiednimi zbiornikami: Kusowo i Dobrcz) na zmiany warunków opadowych. W związku z tym w 1978 r. wybudowano sztuczne odwodnienie jeziora, które dzięki przepompowni może przerzucić nadmiar wody do Strugi Augustowskiej. Jednak ze względu na zazwyczaj niskie stany wód w jeziorze system ten jest rzadko wykorzystywany	passage
+344	Boks – pierwsza liga w sezonie 1957/58 (liczne sukcesy indywidualne: J. Liedtke w 1957 wicemistrz Polski w wadze muszej, brązowe medale w 1953, 1955 i 1958; M.Kaczmarek wicemistrz Polski w 1955, w wadze lekkiej i wicemistrz Polski w 1956 w wadze lekkopółśredniej; A. Siodła wicemistrz Polski w 1962 w wadze lekkośredniej; R. Jakubowski brązowy medal MP w 1960 w wadze półśredniej). Brydż – Drużynowi mistrzowie Polski w sezonach: 1986-1987, 1983-1984, 1980-1981, 1979-1980, 1975, 1972 Siatkówka Kajakarstwo Tenis stołowy Szermierka	passage
+345	UNKNOWN
+346	Dee Amy-Chinn oraz Milly Williamson, 2005: The Vampire Spike in text and fandom: Unsettling oppositions in Buffy the Vampire Slayer. Amy-Chinn, która jest wykładowcą na Uniwersytecie Oxford Brookes, oraz Williamson z Uniwersytetu Brunel skupiają się na konkretnej postaci z serialu - na Spike'u, który według nich reprezentuje „jednocześnie erotyczny wstręt i przyciąganie” oraz „strach przed pożądaniem „innego"”. Autorki porównują postać Spike’a do tego, jak serial ogólnie odnosi się do traktowania seksualności i samozrozumienia.	passage
+347	Po zakończeniu kariery piłkarza rozpoczął pracę szkoleniowca. Najpierw trenował kilka zespołów amatorskich w obwodzie rówieńskim. W 2010 trener Ihor Jaworski zaprosił go do sztabu szkoleniowego Nywy Tarnopol. Po dymisji Jaworskiego, 15 marca 2014 został tymczasowo mianowany na stanowisko głównego trenera klubu	passage
+348	Berlińska Wieża Telewizyjna to nie tylko wieża transmisyjna, ale także punkt orientacyjny, atrakcja turystyczna i miejsce wydarzeń. Berlińska Wieża Telewizyjna jest najwyższym publicznie dostępnym budynkiem w Europie, a po wieży badawczej Rottweiler drugim najwyższym otwartym dla publiczności w Niemczech punktem widokowym. Już w pierwszych trzech latach po otwarciu budynku odwiedziło go ponad cztery miliony osób. Po zjednoczeniu średnia roczna liczba turystów z około 90 krajów ustabilizowała się na poziomie około 1,2 mln	passage
+349	UNKNOWN
+350	UNKNOWN
+351	UNKNOWN
+352	UNKNOWN
+353	UNKNOWN
+354	UNKNOWN
+355	UNKNOWN
+356	Międzynarodowa Unia Ochrony Przyrody (IUCN) od 2018 roku uznaje Ansonia glandulosa za gatunek najmniejszej troski (LC, ang. Least Concern), wcześniej klasyfikowała go jako gatunek niedostatecznie rozpoznany (DD, Data Deficient)	passage
+357	UNKNOWN
+358	UNKNOWN
+359	Barry Bonds po ukończeniu szkoły średniej w 1982 roku, przystąpił do draftu i został wybrany w 2. rundzie przez San Francisco Giants, jednak klub nie spełnił jego oczekiwań finansowych	passage
+360	W ciągu trwającej 9 lat produkcji Acadiana, samochód oferowany był pod trzema różnymi nazwami. Podstawowy i zarazem najtańszy wariant nosił nazwę Acadian Invader, model pośredni charakteryzujący się bogatszym wyposażeniem i liczniejszymi chromowanymi ozdobnikami otrzymał nazwę Acadian Canso, z kolei topowy model z bogatszym wyposażeniem otrzymał nazwę Acadian Beaumont	passage
+361	UNKNOWN
+362	UNKNOWN
+363	Swoje zdolności plastyczne ujawnił już w szkole podstawowej, kiedy to wygrał swoje pierwsze konkursy plastyczne. Po śmierci ojca w 1951 roku objął gospodarstwo rolne i prowadził je przez 10 lat, a przez dwa lata (1955–1956) równocześnie pracował jako doker w gdyńskim porcie. W tym okresie plastyką zajmował się jedynie sporadycznie. W roku 1960 podjął pracę w warsztatach Marynarki Wojennej jako stolarz, gdzie pracował aż do emerytury. Tam też poznał artystę malarza Henryka Baranowskiego i wprowadził go w tajniki warsztatu malarskiego	passage
+364	UNKNOWN
+365	UNKNOWN
+366	Ajos Joanis – wieś w dystrykcie Limassol Ajos Joanis – wieś w dystrykcie Pafos Ajos Joanis Malundas – wieś w dystrykcie Nikozja Ajos Joanis Selemani – wieś w dystrykcie Nikozja	passage
+367	UNKNOWN
+368	Obszar karmienia kotów dla osób postronnych. Kilka minut od portu. Z tyłu znajduje się świątynia Aoshima Koty karmione przez wyspiarzy w porcie Latarnia morska w Aoshimie Poczekalnia w porcie Aoshima Wyspa Aoshima widziana z Nagahamy	passage
+369	Występy muzyczne podczas ceremonii Wykonawcy Utwór Glen Campbell „True Grit” Michel Legrand „What Are You Doing the Rest of Your Life?” Lou Rawls „Jean” The Sandpipers „Come Saturday Morning” B.J. Thomas „Raindrops Keep Fallin’ on My Head”	passage
+370	19 lutego 2008 w Sali Recepcyjnej ratusza w Kaliszu 22 przedstawicieli samorządów lokalnych zawarło oficjalne Porozumienie o współpracy pomiędzy samorządami aglomeracji kalisko-ostrowskiej	passage
+371	UNKNOWN
+372	UNKNOWN
+373	UNKNOWN
+374	Przez gminę przebiega droga wojewódzka nr 270 (Koło – Brdów – Włocławek). W Bugaju krzyżuje się z drogą wojewódzką nr 263 (Kłodawa – Babiak – Kleczew). Przez północne krańce przebiega także droga wojewódzka nr 269 (Sompolno – Chodecz). Przez gminę przebiega także linia kolejowa Tczew – Chorzów Batory, na której znajdują się dwie stacje kolejowe: Babiak i Lipie Góry.	passage
+375	Amoeba.1392 jest niegroźnym pasożytniczym wirusem rezydentnym. Atakuje on pliki o rozszerzeniach *.com, *.exe i *.ovl w momencie ładowania ich do pamięci. Wirus przechwytuje przerwania 10h, 1Ch oraz 21h. Wyświetla na ekranie komputera następujący tekst: SMAKHETAPUNK - NOUVEL Band A.M.O.E.B.A. by PrimeSoft Inc.	passage
+376	Początkowo zespół tworzyło pięciu muzyków. Jego skład nie był publicznie przedstawiany, co sprawiało wrażenie chęci zachowania przez muzyków pewnego stopnia tajemniczości i występowania incognito	passage
+377	UNKNOWN
+378	UNKNOWN
+379	UNKNOWN
+380	UNKNOWN
+381	UNKNOWN
+382	A.C. Milan w sezonie 1958/1959 A.C. Milan w sezonie 1958/1959 Klubowe barwy Milanu Osiągnięcia i skład piłkarskiego zespołu A.C. Milan w sezonie 1958/59.	passage
+383	wynikiem 22:20. Był to mecz deblowy pierwszej rundy. Stewart grała w parze z Nicole Pratt przeciwko Corinie Morariu i Rennae Stubbs. We French Open 2006 wystąpiła w turnieju mikstowym w parze z Marcinem Matkowskim. W lutym 2007 roku wygrała turniej deblistek w Memphis, razem z Nicole Pratt.	passage
+384	UNKNOWN
+385	UNKNOWN
+386	Czyste konta Zawodnik Drużyna 10 Koen Casteels VfL Wolfsburg Manuel Neuer Bayern Monachium Mark Flekken SC Freiburg Robin Zentner 1. FSV Mainz 05 9 Péter Gulácsi RB Lipsk Rafał Gikiewicz FC Augsburg 8 Lukáš Hrádecký Bayer Leverkusen Oliver Baumann TSG Hoffenheim 7 Gregor Kobel Borussia Dortmund Manuel Riemann VfL Bochum 6 Andreas Luthe Union Berlin Stefan Ortega Arminia Bielefeld 5 2 zawodników 4 2 zawodników 3 3 zawodników 2 2 zawodników 1 4 zawodników Źródło:	passage
+387	UNKNOWN
+388	UNKNOWN
+389	UNKNOWN
+390	AZS Politechnika Poznańska – męska i żeńska drużyna hokejowa uczestnicząca w rozgrywkach ligowych. AZS Politechnika Poznańska – kobieca drużyna koszykarska uczestnicząca w rozgrywkach niższych lig.	passage
+391	Anduril YFQ-44 powstaje w ramach projektu United States Air Force - Collaborative Combat Aircraft (CCA). Jego celem jest zaprojektowanie i budowa bezzałogowego statku powietrznego, mającego towarzyszyć nowej amerykańskiej konstrukcji powstającej w ramach programu Next Generation Air Dominance, myśliwca nowej, 6 generacji mającego zastąpić maszyny Lockheed Martin F-22 Raptor	passage
+392	UNKNOWN
+393	UNKNOWN
+394	UNKNOWN
+395	UNKNOWN
+396	W swojej recenzji dla magazynu „Locus” Alex Brown nazywa Czarne słońce „znakomitym dziełem sztuki” i chwali bohaterów, świat przedstawiony, system magii oraz sposób, w jaki queerowość jest znormalizowana, a hierarchie płciowe nieobecne w świecie powieści	passage
+397	UNKNOWN
+398	Kosmodrom znajduje się na obszarze o wymiarach 75 na 90 kilometrów, zaś na jego terenie ulokowane jest 11 kompleksów montażowych, 9 startowych oraz dwa lotniska. Na początku był to poligon doświadczalny dla radzieckiego programu międzykontynentalnej rakiety balistycznej	passage
+399	W 2023 roku seria była nominowana do 9. nagrody Next Manga Award w kategorii najlepsza manga drukowana i zajęła jedenaste miejsce spośród 41 nominowanych	passage
+400	UNKNOWN
+401	UNKNOWN
+402	UNKNOWN
+403	UNKNOWN
+404	UNKNOWN
+405	UNKNOWN
+406	Miejscowość leży na obszarze Średniogórza Północnowęgierskiego, w pobliżu granicy ze Słowacją. Administracyjnie osada należy do powiatu Balassagyarmat, wchodzącego w skład komitatu Nógrád.	passage
+407	UNKNOWN
+408	Eliminacja w Extreme Battle Royalu następuje, gdy zawodnik uderzy przeciwnika bronią, a następnie wyrzuci go z ringu (nie musi zostać wyrzucony przez górną linę). Gdy w ringu pozostanie 10 uczestników, zasada eliminacji zmienia się. Od tej pory można wyeliminować przeciwnika przez przypięcie lub wyrzucenie nad górną liną. Niewyeliminowany wrestler otrzymuje szansę walki na wybranej gali PPV. W tej wariacji dozwolona jest interwencja z zewnątrz. Nikt nie sędziuje starcia, toteż heelowie często kontynuują walkę po eliminacji.	passage
+409	Banknot 100 bilionów dolarów Zimbabwe, efekt hiperinflacji w tym kraju Afryka, szczególnie subsaharyjska, jest najbiedniejszą częścią świata. Jeszcze na przełomie XVIII i XIX wieku średnie dochody były 3–5 razy niższe niż w Europie Zachodniej. Tuż przed II wojną światową udział Afryki w przemyśle świata wynosił 2,3% przy 7,3% udziału w ludności	passage
+410	UNKNOWN
+411	UNKNOWN
+412	UNKNOWN
+413	Już od XVI wieku podróżnicy obserwowali „prymitywne” metody leczenia chorób w celu zweryfikowania, czy niektóre z tych praktyk mogą zostać zaszczepione na gruncie medycyny zachodniej	passage
+414	UNKNOWN
+415	UNKNOWN
+416	„Taniec-Fantazję” wykonała na swym koncercie 25 stycznia 1972 Orkiestra Symfoniczna Polskiego Radia i Telewizji w Krakowie pod dyrekcją Dżansuga Kachidze. Muzyka Bidziny Kwernadze została wykorzystana w gruzińskim filmie Drzewo pragnień (1976) w reżyserii Tengiza Abuładze	passage
+417	UNKNOWN
+418	UNKNOWN
+419	UNKNOWN
+420	UNKNOWN
+421	UNKNOWN
+422	UNKNOWN
+423	UNKNOWN
+424	UNKNOWN
+425	Bianca Maria Sforza, portret autorstwa Ambrogia de Predis (1493) 1 grudnia 1493 w Mediolanie odbył się ślub Bianki Marii z królem Niemiec Maksymilianem I Habsburgiem, synem cesarza Fryderyka III i Eleonory, córki króla Portugalii Edwarda I, wdowcem po Marii Burgundzkiej, reprezentowanym przez biskupa Bressanone. Po mszy ślubnej Bianca została ukoronowana złotą koroną przysłaną przez Maksymiliana. Maksymilian dostał tytułem posagu 400 000 dukatów, co pomogło królowi mającemu kłopoty finansowe	passage
+426	UNKNOWN
+427	UNKNOWN
+428	UNKNOWN
+429	UNKNOWN
+430	Yoshikazu Kotani − Mamiya Taishin Takumi Saitō − Noeru Kisaragi Atsumi Kanno − Sora Amagami Hiroya Matsumoto − Chidori Furumura Masashi Taniguchi − Kōsuke	passage
+431	Sekcja tenisa stołowego funkcjonowała w latach 1987-1991. Tenisiści brali udział w lokalnych rozgrywkach. W 1987 roku zwyciężyli w drużynowych Mistrzostwach Miasta i Gminy Nowy Tomyśl. Mecze rozgrywano w świetlicy Zakładu Budowlano-Montażowego przy ulicy Kolejowej 40a w Nowym Tomyślu.	passage
+432	All Sky Automated Survey Sloan Digital Sky Survey Catalina Sky Survey Two Micron All Sky Survey (2MASS) Katalog Hipparcosa Katalog Messiera New General Catalogue (obiekty NGC) Uppsala General Catalogue Katalog Henry’ego Drapera Katalog ACT ROSAT All Sky Survey Dość kompletny spis wszystkich przeglądów nieba tworzony jest obecnie przez Międzynarodową Unię Astronomiczną; można go znaleźć na serwerze www.skysurveys.org.	passage
+433	Istnieją dwie wersje nazewnictwa szczytów Brdarowych Grap. Wcześniejsza wyróżnia jedynie trzy obiekty: Wielką i Małą Brdarową Grapę oraz Brdarową Dzwonnicę. Jest ona stosowana w literaturze słowackiej oraz części źródeł polskich (m.in. w Wielkiej Encyklopedii Tatrzańskiej Paryskich). Zgodnie z tą wersją, nazwą Mała Brdarowa Grapa określa się kulminację o wysokości 1822 m, a jako Brdarowa Dzwonnica – tę o wysokości 1722 m	passage
+434	UNKNOWN
+435	UNKNOWN
+436	UNKNOWN
+437	Stacja metra Arsenal została otwarta przez „Great Northern, Piccadilly i Brompton Railway” (w skrócie GNP&BR) jako Gillespie Road w dniu 15 grudnia 1906 r	passage
+438	Jest tradycjonalistą i monarchistą. Wątpi jednak w możliwość przywrócenia w Polsce monarchii, dlatego popiera wprowadzenie dyktatury na wzór Francisca Franco i Augusta Pinocheta. Uważa się za przedstawiciela cywilizacji łacińskiej. Jego konfesją jest rzymski katolicyzm	passage
+439	UNKNOWN
+440	UNKNOWN
+441	Blaszki są typowe dla obrazu klinicznego łuszczycy. Zmiany skórne w tej chorobie zaczynają się jako rumieniowe grudki, które stopniowo powiększają się, tworząc intensywnie czerwone (określane także jako „łososiowe”) blaszki.	passage
+442	UNKNOWN
+443	Zgodnie z prawem Okuna okresy, w których poziom bezrobocia jest wysoki, to okresy, w których faktyczny poziom PNB spada poniżej jego poziomu potencjalnego. A zatem wysokiemu poziomowi bezrobocia towarzyszy wysoki poziom produktu, którego wytworzenia zaniechano. Szacuje się, że na każdy procent, o jaki faktyczna stopa bezrobocia przewyższa naturalną stopę bezrobocia, realny PKB jest niższy o 3% od PKB potencjalnego przy pełnym wykorzystaniu zdolności produkcyjnych	passage
+444	W 1830 r. wszedł do sejmu jako poseł wieluński i włączył się w nurt walk parlamentarnych po stronie opozycji, której przewodzili bracia Niemojowscy. Jako poseł z powiatu wieluńskiego województwa kaliskiego na sejm powstańczy	passage
+445	UNKNOWN
+446	UNKNOWN
+447	Alodium Alodium Alodium (łac. allodium) – funkcjonująca w średniowiecznym systemie prawa feudalnego forma własności nieruchomości. Była to ziemia stanowiąca nieograniczoną własność, wolną od zobowiązań i ciężarów feudalnych, czym różniła się od lenna	passage
+448	UNKNOWN
+449	Mariaż między Hetumidami i rządzącymi dotychczas Rubenidami spowodował zakończenie sporów między tymi rodami, rywalizującymi ze sobą o prymat w Cylicji	passage
+450	UNKNOWN
+451	UNKNOWN
+452	UNKNOWN
+453	UNKNOWN
+454	UNKNOWN
+455	Arena Uljin Arena Uljin Arena Uljin – przeznaczona do koszykówki hala sportowa znajdująca się w mieście Uljin, w Korei Południowej. W tej hali swoje mecze rozgrywa drużyna Uljin BC. Hala może pomieścić 2 500 widzów, wszystkie miejsca są siedzące.	passage
+456	Nuove inventioni sopra il modo di navigare, 1595 Dialogo di Camillo Agrippa milanese sopra la generatione de venti Nuove inventioni sopra il modo di navigare, 1595 Trattato di trasportare la guglia in su la piazza di S. Pietro Trattato Di Scientia d’Arme, con un Dialogo di Filosofia Dialogo di Camillo Agrippa milanese del modo di mettere in battaglia presto e con facilità il popolo di qual si voglia luogo con ordinanze e battaglie diverse, 1585	passage
+457	podstaw istnienia CK Monarchii. Pomimo to zwolennicy oderwania się od Austrii stanowili na Węgrzech znikomą mniejszość. Rządząca na Węgrzech arystokracja widziała w silnych związkach z Wiedniem (a potem i z Berlinem) nie tylko skuteczny środek do obrony własnego stanu posiadania, a także ochronę przed ewentualnymi powstaniami mniejszości narodowych stanowiących połowę mieszkańców kraju. Ponadto niebagatelną rolę w umacnianiu monarchii odgrywał czynnik ekonomiczny, gdyż większość eksportu węgierskiego szła właśnie do Austrii.	passage
+458	Znak☫ﷲNazwa w UnikodzieFarsi SymbolArabic Ligature Allah Isolated FormKodowaniedziesiątkowoszesnastkowodziesiątkowoszesnastkowoUnicode9771U+262B65010U+FDF2UTF-8226 152 171e2 98 ab239 183 178ef b7 b2Odwołania znakowe SGML&#9771;&#x262B;&#65010;&#xFDF2;	passage
+459	Dokładne porównanie języka młodzieżowego oraz języka ludzi dorosłych (w tym języka osób najstarszych) nie jest możliwe ze względu na niedostateczną liczbę badań dotyczących tego drugiego	passage
+460	14 grudnia 2022 roku ogłoszono, że Rino Fukuyama i Mizuki Kirihara zostaną nowymi członkami grupy idolek, która powstała po przesłuchaniu „Kawaii Lab. Audition 2022”	passage
+461	UNKNOWN
+462	W 2000 ukończył Wyższą Szkołę Trenerską. Od 2001 pracował w sztabie szkoleniowym FK Moskwa. 26 sierpnia 2007 w związku z dyskwalifikację głównego trenera Leonida Słuckiego kierował drużyną w meczu mistrzostw Rosji	passage
+463	UNKNOWN
+464	UNKNOWN
+465	UNKNOWN
+466	Pierwszy zespół utworzył w 1881 r. i kierował jego działalnością w Przemyślu, Stanisławowie i Kołomyi. W latach 1882–1883 prowadził zespół teatralny wspólnie z Aleksandrem Myszkowskim	passage
+467	Serial skupia się na Laurel, która zaczyna pracować w biurze senatora w Waszyngtonie. Po pewnym czasie odkrywa, że rząd przestał pracować, a kosmici zaczynają zjadać mózgi kongresmenów i pracowników rządowych.	passage
+468	UNKNOWN
+469	UNKNOWN
+470	UNKNOWN
+471	UNKNOWN
+472	W 1960 wystąpił w sztuce Wspaniały świat (The Cool World). Ukończył nowojorską szkołę średnią Fiorello H. LaGuardia High School of Music & Art and Performing Arts	passage
+473	UNKNOWN
+474	UNKNOWN
+475	UNKNOWN
+476	UNKNOWN
+477	UNKNOWN
+478	UNKNOWN
+479	UNKNOWN
+480	UNKNOWN
+481	Turniej odbywał się w Jugorskajej szachmatnajej akadiemii w Chanty-Mansyjsku. Po raz pierwszy w historii rozgrywki Asian Chess Club Champions League odbyły się w Rosji, co było możliwe w związku z przejściem Fiedieracii szachmat Rossii do Azjatyckiej Federacji Szachowej w 2023 roku	passage
+482	UNKNOWN
+483	UNKNOWN
+484	UNKNOWN
+485	W XIX wieku w posiadanie budynku wszedł Privilegierte Österreichische Nationalbank/Österreichisch-Ungarische Bank, a w latach 60. XIX wieku zajęty został na koszary (potoczna nazwa „koszary na Groblach”) kawalerii i taborów (niem. Weisel Kaserne)	passage
+486	UNKNOWN
+487	pierwszego odkrycia stanowiska archeologicznego z powietrza, a następnie jego wykopaliskowej weryfikacji. Przemysłowiec Kurt May i jego kolega Reinhard z Frankfurtu spostrzegli z balonu i sfotografowali w Vilbel w Hesji obiekt, który wydał im się zabytkiem z czasów rzymskich. W tym samym roku Karl Woelcke przeprowadził badania wykopaliskowe tego obiektu, stwierdzając, że jest to willa rzymska.	passage
+488	UNKNOWN
+489	UNKNOWN
+490	2007 : Lettre à Jimmy 2009 : L'Europe depuis l'Afrique 2011 : Écrivain et oiseau migrateur 2012 : Le Sanglot de l'homme noir 2016 : Lettres noires : des ténèbres à la lumière 2016 : Le monde est mon langage 2017 : Penser et écrire l'Afrique aujourd'hui	passage
+491	Urodziła się w 1984 w Polsce i dorastała w Sopocie. Jako dziecko uczyła się w gdańskiej szkole baletowej i mieszkała w internacie. W wieku 16 lat wzięła udział w przesłuchaniu	passage
+492	UNKNOWN
+493	Colonel William Ross Hartshorne Lieutenant Colonel Joseph B. Pattee – commanded after most of the regiment was captured in action at the Battle of Hatcher's Run	passage
+494	UNKNOWN
+495	UNKNOWN
+496	February 25 – At a national congress of the Italian Socialist Party (PSI) in Rome the division between reformists and hard-liners increases; only the approval of an agenda proposed by Costantino Lazzari manages to avoid fracture.	passage
+497	UNKNOWN
+498	UNKNOWN
+499	UNKNOWN
+500	On 5 May 2007, in showing solidarity with the former chief justice, a motorcade of Chaudhry's supporters rode with him from Islamabad to Lahore where he was expected to speak at the Lahore High Court Bar Association when this motorcade of over 2,000 vehicles was stopped by the police with baton charges and tear gas shelling.	passage
+501	UNKNOWN
+502	UNKNOWN
+503	Besides Chinese and overseas Chinese, some supporters and participants of the 1911 Revolution were foreigners; among them, the Japanese were the most active group. Some Japanese even became members of Tongmenghui. Miyazaki Touten was the closest Japanese supporter; others included Heiyama Shu and Ryōhei Uchida. Homer Lea, an American, who became Sun Yat-sen's closest foreign advisor in 1910, supported Sun Yat-sen's military ambitions.	passage
+504	UNKNOWN
+505	During the 1949 season, the Association had made the decision to re-affiliate with the Australian National Football Council. This meant that from 1950, the Association played under the national standard code of rules. Most notably, this meant that throwing the ball in general play was no longer legal.	passage
+506	In June 1984, a rotational lightcurve of Margot was obtained from photometric observations by American astronomer Richard Binzel . Lightcurve analysis gave a well-defined rotation period of 8.17 hours with a brightness amplitude of 0.52 magnitude, indicative of a somewhat elongated shape (U=3).	passage
+507	UNKNOWN
+508	UNKNOWN
+509	UNKNOWN
+510	January 15: A nationwide referendum on whether the proposed new constitution—mainly setting up a parliamentary democracy—will replace that of 1935 is held.	passage
+511	UNKNOWN
+512	Along the Pacific coast of Hokkaido the earthquake was felt with an intensity of 5 on the Japan Meteorological Agency seismic intensity scale (Shindo).	passage
+513	UNKNOWN
+514	UNKNOWN
+515	UNKNOWN
+516	Simin Behbahani, Seh-tar-e Shekasteh ("The Broken Lute"), Persia Alberto de Lacerda, Poemas, Portugal Hushang Ebtehaj (H. E. Sayeh) سراب ("Mirage"), Persian poet published in Iran Uri Zvi Greenberg, Reḥovot Hanahar ("The Streets of the River"), poems lamenting the loss of Jews in Europe; Hebrew-language, Israel	passage
+517	UNKNOWN
+518	UNKNOWN
+519	UNKNOWN
+520	UNKNOWN
+521	UNKNOWN
+522	In the stakeholder vote on the land consolidation plan there were 2,938 eligible voters, about 1,200 of whom were farmers. Only 27 votes were cast, 15 in favor and 12 against the proposal. Despite the low turnout, the plan was approved, because the votes that were not cast were considered to be in favor. This was seen as unfair by many residents of the municipality.	passage
+523	UNKNOWN
+524	UNKNOWN
+525	UNKNOWN
+526	UNKNOWN
+527	UNKNOWN
+528	UNKNOWN
+529	UNKNOWN
+530	Championship final Team 1 Agg.Tooltip Aggregate score Team 2 1st leg 2nd leg Ceramica Jimbolia 1–4 Minerul Oravița 1–1 0–3 Minerul Oravița won the Timișoara Regional Championship and qualify for promotion play-off in Divizia B.	passage
+531	UNKNOWN
+532	UNKNOWN
+533	UNKNOWN
+534	While the national triennial poll had been abolished in 1987. local restoration polls were held in four "dry" areas in conjunction with the 1996 general election. Grey Lynn recorded a majority for local restoration; Eden, Roskill and Tawa did not.	passage
+535	UNKNOWN
+536	UNKNOWN
+537	UNKNOWN
+538	UNKNOWN
+539	UNKNOWN
+540	UNKNOWN
+541	UNKNOWN
+542	UNKNOWN
+543	UNKNOWN
+544	UNKNOWN
+545	UNKNOWN
+546	UNKNOWN
+547	UNKNOWN
+548	UNKNOWN
+549	UNKNOWN
+550	Griffenfeld at the moment when he is pardoned on the scaffold on 5 June, Contemporary illustration Danish invasion of Scania on 29 June. Painting by Claus Møinichen 11 March – Peder Griffenfeld is arrested at Copenhagen Castle and brought to Kastellet where he is imprisoned.	passage
+551	UNKNOWN
+552	UNKNOWN
+553	UNKNOWN
+554	UNKNOWN
+555	UNKNOWN
+556	The New Tachikawa Aircraft Company is formed in Japan. November 1 – Eastern Air Lines Flight 537, a Douglas C-54B-10-DO, en route from Boston, Massachusetts to Washington, D.C. collides with a Lockheed P-38 Lightning fighter on its final approach to National Airport. Both planes crash, killing all 55 people on board the Douglas. The P-38 pilot, Eric Rios Bridaux (a Bolivian Air Force pilot), survives. Among the dead are U.S. Congressman George J. Bates, former U.S. Congressman Michael J. Kennedy, and American cartoonist Helen E. Hokinson.	passage
+557	UNKNOWN
+558	UNKNOWN
+559	UNKNOWN
+560	UNKNOWN
+561	14 February – Women are allowed to stand for parliament in Tasmania. 22 March – The Queensland Legislative Council, the upper house of the Parliament of Queensland is abolished. 10 June – A general election is held in Tasmania, which results in a hung parliament. 3 July – Queensland abolishes capital punishment, the first state in Australia to do so. The Legislative Assembly of Queensland voted 33 to 30 to abolish the death penalty.	passage
+562	UNKNOWN
+563	UNKNOWN
+564	UNKNOWN
+565	UNKNOWN
+566	UNKNOWN
+567	UNKNOWN
+568	Francisco Mendes July 1 – Kurt Student, Luftwaffe general and commander of the German airborne forces during World War II. (b. 1890) July 3 – James Daly, American actor (b. 1918) July 6 – Pietro Montana, Italian-born American sculptor, painter and teacher (b. 1890)	passage
+569	The New York and Harlem Railroad expanded their main line across the Harlem River through Tremont into Fordham in 1841. Stations existed both in Tremont and Fordham back then, but not at 183rd Street. The New York and Harlem was bought by the New York Central and Hudson River Railroad in 1864, but did not build a station at this location until sometime between 1898 and 1901.	passage
+570	UNKNOWN
+571	UNKNOWN
+572	UNKNOWN
+573	UNKNOWN
+574	October – Chapter One of the Milwaukee, Wisconsin-based Experimental Aircraft Association is formed in Riverside, California. October 3 – Flying a Douglas XF4D-1, U.S. Navy Lieutenant Commander James F. Verdin sets a world airspeed record over a 3 km (1.9 mi) course of 752.944 mph (1,211.746 km/h). It is the first time that a carrier-capable combat aircraft in its normal configuration sets a world speed record.	passage
+575	UNKNOWN
+576	UNKNOWN
+577	UNKNOWN
+578	UNKNOWN
+579	UNKNOWN
+580	1876 Berkshire by-election 1876 Berkshire by-election The 1876 Berkshire by-election was fought on 23 February 1876. The by-election was fought due to the resignation of the incumbent Conservative MP, Richard Fellowes Benyon. It was won by the Conservative candidate Philip Wroughton	passage
+581	UNKNOWN
+582	UNKNOWN
+583	UNKNOWN
+584	UNKNOWN
+585	UNKNOWN
+586	UNKNOWN
+587	UNKNOWN
+588	July 9 – The Ottoman Empire, with 15,000 troops and 150 warships, besieges the Spanish garrison at Ciutadella de Menorca at Spain's Balearic Islands. When the town falls on July 17, the 3,099 surviving inhabitants are sold into slavery.	passage
+589	UNKNOWN
+590	UNKNOWN
+591	UNKNOWN
+592	UNKNOWN
+593	UNKNOWN
+594	UNKNOWN
+595	UNKNOWN
+596	UNKNOWN
+597	UNKNOWN
+598	UNKNOWN
+599	UNKNOWN
+600	UNKNOWN
+601	Allan Moffat took pole position for the opening round of the championship ahead of Ian Geoghegan and Bob Jane. Geoghegan challenged Moffat for the lead at the first corner but Moffat held the position. Norm Beechey, starting down the order, made his way into fourth place on the first lap before passing both Jane and Geoghegan at the beginning of lap 2. He eventually passed Moffat for the lead before making slight contact with a lapped car, forcing him to pull over to the side of the track and pull the guard off of his front tyre.	passage
+602	27 January – France and the People's Republic of China announce their decision to establish diplomatic relations. 11 February – The Republic of China (Taiwan) drops diplomatic relations with France because of French recognition of the People's Republic of China. 8-15 March – Cantonal elections held. 23 May – Mrs. Madeleine Dassault, 63, wife of French plane manufacturer and politician Marcel Dassault, is kidnapped while leaving her car in front of her Paris home; she is found unharmed the next day in a farmhouse 27 miles from Paris.	passage
+603	UNKNOWN
+604	UNKNOWN
+605	UNKNOWN
+606	UNKNOWN
+607	At the beginning of Operation Barbarossa the 16th Rifle Division (1st formation) was part of Northwestern Front's 27th Army, reporting directly to Army headquarters along with the 67th Rifle Division and 3rd Rifle Brigade.	passage
+608	UNKNOWN
+609	UNKNOWN
+610	Because of the major eminent domain actions and demolitions in the neighborhood, collections of current and former residents and historic preservationists have advocated for the protection of 109 Washington Street as a New York City landmark. Community Board One has passed a resolution encouraging the New York City Landmarks Preservation Commission to hold a hearing on this question.	passage
+611	UNKNOWN
+612	William Buckland described the new species Pterodactylus macronyx based on fossil remains discovered by Mary Anning in December the previous year from the Lias Group of the Dorset Coast of England. These were the first scientifically documented pterosaurs to be discovered outside of the Solnhofen lithographic limestone.	passage
+613	UNKNOWN
+614	Severe tropical storm (JMA)Tropical storm (SSHWS) DurationJune 14 – June 17Peak intensity110 km/h (70 mph) (10-min); 975 hPa (mbar) Severe Tropical Storm Ruth (Kuring) battered the Philippines in 1977, primarily affecting Luzon. The storm caused significant damage to homes and infrastructure, displacing thousands of people and resulting in fatalities. Its impact underscores the destructive power of tropical cyclones in the region.	passage
+615	UNKNOWN
+616	UNKNOWN
+617	UNKNOWN
+618	UNKNOWN
+619	UNKNOWN
+620	After suffering their first losing season under Coach Don Shula, the Dolphins bounced back to finish 10–4. Bob Griese had a stellar year, despite being forced to wear thick eyeglasses due to a problem with his contacts. Griese, whose season was highlighted by a six touchdown game in St. Louis against the Cardinals, was named Player of the year by the Maxwell Club of Philadelphia. Despite the improvement, the team failed to qualify for the playoffs for the third straight season.	passage
+621	1705th Air Transport Wing 61st Troop Carrier Group: Attached 24 August – 10 December 1950, Assigned 1 January – 1 October 1951 (attached to Far East Air Forces to 315th Air Division, FEAF)	passage
+622	UNKNOWN
+623	UNKNOWN
+624	UNKNOWN
+625	1975 Formula Atlantic season 1975 Formula Atlantic season 1975 Formula Atlantic season Previous: 1974 Next: 1976 IMSA 1976 CASC The 1975 Player's Canadian Formula Atlantic Series season was contested over 6 rounds. In this one-make engine formula all drivers had to use Ford engines.	passage
+626	UNKNOWN
+627	This was the first election for all 3 candidates and each would again contest the electorate at the general election in November 1973 with similar results. Mary Meillon (Liberal) was the eldest daughter of Joe Lawson.	passage
+628	UNKNOWN
+629	UNKNOWN
+630	UNKNOWN
+631	UNKNOWN
+632	UNKNOWN
+633	UNKNOWN
+634	UNKNOWN
+635	UNKNOWN
+636	UNKNOWN
+637	1966 Singapore Grand Prix 1966 Singapore Grand Prix Circuit layout of the Thomson Road Circuit The inaugural Singapore Grand Prix was held from 9 to 11 April 1966, on the Thomson Road Grand Prix circuit. Previous editions of the Grand Prix were held before Singapore gained its independence, and were not called Singapore Grand Prix. The 1965 Malaysian Grand Prix was held on the same course, as part of the Malaysian Grand Prix event, as the 1966 Grand Prix of Singapore.	passage
+638	Giovanni Branca's steam turbine In Rome, Giovanni Branca publishes Le Machine volume nuovo, et di molto artificio da fare effetti maravigliosi tanto Spiritali quanto di Animale Operatione, arichito di bellissime figure.	passage
+639	UNKNOWN
+640	The Siege of Kalmar The Swedish attack on Zealand April – The Kalmar War begins as Denmark-Norway declares war upon Sweden. 3 May – Danish forces lay siege to Kalmar. The Siege of Kalmar ends on August 3. 26 June – The Swedish Storming of Kristianopel. 3 July – Battle of Risbye. Undated A Statue of Leda and the Swan is mounted on a tall column an installed on an artificial islet in the Port of Copenhagen.	passage
+641	UNKNOWN
+642	UNKNOWN
+643	UNKNOWN
+644	UNKNOWN
+645	UNKNOWN
+646	UNKNOWN
+647	UNKNOWN
+648	1962 Hamline Pipers footballConferenceMinnesota Intercollegiate Athletic ConferenceRecord2–7 (0–7 MIAC)Head coach Dick Mulkern (1st season) The 1962 Hamline Pipers football team represented Hamline University of Saint Paul, Minnesota. In their first year under head coach Dick Mulkern, the Pipers compiled a 2–7 record (0–7 against MIAC opponents), finished in eighth place in the MIAC, and were outscored by a total of 198 to 63.	passage
+649	UNKNOWN
+650	UNKNOWN
+651	UNKNOWN
+652	Arthur James Robert Collins. Allen John Bridson Goldsmith, FRCS, LRCP. Captain Andrew Colin Paul Johnstone, OBE, British Overseas Airways Corporation. Muriel Mure.	passage
+653	UNKNOWN
+654	UNKNOWN
+655	UNKNOWN
+656	UNKNOWN
+657	Following the War, the 126th returned to its home stations, but over the course of the next 45 years it underwent many transformations and reorganizations. It lost its attachment to towns such as Adrian, Coldwater, Muskegon, Ionia, and Kalamazoo. For a time, Greenville, Alma and South Haven were elements of the 126th. In March 1953, Wisconsin Highway 32, as well as a portion of former U.S. Route 12 in Michigan, was named in honor of the 32nd Infantry Division, and all Highway 32 shields carry the Red Arrow insignia.	passage
+658	UNKNOWN
+659	The schedule consisted of a total of 12 games. Each team played two games against every opponent in no particular order. One of the games was at home and one was away.	passage
+660	UNKNOWN
+661	UNKNOWN
+662	UNKNOWN
+663	UNKNOWN
+664	UNKNOWN
+665	UNKNOWN
+666	UNKNOWN
+667	UNKNOWN
+668	Severe tropical storm (JMA)Tropical storm (SSHWS) DurationNovember 9 – November 12Peak intensity100 km/h (65 mph) (1-min); 985 hPa (mbar) On November 12 this system emerged in the Bay of Bengal and became Tropical Storm Thirteen (13B)	passage
+669	Photometric observations at the Command Module Observatory (V02) by Tom Polakis on 21 February 2021 revealed that Zwicky has a satellite in its orbit. The moon has a diameter of approximately 2.50 kilometers, or 26% of that of its primary, and an orbital period of 28.46 hours.	passage
+670	UNKNOWN
+671	UNKNOWN
+672	UNKNOWN
+673	UNKNOWN
+674	Do Rio a São Paulo Para Casar, directed by José Medina and starring Waldemar Moreno O Furto dos 500 Milhões de Réis, directed by Arturo Carrari and starring José Fontana	passage
+675	UNKNOWN
+676	UNKNOWN
+677	UNKNOWN
+678	UNKNOWN
+679	UNKNOWN
+680	UNKNOWN
+681	UNKNOWN
+682	UNKNOWN
+683	UNKNOWN
+684	UNKNOWN
+685	UNKNOWN
+686	1-Chloroethyl chloroformate is a useful reagent, for example for the N-dealkylation of tertiary amines, especially their demethylation to produce drug metabolites for forensic investigations.	passage
+687	As of 2002, the number of classified green plant species was estimated to be around 370,000, however, there are probably many thousands more yet unclassified.	passage
+688	Colonel Edward H. Hobson Colonel William E. Hobson Chief Surgeon Charles D. Moore Lieutenant Colonel John B. Carlisle Lieutenant Colonel Benjamin P. Estes	passage
+689	UNKNOWN
+690	UNKNOWN
+691	Center fielder Turkey Stearnes was the team's batting star. He ranked among the NNL leaders with a 12 triples (tied-first), 19 home runs (second), .690 slugging percentage (second), 25 doubles (second), 79 runs scored (fourth), .429 on-base percentage (fifth), 46 walks (fifth), and .350 batting average (seventh).	passage
+692	UNKNOWN
+693	UNKNOWN
+694	UNKNOWN
+695	UNKNOWN
+696	Team 1 Agg.Tooltip Aggregate score Team 2 1st leg 2nd leg Berati 7–0 Himara 4–0 3–0 NBSh Shijak 4–2 Kukësi 3–2 1–0 Erseka 1–0 Kukësi 0–0 1–0 Lushnja 4–5 NBSh Ylli Kuq Kamëz 2–3 2–2	passage
+697	UNKNOWN
+698	UNKNOWN
+699	2001 XR254 is a binary consisting of two components of approximately equal size. Assuming that both components have the same albedo, the primary is estimated to be about 170 km in diameter. The size of the secondary (satellite) in this case is estimated at about 140 km. The total mass of the system is about 4×10	passage
+700	UNKNOWN
+701	UNKNOWN
+702	UNKNOWN
+703	UNKNOWN
+704	The premiership was the sixth and last won by Melbourne under the coaching of Norm Smith over a ten-year period, which ranks among the most dominant periods by a club in VFL/AFL history. It was also the abrupt end to this period of success: captain Ron Barassi, who had played in all six premierships, signed with Carlton as captain-coach in 1965,	passage
+705	UNKNOWN
+706	UNKNOWN
+707	UNKNOWN
+708	UNKNOWN
+709	UNKNOWN
+710	Yunnan People's Anticommunist Volunteer Army (commander-in-chief: Liu Yuanlin, (柳元麟)) 1st Army headquartered at Mengwa (孟瓦), commanded by Wu Yunnuan (吳運暖) 2nd Army headquartered at Suoyong (索永), commanded by Wu Zubo (吳祖柏) 3rd Army headquartered at Laidong (萊東), commanded by Li Wenhuan (李文煥) 4th Army headquartered at Mengma (孟馬), commanded by Zhang Weicheng (張偉成) 5th Army headquartered at Menglong (孟隆), commanded by Duan Xiwen (段希文)	passage
+711	UNKNOWN
+712	UNKNOWN
+713	UNKNOWN
+714	UNKNOWN
+715	UNKNOWN
+716	UNKNOWN
+717	UNKNOWN
+718	12 September – Cornelis Drebbel demonstrates his third submarine on the River Thames in England. The 15-arch Berwick Bridge in Great Britain by James Burrell is opened to traffic.	passage
+719	UNKNOWN
+720	Agenor is a dark Jovian asteroid in a 1:1 orbital resonance with Jupiter. It is located in the trailering Trojan camp at the Gas Giant's L5 Lagrangian point, 60° behind its orbit	passage
+721	UNKNOWN
+722	UNKNOWN
+723	UNKNOWN
+724	UNKNOWN
+725	UNKNOWN
+726	UNKNOWN
+727	UNKNOWN
+728	UNKNOWN
+729	UNKNOWN
+730	The match was scheduled to take place on December 19, 1965 in Willemstad, Netherlands Antilles, but was cancelled. Team 1 Score Team 2 Group A Winner Cancelled Group B Winner	passage
+731	UNKNOWN
+732	UNKNOWN
+733	See also: List of United States representatives from West Virginia West Virginia lost one seat and redistricted from 6 districts to 5, splitting the existing 3rd district up among all the others.	passage
+734	UNKNOWN
+735	UNKNOWN
+736	UNKNOWN
+737	UNKNOWN
+738	UNKNOWN
+739	UNKNOWN
+740	UNKNOWN
+741	UNKNOWN
+742	UNKNOWN
+743	UNKNOWN
+744	UNKNOWN
+745	UNKNOWN
+746	UNKNOWN
+747	UNKNOWN
+748	William Dampier's A New Voyage Round the World, recording the author's adventures in Australasia. Daniel Defoe's An Essay upon Projects, favouring the implementation of income tax and the education of women.	passage
+749	1911 Ishi is 'discovered' and taken to the Museum of Anthropology at the University of California, San Francisco 1915 Bronislaw Malinowski began his studies in the Trobriand Islands	passage
+750	UNKNOWN
+751	Shall Council pass a bylaw creating a debenture debt in the sum of $125,000.00 for the purpose of constructing a fire hall in the vicinity of 97th Street and 127th Avenue? Yes - 7645 No - 1741	passage
+752	UNKNOWN
+753	UNKNOWN
+754	UNKNOWN
+755	June – RPG-7 rocket-propelled grenade launcher introduced in the Soviet Union. September 12 – V/STOL aircraft Hawker Siddeley P.1127 makes its first transitions from vertical to horizontal flight and back, using thrust vectoring. James L. Buie patents transistor-coupled transistor logic, later known as transistor-to-transistor logic circuitry (TTL), used in integrated circuits.	passage
+756	UNKNOWN
+757	The novel received generally positive reviews, with The Guardian's Kit Spring calling it an "absorbing and engaging first novel" and "highly readable".	passage
+758	UNKNOWN
+759	UNKNOWN
+760	Conflict Streamer Year(s) Indian Wars Arizona 1866 World War I Without Inscription 1918 World War II New Guinea with Arrowhead 1943–44 Bismarck Archipelago 1943 Luzon with Arrowhead 1944–45 Afghanistan OEF VIIII 2008-2009	passage
+761	UNKNOWN
+762	UNKNOWN
+763	UNKNOWN
+764	UNKNOWN
+765	UNKNOWN
+766	UNKNOWN
+767	UNKNOWN
+768	UNKNOWN
+769	Three of the five experimental community cable television channels, authorised the previous year by The UK's Minister for Posts and Telecommunications launch.	passage
+770	't Hooft–Polyakov monopole 't Hooft–Polyakov monopole In theoretical physics, the 't Hooft–Polyakov monopole is a topological soliton similar to the Dirac monopole but without the Dirac string. It arises in the case of a Yang–Mills theory with a gauge group G {\displaystyle G} , coupled to a Higgs field which spontaneously breaks it down to a smaller group H {\displaystyle H} via the Higgs mechanism. It was first found independently by Gerard 't Hooft and Alexander Polyakov.	passage
+771	UNKNOWN
+772	UNKNOWN
+773	Note: G = Games pitched; IP = Innings pitched; W = Wins; L = Losses; ERA = Earned run average; SO = Strikeouts Player G IP W L ERA SO Moe Drabowsky 23 83.0 2 6 4.99 56 Sammy Ellis 8 28.0 2 2 6.75 27 John Tsitouris 4 21.1 1 0 0.84 7	passage
+774	UNKNOWN
+775	On 1 June 1991 battalion was reorganized as a mechanized unit and renamed 157th Mechanized Infantry Battalion "Liguria". The battalion consisted now of a command, a command and services company, three mechanized companies equipped with M113 armored personnel carriers, and a mortar company equipped with M106 mortar carriers with 120mm Mod. 63 mortars.	passage
+776	UNKNOWN
+777	UNKNOWN
+778	UNKNOWN
+779	UNKNOWN
+780	UNKNOWN
+781	UNKNOWN
+782	Jalsaghar (The Music Room), directed by Satyajit Ray – (India) Jamila, the Algerian, directed by Youssef Chahine, starring Magda and Salah Zulfikar – (Egypt)	passage
+783	UNKNOWN
+784	Main article: List of stripped Olympic medals Olympics Athlete Country Medal Event Ref 1976 Summer Olympics Valentin Khristov Bulgaria Weightlifting, Men's 110 kg	passage
+785	Halifax native Samuel Cunard chooses Boston as the western terminus for his steamships. Lord Cathcart, the new governor, arrives. The Rebellion Losses Commission sits. The Welland Canal is opened.	passage
+786	UNKNOWN
+787	UNKNOWN
+788	First Prize: Virgilio S. Almario, “Mga Talinhaga sa Panahon ng Krisis” Second Prize: Alice Guillermo, “Ang Kaisipang Pilipino Batay sa Sining Biswal” Third Prize: Anselmo Roque, “Sa Ibabaw ng Kapirasong Lupa”	passage
+789	UNKNOWN
+790	UNKNOWN
+791	Steamship Charles E. Cessna washed ashore at Mobile As the first telegraph line out of Mobile was not restored to service until late on July 7, initial damage reports were scarce.	passage
+792	Original Title English Title Director(s) Year Production Country Amadeo De Souza-Cardoso Armando da Silva Brandao Portugal Andacollo Jorge Di Lauro, Nieves Yankovic Chile Arraial Do Cabo Paulo Sareceni Brazil Bazan I'm N't Ramiro Tamayo Argentina Dagen Mijne Jaren Days My Years Max de Haas Netherlands Tetes Blanches White Heads Guy L. Coté Canada	passage
+793	Although no foreshocks were reported felt before the mainshock, a pressure gauge recording card at the local waterworks showed disturbances beginning at 3:27 a.m., which were likely caused by foreshocks.	passage
+794	UNKNOWN
+795	UNKNOWN
+796	UNKNOWN
+797	UNKNOWN
+798	UNKNOWN
+799	UNKNOWN
+800	UNKNOWN
+801	UNKNOWN
+802	UNKNOWN
+803	It was recreated (II formation) from 9th Moscow People's Militia Rifle Division (In 1941, residents of Zamoskvorechye formed the Twelfth Militia Division of Kirovsky District (дивизия народного ополчения Кировского района) (Zamoskvorechye District). It was destroyed again at Vyazma in October 1941.	passage
+804	UNKNOWN
+805	14th Street Bridge 14th Street Bridge 14th Street Bridge may refer to: Fourteenth Street Bridge (Ohio River) in Louisville, Kentucky 14th Street Bridges over the Potomac River in Washington, D.C.	passage
+806	UNKNOWN
+807	UNKNOWN
+808	UNKNOWN
+809	UNKNOWN
+810	UNKNOWN
+811	UNKNOWN
+812	UNKNOWN
+813	Based on its osculating Keplerian orbital elements, Williams qualifies as a member of the Flora family (402), a giant asteroid family and the largest family of stony asteroids in the main-belt (according to Zappalà but not Nesvorý).	passage
+814	UNKNOWN
+815	UNKNOWN
+816	UNKNOWN
+817	UNKNOWN
+818	UNKNOWN
+819	UNKNOWN
+820	UNKNOWN
+821	UNKNOWN
+822	UNKNOWN
+823	UNKNOWN
+824	UNKNOWN
+825	UNKNOWN
+826	UNKNOWN
+827	UNKNOWN
+828	Ronald MacDonald in 1898 With about five miles remaining, 1898 Boston Marathon champion Ronald MacDonald was about 90 seconds behind leader Jack Caffery, a distance which MacDonald thought he could easily make up. However, MacDonald began to tire after dabbing himself with what he thought was a water sponge, which he received from his brother via a mobile canteen driven by a bicycle rider.	passage
+829	UNKNOWN
+830	Spectroscopic observations taken from the McDonald Observatory in October 1995 has allowed the detection of various chemicals outgassing from the comet while it was 0.66 AU (99 million km) from the Sun. Emission lines of carbon (C	passage
+831	UNKNOWN
+832	UNKNOWN
+833	UNKNOWN
+834	A rotational lightcurve of Kagayayutaka was obtained from photometric observations by French astronomer René Roy in November 2015. Lightcurve analysis gave a rotation period of 3.96 hours with a brightness variation of 0.28 magnitude (U=3-).	passage
+835	UNKNOWN
+836	UNKNOWN
+837	UNKNOWN
+838	November 8 – Jōbu Railway is founded in Japan. November 15 – The New York Central Railroad leases the Boston and Albany Railroad. November 16 – A British Army troop train is wrecked in South Africa near Estcourt by the Boers and 56 men are taken prisoner, including war correspondent Winston Churchill.	passage
+839	The first person to announce their candidacy for the Republican nomination was George W. Cripps. Following the death of his son in the Vietnam War, Cripps called for further US engagement in Vietnam.	passage
+840	UNKNOWN
+841	UNKNOWN
+842	UNKNOWN
+843	UNKNOWN
+844	UNKNOWN
+845	UNKNOWN
+846	UNKNOWN
+847	UNKNOWN
+848	UNKNOWN
+849	UNKNOWN
+850	UNKNOWN
+851	UNKNOWN
+852	UNKNOWN
+853	UNKNOWN
+854	The album previously contained the track "They Afraid of You" (featuring Playboi Carti), but it was later removed from streaming services and physical releases just six days after its release, on August 15, 2019.	passage
+855	UNKNOWN
+856	UNKNOWN
+857	Due to its unusual nature, the hurricane of 1804 set several major precedents which have only rarely occurred since then. Having defied many behaviors normally exhibited by New England hurricanes, the cyclone, described as the most severe in the United States since the Great Colonial Hurricane of 1635,	passage
+858	UNKNOWN
+859	29 June – By-elections in Tanjong Pagar and Cairnhill constituencies were held, with Lee Kuan Yew winning his seat and Soh Ghee Soon from the Liberal Socialist Party winning the other.	passage
+860	UNKNOWN
+861	UNKNOWN
+862	The floods prompted the United States Army Corps of Engineers to build $70 million worth of dams and flood walls along several Connecticut rivers. In 1960, the Army Corps built the Thomaston Dam. The Thomaston Dam on the Naugatuck River is one of the largest flood control measures erected by the Army Corps of Engineers.	passage
+863	Three months after the election, a new constitution proclaiming Hungary a People's Republic and enshrining the principle of one-party rule was adopted.	passage
+864	UNKNOWN
+865	A longer-barreled 14 cm/50 3rd Year Type naval gun was used aboard surface ships and for coastal defense. The 40 caliber/11th Year Type guns were intended for use against destroyers, and fired base-fuzed projectiles with thinner shell walls allowing a larger bursting charge than the 50 caliber/3rd Year Type guns for potential use against armored ships. The lower velocity 40 caliber gun had a useful life expectancy of 800 to 1000 effective full charges (EFC) per barrel.	passage
+866	On January 9, the House began an all-night session proposed by Democratic leaders, primarily to prevent an election by plurality. Through eighteen hours of debate and balloting, no candidate lost or gained significant footing. At eight o'clock a.m. the next day, with attendance dwindling, the pro-Nebraska men joined to adjourn the chamber.	passage
+867	UNKNOWN
+868	UNKNOWN
+869	UNKNOWN
+870	UNKNOWN
+871	15 April – Guru Arjan Dev, Sikh guru, is born (dies 1606) Steven van der Hagen, first admiral of the Dutch East India Company is born in Amersfoort (dies 1621)	passage
+872	UNKNOWN
+873	UNKNOWN
+874	UNKNOWN
+875	UNKNOWN
+876	UNKNOWN
+877	Virginie Efira – Paris Memories (Revoir Paris) Lubna Azabal – Rebel Lucie Debay – Lucie Loses Her Horse (Lucie perd son cheval) Babetida Sadjo – Juwaa	passage
+878	UNKNOWN
+879	Coach Elliott's first season did not bring any significant change to the fortunes of the program, finishing with a losing season to extend by another year the stretch of relatively unsuccessful campaigns waged by the Cornhuskers since the dawn of the 1940s. At the conclusion of the season, Elliott announced that he had accepted the head coaching position at California, making his first Nebraska season also his last.	passage
+880	UNKNOWN
+881	UNKNOWN
+882	UNKNOWN
+883	UNKNOWN
+884	UNKNOWN
+885	The first helicopters arrived at the squadron in May 1951, which was then a wing. These were prototypes of the three-seater "Hiller 360" helicopters that arrived for examination and trial, but were outdated and in a poor state of maintenance. In January 1953, the Air Force's first helicopter rescue was carried out by the "Flipping Sword" gef, when a police ship overturned off the coast of Nahariya in a stormy sea. The two officers managed to reach a small rocky island off the coast and were rescued by a Hiller 360 helicopter.	passage
+886	UNKNOWN
+887	UNKNOWN
+888	UNKNOWN
+889	UNKNOWN
+890	UNKNOWN
+891	UNKNOWN
+892	UNKNOWN
+893	UNKNOWN
+894	UNKNOWN
+895	UNKNOWN
+896	UNKNOWN
+897	UNKNOWN
+898	UNKNOWN
+899	UNKNOWN
+900	UNKNOWN
+901	UNKNOWN
+902	UNKNOWN
+903	A rotational lightcurve of Vasifedoseev was obtained from photometric observations by the wide-field survey at the Palomar Transient Factory in September 2010. Lightcurve analysis gave a rotation period of 4.1124 hours with a brightness variation of 0.23 magnitude (U=2).	passage
+904	UNKNOWN
+905	Let M {\displaystyle M} be a ( G , X ) {\displaystyle (G,X)} -manifold which is connected (as a topological space). The developing map is a map from the universal cover M ~ {\displaystyle {\tilde {M}}} to X {\displaystyle X} which is only well-defined up to composition by an element of G {\displaystyle G} . A developing map is defined as follows:	passage
+906	UNKNOWN
+907	February 12: In Topolino, The secret of success, by Romano Scarpa is first prepublished, which marks the debut of Jubal Pomp. February 18: The British comics magazine Radio Fun ends its run and merges with Buster. February 25: Bert Felstead's Leo the Friendly Lion debuts.	passage
+908	UNKNOWN
+909	UNKNOWN
+910	UNKNOWN
+911	UNKNOWN
+912	UNKNOWN
+913	The 1927 season saw the following rule changes: A statute of limitations in line with federal and state laws to prevent decades-old accusations of game fixing from surfacing.	passage
+914	October 5 – Caliph Al-Nasir dies from dysentery at Baghdad after a 45-year reign. He is succeeded by his son Al-Zahir as ruler of the Abbasid Caliphate. November 9 – Frederick II marries the 14-year-old Queen Yolande, heiress to the kingdom of Jerusalem, and adds the Crusader States to his dominions.	passage
+915	UNKNOWN
+916	UNKNOWN
+917	UNKNOWN
+918	In the late 1990s, Czech astronomer Petr Pravec obtained two rotational lightcurves for this asteroid from photometric observations taken at the Ondřejov Observatory, Czech Republic. They gave a longer-than average rotation period of 23.949 and 24 hours with a brightness variation of 0.27 and 0.3 magnitude, respectively (U=2/n.a.).	passage
+919	UNKNOWN
+920	Jose Maestes was the nominee of the People's Constitutional Party. He replaced Reies Tijerina, who was denied ballot access due to his status as a convicted felon.	passage
+921	UNKNOWN
+922	UNKNOWN
+923	January 7–9 – The Winter Consumer Electronics Show is held in Las Vegas, Nevada. The show featured the first major appearance of video games in the form of dedicated home consoles. June 8 – Atari Inc. settles with Magnavox over the case related to their patents on the technology used in the Odyssey home game system.	passage
+924	UNKNOWN
+925	UNKNOWN
+926	UNKNOWN
+927	UNKNOWN
+928	UNKNOWN
+929	In November 1717, Attorney General Edward Northey and Solicitor General William Thomson provided their legal opinion regarding the proclamation: The proclamation did not contain a pardon, but promised one; Murders committed during acts of piracy could be pardoned; Pirates would not have to forfeit their property, but property taken unlawfully could be retaken by its lawful owner; No pirate who surrendered before the deadline was excepted from the promise of a pardon.	passage
+930	UNKNOWN
+931	On 16 December 1944 the Wehrmacht launched an offensive in the Ardennes region of Belgium, breaking through Allied lines and rapidly advancing towards Antwerp.	passage
+932	UNKNOWN
+933	Most new cars were sold through automobile dealerships in the 1950s, but Crosley automobiles were still on sale at any number of appliance or department stores,	passage
+934	January 8 – The marriage of Blanche of France, daughter of King Charles IV of France and his third wife Joan of Évreux, to her second-cousin, Philip, Duke of Orléans, son of King Philip VI of France and Queen Joan the Lame.	passage
+935	UNKNOWN
+936	UNKNOWN
+937	UNKNOWN
+938	Ultimately, the New Jersey delegation cast its 108 votes for Carter at the 1976 Democratic National Convention. The vote came over the objection of assemblyman Francis J. Gorman, who shouted "No!" and sought to cast his vote for Jerry Brown. He was denied the right, and all votes were cast for Carter, who won the nomination with a large majority of delegate votes.	passage
+939	UNKNOWN
+940	UNKNOWN
+941	UNKNOWN
+942	UNKNOWN
+943	UNKNOWN
+944	September 6 – Lave Cross, 61, third baseman and catcher for over 20 seasons, captain of the 1902 and 1905 AL champion Philadelphia Athletics, and one of the first ten players to collect 2,500 hits. September 27 – Ben Hunt, 38, pitched for the Red Sox and Cardinals in the early 1910s. September 30 – Hank Morrison, 61, pitcher for the 1887 Indianapolis Hoosiers of the National League.	passage
+945	UNKNOWN
+946	August 18 – The element later named as helium is first detected in the spectrum of the Sun's chromosphere by French astronomer Jules Janssen during a total eclipse in Guntur, India, but assumed to be sodium.	passage
+947	20 November: News of the death of Francisco Franco is aired in full color in TVE. 19 December: Gabriel Peña Aranda is appointed Director General of RTVE.	passage
+948	UNKNOWN
+949	UNKNOWN
+950	UNKNOWN
+951	UNKNOWN
+952	UNKNOWN
+953	UNKNOWN
+954	UNKNOWN
+955	UNKNOWN
+956	UNKNOWN
+957	UNKNOWN
+958	Lieutenant Colonel William Y. W. Ripley (declined because of wounds) Colonel Albert B. Jewett - resigned April 25, 1864 Colonel William Wirt Henry - Medal of Honor recipient for action at the October 1864 Battle of Cedar Creek	passage
+959	UNKNOWN
+960	UNKNOWN
+961	UNKNOWN
+962	UNKNOWN
+963	UNKNOWN
+964	UNKNOWN
+965	UNKNOWN
+966	1 February – Loganair, the Scottish airline, is established. 12 March – the Church of the Good Shepherd in Ayr (1957) is elevated to the Good Shepherd Cathedral for the Roman Catholic Diocese of Galloway.	passage
+967	UNKNOWN
+968	Head of the American buffalo From the late 1860s on the Plain Indians called the black troopers of the US Army Buffalo Soldiers. The Indians gave them the appellation because of the similarity of the soldiers' tightly textured short hair to the fur of the buffalo.	passage
+969	UNKNOWN
+970	UNKNOWN
+971	Dove Cottage, photographed c.1920 August 1 – British Rear-Admiral Horatio Nelson's defeat of the French fleet in the Battle of the Nile is the subject of separate poems this year by English poets William Lisle Bowles and William Sotheby.	passage
+972	UNKNOWN
+973	Elmendorf Air Force Base, Alaska, 15 September 1952 Kulis Air National Guard Base, Alaska, 1 July 1955 Joint Base Elmendorf-Richardson, Alaska, 18 Feb 2011– present.	passage
+974	UNKNOWN
+975	UNKNOWN
+976	UNKNOWN
+977	June – Emery Molyneux, English-born maker of globes and scientific instruments October 11 – Joachim Camerarius the Younger, German physician and botanist (born 1534) Roch Le Baillif, French physician (born 1540)	passage
+978	UNKNOWN
+979	UNKNOWN
+980	UNKNOWN
+981	UNKNOWN
+982	UNKNOWN
+983	UNKNOWN
+984	UNKNOWN
+985	UNKNOWN
+986	UNKNOWN
+987	UNKNOWN

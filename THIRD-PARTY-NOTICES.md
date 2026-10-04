@@ -65,8 +65,9 @@ Measurement files in this repository quote passages of Polish and English
 Wikipedia articles, word for word, and the questions paraphrase them:
 
 - the answer-or-abstain sets in [docs/answer-or-abstain](docs/answer-or-abstain/README.md),
-  [v2](docs/answer-or-abstain-v2/README.md), [v3](docs/answer-or-abstain-v3/README.md) and
-  [v4](docs/answer-or-abstain-v4/README.md): question files and recorded answers;
+  [v2](docs/answer-or-abstain-v2/README.md), [v3](docs/answer-or-abstain-v3/README.md),
+  [v4](docs/answer-or-abstain-v4/README.md) and [v5](docs/answer-or-abstain-v5/README.md): question
+  files and recorded answers;
 - the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
   [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
   `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`.

@@ -56,6 +56,9 @@ The following capabilities are present on public `main`:
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | The project goal restated: a text AI that answers in Polish or English from its sources, or says it does not know, and holds a free conversation in both languages; still a goal, not a result | PR #45 | `tools/readme_presentation.rs`, workflow `readme-presentation` | [README](../README.md), [start here](START-HERE.md) | a public measurement of conversation in both languages |
+| One license set with pinned file hashes, Wikipedia text attributed under CC BY-SA 4.0, documentation in English only with a guard, private results reported by their outcome only | PR #46 to PR #53 | `xtask verify` (licensing, disclosure) | [licensing](../LICENSING.md), [license pins](LICENSE-PINS.md), [third-party notices](../THIRD-PARTY-NOTICES.md) | an independent legal review of the license |
+| README numbers made consistent: each result card names its question set and build, exact counts for the answer verdict, earlier versions kept out of the tree | PR #54 to PR #56 | `tools/readme_presentation.rs`, `xtask claims` | [README](../README.md), [measured progress](MEASURED-PROGRESS.md) | — |
+| Answer-or-abstain set v5: 987 new questions frozen before any run; the v4 build unchanged and one candidate change beside two BM25 engines; the candidate rolled back under the rule fixed in advance | PR #57 | `xtask answer-bench check` | [set v5](answer-or-abstain-v5/README.md) | questions from an independent writer; a further held-out set for the next change |
 
 ## v0.5.2
 
