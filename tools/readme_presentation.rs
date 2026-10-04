@@ -359,9 +359,10 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 
 Measured after the v0.5.0 release with the same private implementation as the
 ranking rows above. The original column uses the same 1M bank. After the three
-changes, with the English slots cut at their end to the size of the Polish ones,
-the searched answer bank holds 167,854 passages per slot, 671,416 in all. GEL
-answers only when its best passage leads the runner-up by a
+changes the searched answer bank holds 167,854 passages per slot, 671,416 in all;
+to keep the slots equal, every slot was cut at its end to the size of the
+smallest, which removed about a quarter of the English passages the changes left.
+GEL answers only when its best passage leads the runner-up by a
 threshold fixed in advance (set on a different corpus); otherwise it
 returns UNKNOWN. Three changes to the private build were measured one at a time
 (duplicate handling, answer-bank scope and an encoder variant); their details

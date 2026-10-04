@@ -72,7 +72,7 @@ GEL RAM NCRL 1.0 applies only to material for which the Project Licensor has aut
 
 The redistributed excerpt of *The Rust Programming Language* remains MIT-licensed and is accompanied by its upstream license in `crates/gel-source/fixtures/rust-book/LICENSE.txt`. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and [real-source provenance](docs/REAL-SOURCE-DEMO.md).
 
-Wikipedia passages quoted in the measurement sets and side-by-side records remain under CC BY-SA 4.0 and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 7.
+Wikipedia passages quoted in the measurement sets, the side-by-side records and media, and the README example card remain under CC BY-SA 4.0 and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 7.
 
 ## 9. Contributions and CLA privacy
 
