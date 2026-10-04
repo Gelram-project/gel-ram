@@ -106,11 +106,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-light.svg",
-        "b205b6fd26d64cc7b00fabddbcca1d0cbde966b6d7dcb3ca2fa8dbde2a8262b5",
+        "05b7f5fab928b4068b4d0400a569949501d3bc7cfaf7ad7661dd79fc0cdf3048",
     ),
     (
         "media/presentation/glance-dark.svg",
-        "7b0190738e0bce6e31cfcf0176620ad6f7028eed4f4b77650ef460fbe7eea9af",
+        "3f413a81fe2126b864f050fbc2a00015fbe93f3e5a581d9741bd1cb2689818bb",
     ),
     (
         "media/presentation/question-path-light.svg",
@@ -122,27 +122,27 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/example-41-light.svg",
-        "87bb62857b97377b16b8995d5f3b5c5f987aface4fd6dbdc2d089a843b8e4093",
+        "43bb6a77914db4246e236cc967bab9d3cf1266f49824e08bea135c15465bfe46",
     ),
     (
         "media/presentation/example-41-dark.svg",
-        "23bd8ecb38654e86653b0a5f7660ff2867dc7ecbce45f2bd2457480821980a70",
+        "a04a7b97344832c87b10a4228a7c4d7801b6d23252bec190c59b8efdd5d901a8",
     ),
     (
         "media/presentation/answer-dots-light.svg",
-        "700565e0fb8b7f6f20cb679ba1be8c7cfb253be2871ec6180ec76b26af944bcf",
+        "46e35b015a5e04486dd2279154da794634a60c69730bf62ac4b27e3449ac541e",
     ),
     (
         "media/presentation/answer-dots-dark.svg",
-        "393a72ba16ac3f51d9663046d33ead44d7b93164259f73da0fc81028fb73a046",
+        "60dde65ff2b023f595e7dcd1a3e9c96dd830f835b729a122a7c6f3c318c95d9d",
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "d60296cb5dac4a378b17ea9f274f4fff75474b7470c62c53612e56d04cf0d84a",
+        "eb230ad86f6f1968489c7e1c6cc44541e20b2cf3dc35436fd9895b665499ab8d",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "29b61efbe13bbe8abb28b2e7b87053487b99ed438c74c8be424d68bb89495e95",
+        "b683ea134fd0d3b6b9af084727543fc7220d78135d4cab81051102de5e399028",
     ),
     (
         "media/presentation/chips/01-light.svg",
