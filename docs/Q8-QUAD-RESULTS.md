@@ -106,8 +106,6 @@ hardware-level memory computation, macOS/Windows runtime or GPU result is claime
   tests run in both harnesses, so totals are executions, not unique assertions.
 - Workspace format check, Clippy with warnings denied, docs and binary selftest
   pass on Rust 1.85.0. Existing data-integrity example reports PASS.
-- Source changes originate in a private codebase, with an explicit export
-  mapping; no other private component is part of this export.
 - The original 051 snapshot stopped full verify at pending license confirmation.
   The author subsequently confirmed the public PolyForm license. The licensing
   check remains enabled. The subsequent 052 full-gate rerun passed on Rust 1.85.0

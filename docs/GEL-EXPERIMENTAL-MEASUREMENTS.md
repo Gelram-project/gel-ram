@@ -44,34 +44,18 @@ All measured rows, including slow ones, are retained. Recomputing statistics
 from these files is possible; reproducing the private engine is not.
 The CSV's checks field counts worker scans, not independent semantic queries.
 
-## Phase evolution kernel — historical measurements, 19 September 2026
+## A second private component — historical timing (19 September 2026)
 
-| Active graph / steps | Run | N per implementation | Reference p50 µs | GEL candidate p50 µs | Ratio |
-|---|---|---:|---:|---:|---:|
-| 2 nodes / 20 | R3 | 24 | 11.5420 | 6.8375 | 1.688× |
-| 2 nodes / 20 | R4 | 24 | 8.2350 | 4.7790 | 1.723× |
-| 2 nodes / 512 | R3 | 24 | 289.0590 | 166.5350 | 1.736× |
-| 2 nodes / 512 | R4 | 24 | 206.5500 | 119.4475 | 1.729× |
-| 256 nodes, 8192 connections / 20 | R3 | 24 | 28081.9400 | 26222.0540 | 1.071× |
-| 256 nodes, 8192 connections / 20 | R4 | 24 | 28023.7575 | 26175.9185 | 1.071× |
-
-Same CPU family, Linux, Rust 1.97.0, release, one thread pinned to CPU8.
-ABBA/BAAB order; p50 averages the two central observations.
-The timer includes evolution and its allocations, but excludes graph creation,
-ORB retrieval, answer construction and durable storage. These are active
-graphs; large shortcuts for inactive graphs are not presented as active gains.
-Recorded results matched the reference bitwise on tested inputs.
-On 26 September, the saved CSV reduction was repeated and matched the saved
-summary byte-for-byte. This was not a new execution of the phase campaign.
-Its underlying implementation and raw campaign remain private: this table
-is explicitly **author-reported**, not independently reproducible evidence.
+Author-reported timings of a second private component were compared with a
+reference implementation on a small and a larger input (ratios 1.07–1.73×). The
+implementation and raw data remain private; these figures measure a different
+task and establish no end-to-end advantage.
 
 ## What these numbers do not establish
 
-- Sketch search, phase evolution and Ocean full Q8 scan are different tasks.
-  Do not divide their times to claim an end-to-end speedup.
+- Sketch search, the second private component and the full Q8 scan are different
+  tasks. Do not divide their times to claim an end-to-end speedup.
 - No 1M/10M sketch replay or equivalence to the Q8 top-10 ranking is established here.
-- Phase graph nodes are not automatically Ocean ORBs.
 - The computations execute on CPU with data in memory. Hardware-level memory
   computing, operation without CPU and permanent CPU-cache residency are not proven.
 - There is no measured superiority over a named commercial system.

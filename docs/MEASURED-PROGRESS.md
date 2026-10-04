@@ -21,7 +21,7 @@ latency series for the new profile is reported here.
 Five real articles, 82 fields, resident bank. Release build,
 Ryzen AI9 HX370. Nearest-rank, N=1000 warm repetitions per row, 20 warmups.
 Timer covers the dialogue response call through completed reply construction,
-excluding loading, display, report writes and subsequent Q8 fallback.
+excluding loading, display and report writes.
 The first run is shown, not a selected best run. All times are **µs**.
 
 | ID / subject | Result | p1 | p10 | p50 | p95 | p99 | max |
@@ -53,10 +53,10 @@ Newer quotation/list support was not timed in this campaign.
 
 Four new PL articles, 69 fields, 13 questions: six source-field answers,
 two quotations, one limited whole-field comparison, three UNHANDLED and
-one UNKNOWN. Six field outputs were checked against HTML cells.
+one UNKNOWN. Six field outputs were checked against the source tables.
 Japan's language answer retained both “de facto” and “de iure” qualifiers.
 Two offline runs had identical output. No timing measurement; not 9/13
-semantic accuracy, not a million-record deployment. Known templates and no
+semantic accuracy, not a million-record deployment. A small question set and no
 independent adjudicator limit generalization.
 
 ## Evidence identities
@@ -98,9 +98,9 @@ passages read back and ranked within their own slot, sampled at a fixed step.
 | Stage (each measured separately) | Passages per slot | Probes | Answered | Correct answers | Wrong among all probes | UNKNOWN |
 |---|---:|---:|---:|---:|---:|---:|
 | Original bank | 250,000 | 10,000 | 77.0% | 97.7% | 1.78% | 23.1% |
-| Identical passages (also ones the encoder cannot tell apart) stored once, all sources and variants kept | 231,033 | 10,000 | 83.7% | 98.6% | 1.17% | 16.3% |
-| Reference, link and bibliography sections left out | 167,854 | 10,000 | 88.5% | 98.8% | 1.04% | 11.5% |
-| Encoder keeps numbers and short words (selection sample) | 167,854 | 10,000 | 92.8% | 99.94% | 0.06% | 7.2% |
+| Change 1: duplicate handling | 231,033 | 10,000 | 83.7% | 98.6% | 1.17% | 16.3% |
+| Change 2: answer-bank scope | 167,854 | 10,000 | 88.5% | 98.8% | 1.04% | 11.5% |
+| Change 3: encoder variant (selection sample) | 167,854 | 10,000 | 92.8% | 99.94% | 0.06% | 7.2% |
 | Same, validation sample | 167,854 | 9,600 | 93.1% | 99.96% | 0.04% | 6.9% |
 | Same, large sample | 167,854 | 50,000 | 92.8% | 99.95% | 0.046% | 7.2% |
 
