@@ -162,13 +162,6 @@ const NATIVE: &str = r####"# GEL RAM
   <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-__RESULTS__
-
-__FLOW__
-
-**Find the passage. Check the source.** Local Rust tools for exact source-bound
-quotations, stale-citation refusal and independently pinned snapshots.
-
 **What GEL RAM is working toward.** A text AI whose knowledge is written into
 memory rather than trained into model weights, so adding knowledge needs no
 fine-tuning. It answers in Polish or English from that knowledge and shows the
@@ -176,6 +169,25 @@ source it used, or says plainly that it does not know, and it holds a free
 conversation in both languages. A copy kept on disk means a restart or a crash
 loses nothing that was saved. **This is the goal, not a result of this
 repository**: the sections below state exactly what has been checked so far.
+
+**Where the numbers below come from.** The answers counted in the cards were
+given by a private development build and its private bank, not by the tools in
+this checkout. The first card is the newest frozen set (v4); the example and
+the answer grid show an earlier run on set v1, the 80 questions also put to
+three language models. Every question is published with its expected answer
+and source passage: [the 985 of set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
+and [the 80 of set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
+every recorded answer, and `xtask answer-bench check` re-scores them on each
+verify run. Free conversation has not been measured yet.
+
+__RESULTS__
+
+__FLOW__
+
+**What this checkout runs.** Local Rust tools for phrase lookup in your own
+files: exact source-bound quotations, refusal of a stale citation and
+independently pinned snapshots. They do not answer natural-language questions;
+that is the goal above.
 
 __FACTS__
 
@@ -371,8 +383,8 @@ The questions were written by the project's AI coding assistant for randomly
 sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
-not a precision claim. Answering natural questions (14% answered) remains the
-open problem.
+not a precision claim. Answering natural questions remains the open problem: 14%
+answered here, 43% (423 of 985) on the later [set v4](docs/answer-or-abstain-v4/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
@@ -460,10 +472,11 @@ const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
-reduced motion is requested), result panels drawn from the recorded
-side-by-side run and the claim registry, an animated 3D scene of the citation
-check, a strip of checked facts, colour-coded workflow badges, six real GIF
-previews and two 3D graphics of the public checks. The adjacent
+reduced motion is requested), result panels drawn from the recorded answers of
+frozen sets v4 and v1 and from the claim registry, each panel naming its set, an
+animated 3D scene of the citation check, a strip of checked facts, colour-coded
+workflow badges, six real GIF previews and two 3D graphics of the public checks.
+The adjacent
 README-MULTIMEDIA.html is a script-free local document with the full responsive
 panel layout, theme-aware backgrounds, a still-image control and links to the
 public documentation. Open it from the checkout in a browser. GitHub's file
@@ -1453,16 +1466,6 @@ impl Recorded {
         (n(b'C'), n(b'W'), n(b'U'))
     }
 }
-/// Probes, answered and correct shares of the large read-back sample in docs/MEASURED-PROGRESS.md.
-fn readback() -> Result<(String, String, String)> {
-    let text = fs::read_to_string("docs/MEASURED-PROGRESS.md")?;
-    let row = text
-        .lines()
-        .find(|l| l.starts_with("| Same, large sample |"))
-        .ok_or("missing large read-back row")?;
-    let f: Vec<&str> = row.split('|').map(str::trim).collect();
-    Ok((f[3].to_string(), f[4].to_string(), f[5].to_string()))
-}
 /// How many claims the registry in docs/CLAIMS.md holds in each evidence mode.
 fn statuses() -> Result<Vec<(&'static str, usize)>> {
     let text = fs::read_to_string("docs/CLAIMS.md")?;
@@ -1548,6 +1551,9 @@ struct Headline {
     unknown: usize,
     /// (correct, wrong) of the two search engines at the same selection rule.
     engines: [(usize, usize); 2],
+    /// (correct, wrong) of GEL RAM at its precise setting and of both engines at their strict threshold.
+    precise: (usize, usize),
+    strict: [(usize, usize); 2],
 }
 const HEADLINE_DIR: &str = "docs/answer-or-abstain-v4";
 impl Headline {
@@ -1572,6 +1578,11 @@ impl Headline {
             row("Tantivy BM25, threshold")?,
             row("SQLite FTS5, threshold")?,
         );
+        let (p, ts, fs_) = (
+            row("GEL RAM, precise setting")?,
+            row("Tantivy BM25, strict threshold")?,
+            row("SQLite FTS5, strict threshold")?,
+        );
         let text = fs::read_to_string(format!("{HEADLINE_DIR}/with-answer-questions.txt"))?;
         let langs: Vec<&str> = text
             .lines()
@@ -1587,10 +1598,15 @@ impl Headline {
         };
         if answered != correct + wrong
             || answered + unknown != pl + en
-            || t.len() < 3
-            || f.len() < 3
+            || [&t, &f, &p, &ts, &fs_].iter().any(|r| r.len() < 3)
         {
             return Err("headline numbers do not add up".into());
+        }
+        // The first card states both comparisons in words; refuse to draw it if the data disagree.
+        let more_and_worse = [&t, &f].iter().all(|r| r[1] > correct && r[2] > wrong);
+        let strict_ahead = [&ts, &fs_].iter().all(|r| r[1] > p[1] && r[2] <= p[2]);
+        if !more_and_worse || !strict_ahead {
+            return Err("the comparison stated on the first card no longer holds".into());
         }
         Ok(Headline {
             questions: pl + en,
@@ -1601,20 +1617,25 @@ impl Headline {
             wrong,
             unknown,
             engines: [(t[1], t[2]), (f[1], f[2])],
+            precise: (p[1], p[2]),
+            strict: [(ts[1], ts[2]), (fs_[1], fs_[2])],
         })
     }
     fn engines(&self) -> String {
         let [(a, x), (b, y)] = self.engines;
-        format!(
-            "{}–{} correct and {}–{} wrong",
-            a.min(b),
-            a.max(b),
-            x.min(y),
-            x.max(y)
-        )
+        format!("{} correct and {} wrong", span(a, b), span(x, y))
     }
 }
-fn glance(dark: bool, h: &Headline, rb: &(String, String, String)) -> String {
+/// "a–b" with the smaller number first.
+fn span(a: usize, b: usize) -> String {
+    format!("{}–{}", a.min(b), a.max(b))
+}
+/// What the first result card says, as its description and as the README alternative text.
+fn glance_text(h: &Headline) -> String {
+    let [(a, x), (b, y)] = h.strict;
+    format!("Private development build, frozen set v4: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, so there the engines are ahead. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
+}
+fn glance(dark: bool, h: &Headline) -> String {
     let t = theme(dark);
     let low = wilson_low(h.correct, h.answered);
     let precision = 100.0 * h.correct as f64 / h.answered as f64;
@@ -1639,15 +1660,21 @@ fn glance(dark: bool, h: &Headline, rb: &(String, String, String)) -> String {
         ),
     ];
     let mut body = format!(
-        r#"<text class="kick" x="40" y="48">{} NEW FROZEN QUESTIONS · {} POLISH, {} ENGLISH · ONE RECORDED RUN</text>"#,
+        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · FROZEN SET V4 · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
         h.questions, h.pl, h.en
     );
     for (i, (big, colour, label, note)) in cols.iter().enumerate() {
         let x = 40 + i * 285;
         body.push_str(&format!(r#"<text x="{x}" y="118" font-size="52" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="150" font-size="18" class="b">{label}</text><text x="{x}" y="174" font-size="14" class="mut">{note}</text>"#));
     }
-    body.push_str(&format!(r#"<path d="M890 76V182" stroke="{}"/><text x="920" y="118" font-size="52" class="b" style="fill:{}">{}</text><text x="920" y="150" font-size="18" class="b">stored-passage read-back</text><text x="920" y="174" font-size="14" class="mut">{} probes · not questions</text>"#, t.line, t.accent, rb.2, rb.0));
-    result_card(dark, 206, ("Evidence you can inspect", &format!("On {} new frozen questions GEL RAM gave {} correct answers, {} wrong and {} UNKNOWN; two BM25 search engines on the same bank gave {}. A different experiment, not questions: {} correct answers when {} stored passages are read back.", h.questions, h.correct, h.wrong, h.unknown, h.engines(), rb.2, rb.0)), &body)
+    let [(a, x), (b, y)] = h.engines;
+    body.push_str(&format!(r#"<path d="M890 76V182" stroke="{}"/><text x="920" y="118" font-size="52" class="b">{}</text><text x="920" y="150" font-size="18" class="b">BM25 engines, correct</text><text x="920" y="174" font-size="14" class="mut">same bank · {} wrong</text>"#, t.line, span(a, b), span(x, y)));
+    result_card(
+        dark,
+        206,
+        ("Evidence you can inspect", &glance_text(h)),
+        &body,
+    )
 }
 fn path_card(dark: bool) -> String {
     let t = theme(dark);
@@ -1695,7 +1722,7 @@ fn example(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 570, 420, t) + &panel(610, 570, 420, t);
     b.push_str(
-        r#"<text class="kick" x="44" y="56">REAL EXAMPLE · REAL SOURCE · QUESTION 41 OF 80</text>"#,
+        r#"<text class="kick" x="44" y="56">EARLIER RUN · SET V1 · QUESTION 41 OF 80</text>"#,
     );
     for (i, l) in wrap(&r.question, 50, 2).iter().enumerate() {
         b.push_str(&format!(
@@ -1735,7 +1762,7 @@ fn example(dark: bool, r: &Recorded) -> String {
         }
     }
     b.push_str(r#"<text x="634" y="392" font-size="14" class="mut">All three give a reason the source does not give.</text><text x="634" y="414" font-size="14" class="mut">GEL returns the passage that states it.</text>"#);
-    result_card(dark, 460, ("One question, four systems", &format!("Question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
+    result_card(dark, 460, ("One question, four systems", &format!("Earlier run, set v1, question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
 }
 const BREAK: [(&str, &str, &str); 4] = [
     (
@@ -1762,7 +1789,9 @@ const BREAK: [(&str, &str, &str); 4] = [
 fn dots(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 720, 360, t) + &panel(760, 420, 360, t);
-    b.push_str(r#"<text class="kick" x="44" y="56">ANSWER OR ABSTAIN · SAME 80 QUESTIONS, SAME RULE</text>"#);
+    b.push_str(
+        r#"<text class="kick" x="44" y="56">EARLIER RUN · SET V1 · 80 QUESTIONS, SAME RULE</text>"#,
+    );
     for (row, (name, verdicts)) in r.systems.iter().enumerate() {
         let (ok, wrong, unknown) = r.counts(row);
         let y = 104 + row * 62;
@@ -1795,7 +1824,7 @@ fn dots(dark: bool, r: &Recorded) -> String {
         })
         .collect::<Vec<_>>()
         .join(". ");
-    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("{desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
+    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("Earlier run on set v1 (80 questions, an earlier build), beside three language models answering closed book. {desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
 }
 fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
     let t = theme(dark);
@@ -1818,7 +1847,7 @@ fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
         (
             "Natural question coverage",
             format!(
-                "now {} of {} correct on a new frozen set, {} wrong",
+                "now {} of {} correct on frozen set v4, {} wrong",
                 h.correct, h.questions, h.wrong
             ),
             "most of a new frozen set answered, still 0 wrong",
@@ -1861,18 +1890,22 @@ fn result_path(name: &str, dark: bool) -> String {
 fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let r = Recorded::read()?;
     let h = Headline::read()?;
-    let rb = readback()?;
     let s = statuses()?;
     let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
     let mut out = Vec::new();
-    let (l, d) = both(&|dark| glance(dark, &h, &rb));
-    out.push(("glance", l, d, format!("Evidence you can inspect. {} new frozen questions, one recorded run: {} correct answers with their source passages, {} wrong, {} UNKNOWN; two BM25 search engines on the same bank: {}. A different experiment, not questions: {} correct answers when {} stored passages are read back.", h.questions, h.correct, h.wrong, h.unknown, h.engines(), rb.2, rb.0)));
+    let (l, d) = both(&|dark| glance(dark, &h));
+    out.push((
+        "glance",
+        l,
+        d,
+        format!("Evidence you can inspect. {}", glance_text(&h)),
+    ));
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example-41", l, d, format!("Question 41: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
+    out.push(("example-41", l, d, format!("Earlier run, set v1, question 41 of 80: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
     let (l, d) = both(&|dark| dots(dark, &r));
-    out.push(("answer-dots", l, d, format!("{}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
+    out.push(("answer-dots", l, d, format!("Earlier run on set v1, 80 questions, an earlier build beside three language models answering closed book. {}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
     let (l, d) = both(&|dark| surface(dark, &s, &h));
     out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
@@ -2463,17 +2496,24 @@ mod tests {
         let r = Recorded::read().unwrap();
         let (ok, wrong, unknown) = r.counts(0);
         assert_eq!(ok + wrong + unknown, 80);
-        let rb = readback().unwrap();
         let h = Headline::read().unwrap();
         assert_eq!(h.answered + h.unknown, h.questions);
-        let g = glance(false, &h, &rb);
+        assert!(HEADLINE_DIR.ends_with("-v4"), "the first card names set v4");
+        let g = glance(false, &h);
         assert!(g.contains(&format!(">{} / {}<", h.correct, h.questions)));
         assert!(g.contains(&format!(">{}<", h.wrong)) && g.contains(&format!(">{}<", h.unknown)));
-        assert!(g.contains("stored-passage read-back") && g.contains("not questions"));
-        assert!(g.contains(&rb.2) && g.contains(&rb.0));
+        assert!(g.contains("PRIVATE DEVELOPMENT BUILD · FROZEN SET V4"));
+        let [(a, _), (b, _)] = h.engines;
+        assert!(g.contains(&format!(">{}<", span(a, b))));
+        assert!(g.contains("so there the engines are ahead"));
+        assert!(
+            !g.contains("read-back"),
+            "stored passages read back are not questions and stay off the question card"
+        );
         let d = dots(true, &r);
         assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
         let e = example(false, &r);
+        assert!(d.contains("EARLIER RUN · SET V1") && e.contains("EARLIER RUN · SET V1"));
         assert!(r.question.contains("Sudbury") && e.contains("House of Lords"));
         assert!(
             r.answers.iter().all(|a| a.2 == b'W'),

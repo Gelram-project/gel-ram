@@ -8,13 +8,31 @@
   <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. 985 new frozen questions, one recorded run: 405 correct answers with their source passages, 18 wrong, 562 UNKNOWN; two BM25 search engines on the same bank: 531–558 correct and 40–41 wrong. A different experiment, not questions: 99.95% correct answers when 50,000 stored passages are read back." src="media/presentation/glance-light.svg" width="1200"></picture>
+**What GEL RAM is working toward.** A text AI whose knowledge is written into
+memory rather than trained into model weights, so adding knowledge needs no
+fine-tuning. It answers in Polish or English from that knowledge and shows the
+source it used, or says plainly that it does not know, and it holds a free
+conversation in both languages. A copy kept on disk means a restart or a crash
+loses nothing that was saved. **This is the goal, not a result of this
+repository**: the sections below state exactly what has been checked so far.
+
+**Where the numbers below come from.** The answers counted in the cards were
+given by a private development build and its private bank, not by the tools in
+this checkout. The first card is the newest frozen set (v4); the example and
+the answer grid show an earlier run on set v1, the 80 questions also put to
+three language models. Every question is published with its expected answer
+and source passage: [the 985 of set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
+and [the 80 of set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
+every recorded answer, and `xtask answer-bench check` re-scores them on each
+verify run. Free conversation has not been measured yet.
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen set v4: on 985 new questions (493 Polish, 492 English) GEL RAM at its balanced setting gave 405 correct answers, each with its source passage, 18 wrong and 562 UNKNOWN. Two BM25 search engines on the same bank and rule gave 531–558 correct and 40–41 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 281 correct and 8 wrong, the engines at their strict threshold 361–363 correct and 5–8 wrong, so there the engines are ahead. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-41-dark.svg"><img alt="Question 41: Why was the 1963 Sudbury and Woodbridge by-election held? GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give." src="media/presentation/example-41-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-41-dark.svg"><img alt="Earlier run, set v1, question 41 of 80: Why was the 1963 Sudbury and Woodbridge by-election held? GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give." src="media/presentation/example-41-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Earlier run on set v1, 80 questions, an earlier build beside three language models answering closed book. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 
@@ -24,16 +42,10 @@ Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale 
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
-**Find the passage. Check the source.** Local Rust tools for exact source-bound
-quotations, stale-citation refusal and independently pinned snapshots.
-
-**What GEL RAM is working toward.** A text AI whose knowledge is written into
-memory rather than trained into model weights, so adding knowledge needs no
-fine-tuning. It answers in Polish or English from that knowledge and shows the
-source it used, or says plainly that it does not know, and it holds a free
-conversation in both languages. A copy kept on disk means a restart or a crash
-loses nothing that was saved. **This is the goal, not a result of this
-repository**: the sections below state exactly what has been checked so far.
+**What this checkout runs.** Local Rust tools for phrase lookup in your own
+files: exact source-bound quotations, refusal of a stale citation and
+independently pinned snapshots. They do not answer natural-language questions;
+that is the goal above.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
 
@@ -243,8 +255,8 @@ The questions were written by the project's AI coding assistant for randomly
 sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
-not a precision claim. Answering natural questions (14% answered) remains the
-open problem.
+not a precision claim. Answering natural questions remains the open problem: 14%
+answered here, 43% (423 of 985) on the later [set v4](docs/answer-or-abstain-v4/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
