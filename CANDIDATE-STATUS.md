@@ -1,6 +1,6 @@
 # GEL RAM 0.5.2 — publication and release status
 
-Updated 2026-09-30. Evidence Lab, originally prepared from published commit
+Updated 2026-10-04. Evidence Lab, originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`, was merged into public `main` through
 PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`; the review repairs followed
 through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`, and the 0.4.0
@@ -9,9 +9,10 @@ the owner published as the v0.4.0 GitHub Release on 2026-09-27. The v0.5.0 GitHu
 Release was published on 2026-09-28 from `d15966e0de59181f01937b97a2aee0121b0f0036`; the v0.5.1 tag points to
 `dc276102b3539c553f0a7c7cf3813433531cfde9`.
 All merges passed the required checks and were authorized by the owner. The
-version line is now 0.5.2. The owner publishes the v0.5.2 GitHub Release from
-the merge commit of this version cutover; the Releases page shows whether that
-has happened.
+version line is now 0.5.2. The owner published the v0.5.2 GitHub Release on
+2026-09-30. On 2026-10-04 the owner removed the GitHub Releases of v0.3.0,
+v0.4.0, v0.5.0 and v0.5.1 from the Releases page; their tags remain, and v0.5.2
+is the current release.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -69,9 +70,9 @@ must be checked separately. Only free standard runners are in scope.
 New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 private component, private corpus or user data was exported.
-Evidence Lab scope and results: [Evidence Lab notes](docs/history/release-notes/RELEASE-NOTES-EVIDENCE-LAB.md).
+Evidence Lab scope and results: [Evidence Lab](docs/EVIDENCE-LAB.md).
 Historical R2 preparation record (its publication and platform flags predate the approvals above): [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md). Open external gates: [claim registry](docs/CLAIMS.md).
-Previously published: [Live Lab update](docs/history/release-notes/RELEASE-NOTES-LIVE-LAB.md).
+Previously published: [Live Lab](docs/LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
@@ -102,7 +103,7 @@ remain documented as historical measurements in [the Ocean guide](docs/OCEAN-SCA
 
 1. Rust public core, multipart source readout, integrity and reproduction tools, pinned source fixtures and dependency/third-party inventory.
 2. GEL RAM NCRL 1.0 as the operative root public license for GEL RAM-owned material, plus the commercial licensing path and CLA 2.0.
-3. Two English terminal demonstration films, previews and six extracted screenshots, with scope and timing limitations in [the film guide](media/FILMS-GUIDE.md).
+3. Two English terminal demonstration films of a private application preview, with six extracted screenshots; removed from the tree on 2026-10-04.
 4. Public media reuse terms in [media/RIGHTS.md](media/RIGHTS.md).
 
 ## Excluded private scope

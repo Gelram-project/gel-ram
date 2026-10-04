@@ -2,7 +2,7 @@
 
 2026-09-11, follow-up to R2. No scoring-kernel or license change; the private research system
 remains outside this export. Current README replaces the accumulated openings;
-the previous version is preserved verbatim in [README history](../README-HISTORY-R2.md).
+the previous version remains in the git history.
 
 ## Reporting fixes
 

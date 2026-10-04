@@ -7,8 +7,7 @@ mark when each event first appears on screen; a result stays visible
 afterwards. They were read from every visually distinct frame (ffmpeg
 mpdecimate) in an AI frame review on 26 September 2026, see
 [media review](../docs/MEDIA-DECODE-REVIEW.md). That review is not a human
-sign-off. The two private application previews are not transcribed; their
-scope and limits are summarized at the end. Original videos are unchanged.
+sign-off. The original video is unchanged.
 
 ## 1. Public Evidence Lab — 70.35 s
 
@@ -46,17 +45,3 @@ Exact command sequence and full hashes: [commands](evidence-lab/commands.txt),
 These are individual application measurements, not percentiles, ORB/s or a
 million-record search. Typing, reading pauses and terminal rendering are outside
 the timers. The historical film predates the newer bounded-context renderer.
-
-## Private application previews
-
-The [continuous chat](GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) and
-[hardware and short answers](GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4) films were
-recorded on 13 September 2026 and show a separate private native Rust
-application. Its engine, bank and logs are not in this repository, so nothing
-in these films can be reproduced from this checkout. Displayed times are single
-on-screen values, not a controlled performance comparison. The answers are
-bounded and source-based, not produced by an unrestricted language model.
-Neither preview establishes general understanding, persistent learning, network
-operation, hardware-level memory computation or chat ORB/s. The public checkout
-does not provide the private /chat. For reproduction, use the Evidence Lab
-above.

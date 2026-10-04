@@ -22,23 +22,19 @@ No-answer control (80 questions without a correct answer):
 [summary, 48 s](beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-SUMMARY-EN.mp4) ·
 [conditions and limits](../docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 
-# Three films, two distinct scopes
+# The Evidence Lab film
 
-Start with the public Evidence Lab. All films are silent; elapsed times in an
-individual demonstration are not latency-distribution benchmarks.
+The film is silent; elapsed times in a single demonstration are not
+latency-distribution benchmarks.
 
 | Film | Scope | Inputs and observations | Reproduction |
 |---|---|---|---|
 | [Evidence Lab, 70.35 s](GEL-EVIDENCE-LAB-EN.mp4) | PUBLIC tool | Two documents, 308 input bytes; phrase, citation, UNKNOWN, save, restart, reload | [Commands and evidence](EVIDENCE-LAB-GUIDE.md) |
-| [Hardware / answers, 90 s](GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4) | PRIVATE APPLICATION PREVIEW | Four prepared questions; a follow-up and a refusal | [Scope and limits](FILMS-GUIDE.md); private engine not supplied |
-| [Continuous chat, 60 s](GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4) | PRIVATE APPLICATION PREVIEW | Three prepared questions in one session, including an UNKNOWN | [Scope and limits](FILMS-GUIDE.md); private engine not supplied |
 
-The private previews are dated 13 September 2026. They do not imply that running
-the public checkout opens the private /chat. Use the individual guides for
-recorded provenance; do not assign today's commit to historical recordings.
-Subsequent recorder/context fixes have not silently replaced these films.
+Use the guide for recorded provenance; do not assign today's commit to a
+historical recording. Two earlier films of a private application preview, with
+their guide and stills, were removed from the repository on 4 October 2026.
 
-[Detailed annotated preview guide](FILMS-GUIDE.md) ·
 [Descriptive transcript of the public film](TRANSCRIPTS-EN.md) ·
 [Full decode checks and remaining visual-review limitations](../docs/MEDIA-DECODE-REVIEW.md).
 

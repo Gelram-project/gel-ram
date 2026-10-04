@@ -503,11 +503,10 @@ any of these sources makes the read-only check fail until the images are rebuilt
 
 ## Preservation and source
 
-The presentation belongs to the __RELEASE__ source. The exact prior README is
-retained as [README-HISTORY-PRE-MULTIMEDIA.md](../README-HISTORY-PRE-MULTIMEDIA.md).
-The already existing pre-visual history also remains untouched. The new README
-keeps its technical content below the presentation unchanged, including the
-quick-start checkout of the __RELEASE__ tag.
+The presentation belongs to the __RELEASE__ source. Earlier README versions are
+no longer kept in the tree; they remain in the git history. The README keeps its
+technical content below the presentation unchanged, including the quick-start
+checkout of the __RELEASE__ tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.

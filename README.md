@@ -488,13 +488,11 @@ cargo run --locked --offline --release -p gel-phase-quad --example quad_playgrou
 | [Project map](docs/START-HERE.md) | [Verified results and scope](docs/VERIFIED-RESULTS.md) | [Public roadmap](docs/ROADMAP.md) |
 | [Evidence Lab](docs/EVIDENCE-LAB.md) | [Publication fault tests](docs/PUBLICATION-FAULT-TESTS.md) | [Publication status](CANDIDATE-STATUS.md) |
 | [Batch interface](docs/EVIDENCE-BATCH.md) | [Source bundle verification](docs/SOURCE-BUNDLE.md) | [Media index](media/INDEX.md) |
-| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Earlier README and results](README-HISTORY-R2.md) |
+| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.5.2.md) |
 
-The complete README immediately before this layout change is preserved unchanged
-in [README-HISTORY-PRE-VISUAL.md](README-HISTORY-PRE-VISUAL.md), from commit
-`ffa85b639e58ad0e70d45f322a375080ccc41258`. It is a historical snapshot, not an
-additional current entry point. Existing detailed reports and raw evidence remain
-in their original locations.
+Earlier README versions and the notes of earlier releases are no longer kept in
+the tree; they remain in the git history. Detailed reports and raw evidence
+remain in their original locations.
 
 ## About and licensing
 

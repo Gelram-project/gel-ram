@@ -343,46 +343,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
     ),
     (
-        "media/GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4",
-        "3b568bebdef34d34931970ce1f86ae0c521dba9e9ef6f7d050c5363357b63064",
-    ),
-    (
-        "media/GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4",
-        "b2d6cccc2beca58b73705a1bb6bcf156c4d54a5304fb8d8a770ba628c7cf63cf",
-    ),
-    (
-        "media/continuous-chat-preview.png",
-        "7d71a0e0b21ef0772a14f7ba9aa1f163d4d179122307392ff0de404f6c280a65",
-    ),
-    (
-        "media/screenshots/01-hardware-00m10s.png",
-        "27bde081109e4fd347fd34d5248a103503a3de8258e2f520af4a5708c6faaeae",
-    ),
-    (
-        "media/screenshots/02-chat-00m25s.png",
-        "63dc404334d6332217924af8fb591cbe2b39b911d09ca7397d98de70f0300ebe",
-    ),
-    (
-        "media/screenshots/03-followup-00m45s.png",
-        "5068151833b636ef46499fe4cee99c6a84b9d5c1e52b51470799a263e0c67817",
-    ),
-    (
-        "media/screenshots/04-unknown-01m10s.png",
-        "d1b797a24fd2f717e52c5d75f015648acbcf87f2821dd531ec74930fb708b77c",
-    ),
-    (
-        "media/screenshots/05-summaries-00m37s.png",
-        "7d71a0e0b21ef0772a14f7ba9aa1f163d4d179122307392ff0de404f6c280a65",
-    ),
-    (
-        "media/screenshots/06-unknown-00m49s.png",
-        "caef327d44a01ce25dfcae5c875f97b9ea14ffaeafadd8e1eccd046a69c4510d",
-    ),
-    (
-        "media/terminal-preview.png",
-        "d1b797a24fd2f717e52c5d75f015648acbcf87f2821dd531ec74930fb708b77c",
-    ),
-    (
         "docs/images/q8-four-views-en.png",
         "061a5e99f1fa5ba8380a5b8ed6c60d672904b2b8069382971a60c0192a95c104",
     ),
@@ -964,19 +924,6 @@ fn reference_tokens(text: &str) -> Vec<(usize, &str)> {
     found
 }
 
-/// Paths removed from the tree that the frozen `README-HISTORY-*` snapshots still cite.
-/// Only those snapshots may cite them; anywhere else a missing path is still a finding.
-const REMOVED_CITED_BY_SNAPSHOTS: &[&str] = &["docs/licensing-next/"];
-
-fn snapshot_cites_removed(citing: &Path, token: &str) -> bool {
-    citing
-        .to_str()
-        .is_some_and(|c| !c.contains('/') && c.starts_with("README-HISTORY-"))
-        && REMOVED_CITED_BY_SNAPSHOTS
-            .iter()
-            .any(|p| token.starts_with(p))
-}
-
 fn docs_refs() -> Result<(), String> {
     let root = workspace_root()?;
     let mut files = Vec::new();
@@ -992,7 +939,7 @@ fn docs_refs() -> Result<(), String> {
         let citing = path.strip_prefix(root).unwrap_or(path.as_path());
         for (line, token) in reference_tokens(&text) {
             checked += 1;
-            if !root.join(token).exists() && !snapshot_cites_removed(citing, token) {
+            if !root.join(token).exists() {
                 missing.push(format!(
                     "{}:{line}: missing repository reference: {token}",
                     citing.display()
@@ -1320,24 +1267,6 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn only_frozen_snapshots_may_cite_removed_paths() {
-        let removed = "docs/licensing-next/";
-        assert!(snapshot_cites_removed(
-            Path::new("README-HISTORY-PRE-VISUAL.md"),
-            removed
-        ));
-        assert!(!snapshot_cites_removed(Path::new("README.md"), removed));
-        assert!(!snapshot_cites_removed(
-            Path::new("docs/README-HISTORY-X.md"),
-            removed
-        ));
-        assert!(!snapshot_cites_removed(
-            Path::new("README-HISTORY-PRE-VISUAL.md"),
-            "docs/MISSING.md"
-        ));
-    }
 
     #[test]
     fn component_evidence_exception_is_exact_and_text_only() {
