@@ -118,7 +118,7 @@ The two private-preview films are bounded native Rust source-frame demonstration
 
 The root [LICENSE](LICENSE) is operative for GEL RAM-owned material on public `main`. [LICENSING.md](LICENSING.md) explains the selected policy. Historical release grants remain historical grants and are not rewritten by a later version.
 
-The directory `docs/licensing-next/` is retained as historical proposal material only. Its staged documents are not an additional active license and do not override the root license.
+Earlier staged proposal documents are not part of this tree; they were never an additional active license. The license texts in force are pinned in [docs/LICENSE-PINS.md](docs/LICENSE-PINS.md).
 
 Third-party material remains subject to its own terms. The redistributed Rust Book excerpt remains MIT-licensed.
 

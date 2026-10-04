@@ -14,4 +14,4 @@ External contributions intended for merge require GEL RAM CLA 2.0. Completed CLA
 
 Identified third-party material remains subject to its own license terms. The Rust Book excerpt is distributed under MIT with its full licence and attribution in crates/gel-source/fixtures/rust-book/LICENSE.txt. See docs/REAL-SOURCE-DEMO.md and THIRD-PARTY-NOTICES.md.
 
-Historical release tags retain the licenses under which they were distributed. Historical staged proposals in docs/licensing-next/ are not additional current grants.
+Historical release tags retain the licenses under which they were distributed. Earlier staged proposal documents are not part of this tree and were never additional current grants.
