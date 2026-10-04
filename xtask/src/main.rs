@@ -106,11 +106,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-light.svg",
-        "05b7f5fab928b4068b4d0400a569949501d3bc7cfaf7ad7661dd79fc0cdf3048",
+        "7c23b267a8223f4a2b77ff8a1a56b09fdb9ab63ea3725cc9ffaba9140d89dc0d",
     ),
     (
         "media/presentation/glance-dark.svg",
-        "3f413a81fe2126b864f050fbc2a00015fbe93f3e5a581d9741bd1cb2689818bb",
+        "04d191c4593280691e007edeb6d0c9b423ebcde4b307be6d401f2cbf301b0344",
     ),
     (
         "media/presentation/question-path-light.svg",
@@ -138,11 +138,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "eb230ad86f6f1968489c7e1c6cc44541e20b2cf3dc35436fd9895b665499ab8d",
+        "ebf1a7619210feb1d6a9f6fa10ccd4a991be98a053dc65d024910ee652048a94",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "b683ea134fd0d3b6b9af084727543fc7220d78135d4cab81051102de5e399028",
+        "3ffafc36fb781fe5f6ba6d0acf014b8f1303f6ee9ea5c0c190e8245704c2b7e7",
     ),
     (
         "media/presentation/chips/01-light.svg",

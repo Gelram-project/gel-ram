@@ -143,24 +143,34 @@ fn scan(text: &str) -> Vec<String> {
 }
 
 /// Frozen answer-or-abstain question files quote Wikipedia passages byte for byte in their last
-/// column, and `answer-bench check` verifies each passage against its SHA-256. A race time
-/// written as four dot-separated numbers in a quoted results table has the shape of an IPv4 address. Only in those files,
-/// and only for that check, an address found solely inside the quoted passages is not a finding;
-/// every other column and every other check is read as usual.
+/// column, and `answer-bench check` verifies each passage against its SHA-256. The recorded
+/// answer files of the same sets give a stored passage as the answer (kind `passage`). A race
+/// time written as four dot-separated numbers, or an address a Wikipedia article quotes, has the
+/// shape of an IPv4 address. Only in those files, and only for that check, an address found
+/// solely inside the quoted passages is not a finding; every other column and every other check
+/// is read as usual.
 fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
     let Some(addr) = finding.strip_prefix("network address ") else {
         return false;
     };
-    if !(name.starts_with("docs/answer-or-abstain") && name.ends_with("-questions.txt")) {
+    let set = name.starts_with("docs/answer-or-abstain");
+    let questions = set && name.ends_with("-questions.txt");
+    let recorded = set && name.contains("/recorded/") && name.ends_with(".txt");
+    if !questions && !recorded {
         return false;
     }
     let outside = text
         .lines()
         .map(|l| {
             if l.starts_with('#') {
-                l
+                l.to_string()
+            } else if questions {
+                l.rsplit_once('\t').map_or(l, |(head, _)| head).to_string()
             } else {
-                l.rsplit_once('\t').map_or(l, |(head, _)| head)
+                match l.split('\t').collect::<Vec<_>>()[..] {
+                    [nr, _, "passage"] => format!("{nr}\t\tpassage"),
+                    _ => l.to_string(),
+                }
             }
         })
         .collect::<Vec<_>>()
@@ -319,6 +329,19 @@ mod tests {
             file,
             &quoted,
             "e-mail address at mail.test"
+        ));
+        let rec = "docs/answer-or-abstain-v5/recorded/with-answer/gel-ram.txt";
+        let passage = format!("# system\n1\tthe relay {time} is reachable\tpassage\n2\tUNKNOWN\n");
+        assert!(quoted_only_address(rec, &passage, &finding));
+        let typed = format!("1\tthe relay {time}\tshort\n");
+        assert!(!quoted_only_address(rec, &typed, &finding));
+        let review = "docs/answer-or-abstain-v5/recorded/with-answer/review.txt";
+        let reason = format!("gel-ram\t1\tWRONG\tmatched {time}\n");
+        assert!(!quoted_only_address(review, &reason, &finding));
+        assert!(!quoted_only_address(
+            "docs/recorded/a.txt",
+            &passage,
+            &finding
         ));
     }
 
