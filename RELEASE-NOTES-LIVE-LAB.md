@@ -9,7 +9,7 @@ No new tag or Release is created; the existing v0.3.0 asset remains unchanged.
 ## Runnable scope
 
 - Rust terminal Live Lab with authored demo notes and caller-selected UTF-8 files.
-- A source-catalog builder and GELSRC01 plaintext envelope, not the private ORB encoder.
+- A source-catalog builder and GELSRC01 plaintext envelope, not a private encoder.
 - No-replace publication, retained independent SHA256 pin and verified fresh-process reopen.
 - Whole-source phrase search across storage parts, exact original byte ranges,
   selectable matching lines and explicit UNKNOWN/INCOMPLETE states.
@@ -39,7 +39,7 @@ computation is claimed by the new package.
 Active root NCRL1.0, CLA and commercial terms, external dependency versions,
 existing films, Ocean research archives and private implementation remain
 unchanged. Historical licensing-proposal notices do not activate that proposal.
-No private speaker, personal corpus, keys, conversation, encrypted vault,
+No private personal corpus, keys, conversation, encrypted storage,
 network daemon, telemetry or paid service is added. Do not use plaintext source
 bundles as a private encrypted memory store. Parent directories must be trusted;
 portable path checks do not defend against hostile concurrent path replacement.

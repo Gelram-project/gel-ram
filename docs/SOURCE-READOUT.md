@@ -52,7 +52,7 @@ prepared under the then-active PolyForm licensing, and no private master
 licensing files are changed.
 
 Only synthetic test text accompanies this readout. No Wikipedia corpus,
-machine-specific paths, models, TLS credentials, private reports, donor monolith
+machine-specific paths, models, TLS credentials, private reports, private code
 or the private application is included. Released in v0.3.0; platform results
 belong to the CI of each exact revision.
 

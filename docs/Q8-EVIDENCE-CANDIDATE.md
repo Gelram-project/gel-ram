@@ -5,7 +5,7 @@ The [revision2 audit and repeat measurements](Q8-CANDIDATE-R2-AUDIT.md) add
 fixture input hardening. The first campaign below remains a historical record.
 Not a tagged release at the time; PolyForm licensing was then unchanged (the
 module was later released in v0.3.0 under GEL RAM NCRL 1.0). No private application,
-encoder, conversation, media bank, donor monolith or model is included.
+encoder, conversation, media bank, private code or model is included.
 
 ## Try the sample now
 

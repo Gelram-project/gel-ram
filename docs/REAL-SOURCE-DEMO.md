@@ -3,7 +3,7 @@
 This small reproducible example reads three actual paragraphs about ownership
 from *The Rust Programming Language*. It is an excerpt, not a complete chapter.
 It uses the public `gel-source` catalog and multipart reader. No private Ocean,
-printer, Q8 encoder, model, browser, network call or downloaded executable is used.
+Q8 encoder, model, browser, network call or downloaded executable is used.
 
 After the documented one-time toolchain/dependency setup:
 

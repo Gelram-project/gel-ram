@@ -42,7 +42,7 @@ rustc --edition=2021 --test docs/evidence-q8-current/summarize.rs -o /tmp/gel-su
 
 These validations detect accidental incomplete results, not deliberately forged
 logs or sources. Checked view descriptors still do not authenticate the sender.
-No new claim is made about the private donor variants or general semantic quality.
+No new claim is made about private variants or general semantic quality.
 
 ## Complete rerun after the input fix
 

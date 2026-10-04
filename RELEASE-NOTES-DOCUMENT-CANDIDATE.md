@@ -27,7 +27,7 @@ for their previous snapshots, not measurements of this new document API.
 
 ## Not included or claimed
 
-No private speaker, application, vault, encoder, P2P internals, conversation or
+No private application, storage, encoder, network internals, conversation or
 knowledge bank. No LLM, paid service, unrestricted dialogue or semantic recall
 claim. Exact-revision Windows/macOS results are recorded by
 [CI](https://github.com/Gelram-project/gel-ram/actions), not inferred from older

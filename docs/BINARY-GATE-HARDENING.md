@@ -63,6 +63,6 @@ these runs establish correctness for these cases, not a new speedup.
 
 ## Outside this patch
 
-No new store format, buffering/CRC optimization, global worker pool, P2P,
+No new store format, buffering/CRC optimization, global worker pool, network service,
 LLM, license change, CLA registry, full secret scanner or GPU implementation
 is introduced. Those audit suggestions require their own scope and evidence.
