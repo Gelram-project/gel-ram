@@ -21,7 +21,7 @@ commit `82a7e5d6a48109d091113661b69be0a8ef1dccdd`.
   `b50980aad8b8f14f77e25a97b32dd94bf008b0af` (2026-09-09).
   This is not proof that dependencies contain no defects or malicious code.
 
-All examples are author-created synthetic text. No private corpus, speaker,
+All examples are author-created synthetic text. No private corpus,
 media, personal data or algorithm is needed. This implementation adds only
 selection and validation over the existing public catalog, not an importer.
 

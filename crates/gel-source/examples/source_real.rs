@@ -1,5 +1,5 @@
 //! Offline exact readout of a pinned, MIT-licensed Rust Book excerpt.
-//! This is not semantic search, an ORB encoder, or a language model.
+//! This is not semantic search, an encoder, or a language model.
 use gel_source::{hex, Corpus, Error, Hash, LeadPartsError};
 
 const TITLE: &str = "Rust ownership";

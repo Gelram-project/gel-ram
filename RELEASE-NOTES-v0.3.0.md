@@ -17,7 +17,7 @@ GEL RAM v0.3.0 marks the current public generation after the controlled publicat
 
 ## Evidence boundary
 
-The demonstration films show bounded native Rust source-frame behaviour and measured local timings on the documented setup. They are not token-per-second measurements and do not establish general LLM inference speed, unrestricted language generation, universal semantic accuracy, P2P operation or production readiness.
+The demonstration films show bounded native Rust source-frame behaviour and measured local timings on the documented setup. They are not token-per-second measurements and do not establish general LLM inference speed, unrestricted language generation, universal semantic accuracy, network operation or production readiness.
 
 Historical measurements and files labelled v0.2.x remain historical evidence. A later version number does not retroactively change their measured scope.
 

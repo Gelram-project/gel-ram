@@ -35,7 +35,7 @@ caller-selected file and only creates new fixture files; it never interprets
 their bytes as code. It does not provide adversarial filesystem isolation.
 
 Cargo.lock and dependencies are unchanged from the inspected public base.
-No donor source or private licensing file was copied into this candidate.
+No private source or private licensing file was copied into this candidate.
 Existing module low-level APIs remain available; checked views are opt-in.
 Compatibility labels do not protect against deliberately false metadata.
 Input caps do not guarantee immunity to resource exhaustion or allocation failure.

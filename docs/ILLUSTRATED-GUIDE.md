@@ -79,4 +79,4 @@ The Rust release gate pins these four PNG paths by their reviewed SHA-256
 digests, alongside the separately reviewed media screenshots and previews; any
 PNG outside that reviewed list, or modified bytes, fails. Implementation remains Rust.
 This is a content approval boundary, not a new multimedia decoder or private
-image-to-ORB encoder. The public license is unchanged.
+image encoder. The public license is unchanged.

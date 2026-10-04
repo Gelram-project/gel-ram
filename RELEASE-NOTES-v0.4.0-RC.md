@@ -58,7 +58,7 @@ Older Linux/Windows/macOS results cannot certify these new bytes. Native
 Linux/Windows/macOS results for the PR #9 head are pinned in
 [the platform record](docs/PLATFORM-REVIEW.md); every later revision needs its
 own per-platform [CI evidence](docs/CI-EVIDENCE.md).
-No semantic chatbot, encrypted private vault, private speaker, hardware-level
+No semantic chatbot, encrypted storage, hardware-level
 memory computation or fourfold independent information capacity is claimed.
 
 PUBLICATION_APPROVED=YES (public main integration)
