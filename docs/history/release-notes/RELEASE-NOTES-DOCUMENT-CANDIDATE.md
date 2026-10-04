@@ -15,7 +15,7 @@ Platform checks must pass for the exact PR revision before merging.
   inclusion of the example in the local verifier and portable CI configuration.
 - Locked Unicode dependencies, updated dependency inventory and package manifest.
 - Reproducible text probe, raw 1000-operation CSV and independent Rust statistics
-  checker; [validation and limits](docs/PACKAGE-VALIDATION.md).
+  checker; [validation and limits](../../PACKAGE-VALIDATION.md).
 - Technical verification can run on an unapproved candidate. Approval flags are
   parsed independently; successful tests never approve publication by themselves.
 

@@ -1,7 +1,7 @@
 # Source-readout and archive-report candidate
 
 > Historical pre-v0.3.0 candidate notes. This material was released in v0.3.0,
-> whose operative root license is GEL RAM NCRL 1.0 ([licensing](LICENSING.md)).
+> whose operative root license is GEL RAM NCRL 1.0 ([licensing](../../../LICENSING.md)).
 > Status and licensing statements below describe the state before that release.
 
 At the time: unreleased, review only. No public tag, publication approval or license cutover.
@@ -17,7 +17,7 @@ by its separately reviewed source-manifest hash, not by an invented release tag.
   excerpt with source provenance. No imported private corpus is needed.
 - Rust source-audit/source-bundle commands with bounded inventory checking and
   an independently supplied SHA-256 manifest pin; no publication side effects.
-- An [exact external dependency inventory](docs/DEPENDENCY-INVENTORY.md), including
+- An [exact external dependency inventory](../../DEPENDENCY-INVENTORY.md), including
   locked archive checksums and upstream license-file fingerprints.
 
 ## Repaired during review
@@ -46,7 +46,7 @@ cargo run --locked --offline -p xtask -- report ../gel-report-new REVIEWED_MANIF
 ```
 
 Replace the last argument with the reviewed source-manifest hash. The report
-directory must not exist. See [validation](docs/SOURCE-CANDIDATE-VALIDATION.md).
+directory must not exist. See [validation](../../SOURCE-CANDIDATE-VALIDATION.md).
 
 ## Not included or claimed
 

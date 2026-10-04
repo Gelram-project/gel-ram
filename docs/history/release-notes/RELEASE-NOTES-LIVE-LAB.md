@@ -19,7 +19,7 @@ No new tag or Release is created; the existing v0.3.0 asset remains unchanged.
 
 Start: `cargo run --locked --offline --release -p gel-live-lab`.
 Use `--demo` for scripted runtime checks or `--plain` for a scrolling transcript.
-[Commands, limits and persistence](docs/LIVE-LAB.md).
+[Commands, limits and persistence](../../LIVE-LAB.md).
 
 ## Verification
 
