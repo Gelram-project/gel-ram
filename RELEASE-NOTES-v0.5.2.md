@@ -10,13 +10,14 @@ formats, Rust pin and third-party dependencies are unchanged from
 
 ## What the project is building
 
-The README now states the goal as a goal: a speaking AI whose knowledge is
-printed into memory rather than trained into model weights, with a printer
-that writes it in, a reader that finds it again with its source, and a cold
-copy on disk so that a restart or a crash loses nothing. **This is the goal, not
-a result of this repository.** The README sections "What is different here" and
-"What you can check without the private code" give each property with its
-evidence and its limit.
+> **Correction (October 2026).** The goal statement introduced in this release was
+> restated on `main`: the project works toward a text AI that answers in Polish or
+> English from its sources, or says it does not know, and holds a free
+> conversation in both languages. See the [README](README.md).
+
+The README now states the goal as a goal, not as a result of this repository. The
+README sections "What is different here" and "What you can check without the
+private code" give each property with its evidence and its limit.
 
 ## New checks anyone can run
 

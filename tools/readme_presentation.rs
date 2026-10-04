@@ -169,14 +169,13 @@ __FLOW__
 **Find the passage. Check the source.** Local Rust tools for exact source-bound
 quotations, stale-citation refusal and independently pinned snapshots.
 
-**What GEL RAM is building.** A speaking AI whose knowledge is printed into
+**What GEL RAM is working toward.** A text AI whose knowledge is written into
 memory rather than trained into model weights, so adding knowledge needs no
-fine-tuning or LoRA training. Its brain is that printed knowledge in RAM, with a
-printer that writes it in and a reader that finds it again with its source; its
-speaker answers from it or says it does not know. As the memory grows, a cold
-copy is kept on disk, so that a restart or a crash loses nothing. **This is the
-goal, not a result of this repository**: the tools and measurements below state
-exactly what has been checked so far.
+fine-tuning. It answers in Polish or English from that knowledge and shows the
+source it used, or says plainly that it does not know, and it holds a free
+conversation in both languages. A copy kept on disk means a restart or a crash
+loses nothing that was saved. **This is the goal, not a result of this
+repository**: the sections below state exactly what has been checked so far.
 
 __FACTS__
 
