@@ -11,7 +11,13 @@ blind independent evaluation, human review, semantic benchmark or new web crawl.
   [LICENSE-ownership.txt](LICENSE-ownership.txt). Original revision and range:
   [provenance](../../../../docs/REAL-SOURCE-DEMO.md).
 - source-builder.txt: frozen project documentation, SHA256
-  `201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282`.
+  `4e16646d03292eaf65b6764e5144829c8ea4587e08c167cfd5edc0df7d8811d6`.
+  On 2026-10-04 one scope sentence (lines 90–91) was reworded as in the current
+  [source builder page](../../../../docs/SOURCE-BUILDER.md); no case query or
+  expected document changed, and all 24 cases give the same result. Outputs
+  recorded before then report the earlier SHA256
+  `201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282`
+  (5,317 bytes).
 - ocean-scale.txt: frozen project documentation, SHA256
   `cd1f614ac1c5d92600d38e758ebb0386897050024995d780cfae3a7930f4ecd8`.
   On 2026-09-27 one limitation sentence (line 76) was reworded to general

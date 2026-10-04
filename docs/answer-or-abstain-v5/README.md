@@ -18,8 +18,9 @@ All answers were recorded on 2026-10-03. Every system answers with one stored pa
 setting were fixed on v1 + v2 before this set was drawn and written. The set was frozen by
 SHA-256 before any system ran on it, and each system ran once.
 
-**Status: public diagnostic.** Once published, these questions are no longer held out; the next
-clean check uses a set drawn and frozen privately before this one was published. The identity
+**Status: public diagnostic.** Once published, these questions are no longer held out; the
+passages for the next clean check were drawn and frozen privately before this set was
+published, and their questions will be frozen before any run. The identity
 above is the SHA-256 of a list of the hashes of every data file of the set; `answer-bench check`
 recomputes it.
 
@@ -195,3 +196,12 @@ Times were not measured on this set.
   answering from the bank, not general knowledge or conversation.
 - **The engines:** they ran with default settings, and a tuned setup may do better.
 - **One run:** each system ran once on this set.
+- **Text, not truth:** the scorer checks text. A returned passage is long and may contain an
+  accepted spelling by chance; the review found such pairs and may have missed others.
+
+## Attribution
+
+Source passages and expected answers quote Wikipedia, available under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); the questions paraphrase it.
+The answers are passages of the same bank, reproduced as returned. Third-party material keeps
+its own terms, as described in [LICENSING](../../LICENSING.md).

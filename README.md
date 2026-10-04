@@ -27,7 +27,7 @@ and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt
 every recorded answer, and `xtask answer-bench check` re-scores them on each
 verify run. Free conversation has not been measured yet.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen question set v5: on 987 new questions (491 Polish, 496 English) GEL RAM at its balanced setting gave 416 correct answers, each with its source passage, 16 wrong and 555 UNKNOWN. Two BM25 search engines on the same bank and rule gave 567–597 correct and 43–47 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 297 correct and 1 wrong, the engines at their strict threshold 378–379 correct and 3–3 wrong, so there the engines find more answers. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen question set v5: on 987 new questions (491 Polish, 496 English) GEL RAM at its balanced setting gave 416 correct answers, each with its source passage, 16 wrong and 555 UNKNOWN. Two BM25 search engines on the same bank and rule gave 567–597 correct and 43–47 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 297 correct and 1 wrong, the engines at their strict threshold 378–379 correct and 3 wrong each, so there the engines find more answers. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
@@ -132,7 +132,7 @@ Three properties, each with its evidence and its limit:
   from another article; the models gave 80–233 wrong answers each. On 80
   questions without a correct answer it still answered 6 of the 40 with a false
   premise, so it does not always refuse. On 985 newer frozen questions, written
-  after the latest change, a development build answered 423: 405 correct and 18
+  after the change it tests, a development build answered 423: 405 correct and 18
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
   and gave more wrong answers (40–41). On 987 more frozen questions the same
   build answered 432: 416 correct and 16 wrong, and the engines again found
@@ -229,9 +229,10 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 
 ### Answer verdict: answer only when the lead is clear
 
-Measured after the v0.5.0 release with the same private build as the ranking
-rows above. The original column uses the same 1M bank; the three changes shrink
-the searched answer bank to 167,854 passages per slot, 671,416 in all. GEL
+Measured after the v0.5.0 release with the same private implementation as the
+ranking rows above. The original column uses the same 1M bank. After the three
+changes, with the English slots cut at their end to the size of the Polish ones,
+the searched answer bank holds 167,854 passages per slot, 671,416 in all. GEL
 answers only when its best passage leads the runner-up by a
 threshold fixed in advance (set on a different corpus); otherwise it
 returns UNKNOWN. Three changes to the private build were measured one at a time
@@ -371,8 +372,7 @@ The still does not prove that every intermediate step was reviewed.
 
 </details>
 
-[All media and their scope](media/INDEX.md). Historical private previews show a
-separate application and are not instructions for running this public checkout.
+[All media and their scope](media/INDEX.md).
 No generated terminal mockup or illustrative timing is used as execution evidence.
 
 ## Quick start
@@ -522,5 +522,5 @@ Historical grants are not rewritten. The license texts in force are pinned in
 
 [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [CLA privacy](CLA-PRIVACY.md)
 
-Public attribution: **RR, GEL RAM Project**. Contract and CLA enquiries use
+Public attribution: **RR — GEL RAM Project**. Contract and CLA enquiries use
 `gelram.licensing@gmail.com`; completed agreements and personal records stay private.

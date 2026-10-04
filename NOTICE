@@ -12,6 +12,6 @@ Project-owned demonstration films and screenshots under media/ are covered for n
 
 External contributions intended for merge require GEL RAM CLA 2.0. Completed CLA and contracting records remain private.
 
-Identified third-party material remains subject to its own license terms. The Rust Book excerpt is distributed under MIT with its full licence and attribution in crates/gel-source/fixtures/rust-book/LICENSE.txt. Wikipedia passages quoted in the measurement sets remain under CC BY-SA 4.0. See docs/REAL-SOURCE-DEMO.md and THIRD-PARTY-NOTICES.md.
+Identified third-party material remains subject to its own license terms. The Rust Book excerpt is distributed under MIT with its full licence and attribution in crates/gel-source/fixtures/rust-book/LICENSE.txt. Wikipedia passages quoted in the measurement sets, the side-by-side records and media, and the README example card remain under CC BY-SA 4.0. See docs/REAL-SOURCE-DEMO.md and THIRD-PARTY-NOTICES.md.
 
 Historical release tags retain the licenses under which they were distributed. Earlier staged proposal documents are not part of this tree and were never additional current grants.

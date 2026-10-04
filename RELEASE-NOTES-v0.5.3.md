@@ -15,24 +15,25 @@ weights. It answers in Polish or English from that knowledge and shows the sourc
 it used, or says plainly that it does not know, and it holds a free conversation
 in both languages. **This is the goal, not a result of this repository.** Free
 conversation has not been measured yet. The README states the goal first and
-says, next to every result, which question set and which build it comes from.
+labels each result card with the question set and the build it comes from.
 
 ## New measured result: question set v5
 
-[Set v5](https://github.com/Gelram-project/gel-ram/blob/v0.5.3/docs/answer-or-abstain-v5/README.md)
+[Question set v5](https://github.com/Gelram-project/gel-ram/blob/v0.5.3/docs/answer-or-abstain-v5/README.md)
 has 987 new questions (491 Polish, 496 English), frozen before any run. Every
 question, recorded answer and review decision is published, and
 `xtask answer-bench check` re-scores them in every verify run.
 
-- **The v4 result held.** The development build measured in v4, unchanged,
-  answered 432: 416 correct and 16 wrong, a precision of 96.3% (95% Wilson
-  interval 94.1–97.7%), after 95.6% where its setting was chosen and 95.7% on v4.
+- **The v4 result held.** The development build measured on question set v4,
+  unchanged, answered 432: 416 correct and 16 wrong, a precision of 96.3% (95%
+  Wilson interval 94.1–97.7%), after 95.6% where its setting was chosen and
+  95.7% on question set v4.
 - **Beside two BM25 search engines** on the same bank and rule, the engines
   found more answers (567 and 597 correct), and GEL RAM gave about a third as
   many wrong ones (16 against 43 and 47).
-- **At the precise setting** GEL RAM gave 297 correct and 1 wrong. On v4 the same
-  setting gave 97.2%, so a precision of 0.99 is still not claimed; the engines at
-  their strict thresholds found more answers.
+- **At the precise setting** GEL RAM gave 297 correct and 1 wrong. On question
+  set v4 the same setting gave 97.2%, so a precision of 0.99 is still not
+  claimed; the engines at their strict thresholds found more answers.
 - **A candidate change was rolled back.** It gave more correct answers, but its
   precision fell to 92.3%, below the 0.95 fixed before the run.
 
@@ -65,8 +66,8 @@ question, recorded answer and review decision is published, and
 ## Earlier versions
 
 Earlier README versions, the notes of earlier releases and two films of a
-private application preview are no longer in the tree; they remain in the git
-history. The release pages of v0.3.0 to v0.5.1 were removed; their tags remain.
+private application preview were removed from the tree. The release pages of
+v0.3.0 to v0.5.1 were removed; their tags remain.
 
 ## Verify this release yourself
 

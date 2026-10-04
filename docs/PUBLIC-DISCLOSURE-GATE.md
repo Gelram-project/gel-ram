@@ -17,8 +17,9 @@ the tree (not `target` or `.git`; binary files are skipped) and fails on any of:
   column and every other check applies to those files as usual.
 - **Credentials**: strings shaped like GitHub, Groq, OpenAI-style, Slack or AWS
   keys, and private key blocks.
-- **E-mail addresses** other than the published contacts
-  (`gelram.licensing@gmail.com`, `noreply@anthropic.com`) and no-reply or
+- **E-mail addresses** other than the published contact
+  (`gelram.licensing@gmail.com`), the no-reply address of commit co-author lines
+  (`noreply@anthropic.com`) and no-reply or
   example domains.
 - **Polish prose**: documentation in Markdown, SVG and HTML is English only. A line
   with a letter used only in Polish fails, except in code blocks and inline code

@@ -149,7 +149,7 @@ cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new</code></pre>
 <section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">Technical README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/EVIDENCE-BATCH.md">Batch mode and exit codes</a></li><li><a href="__DOC__/docs/BACKUP.md">Backup and restore</a></li><li><a href="__DOC__/docs/MUTATION-MATRIX.md">Format mutation matrix</a></li><li><a href="__DOC__/docs/BENCHMARK-GREP.md">Comparison with grep</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the pinned source on GitHub. Viewing this local page loads only adjacent assets, with no scripts, trackers or remote fonts.</p></section></div>
 <section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It belongs to the <code>__RELEASE__</code> source. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
 </main>
-<footer><p><strong>GEL RAM · Evidence Lab</strong><br>RR, GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
+<footer><p><strong>GEL RAM · Evidence Lab</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
 </div></body></html>
 "####;
 const NATIVE: &str = r####"# GEL RAM
@@ -260,7 +260,7 @@ Three properties, each with its evidence and its limit:
   from another article; the models gave 80–233 wrong answers each. On 80
   questions without a correct answer it still answered 6 of the 40 with a false
   premise, so it does not always refuse. On 985 newer frozen questions, written
-  after the latest change, a development build answered 423: 405 correct and 18
+  after the change it tests, a development build answered 423: 405 correct and 18
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
   and gave more wrong answers (40–41). On 987 more frozen questions the same
   build answered 432: 416 correct and 16 wrong, and the engines again found
@@ -357,9 +357,10 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 
 ### Answer verdict: answer only when the lead is clear
 
-Measured after the v0.5.0 release with the same private build as the ranking
-rows above. The original column uses the same 1M bank; the three changes shrink
-the searched answer bank to 167,854 passages per slot, 671,416 in all. GEL
+Measured after the v0.5.0 release with the same private implementation as the
+ranking rows above. The original column uses the same 1M bank. After the three
+changes, with the English slots cut at their end to the size of the Polish ones,
+the searched answer bank holds 167,854 passages per slot, 671,416 in all. GEL
 answers only when its best passage leads the runner-up by a
 threshold fixed in advance (set on a different corpus); otherwise it
 returns UNKNOWN. Three changes to the private build were measured one at a time
@@ -1632,12 +1633,27 @@ impl Headline {
     }
     fn engines(&self) -> String {
         let [(a, x), (b, y)] = self.engines;
-        format!("{} correct and {} wrong", span(a, b), span(x, y))
+        both(a, b, x, y)
     }
 }
-/// "a–b" with the smaller number first.
+/// "a–b" with the smaller number first, or one number when both are equal.
 fn span(a: usize, b: usize) -> String {
-    format!("{}–{}", a.min(b), a.max(b))
+    if a == b {
+        a.to_string()
+    } else {
+        format!("{}–{}", a.min(b), a.max(b))
+    }
+}
+/// Correct and wrong answers of two systems: "531–558 correct and 40–41 wrong", "378–379 correct and 3 wrong each".
+fn both(a: usize, b: usize, x: usize, y: usize) -> String {
+    let each = |p: usize, q: usize| if p == q { " each" } else { "" };
+    format!(
+        "{} correct{} and {} wrong{}",
+        span(a, b),
+        each(a, b),
+        span(x, y),
+        each(x, y)
+    )
 }
 /// What the first result card says, as its description and as the README alternative text.
 fn glance_text(h: &Headline) -> String {
@@ -1648,7 +1664,7 @@ fn glance_text(h: &Headline) -> String {
     } else {
         "so there the engines find more answers"
     };
-    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
+    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {}, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, both(a, b, x, y))
 }
 fn glance(dark: bool, h: &Headline) -> String {
     let t = theme(dark);
@@ -2529,6 +2545,9 @@ mod tests {
         )));
         let [(a, _), (b, _)] = h.engines;
         assert!(g.contains(&format!(">{}<", span(a, b))));
+        assert_eq!(span(3, 3), "3");
+        assert_eq!(both(379, 378, 3, 3), "378–379 correct and 3 wrong each");
+        assert!(!g.contains("3–3"));
         assert!(g.contains("At the precise setting") && g.contains("so there the engines"));
         assert!(
             !g.contains("read-back"),
