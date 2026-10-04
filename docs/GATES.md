@@ -3,7 +3,7 @@
 A release candidate is green only when all applicable gates pass on the same source tree.
 
 1. Rust-only source/tooling gate.
-2. Licensing-mode gate: the only accepted LICENSE-MODE.txt value is GEL RAM
+2. Licensing-mode gate: the only accepted value of docs/LICENSE-MODE.txt is GEL RAM
    NCRL 1.0 + Commercial + CLA 2.0, the root LICENSE must match the pinned NCRL
    bytes, and the publication status must keep LEGAL_APPROVED=NO. This checks
    consistency of the active license files, not legal validity.

@@ -22,7 +22,7 @@ const INVENTORY: &str = "docs/DEPENDENCY-INVENTORY.md";
 const PROJECT_FILES: &[&str] = &[
     "LICENSE",
     "NOTICE",
-    "LICENSE-MODE.txt",
+    "docs/LICENSE-MODE.txt",
     "LICENSING.md",
     "COMMERCIAL-LICENSE.md",
     "THIRD-PARTY-NOTICES.md",

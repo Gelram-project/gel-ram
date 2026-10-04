@@ -24,7 +24,7 @@ Attaching the archives to a release is a separate owner decision.
 | `gel-evidence`, `gel-backup`, `gel-live-lab` (`.exe` on Windows) | the three programs, release profile, symbols stripped |
 | BUILD-INFO.txt | revision and working-tree state, target, rustc and cargo versions, runner image, each third-party crate, each binary's size and SHA-256, the results of the checks below |
 | SHA256SUMS.txt | SHA-256 of every other file in the package |
-| `LICENSE`, `NOTICE`, `LICENSE-MODE.txt`, `LICENSING.md`, `COMMERCIAL-LICENSE.md` | the project's terms, unchanged; the packages are under the same license as the source |
+| `LICENSE`, `NOTICE`, LICENSE-MODE.txt (from `docs/LICENSE-MODE.txt`), `LICENSING.md`, `COMMERCIAL-LICENSE.md` | the project's terms, unchanged; the packages are under the same license as the source |
 | THIRD-PARTY-NOTICES.md, DEPENDENCY-INVENTORY.md | the third-party inventory with the reviewed license-file hashes |
 | `licenses/NAME-VERSION/` | the license files of every third-party crate in the target's dependency graph, copied from the exact locked crate |
 | `licenses/rust-VERSION/` | `COPYRIGHT`, `LICENSE-APACHE` and `LICENSE-MIT` of the Rust toolchain whose standard library is linked in |
