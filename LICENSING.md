@@ -88,7 +88,7 @@ Personal information collected for CLA administration is covered by [CLA-PRIVACY
 
 Historical tags retain the license under which they were originally distributed. This license does not revoke rights already validly granted for those historical releases.
 
-Earlier staged proposal documents are not part of this tree and were never an additional current license. The license texts in force are identified by their SHA-256 in [docs/LICENSE-PINS.md](docs/LICENSE-PINS.md); nothing overrides the root [LICENSE](LICENSE), this file, or [LICENSE-MODE.txt](LICENSE-MODE.txt).
+Earlier staged proposal documents are not part of this tree and were never an additional current license. The license texts in force are identified by their SHA-256 in [docs/LICENSE-PINS.md](docs/LICENSE-PINS.md); nothing overrides the root [LICENSE](LICENSE), this file, or [docs/LICENSE-MODE.txt](docs/LICENSE-MODE.txt).
 
 ## 11. No AGPL alternative
 

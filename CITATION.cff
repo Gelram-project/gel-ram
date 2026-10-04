@@ -8,3 +8,4 @@ authors:
 repository-code: "https://github.com/Gelram-project/gel-ram"
 url: "https://github.com/Gelram-project/gel-ram"
 abstract: "Research toward a text AI that converses freely in Polish and English and answers from its sources, or says it does not know. A goal, not yet a result. This repository: independent Rust research into RAM-resident knowledge, exact source-bound readout, reproducible integrity checks, synthetic Q8 experiments and frozen answer-or-abstain question sets in Polish and English."
+license-url: "https://github.com/Gelram-project/gel-ram/blob/main/LICENSE"

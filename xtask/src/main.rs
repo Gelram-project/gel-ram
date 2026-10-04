@@ -655,7 +655,7 @@ fn publication_status(text: &str) -> Result<bool, String> {
 fn licensing() -> Result<(), String> {
     let root = workspace_root()?;
     let read = |name: &str| fs::read_to_string(root.join(name)).map_err(|e| format!("{name}: {e}"));
-    let mode = read("LICENSE-MODE.txt")?;
+    let mode = read("docs/LICENSE-MODE.txt")?;
     let license = read("LICENSE")?;
     let notice = read("NOTICE")?;
     let commercial = read("COMMERCIAL-LICENSE.md")?;
@@ -685,7 +685,7 @@ fn licensing() -> Result<(), String> {
                 "NOTICE",
             )?;
         }
-        other => return Err(format!("unsupported LICENSE-MODE.txt value: {other}")),
+        other => return Err(format!("unsupported docs/LICENSE-MODE.txt value: {other}")),
     }
     require(
         &commercial,
