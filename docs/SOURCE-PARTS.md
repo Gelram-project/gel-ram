@@ -1,4 +1,4 @@
-# Multipart source readout / Odczyt wieloczęściowy
+# Multipart source readout
 
 Released in v0.3.0. This adds `Corpus::lead_parts(title, expected_parts)`
 to the public source catalog. No binary ORB format, Q8 algorithm, dependency
@@ -34,20 +34,7 @@ quote bytes are capped at64MiB before cloning, even with overlapping source
 ranges. Index nodes, record metadata, strings and allocator costs are extra;
 this is not a process RSS limit. No speedup or semantic accuracy is claimed.
 
-## Polski
-
-Jednoznaczny tytuł → numerowane części → osobne cytaty i ich źródła.
-Obsługujemy `Lead` / `WSTĘP` albo jedną numerowaną rodzinę, od1 bez luk.
-Nie zgadujemy kolejności ani brakujących części. Zachowujemy dokładne bajty,
-w tym polskie znaki i angielską interpunkcję Unicode. Inny zapis normalizacji
-tytułu nie jest automatycznie dopasowywany.
-
-Brak końcowej części wykryjemy tylko wtedy, gdy niezależnie znamy oczekiwaną
-liczbę części. Cytat i hash potwierdzają zgodność z zatwierdzonymi bajtami,
-nie pełne rozumienie, prawdę ani poprawność kwantyzatora. Przykłady są autorskie
-i syntetyczne; nie zawierają prywatnego banku wiedzy.
-
-## Reproduce / Powtórzenie
+## Reproduce
 
 Fetch locked dependencies once if needed, then use offline commands:
 

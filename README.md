@@ -469,7 +469,7 @@ natural-language quality. The public numerical demonstration is available throug
 cargo run --locked --offline --release -p gel-phase-quad --example quad_playground -- --interactive
 ```
 
-[Illustrated guide, English / Polish](docs/ILLUSTRATED-GUIDE.md) ·
+[Illustrated guide](docs/ILLUSTRATED-GUIDE.md) ·
 [Live Lab](docs/LIVE-LAB.md) · [Real-source fixture and provenance](docs/REAL-SOURCE-DEMO.md)
 
 </details>

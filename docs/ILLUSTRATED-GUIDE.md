@@ -1,6 +1,6 @@
 # Q8 Quad: illustrated public guide
 
-These two illustrations, each available in English and Polish, explain the public preview. They were
+These two illustrations explain the public preview. They were
 edited with AI assistance from author-supplied sketches, with wording checked
 against the public code and reports. They are **concept diagrams, not screenshots,
 hardware measurements or evidence by themselves**. All diagrams are schematic;
@@ -9,13 +9,7 @@ They neither disclose nor validate the private implementation.
 
 ## One record, four views
 
-### English — Q8
-
 ![One Q8 record, four reversible views. Apply matching transforms to preserve the score; four views are not four independent datasets.](images/q8-four-views-en.png)
-
-### Polski — Q8
-
-![Q8 Quad: jeden rekord, cztery odwracalne widoki; ta sama transformacja zapytania i rekordu zachowuje wynik odczytu. Nie są to cztery niezależne dane.](images/q8-four-views-pl.png)
 
 **English text equivalent.** One stored record has four reversible coordinate
 views P0–P3. Applying the matching transform to query and candidate preserves
@@ -36,13 +30,7 @@ are a visual metaphor for phase codes, not a picture of hardware.
 
 ## Evidence and limits
 
-### English — evidence
-
 ![Tests check ORB128 bytes, Q8 view scores and Top-K against references. CPU timings retain slower cases. This is not proof of semantics, independent capacity x4, universal speedup or hardware-level memory computation.](images/evidence-limits-en.png)
-
-### Polski — dowody
-
-![GEL RAM: zgodność bajtów ORB128, widoków Q8 i rankingu Top-K z referencją w testach; surowe pomiary CPU. Brak twierdzenia o pełnej semantyce, pojemności 4x, uniwersalnym przyspieszeniu lub obliczeniach sprzętowych w pamięci.](images/evidence-limits-pl.png)
 
 **English text equivalent.** The tests check ORB128 byte reconstruction, Q8
 view-score equivalence and Top-K agreement with a reference. CPU measurements
@@ -74,8 +62,7 @@ the approved exports. Generator provenance metadata is retained; it is not a
 GEL benchmark attestation. Visual review and release pins do not prove absence
 of arbitrary steganography or vulnerabilities in downstream image decoders.
 
-The [prompt record](VISUAL-PROMPTS.md) documents the approved wording and method.
-The Rust release gate pins these four PNG paths by their reviewed SHA-256
+The Rust release gate pins these two PNG paths by their reviewed SHA-256
 digests, alongside the separately reviewed media screenshots and previews; any
 PNG outside that reviewed list, or modified bytes, fails. Implementation remains Rust.
 This is a content approval boundary, not a new multimedia decoder or private

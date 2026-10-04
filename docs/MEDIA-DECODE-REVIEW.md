@@ -38,7 +38,7 @@ mpdecimate threshold, such as a blinking cursor, may have been skipped.
 | Hardware / answers, 90 s | 134 / 134 | nothing found; the hardware model is shown on purpose | none | four cases and times matched the run notes at review time (since shortened) | readable | small; digits need zoom |
 
 Corrections made from this review: event times in the
-[transcripts](../media/TRANSCRIPTS-PL-EN.md) now mark when each event first
+[transcripts](../media/TRANSCRIPTS-EN.md) now mark when each event first
 appears (they were 3–5 s late); the film guide states that session logging to
 disk was on and that the private-preview label is visible only before `/chat`
 (0–24.5 s and 0–15.7 s). The films themselves are

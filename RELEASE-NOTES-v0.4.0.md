@@ -50,7 +50,7 @@ this change alone alters no source-bundle, collection or Q8 wire format.
 - Allocations, user-space copies and peak additional heap per collection
   mutation, measured locally ([mutation comparison](docs/MUTATION-COMPARISON.md)).
 - A [measurement protocol](docs/MEASUREMENT-PROTOCOL.md), PL/EN film
-  [transcripts](media/TRANSCRIPTS-PL-EN.md) and the A01–A24 review work list in
+  [transcripts](https://github.com/Gelram-project/gel-ram/blob/v0.4.0/media/TRANSCRIPTS-PL-EN.md) and the A01–A24 review work list in
   the [roadmap](docs/ROADMAP.md).
 
 ## Withdrawn from main

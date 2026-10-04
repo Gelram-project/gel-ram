@@ -170,6 +170,50 @@ fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
         .any(|part| part == addr)
 }
 
+/// Paths whose Polish text is quoted data (questions, recorded answers, frozen records),
+/// not documentation prose.
+const POLISH_DATA_PATHS: &[&str] = &[
+    "docs/answer-or-abstain",
+    "docs/evidence-",
+    "docs/GEL-BESIDE-GROQ.md",
+    "docs/GEL-BESIDE-GROQ-NO-ANSWER.md",
+];
+
+/// Documentation prose is English only. In Markdown, SVG and HTML files outside the data
+/// paths, a line with a letter used only in Polish is a finding; Markdown code blocks and
+/// inline code (identifiers, search examples) are not prose and are skipped.
+fn polish_prose(name: &str, text: &str) -> Vec<String> {
+    let prose = [".md", ".svg", ".html"].iter().any(|e| name.ends_with(e));
+    let crate_fixture = name.starts_with("crates/") && name.contains("/fixtures/");
+    if !prose || crate_fixture || POLISH_DATA_PATHS.iter().any(|p| name.starts_with(p)) {
+        return Vec::new();
+    }
+    let markdown = name.ends_with(".md");
+    let mut fence = false;
+    let mut found = Vec::new();
+    for (index, line) in text.lines().enumerate() {
+        if markdown && line.trim_start().starts_with("```") {
+            fence = !fence;
+            continue;
+        }
+        if fence {
+            continue;
+        }
+        let outside_code: String = if markdown {
+            line.split('`').step_by(2).collect()
+        } else {
+            line.to_string()
+        };
+        if outside_code.chars().any(|c| "ąćęłńśźżĄĆĘŁŃŚŹŻ".contains(c)) {
+            found.push(format!(
+                "Polish text in documentation prose at line {}",
+                index + 1
+            ));
+        }
+    }
+    found
+}
+
 /// Scans every file of the tree (not `target` or `.git`); binary files are skipped.
 pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
     let (mut scanned, mut bad) = (0usize, Vec::new());
@@ -187,6 +231,9 @@ pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
             .unwrap_or(path)
             .display()
             .to_string();
+        for finding in polish_prose(&name, &text) {
+            bad.push(format!("{name}: {finding}"));
+        }
         for finding in scan(&text) {
             if quoted_only_address(&name, &text, &finding) {
                 continue;
@@ -273,6 +320,23 @@ mod tests {
             &quoted,
             "e-mail address at mail.test"
         ));
+    }
+
+    #[test]
+    fn polish_prose_only_outside_code_and_data() {
+        let word = ["zaż", "ółć"].concat();
+        assert_eq!(
+            polish_prose("docs/NOTES.md", &format!("a {word} b")).len(),
+            1
+        );
+        assert!(polish_prose("docs/NOTES.md", &format!("run `find {word}`")).is_empty());
+        let fenced = format!("```\nfind {word}\n```\nplain");
+        assert!(polish_prose("docs/NOTES.md", &fenced).is_empty());
+        let data = "docs/answer-or-abstain-v4/README.md";
+        assert!(polish_prose(data, &word).is_empty());
+        assert!(polish_prose("crates/x/fixtures/a.md", &word).is_empty());
+        assert!(polish_prose("crates/x/src/lib.rs", &word).is_empty());
+        assert_eq!(polish_prose("media/a.svg", &word).len(), 1);
     }
 
     #[test]
