@@ -390,14 +390,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "docs/images/evidence-limits-en.png",
         "6a6b9af2ea626591863d56b6d082613794d52ae1b8f825244ba0b62fecd8b9fd",
     ),
-    (
-        "docs/images/q8-four-views-pl.png",
-        "22928431fc598e080a755e25a7acb75b29feacf011e554a5d2d3c8c28ee02a7f",
-    ),
-    (
-        "docs/images/evidence-limits-pl.png",
-        "5913962e08810b86e253d046b6be8a0628b9affcd0d8beddef87fae0cdde9392",
-    ),
 ];
 const ALLOWED_EXTENSIONLESS: &[&str] = &[
     "Cargo.lock",

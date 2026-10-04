@@ -107,8 +107,8 @@ binary/image extension exception was added. No scripts, external resources,
 private screenshots, credentials or original bank data are embedded in those SVGs.
 Historical visuals remain in the preserved documentation.
 
-Two additional [educational illustrations, each in English and Polish](ILLUSTRATED-GUIDE.md),
-stored as four PNG files,
+Two additional [educational illustrations](ILLUSTRATED-GUIDE.md),
+stored as two PNG files,
 are permitted only at exact paths and with pinned SHA-256 bytes. They are
 AI-assisted concept diagrams, not measurements. A Rust regression rejects
 changed image bytes and an otherwise identical image at an unapproved path
