@@ -4,7 +4,7 @@ Date: 2026-09-30
 
 v0.5.2 is a documentation and evidence release. The public libraries, file
 formats, Rust pin and third-party dependencies are unchanged from
-[v0.5.1](https://github.com/Gelram-project/gel-ram/blob/v0.5.2/RELEASE-NOTES-v0.5.1.md); the workspace version moves to
+v0.5.1; the workspace version moves to
 0.5.2. Every change since v0.5.1 is listed with its commit in the
 [roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.5.2/docs/ROADMAP.md).
 

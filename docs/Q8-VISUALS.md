@@ -1,6 +1,6 @@
 # Q8 visuals: measured values, bounded claims
 
-The [historical README charts](../README-HISTORY-R2.md#measured-shared-readout-advantage--historical-v1)
+The historical README charts (in an earlier README, now only in the git history)
 visualize the complete historical 48-run V1 campaign. This is a documentation
 change, not a new benchmark or a change to the scoring algorithm.
 

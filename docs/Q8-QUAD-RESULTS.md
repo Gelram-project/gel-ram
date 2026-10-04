@@ -43,8 +43,9 @@ reversal of all stored phase/mask views were also checked.
 
 ## All matrix cells
 
-[Color charts of every cell, with interpretation](../README-HISTORY-R2.md#measured-shared-readout-advantage--historical-v1)
-and [chart provenance](Q8-VISUALS.md) use this unchanged V1 evidence.
+Color charts of every cell, with interpretation, were part of an earlier README
+that is now only in the git history; they and the [chart provenance](Q8-VISUALS.md)
+use this unchanged V1 evidence.
 
 Speed ratio = sum of FourViews times / sum of Shared times for one invocation.
 Below are the median and full minimum–maximum of the three repetition ratios.

@@ -1,12 +1,12 @@
 # Media decode review — 26 September 2026
 
-Local checks of the three existing repository MP4s:
+Local checks of the repository's Evidence Lab film. Two private application
+previews were checked the same way on that date; they were removed from the
+repository on 4 October 2026.
 
 | File | Duration | Resolution | Frame rate | Bytes | Full video decode |
 |---|---:|---|---:|---:|---|
 | GEL-EVIDENCE-LAB-EN.mp4 | 70.35 s | 1920×1080 | 20 fps | 840031 | PASS |
-| GEL-RAM-CONTINUOUS-CHAT-EN-60s.mp4 | 60 s | 1920×1080 | 30 fps | 1786517 | PASS |
-| GEL-RAM-HARDWARE-EN-CENTERED-90s.mp4 | 90 s | 1920×1080 | 30 fps | 1394644 | PASS |
 
 All video streams are H264. ffprobe returned metadata; ffmpeg decoded each full
 video with error logging and -xerror, exiting successfully with empty error logs.
@@ -34,18 +34,14 @@ mpdecimate threshold, such as a blinking cursor, may have been skipped.
 | Film | Distinct frames viewed | Privacy | Content cuts | Logs / documentation | 1080p | 640 px |
 |---|---:|---|---|---|---|---|
 | Evidence Lab, 70.35 s | 161 / 161 | nothing found | none | commands, byte counts, ns values and hashes match both process logs | readable; the pointer hides one hash character at 31–67 s (the same hash is readable elsewhere) | hashes and ns values unreadable |
-| Continuous chat, 60 s | 138 / 138 | nothing found; the hardware model is shown on purpose | none | questions, answers and times matched the run notes at review time (since shortened) | readable | borderline |
-| Hardware / answers, 90 s | 134 / 134 | nothing found; the hardware model is shown on purpose | none | four cases and times matched the run notes at review time (since shortened) | readable | small; digits need zoom |
 
 Corrections made from this review: event times in the
-[transcripts](../media/TRANSCRIPTS-EN.md) now mark when each event first
-appears (they were 3–5 s late); the film guide states that session logging to
-disk was on and that the private-preview label is visible only before `/chat`
-(0–24.5 s and 0–15.7 s). The films themselves are
-unchanged. At 640 px the hash-heavy screens cannot be read in any film; for the
-public film the transcript carries those values. On 27 September 2026 the
-transcripts of the two private previews were removed from the repository; only
-the public Evidence Lab film is transcribed.
+[transcript](../media/TRANSCRIPTS-EN.md) now mark when each event first
+appears (they were 3–5 s late). The film itself is unchanged. At 640 px its
+hash-heavy screens cannot be read; the transcript carries those values. The
+two private application previews reviewed on the same date were removed from
+the repository, their transcripts on 27 September 2026 and the films with
+their guide and stills on 4 October 2026.
 
 ```text
 AI_FRAME_REVIEW=COMPLETE_FOR_DISTINCT_FRAMES
