@@ -69,9 +69,9 @@ must be checked separately. Only free standard runners are in scope.
 New scope: bounded multi-document collection, exact citations, no-replace
 snapshots, generation invalidation, E2E measurement and Q reference tests. No private application code,
 private component, private corpus or user data was exported.
-Evidence Lab scope and results: [Evidence Lab notes](RELEASE-NOTES-EVIDENCE-LAB.md).
+Evidence Lab scope and results: [Evidence Lab notes](docs/history/release-notes/RELEASE-NOTES-EVIDENCE-LAB.md).
 Historical R2 preparation record (its publication and platform flags predate the approvals above): [R2 preparation](docs/evidence-collection/FOLLOWUP-R2.md). Open external gates: [claim registry](docs/CLAIMS.md).
-Previously published: [Live Lab update](RELEASE-NOTES-LIVE-LAB.md).
+Previously published: [Live Lab update](docs/history/release-notes/RELEASE-NOTES-LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
 `V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.

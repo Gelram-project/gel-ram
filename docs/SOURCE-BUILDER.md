@@ -1,7 +1,7 @@
 # Build your own exact source catalog
 
 Public-source writer and persistence addition on the v0.3.0 development line.
-See [Live Lab update scope](../RELEASE-NOTES-LIVE-LAB.md) for publication status.
+See [Live Lab update scope](history/release-notes/RELEASE-NOTES-LIVE-LAB.md) for publication status.
 Rust only, no LLM or network.
 
 Previously the public reader needed an already encoded catalog. `CorpusBuilder`

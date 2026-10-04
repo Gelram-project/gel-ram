@@ -3,14 +3,14 @@
 Base: `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a` (published Live Lab / PR #5).
 The owner authorized public main integration after checks. The workspace was then
 `0.4.0-rc.1` and no tag was created at that point; the feature belongs to the
-[v0.4.0 release notes](RELEASE-NOTES-v0.4.0.md). Root licensing
+[v0.4.0 release notes](../../../RELEASE-NOTES-v0.4.0.md). Root licensing
 and external dependency versions are unchanged. No private implementation imported.
 
 Local integration review also includes public documentation updates through
 `44b6d7af4d1ffc5715585d2d5c5db42ee401e4f8` (PRs #6 and #7).
 Those updates are already public, not new Evidence Lab functionality. The
 candidate additions below remain relative to the original implementation base.
-Start with [candidate quickcheck](docs/CANDIDATE-QUICKCHECK.md).
+Start with [candidate quickcheck](../../CANDIDATE-QUICKCHECK.md).
 
 ## New, not recycled from the base
 
@@ -24,7 +24,7 @@ Start with [candidate quickcheck](docs/CANDIDATE-QUICKCHECK.md).
 
 The already published Ocean 1M/10M and single-document Live Lab are retained as
 the base, not presented as new measurements. The two existing films do not show
-this new application. A [separate new terminal recording](media/EVIDENCE-LAB-GUIDE.md)
+this new application. A [separate new terminal recording](../../../media/EVIDENCE-LAB-GUIDE.md)
 now shows the candidate with a real process restart. `gel-evidence --demo` remains
 a reproducible quick demonstration.
 
@@ -36,7 +36,7 @@ The latter directory must be new and outside the source tree. Includes corpus
 snapshots, so review contents before sharing reports from your own data.
 Cached dependencies and Rust 1.85.0 are prerequisites for offline compilation.
 
-Candidate-specific native results are pinned in [the platform record](docs/PLATFORM-REVIEW.md).
+Candidate-specific native results are pinned in [the platform record](../../PLATFORM-REVIEW.md).
 Prepared workflows alone do not count as executed CI; inspect the run for each revision.
 Technical PASS does not grant merge or release approval.
 
@@ -49,10 +49,10 @@ snapshot includes full text and metadata, not a compressed store. Mutation rehas
 the entire snapshot; it is not an incremental index or constant-time update.
 OS crash tests do not establish physical power-failure durability.
 
-[Contract](docs/EVIDENCE-LAB.md) · [benchmark method](docs/EVIDENCE-CAMPAIGN.md).
+[Contract](../../EVIDENCE-LAB.md) · [benchmark method](../../EVIDENCE-CAMPAIGN.md).
 
-Measured local results and raw evidence: [Linux review](docs/evidence-collection/README.md).
+Measured local results and raw evidence: [Linux review](../../evidence-collection/README.md).
 
-Follow-up preparation adds [24 post-freeze contract cases](docs/ASSESSMENT-REVIEW.md)
-without runtime tuning and [native platform handoff](docs/PLATFORM-REVIEW.md).
+Follow-up preparation adds [24 post-freeze contract cases](../../ASSESSMENT-REVIEW.md)
+without runtime tuning and [native platform handoff](../../PLATFORM-REVIEW.md).
 This is developer-authored assessment, not independent blind validation.
