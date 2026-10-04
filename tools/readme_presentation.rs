@@ -172,11 +172,11 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen set (v4); the example and
-the answer grid show an earlier run on set v1, the 80 questions also put to
+this checkout. The first card is the newest frozen question set (v4); the example and
+the answer grid show an earlier run on question set v1, the 80 questions also put to
 three language models. Every question is published with its expected answer
-and source passage: [the 985 of set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
-and [the 80 of set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
+and source passage: [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
+and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
 every recorded answer, and `xtask answer-bench check` re-scores them on each
 verify run. Free conversation has not been measured yet.
 
@@ -251,8 +251,9 @@ read-only presentation check fails if they drift.
 
 Three properties, each with its evidence and its limit:
 
-- **It answers with its source, or says it does not know.** On 80 frozen
-  questions it gave 11 answers, all correct, and 69 UNKNOWN, where three
+- **It answers with a stored source passage or says UNKNOWN; it is not always
+  right.** On the 80 frozen questions of question set v1 it gave 11 answers,
+  all correct, and 69 UNKNOWN, where three
   language models answering closed book gave 11–28 wrong answers each. On 394
   new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
   from another article; the models gave 80–233 wrong answers each. On 80
@@ -261,12 +262,12 @@ Three properties, each with its evidence and its limit:
   after the latest change, a development build answered 423: 405 correct and 18
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
   and gave more wrong answers (40–41).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [set v2](docs/answer-or-abstain-v2/README.md) · [set v4](docs/answer-or-abstain-v4/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
   replace it and the old citation is refused.
-- **A restart should lose nothing.** The public snapshot tools keep the previous
+- **Saved snapshots survive a killed process.** The public snapshot tools keep the previous
   copy through injected I/O failures, permission denial and a full disk
   ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)), and a growing collection
   killed at random moments loses no acknowledged snapshot
@@ -304,8 +305,8 @@ They are reported here without publishing the private engine.
 |:---|---:|:---|:---|
 | Resident read at a known address | 40 | p50 **53.872 µs**, p95 **79.640 µs**, p99 **90.009 µs**; 40/40 reference matches | Addressed read after loading into RAM, not semantic search |
 | Source-integrity gate | 1,000 source fragments; 5 controls each | **1,000 valid payloads admitted; 4,000 invalid cases rejected** | Changed payload, missing address, wrong source and stale catalog generation are distinguished |
-| Single Q8 ranking | 400 probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
-| Quad ranking | Same 400 probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
+| Single Q8 ranking | 400 source-text probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
+| Quad ranking | Same 400 source-text probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
 
 The logical ranking bank contains **1M fragments across four 250k slots**;
 these probes do **not** search all 1M candidates. One empty probe remains in
@@ -353,27 +354,30 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 
 ### Answer verdict: answer only when the lead is clear
 
-Measured after the v0.5.0 release on the same private 1M bank as the ranking
-rows above. GEL answers only when its best passage leads the runner-up by a
+Measured after the v0.5.0 release with the same private build as the ranking
+rows above. The original column uses the same 1M bank; the three changes shrink
+the searched answer bank to 167,854 passages per slot, 671,416 in all. GEL
+answers only when its best passage leads the runner-up by a
 threshold fixed in advance (set on a different corpus); otherwise it
 returns UNKNOWN. Three changes to the private build were measured one at a time
 (duplicate handling, answer-bank scope and an encoder variant); their details
 remain private.
 
-| Stored passages read back (ranked within their slot) | Original bank | After the three changes |
+| Stored passages read back (ranked within their slot) | Original bank (1M passages) | After the three changes (671,416 passages) |
 |:---|---:|---:|
-| Probes | 10,000 | 50,000 |
-| Answered | 77.0% | 92.8% |
-| Of the answers given, correct (same article) | 97.7% | **99.95%** (23 wrong of 46,376) |
-| Wrong answers among all probes | 1.78% | **0.046%** |
-| UNKNOWN | 23.1% | 7.2% |
+| Probes | 9,998 | 50,000 |
+| Answered | 7,693 (76.9%) | 46,376 (92.8%) |
+| Correct (same article), share of the answers | 7,515 (97.7%) | **46,353 (99.95%)** |
+| Wrong, share of all probes | 178 (1.78%) | **23 (0.046%)** |
+| UNKNOWN | 2,305 (23.1%) | 3,624 (7.2%) |
 
 Two of the four slots reach a 95% Wilson lower bound of at least 0.999 (0.9993
 and 0.9994); the other two reach 0.9984 and 0.9986. The probes are stored
-passages, not questions; after the changes the bank holds 167,854 passages per
-slot.
+passages, not questions. Counts are exact; the original-bank row was earlier
+given as 10,000 probes and 77.0% answered, where 2 empty probes are not counted
+and 7,693 of 9,998 is 76.9%.
 
-| 80 natural questions (40 PL, 40 EN), all slots searched | Without verification | With source verification |
+| 80 natural questions of question set v1 (40 PL, 40 EN), all four slots of the 671,416-passage bank searched | Without verification | With source verification |
 |:---|---:|---:|
 | Top-1 from the right article | 27 (34%) | **40 (50%)** |
 | Answers given | 9 (1 wrong) | **11 (all correct)** |
@@ -384,13 +388,13 @@ sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [set v4](docs/answer-or-abstain-v4/README.md).
+answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
 ### Side by side with three language models
 
-The same 80 frozen questions went to GEL RAM and, closed book, to three
+The same 80 frozen questions (question set v1) went to GEL RAM and, closed book, to three
 language models on the Groq API, in one recorded run with one scoring rule.
 GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
 models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
@@ -421,21 +425,21 @@ answered none of the invented ones and 6 of the false premises; it can still
 return a passage that matches a question without answering it. The models
 answered 3–22 and 2–16. [No-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 
-**A larger frozen set (v2).** 394 new questions (198 PL, 196 EN), drawn at
+**A larger frozen question set (v2).** 394 new questions (198 PL, 196 EN), drawn at
 random from the bank and frozen before any system ran, went to the same four
 systems in one run on 2026-09-29. GEL answered 63 and said UNKNOWN to 331:
 **59 correct and 4 wrong** — each wrong answer a passage from another article,
 three of them disambiguation pages, all four in Polish. The models answered
 123–283 and gave **80–233 wrong answers each**.
 
-| Same 394 questions (v2) | Answered | Correct | Wrong | UNKNOWN |
+| Same 394 questions (question set v2) | Answered | Correct | Wrong | UNKNOWN |
 |:---|---:|---:|---:|---:|
 | GEL RAM (local bank, answers with the source passage) | 63 | 59 | **4** | 331 |
 | GPT-OSS-120B (Groq API, closed book) | 223 | 92 | 131 | 171 |
 | GPT-OSS-20B (Groq API, closed book) | 283 | 50 | 233 | 111 |
 | Qwen3.8-27B (Groq API, closed book) | 123 | 43 | 80 | 271 |
 
-[Set v2: every question, answer and review decision](docs/answer-or-abstain-v2/README.md)
+[Question set v2: every question, answer and review decision](docs/answer-or-abstain-v2/README.md)
 
 ### Same supplied-source task: GEL adapter and models served by Groq
 
@@ -473,7 +477,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen sets v4 and v1 and from the claim registry, each panel naming its set, an
+frozen question sets v4 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1632,7 +1636,7 @@ fn span(a: usize, b: usize) -> String {
 /// What the first result card says, as its description and as the README alternative text.
 fn glance_text(h: &Headline) -> String {
     let [(a, x), (b, y)] = h.strict;
-    format!("Private development build, frozen set v4: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, so there the engines are ahead. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
+    format!("Private development build, frozen question set v4: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {} correct and {} wrong, so there the engines are ahead. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, span(a, b), span(x, y))
 }
 fn glance(dark: bool, h: &Headline) -> String {
     let t = theme(dark);
@@ -1659,7 +1663,7 @@ fn glance(dark: bool, h: &Headline) -> String {
         ),
     ];
     let mut body = format!(
-        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · FROZEN SET V4 · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
+        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET V4 · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
         h.questions, h.pl, h.en
     );
     for (i, (big, colour, label, note)) in cols.iter().enumerate() {
@@ -1721,7 +1725,7 @@ fn example(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 570, 420, t) + &panel(610, 570, 420, t);
     b.push_str(
-        r#"<text class="kick" x="44" y="56">EARLIER RUN · SET V1 · QUESTION 41 OF 80</text>"#,
+        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · #41 OF 80</text>"#,
     );
     for (i, l) in wrap(&r.question, 50, 2).iter().enumerate() {
         b.push_str(&format!(
@@ -1761,7 +1765,7 @@ fn example(dark: bool, r: &Recorded) -> String {
         }
     }
     b.push_str(r#"<text x="634" y="392" font-size="14" class="mut">All three give a reason the source does not give.</text><text x="634" y="414" font-size="14" class="mut">GEL returns the passage that states it.</text>"#);
-    result_card(dark, 460, ("One question, four systems", &format!("Earlier run, set v1, question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
+    result_card(dark, 460, ("One question, four systems", &format!("Private build, earlier run on question set v1, question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
 }
 const BREAK: [(&str, &str, &str); 4] = [
     (
@@ -1789,7 +1793,7 @@ fn dots(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 720, 360, t) + &panel(760, 420, 360, t);
     b.push_str(
-        r#"<text class="kick" x="44" y="56">EARLIER RUN · SET V1 · 80 QUESTIONS, SAME RULE</text>"#,
+        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · 80 QUESTIONS, SAME RULE</text>"#,
     );
     for (row, (name, verdicts)) in r.systems.iter().enumerate() {
         let (ok, wrong, unknown) = r.counts(row);
@@ -1823,7 +1827,7 @@ fn dots(dark: bool, r: &Recorded) -> String {
         })
         .collect::<Vec<_>>()
         .join(". ");
-    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("Earlier run on set v1 (80 questions, an earlier build), beside three language models answering closed book. {desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
+    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("Private build, earlier run on question set v1 (80 questions, an earlier build), beside three language models answering closed book. {desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
 }
 fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
     let t = theme(dark);
@@ -1846,7 +1850,7 @@ fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
         (
             "Natural question coverage",
             format!(
-                "now {} of {} correct on frozen set v4, {} wrong",
+                "now {} of {} correct on question set v4, {} wrong",
                 h.correct, h.questions, h.wrong
             ),
             "most of a new frozen set answered, still 0 wrong",
@@ -1902,9 +1906,9 @@ fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example-41", l, d, format!("Earlier run, set v1, question 41 of 80: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
+    out.push(("example-41", l, d, format!("Private build, earlier run on question set v1, question 41 of 80: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
     let (l, d) = both(&|dark| dots(dark, &r));
-    out.push(("answer-dots", l, d, format!("Earlier run on set v1, 80 questions, an earlier build beside three language models answering closed book. {}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
+    out.push(("answer-dots", l, d, format!("Private build, earlier run on question set v1, 80 questions, an earlier build beside three language models answering closed book. {}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
     let (l, d) = both(&|dark| surface(dark, &s, &h));
     out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
@@ -2497,11 +2501,14 @@ mod tests {
         assert_eq!(ok + wrong + unknown, 80);
         let h = Headline::read().unwrap();
         assert_eq!(h.answered + h.unknown, h.questions);
-        assert!(HEADLINE_DIR.ends_with("-v4"), "the first card names set v4");
+        assert!(
+            HEADLINE_DIR.ends_with("-v4"),
+            "the first card names question set v4"
+        );
         let g = glance(false, &h);
         assert!(g.contains(&format!(">{} / {}<", h.correct, h.questions)));
         assert!(g.contains(&format!(">{}<", h.wrong)) && g.contains(&format!(">{}<", h.unknown)));
-        assert!(g.contains("PRIVATE DEVELOPMENT BUILD · FROZEN SET V4"));
+        assert!(g.contains("PRIVATE DEVELOPMENT BUILD · QUESTION SET V4"));
         let [(a, _), (b, _)] = h.engines;
         assert!(g.contains(&format!(">{}<", span(a, b))));
         assert!(g.contains("so there the engines are ahead"));
@@ -2512,7 +2519,10 @@ mod tests {
         let d = dots(true, &r);
         assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
         let e = example(false, &r);
-        assert!(d.contains("EARLIER RUN · SET V1") && e.contains("EARLIER RUN · SET V1"));
+        assert!(
+            d.contains("PRIVATE BUILD · QUESTION SET V1")
+                && e.contains("PRIVATE BUILD · QUESTION SET V1")
+        );
         assert!(r.question.contains("Sudbury") && e.contains("House of Lords"));
         assert!(
             r.answers.iter().all(|a| a.2 == b'W'),

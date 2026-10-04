@@ -99,9 +99,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-answer-verdict-self-read",
         dimension: "retrieval",
-        scope: "separate private implementation after three measured changes; 50,000 stored-passage probes ranked within their slot",
+        scope: "separate private implementation after three measured changes; answer bank of 671,416 passages (167,854 per slot); 50,000 stored-passage probes ranked within their slot",
         input: "verdict lead threshold fixed in advance from another corpus; encoder variant chosen on a separate sample",
-        expected: "answered 92.8%, correct answers 99.95% (23 wrong of 46,376), wrong 0.046% of probes",
+        expected: "46,376 of 50,000 answered (92.8%): 46,353 correct (99.95% of answers) and 23 wrong (0.046% of probes)",
         counterexample: "self-read precision presented as natural-question accuracy, global 1M search or an unchanged bank",
         source: "docs/MEASURED-PROGRESS.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
@@ -109,7 +109,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-natural-question-answers",
         dimension: "retrieval",
-        scope: "80 PL/EN questions written by the project's AI coding assistant, frozen before the run, all slots searched",
+        scope: "80 PL/EN questions (question set v1) written by the project's AI coding assistant, frozen before the run, all four slots of the 671,416-passage answer bank searched",
         input: "source verification of the best candidates; threshold from a separate 80-question calibration set",
         expected: "top-1 right article 40/80; 11 answers, all correct; 69 UNKNOWN",
         counterexample: "11 of 11 reported as a precision rate or the set treated as an independent benchmark",

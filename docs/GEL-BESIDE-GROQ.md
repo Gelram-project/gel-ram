@@ -30,7 +30,7 @@ models 80–233 wrong answers each. [Set v2](answer-or-abstain-v2/README.md).
   frozen by SHA-256 before any model was called.
 - **GEL RAM** answers from its local bank. When its best passage clearly leads,
   it returns that source passage; otherwise it says UNKNOWN. Same configuration
-  as the [natural-question result](MEASURED-PROGRESS.md#natural-questions-on-the-same-bank),
+  as the [natural-question result](MEASURED-PROGRESS.md#natural-questions-on-the-final-answer-bank),
   re-run in the same session with byte-identical output.
 - **GPT-OSS-120B, GPT-OSS-20B and Qwen3.8-27B** (`openai/gpt-oss-120b`,
   `openai/gpt-oss-20b`, `qwen/qwen3.8-27b`) were called through the Groq API
