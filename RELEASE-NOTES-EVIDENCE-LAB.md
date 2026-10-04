@@ -45,7 +45,7 @@ Technical PASS does not grant merge or release approval.
 Not semantic QA, multimedia understanding, encrypted personal memory,
 an anti-rollback protocol or hardware-level memory computation. Q reference and source
 lookup are separate; they do not prove fourfold independent storage. The collection
-snapshot includes full text and metadata, not compressed ORBs. Mutation rehashes
+snapshot includes full text and metadata, not a compressed store. Mutation rehashes
 the entire snapshot; it is not an incremental index or constant-time update.
 OS crash tests do not establish physical power-failure durability.
 

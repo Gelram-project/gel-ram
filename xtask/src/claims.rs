@@ -29,7 +29,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-resident-addressed-read",
         dimension: "timing",
-        scope: "private resident reader, known address, 40 observations",
+        scope: "separate private implementation, known address, 40 observations",
         input: "author-retained addressed read timing series after RAM load",
         expected: "p50 53.872 us, p95 79.640 us; no global search or semantic decision claim",
         counterexample: "addressed lookup latency presented as full Ocean search latency",
@@ -39,7 +39,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-source-integrity-controls",
         dimension: "integrity",
-        scope: "private experimental adapter, 1000 PL/EN fragments, five controls each",
+        scope: "separate private implementation, 1000 PL/EN fragments, five controls each",
         input: "valid, corrupt, missing, wrong-source and stale-generation cases",
         expected: "1000 valid admitted and 4000 invalid rejected; no semantic correctness inferred",
         counterexample: "matching source bytes treated as proof of a claim or general understanding",
@@ -49,7 +49,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-single-quad-slot-ranking",
         dimension: "ranking",
-        scope: "private reader, known 250k slot of logical 1M bank, 400 probes",
+        scope: "separate private implementation, known 250k slot of logical 1M bank, 400 probes",
         input: "same probes for Single and Quad, including one empty probe in quality denominator",
         expected: "Single top1 368/400 and top10 393/400; Quad 310/400 and 361/400",
         counterexample: "slot ranking described as global million-record semantic recall or Quad superiority",
@@ -69,7 +69,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-slot-ranking-update",
         dimension: "ranking",
-        scope: "private reader, same 400 probes and known 250k slot, updated profile",
+        scope: "separate private implementation, same 400 probes and known 250k slot, updated build",
         input: "same probes for Single and Quad; two private pipeline changes between runs",
         expected: "Single top1 379/400 and top10 397/400; Quad 371/400 and 396/400",
         counterexample: "gain attributed to one change, or slot ranking presented as global 1M recall",
@@ -79,7 +79,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-source-field-dialogue-timing",
         dimension: "timing",
-        scope: "private dialogue pilot, five articles, 13 questions, three runs of 1000 warm repeats",
+        scope: "separate private implementation, dialogue pilot on five articles, 13 questions, three runs of 1000 warm repeats",
         input: "resident source fields; loading, display, report writes and fallback excluded",
         expected: "field p50 2.054-4.819 us, comparison p50 19.417-21.220 us, slowest 711.017 us",
         counterexample: "medians presented as worst case, or UNHANDLED counted as an answer",
@@ -89,7 +89,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-new-article-transfer",
         dimension: "retrieval",
-        scope: "private dialogue on four new PL articles, 13 questions, no timing",
+        scope: "separate private implementation, dialogue on four new PL articles, 13 questions, no timing",
         input: "69 source fields; six field outputs checked against the source HTML cells",
         expected: "6 field answers, 2 quotations, 1 limited comparison, 3 UNHANDLED, 1 UNKNOWN",
         counterexample: "result counted as 9/13 semantic accuracy or a million-record deployment",
@@ -99,7 +99,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-answer-verdict-self-read",
         dimension: "retrieval",
-        scope: "private bank after merging duplicates, leaving out reference sections, keeping numbers; 50,000 stored-passage probes ranked within their slot",
+        scope: "separate private implementation after three measured changes; 50,000 stored-passage probes ranked within their slot",
         input: "verdict lead threshold fixed in advance from another corpus; encoder variant chosen on a separate sample",
         expected: "answered 92.8%, correct answers 99.95% (23 wrong of 46,376), wrong 0.046% of probes",
         counterexample: "self-read precision presented as natural-question accuracy, global 1M search or an unchanged bank",
@@ -139,7 +139,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "store-kill-during-learning",
         dimension: "persistence",
-        scope: "private knowledge store growing while it learns: 100 + 100 random kills in two series and 7 fixed stop points",
+        scope: "separate private implementation under continuous writes: 100 + 100 random kills in two series and 7 fixed stop points",
         input: "SIGKILL at a seeded random time or at a fixed point; reopen and check, then resume",
         expected: "0 of 235,712 confirmed records lost; every reopen check passed; every resume equal to the run without a kill",
         counterexample: "read as power-loss durability, as a large-store result, or as reproducible from this checkout",
@@ -389,7 +389,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "gel-sketch-search",
         dimension: "timing",
-        scope: "private engine, 128-byte sketches, three replays",
+        scope: "separate private implementation, compact sketches, three replays",
         input: "201 measured batches per size with raw CSV",
         expected: "author-reported per-scan p50; not reproducible from this checkout",
         counterexample: "divided by a full-scan row to claim a speed-up",
@@ -421,7 +421,7 @@ const CLAIMS: &[Claim] = &[
         dimension: "mechanism",
         scope: "hardware-level memory computation",
         input: "hardware experiment and mechanism trace required",
-        expected: "not established by CPU phase simulations",
+        expected: "not established by CPU-only experiments",
         counterexample: "renamed CPU baseline presented as hardware memory compute",
         source: "docs/GEL-EXPERIMENTAL-MEASUREMENTS.md",
         evidence: Evidence::Deferred("NOT_ESTABLISHED"),

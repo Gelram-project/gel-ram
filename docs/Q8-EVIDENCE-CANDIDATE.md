@@ -121,8 +121,8 @@ rows can involve data layout/cache effects, not extra independent information.
 
 ### Real input boundary
 
-The external fixture contains 768 existing phase/mask records from a private
-256-node encoded sample. Conversion copied all phase and mask bytes unchanged,
+The external fixture contains 768 existing records from a caller-supplied encoded
+sample that is not distributed. Conversion copied all record bytes unchanged,
 without re-quantization. The 884,748-byte test fixture SHA256 is
 `23d5f20f4268992f51e6c8d1f838b305bcd96c75563f51ec0734bda2b12a4ce4`.
 Each of six invocations passed 3072 view inverses and 33,792 score comparisons:

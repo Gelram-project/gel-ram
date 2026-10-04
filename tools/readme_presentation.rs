@@ -344,14 +344,9 @@ The Groq table below remains a separate supplied-source decision diagnostic;
 Measured after the v0.5.0 release on the same private 1M bank as the ranking
 rows above. GEL answers only when its best passage leads the runner-up by a
 threshold fixed in advance (set on a different corpus); otherwise it
-returns UNKNOWN. Three changes were applied and measured one at a time:
-
-1. identical passages, including ones the encoder cannot tell apart, are stored
-   once, with every source and text variant kept;
-2. reference, link and bibliography sections stay available as sources but are
-   left out of the answer bank (Polish slots −27%, English −3–5%);
-3. the private encoder keeps numbers and short words, so passages that differ
-   only by a year or a score stay apart.
+returns UNKNOWN. Three changes to the private build were measured one at a time
+(duplicate handling, answer-bank scope and an encoder variant); their details
+remain private.
 
 | Stored passages read back (ranked within their slot) | Original bank | After the three changes |
 |:---|---:|---:|

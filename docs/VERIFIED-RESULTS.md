@@ -111,7 +111,7 @@ The public repository does not claim that it proves:
 - fourfold independent capacity from four reversible views.
 
 Separate [author-reported component measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)
-cover different tasks (compact-sketch search, phase evolution); they do not
+cover different tasks (compact-sketch search, a second private component); they do not
 establish an end-to-end advantage over this baseline. No private-path speedup
 is claimed; the private mechanism remains unpublished until a reproducible
 public evidence package exists.

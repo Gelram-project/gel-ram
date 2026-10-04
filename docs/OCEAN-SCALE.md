@@ -9,7 +9,7 @@ claimed. The stable public workspace never depended on them.
 ## Measured scope and limits
 
 Separate [GEL component measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)
-cover private-prototype sketch search and phase evolution. They measure
+cover private-prototype search measurements. They measure
 different tasks and are not speedup comparisons against this full scan.
 
 EXACT full scan → top10 → decision, milliseconds, 24 workers:

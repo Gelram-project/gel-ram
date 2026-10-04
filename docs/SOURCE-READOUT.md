@@ -43,10 +43,9 @@ CI fetches those locked dependencies before the existing offline checks.
 
 ## Provenance and release boundary
 
-This is a narrow extraction of the project owner's private source-catalog
-module and its regression tests. The adapter replaces the private hash-provider
-dependency with sha2 and bounds TSV splitting to nine fields. The catalog and
-passage contracts are otherwise preserved. GEL RAM-owned material is under
+This module uses the RustCrypto sha2 crate for SHA-256 and bounds TSV splitting
+to nine fields. The catalog and
+passage contracts are preserved. GEL RAM-owned material is under
 GEL RAM NCRL 1.0 ([licensing](../LICENSING.md)); the extraction was first
 prepared under the then-active PolyForm licensing, and no private master
 licensing files are changed.
