@@ -972,6 +972,19 @@ fn reference_tokens(text: &str) -> Vec<(usize, &str)> {
     found
 }
 
+/// Paths removed from the tree that the frozen `README-HISTORY-*` snapshots still cite.
+/// Only those snapshots may cite them; anywhere else a missing path is still a finding.
+const REMOVED_CITED_BY_SNAPSHOTS: &[&str] = &["docs/licensing-next/"];
+
+fn snapshot_cites_removed(citing: &Path, token: &str) -> bool {
+    citing
+        .to_str()
+        .is_some_and(|c| !c.contains('/') && c.starts_with("README-HISTORY-"))
+        && REMOVED_CITED_BY_SNAPSHOTS
+            .iter()
+            .any(|p| token.starts_with(p))
+}
+
 fn docs_refs() -> Result<(), String> {
     let root = workspace_root()?;
     let mut files = Vec::new();
@@ -987,7 +1000,7 @@ fn docs_refs() -> Result<(), String> {
         let citing = path.strip_prefix(root).unwrap_or(path.as_path());
         for (line, token) in reference_tokens(&text) {
             checked += 1;
-            if !root.join(token).exists() {
+            if !root.join(token).exists() && !snapshot_cites_removed(citing, token) {
                 missing.push(format!(
                     "{}:{line}: missing repository reference: {token}",
                     citing.display()
@@ -1315,6 +1328,24 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn only_frozen_snapshots_may_cite_removed_paths() {
+        let removed = "docs/licensing-next/";
+        assert!(snapshot_cites_removed(
+            Path::new("README-HISTORY-PRE-VISUAL.md"),
+            removed
+        ));
+        assert!(!snapshot_cites_removed(Path::new("README.md"), removed));
+        assert!(!snapshot_cites_removed(
+            Path::new("docs/README-HISTORY-X.md"),
+            removed
+        ));
+        assert!(!snapshot_cites_removed(
+            Path::new("README-HISTORY-PRE-VISUAL.md"),
+            "docs/MISSING.md"
+        ));
+    }
 
     #[test]
     fn component_evidence_exception_is_exact_and_text_only() {
