@@ -89,9 +89,10 @@ does not represent measured execution. Existing repository licensing applies.
 ## Answer verdict — measured after the v0.5.0 release
 
 Same private implementation as the ranking section above. The original bank is
-the same 1M PL/EN bank (four slots of 250,000 passages); the changes below, with
-the English slots then cut at their end to the size of the Polish ones, leave
-167,854 passages per slot in the searched answer bank, 671,416 in all. A verdict
+the same 1M PL/EN bank (four slots of 250,000 passages). The four-slot measurement
+needs slots of equal size, so after each change every slot was cut at its end to
+the size of the smallest one. After the changes below the searched answer bank
+holds 167,854 passages per slot, 671,416 in all. A verdict
 answers only when the best passage leads the
 runner-up by more than a threshold that was fixed in advance
 from a different corpus and never tuned on these probes. Correct means the
@@ -120,9 +121,12 @@ steps. Large sample per slot: correct answers 0.9997, 0.9991, 0.9998, 0.9993;
 95% Wilson lower bounds 0.9993, 0.9984, 0.9994, 0.9986. At equal bank size, a
 control with the reference sections kept reached 83.8% answered and 1.26% wrong,
 so the gain from that stage is not an effect of the smaller bank. Leaving those
-sections out changes the scope of the answer bank (Polish slots −27%, English
-−3–5%); they remain available as sources. To keep the four slots equal, the
-English slots were then cut at their end to the same 167,854 passages.
+sections out changes the scope of the answer bank (Polish slots −26–27%, English
+−3–5%); they remain available as sources. The smaller Polish slot then set the
+common size of 167,854 passages: the cut to equal slots removed a further 3,457
+passages from the other Polish slot and 51,790 and 56,605 from the two English
+slots, so the English half of the final bank is about a quarter smaller than the
+scope change alone would leave.
 
 ## Natural questions on the final answer bank
 
