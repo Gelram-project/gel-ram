@@ -77,7 +77,7 @@ Historical R2 preparation record (its publication and platform flags predate the
 Previously published: [Live Lab](docs/LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
-`V0_3_0_TAGGED_RELEASE=PUBLISHED` records that the annotated `v0.3.0` tag and GitHub Release have been created from the exact green public-main commit selected for the release. The public `main` branch may advance after that immutable release point through separately verified changes.
+`V0_3_0_TAGGED_RELEASE` and the other `_TAGGED_RELEASE` fields record the state of each release: the v0.3.0 to v0.5.1 releases were created from green public-main commits, and on 2026-10-04 their release pages were removed while their tags remain. The public `main` branch may advance after a release point through separately verified changes.
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
 
@@ -115,7 +115,7 @@ and networked components remain excluded, and no Ocean
 research module is part of the current tree. User conversations, signed agreements, keys,
 personal identity records and private local diagnostic logs are not included.
 
-The two private-preview films are bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, network operation or hardware-level memory effects.
+The two private-preview films, removed from the tree on 2026-10-04, were bounded native Rust source-frame demonstrations; the Evidence Lab film shows public phrase retrieval. None of them proves general AI, semantic accuracy, unrestricted language generation, fourfold independent storage, network operation or hardware-level memory effects.
 
 ## Licensing status
 

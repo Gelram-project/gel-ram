@@ -10,7 +10,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-/// Published contact addresses; any other e-mail address is a finding.
+/// The published contact and the no-reply address of commit co-author lines; any other e-mail address is a finding.
 const CONTACTS: &[&str] = &["gelram.licensing@gmail.com", "noreply@anthropic.com"];
 /// Domains that never identify a person: GitHub no-reply and documentation examples.
 const CONTACT_DOMAINS: &[&str] = &[

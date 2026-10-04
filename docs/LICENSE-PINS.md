@@ -1,6 +1,6 @@
 # License texts in force
 
-The names below refer only to these exact files on `main`. A file with the same
+The names below refer only to these exact files in this tree. A file with the same
 name and a different SHA-256 is not that license text. Earlier staged proposal
 documents are not part of this tree; they were never an additional current grant.
 

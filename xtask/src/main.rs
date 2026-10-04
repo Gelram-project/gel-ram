@@ -38,7 +38,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "951b03bb4264427f68ff7bab438eeb98c40d68c2f2e0f7f9d4db52273ab89d0d",
+        "babd8e35908a5daa520c313844f91bb1d78953f78b74a4279cc1f25523388c90",
     ),
     (
         "media/presentation/header-light.svg",
@@ -106,11 +106,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-light.svg",
-        "7c23b267a8223f4a2b77ff8a1a56b09fdb9ab63ea3725cc9ffaba9140d89dc0d",
+        "5fba4aa70365a8e843965b34e645969162d21ffb685b78e6f0ba01db58c9203e",
     ),
     (
         "media/presentation/glance-dark.svg",
-        "04d191c4593280691e007edeb6d0c9b423ebcde4b307be6d401f2cbf301b0344",
+        "f655ca355fd3d789c3849945d95c572e29bad08fd40e8f8aeeeb0159118c1665",
     ),
     (
         "media/presentation/question-path-light.svg",

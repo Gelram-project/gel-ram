@@ -89,8 +89,9 @@ does not represent measured execution. Existing repository licensing applies.
 ## Answer verdict — measured after the v0.5.0 release
 
 Same private implementation as the ranking section above. The original bank is
-the same 1M PL/EN bank (four slots of 250,000 passages); the changes below shrink
-the searched answer bank to 167,854 passages per slot, 671,416 in all. A verdict
+the same 1M PL/EN bank (four slots of 250,000 passages); the changes below, with
+the English slots then cut at their end to the size of the Polish ones, leave
+167,854 passages per slot in the searched answer bank, 671,416 in all. A verdict
 answers only when the best passage leads the
 runner-up by more than a threshold that was fixed in advance
 from a different corpus and never tuned on these probes. Correct means the
@@ -120,11 +121,12 @@ steps. Large sample per slot: correct answers 0.9997, 0.9991, 0.9998, 0.9993;
 control with the reference sections kept reached 83.8% answered and 1.26% wrong,
 so the gain from that stage is not an effect of the smaller bank. Leaving those
 sections out changes the scope of the answer bank (Polish slots −27%, English
-−3–5%); they remain available as sources.
+−3–5%); they remain available as sources. To keep the four slots equal, the
+English slots were then cut at their end to the same 167,854 passages.
 
 ## Natural questions on the final answer bank
 
-80 questions (40 PL, 40 EN), searched across all four slots of the final answer
+The 80 questions of question set v1 (40 PL, 40 EN), searched across all four slots of the final answer
 bank (671,416 passages), written by the project's AI coding assistant as
 paraphrases for passages sampled with a fixed seed, frozen by SHA-256 before
 any run. The

@@ -70,7 +70,9 @@ Wikipedia articles, word for word, and the questions paraphrase them:
   files and recorded answers;
 - the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
   [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
-  `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`.
+  `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`;
+- the README example card, which quotes the source passage of question 41 of question set
+  v1: `media/presentation/example-41-light.svg` and `media/presentation/example-41-dark.svg`.
 
 Wikipedia text is licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License (CC BY-SA 4.0, <https://creativecommons.org/licenses/by-sa/4.0/>).

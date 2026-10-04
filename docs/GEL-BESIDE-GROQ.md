@@ -1,4 +1,4 @@
-# GEL RAM beside three language models — 80 frozen questions
+# GEL RAM beside three language models — 80 frozen questions (question set v1)
 
 > **Private measurement.** GEL RAM ran on the separate private implementation;
 > this repository cannot run it on these questions. The recorded answers can be

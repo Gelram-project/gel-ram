@@ -47,7 +47,7 @@ The CSV's checks field counts worker scans, not independent semantic queries.
 ## A second private component — historical timing (19 September 2026)
 
 Author-reported timings of a second private component were compared with a
-reference implementation on a small and a larger input (ratios 1.07–1.73×). The
+reference implementation on a small and a larger input (ratios 1.07–1.74×). The
 implementation and raw data remain private; these figures measure a different
 task and establish no end-to-end advantage.
 
