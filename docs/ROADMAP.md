@@ -51,6 +51,12 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
+## After v0.5.2 (on `main`)
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| The project goal restated: a text AI that answers in Polish or English from its sources, or says it does not know, and holds a free conversation in both languages; still a goal, not a result | PR #45 | `tools/readme_presentation.rs`, workflow `readme-presentation` | [README](../README.md), [start here](START-HERE.md) | a public measurement of conversation in both languages |
+
 ## v0.5.2
 
 A documentation and evidence release; public file formats and third-party dependencies

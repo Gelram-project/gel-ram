@@ -5,15 +5,18 @@ project without reading the entire repository.
 
 ## In one paragraph
 
-GEL RAM is an independent Rust research project. Its goal is a speaking AI
-whose knowledge is printed into memory rather than trained into model weights,
-with a cold copy on disk so that a restart or a crash loses nothing; that goal
-is not a result of this repository. The public
+GEL RAM is an independent Rust research project. Its goal is a text AI whose
+knowledge is written into memory rather than trained into model weights: it
+answers in Polish or English from that knowledge and shows the source it used,
+or says plainly that it does not know, and it holds a free conversation in both
+languages; a copy kept on disk means a restart or a crash loses nothing that was
+saved. That goal is not a result of this repository. The public
 repository contains the reproducible subset: source provenance, integrity gates,
 Q8 numeric experiments, persistent source bundles, an offline Live Lab, the
 multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
-snapshots, and recorded 1M/10M synthetic Ocean measurements. The complete private research system is larger
-and is intentionally not described here.
+snapshots, frozen answer-or-abstain question sets in Polish and English, and
+recorded 1M/10M synthetic Ocean measurements (historical). The complete private
+research system is larger and is intentionally not described here.
 
 Fastest try, after the setup in [TRY-IT](TRY-IT.md):
 `cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`
