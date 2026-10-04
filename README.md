@@ -503,8 +503,9 @@ requires a separate signed Commercial Agreement. This README adds no rights.
 [Third-party notices](THIRD-PARTY-NOTICES.md) · [Media rights](media/RIGHTS.md)
 
 Third-party material retains its own terms, including the MIT-licensed Rust Book
-fixture. Historical grants are not rewritten. The historical proposal directory
-identified in the licensing guide is not an additional active license.
+fixture and the Wikipedia passages (CC BY-SA 4.0) quoted in the measurement sets.
+Historical grants are not rewritten. The license texts in force are pinned in
+[docs/LICENSE-PINS.md](docs/LICENSE-PINS.md).
 
 [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [CLA privacy](CLA-PRIVACY.md)
 
