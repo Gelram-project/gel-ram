@@ -1,7 +1,4 @@
-# Third-party notices for the next GEL RAM release
-
-> Inventory for the local candidate. Upstream terms continue to govern their
-> material; this document does not grant publication approval or change LICENSE.
+# Third-party notices
 
 ## 1. Boundary
 
@@ -62,6 +59,33 @@ ranges and hashes are documented in [real-source provenance](docs/REAL-SOURCE-DE
 This documentation excerpt remains MIT-licensed, independently of the active GEL
 terms. The generated GEL catalog and example code are separate project material.
 
-## 7. Project contact
+## 7. Wikipedia text (CC BY-SA 4.0)
+
+Measurement files in this repository quote passages of Polish and English
+Wikipedia articles, word for word, and the questions paraphrase them:
+
+- the answer-or-abstain sets in [docs/answer-or-abstain](docs/answer-or-abstain/README.md),
+  [v2](docs/answer-or-abstain-v2/README.md), [v3](docs/answer-or-abstain-v3/README.md) and
+  [v4](docs/answer-or-abstain-v4/README.md): question files and recorded answers;
+- the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
+  [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
+  `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`.
+
+Wikipedia text is licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License (CC BY-SA 4.0, <https://creativecommons.org/licenses/by-sa/4.0/>).
+It is not GEL RAM-owned material and is not licensed under GEL RAM NCRL 1.0: each
+quoted passage, and any adaptation of it in these files, remains under CC BY-SA 4.0,
+including the uses that license permits.
+
+- **Source and authors.** For every question passage, the question files name the
+  article title and URL, the dump (`wikipedia_pl_all_maxi_2026-05` or
+  `wikipedia_en_all_maxi_2026-02`) and the entry it was taken from. The authors are
+  the contributors listed in the history of each article at its URL.
+- **Changes.** Articles were split into sections and stored as plain text; questions
+  were written as paraphrases for measurement.
+- **Recorded answers.** A passage returned as an answer comes from the same two
+  dumps; its article title is not yet listed next to each answer.
+
+## 8. Project contact
 
 Questions about third-party notices or licensing boundaries: `gelram.licensing@gmail.com`.
