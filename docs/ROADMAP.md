@@ -6,7 +6,7 @@ private performance work are intentionally outside this document.
 
 ## Version boundary
 - The 0.5.3 version line contains everything below; tagged releases are listed on
-  the Releases page. Tagged `v0.5.2` remains the previous release; the tags `v0.5.1`,
+  the Releases page. Tagged `v0.5.3` is the current release; the tags `v0.5.2`, `v0.5.1`,
   `v0.5.0`, `v0.4.0` and `v0.3.0` remain without a release page.
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).

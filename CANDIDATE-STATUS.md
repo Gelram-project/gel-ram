@@ -10,11 +10,10 @@ Release was published on 2026-09-28 from `d15966e0de59181f01937b97a2aee0121b0f00
 `dc276102b3539c553f0a7c7cf3813433531cfde9`, and the v0.5.2 tag to
 `0ff4bcec09ca077e02f1ff6fb3b01683a89ff7b2`.
 All merges passed the required checks and were authorized by the owner. The
-owner published the v0.5.2 GitHub Release on 2026-09-30. On 2026-10-04 the owner
-removed the GitHub Releases of v0.3.0, v0.4.0, v0.5.0 and v0.5.1 from the
-Releases page; their tags remain. The version line is now 0.5.3. The owner
-publishes the v0.5.3 GitHub Release from the merge commit of this version
-cutover; the Releases page shows whether that has happened.
+version line is now 0.5.3. The owner published the v0.5.3 GitHub Release on
+2026-10-04 from `53d6979e541062e706ba2692237de1f329264a22`; it is the current
+release. On 2026-10-04 the owner removed the release pages of v0.3.0, v0.4.0,
+v0.5.0, v0.5.1 and v0.5.2; their tags remain.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
@@ -35,8 +34,8 @@ ACTIVE_PUBLIC_LICENSE=GEL-RAM-NCRL-1.0
 LICENSE_ACTIVATED=YES
 VERSION_LINE=0.5.3
 TARGET_RELEASE=0.5.3
-V0_5_3_TAGGED_RELEASE=SEE_RELEASES_PAGE
-V0_5_2_TAGGED_RELEASE=PUBLISHED
+V0_5_3_TAGGED_RELEASE=PUBLISHED
+V0_5_2_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
 V0_5_1_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
 V0_5_0_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
 V0_4_0_TAGGED_RELEASE=TAG_ONLY_RELEASE_PAGE_REMOVED
@@ -50,8 +49,7 @@ PAID_SERVICES_AUTHORIZED=NO
 
 The workspace version is 0.5.3. `RELEASE_APPROVED=BY_OWNER_PUBLICATION` means
 the release is approved by the owner's act of publishing the GitHub Release for
-tag v0.5.3; the tag exists only after that act, and until then this is the
-prepared release commit. The
+tag v0.5.3, which happened on 2026-10-04. The
 [Releases page](https://github.com/Gelram-project/gel-ram/releases) is
 authoritative for that state. The v0.4.0 release was published without the
 source archive asset its notes mention; its release page has since been
@@ -77,7 +75,7 @@ Historical R2 preparation record (its publication and platform flags predate the
 Previously published: [Live Lab](docs/LIVE-LAB.md).
 Prior results: [historical document validation](docs/PACKAGE-VALIDATION.md).
 
-`V0_3_0_TAGGED_RELEASE` and the other `_TAGGED_RELEASE` fields record the state of each release: the v0.3.0 to v0.5.1 releases were created from green public-main commits, and on 2026-10-04 their release pages were removed while their tags remain. The public `main` branch may advance after a release point through separately verified changes.
+`V0_3_0_TAGGED_RELEASE` and the other `_TAGGED_RELEASE` fields record the state of each release: the v0.3.0 to v0.5.3 releases were created from green public-main commits; on 2026-10-04 the release pages of v0.3.0 to v0.5.2 were removed while their tags remain. The public `main` branch may advance after a release point through separately verified changes.
 
 `LEGAL_APPROVED=NO` means no claim is made that independent legal counsel has certified the custom license. No new license is activated here.
 
