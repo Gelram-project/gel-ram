@@ -345,23 +345,23 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Beside two search engines and three language models, set v6: replays from recorded files.
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4",
-        "cc7bba20f09b9a40f5d6bfb48c803c6f0273c66d65fdac447bab1a9051532f46",
+        "1a1e8588736f4da0b6a9e71cafc245ef0f387c134717aeb95a0487dd9ee5f7ee",
     ),
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4",
-        "2b5fe1b3d2d31ae8bd8517508e02397ef286ac478b09d1ebea1e171c1feb34f1",
+        "c82eca1c23461b9a444140cc1e843dd4d57669e19ba28d07ac5e31899c82a6ea",
     ),
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-SUMMARY-EN.mp4",
-        "132b5d2ebb8ffd353758400caac2cb37a28e803f0dfe777b345f1abd390c2a06",
+        "6f006a67652532fdc038134c9a271de575a72ac38c7638d748d576d20e031c0e",
     ),
     (
         "media/beside-v6/all-150-answers.png",
-        "d26118b372789bebfd9e8eb2f9d5fbfff9c6bf7c351a5af9db2beba3def5a36b",
+        "21b65ac7e5b7a0db72a2fa416c1244a1ec4d950f0216c96dac5cb66be488d054",
     ),
     (
         "media/beside-v6/scoreboard-400.png",
-        "744a32f5b73a4fd255535a43db895d09c34aa68c6726440e26132f6cf1eb5602",
+        "1ba01b8a39b2672b9c3286fb1b67dd6098c79d9d3f25b93399e47d02649da014",
     ),
     (
         "docs/images/q8-four-views-en.png",

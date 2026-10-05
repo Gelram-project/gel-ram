@@ -1,4 +1,4 @@
-# 150 of those 400 shown in the film (75 Polish, 75 English), drawn the same way with seed 0x5eed_2026_1005_0150.
+# 150 of those 400 shown in the film (75 Polish, 75 English), drawn the same way, splitmix64(seed XOR question number) with seed 0x5eed_2026_1005_0150, the 75 smallest values per language.
 2
 13
 18

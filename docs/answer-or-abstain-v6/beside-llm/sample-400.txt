@@ -1,4 +1,4 @@
-# 400 question numbers of answer_or_abstain_v6 asked to the language models (200 Polish, 200 English), drawn before any request: splitmix64 of the question number with seed 0x5eed_2026_1005_0400, the 200 smallest values per language.
+# 400 question numbers of answer_or_abstain_v6 asked to the language models (200 Polish, 200 English), drawn before any request: splitmix64(seed XOR question number) with seed 0x5eed_2026_1005_0400, the 200 smallest values per language.
 2
 3
 4

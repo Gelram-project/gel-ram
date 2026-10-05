@@ -57,7 +57,7 @@ The following capabilities are present on public `main`:
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | Answer-or-abstain set v6: 990 new questions frozen before any run, used internally before (an experiment and an analysis of its errors) without changing any build or setting; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | PR #62 | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md) | questions from an independent writer; a held-out check of the next change |
-| GEL beside two search engines and three language models on 400 questions of set v6 drawn by a fixed seed, with an 11-minute film of 150 of them: the models, closed book, 97–230 wrong answers each, GEL 10, the engines 13 and 14 | PR #63 | `answer-bench score v6:with-answer` | [side by side](GEL-BESIDE-ENGINES-AND-LLMS-V6.md) | models given the bank; an independent question writer |
+| GEL beside two search engines and three language models on 400 questions of set v6 drawn by a fixed seed, with a 12-minute film of 150 of them in two parts: the models, closed book, 97–230 wrong answers each, GEL 10, the engines 13 and 14 (not different beyond chance; the engines found more, 226 and 239 correct against 160) | PR #63 | `answer-bench score v6:with-answer` | [side by side](GEL-BESIDE-ENGINES-AND-LLMS-V6.md) | models given the bank; an independent question writer |
 
 ## v0.5.3
 

@@ -25,7 +25,7 @@ No-answer control (80 questions without a correct answer):
 # GEL beside two search engines and three language models (question set v6)
 
 150 questions in two parts:
-[part 1, 5 min 29 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4) ·
+[part 1, 5 min 45 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4) ·
 [part 2, 6 min 31 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4) ·
 [summary, 1 min 28 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-SUMMARY-EN.mp4) ·
 [conditions, answers and limits](../docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)

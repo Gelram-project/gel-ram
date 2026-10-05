@@ -140,7 +140,8 @@ Three properties, each with its evidence and its limit:
   more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
   questions it answered 465: 447 correct and 18 wrong; the engines found more
   (588–616 correct) with more wrong answers (33–36). On 400 of those questions
-  the three models, closed book, gave 97–230 wrong answers each; the build gave 10.
+  the three models, closed book, gave 97–230 wrong answers each; the build, with
+  the bank, gave 10 and the engines 13 and 14.
   [Side by side](docs/GEL-BESIDE-GROQ.md) · [side by side, set v6 (film)](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
