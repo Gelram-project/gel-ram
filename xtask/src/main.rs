@@ -121,20 +121,20 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "60ed03b63cc8693372e34f6d29fe5288f622bdee2d2d00e369bebd75aec4d31a",
     ),
     (
-        "media/presentation/example-41-light.svg",
-        "43bb6a77914db4246e236cc967bab9d3cf1266f49824e08bea135c15465bfe46",
+        "media/presentation/example-light.svg",
+        "79a0ca2bc90b4d4b81b48c8e3a97d720c8fa574a19de2d780cc79754394b68aa",
     ),
     (
-        "media/presentation/example-41-dark.svg",
-        "a04a7b97344832c87b10a4228a7c4d7801b6d23252bec190c59b8efdd5d901a8",
+        "media/presentation/example-dark.svg",
+        "4adf3b7979b0971df9947f88bdbd07fff8ab6ec18426a2faaf8f09e13667da0c",
     ),
     (
         "media/presentation/answer-dots-light.svg",
-        "46e35b015a5e04486dd2279154da794634a60c69730bf62ac4b27e3449ac541e",
+        "30bc1c83f4473dce528e6fc6fccfd810480dc837e52e3f30ede3d7b0d0521839",
     ),
     (
         "media/presentation/answer-dots-dark.svg",
-        "60dde65ff2b023f595e7dcd1a3e9c96dd830f835b729a122a7c6f3c318c95d9d",
+        "e6a016eef0c77dfa27621648338a28711e4eae27d86d8148438043f8963f3212",
     ),
     (
         "media/presentation/truth-surface-light.svg",

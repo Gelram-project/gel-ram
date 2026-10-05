@@ -18,9 +18,9 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v6); the example and
-the answer grid show an earlier run on question set v1, the 80 questions also put to
-three language models. Every question is published with its expected answer
+this checkout. The cards show the newest frozen question set (v6): the first all 990
+questions; the example and the answer grid 400 of them, drawn by a fixed seed and also
+put to three language models. Every question is published with its expected answer
 and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
 [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
@@ -32,15 +32,15 @@ verify run. Free conversation has not been measured yet.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-41-dark.svg"><img alt="Private build, earlier run on question set v1, question 41 of 80: Why was the 1963 Sudbury and Woodbridge by-election held? GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give." src="media/presentation/example-41-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-dark.svg"><img alt="Private build, question set v6, question 592: Which team shared the 1917 Bombay Quadrangular cricket title with the Europeans? GEL RAM returned the stored source passage, the two search engines on the same bank were correct and correct, and the three models, closed book, gave wrong answers. Chosen by a fixed rule: the first English question of the film draw that GEL RAM answered correctly and all three models wrongly." src="media/presentation/example-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Private build, earlier run on question set v1, 80 questions, an earlier build beside three language models answering closed book. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines on the same bank, beside three language models answering closed book. GEL RAM (balanced): 160 correct, 10 wrong, 230 UNKNOWN. Tantivy (BM25): 226 correct, 13 wrong, 161 UNKNOWN. SQLite FTS5 (BM25): 239 correct, 14 wrong, 147 UNKNOWN. GPT-OSS-120B: 89 correct, 129 wrong, 182 UNKNOWN. GPT-OSS-20B: 46 correct, 230 wrong, 124 UNKNOWN. Qwen3.8-27B: 33 correct, 97 wrong, 270 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 23 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
 
-[Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
+[Full comparison](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
@@ -276,32 +276,42 @@ answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-ab
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
-### Side by side with three language models
+### Side by side with two search engines and three language models
 
-The same 80 frozen questions (question set v1) went to GEL RAM and, closed book, to three
-language models on the Groq API, in one recorded run with one scoring rule.
-GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
-models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
+400 questions of question set v6, drawn by a fixed seed before any request, went
+closed book to three language models on the Groq API in one recorded run, beside
+the recorded answers of GEL RAM and of two BM25 search engines on the same bank,
+with one scoring rule. The models could also say UNKNOWN, yet **97–230 of their
+answers were wrong**; GEL RAM gave 10 wrong answers and the engines 13 and 14,
+not different beyond chance, while the engines found more answers.
 
-| Same 80 questions | Answered | Correct | Wrong | UNKNOWN |
+| Same 400 questions | Answered | Correct | Wrong | UNKNOWN |
 |:---|---:|---:|---:|---:|
-| GEL RAM (local bank, answers with the source passage) | 11 | 11 | **0** | 69 |
-| GPT-OSS-120B (Groq API, closed book) | 31 | 10 | 21 | 49 |
-| GPT-OSS-20B (Groq API, closed book) | 36 | 8 | 28 | 44 |
-| Qwen3.8-27B (Groq API, closed book) | 17 | 6 | 11 | 63 |
+| GEL RAM, balanced (local bank, one stored passage) | 170 | 160 | 10 | 230 |
+| Tantivy BM25, threshold (same bank) | 239 | 226 | 13 | 161 |
+| SQLite FTS5 BM25, threshold (same bank) | 253 | 239 | 14 | 147 |
+| GPT-OSS-120B (Groq API, closed book) | 218 | 89 | 129 | 182 |
+| GPT-OSS-20B (Groq API, closed book) | 276 | 46 | 230 | 124 |
+| Qwen3.8-27B (Groq API, closed book) | 130 | 33 | 97 | 270 |
 
-[![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong. GPT-OSS-20B: 8 correct, 28 wrong. Qwen3.8-27B: 6 correct, 11 wrong.](media/beside-groq/all-80-answers.png)](docs/GEL-BESIDE-GROQ.md)
+At the stricter settings GEL RAM gave 112 correct and 2 wrong answers, the
+engines 156 and 1, and 159 and 2.
 
-The two sides do different jobs: GEL looks facts up in a bank it holds, the
-models answer from training. On 10 of GEL's 11 answers no model was correct; on
-12 other questions a model was correct where GEL said UNKNOWN. The visible model
-answers were two words at the median; the GPT-OSS models also generated 51 and
-154 hidden reasoning tokens per question on average. GEL returns the stored
-source passage (33 words at the median). Times are recorded, not compared: GEL
-0.25 s for all 80 locally, the models 59–371 ms per question at the median over
-the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
+[![The 150 questions of the film as one cell per system: green correct, red wrong, grey UNKNOWN.](media/beside-v6/all-150-answers.png)](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)
+
+The two sides do different jobs: GEL RAM and the engines look facts up in a bank
+they hold, and every question was written from a passage of it; the models
+answer from training. GEL RAM answered correctly 133–149 questions that a given
+model did not; each model answered correctly 22–62 that GEL RAM did not. Times
+are not compared. [All 400 answers, prompts, review and limits](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)
+· [Film of 150 questions, part 1](media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4)
+· [part 2](media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4)
+· [Try your own system on the same questions](docs/answer-or-abstain-v6/README.md)
+
+**Earlier run, question set v1.** On 80 frozen questions an earlier build
+answered 11, all correct, and said UNKNOWN to 69; the three models gave 11–28
+wrong answers each. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
 · [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
-· [Try your own system on the same questions](docs/answer-or-abstain/README.md)
 
 **No-answer control.** 80 more questions have no correct answer: 40 ask about
 invented subjects, 40 carry a false premise about an entry in the bank. GEL
