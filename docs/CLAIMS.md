@@ -30,6 +30,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-beside-bm25-v3 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v4 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v5 | comparison | MEASURED_LOCAL |
+| gel-beside-bm25-v6 | comparison | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |

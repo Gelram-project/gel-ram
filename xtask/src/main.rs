@@ -106,11 +106,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-light.svg",
-        "5fba4aa70365a8e843965b34e645969162d21ffb685b78e6f0ba01db58c9203e",
+        "c3bd49baefcddf8a08ec7590d2678622da0eca12db322007e2305976e742777c",
     ),
     (
         "media/presentation/glance-dark.svg",
-        "f655ca355fd3d789c3849945d95c572e29bad08fd40e8f8aeeeb0159118c1665",
+        "ef65f095909203da187aaa3ac06721d0ecabbe82af5a9aa54a5dd48aa6aef99d",
     ),
     (
         "media/presentation/question-path-light.svg",
@@ -138,11 +138,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "ebf1a7619210feb1d6a9f6fa10ccd4a991be98a053dc65d024910ee652048a94",
+        "7f704827e1594742ef847bf708f14c43852571bb66118589088a27309b7a0203",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "3ffafc36fb781fe5f6ba6d0acf014b8f1303f6ee9ea5c0c190e8245704c2b7e7",
+        "3257950eb31afb48460df677e92c3108fc73e54daebf29b0dc9ba4e867c9fad2",
     ),
     (
         "media/presentation/chips/01-light.svg",

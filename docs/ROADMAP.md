@@ -52,6 +52,12 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
+## After v0.5.3 (on `main`)
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Answer-or-abstain set v6: 990 new questions frozen before any run; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | PR #62 | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md) | questions from an independent writer; a held-out check of the next change |
+
 ## v0.5.3
 
 A documentation and evidence release; public file formats and third-party dependencies

@@ -187,6 +187,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-bm25-v6",
+        dimension: "comparison",
+        scope: "990 new PL/EN questions (answer_or_abstain_v6), frozen before any run and used once before for an internal experiment that changed no build or setting; the v4 build unchanged, fixed on v1 + v2; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank",
+        input: "one run per system; settings of every system chosen on v1 + v2 by one rule (precision >= 0.95 or >= 0.99); one scoring rule for all; the manual review listed",
+        expected: "GEL 465 answers, 447 correct, 18 wrong (96.1%); precise setting 313 correct, 2 wrong; engines at the same rule 588-616 correct, 33-36 wrong",
+        counterexample: "read as GEL finding more answers than BM25, as 99% precision across sets, as a released build, or as a tuned BM25 baseline",
+        source: "docs/answer-or-abstain-v6/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",

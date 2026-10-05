@@ -172,10 +172,11 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v5); the example and
+this checkout. The first card is the newest frozen question set (v6); the example and
 the answer grid show an earlier run on question set v1, the 80 questions also put to
 three language models. Every question is published with its expected answer
-and source passage: [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
+and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
+[the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
 and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
 every recorded answer, and `xtask answer-bench check` re-scores them on each
@@ -264,8 +265,10 @@ Three properties, each with its evidence and its limit:
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
   and gave more wrong answers (40–41). On 987 more frozen questions the same
   build answered 432: 416 correct and 16 wrong, and the engines again found
-  more (567–597 correct) with more wrong answers (43–47).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
+  questions it answered 465: 447 correct and 18 wrong; the engines found more
+  (588–616 correct) with more wrong answers (33–36).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -393,8 +396,9 @@ sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md)
-and 44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md).
+answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md),
+44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md) and 47% (465 of 990) on
+[question set v6](docs/answer-or-abstain-v6/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
@@ -483,7 +487,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v5 and v1 and from the claim registry, each panel naming its set, an
+frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1564,9 +1568,9 @@ struct Headline {
     precise: (usize, usize),
     strict: [(usize, usize); 2],
 }
-const HEADLINE_DIR: &str = "docs/answer-or-abstain-v5";
+const HEADLINE_DIR: &str = "docs/answer-or-abstain-v6";
 /// The question set the first card shows, as named in the README.
-const HEADLINE_SET: &str = "v5";
+const HEADLINE_SET: &str = "v6";
 impl Headline {
     fn read() -> Result<Headline> {
         let readme = fs::read_to_string(format!("{HEADLINE_DIR}/README.md"))?;
