@@ -1070,7 +1070,7 @@ fn beside_verdicts(b: &Beside) -> String {
 }
 
 /// The rows of the page's three tables: results, the language split and the pairs.
-fn beside_rows(b: &Beside) -> Vec<String> {
+fn beside_rows(b: &Beside) -> Result<Vec<String>, String> {
     let mut out = Vec::new();
     let count = |v: &[Verdict], lang: Option<&str>, x: Verdict| {
         v.iter()
@@ -1107,7 +1107,9 @@ fn beside_rows(b: &Beside) -> Vec<String> {
     };
     for (first, second, label) in BESIDE_PAIRS {
         let (Some(a), Some(c)) = (of(first), of(second)) else {
-            continue;
+            return Err(format!(
+                "unknown system in the pair {first} beside {second}"
+            ));
         };
         let only = |v: Verdict| {
             let mine = a
@@ -1128,7 +1130,7 @@ fn beside_rows(b: &Beside) -> Vec<String> {
             only(Verdict::Wrong)
         ));
     }
-    out
+    Ok(out)
 }
 
 /// Fails unless the verdict file and the page's table rows follow from the recorded answers.
@@ -1145,7 +1147,7 @@ fn check_beside(root: &Path) -> Result<(), String> {
         ));
     }
     let page = read(&root.join(BESIDE_PAGE))?;
-    for row in beside_rows(&b) {
+    for row in beside_rows(&b)? {
         if !page.lines().any(|l| l == row) {
             return Err(format!("{BESIDE_PAGE} lacks the re-scored row: {row}"));
         }
@@ -1226,7 +1228,7 @@ mod tests {
             .map(v)
             .to_vec(),
         };
-        let rows = beside_rows(&b);
+        let rows = beside_rows(&b).unwrap();
         for row in [
             "| GEL RAM, balanced | local bank, one stored passage | 2 | 1 | 1 | 1 | 50.0% (9.5–90.5%) |",
             "| GEL RAM, balanced | 1 / 0 / 0 | 0 / 1 / 1 |",

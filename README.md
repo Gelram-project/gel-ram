@@ -16,11 +16,11 @@ conversation in both languages. A copy kept on disk means a restart or a crash
 loses nothing that was saved. **This is the goal, not a result of this
 repository**: the sections below state exactly what has been checked so far.
 
-**Where the numbers below come from.** The answers counted in the cards were
+**Where the numbers below come from.** GEL RAM's answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The cards show the newest frozen question set (v6): the first all 990
-questions; the example and the answer grid 400 of them, drawn by a fixed seed and also
-put to three language models. Every question is published with its expected answer
+this checkout. The cards show the newest frozen question set (v6): the first card
+covers all 990 questions; the answer grid covers 400 of them, drawn by a fixed seed
+and also put to three language models, and the example is one of those. Every question is published with its expected answer
 and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
 [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
@@ -32,9 +32,9 @@ verify run. Free conversation has not been measured yet.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-dark.svg"><img alt="Private build, question set v6, question 592: Which team shared the 1917 Bombay Quadrangular cricket title with the Europeans? GEL RAM returned the stored source passage, the two search engines on the same bank were correct and correct, and the three models, closed book, gave wrong answers. Chosen by a fixed rule: the first English question of the film draw that GEL RAM answered correctly and all three models wrongly." src="media/presentation/example-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-dark.svg"><img alt="Private build, question set v6, question 592: Which team shared the 1917 Bombay Quadrangular cricket title with the Europeans? GEL RAM returned the stored source passage, the two search engines on the same bank were both correct, and the three models, closed book, gave wrong answers. Chosen by a stated rule: the lowest-numbered English question among the 150 in the film that GEL RAM answered correctly and all three models wrongly. 16 of the 400 questions have GEL RAM correct and all three models wrong; each model was correct on 22–62 that GEL RAM was not." src="media/presentation/example-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines on the same bank, beside three language models answering closed book. GEL RAM (balanced): 160 correct, 10 wrong, 230 UNKNOWN. Tantivy (BM25): 226 correct, 13 wrong, 161 UNKNOWN. SQLite FTS5 (BM25): 239 correct, 14 wrong, 147 UNKNOWN. GPT-OSS-120B: 89 correct, 129 wrong, 182 UNKNOWN. GPT-OSS-20B: 46 correct, 230 wrong, 124 UNKNOWN. Qwen3.8-27B: 33 correct, 97 wrong, 270 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines at their threshold settings on the same bank, beside three language models answering closed book. GEL RAM (balanced): 160 correct, 10 wrong, 230 UNKNOWN. Tantivy (BM25): 226 correct, 13 wrong, 161 UNKNOWN. SQLite FTS5 (BM25): 239 correct, 14 wrong, 147 UNKNOWN. GPT-OSS-120B: 89 correct, 129 wrong, 182 UNKNOWN. GPT-OSS-20B: 46 correct, 230 wrong, 124 UNKNOWN. Qwen3.8-27B: 33 correct, 97 wrong, 270 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 

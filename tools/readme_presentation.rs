@@ -170,11 +170,11 @@ conversation in both languages. A copy kept on disk means a restart or a crash
 loses nothing that was saved. **This is the goal, not a result of this
 repository**: the sections below state exactly what has been checked so far.
 
-**Where the numbers below come from.** The answers counted in the cards were
+**Where the numbers below come from.** GEL RAM's answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The cards show the newest frozen question set (v6): the first all 990
-questions; the example and the answer grid 400 of them, drawn by a fixed seed and also
-put to three language models. Every question is published with its expected answer
+this checkout. The cards show the newest frozen question set (v6): the first card
+covers all 990 questions; the answer grid covers 400 of them, drawn by a fixed seed
+and also put to three language models, and the example is one of those. Every question is published with its expected answer
 and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
 [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
@@ -499,7 +499,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
+frozen question set v6 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1415,20 +1415,27 @@ fn bars_picture() -> String {
 /// The drawn sample of question set v6 beside three language models, read from the verdict
 /// file that `answer-bench check` re-scores from the recorded answers on every verify run:
 /// one verdict letter per question (C correct, W wrong, U UNKNOWN, E error) for each system,
-/// and the example question chosen by a fixed rule.
+/// and the example question chosen by a stated rule.
 struct Beside {
     systems: Vec<(&'static str, Vec<u8>)>,
     /// Whether each question, in verdict-file order, is English.
     english: Vec<bool>,
+    /// The example: its row in the verdict file and its question number.
+    index: usize,
     nr: usize,
     question: String,
     passage: String,
     engines: [u8; 2],
     answers: Vec<(&'static str, String, u8)>,
+    /// Questions of the sample that GEL RAM answered correctly and all three models wrongly.
+    fits: usize,
+    /// Fewest and most questions a model answered correctly where GEL RAM did not.
+    model_only: (usize, usize),
 }
 const BESIDE_DIR: &str = "docs/answer-or-abstain-v6/beside-llm";
 const BESIDE_COUNT: usize = 400;
-/// Drawn systems: name in the grid, column of the verdict file.
+/// Drawn systems: name in the grid, column of the verdict file. The engines at their
+/// threshold settings; the first is GEL RAM, the last three the models.
 const BESIDE_SYSTEMS: [(&str, &str); 6] = [
     ("GEL RAM (balanced)", "gel-ram"),
     ("Tantivy (BM25)", "tantivy-bm25"),
@@ -1437,6 +1444,8 @@ const BESIDE_SYSTEMS: [(&str, &str); 6] = [
     ("GPT-OSS-20B", "gpt-oss-20b"),
     ("Qwen3.8-27B", "qwen3.8-27b"),
 ];
+/// The rule that picks the example card's question, as the card states it.
+const EXAMPLE_RULE: &str = "the lowest-numbered English question among the 150 in the film that GEL RAM answered correctly and all three models wrongly";
 /// Field `i` of the line of question `nr` in a tab-separated file.
 fn field(text: &str, nr: usize, i: usize) -> Result<String> {
     text.lines()
@@ -1467,60 +1476,79 @@ impl Beside {
             .filter(|l| !l.starts_with('#') && !l.is_empty())
             .map(|l| l.split('\t').collect())
             .collect();
-        if rows.len() != BESIDE_COUNT || rows.iter().any(|r| r.len() != header.len() + 1) {
-            return Err("the verdict file must hold 400 complete rows".into());
+        let lang = col("lang")?;
+        if rows.len() != BESIDE_COUNT
+            || rows.iter().any(|r| {
+                r.len() != header.len() + 1
+                    || !matches!(r[lang], "pl" | "en")
+                    || r[lang + 1..]
+                        .iter()
+                        .any(|v| !matches!(*v, "C" | "W" | "U" | "E"))
+            })
+        {
+            return Err("the verdict file must hold 400 complete rows of known letters".into());
         }
-        let mut systems = Vec::new();
+        let english: Vec<bool> = rows.iter().map(|r| r[lang] == "en").collect();
+        if english.iter().filter(|e| **e).count() * 2 != BESIDE_COUNT {
+            return Err("the grid draws 200 Polish and 200 English questions".into());
+        }
+        let numbers = rows
+            .iter()
+            .map(|r| r[0].parse::<usize>())
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        let mut systems: Vec<(&str, Vec<u8>)> = Vec::new();
         for (name, id) in BESIDE_SYSTEMS {
             let c = col(id)?;
             systems.push((name, rows.iter().map(|r| r[c].as_bytes()[0]).collect()));
         }
-        let lang = col("lang")?;
-        let english: Vec<bool> = rows.iter().map(|r| r[lang] == "en").collect();
-        let row = |nr: &str| rows.iter().position(|r| r[0] == nr);
-        // The example: the first English question of the film draw that GEL RAM answered
-        // correctly and all three models answered wrongly.
+        let verdict = |s: usize, i: usize| systems[s].1[i];
+        let beaten = |i: usize| verdict(0, i) == b'C' && (3..6).all(|s| verdict(s, i) == b'W');
+        let fits = |i: usize| english[i] && beaten(i);
         let film = fs::read_to_string(format!("{BESIDE_DIR}/film-150.txt"))?;
-        let models = ["gpt-oss-120b", "gpt-oss-20b", "qwen3.8-27b"];
-        let mut chosen = None;
-        for nr in film
+        let mut film = film
             .lines()
             .filter(|l| !l.starts_with('#') && !l.is_empty())
-        {
-            let i = row(nr).ok_or(format!("film question {nr} is not in the sample"))?;
-            let r = &rows[i];
-            if english[i]
-                && r[col("gel-ram")?] == "C"
-                && models.iter().all(|m| col(m).is_ok_and(|c| r[c] == "W"))
-            {
+            .map(str::parse::<usize>)
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        film.sort_unstable();
+        let mut chosen = None;
+        for nr in film {
+            let i = numbers
+                .iter()
+                .position(|n| *n == nr)
+                .ok_or(format!("film question {nr} is not in the sample"))?;
+            if fits(i) {
                 chosen = Some(i);
                 break;
             }
         }
-        let i = chosen.ok_or("no film question fits the example rule")?;
-        let nr: usize = rows[i][0].parse()?;
+        let index = chosen.ok_or("no film question fits the example rule")?;
+        let nr = numbers[index];
+        let model_only = (3..6)
+            .map(|s| {
+                (0..BESIDE_COUNT)
+                    .filter(|&i| verdict(s, i) == b'C' && verdict(0, i) != b'C')
+                    .count()
+            })
+            .fold((usize::MAX, 0), |(lo, hi), n| (lo.min(n), hi.max(n)));
         let questions = fs::read_to_string("docs/answer-or-abstain-v6/with-answer-questions.txt")?;
         let gel = fs::read_to_string("docs/answer-or-abstain-v6/recorded/with-answer/gel-ram.txt")?;
         let mut answers = Vec::new();
-        for (name, id) in BESIDE_SYSTEMS.iter().skip(3) {
+        for (s, (name, id)) in BESIDE_SYSTEMS.iter().enumerate().skip(3) {
             let given = fs::read_to_string(format!("{BESIDE_DIR}/recorded/{id}.txt"))?;
-            answers.push((
-                *name,
-                field(&given, nr, 1)?,
-                rows[i][col(id)?].as_bytes()[0],
-            ));
+            answers.push((*name, field(&given, nr, 1)?, verdict(s, index)));
         }
         Ok(Beside {
-            engines: [
-                rows[i][col("tantivy-bm25")?].as_bytes()[0],
-                rows[i][col("sqlite-fts5")?].as_bytes()[0],
-            ],
-            systems,
-            english,
+            engines: [verdict(1, index), verdict(2, index)],
+            fits: (0..BESIDE_COUNT).filter(|&i| beaten(i)).count(),
+            model_only,
+            index,
             nr,
             question: field(&questions, nr, 2)?,
             passage: field(&gel, nr, 1)?,
             answers,
+            english,
+            systems,
         })
     }
     /// Correct, wrong and UNKNOWN answers of one system.
@@ -1827,7 +1855,7 @@ fn example(dark: bool, r: &Beside) -> String {
     }
     b.push_str(&format!(
         r#"<text x="44" y="164" font-size="17" class="b">GEL RAM</text>{}"#,
-        pill(134, 148, b'C', t)
+        pill(134, 148, r.systems[0].1[r.index], t)
     ));
     b.push_str(r#"<text x="44" y="196" font-size="13" class="mut">returned this stored source passage:</text>"#);
     for (i, l) in wrap(&r.passage, 64, 6).iter().enumerate() {
@@ -1838,9 +1866,9 @@ fn example(dark: bool, r: &Beside) -> String {
         ));
     }
     b.push_str(&format!(
-        r#"<text x="44" y="380" font-size="13" class="mut">Two BM25 search engines, same bank:</text>{}{}"#,
-        pill(290, 364, r.engines[0], t),
-        pill(394, 364, r.engines[1], t)
+        r#"<text x="44" y="362" font-size="13" class="mut">Two BM25 search engines, same bank:</text><text x="44" y="393" font-size="14" class="b">Tantivy</text>{}<text x="240" y="393" font-size="14" class="b">SQLite FTS5</text>{}"#,
+        pill(112, 376, r.engines[0], t),
+        pill(332, 376, r.engines[1], t)
     ));
     b.push_str(r#"<text x="44" y="418" font-size="12" class="mut">Wikipedia passage (CC BY-SA 4.0) as stored in the GEL bank</text>"#);
     b.push_str(
@@ -1860,8 +1888,23 @@ fn example(dark: bool, r: &Beside) -> String {
             ));
         }
     }
-    b.push_str(r#"<text x="634" y="370" font-size="14" class="mut">All three answers are wrong by the published rule.</text><text x="634" y="394" font-size="12" class="mut">Chosen by a fixed rule: the first English question of the film draw</text><text x="634" y="412" font-size="12" class="mut">that GEL RAM answered correctly and all three models wrongly.</text>"#);
-    result_card(dark, 460, ("One question, six systems", &format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage: {} The two search engines on the same bank: {}. The three models, closed book, answered: {}. Chosen by a fixed rule: the first English question of the film draw that GEL RAM answered correctly and all three models wrongly.", r.nr, r.question, r.passage, r.engines.map(verdict_word).join(" and "), r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
+    let (lo, hi) = r.model_only;
+    b.push_str(&format!(r#"<text x="634" y="344" font-size="14" class="mut">All three answers are wrong by the published rule.</text><text x="634" y="366" font-size="12" class="mut">Stated rule: the lowest-numbered English question among the film's 150</text><text x="634" y="382" font-size="12" class="mut">that GEL RAM answered correctly and all three models wrongly.</text><text x="634" y="404" font-size="12" class="mut">{} of the 400 questions have GEL RAM correct and all three models wrong;</text><text x="634" y="420" font-size="12" class="mut">each model was correct on {lo}–{hi} that GEL RAM was not.</text>"#, r.fits));
+    result_card(
+        dark,
+        460,
+        ("One question, six systems", &example_text(r)),
+        &b,
+    )
+}
+/// The example card in words, for the card and the README alternative text.
+fn example_text(r: &Beside) -> String {
+    let (lo, hi) = r.model_only;
+    let engines = match r.engines {
+        [b'C', b'C'] => "both correct".to_string(),
+        [a, b] => format!("{} and {}", verdict_word(a), verdict_word(b)),
+    };
+    format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage: {} The two search engines on the same bank (Tantivy, SQLite FTS5): {engines}. The three models, closed book, answered: {}; all three wrong. Chosen by a stated rule: {EXAMPLE_RULE}. {} of the 400 questions have GEL RAM correct and all three models wrong; each model was correct on {lo}–{hi} that GEL RAM was not.", r.nr, r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "), r.fits)
 }
 /// A verdict letter as a word.
 fn verdict_word(v: u8) -> &'static str {
@@ -1941,7 +1984,7 @@ fn dots_text(r: &Beside) -> String {
         })
         .collect::<Vec<_>>()
         .join(". ");
-    format!("Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines on the same bank, beside three language models answering closed book. {desc}.")
+    format!("Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines at their threshold settings on the same bank, beside three language models answering closed book. {desc}.")
 }
 fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
     let t = theme(dark);
@@ -2020,7 +2063,7 @@ fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example", l, d, format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage, the two search engines on the same bank were {}, and the three models, closed book, gave wrong answers. Chosen by a fixed rule: the first English question of the film draw that GEL RAM answered correctly and all three models wrongly.", r.nr, r.question, r.engines.map(verdict_word).join(" and "))));
+    out.push(("example", l, d, format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage, the two search engines on the same bank were {}, and the three models, closed book, gave wrong answers. Chosen by a stated rule: {EXAMPLE_RULE}. {} of the 400 questions have GEL RAM correct and all three models wrong; each model was correct on {}–{} that GEL RAM was not.", r.nr, r.question, if r.engines == [b'C', b'C'] { "both correct".to_string() } else { r.engines.map(verdict_word).join(" and ") }, r.fits, r.model_only.0, r.model_only.1)));
     let (l, d) = both(&|dark| dots(dark, &r));
     out.push(("answer-dots", l, d, format!("{} Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", dots_text(&r))));
     let (l, d) = both(&|dark| surface(dark, &s, &h));
@@ -2647,10 +2690,41 @@ mod tests {
         assert_eq!(d.matches("<circle").count(), 6 * BESIDE_COUNT + 3);
         let e = example(false, &r);
         assert!(d.contains("PRIVATE BUILD · SET V6") && e.contains("PRIVATE BUILD · SET V6"));
+        let fits = |i: usize| {
+            r.english[i] && r.systems[0].1[i] == b'C' && (3..6).all(|s| r.systems[s].1[i] == b'W')
+        };
         assert!(
-            r.answers.iter().all(|a| a.2 == b'W') && r.systems[0].1.contains(&b'C'),
-            "the example follows its rule"
+            fits(r.index) && r.answers.iter().all(|a| a.2 == b'W'),
+            "the example fits its rule"
         );
+        let film: Vec<usize> = fs::read_to_string(format!("{BESIDE_DIR}/film-150.txt"))
+            .unwrap()
+            .lines()
+            .filter(|l| !l.starts_with('#') && !l.is_empty())
+            .map(|l| l.parse().unwrap())
+            .collect();
+        assert!(film.contains(&r.nr));
+        let numbers: Vec<usize> = fs::read_to_string(format!("{BESIDE_DIR}/verdicts-400.txt"))
+            .unwrap()
+            .lines()
+            .filter(|l| !l.starts_with('#') && !l.is_empty())
+            .map(|l| l.split('\t').next().unwrap().parse().unwrap())
+            .collect();
+        assert_eq!(numbers[r.index], r.nr);
+        for nr in film.iter().filter(|n| **n < r.nr) {
+            let i = numbers.iter().position(|n| n == nr).unwrap();
+            assert!(!fits(i), "no lower-numbered film question fits the rule");
+        }
+        assert_eq!(
+            r.fits,
+            (0..BESIDE_COUNT)
+                .filter(|&i| r.systems[0].1[i] == b'C' && (3..6).all(|s| r.systems[s].1[i] == b'W'))
+                .count()
+        );
+        assert!(e.contains(&format!(
+            "{} of the 400 questions have GEL RAM correct",
+            r.fits
+        )));
         assert!(e.contains(&esc(&wrap(&r.question, 50, 2)[0])));
         // The README table states the grid's counts, row by row.
         for (i, label) in [
