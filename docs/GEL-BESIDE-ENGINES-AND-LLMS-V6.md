@@ -24,7 +24,8 @@ the on-screen pacing is not execution time.
 answer from the same bank of 671,416 Wikipedia passages; the models answer from
 training, closed book. Every question was written from a passage of this bank, so
 the bank holds each answer by construction; the models were not given it. It
-shows what each does when it does not know the answer: say so, or answer anyway.
+shows what each does when it cannot find or does not know the answer: say so, or
+answer anyway.
 
 ## What was compared
 
@@ -37,8 +38,8 @@ shows what each does when it does not know the answer: say so, or answer anyway.
 - **GEL RAM**, the development build measured in sets v4 to v6, at its balanced
   setting and its precise setting. It answers with one stored passage, quoted as
   stored, or says UNKNOWN. Its answers are those recorded for set v6.
-- **Tantivy and SQLite FTS5 (BM25)** over the same bank, each at a threshold
-  setting and a strict setting, as recorded for set v6.
+- **Tantivy and SQLite FTS5 (BM25)** over the same bank, each at a threshold and a
+  strict threshold, as recorded for set v6.
 - **One rule for choosing settings**, on earlier questions: precision at least
   0.95 (GEL RAM balanced, the engines' threshold settings) or at least 0.99
   (GEL RAM precise, the engines' strict settings).
@@ -73,11 +74,11 @@ Question: {PYTANIE}
 | System | Conditions | Answered | Correct | Wrong | UNKNOWN | Correct among answered (95% Wilson) |
 |---|---|---:|---:|---:|---:|---|
 | GEL RAM, balanced | local bank, one stored passage | 170 | 160 | 10 | 230 | 94.1% (89.5–96.8%) |
-| Tantivy (BM25), threshold | same bank, same rule | 239 | 226 | 13 | 161 | 94.6% (90.9–96.8%) |
-| SQLite FTS5 (BM25), threshold | same bank, same rule | 253 | 239 | 14 | 147 | 94.5% (90.9–96.7%) |
+| Tantivy (BM25), threshold | same bank, threshold | 239 | 226 | 13 | 161 | 94.6% (90.9–96.8%) |
+| SQLite FTS5 (BM25), threshold | same bank, threshold | 253 | 239 | 14 | 147 | 94.5% (90.9–96.7%) |
 | GEL RAM, precise | the same, stricter setting | 114 | 112 | 2 | 286 | 98.2% (93.8–99.5%) |
-| Tantivy (BM25), strict | the same, stricter setting | 157 | 156 | 1 | 243 | 99.4% (96.5–99.9%) |
-| SQLite FTS5 (BM25), strict | the same, stricter setting | 161 | 159 | 2 | 239 | 98.8% (95.6–99.7%) |
+| Tantivy (BM25), strict | same bank, strict threshold | 157 | 156 | 1 | 243 | 99.4% (96.5–99.9%) |
+| SQLite FTS5 (BM25), strict | same bank, strict threshold | 161 | 159 | 2 | 239 | 98.8% (95.6–99.7%) |
 | GPT-OSS-120B | Groq API, closed book | 218 | 89 | 129 | 182 | 40.8% (34.5–47.5%) |
 | GPT-OSS-20B | Groq API, closed book | 276 | 46 | 230 | 124 | 16.7% (12.7–21.5%) |
 | Qwen3.8-27B | Groq API, closed book | 130 | 33 | 97 | 270 | 25.4% (18.7–33.5%) |
@@ -99,8 +100,9 @@ wrong).
 | GPT-OSS-20B | 25 / 118 / 57 | 21 / 112 / 67 |
 | Qwen3.8-27B | 24 / 70 / 106 | 9 / 27 / 164 |
 
-Question by question: GEL RAM at its balanced setting beside each other system,
-and at its precise setting beside the engines' strict settings. p is the
+Question by question: GEL RAM at its balanced setting beside the engines'
+threshold settings and each model, and at its precise setting beside the engines'
+strict settings. p is the
 two-sided exact sign test on the questions only one of the two answered
 correctly (or wrongly):
 
@@ -165,8 +167,9 @@ questions outside the sample and run:
 cargo run --locked --offline -p xtask -- answer-bench score v6:with-answer my-answers.txt --rules published
 ```
 
-With `--rules published`, as in the tables above, the counts printed are those of
-the sample before the review (82, 43 and 30 correct; 136, 233 and 100 wrong).
+The tables above use the published rules; with `--rules published` the counts
+printed are those of the sample before the review (82, 43 and 30 correct; 136,
+233 and 100 wrong).
 Without it the stricter default rules apply; they count one more of Qwen3.8-27B's
 answers as wrong (29 correct, 101 wrong). Source passages and expected answers
 quote Wikipedia under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/);

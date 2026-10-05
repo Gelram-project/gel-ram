@@ -345,15 +345,15 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Beside two search engines and three language models, set v6: replays from recorded files.
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4",
-        "1a1e8588736f4da0b6a9e71cafc245ef0f387c134717aeb95a0487dd9ee5f7ee",
+        "b8425496ad43817950b18b697300a31dc627a52a9fcac56bfeedb3efb3d6309f",
     ),
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4",
-        "c82eca1c23461b9a444140cc1e843dd4d57669e19ba28d07ac5e31899c82a6ea",
+        "6657e938fb5b6ed3a8db465d5a212a0b67de0262ca4d4c18bd5f1adbe2571ecf",
     ),
     (
         "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-SUMMARY-EN.mp4",
-        "6f006a67652532fdc038134c9a271de575a72ac38c7638d748d576d20e031c0e",
+        "d7eed98759fb2ead515f58dc82b72eb8731ee1c83e58bbba011476580996d087",
     ),
     (
         "media/beside-v6/all-150-answers.png",
