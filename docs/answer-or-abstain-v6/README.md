@@ -20,9 +20,8 @@ the answer of each system was recorded in one run.
 
 **Earlier internal use, stated for completeness.** After the freeze and before the runs recorded
 here, the set was used internally: in one experiment on the private implementation and in an
-analysis of that experiment's errors. In the experiment the same build ran once on every question
-without an abstention threshold, returning one passage each, and those 990 passages were reviewed
-blind by the rules used here. Neither use changed the build or any setting reported here. The
+analysis of that experiment's errors. In the experiment the same build returned one passage for every question in a
+diagnostic run, and those 990 passages were reviewed blind by the rules used here. Neither use changed the build or any setting reported here. The
 answers of GEL RAM recorded here are the same passages as in that run: 465 of 465 at the balanced
 setting. GEL RAM's results on this set were therefore known before the runs recorded here; the
 engines had not run on it.
