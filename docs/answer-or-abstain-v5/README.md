@@ -22,7 +22,8 @@ SHA-256 before any system ran on it, and each system ran once.
 passages for the next clean check were drawn and frozen privately before this set was
 published, and their questions will be frozen before any run. The identity
 above is the SHA-256 of a list of the hashes of every data file of the set; `answer-bench check`
-recomputes it.
+recomputes it. The same build at the same settings was measured again on 990 newer
+questions: [set v6](../answer-or-abstain-v6/README.md).
 
 ## Two questions fixed before the run
 

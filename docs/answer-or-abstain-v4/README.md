@@ -19,7 +19,7 @@ before any system ran on it, and each system ran once.
 **Status: public diagnostic.** Once published, these questions are no longer held out. The
 identity above is the SHA-256 of a list of the hashes of every data file of the set;
 `answer-bench check` recomputes it. The same build at the same settings was measured again on
-987 newer questions: [set v5](../answer-or-abstain-v5/README.md).
+987 newer questions: [set v5](../answer-or-abstain-v5/README.md), and on 990 more: [set v6](../answer-or-abstain-v6/README.md).
 
 ## What changed since v3
 

@@ -187,6 +187,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-bm25-v6",
+        dimension: "comparison",
+        scope: "990 new PL/EN questions (answer_or_abstain_v6), frozen before any run and used internally before (an experiment and an analysis of its errors) without changing any build or setting; the v4 build unchanged, fixed on v1 + v2; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank",
+        input: "one recorded run per system, GEL's answers equal to those of the earlier internal experiment; settings of every system chosen on v1 + v2 by one rule (precision >= 0.95 or >= 0.99); one scoring rule for all; the manual review listed",
+        expected: "GEL 465 answers, 447 correct, 18 wrong (96.1%); precise setting 313 correct, 2 wrong; engines at the same rule 588-616 correct, 33-36 wrong",
+        counterexample: "read as GEL finding more answers than BM25, as 99% precision across sets, as a released build, or as a tuned BM25 baseline",
+        source: "docs/answer-or-abstain-v6/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
@@ -319,7 +329,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "answer-bench-rescoring",
         dimension: "scoring",
-        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979 and v4 with 985 with an answer; recorded answers of four systems (v1, v2), eight (v3) and eleven (v4)",
+        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979, v4 with 985, v5 with 987 and v6 with 990 with an answer; recorded answers of four systems (v1, v2), eight (v3, v6), eleven (v4) and ten (v5)",
         input: "xtask answer-bench check re-scores every recorded answer with the published and strict rules",
         expected: "each set README, including the v3 and v4 precision and paired tables, and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
         counterexample: "re-scoring read as re-running GEL or the models",

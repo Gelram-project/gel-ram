@@ -1,4 +1,4 @@
-//! answer_or_abstain_v1 to v5 (docs/answer-or-abstain*): score any
+//! answer_or_abstain_v1 to v6 (docs/answer-or-abstain*): score any
 //! system's answers with the published rules or the stricter ones, and check
 //! that every published number is reproduced from the recorded answers.
 //!
@@ -130,7 +130,31 @@ const V5: SetDef = SetDef {
         ("gel-ram-precise", "sqlite-fts5-strict"),
     ],
 };
-const SETS: [&SetDef; 5] = [&V1, &V2, &V3, &V4, &V5];
+const V6: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v6",
+    name: "answer_or_abstain_v6",
+    parts: &[Set::WithAnswer],
+    count: 990,
+    side_by_side: false,
+    systems: &[
+        ("gel-ram", "GEL RAM"),
+        ("gel-ram-precise", "GEL RAM, precise setting"),
+        ("tantivy-bm25", "Tantivy BM25, threshold"),
+        ("tantivy-bm25-strict", "Tantivy BM25, strict threshold"),
+        ("tantivy-bm25-top1", "Tantivy BM25, always top 1"),
+        ("sqlite-fts5", "SQLite FTS5, threshold"),
+        ("sqlite-fts5-strict", "SQLite FTS5, strict threshold"),
+        ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
+    ],
+    precision: true,
+    paired: &[
+        ("gel-ram", "tantivy-bm25"),
+        ("gel-ram", "sqlite-fts5"),
+        ("gel-ram-precise", "tantivy-bm25-strict"),
+        ("gel-ram-precise", "sqlite-fts5-strict"),
+    ],
+};
+const SETS: [&SetDef; 6] = [&V1, &V2, &V3, &V4, &V5, &V6];
 const SYSTEMS: [System; 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),

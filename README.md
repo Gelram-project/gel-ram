@@ -18,16 +18,17 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v5); the example and
+this checkout. The first card is the newest frozen question set (v6); the example and
 the answer grid show an earlier run on question set v1, the 80 questions also put to
 three language models. Every question is published with its expected answer
-and source passage: [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
+and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
+[the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
 and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
 every recorded answer, and `xtask answer-bench check` re-scores them on each
 verify run. Free conversation has not been measured yet.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen question set v5: on 987 new questions (491 Polish, 496 English) GEL RAM at its balanced setting gave 416 correct answers, each with its source passage, 16 wrong and 555 UNKNOWN. Two BM25 search engines on the same bank and rule gave 567–597 correct and 43–47 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 297 correct and 1 wrong, the engines at their strict threshold 378–379 correct and 3 wrong each, so there the engines find more answers. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen question set v6: on 990 new questions (495 Polish, 495 English) GEL RAM at its balanced setting gave 447 correct answers, each with its source passage, 18 wrong and 525 UNKNOWN. Two BM25 search engines on the same bank and rule gave 588–616 correct and 33–36 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 313 correct and 2 wrong, the engines at their strict threshold 414–417 correct and 4–5 wrong, so there the engines find more answers. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
 
@@ -37,7 +38,7 @@ verify run. Free conversation has not been measured yet.
 
 Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 21 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 22 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
 
 [Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
 
@@ -136,8 +137,10 @@ Three properties, each with its evidence and its limit:
   wrong; two BM25 search engines on the same bank found more (531–558 correct)
   and gave more wrong answers (40–41). On 987 more frozen questions the same
   build answered 432: 416 correct and 16 wrong, and the engines again found
-  more (567–597 correct) with more wrong answers (43–47).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
+  questions it answered 465: 447 correct and 18 wrong; the engines found more
+  (588–616 correct) with more wrong answers (33–36).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -265,8 +268,9 @@ sampled passages and frozen before any run. Verification compares a question
 with the stored sources of its best candidates; its threshold was set on a separate
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md)
-and 44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md).
+answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md),
+44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md) and 47% (465 of 990) on
+[question set v6](docs/answer-or-abstain-v6/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
