@@ -1,0 +1,3 @@
+Answer the question from your own knowledge. The question refers to a fact stated in an English Wikipedia article. Give one short answer (at most 12 words) and no explanation. If you are not sure of the answer, reply with exactly: UNKNOWN
+
+Question: {PYTANIE}

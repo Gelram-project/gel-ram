@@ -1,0 +1,401 @@
+# openai/gpt-oss-20b through the Groq API on 2026-10-05, closed book: no passages, no tools; temperature 0, at most 4096 output tokens, reasoning effort low; one question per request, 4 s apart; prompt-en.txt or prompt-pl.txt by the question's language. nr (question number in answer_or_abstain_v6), answer exactly as returned (tabs and line breaks replaced by spaces).
+2	Polska.
+3	Maccabi Haifa.
+4	1965
+10	1992
+13	UNKNOWN
+14	Rzeszów.
+16	Malpighiales.
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+22	3,000.
+23	Princess Anna of Saxe‑Coburg and Gotha.
+24	Księga uzdrowienia to „The Book of Healing”.
+26	Paul Muller
+33	12 km.
+34	BioWare.
+36	2015
+39	auto, lambda, move semantics, smart pointers, concurrency, constexpr, nullptr, enum class.
+40	1948
+43	Atanasz
+46	Giuseppe Giannini.
+49	UNKNOWN
+53	Major General Sir John Hope.
+57	Hans Holbein the Elder.
+59	Least Concern.
+61	UNKNOWN
+62	Szwajcaria.
+65	2004
+71	polar climate zone.
+72	guitar
+73	Zbigniew Boniek.
+74	Ronnie O'Sullivan
+78	UNKNOWN
+82	UNKNOWN
+83	Klasyczna muzyka.
+84	The Elton John Show.
+92	2011
+93	UNKNOWN
+103	UNKNOWN
+110	UNKNOWN
+111	Ministerstwo Finansów (Narodowy Skarb Państwa).
+113	Algeria
+114	1795
+117	Tímea Babos
+120	Kaja Kallas.
+122	Brazil
+123	UNKNOWN
+126	UNKNOWN
+128	12
+130	UNKNOWN
+132	UNKNOWN
+138	UNKNOWN
+139	12th century.
+142	San Mamés Stadium.
+145	Burgos.
+147	UNKNOWN
+150	UNKNOWN
+151	Baku.
+155	12th place.
+156	UNKNOWN
+161	UNKNOWN
+166	UNKNOWN
+167	UNKNOWN
+168	Amun.
+171	12th place.
+174	1975
+175	The Go‑Go's
+176	Duffy.
+179	UNKNOWN
+182	UNKNOWN
+189	Infinity Ward
+191	Warszawa.
+194	UNKNOWN
+198	UNKNOWN
+199	Zingiberales
+200	Athletic Bilbao.
+201	UNKNOWN
+204	Albarello to ceramiczna, okrągła waza z wąskim szyjkiem.
+206	1988
+209	Ród Bogutów.
+212	4th place.
+218	UNKNOWN
+221	Kalisz.
+222	Dany Boon.
+225	3 km.
+226	1922
+227	UNKNOWN
+229	Bolesław I the Tall.
+234	Thomas Say.
+237	Maya Rudolph.
+238	Königsberg.
+240	Al-Mansur Qalawun.
+246	UNKNOWN
+251	RAW
+255	Radio 1.
+261	Ustawa o adwokaturze (1994).
+262	UNKNOWN
+263	UNKNOWN
+264	7
+265	UNKNOWN
+266	UNKNOWN
+267	Heinz Guderian.
+269	2
+270	Kamil Dębski.
+272	Clarence Clemons.
+273	UNKNOWN
+274	Johann Palisa.
+275	Kevin Martin.
+277	Yasushi Akimoto
+278	Algieba pochodzi z arab. al‑jibah – „jasna gwiazda”.
+279	3
+280	Jupiter.
+281	Jean‑Claude Killy.
+284	Rzymianie.
+285	UNKNOWN
+286	Tigris
+289	UNKNOWN
+293	UNKNOWN
+294	UNKNOWN
+298	Swimming.
+303	UNKNOWN
+304	Mary Tinne.
+306	UNKNOWN
+307	1974
+308	Nacer Bouhanni.
+314	UNKNOWN
+319	2005
+322	UNKNOWN
+324	Bolesław I Chrobry.
+325	1948
+330	UNKNOWN
+332	Ziemia obiecana.
+335	Park Skaryszewski.
+336	Henry Norris Russell Lectureship.
+338	Methylprednisolone
+340	TVP3.
+343	UNKNOWN
+345	Warszawa.
+350	UNKNOWN
+351	Gods and Monsters
+352	UNKNOWN
+354	Destroyer.
+357	Polish Socialist Party (PPS)
+367	Dzień Niepodległości.
+370	UNKNOWN
+371	Vienna.
+374	1629
+376	1852
+377	Gmina Łańcut.
+380	UNKNOWN
+383	BMW iX3 uses the eDrive 3.0 generation.
+389	Nikephoros Phokas.
+392	boczek
+393	3
+395	UNKNOWN
+398	3
+399	All Elite Wrestling (AEW)
+401	Łomża
+402	Frankfurt Motor Show (Frankfurt am Main)
+406	ensemble
+409	UNKNOWN
+410	400-metrowa.
+415	UNKNOWN
+420	Princeton University.
+423	Na kamieniu.
+429	Shamil Basayev.
+431	John Joseph Paul.
+432	UNKNOWN
+435	Zofia Rombowska.
+436	Sir John Le Mesurier.
+437	The Eternal Tower
+438	Ewa Kopacz.
+440	ul. 1 Maja 1
+441	Gmina Rzgów.
+442	Ivan S. Klyukin.
+443	UNKNOWN
+444	Maryland.
+446	Arborealny, diurny, żywi się owadami.
+447	Uniwersytet Warszawski.
+448	Battle of the Hellespont.
+452	Gmina Sława.
+457	UNKNOWN
+461	Michał Szpak.
+463	Senegal
+465	48th place
+468	Duszpasterstwo Akademickie Bydgoszczy.
+470	1905
+471	1
+472	FC Nordsjælland
+476	San Lorenzo in Damaso.
+477	Nike.
+481	1992
+482	1. Brygada Kawalerii.
+483	William Goldman
+484	The King's Speech.
+487	UNKNOWN
+490	Maciej Stuhr
+492	Chicago.
+493	UNKNOWN
+494	Attalus III.
+502	UNKNOWN
+505	1882
+506	Ed Emory
+507	UNKNOWN
+508	Natascha, the wife of discoverer Karl Reinmuth.
+513	Tennessee River watershed.
+518	UNKNOWN
+519	Ondřejov Observatory in the Czech Republic.
+521	Ted Theodore
+523	30 seats.
+524	UNKNOWN
+525	WPBSA.
+526	UNKNOWN
+530	Dan Gurney.
+531	AIK
+532	Mendoza.
+536	UNKNOWN
+537	Liebmann's Lager.
+539	UNKNOWN
+541	Coma Berenices.
+543	Liberal Party.
+549	UNKNOWN
+554	1.5 AU
+555	FC Lyon
+557	NBA
+560	John Henry Poynder
+567	UNKNOWN
+572	Birmingham.
+576	Johan Gustaf Sandberg.
+581	UNKNOWN
+582	Jim Rook
+585	Bournemouth & Boscombe Athletic.
+588	Podhale Nowy Targ.
+589	Conservative candidate won.
+592	Hindus
+597	6
+600	UNKNOWN
+601	12th Bersaglieri Battalion “Cacciatori”
+605	Reform and Opening‑up policy.
+610	Democrat.
+611	José María Calatrava.
+614	1 May 1897
+615	157th Fighter Group
+618	Captain John H. Smith.
+620	UNKNOWN
+621	William J. McCarthy.
+622	September 6, 1912.
+623	Croke Park, Dublin.
+624	UNKNOWN
+627	UNKNOWN
+628	UNKNOWN
+630	Cleveland Barons.
+631	Pier Paolo Pasolini
+632	1994
+633	John William Polidori
+638	1705
+639	Soviet Union.
+644	UNKNOWN
+649	Bill Spivey.
+653	CBS
+654	FC Basel.
+655	5
+656	Jim McGinty
+657	John Paul
+658	UNKNOWN
+659	Ratcliffe Stadium.
+661	Labour.
+662	UNKNOWN
+663	Ponsonby United.
+664	Liberal candidate William Henry Smith.
+666	Nitrogen source.
+670	Ramat Gan Stadium in Tel Aviv.
+671	UNKNOWN
+672	Serine palmitoyltransferase.
+675	UNKNOWN
+676	1942
+677	UNKNOWN
+682	Conservative candidate won the Coleridge ward.
+685	UNKNOWN
+687	UNKNOWN
+692	UNKNOWN
+693	Hounslow
+694	1990
+695	UNKNOWN
+696	UNKNOWN
+700	AP and UPI.
+702	UNKNOWN
+703	UNKNOWN
+705	Elective termination of pregnancy.
+706	UNKNOWN
+707	UNKNOWN
+709	The Moon of the Desert
+710	UNKNOWN
+714	About 1,200 people.
+715	Albany.
+717	UNKNOWN
+719	12
+723	UNKNOWN
+727	Rødovre IK.
+729	0
+730	UNKNOWN
+731	William A. Gaston.
+732	UNKNOWN
+734	UNKNOWN
+735	UNKNOWN
+739	UNKNOWN
+740	John W. Smith
+743	Léonard.
+745	UNKNOWN
+751	UNKNOWN
+754	April 12, 1804
+757	John J. McCaffrey
+758	1917
+760	UNKNOWN
+761	U.S. Senate.
+763	John G. Schmid
+765	UNKNOWN
+769	UNKNOWN
+770	Labour candidate won the Central ward.
+773	Patricia Coleman
+776	Hungary
+784	1
+789	UNKNOWN
+790	UNKNOWN
+791	1,000 inhabitants.
+798	Dan Issel
+800	1st Rifle Brigade.
+805	UNKNOWN
+806	UNKNOWN
+808	Baltimore Orioles
+809	St. Helens
+810	David Hobbs.
+815	Shakhter Karagandy.
+817	UNKNOWN
+821	UNKNOWN
+826	Jim McGinty (Labor)
+827	UNKNOWN
+829	1,200 feet (≈366 m).
+830	Slaughterhouse‑Five.
+834	UNKNOWN
+836	Sir William Henry Harrison
+838	First‑past‑the‑post.
+840	Cooch Behar district.
+841	John B. Connally
+846	Geelong.
+847	0
+853	Inspector John H. Smith.
+854	The Old Hand
+855	UNKNOWN
+860	UNKNOWN
+870	1855
+871	Jacques de Molay.
+872	Cornwall Royals.
+873	Tottenham Hotspur
+874	Aston Villa
+877	Peter Runggaldier
+878	May 12, 1920
+879	6 February 1804
+880	2
+881	Arthur Gore
+886	Partizan.
+887	UNKNOWN
+888	UNKNOWN
+892	UNKNOWN
+893	UNKNOWN
+896	John McDonald
+897	UNKNOWN
+905	UNKNOWN
+906	UNKNOWN
+907	Mayflower
+910	German V‑1 flying bombs.
+917	UNKNOWN
+918	Wrexham.
+919	Rolf Götz
+921	May 23, 1865.
+926	Parc des Princes.
+934	1921
+935	John J. McCarthy
+936	Romania
+941	John Newcombe and Tony Roche
+942	UNKNOWN
+944	24
+945	Solicitor.
+949	Asheville Tourists.
+951	UNKNOWN
+952	Jesse.
+958	20 seats.
+959	UNKNOWN
+962	UNKNOWN
+970	8
+971	Iowa Stadium.
+973	Dual Contracts.
+975	Giovanni Gonnessi.
+978	UNKNOWN
+980	The Demon.
+981	1906
+982	Lou Gramm.
+983	15 March 1585
+984	1968.
+990	UNKNOWN
