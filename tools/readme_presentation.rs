@@ -1686,7 +1686,10 @@ fn glance(dark: bool, h: &Headline) -> String {
             h.wrong.to_string(),
             t.ink,
             "wrong among answered",
-            format!("precision {precision:.1}% · Wilson ≥ {:.1}%", (1000.0 * low).floor() / 10.0),
+            format!(
+                "precision {precision:.1}% · Wilson ≥ {:.1}%",
+                (1000.0 * low).floor() / 10.0
+            ),
         ),
         (
             h.unknown.to_string(),
@@ -2554,7 +2557,10 @@ mod tests {
         assert_eq!(both(379, 378, 3, 3), "378–379 correct and 3 wrong each");
         let repeated = g
             .split(|c: char| !(c.is_ascii_digit() || c == '–'))
-            .any(|t| t.split_once('–').is_some_and(|(x, y)| !x.is_empty() && x == y));
+            .any(|t| {
+                t.split_once('–')
+                    .is_some_and(|(x, y)| !x.is_empty() && x == y)
+            });
         assert!(!repeated, "a range never repeats one number");
         assert!(g.contains("At the precise setting") && g.contains("so there the engines"));
         assert!(
