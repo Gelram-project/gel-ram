@@ -56,7 +56,7 @@ The following capabilities are present on public `main`:
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
-| Answer-or-abstain set v6: 990 new questions frozen before any run; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | PR #62 | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md) | questions from an independent writer; a held-out check of the next change |
+| Answer-or-abstain set v6: 990 new questions frozen before any run, used internally before (an experiment and an analysis of its errors) without changing any build or setting; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | PR #62 | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md) | questions from an independent writer; a held-out check of the next change |
 
 ## v0.5.3
 

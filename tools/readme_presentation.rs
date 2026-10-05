@@ -1686,7 +1686,7 @@ fn glance(dark: bool, h: &Headline) -> String {
             h.wrong.to_string(),
             t.ink,
             "wrong among answered",
-            format!("precision {precision:.1}% · Wilson ≥ {:.1}%", 100.0 * low),
+            format!("precision {precision:.1}% · Wilson ≥ {:.1}%", (1000.0 * low).floor() / 10.0),
         ),
         (
             h.unknown.to_string(),
@@ -1696,7 +1696,7 @@ fn glance(dark: bool, h: &Headline) -> String {
         ),
     ];
     let mut body = format!(
-        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RUN</text>"#,
+        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RECORDED RUN</text>"#,
         HEADLINE_SET.to_uppercase(),
         h.questions,
         h.pl,
@@ -2552,7 +2552,10 @@ mod tests {
         assert!(g.contains(&format!(">{}<", span(a, b))));
         assert_eq!(span(3, 3), "3");
         assert_eq!(both(379, 378, 3, 3), "378–379 correct and 3 wrong each");
-        assert!(!g.contains("3–3"));
+        let repeated = g
+            .split(|c: char| !(c.is_ascii_digit() || c == '–'))
+            .any(|t| t.split_once('–').is_some_and(|(x, y)| !x.is_empty() && x == y));
+        assert!(!repeated, "a range never repeats one number");
         assert!(g.contains("At the precise setting") && g.contains("so there the engines"));
         assert!(
             !g.contains("read-back"),

@@ -1,6 +1,6 @@
 # Answer-or-abstain set v6
 
-`answer_or_abstain_v6` · SHA-256 `1efb3453d12ed525bc4323deec7eb49e1b73eea9b768f26d3a08bcb057819d89`
+`answer_or_abstain_v6` · SHA-256 `6bf1c962289e1afe3d553812e1bfadebc52baf9a10d193b73f5bf2ebf615bbfe`
 
 990 new questions (495 Polish, 495 English), each about a fact stated in one Wikipedia passage of
 the GEL bank, and the answers of:
@@ -13,24 +13,30 @@ the GEL bank, and the answers of:
 All answers were recorded on 2026-10-04. Every system answers with one stored passage or with
 `UNKNOWN`.
 
-**This set is held out for every system it measures.** The build and every setting were fixed on
-v1 + v2 before this set was drawn and written. The passages were drawn and frozen privately
+**No system and no setting was chosen or tuned on this set.** The build and every setting were
+fixed on v1 + v2 before this set was drawn and written. The passages were drawn and frozen privately
 before v5 was published, the questions were frozen by SHA-256 before any system ran on them, and
-each system ran once.
+the answer of each system was recorded in one run.
 
-**One earlier internal use, stated for completeness.** After the freeze and before the runs
-recorded here, the set was used once for an internal experiment on the private implementation.
-That experiment changed neither the build nor any setting reported here. The answers of GEL RAM
-recorded here are the same passages as in that run: 465 of 465 at the balanced setting.
+**Earlier internal use, stated for completeness.** After the freeze and before the runs recorded
+here, the set was used internally: in one experiment on the private implementation and in an
+analysis of that experiment's errors. In the experiment the same build ran once on every question
+without an abstention threshold, returning one passage each, and those 990 passages were reviewed
+blind by the rules used here. Neither use changed the build or any setting reported here. The
+answers of GEL RAM recorded here are the same passages as in that run: 465 of 465 at the balanced
+setting. GEL RAM's results on this set were therefore known before the runs recorded here; the
+engines had not run on it.
 
 **Status: public diagnostic.** Once published, these questions are no longer held out. Later
 checks use passages that were drawn and frozen privately before this set was published. The
 identity above is the SHA-256 of a list of the hashes of every data file of the set;
 `answer-bench check` recomputes it.
 
-## The question fixed before the run
+## The question
 
 **Does the result of v4 and v5 hold on a third new set?** The same build at the same settings.
+The question was set after the internal experiment, so it is not a prediction made in advance for
+GEL RAM; the settings it is measured with were fixed on v1 + v2.
 
 ## How the runs were made
 
@@ -61,12 +67,12 @@ best possible result.
   writer saw its passages and their article titles, and no system's answers.
 - **Passages without an honest question:** 10 were marked unaskable with a reason before any
   run: navigation bars or image captions without a fact, a repeated article title, a list of
-  references, a pair of coordinates, and tables run together without separators. That leaves
-  990 questions.
+  references, a pair of coordinates, an introduction saying only that the article is a list, and
+  tables run together without separators. That leaves 990 questions.
 - **Fixes before the freeze:** one. A writer proposed marking a table run together without
   separators as unaskable instead of the substitute question it had written; this was accepted.
   While the set was assembled, the text of two questions was shown on a check screen; no rule or
-  setting was changed afterwards.
+  setting of the systems reported here was changed afterwards.
 
 ## Files
 
@@ -111,14 +117,14 @@ two-sided exact sign test (McNemar's exact test) on those questions.
 | Tantivy BM25, threshold | strict | 621 | 587 (591) | 34 (30) | 369 | 0 |
 | Tantivy BM25, strict threshold | published | 418 | 414 | 4 | 572 | 0 |
 | Tantivy BM25, strict threshold | strict | 418 | 413 | 5 | 572 | 0 |
-| Tantivy BM25, always top 1 | published | 990 | 799 (818) | 191 (172) | 0 | 0 |
-| Tantivy BM25, always top 1 | strict | 990 | 798 (817) | 192 (173) | 0 | 0 |
+| Tantivy BM25, always top 1 | published | 990 | 798 (818) | 192 (172) | 0 | 0 |
+| Tantivy BM25, always top 1 | strict | 990 | 797 (817) | 193 (173) | 0 | 0 |
 | SQLite FTS5, threshold | published | 652 | 616 (620) | 36 (32) | 338 | 0 |
 | SQLite FTS5, threshold | strict | 652 | 615 (619) | 37 (33) | 338 | 0 |
 | SQLite FTS5, strict threshold | published | 422 | 417 (418) | 5 (4) | 568 | 0 |
 | SQLite FTS5, strict threshold | strict | 422 | 416 (417) | 6 (5) | 568 | 0 |
-| SQLite FTS5, always top 1 | published | 990 | 806 (826) | 184 (164) | 0 | 0 |
-| SQLite FTS5, always top 1 | strict | 990 | 805 (825) | 185 (165) | 0 | 0 |
+| SQLite FTS5, always top 1 | published | 990 | 805 (826) | 185 (164) | 0 | 0 |
+| SQLite FTS5, always top 1 | strict | 990 | 804 (825) | 186 (165) | 0 | 0 |
 
 | Published rules, after the review | Precision (95% Wilson) | Wrong among all questions (95% Wilson) | Polish: correct / answered | English: correct / answered |
 |---|---|---|---:|---:|
@@ -126,10 +132,10 @@ two-sided exact sign test (McNemar's exact test) on those questions.
 | GEL RAM, precise setting | 99.4% (97.7–99.8%) | 0.2% (0.1–0.7%) | 188 / 190 | 125 / 125 |
 | Tantivy BM25, threshold | 94.7% (92.6–96.2%) | 3.3% (2.4–4.6%) | 328 / 351 | 260 / 270 |
 | Tantivy BM25, strict threshold | 99.0% (97.6–99.6%) | 0.4% (0.2–1.0%) | 260 / 264 | 154 / 154 |
-| Tantivy BM25, always top 1 | 80.7% (78.1–83.0%) | 19.3% (17.0–21.9%) | 383 / 495 | 416 / 495 |
+| Tantivy BM25, always top 1 | 80.6% (78.0–82.9%) | 19.4% (17.1–22.0%) | 382 / 495 | 416 / 495 |
 | SQLite FTS5, threshold | 94.5% (92.5–96.0%) | 3.6% (2.6–5.0%) | 337 / 363 | 279 / 289 |
 | SQLite FTS5, strict threshold | 98.8% (97.3–99.5%) | 0.5% (0.2–1.2%) | 261 / 266 | 156 / 156 |
-| SQLite FTS5, always top 1 | 81.4% (78.9–83.7%) | 18.6% (16.3–21.1%) | 388 / 495 | 418 / 495 |
+| SQLite FTS5, always top 1 | 81.3% (78.8–83.6%) | 18.7% (16.4–21.2%) | 387 / 495 | 418 / 495 |
 
 | The same questions: first beside second | Correct only in the first / only in the second | Wrong only in the first / only in the second |
 |---|---:|---:|
@@ -152,8 +158,8 @@ published ones; the strict rules count one more answer as wrong for each engine 
   - question by question, the engines answered correctly 190 and 211 questions that GEL RAM did
     not, and GEL RAM 49 and 42 that they did not (p < 0.001): **the engines find more answers**;
   - the engines answered wrongly 26 and 28 questions where GEL RAM did not, and GEL RAM 11 and
-    10 where they did not (p = 0.020 and p = 0.005): **GEL RAM gives fewer than half as many
-    wrong answers**.
+    10 where they did not (p = 0.020 and p = 0.005): **GEL RAM gives fewer wrong answers**,
+    18 against 33 and 36 in all, about half as many.
 - **At the precise setting GEL RAM gave 313 correct and 2 wrong answers**, a precision of 99.4%
   (97.7–99.8%). On v4 the same setting gave 97.2% and on v5 99.7%, so the three sets together do
   not establish a precision of 0.99.
@@ -161,12 +167,20 @@ published ones; the strict rules count one more answer as wrong for each engine 
   - They found more answers (p < 0.001); the wrong answers, 1 against 3 and 1 against 4, do not
     differ beyond chance (p = 0.625 and p = 0.375).
 - **The review covered every answered pair of the recorded runs, 1,053 distinct pairs.**
-  - 700 pairs had already been reviewed blind, by the same rules, in the internal experiment;
-    their verdicts were kept, which changed 4 of them.
-  - The other 353 pairs were reviewed blind in five separate parts. 18 changes were proposed and
-    each was checked against its row; all 18 were accepted (17 to WRONG, 1 to CORRECT).
-  - The 53 lines of [review.txt](recorded/with-answer/review.txt) apply these 22 changes to the
+  - 700 pairs had already been reviewed blind, by the same rules, in the internal experiment (its
+    990 passages include answers the engines also returned); their verdicts were kept; 4 of them
+    differ from the automatic score.
+  - The other 353 pairs, all of them answers of the engines, were first reviewed in five parts
+    whose files named the engine run of each pair; the reviewers were told to ignore it, but that
+    pass was not blind. They were then reviewed again blind, in five parts split differently. The
+    blind pass proposed the same 18 changes and one more, at a top-1 run only; each was checked
+    against its row and all 19 were accepted (18 to WRONG, 1 to CORRECT). The published verdicts
+    are those of the blind pass.
+  - The 55 lines of [review.txt](recorded/with-answer/review.txt) apply these 23 changes to the
     published runs.
+  - Before the review, the questions only one of the pair answered wrongly were 12 against 24
+    beside Tantivy (p = 0.065) and 11 against 26 beside SQLite FTS5 (p = 0.020): the difference
+    beside Tantivy reaches significance only with the review.
   - At the balanced setting 1 of GEL RAM's answers was changed to WRONG; none at the precise
     setting.
 
@@ -180,11 +194,13 @@ Times were not measured on this set.
 - **What can be re-run:** GEL's answers come from a development build of the separate private
   implementation, which is not part of a release. Nothing here can be re-run from this checkout,
   because the bank of 671,416 passages is not published.
-- **The earlier internal use:** described above; it changed no build or setting reported here.
+- **The earlier internal use:** described above; it changed no build or setting reported here, but
+  GEL RAM's results on this set were known before the recorded runs.
 - **The questions** ask about randomly drawn passages, so many concern narrow facts. They test
   answering from the bank, not general knowledge or conversation.
 - **The engines:** they ran with default settings, and a tuned setup may do better.
-- **One run:** each system ran once on this set.
+- **One recorded run:** the answers of each system were recorded in one run on this set; the GEL
+  build had run once before on it, in the internal experiment described above.
 - **Text, not truth:** the scorer checks text. A returned passage is long and may contain an
   accepted spelling by chance; the review found such pairs and may have missed others.
 

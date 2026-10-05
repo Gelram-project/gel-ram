@@ -106,11 +106,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-light.svg",
-        "c3bd49baefcddf8a08ec7590d2678622da0eca12db322007e2305976e742777c",
+        "3c50be7dcf0f1b18b2cd7123e8de2c662fdb5ca74d82dac1b71f6dcd6697221f",
     ),
     (
         "media/presentation/glance-dark.svg",
-        "ef65f095909203da187aaa3ac06721d0ecabbe82af5a9aa54a5dd48aa6aef99d",
+        "93502d531817391880d106d473ce3c6b071472b08dc72a2bef656aa22e100d6d",
     ),
     (
         "media/presentation/question-path-light.svg",
