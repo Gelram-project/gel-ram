@@ -1,4 +1,4 @@
-//! answer_or_abstain_v1 to v6 (docs/answer-or-abstain*): score any
+//! answer_or_abstain_v1 to v7 (docs/answer-or-abstain*): score any
 //! system's answers with the published rules or the stricter ones, and check
 //! that every published number is reproduced from the recorded answers.
 //!
@@ -176,7 +176,42 @@ const V6: SetDef = SetDef {
         ("gel-ram-precise", "sqlite-fts5-strict"),
     ],
 };
-const SETS: [&SetDef; 6] = [&V1, &V2, &V3, &V4, &V5, &V6];
+const V7: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v7",
+    name: "answer_or_abstain_v7",
+    parts: &[Set::WithAnswer, Set::NoAnswer],
+    count: 982,
+    no_answer: NoAnswerPart {
+        count: 599,
+        kinds: &[Kind::Absent, Kind::Invented],
+    },
+    side_by_side: false,
+    systems: &[
+        ("gel-ram", "GEL RAM"),
+        ("gel-ram-precise", "GEL RAM, precise setting"),
+        ("gel-ram-candidate", "GEL RAM, candidate change"),
+        (
+            "gel-ram-candidate-precise",
+            "GEL RAM, candidate change, precise setting",
+        ),
+        ("tantivy-bm25", "Tantivy BM25, threshold"),
+        ("tantivy-bm25-strict", "Tantivy BM25, strict threshold"),
+        ("tantivy-bm25-top1", "Tantivy BM25, always top 1"),
+        ("sqlite-fts5", "SQLite FTS5, threshold"),
+        ("sqlite-fts5-strict", "SQLite FTS5, strict threshold"),
+        ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
+    ],
+    precision: true,
+    paired: &[
+        ("gel-ram-candidate", "gel-ram"),
+        ("gel-ram-candidate-precise", "gel-ram-precise"),
+        ("gel-ram", "tantivy-bm25-strict"),
+        ("gel-ram", "sqlite-fts5-strict"),
+        ("gel-ram-precise", "tantivy-bm25-strict"),
+        ("gel-ram-precise", "sqlite-fts5-strict"),
+    ],
+};
+const SETS: [&SetDef; 7] = [&V1, &V2, &V3, &V4, &V5, &V6, &V7];
 const SYSTEMS: [System; 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),
@@ -747,6 +782,9 @@ fn render(def: &SetDef, results: &Results) -> String {
     }
     if def.precision {
         s.push_str(&precision_table(def, results));
+        if def.parts.len() == 2 {
+            s.push_str(&all_questions_table(def, results));
+        }
     }
     if !def.paired.is_empty() {
         s.push_str(&paired_table(def, results));
@@ -773,6 +811,43 @@ fn precision_table(def: &SetDef, results: &Results) -> String {
             display(def, r.system),
             share(t[0], t[0] + t[1]),
             share(t[1], t.iter().sum())
+        );
+    }
+    s
+}
+
+/// Both parts together (published rules, after the review): correct answers, wrong answers (a
+/// wrong answer to a question with one, any answer to a question without one) and UNKNOWN,
+/// and correct / wrong for each language.
+fn all_questions_table(def: &SetDef, results: &Results) -> String {
+    let n = def.count + def.no_answer.count;
+    let mut s = format!("\n| All {n} questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |\n|---|---:|---:|---:|---:|---:|\n");
+    let anyway = |t: &Totals| t.0[4] + t.0[5] + t.0[8];
+    for &(system, _) in def.systems {
+        let part = |set: Set| {
+            results
+                .iter()
+                .find(|r| r.set == set && r.rules == Rules::Published && r.system == system)
+        };
+        let (Some(w), Some(b)) = (part(Set::WithAnswer), part(Set::NoAnswer)) else {
+            continue;
+        };
+        let lang = |i: usize| {
+            let (a, c) = (&w.by_lang[i], &b.by_lang[i]);
+            format!("{} / {}", a.0[0], a.0[1] + anyway(c))
+        };
+        let (tw, tb) = (&w.reviewed, &b.reviewed);
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} + {} = {} | {} | {} | {} |",
+            display(def, system),
+            tw.0[0],
+            tw.0[1],
+            anyway(tb),
+            tw.0[1] + anyway(tb),
+            tw.0[2] + tb.0[2],
+            lang(0),
+            lang(1)
         );
     }
     s

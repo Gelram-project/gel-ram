@@ -29,7 +29,8 @@ engines had not run on it.
 **Status: public diagnostic.** Once published, these questions are no longer held out. Later
 checks use passages that were drawn and frozen privately before this set was published. The
 identity above is the SHA-256 of a list of the hashes of every data file of the set;
-`answer-bench check` recomputes it.
+`answer-bench check` recomputes it. The next set, [set v7](../answer-or-abstain-v7/README.md),
+did not keep that order: its passages were drawn by a fixed seed after this set was published.
 
 ## The question
 

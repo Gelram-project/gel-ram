@@ -197,6 +197,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "gel-beside-bm25-v7",
+        dimension: "comparison",
+        scope: "982 new PL/EN questions with an answer and 599 without one in the bank (399 about real topics outside it, 200 about invented subjects) (answer_or_abstain_v7), frozen before any run and not used before; the v4 build unchanged, fixed on v1 + v2, and one candidate change fixed before the draw; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank",
+        input: "one run per system; settings of the build and the engines chosen on v1 + v2 by one rule (precision >= 0.95 or >= 0.99), the candidate's threshold set without any question; one scoring rule for all; the blind manual review listed",
+        expected: "GEL 425 answers, 413 correct, 12 wrong (97.2%) and 26 answers to the 599 questions without one; precise setting 291 correct, 3 wrong, 3 answers without one; engines at the strict threshold 380-384 correct with 34-38 wrong in all; the candidate change 245 correct, 11 wrong in all, rolled back",
+        counterexample: "read as GEL finding more answers than BM25 at the same rule, as 99% precision across sets, as proof that a topic is absent from the bank, as a released build, or as a tuned BM25 baseline",
+        source: "docs/answer-or-abstain-v7/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",
@@ -329,7 +339,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "answer-bench-rescoring",
         dimension: "scoring",
-        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979, v4 with 985, v5 with 987 and v6 with 990 with an answer; recorded answers of four systems (v1, v2), eight (v3, v6), eleven (v4) and ten (v5)",
+        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979, v4 with 985, v5 with 987, v6 with 990 with an answer, and v7 with 982 with an answer and 599 without; recorded answers of four systems (v1, v2), eight (v3, v6), eleven (v4) and ten (v5, v7)",
         input: "xtask answer-bench check re-scores every recorded answer with the published and strict rules",
         expected: "each set README, including the v3 and v4 precision and paired tables, and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
         counterexample: "re-scoring read as re-running GEL or the models",

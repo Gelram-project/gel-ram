@@ -172,10 +172,12 @@ repository**: the sections below state exactly what has been checked so far.
 
 **Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v6); the example and
+this checkout. The first card is the newest frozen question set (v7); the example and
 the answer grid show an earlier run on question set v1, the 80 questions also put to
 three language models. Every question is published with its expected answer
-and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
+and source passage: [the 982 of question set v7](docs/answer-or-abstain-v7/with-answer-questions.txt)
+and its [599 questions whose answer is not in the bank](docs/answer-or-abstain-v7/no-answer-questions.txt),
+[the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
 [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
 and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
@@ -267,8 +269,13 @@ Three properties, each with its evidence and its limit:
   build answered 432: 416 correct and 16 wrong, and the engines again found
   more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
   questions it answered 465: 447 correct and 18 wrong; the engines found more
-  (588–616 correct) with more wrong answers (33–36).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  (588–616 correct) with more wrong answers (33–36). On 982 more frozen questions
+  it answered 425: 413 correct and 12 wrong; of 599 further questions whose answer
+  is not in the bank, 399 about real topics outside it and 200 about invented
+  subjects, it answered 26 and said UNKNOWN to 573. The engines at their strict
+  threshold, with about as many wrong answers in all (34–38 against 38), gave
+  380–384 correct answers.
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [question set v7](docs/answer-or-abstain-v7/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -397,8 +404,9 @@ with the stored sources of its best candidates; its threshold was set on a separ
 calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
 not a precision claim. Answering natural questions remains the open problem: 14%
 answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md),
-44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md) and 47% (465 of 990) on
-[question set v6](docs/answer-or-abstain-v6/README.md).
+44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md), 47% (465 of 990) on
+[question set v6](docs/answer-or-abstain-v6/README.md) and 43% (425 of 982) on
+[question set v7](docs/answer-or-abstain-v7/README.md).
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
@@ -487,7 +495,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
+frozen question sets v7 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1567,10 +1575,13 @@ struct Headline {
     /// (correct, wrong) of GEL RAM at its precise setting and of both engines at their strict threshold.
     precise: (usize, usize),
     strict: [(usize, usize); 2],
+    /// Questions without an answer in the bank, when the set has them: their number, the
+    /// answers GEL RAM gave anyway at its balanced setting, and its UNKNOWN.
+    no_answer: Option<(usize, usize, usize)>,
 }
-const HEADLINE_DIR: &str = "docs/answer-or-abstain-v6";
+const HEADLINE_DIR: &str = "docs/answer-or-abstain-v7";
 /// The question set the first card shows, as named in the README.
-const HEADLINE_SET: &str = "v6";
+const HEADLINE_SET: &str = "v7";
 impl Headline {
     fn read() -> Result<Headline> {
         let readme = fs::read_to_string(format!("{HEADLINE_DIR}/README.md"))?;
@@ -1623,6 +1634,32 @@ impl Headline {
         if !more_and_worse || !strict_more {
             return Err("the comparison stated on the first card no longer holds".into());
         }
+        // The second "GEL RAM | published" row is the part without an answer, when there is one:
+        // answers given anyway (one count per kind, separated by "/"), then UNKNOWN.
+        let no_answer = match readme
+            .lines()
+            .filter(|l| l.starts_with("| GEL RAM | published |"))
+            .nth(1)
+        {
+            None => None,
+            Some(line) => {
+                let cells: Vec<&str> = line.split('|').map(str::trim).collect();
+                let anyway = cells[3]
+                    .split('/')
+                    .map(|n| n.trim().parse::<usize>())
+                    .sum::<std::result::Result<usize, _>>()?;
+                let unknown: usize = cells[4].parse()?;
+                let text = fs::read_to_string(format!("{HEADLINE_DIR}/no-answer-questions.txt"))?;
+                let n = text
+                    .lines()
+                    .filter(|l| !l.starts_with('#') && !l.is_empty())
+                    .count();
+                if anyway + unknown > n {
+                    return Err("no-answer numbers do not add up".into());
+                }
+                Some((n, anyway, unknown))
+            }
+        };
         Ok(Headline {
             questions: pl + en,
             pl,
@@ -1634,6 +1671,7 @@ impl Headline {
             engines: [(t[1], t[2]), (f[1], f[2])],
             precise: (p[1], p[2]),
             strict: [(ts[1], ts[2]), (fs_[1], fs_[2])],
+            no_answer,
         })
     }
     fn engines(&self) -> String {
@@ -1669,7 +1707,11 @@ fn glance_text(h: &Headline) -> String {
     } else {
         "so there the engines find more answers"
     };
-    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {}, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, both(a, b, x, y))
+    let without = match h.no_answer {
+        None => String::new(),
+        Some((n, anyway, unknown)) => format!(" On {n} more questions whose answer is not in the bank it answered {anyway} and said UNKNOWN to {unknown}."),
+    };
+    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions with an answer ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN.{without} Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {}, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, both(a, b, x, y))
 }
 fn glance(dark: bool, h: &Headline) -> String {
     let t = theme(dark);
@@ -1699,11 +1741,9 @@ fn glance(dark: bool, h: &Headline) -> String {
         ),
     ];
     let mut body = format!(
-        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RECORDED RUN</text>"#,
+        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS WITH AN ANSWER · ONE RUN</text>"#,
         HEADLINE_SET.to_uppercase(),
-        h.questions,
-        h.pl,
-        h.en
+        h.questions
     );
     for (i, (big, colour, label, note)) in cols.iter().enumerate() {
         let x = 40 + i * 285;
@@ -2553,6 +2593,12 @@ mod tests {
         )));
         let [(a, _), (b, _)] = h.engines;
         assert!(g.contains(&format!(">{}<", span(a, b))));
+        // A set with a part without an answer: its counts come from the second results row.
+        let (n, anyway, unknown) = h.no_answer.unwrap();
+        assert!(anyway + unknown <= n);
+        assert!(glance_text(&h).contains(&format!(
+            "On {n} more questions whose answer is not in the bank it answered {anyway} and said UNKNOWN to {unknown}."
+        )));
         assert_eq!(span(3, 3), "3");
         assert_eq!(both(379, 378, 3, 3), "378–379 correct and 3 wrong each");
         let repeated = g
