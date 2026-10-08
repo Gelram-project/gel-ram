@@ -1,3 +1,0 @@
-Odpowiedz na pytanie na podstawie własnej wiedzy. Pytanie dotyczy faktu z artykułu polskiej Wikipedii. Podaj jedną krótką odpowiedź (najwyżej 12 słów), bez wyjaśnień. Jeśli nie masz pewności co do odpowiedzi, odpowiedz dokładnie: UNKNOWN
-
-Pytanie: {PYTANIE}

@@ -873,7 +873,6 @@ pub fn check(root: &Path) -> Result<(), String> {
         }
         println!("ANSWER_BENCH_SET={} sha256={identity}", def.name);
     }
-    check_beside(root)?;
     println!("ANSWER_BENCH=PASS recorded answers reproduce the published tables");
     Ok(())
 }
@@ -903,260 +902,7 @@ fn find_part(spec: &str) -> Result<(&'static SetDef, Set), String> {
     Ok((def, set))
 }
 
-/// The drawn sample of v6 put to three language models: docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md.
-const BESIDE_DIR: &str = "docs/answer-or-abstain-v6/beside-llm";
-const BESIDE_PAGE: &str = "docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md";
-const BESIDE_COUNT: usize = 400;
-/// Systems of the sample in table order: id, name on the page, conditions. The first six are
-/// re-scored v6 recordings; the last three are the models' answers in the sample folder.
-const BESIDE_SYSTEMS: [(&str, &str, &str); 9] = [
-    (
-        "gel-ram",
-        "GEL RAM, balanced",
-        "local bank, one stored passage",
-    ),
-    (
-        "tantivy-bm25",
-        "Tantivy (BM25), threshold",
-        "same bank, threshold",
-    ),
-    (
-        "sqlite-fts5",
-        "SQLite FTS5 (BM25), threshold",
-        "same bank, threshold",
-    ),
-    (
-        "gel-ram-precise",
-        "GEL RAM, precise",
-        "the same, stricter setting",
-    ),
-    (
-        "tantivy-bm25-strict",
-        "Tantivy (BM25), strict",
-        "same bank, strict threshold",
-    ),
-    (
-        "sqlite-fts5-strict",
-        "SQLite FTS5 (BM25), strict",
-        "same bank, strict threshold",
-    ),
-    ("gpt-oss-120b", "GPT-OSS-120B", "Groq API, closed book"),
-    ("gpt-oss-20b", "GPT-OSS-20B", "Groq API, closed book"),
-    ("qwen3.8-27b", "Qwen3.8-27B", "Groq API, closed book"),
-];
-/// Pairs compared question by question on the page: first, second, row label.
-const BESIDE_PAIRS: [(&str, &str, &str); 7] = [
-    (
-        "gel-ram",
-        "tantivy-bm25",
-        "balanced / Tantivy (BM25), threshold",
-    ),
-    (
-        "gel-ram",
-        "sqlite-fts5",
-        "balanced / SQLite FTS5 (BM25), threshold",
-    ),
-    (
-        "gel-ram-precise",
-        "tantivy-bm25-strict",
-        "precise / Tantivy (BM25), strict",
-    ),
-    (
-        "gel-ram-precise",
-        "sqlite-fts5-strict",
-        "precise / SQLite FTS5 (BM25), strict",
-    ),
-    ("gel-ram", "gpt-oss-120b", "balanced / GPT-OSS-120B"),
-    ("gel-ram", "gpt-oss-20b", "balanced / GPT-OSS-20B"),
-    ("gel-ram", "qwen3.8-27b", "balanced / Qwen3.8-27B"),
-];
-
-/// The sample's questions in file order with their language, and every system's verdict on
-/// each (published rules, after the review: v6's for the recorded systems, the sample's own
-/// for the models).
-struct Beside {
-    sample: Vec<(usize, String)>,
-    verdicts: Vec<Vec<Verdict>>,
-}
-
-fn beside(root: &Path) -> Result<Beside, String> {
-    let dir = root.join(BESIDE_DIR);
-    let mut seen = vec![false; V6.count];
-    let numbers = read(&dir.join("sample-400.txt"))?;
-    let numbers: Vec<usize> = rows(&numbers)
-        .map(|f| question_number(f[0], &mut seen))
-        .collect::<Result<_, _>>()?;
-    if numbers.len() != BESIDE_COUNT {
-        return Err(format!(
-            "{BESIDE_DIR}/sample-400.txt: expected {BESIDE_COUNT} numbers"
-        ));
-    }
-    let qs = questions(
-        Set::WithAnswer,
-        &read(&root.join(V6.dir).join(question_file(Set::WithAnswer)))?,
-        V6.count,
-    )?;
-    let v6 = results(root, &V6)?;
-    let models = &SYSTEMS[1..];
-    let review = reviews(
-        Set::WithAnswer,
-        models,
-        &read(&dir.join("recorded/review.txt"))?,
-        V6.count,
-    )?;
-    if let Some((system, nr)) = review.keys().find(|(_, nr)| !numbers.contains(nr)) {
-        return Err(format!(
-            "{BESIDE_DIR}: review of {system} {nr} outside the sample"
-        ));
-    }
-    let mut verdicts = Vec::new();
-    for (id, _, _) in BESIDE_SYSTEMS {
-        let all = if models.iter().any(|(m, _)| *m == id) {
-            let given = answers(&read(&dir.join(format!("recorded/{id}.txt")))?, V6.count)?;
-            if given.len() != BESIDE_COUNT || numbers.iter().any(|nr| !given.contains_key(nr)) {
-                return Err(format!(
-                    "{BESIDE_DIR}/recorded/{id}.txt: expected exactly the sample's questions"
-                ));
-            }
-            let mut v = score(Set::WithAnswer, Rules::Published, &qs, &given);
-            for ((system, nr), r) in &review {
-                if system == id {
-                    v[nr - 1] = *r;
-                }
-            }
-            v
-        } else {
-            v6.iter()
-                .find(|r| r.set == Set::WithAnswer && r.rules == Rules::Published && r.system == id)
-                .ok_or(format!("v6 has no recorded system {id}"))?
-                .verdicts
-                .clone()
-        };
-        verdicts.push(numbers.iter().map(|nr| all[nr - 1]).collect());
-    }
-    let sample = numbers
-        .iter()
-        .map(|&nr| (nr, qs[nr - 1].lang.clone()))
-        .collect();
-    Ok(Beside { sample, verdicts })
-}
-
-fn letter(v: Verdict) -> char {
-    match v {
-        Verdict::Correct => 'C',
-        Verdict::Wrong => 'W',
-        Verdict::Unknown => 'U',
-        _ => 'E',
-    }
-}
-
-/// The per-question verdict file the README grid is drawn from.
-fn beside_verdicts(b: &Beside) -> String {
-    let mut s = String::from("# Verdicts on the 400 questions of sample-400.txt (published rules, after the review: set v6's review for GEL RAM and the engines, recorded/review.txt for the models). C correct, W wrong, U UNKNOWN, E error. Written by `answer-bench beside`; `answer-bench check` fails unless this file matches the recorded answers.\n# nr\tlang");
-    for (id, _, _) in BESIDE_SYSTEMS {
-        s.push('\t');
-        s.push_str(id);
-    }
-    s.push('\n');
-    for (i, (nr, lang)) in b.sample.iter().enumerate() {
-        let _ = write!(s, "{nr}\t{lang}");
-        for v in &b.verdicts {
-            s.push('\t');
-            s.push(letter(v[i]));
-        }
-        s.push('\n');
-    }
-    s
-}
-
-/// The rows of the page's three tables: results, the language split and the pairs.
-fn beside_rows(b: &Beside) -> Result<Vec<String>, String> {
-    let mut out = Vec::new();
-    let count = |v: &[Verdict], lang: Option<&str>, x: Verdict| {
-        v.iter()
-            .zip(&b.sample)
-            .filter(|(y, (_, l))| **y == x && lang.is_none_or(|lang| l == lang))
-            .count()
-    };
-    for ((_, name, conditions), v) in BESIDE_SYSTEMS.iter().zip(&b.verdicts) {
-        let (c, w, u) = (
-            count(v, None, Verdict::Correct),
-            count(v, None, Verdict::Wrong),
-            count(v, None, Verdict::Unknown),
-        );
-        out.push(format!(
-            "| {name} | {conditions} | {} | {c} | {w} | {u} | {} |",
-            c + w,
-            share(c, c + w)
-        ));
-        let [pl, en] = ["pl", "en"].map(|l| {
-            format!(
-                "{} / {} / {}",
-                count(v, Some(l), Verdict::Correct),
-                count(v, Some(l), Verdict::Wrong),
-                count(v, Some(l), Verdict::Unknown)
-            )
-        });
-        out.push(format!("| {name} | {pl} | {en} |"));
-    }
-    let of = |id: &str| {
-        BESIDE_SYSTEMS
-            .iter()
-            .position(|(s, _, _)| *s == id)
-            .map(|i| &b.verdicts[i])
-    };
-    for (first, second, label) in BESIDE_PAIRS {
-        let (Some(a), Some(c)) = (of(first), of(second)) else {
-            return Err(format!(
-                "unknown system in the pair {first} beside {second}"
-            ));
-        };
-        let only = |v: Verdict| {
-            let mine = a
-                .iter()
-                .zip(c)
-                .filter(|(x, y)| **x == v && **y != v)
-                .count();
-            let theirs = a
-                .iter()
-                .zip(c)
-                .filter(|(x, y)| **x != v && **y == v)
-                .count();
-            format!("{mine} / {theirs} ({})", p_text(sign_test(mine, theirs)))
-        };
-        out.push(format!(
-            "| {label} | {} | {} |",
-            only(Verdict::Correct),
-            only(Verdict::Wrong)
-        ));
-    }
-    Ok(out)
-}
-
-/// Fails unless the verdict file and the page's table rows follow from the recorded answers.
-fn check_beside(root: &Path) -> Result<(), String> {
-    let b = beside(root)?;
-    if b.verdicts.iter().flatten().any(|v| *v == Verdict::Error) {
-        return Err(format!(
-            "{BESIDE_DIR}: a sample question has no admitted answer"
-        ));
-    }
-    if read(&root.join(BESIDE_DIR).join("verdicts-400.txt"))? != beside_verdicts(&b) {
-        return Err(format!(
-            "{BESIDE_DIR}/verdicts-400.txt differs from the re-scored answers; run `answer-bench beside`"
-        ));
-    }
-    let page = read(&root.join(BESIDE_PAGE))?;
-    for row in beside_rows(&b)? {
-        if !page.lines().any(|l| l == row) {
-            return Err(format!("{BESIDE_PAGE} lacks the re-scored row: {row}"));
-        }
-    }
-    println!("ANSWER_BENCH_BESIDE=PASS sample=400 systems=9 page rows and verdict file re-scored");
-    Ok(())
-}
-
-/// `answer-bench check`, `answer-bench tables [SET]`, `answer-bench beside`, or
+/// `answer-bench check`, `answer-bench tables [SET]`, or
 /// `answer-bench score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]`.
 pub fn run(args: &[String]) -> Result<(), String> {
     let root = crate::workspace_root()?;
@@ -1168,10 +914,6 @@ pub fn run(args: &[String]) -> Result<(), String> {
     };
     match args.as_slice() {
         ["check"] => check(root),
-        ["beside"] => {
-            print!("{}", beside_verdicts(&beside(root)?));
-            Ok(())
-        }
         ["tables"] => {
             print!("{}", render(&V1, &results(root, &V1)?));
             Ok(())
@@ -1201,46 +943,13 @@ pub fn run(args: &[String]) -> Result<(), String> {
             );
             Ok(())
         }
-        _ => Err("usage: answer-bench check | tables [SET] | beside | score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]".into()),
+        _ => Err("usage: answer-bench check | tables [SET] | score <[SET:]with-answer|[SET:]no-answer> <answers.txt> [--rules strict|published]".into()),
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn beside_rows_follow_the_verdicts() {
-        let v = |s: &str| -> Vec<Verdict> {
-            s.bytes()
-                .map(|c| match c {
-                    b'C' => Verdict::Correct,
-                    b'W' => Verdict::Wrong,
-                    _ => Verdict::Unknown,
-                })
-                .collect()
-        };
-        let b = Beside {
-            sample: vec![(1, "pl".into()), (2, "en".into()), (3, "en".into())],
-            verdicts: [
-                "CWU", "CCU", "UUU", "CUU", "CUU", "CUU", "WWC", "WWW", "UUU",
-            ]
-            .map(v)
-            .to_vec(),
-        };
-        let rows = beside_rows(&b).unwrap();
-        for row in [
-            "| GEL RAM, balanced | local bank, one stored passage | 2 | 1 | 1 | 1 | 50.0% (9.5–90.5%) |",
-            "| GEL RAM, balanced | 1 / 0 / 0 | 0 / 1 / 1 |",
-            "| balanced / GPT-OSS-120B | 1 / 1 (p = 1.000) | 0 / 1 (p = 1.000) |",
-            "| Qwen3.8-27B | Groq API, closed book | 0 | 0 | 0 | 3 | — |",
-        ] {
-            assert!(rows.iter().any(|r| r == row), "missing row {row}");
-        }
-        let file = beside_verdicts(&b);
-        assert!(file.ends_with("3\ten\tU\tU\tU\tU\tU\tU\tC\tW\tU\n"));
-        assert_eq!(file.lines().count(), 2 + 3);
-    }
 
     fn q(groups: &[&[(&str, bool)]]) -> Question {
         Question {

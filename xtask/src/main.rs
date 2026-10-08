@@ -121,28 +121,28 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "60ed03b63cc8693372e34f6d29fe5288f622bdee2d2d00e369bebd75aec4d31a",
     ),
     (
-        "media/presentation/example-light.svg",
-        "f2e0d51be5100edaab950cb0892a545a1e0a6b45022b44be93d982aafa429845",
+        "media/presentation/example-41-light.svg",
+        "43bb6a77914db4246e236cc967bab9d3cf1266f49824e08bea135c15465bfe46",
     ),
     (
-        "media/presentation/example-dark.svg",
-        "beda615c82f3cef39da9ac0c30e001b9e6d18cf918c1a8c44f2723fddb4ce3d1",
+        "media/presentation/example-41-dark.svg",
+        "a04a7b97344832c87b10a4228a7c4d7801b6d23252bec190c59b8efdd5d901a8",
     ),
     (
         "media/presentation/answer-dots-light.svg",
-        "d78760fa5cb1f399f36668449bf8e70c7406aaa47e1fb13359c219b5594a516e",
+        "46e35b015a5e04486dd2279154da794634a60c69730bf62ac4b27e3449ac541e",
     ),
     (
         "media/presentation/answer-dots-dark.svg",
-        "c0d72f2c8bb9bf31f8fdb2292b7ccc661a53722ff64f355b9e1c578b8db2a05a",
+        "60dde65ff2b023f595e7dcd1a3e9c96dd830f835b729a122a7c6f3c318c95d9d",
     ),
     (
         "media/presentation/truth-surface-light.svg",
-        "a403a769a74d5542ee961717b993a1d9787e2a69e21247f08a432fb892a1cf59",
+        "7f704827e1594742ef847bf708f14c43852571bb66118589088a27309b7a0203",
     ),
     (
         "media/presentation/truth-surface-dark.svg",
-        "6f5e0541a4bf58585b95b79e1d63a841a59bf93ca679827974de440fc04b07ae",
+        "3257950eb31afb48460df677e92c3108fc73e54daebf29b0dc9ba4e867c9fad2",
     ),
     (
         "media/presentation/chips/01-light.svg",
@@ -341,27 +341,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/beside-groq/response-times.png",
         "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
-    ),
-    // Beside two search engines and three language models, set v6: replays from recorded files.
-    (
-        "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4",
-        "b8425496ad43817950b18b697300a31dc627a52a9fcac56bfeedb3efb3d6309f",
-    ),
-    (
-        "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4",
-        "6657e938fb5b6ed3a8db465d5a212a0b67de0262ca4d4c18bd5f1adbe2571ecf",
-    ),
-    (
-        "media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-SUMMARY-EN.mp4",
-        "d7eed98759fb2ead515f58dc82b72eb8731ee1c83e58bbba011476580996d087",
-    ),
-    (
-        "media/beside-v6/all-150-answers.png",
-        "21b65ac7e5b7a0db72a2fa416c1244a1ec4d950f0216c96dac5cb66be488d054",
-    ),
-    (
-        "media/beside-v6/scoreboard-400.png",
-        "1ba01b8a39b2672b9c3286fb1b67dd6098c79d9d3f25b93399e47d02649da014",
     ),
     (
         "docs/images/q8-four-views-en.png",

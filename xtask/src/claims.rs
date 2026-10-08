@@ -197,16 +197,6 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
-        id: "gel-beside-llm-v6",
-        dimension: "comparison",
-        scope: "400 questions of answer_or_abstain_v6 drawn by a fixed seed (200 PL, 200 EN); GEL and two BM25 engines as recorded for v6 beside three language models through the Groq API, closed book",
-        input: "one run per model on 2026-10-05, prompts and settings published; one scoring rule for all; blind review of the model answers listed",
-        expected: "GEL balanced 160 correct, 10 wrong; engines 226 and 239 correct, 13 and 14 wrong; at the strict settings GEL 112/2, engines 156/1 and 159/2; models 33-89 correct, 97-230 wrong",
-        counterexample: "read as GEL knowing more than the models, as a comparison with models given the bank, as a released build, or as GEL making fewer wrong answers than the engines on these 400 questions at either setting",
-        source: "docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md",
-        evidence: Evidence::Deferred("MEASURED_LOCAL"),
-    },
-    Claim {
         id: "source-roundtrip",
         dimension: "bytes",
         scope: "GELSET01 source bytes",

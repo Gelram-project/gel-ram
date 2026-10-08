@@ -3,7 +3,7 @@
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question set v6 and from the claim registry, each panel naming its set, an
+frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent

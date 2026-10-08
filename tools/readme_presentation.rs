@@ -170,11 +170,11 @@ conversation in both languages. A copy kept on disk means a restart or a crash
 loses nothing that was saved. **This is the goal, not a result of this
 repository**: the sections below state exactly what has been checked so far.
 
-**Where the numbers below come from.** GEL RAM's answers counted in the cards were
+**Where the numbers below come from.** The answers counted in the cards were
 given by a private development build and its private bank, not by the tools in
-this checkout. The cards show the newest frozen question set (v6): the first card
-covers all 990 questions; the answer grid covers 400 of them, drawn by a fixed seed
-and also put to three language models, and the example is one of those. Every question is published with its expected answer
+this checkout. The first card is the newest frozen question set (v6); the example and
+the answer grid show an earlier run on question set v1, the 80 questions also put to
+three language models. Every question is published with its expected answer
 and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
 [the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
 [the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
@@ -267,10 +267,8 @@ Three properties, each with its evidence and its limit:
   build answered 432: 416 correct and 16 wrong, and the engines again found
   more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
   questions it answered 465: 447 correct and 18 wrong; the engines found more
-  (588–616 correct) with more wrong answers (33–36). On 400 of those questions
-  the three models, closed book, gave 97–230 wrong answers each; the build, with
-  the bank, gave 10 and the engines 13 and 14.
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [side by side, set v6 (film)](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
+  (588–616 correct) with more wrong answers (33–36).
+  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 - **Knowledge is printed, not trained.** New knowledge is written into memory;
   no fine-tuning or LoRA run is involved. In the public tools this is the
   collection you build from your own files: add a document and cite it exactly;
@@ -404,42 +402,32 @@ answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-ab
 
 [Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
 
-### Side by side with two search engines and three language models
+### Side by side with three language models
 
-400 questions of question set v6, drawn by a fixed seed before any request, went
-closed book to three language models on the Groq API in one recorded run, beside
-the recorded answers of GEL RAM and of two BM25 search engines on the same bank,
-with one scoring rule. The models could also say UNKNOWN, yet **97–230 of their
-answers were wrong**; GEL RAM gave 10 wrong answers and the engines 13 and 14,
-not different beyond chance, while the engines found more answers.
+The same 80 frozen questions (question set v1) went to GEL RAM and, closed book, to three
+language models on the Groq API, in one recorded run with one scoring rule.
+GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
+models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
 
-| Same 400 questions | Answered | Correct | Wrong | UNKNOWN |
+| Same 80 questions | Answered | Correct | Wrong | UNKNOWN |
 |:---|---:|---:|---:|---:|
-| GEL RAM, balanced (local bank, one stored passage) | 170 | 160 | 10 | 230 |
-| Tantivy BM25, threshold (same bank) | 239 | 226 | 13 | 161 |
-| SQLite FTS5 BM25, threshold (same bank) | 253 | 239 | 14 | 147 |
-| GPT-OSS-120B (Groq API, closed book) | 218 | 89 | 129 | 182 |
-| GPT-OSS-20B (Groq API, closed book) | 276 | 46 | 230 | 124 |
-| Qwen3.8-27B (Groq API, closed book) | 130 | 33 | 97 | 270 |
+| GEL RAM (local bank, answers with the source passage) | 11 | 11 | **0** | 69 |
+| GPT-OSS-120B (Groq API, closed book) | 31 | 10 | 21 | 49 |
+| GPT-OSS-20B (Groq API, closed book) | 36 | 8 | 28 | 44 |
+| Qwen3.8-27B (Groq API, closed book) | 17 | 6 | 11 | 63 |
 
-At the stricter settings GEL RAM gave 112 correct and 2 wrong answers, the
-engines 156 and 1, and 159 and 2.
+[![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong. GPT-OSS-20B: 8 correct, 28 wrong. Qwen3.8-27B: 6 correct, 11 wrong.](media/beside-groq/all-80-answers.png)](docs/GEL-BESIDE-GROQ.md)
 
-[![The 150 questions of the film as one cell per system: green correct, red wrong, grey UNKNOWN.](media/beside-v6/all-150-answers.png)](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)
-
-The two sides do different jobs: GEL RAM and the engines look facts up in a bank
-they hold, and every question was written from a passage of it; the models
-answer from training. GEL RAM answered correctly 133–149 questions that a given
-model did not; each model answered correctly 22–62 that GEL RAM did not. Times
-are not compared. [All 400 answers, prompts, review and limits](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)
-· [Film of 150 questions, part 1](media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4)
-· [part 2](media/beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4)
-· [Try your own system on the same questions](docs/answer-or-abstain-v6/README.md)
-
-**Earlier run, question set v1.** On 80 frozen questions an earlier build
-answered 11, all correct, and said UNKNOWN to 69; the three models gave 11–28
-wrong answers each. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
+The two sides do different jobs: GEL looks facts up in a bank it holds, the
+models answer from training. On 10 of GEL's 11 answers no model was correct; on
+12 other questions a model was correct where GEL said UNKNOWN. The visible model
+answers were two words at the median; the GPT-OSS models also generated 51 and
+154 hidden reasoning tokens per question on average. GEL returns the stored
+source passage (33 words at the median). Times are recorded, not compared: GEL
+0.25 s for all 80 locally, the models 59–371 ms per question at the median over
+the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
 · [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
+· [Try your own system on the same questions](docs/answer-or-abstain/README.md)
 
 **No-answer control.** 80 more questions have no correct answer: 40 ask about
 invented subjects, 40 carry a false premise about an entry in the bank. GEL
@@ -499,7 +487,7 @@ const GUIDE: &str = r####"# Multimedia README presentation
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), result panels drawn from the recorded answers of
-frozen question set v6 and from the claim registry, each panel naming its set, an
+frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -1412,56 +1400,29 @@ fn bars_picture() -> String {
         1200,
     )
 }
-/// The drawn sample of question set v6 beside three language models, read from the verdict
-/// file that `answer-bench check` re-scores from the recorded answers on every verify run:
-/// one verdict letter per question (C correct, W wrong, U UNKNOWN, E error) for each system,
-/// and the example question chosen by a stated rule.
-struct Beside {
+/// The recorded side-by-side run, read from the published evidence file: one
+/// verdict letter per question (C correct, W wrong, U UNKNOWN, E error) for each
+/// system, and question 41 as the worked example.
+struct Recorded {
     systems: Vec<(&'static str, Vec<u8>)>,
-    /// Whether each question, in verdict-file order, is English.
-    english: Vec<bool>,
-    /// The example: its row in the verdict file and its question number.
-    index: usize,
-    nr: usize,
     question: String,
     passage: String,
-    engines: [u8; 2],
     answers: Vec<(&'static str, String, u8)>,
-    /// Questions of the sample that GEL RAM answered correctly and all three models wrongly.
-    fits: usize,
-    /// Fewest and most questions a model answered correctly where GEL RAM did not.
-    model_only: (usize, usize),
 }
-const BESIDE_DIR: &str = "docs/answer-or-abstain-v6/beside-llm";
-const BESIDE_COUNT: usize = 400;
-/// Drawn systems: name in the grid, column of the verdict file. The engines at their
-/// threshold settings; the first is GEL RAM, the last three the models.
-const BESIDE_SYSTEMS: [(&str, &str); 6] = [
-    ("GEL RAM (balanced)", "gel-ram"),
-    ("Tantivy (BM25)", "tantivy-bm25"),
-    ("SQLite FTS5 (BM25)", "sqlite-fts5"),
+const RECORDED: &str = "docs/evidence-side-by-side/side-by-side.txt";
+const RECORDED_SYSTEMS: [(&str, &str); 4] = [
+    ("GEL RAM", "GEL"),
     ("GPT-OSS-120B", "gpt-oss-120b"),
     ("GPT-OSS-20B", "gpt-oss-20b"),
     ("Qwen3.8-27B", "qwen3.8-27b"),
 ];
-/// The rule that picks the example card's question, as the card states it.
-const EXAMPLE_RULE: &str = "the lowest-numbered English question among the 150 in the film that GEL RAM answered correctly and all three models wrongly";
-/// Field `i` of the line of question `nr` in a tab-separated file.
-fn field(text: &str, nr: usize, i: usize) -> Result<String> {
-    text.lines()
-        .filter(|l| !l.starts_with('#'))
-        .map(|l| l.split('\t').collect::<Vec<_>>())
-        .find(|f| f[0] == nr.to_string())
-        .and_then(|f| f.get(i).map(|s| s.to_string()))
-        .ok_or(format!("question {nr} has no field {i}").into())
-}
-impl Beside {
-    fn read() -> Result<Beside> {
-        let text = fs::read_to_string(format!("{BESIDE_DIR}/verdicts-400.txt"))?;
+impl Recorded {
+    fn read() -> Result<Recorded> {
+        let text = fs::read_to_string(RECORDED)?;
         let header: Vec<&str> = text
             .lines()
             .find_map(|l| l.strip_prefix("# nr\t"))
-            .ok_or("missing verdict header")?
+            .ok_or("missing evidence header")?
             .split('\t')
             .collect();
         let col = |name: &str| {
@@ -1469,86 +1430,46 @@ impl Beside {
                 .iter()
                 .position(|h| *h == name)
                 .map(|i| i + 1)
-                .ok_or(format!("missing verdict column {name}"))
+                .ok_or(format!("missing evidence column {name}"))
         };
         let rows: Vec<Vec<&str>> = text
             .lines()
             .filter(|l| !l.starts_with('#') && !l.is_empty())
             .map(|l| l.split('\t').collect())
             .collect();
-        let lang = col("lang")?;
-        if rows.len() != BESIDE_COUNT
-            || rows.iter().any(|r| {
-                r.len() != header.len() + 1
-                    || !matches!(r[lang], "pl" | "en")
-                    || r[lang + 1..]
-                        .iter()
-                        .any(|v| !matches!(*v, "C" | "W" | "U" | "E"))
-            })
-        {
-            return Err("the verdict file must hold 400 complete rows of known letters".into());
-        }
-        let english: Vec<bool> = rows.iter().map(|r| r[lang] == "en").collect();
-        if english.iter().filter(|e| **e).count() * 2 != BESIDE_COUNT {
-            return Err("the grid draws 200 Polish and 200 English questions".into());
-        }
-        let numbers = rows
-            .iter()
-            .map(|r| r[0].parse::<usize>())
-            .collect::<std::result::Result<Vec<_>, _>>()?;
-        let mut systems: Vec<(&str, Vec<u8>)> = Vec::new();
-        for (name, id) in BESIDE_SYSTEMS {
-            let c = col(id)?;
-            systems.push((name, rows.iter().map(|r| r[c].as_bytes()[0]).collect()));
-        }
-        let verdict = |s: usize, i: usize| systems[s].1[i];
-        let beaten = |i: usize| verdict(0, i) == b'C' && (3..6).all(|s| verdict(s, i) == b'W');
-        let fits = |i: usize| english[i] && beaten(i);
-        let film = fs::read_to_string(format!("{BESIDE_DIR}/film-150.txt"))?;
-        let mut film = film
-            .lines()
-            .filter(|l| !l.starts_with('#') && !l.is_empty())
-            .map(str::parse::<usize>)
-            .collect::<std::result::Result<Vec<_>, _>>()?;
-        film.sort_unstable();
-        let mut chosen = None;
-        for nr in film {
-            let i = numbers
+        if rows.len() != 80
+            || rows
                 .iter()
-                .position(|n| *n == nr)
-                .ok_or(format!("film question {nr} is not in the sample"))?;
-            if fits(i) {
-                chosen = Some(i);
-                break;
-            }
+                .enumerate()
+                .any(|(i, r)| r[0] != (i + 1).to_string())
+        {
+            return Err("the evidence file must hold questions 1 to 80 in order".into());
         }
-        let index = chosen.ok_or("no film question fits the example rule")?;
-        let nr = numbers[index];
-        let model_only = (3..6)
-            .map(|s| {
-                (0..BESIDE_COUNT)
-                    .filter(|&i| verdict(s, i) == b'C' && verdict(0, i) != b'C')
-                    .count()
-            })
-            .fold((usize::MAX, 0), |(lo, hi), n| (lo.min(n), hi.max(n)));
-        let questions = fs::read_to_string("docs/answer-or-abstain-v6/with-answer-questions.txt")?;
-        let gel = fs::read_to_string("docs/answer-or-abstain-v6/recorded/with-answer/gel-ram.txt")?;
+        let letter = |v: &str| match v {
+            "CORRECT" => b'C',
+            "WRONG" => b'W',
+            "UNKNOWN" => b'U',
+            _ => b'E',
+        };
+        let mut systems = Vec::new();
+        for (name, id) in RECORDED_SYSTEMS {
+            let c = col(id)?;
+            systems.push((name, rows.iter().map(|r| letter(r[c])).collect()));
+        }
+        let ex = &rows[40];
         let mut answers = Vec::new();
-        for (s, (name, id)) in BESIDE_SYSTEMS.iter().enumerate().skip(3) {
-            let given = fs::read_to_string(format!("{BESIDE_DIR}/recorded/{id}.txt"))?;
-            answers.push((*name, field(&given, nr, 1)?, verdict(s, index)));
+        for (name, id) in RECORDED_SYSTEMS.iter().skip(1) {
+            answers.push((
+                *name,
+                ex[col(&format!("{id}_answer"))?].to_string(),
+                letter(ex[col(id)?]),
+            ));
         }
-        Ok(Beside {
-            engines: [verdict(1, index), verdict(2, index)],
-            fits: (0..BESIDE_COUNT).filter(|&i| beaten(i)).count(),
-            model_only,
-            index,
-            nr,
-            question: field(&questions, nr, 2)?,
-            passage: field(&gel, nr, 1)?,
-            answers,
-            english,
+        Ok(Recorded {
             systems,
+            question: ex[col("question")?].to_string(),
+            passage: ex[col("GEL_source_excerpt")?].to_string(),
+            answers,
         })
     }
     /// Correct, wrong and UNKNOWN answers of one system.
@@ -1839,13 +1760,12 @@ fn panel(x: usize, w: usize, h: usize, t: &Theme) -> String {
         t.bg[0], t.line
     )
 }
-fn example(dark: bool, r: &Beside) -> String {
+fn example(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 570, 420, t) + &panel(610, 570, 420, t);
-    b.push_str(&format!(
-        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · SET V6 · #{} OF 990</text>"#,
-        r.nr
-    ));
+    b.push_str(
+        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · #41 OF 80</text>"#,
+    );
     for (i, l) in wrap(&r.question, 50, 2).iter().enumerate() {
         b.push_str(&format!(
             r#"<text x="44" y="{}" font-size="20" class="b">{}</text>"#,
@@ -1855,27 +1775,22 @@ fn example(dark: bool, r: &Beside) -> String {
     }
     b.push_str(&format!(
         r#"<text x="44" y="164" font-size="17" class="b">GEL RAM</text>{}"#,
-        pill(134, 148, r.systems[0].1[r.index], t)
+        pill(134, 148, r.systems[0].1[40], t)
     ));
     b.push_str(r#"<text x="44" y="196" font-size="13" class="mut">returned this stored source passage:</text>"#);
-    for (i, l) in wrap(&r.passage, 64, 6).iter().enumerate() {
+    for (i, l) in wrap(&r.passage, 64, 7).iter().enumerate() {
         b.push_str(&format!(
             r#"<text x="44" y="{}" font-size="15">{}</text>"#,
             222 + i * 22,
             esc(l)
         ));
     }
-    b.push_str(&format!(
-        r#"<text x="44" y="362" font-size="13" class="mut">Two BM25 search engines, same bank:</text><text x="44" y="393" font-size="14" class="b">Tantivy</text>{}<text x="240" y="393" font-size="14" class="b">SQLite FTS5</text>{}"#,
-        pill(112, 376, r.engines[0], t),
-        pill(332, 376, r.engines[1], t)
-    ));
     b.push_str(r#"<text x="44" y="418" font-size="12" class="mut">Wikipedia passage (CC BY-SA 4.0) as stored in the GEL bank</text>"#);
     b.push_str(
         r#"<text class="kick" x="634" y="56">SAME QUESTION · THREE MODELS, CLOSED BOOK</text>"#,
     );
     for (i, (name, answer, v)) in r.answers.iter().enumerate() {
-        let y = 104 + i * 80;
+        let y = 104 + i * 88;
         b.push_str(&format!(
             r#"<text x="634" y="{y}" font-size="17" class="b">{name}</text>{}"#,
             pill(1060, y - 17, *v, t)
@@ -1888,32 +1803,8 @@ fn example(dark: bool, r: &Beside) -> String {
             ));
         }
     }
-    let (lo, hi) = r.model_only;
-    b.push_str(&format!(r#"<text x="634" y="344" font-size="14" class="mut">All three answers are wrong by the published rule.</text><text x="634" y="366" font-size="12" class="mut">Stated rule: the lowest-numbered English question among the film's 150</text><text x="634" y="382" font-size="12" class="mut">that GEL RAM answered correctly and all three models wrongly.</text><text x="634" y="404" font-size="12" class="mut">{} of the 400 questions have GEL RAM correct and all three models wrong;</text><text x="634" y="420" font-size="12" class="mut">each model was correct on {lo}–{hi} that GEL RAM was not.</text>"#, r.fits));
-    result_card(
-        dark,
-        460,
-        ("One question, six systems", &example_text(r)),
-        &b,
-    )
-}
-/// The example card in words, for the card and the README alternative text.
-fn example_text(r: &Beside) -> String {
-    let (lo, hi) = r.model_only;
-    let engines = match r.engines {
-        [b'C', b'C'] => "both correct".to_string(),
-        [a, b] => format!("{} and {}", verdict_word(a), verdict_word(b)),
-    };
-    format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage: {} The two search engines on the same bank (Tantivy, SQLite FTS5): {engines}. The three models, closed book, answered: {}; all three wrong. Chosen by a stated rule: {EXAMPLE_RULE}. {} of the 400 questions have GEL RAM correct and all three models wrong; each model was correct on {lo}–{hi} that GEL RAM was not.", r.nr, r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "), r.fits)
-}
-/// A verdict letter as a word.
-fn verdict_word(v: u8) -> &'static str {
-    match v {
-        b'C' => "correct",
-        b'W' => "wrong",
-        b'U' => "UNKNOWN",
-        _ => "error",
-    }
+    b.push_str(r#"<text x="634" y="392" font-size="14" class="mut">All three give a reason the source does not give.</text><text x="634" y="414" font-size="14" class="mut">GEL returns the passage that states it.</text>"#);
+    result_card(dark, 460, ("One question, four systems", &format!("Private build, earlier run on question set v1, question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
 }
 const BREAK: [(&str, &str, &str); 4] = [
     (
@@ -1937,43 +1828,34 @@ const BREAK: [(&str, &str, &str); 4] = [
         "CHECKED EQUAL",
     ),
 ];
-fn dots(dark: bool, r: &Beside) -> String {
+fn dots(dark: bool, r: &Recorded) -> String {
     let t = theme(dark);
     let mut b = panel(20, 720, 360, t) + &panel(760, 420, 360, t);
     b.push_str(
-        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · SET V6 · 400 DRAWN QUESTIONS</text>"#,
+        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · 80 QUESTIONS, SAME RULE</text>"#,
     );
-    // Polish questions first, then English, in verdict-file order: four rows of 100 per system.
-    let order: Vec<usize> = (0..r.english.len())
-        .filter(|&i| !r.english[i])
-        .chain((0..r.english.len()).filter(|&i| r.english[i]))
-        .collect();
     for (row, (name, verdicts)) in r.systems.iter().enumerate() {
         let (ok, wrong, unknown) = r.counts(row);
-        let y = 82 + row * 43;
-        b.push_str(&format!(r#"<text x="44" y="{}" font-size="14" class="b">{name}</text><text x="44" y="{}" font-size="11" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 10, y + 26));
-        for (k, &i) in order.iter().enumerate() {
-            let cx = 252.0 + (k % 100) as f64 * 4.6;
-            let cy = y as f64 + (k / 100) as f64 * 7.0 + if k >= 200 { 3.0 } else { 0.0 };
-            b.push_str(&match verdicts[i] {
-                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.8" fill="{}"/>"#, t.green[1]),
-                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.8" fill="{}"/>"#, t.red[1]),
-                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.4" fill="none" stroke="{}" stroke-width=".8"/>"#, t.muted),
-                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="1.8" fill="{}"/>"#, t.amber[1]),
+        let y = 104 + row * 62;
+        b.push_str(&format!(r#"<text x="44" y="{y}" font-size="16" class="b">{name}</text><text x="44" y="{}" font-size="12" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 19));
+        for (i, v) in verdicts.iter().enumerate() {
+            let cx = 252.0 + i as f64 * 5.6 + if i >= 40 { 6.0 } else { 0.0 };
+            let cy = y as f64 + 2.0;
+            b.push_str(&match v {
+                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.green[1]),
+                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.red[1]),
+                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2" fill="none" stroke="{}" stroke-width="1"/>"#, t.muted),
+                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.amber[1]),
             });
         }
     }
-    b.push_str(&format!(r#"<circle cx="50" cy="352" r="4" fill="{}"/><text x="60" y="357" font-size="12" class="mut">correct</text><circle cx="124" cy="352" r="4" fill="{}"/><text x="134" y="357" font-size="12" class="mut">wrong</text><circle cx="190" cy="352" r="3.4" fill="none" stroke="{}" stroke-width="1.2"/><text x="200" y="357" font-size="12" class="mut">UNKNOWN · rows 1–2 Polish, 3–4 English · models closed book</text>"#, t.green[1], t.red[1], t.muted));
+    b.push_str(&format!(r#"<circle cx="50" cy="352" r="4" fill="{}"/><text x="60" y="357" font-size="12" class="mut">correct</text><circle cx="124" cy="352" r="4" fill="{}"/><text x="134" y="357" font-size="12" class="mut">wrong</text><circle cx="190" cy="352" r="3.4" fill="none" stroke="{}" stroke-width="1.2"/><text x="200" y="357" font-size="12" class="mut">UNKNOWN · 1–40 Polish, 41–80 English · models via the Groq API, closed book</text>"#, t.green[1], t.red[1], t.muted));
     b.push_str(r#"<text class="kick" x="784" y="56">TRY TO BREAK GEL · PUBLIC TOOL</text>"#);
     for (i, (what, why, outcome)) in BREAK.iter().enumerate() {
         let y = 104 + i * 62;
         b.push_str(&format!(r#"<text x="784" y="{y}" font-size="15" class="b">{what}</text><text x="784" y="{}" font-size="12" class="mut">{why}</text><text x="1156" y="{}" font-size="12" class="b" text-anchor="end" letter-spacing="1" style="fill:{}">{outcome}</text>"#, y + 19, y + 19, t.good));
     }
     b.push_str(r#"<text x="784" y="357" font-size="12" class="mut">Each is recorded; the recordings are linked below.</text>"#);
-    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("{} The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", dots_text(r))), &b)
-}
-/// The answer grid in words, for the card and the README alternative text.
-fn dots_text(r: &Beside) -> String {
     let desc = r
         .systems
         .iter()
@@ -1984,7 +1866,7 @@ fn dots_text(r: &Beside) -> String {
         })
         .collect::<Vec<_>>()
         .join(". ");
-    format!("Private build, question set v6, 400 questions drawn by a fixed seed: GEL RAM at its balanced setting and two BM25 search engines at their threshold settings on the same bank, beside three language models answering closed book. {desc}.")
+    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("Private build, earlier run on question set v1 (80 questions, an earlier build), beside three language models answering closed book. {desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
 }
 fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
     let t = theme(dark);
@@ -2048,7 +1930,7 @@ fn result_path(name: &str, dark: bool) -> String {
 }
 /// The result graphics in README order: file stem, light body, dark body and an alternative text read from the same data.
 fn results() -> Result<Vec<(&'static str, String, String, String)>> {
-    let r = Beside::read()?;
+    let r = Recorded::read()?;
     let h = Headline::read()?;
     let s = statuses()?;
     let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
@@ -2063,9 +1945,9 @@ fn results() -> Result<Vec<(&'static str, String, String, String)>> {
     let (l, d) = both(&path_card);
     out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
     let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example", l, d, format!("Private build, question set v6, question {}: {} GEL RAM returned the stored source passage, the two search engines on the same bank were {}, and the three models, closed book, gave wrong answers. Chosen by a stated rule: {EXAMPLE_RULE}. {} of the 400 questions have GEL RAM correct and all three models wrong; each model was correct on {}–{} that GEL RAM was not.", r.nr, r.question, if r.engines == [b'C', b'C'] { "both correct".to_string() } else { r.engines.map(verdict_word).join(" and ") }, r.fits, r.model_only.0, r.model_only.1)));
+    out.push(("example-41", l, d, format!("Private build, earlier run on question set v1, question 41 of 80: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
     let (l, d) = both(&|dark| dots(dark, &r));
-    out.push(("answer-dots", l, d, format!("{} Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", dots_text(&r))));
+    out.push(("answer-dots", l, d, format!("Private build, earlier run on question set v1, 80 questions, an earlier build beside three language models answering closed book. {}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
     let (l, d) = both(&|dark| surface(dark, &s, &h));
     out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
     Ok(out)
@@ -2087,7 +1969,7 @@ fn results_block() -> Result<String> {
             s.push_str("\n\nRecordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)");
         }
     }
-    s.push_str("\n\n[Full comparison](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)");
+    s.push_str("\n\n[Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)");
     Ok(s)
 }
 /// Points of a quad as SVG text.
@@ -2653,10 +2535,9 @@ mod tests {
     }
     #[test]
     fn results_follow_the_recorded_answers() {
-        let r = Beside::read().unwrap();
+        let r = Recorded::read().unwrap();
         let (ok, wrong, unknown) = r.counts(0);
-        assert_eq!(ok + wrong + unknown, BESIDE_COUNT);
-        assert_eq!(r.english.iter().filter(|e| **e).count(), BESIDE_COUNT / 2);
+        assert_eq!(ok + wrong + unknown, 80);
         let h = Headline::read().unwrap();
         assert_eq!(h.answered + h.unknown, h.questions);
         assert!(
@@ -2687,63 +2568,17 @@ mod tests {
             "stored passages read back are not questions and stay off the question card"
         );
         let d = dots(true, &r);
-        assert_eq!(d.matches("<circle").count(), 6 * BESIDE_COUNT + 3);
+        assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
         let e = example(false, &r);
-        assert!(d.contains("PRIVATE BUILD · SET V6") && e.contains("PRIVATE BUILD · SET V6"));
-        let fits = |i: usize| {
-            r.english[i] && r.systems[0].1[i] == b'C' && (3..6).all(|s| r.systems[s].1[i] == b'W')
-        };
         assert!(
-            fits(r.index) && r.answers.iter().all(|a| a.2 == b'W'),
-            "the example fits its rule"
+            d.contains("PRIVATE BUILD · QUESTION SET V1")
+                && e.contains("PRIVATE BUILD · QUESTION SET V1")
         );
-        let film: Vec<usize> = fs::read_to_string(format!("{BESIDE_DIR}/film-150.txt"))
-            .unwrap()
-            .lines()
-            .filter(|l| !l.starts_with('#') && !l.is_empty())
-            .map(|l| l.parse().unwrap())
-            .collect();
-        assert!(film.contains(&r.nr));
-        let numbers: Vec<usize> = fs::read_to_string(format!("{BESIDE_DIR}/verdicts-400.txt"))
-            .unwrap()
-            .lines()
-            .filter(|l| !l.starts_with('#') && !l.is_empty())
-            .map(|l| l.split('\t').next().unwrap().parse().unwrap())
-            .collect();
-        assert_eq!(numbers[r.index], r.nr);
-        for nr in film.iter().filter(|n| **n < r.nr) {
-            let i = numbers.iter().position(|n| n == nr).unwrap();
-            assert!(!fits(i), "no lower-numbered film question fits the rule");
-        }
-        assert_eq!(
-            r.fits,
-            (0..BESIDE_COUNT)
-                .filter(|&i| r.systems[0].1[i] == b'C' && (3..6).all(|s| r.systems[s].1[i] == b'W'))
-                .count()
+        assert!(r.question.contains("Sudbury") && e.contains("House of Lords"));
+        assert!(
+            r.answers.iter().all(|a| a.2 == b'W'),
+            "question 41 is the published example"
         );
-        assert!(e.contains(&format!(
-            "{} of the 400 questions have GEL RAM correct",
-            r.fits
-        )));
-        assert!(e.contains(&esc(&wrap(&r.question, 50, 2)[0])));
-        // The README table states the grid's counts, row by row.
-        for (i, label) in [
-            "GEL RAM, balanced (local bank, one stored passage)",
-            "Tantivy BM25, threshold (same bank)",
-            "SQLite FTS5 BM25, threshold (same bank)",
-            "GPT-OSS-120B (Groq API, closed book)",
-            "GPT-OSS-20B (Groq API, closed book)",
-            "Qwen3.8-27B (Groq API, closed book)",
-        ]
-        .iter()
-        .enumerate()
-        {
-            let (c, w, u) = r.counts(i);
-            assert!(
-                NATIVE.contains(&format!("| {label} | {} | {c} | {w} | {u} |", c + w)),
-                "README row {label}"
-            );
-        }
     }
     #[test]
     fn goals_are_labelled_and_claims_are_counted() {

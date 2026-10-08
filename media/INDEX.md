@@ -22,18 +22,6 @@ No-answer control (80 questions without a correct answer):
 [summary, 48 s](beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-SUMMARY-EN.mp4) ·
 [conditions and limits](../docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
 
-# GEL beside two search engines and three language models (question set v6)
-
-150 questions in two parts:
-[part 1, 5 min 45 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART1-EN.mp4) ·
-[part 2, 6 min 31 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-PART2-EN.mp4) ·
-[summary, 1 min 28 s](beside-v6/GEL-BESIDE-ENGINES-AND-LLMS-V6-SUMMARY-EN.mp4) ·
-[conditions, answers and limits](../docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md)
-
-Replays rendered from the recorded answer files of set v6 and of one run of the
-models on 2026-10-05, not screen captures. The 150 questions were drawn by a fixed
-seed; the pacing is not execution time.
-
 # The Evidence Lab film
 
 The film is silent; elapsed times in a single demonstration are not

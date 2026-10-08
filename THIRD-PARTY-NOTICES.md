@@ -71,10 +71,8 @@ Wikipedia articles, word for word, and the questions paraphrase them:
 - the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
   [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
   `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`;
-- the side-by-side page [set v6 beside two search engines and three language models](docs/GEL-BESIDE-ENGINES-AND-LLMS-V6.md),
-  its records in `docs/answer-or-abstain-v6/beside-llm/` and the recordings and images in `media/beside-v6/`;
-- the README example card, which quotes the source passage of question 592 of question set
-  v6: `media/presentation/example-light.svg` and `media/presentation/example-dark.svg`.
+- the README example card, which quotes the source passage of question 41 of question set
+  v1: `media/presentation/example-41-light.svg` and `media/presentation/example-41-dark.svg`.
 
 Wikipedia text is licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License (CC BY-SA 4.0, <https://creativecommons.org/licenses/by-sa/4.0/>).
