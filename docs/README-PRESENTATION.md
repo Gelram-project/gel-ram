@@ -2,8 +2,8 @@
 
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
-reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v7 and v1 and from the claim registry, each panel naming its set, an
+reduced motion is requested), a card of one stored Q8 record drawn from the 48
+recorded comparison runs in docs/evidence-q8-current, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -30,12 +30,16 @@ map, the Unix-only exclusion list of the CI evidence collector and the committed
 mutation matrix report. The property-map graphic shows the rule the collector
 enforces on each CI platform, not the result of a particular run. A change to
 any of these sources makes the read-only check fail until the images are rebuilt.
+The record card is drawn the same way from the recorded comparison runs: the
+builder refuses to draw it when a run lacks its PASS line or the runs disagree
+on a byte count. A change to any of those runs makes the read-only check fail
+until the card is rebuilt.
 
 ## Preservation and source
 
 The presentation belongs to the v0.6.0 source. Earlier README versions are
 no longer kept in the tree; they remain in the git history. The README keeps its
-technical content below the presentation unchanged, including the quick-start
+hand-maintained part below the generated region, including the quick-start
 checkout of the v0.6.0 tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and

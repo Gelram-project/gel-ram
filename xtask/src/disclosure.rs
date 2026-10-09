@@ -182,12 +182,7 @@ fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
 
 /// Paths whose Polish text is quoted data (questions, recorded answers, frozen records),
 /// not documentation prose.
-const POLISH_DATA_PATHS: &[&str] = &[
-    "docs/answer-or-abstain",
-    "docs/evidence-",
-    "docs/GEL-BESIDE-GROQ.md",
-    "docs/GEL-BESIDE-GROQ-NO-ANSWER.md",
-];
+const POLISH_DATA_PATHS: &[&str] = &["docs/answer-or-abstain", "docs/evidence-"];
 
 /// Documentation prose is English only. In Markdown, SVG and HTML files outside the data
 /// paths, a line with a letter used only in Polish is a finding; Markdown code blocks and

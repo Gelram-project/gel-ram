@@ -70,11 +70,9 @@ Wikipedia articles, word for word, and the questions paraphrase them:
   [v6](docs/answer-or-abstain-v6/README.md) and [v7](docs/answer-or-abstain-v7/README.md):
   question files and recorded answers, and in v7 the passages of articles outside the bank
   that its questions without an answer were written from;
-- the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
-  [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
-  `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`;
-- the README example card, which quotes the source passage of question 41 of question set
-  v1: `media/presentation/example-41-light.svg` and `media/presentation/example-41-dark.svg`.
+- earlier side-by-side pages, records and media and a README example card that quoted
+  these passages; they were removed from the tree, and their copies in the git history
+  remain under CC BY-SA 4.0.
 
 Wikipedia text is licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License (CC BY-SA 4.0, <https://creativecommons.org/licenses/by-sa/4.0/>).

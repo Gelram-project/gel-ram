@@ -4,8 +4,8 @@
 //!
 //! `check` re-scores the recorded answers of every system of every set,
 //! renders the result tables and fails unless the README of the set contains
-//! exactly those tables and the side-by-side document contains the rows it
-//! publishes. It also verifies every source-passage hash and the set identity.
+//! exactly those tables. It also verifies every source-passage hash and the set
+//! identity.
 //! It re-scores recorded text; it does not re-run any system.
 use std::{collections::HashMap, fmt::Write as _, fs, path::Path};
 
@@ -31,8 +31,6 @@ struct SetDef {
     /// Questions of the part with an answer.
     count: usize,
     no_answer: NoAnswerPart,
-    /// Whether docs/GEL-BESIDE-GROQ.md publishes rows re-scored from this set.
-    side_by_side: bool,
     /// The systems whose answers the set records, in table order.
     systems: &'static [System],
     /// Whether the README also shows precision and language splits with Wilson intervals.
@@ -50,7 +48,6 @@ const V1: SetDef = SetDef {
         count: 80,
         kinds: &[Kind::Invented, Kind::FalsePremise],
     },
-    side_by_side: true,
     systems: &SYSTEMS,
     precision: false,
     paired: &[],
@@ -61,7 +58,6 @@ const V2: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 394,
     no_answer: NO_PART,
-    side_by_side: false,
     systems: &SYSTEMS,
     precision: false,
     paired: &[],
@@ -72,7 +68,6 @@ const V3: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 979,
     no_answer: NO_PART,
-    side_by_side: false,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-first-run", "GEL RAM, first run"),
@@ -96,7 +91,6 @@ const V4: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 985,
     no_answer: NO_PART,
-    side_by_side: false,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -125,7 +119,6 @@ const V5: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 987,
     no_answer: NO_PART,
-    side_by_side: false,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -157,7 +150,6 @@ const V6: SetDef = SetDef {
     parts: &[Set::WithAnswer],
     count: 990,
     no_answer: NO_PART,
-    side_by_side: false,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -185,7 +177,6 @@ const V7: SetDef = SetDef {
         count: 599,
         kinds: &[Kind::Absent, Kind::Invented],
     },
-    side_by_side: false,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -929,35 +920,6 @@ fn wilson(k: usize, n: usize) -> (f64, f64) {
     ((c - r) / d, (c + r) / d)
 }
 
-/// Rows of the summary table in docs/GEL-BESIDE-GROQ.md (published rules, after the review).
-fn side_by_side_rows(def: &SetDef, results: &Results) -> Vec<String> {
-    results
-        .iter()
-        .filter(|r| r.set == Set::WithAnswer && r.rules == Rules::Published)
-        .map(|r| {
-            let t = r.reviewed.0;
-            let answered = t[0] + t[1];
-            let (lo, hi) = wilson(t[0], answered);
-            let conditions = if r.system == "gel-ram" {
-                "local bank, answers with a source passage"
-            } else {
-                "Groq API, closed book"
-            };
-            format!(
-                "| {} | {conditions} | {answered} | {} | {} | {} | {} | {}/{answered} ({:.0}–{:.0}%) |",
-                display(def, r.system),
-                t[0],
-                t[1],
-                t[2],
-                t[7],
-                t[0],
-                100.0 * lo,
-                100.0 * hi
-            )
-        })
-        .collect()
-}
-
 /// SHA-256 over the names and hashes of every data file of the set, in a fixed order.
 fn set_identity(root: &Path, def: &SetDef) -> Result<String, String> {
     let dir = root.join(def.dir);
@@ -1013,16 +975,6 @@ pub fn check(root: &Path) -> Result<(), String> {
                 "{}: README results differ from the re-scored recorded answers; run `answer-bench tables`",
                 def.name
             ));
-        }
-        if def.side_by_side {
-            let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
-            for row in side_by_side_rows(def, &results) {
-                if !side.contains(&row) {
-                    return Err(format!(
-                        "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
-                    ));
-                }
-            }
         }
         let identity = set_identity(root, def)?;
         if !readme.contains(&format!("`{}` · SHA-256 `{identity}`", def.name)) {

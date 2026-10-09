@@ -38,23 +38,31 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "4129a2baae30c9db8e03b0156bcffc47e9604d0df19171745e99f88c56387f1d",
+        "a52db2b72720ac812dceb8b316e6124e133d7b840612284416aca9af5e75231a",
     ),
     (
         "media/presentation/header-light.svg",
-        "057c5624f51ecdcd55d89de6c48ee74b2339d1ae0a503995622ee34d1ec61960",
+        "b54fcff8c5fb76b474b5ac0808fcff85a1db02a83ef5cc7788bf3b4bd9cec5c8",
     ),
     (
         "media/presentation/header-dark.svg",
-        "e55b9bd61e16b9d47f69a2603f08601f521029adbaa567c27d90c27147a452bc",
+        "c0755f16a769d392955fdc6b10fafaee9839579a283ea6614c3f559d3197327a",
     ),
     (
         "media/presentation/header-still-light.svg",
-        "72f2b39ea9de21c4d1e9b64512c206a98423fa264f88c7b565f5284b0b9a75f3",
+        "b2baa837b0108bf86ca62be91b1f7dbcabe6521e1d159983964adcb52c254557",
     ),
     (
         "media/presentation/header-still-dark.svg",
-        "69066b779b281b0f1b705bd93239febbe417d28c3ef6babf03a4cf8df15c2e9d",
+        "933da2774f1fa1bebf1fef64d7662461d9c1388890d165d67151b59b3717de07",
+    ),
+    (
+        "media/presentation/record-light.svg",
+        "e58907c27302a6808e3277ae099b12c353fb85b2586374684920b33c71704ea0",
+    ),
+    (
+        "media/presentation/record-dark.svg",
+        "45cefe87675ed8537af6c8a71d1729efdcca76ccb60e46818df19741172e9837",
     ),
     (
         "media/presentation/flow-light.svg",
@@ -105,46 +113,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "0863d48ebe5fbb4199e9947f29518f6f3224250142cb4d4eb4c3c9f68926a132",
     ),
     (
-        "media/presentation/glance-light.svg",
-        "c2cd9668f9de1e3c7e0be72396216cb90502e2d9ac841bea996529f550ab261e",
-    ),
-    (
-        "media/presentation/glance-dark.svg",
-        "caab3ede71c209d8f6b999116ea52ae54e728b5b8b9fc457d05e495070280f9f",
-    ),
-    (
-        "media/presentation/question-path-light.svg",
-        "5935821b5291b84d5846a00127e3999c310c32946e1c5ba56abbe27567aa0e57",
-    ),
-    (
-        "media/presentation/question-path-dark.svg",
-        "60ed03b63cc8693372e34f6d29fe5288f622bdee2d2d00e369bebd75aec4d31a",
-    ),
-    (
-        "media/presentation/example-41-light.svg",
-        "43bb6a77914db4246e236cc967bab9d3cf1266f49824e08bea135c15465bfe46",
-    ),
-    (
-        "media/presentation/example-41-dark.svg",
-        "a04a7b97344832c87b10a4228a7c4d7801b6d23252bec190c59b8efdd5d901a8",
-    ),
-    (
-        "media/presentation/answer-dots-light.svg",
-        "46e35b015a5e04486dd2279154da794634a60c69730bf62ac4b27e3449ac541e",
-    ),
-    (
-        "media/presentation/answer-dots-dark.svg",
-        "60dde65ff2b023f595e7dcd1a3e9c96dd830f835b729a122a7c6f3c318c95d9d",
-    ),
-    (
-        "media/presentation/truth-surface-light.svg",
-        "b8082646869a7b337272045c4ff473d27726fdb9f704901a6c55ab77a0dc2075",
-    ),
-    (
-        "media/presentation/truth-surface-dark.svg",
-        "a9e72a24767e0441538792554fd95fccf31606623dcf825f01d73c3009b678f5",
-    ),
-    (
         "media/presentation/chips/01-light.svg",
         "d4207f2334a255e66fc3a92cfeba06ff3ee66dd50b045496c41005c4694f3fc2",
     ),
@@ -191,10 +159,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/presentation/chips/06-dark.svg",
         "e64e325af468f9803365e27c18f269821ad94be8a718b163759b587d47c55bba",
-    ),
-    (
-        "media/presentation/measured-progress.svg",
-        "cdfdfd4c7c85c07c09f7968ecb1273672f6c9bfd4aad337f5ebab51fd91dd40f",
     ),
     (
         "media/gifs/01-evidence-light.gif",
@@ -307,40 +271,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "media/evidence-lab/02-reopened-56s.png",
         "3d385ca2c4862ac873c089be1502770550ea810d5af51d16a15656335e08a82a",
-    ),
-    // GEL beside three language models: replays rendered from one recorded run.
-    (
-        "media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4",
-        "e96ebea496c445a4bdd2fbe00d72bc4b2caca6b84037a06f782f5398dbab47fc",
-    ),
-    (
-        "media/beside-groq/GEL-BESIDE-GROQ-SUMMARY-EN.mp4",
-        "21f0616fc6d2854d383e10c7eada1034c50ed19ac4643e248c363398ec515584",
-    ),
-    (
-        "media/beside-groq/all-80-answers.png",
-        "c904d775a1105628faa58e17291b51ac07aea0bc16e15b6f2c6a6f248403e017",
-    ),
-    (
-        "media/beside-groq/scoreboard.png",
-        "bac896d45ec9a2790fa21ac39464e3865050d537fd89df2a2fd5832961a57689",
-    ),
-    // No-answer control: replays rendered from one recorded run.
-    (
-        "media/beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-80-EN.mp4",
-        "a4b3dd46f2bac69550b1962bef26f4082f588cc63ab5d932fe38b4ffa11d33a5",
-    ),
-    (
-        "media/beside-groq/GEL-BESIDE-GROQ-NO-ANSWER-SUMMARY-EN.mp4",
-        "1dd0c3a66d339556e1c4962484878a1cc8e5973ce5a38697e275a6c7f014b33f",
-    ),
-    (
-        "media/beside-groq/no-answer-replies.png",
-        "29a4970928751e8565226b2ef2245b5c74bcfc0bc24515cf9b39b299148d9b30",
-    ),
-    (
-        "media/beside-groq/response-times.png",
-        "c9d39ee9316d710c78e4951046cd9e833d850fbad61797629ef17207c9359c6f",
     ),
     (
         "docs/images/q8-four-views-en.png",

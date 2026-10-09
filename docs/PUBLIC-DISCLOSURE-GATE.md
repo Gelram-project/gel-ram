@@ -24,7 +24,7 @@ the tree (not `target` or `.git`; binary files are skipped) and fails on any of:
 - **Polish prose**: documentation in Markdown, SVG and HTML is English only. A line
   with a letter used only in Polish fails, except in code blocks and inline code
   and in the paths that quote Polish data (the answer-or-abstain sets, the
-  evidence records, the two side-by-side pages and crate fixtures).
+  evidence records and crate fixtures).
 
 `xtask verify` runs the gate, so every pull request and release check runs it
 too. Final marker: `PUBLIC_DISCLOSURE_GATE=PASS`.

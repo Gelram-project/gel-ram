@@ -7,5 +7,5 @@ authors:
   - name: "RR — GEL RAM Project"
 repository-code: "https://github.com/Gelram-project/gel-ram"
 url: "https://github.com/Gelram-project/gel-ram"
-abstract: "Research toward a text AI that converses freely in Polish and English and answers from its sources, or says it does not know. A goal, not yet a result. This repository: independent Rust research into RAM-resident knowledge, exact source-bound readout, reproducible integrity checks, synthetic Q8 experiments and frozen answer-or-abstain question sets in Polish and English."
+abstract: "GEL RAM prints knowledge into memory as fixed Q8 records, instead of training it into model weights, and reads the records back exactly, working toward hardware-level memory computation (not established here). Goal: a text AI that answers in Polish and English from what it holds, or says it does not know; a goal, not yet a result. This repository: the public Rust memory core, exact source-bound readout, reproducible integrity checks, synthetic Q8 experiments and frozen answer-or-abstain question sets in Polish and English."
 license-url: "https://github.com/Gelram-project/gel-ram/blob/main/LICENSE"
