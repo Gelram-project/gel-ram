@@ -38,7 +38,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "babd8e35908a5daa520c313844f91bb1d78953f78b74a4279cc1f25523388c90",
+        "4129a2baae30c9db8e03b0156bcffc47e9604d0df19171745e99f88c56387f1d",
     ),
     (
         "media/presentation/header-light.svg",
