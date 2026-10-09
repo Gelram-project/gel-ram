@@ -1,4 +1,4 @@
-# GEL RAM v0.6.0 — questions whose answer is not there, and a collection 14.8 times larger
+# GEL RAM v0.6.0 — questions whose answer is not there
 
 Date: 2026-10-09
 
@@ -53,23 +53,6 @@ Every question, recorded answer and review decision is published, and
 - **One flaw of the set is stated in its README.** A topic outside the bank is
   checked by its title, and one such topic is in the bank under another word form.
 
-## The same build on a collection 14.8 times larger
-
-After the recorded runs, the same build at the same settings answered the same
-questions on 9,953,803 passages: the bank and further Wikipedia articles from the
-same dumps, each article once. This is a private check, and only its numbers are
-published:
-
-- precision stayed within the 95% intervals of the bank's results: 95.2% at the
-  balanced setting, 98.1% at the precise one;
-- correct answers fell by 23% and 29%, mostly to `UNKNOWN`, not to wrong answers;
-- some topics outside the bank are stated by other articles of the larger
-  collection;
-- three of five predictions frozen before the run held, and the two that failed
-  are stated.
-
-[Details](https://github.com/Gelram-project/gel-ram/blob/v0.6.0/docs/answer-or-abstain-v7/README.md#the-same-build-on-a-collection-148-times-larger)
-
 ## `answer-bench`
 
 - A third kind of question without an answer, `absent`: a real topic whose article
@@ -113,5 +96,3 @@ A process kill is not a power cut; power-loss safety is not established.
 Answering natural questions remains open: GEL answers a minority of them. At the
 same rule the BM25 search engines find more answers than GEL RAM; a 99% precision
 is not claimed. A topic checked as outside the bank is not proven absent from it.
-The check on the larger collection is private: its answers and the collection are
-not published.

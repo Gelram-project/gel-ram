@@ -56,14 +56,12 @@ The following capabilities are present on public `main`:
 
 A documentation and evidence release; public file formats and third-party dependencies
 are unchanged from v0.5.3. `answer-bench` gains question sets v6 and v7, with a third kind
-of question without an answer; the v7 results are also reported on a collection 14.8 times
-larger, numbers only.
+of question without an answer.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | Answer-or-abstain set v6: 990 new questions frozen before any run, used internally before (an experiment and an analysis of its errors) without changing any build or setting; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | 8bfb3df (PR #62) | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md) | questions from an independent writer; a held-out check of the next change |
 | Answer-or-abstain set v7: 982 new questions with an answer and 599 whose answer is not in the bank (real topics outside it and invented subjects), frozen before any run; the v4 build unchanged beside two BM25 engines and a candidate change that was rolled back; answer-bench counts a third kind of question without an answer | PR #63 | `xtask answer-bench check` | [set v7](answer-or-abstain-v7/README.md) | questions from an independent writer; a held-out check of the next change |
-| The same build on a collection 14.8 times larger (9,953,803 passages, each article once), numbers only: precision 95.2% and 98.1% at the two settings, correct answers down 23% and 29%, mostly to UNKNOWN; three of five frozen predictions held | PR #63 | — (private check) | [set v7](answer-or-abstain-v7/README.md#the-same-build-on-a-collection-148-times-larger) | a published larger collection and an independent run |
 
 ## v0.5.3
 
