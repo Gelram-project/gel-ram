@@ -1,6 +1,6 @@
-# Verify Evidence Lab (0.5.3) yourself
+# Verify Evidence Lab (0.6.0) yourself
 
-Run these commands from a 0.5.3 checkout (current main or the v0.5.3 tag), not
+Run these commands from a 0.6.0 checkout (current main or the v0.6.0 tag), not
 from older tags. Evidence Lab was merged in PR #9 (as 0.4.0-rc.1) and has been
 part of every version line since 0.4.0.
 Rust 1.85.0 and cached locked dependencies are prerequisites. Initial toolchain

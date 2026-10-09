@@ -1,4 +1,4 @@
-//! Public numeric Quad Grid reference: one state, four reversible addresses.
+//! Public numeric four-view reference: one record, four reversible views.
 struct Rng(u64);
 impl Rng {
     fn new(seed: u64) -> Self {

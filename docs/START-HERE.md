@@ -5,13 +5,12 @@ project without reading the entire repository.
 
 ## In one paragraph
 
-GEL RAM is an independent Rust research project. Its goal is a text AI whose
-knowledge is written into memory rather than trained into model weights: it
-answers in Polish or English from that knowledge and shows the source it used,
-or says plainly that it does not know, and it holds a free conversation in both
-languages; a copy kept on disk means a restart or a crash loses nothing that was
-saved. That goal is not a result of this repository. The public
-repository contains the reproducible subset: source provenance, integrity gates,
+GEL RAM prints knowledge into memory as fixed Q8 records, instead of training it
+into model weights, and reads the records back exactly, working toward
+hardware-level memory computation. The goal is a text AI that answers in Polish
+and English from what it holds, or says it does not know. This repository does
+not establish hardware-level memory computation ([claim registry](CLAIMS.md):
+`NOT_ESTABLISHED`); the text AI is a goal, not a result. The public repository contains the reproducible subset: source provenance, integrity gates,
 Q8 numeric experiments, persistent source bundles, an offline Live Lab, the
 multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
 snapshots, frozen answer-or-abstain question sets in Polish and English, and
@@ -28,7 +27,7 @@ Fastest try, after the setup in [TRY-IT](TRY-IT.md):
 2. **Run it yourself:** [TRY-IT](TRY-IT.md)
 3. **Check the evidence:** [VERIFIED RESULTS](VERIFIED-RESULTS.md)
 4. **See the author-run question results:** [Measured progress](MEASURED-PROGRESS.md),
-   [side by side with three language models](GEL-BESIDE-GROQ.md)
+   [external checks](EXTERNAL-CHECKS.md)
 5. **Inspect the recorded 1M/10M measurements:** [Ocean Scale](OCEAN-SCALE.md)
 6. **See what comes next publicly:** [Roadmap](ROADMAP.md)
 

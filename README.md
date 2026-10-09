@@ -5,63 +5,124 @@
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/presentation/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/header-still-light.svg">
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
+  <img alt="GEL RAM. Knowledge printed, not trained. One stored record, four exact views, 1,152 bytes. Read back exactly; it can say UNKNOWN; a process kill, not a power cut, loses nothing it confirmed. Logo: a glass cube of record cells around an accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-**What GEL RAM is working toward.** A text AI whose knowledge is written into
-memory rather than trained into model weights, so adding knowledge needs no
-fine-tuning. It answers in Polish or English from that knowledge and shows the
-source it used, or says plainly that it does not know, and it holds a free
-conversation in both languages. A copy kept on disk means a restart or a crash
-loses nothing that was saved. **This is the goal, not a result of this
-repository**: the sections below state exactly what has been checked so far.
+**GEL RAM prints knowledge into memory as fixed Q8 records, instead of training
+it into model weights, and reads the records back exactly, working toward
+hardware-level memory computation.** The goal is a text AI that answers in
+Polish and English from what it holds, or says it does not know.
 
-**Where the numbers below come from.** The answers counted in the cards were
-given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v6); the example and
-the answer grid show an earlier run on question set v1, the 80 questions also put to
-three language models. Every question is published with its expected answer
-and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
-[the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
-[the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
-and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
-every recorded answer, and `xtask answer-bench check` re-scores them on each
-verify run. Free conversation has not been measured yet.
+The step that prints text into records is private, so the Q8 records in this
+checkout are synthetic and its tools do not answer natural-language questions.
+This repository does not establish hardware-level memory computation
+([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
+not a result.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Evidence you can inspect. Private development build, frozen question set v6: on 990 new questions (495 Polish, 495 English) GEL RAM at its balanced setting gave 447 correct answers, each with its source passage, 18 wrong and 525 UNKNOWN. Two BM25 search engines on the same bank and rule gave 588–616 correct and 33–36 wrong: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave 313 correct and 2 wrong, the engines at their strict threshold 414–417 correct and 4–5 wrong, so there the engines find more answers. Every recorded answer is re-scored by the public verify run; the build itself is private." src="media/presentation/glance-light.svg" width="1200"></picture>
+## One record, four exact views
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/question-path-dark.svg"><img alt="What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence." src="media/presentation/question-path-light.svg" width="1200"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/record-dark.svg"><img alt="One stored Q8 record: 1,024 one-byte values and a 128-byte activity mask, 1,152 bytes, read through four equivalent views without four copies. Four packed copies would take 4,608 bytes; the reference layout used for checking takes 8,192 bytes. 48 of 48 recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories." src="media/presentation/record-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/example-41-dark.svg"><img alt="Private build, earlier run on question set v1, question 41 of 80: Why was the 1963 Sudbury and Woodbridge by-election held? GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give." src="media/presentation/example-41-light.svg" width="1200"></picture>
+A record is stored once: 1,024 one-byte values and a 128-byte activity mask,
+1,152 bytes. The reader exposes four equivalent views of it and, for each view,
+returns the score a separate read of a materialized copy gives, bit for bit on
+the same build and platform. Four packed copies would take 4,608 bytes. Four
+views are not four independent memories, four votes or a 4× speedup, and 1,152
+bytes is the record, not process memory. On the author's private ranking check,
+a different task, Single still outperforms Quad in this run: top-1 379 against
+371 of 400. [How each part is checked](#the-memory-core)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/answer-dots-dark.svg"><img alt="Private build, earlier run on question set v1, 80 questions, an earlier build beside three language models answering closed book. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong, 49 UNKNOWN. GPT-OSS-20B: 8 correct, 28 wrong, 44 UNKNOWN. Qwen3.8-27B: 6 correct, 11 wrong, 63 UNKNOWN. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup." src="media/presentation/answer-dots-light.svg" width="1200"></picture>
+## Exact bytes, or a refusal
 
-Recordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)
+<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/05-integrity-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif"><img alt="Changed bytes. Retained pin. Refusal." src="media/gifs/05-integrity-light.gif" width="1000" loading="lazy"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/truth-surface-dark.svg"><img alt="Claims by status: 5 EXECUTABLE_CHECK, 13 SEPARATE_GATE, 22 MEASURED_LOCAL, 1 NOT_VERIFIED, 2 NOT_ESTABLISHED; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction." src="media/presentation/truth-surface-light.svg" width="1200"></picture>
+The public collection tool builds a collection from your own files; it does not
+print Q8 records, but it follows the same rule. Each quotation comes back byte
+for byte with its byte range; replace a document and its earlier citation is
+refused; change one byte of a saved snapshot and loading it with the pin you
+kept fails. A matching pin proves these are the bytes you kept, not that the
+source is true; a hash is not a signature.
+Replays of real public-tool runs: [this one, as text](media/gifs/05-integrity.txt) · [old citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [all six](#see-it-in-action)
 
-[Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)
+## A killed process loses nothing it confirmed
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
+In the recorded crash series the public collection tool was killed at random
+moments in 200 trials while its collection grew: 0 of 2,683 acknowledged
+snapshots were lost, none was partial, and every trial resumed to the
+uninterrupted result ([crash series](docs/CRASH-SERIES.md)). Injected write
+failures, permission denial and a full disk leave the previous snapshot intact
+([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). A separate private series
+checked 235,712 confirmed records after kills; none was lost. A process kill is
+not a power cut: power-loss durability is not established.
 
-**What this checkout runs.** Local Rust tools for phrase lookup in your own
-files: exact source-bound quotations, refusal of a stale citation and
-independently pinned snapshots. They do not answer natural-language questions;
-that is the goal above.
+## UNKNOWN when the bank does not hold the answer
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
+Of 599 frozen questions written to have no answer in the bank (399 about real
+topics outside it, checked by title, and 200 about invented subjects; the set
+page lists one exception), a private development build said UNKNOWN to 573 and
+answered 26. Silence costs answers too: it said UNKNOWN to 557 of the 982
+questions that have one. The build and its bank are private;
+`xtask answer-bench check` re-scores every recorded answer.
+[Question set v7 and its limits](docs/answer-or-abstain-v7/README.md)
 
-[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
+## Run it now
 
-> **Version 0.5.3.** The instructions below use the `v0.5.3` tag. Record the exact
-> commit you test.
-> [Release notes](RELEASE-NOTES-v0.5.3.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs). Cloning, the
+toolchain and the fetch need a network; after that Cargo runs offline. No model
+and no private data are involved. Run each line separately:
 
-**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
-Open that file from this checkout in a browser for the responsive blue-panel layout,
-light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this repository does not enable Pages.
-[Presentation guide](docs/README-PRESENTATION.md).
+```sh
+git clone https://github.com/Gelram-project/gel-ram.git
+cd gel-ram
+rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+cargo fetch --locked
+cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
+cargo run --locked --offline -p xtask -- mutation-matrix
+cargo run --locked --offline -p xtask -- crash-series 20
+cargo run --locked --offline --release -p gel-physics -- 5
+```
+
+| Run | Line to check | What it shows | Its limit |
+|:---|:---|:---|:---|
+| One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
+| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three public file formats is refused under the original pin | A finite matrix, not every possible corruption |
+| Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
+| F0 memory physics | `GEL_PHYSICS_F0_V3`, then ns per step and GiB/s from 48 KiB to 256 MiB and random 32/64/128-byte fetches in a 64 MiB working set | What your own memory costs, measured instead of assumed | Nanoseconds and GiB/s only, no cycles; compare rows only within one machine and one output tag |
+
+`cargo run --locked --offline -p xtask -- verify` runs the full public check,
+including a smaller `quad_compare` run and, on Unix hosts, a five-trial crash
+series; it ends with `GEL_VERIFY_ALL=PASS`.
+
+[The memory core](#the-memory-core) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [External checks](docs/EXTERNAL-CHECKS.md) · [Quick start](#quick-start) · [Documentation](#documentation) · [License](#about-and-licensing)
+
+## The memory core
+
+The public core holds fixed records, reads them exactly and measures the memory
+they live in. Each row names a test (`cargo test --locked --offline -p CRATE`)
+or a command.
+
+| Part | What it does | Check it |
+|:---|:---|:---|
+| ORB128 record (`gel-orb`) | One fixed 1,024-bit record of 128 bytes, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
+| Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single header bit flip, payload byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
+| Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
+| Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
+| Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
+| F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
+
+Tests hold four equalities:
+
+```text
+reference result      == optimized result      (gel-kernel: kernel_matches_reference)
+full Top-K            == progressive Top-K     (gel-reader)
+original record bytes == rebuilt record bytes  (gel-structural)
+written store         == reopened store        (gel-store: persistence_roundtrip_and_payload_corruption_rejection)
+```
+
+`cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,
+the store, Reader16 and the structural rebuild in one run and prints
+`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not turn text into
+records; that step and its bank are private.
 
 ## See it in action
 
@@ -69,11 +130,7 @@ source, not as a hosted page; this repository does not enable Pages.
 Each animation lasts 12 seconds; pacing is editorial, not execution time.
 [Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/chips/05-dark.svg"><img alt="Workflow 05 · CHANGED BYTE REFUSED" src="media/presentation/chips/05-light.svg" width="320"></picture>
-
-<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.png"><source media="(prefers-reduced-motion: reduce)" srcset="media/gifs/05-integrity-light.png"><source media="(prefers-color-scheme: dark)" srcset="media/gifs/05-integrity-dark.gif"><img alt="Changed bytes. Retained pin. Refusal." src="media/gifs/05-integrity-light.gif" width="1000" loading="lazy"></picture>
-
-[Full transcript](media/gifs/05-integrity.txt) · [Full-size dark replay](media/gifs/05-integrity-dark.gif)
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
 ### Six workflows, one evidence trail
 
@@ -102,7 +159,15 @@ its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
 New presentation is not a new execution, benchmark or human acceptance.
 
+**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
+Open that file from this checkout in a browser for the responsive blue-panel layout,
+light/dark backgrounds and a still-image control. GitHub displays HTML files as
+source, not as a hosted page; this repository does not enable Pages.
+[Presentation guide](docs/README-PRESENTATION.md).
+
 ## What the public checks cover
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/facts-dark.svg"><img alt="Checked facts: documented properties mapped to tests, checked on every CI platform with declared Unix-only exclusions, three CI platforms, format mutants each rejected or explained, network isolation verified in the strict reproduction." src="media/presentation/facts-light.svg" width="1200"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/wall-dark.svg"><img alt="Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows." src="media/presentation/wall-light.svg" width="1200"></picture>
 
@@ -121,37 +186,6 @@ committed report; `xtask verify` regenerates it and fails on any difference.
 Both images are drawn from these files when the presentation is built, and the
 read-only presentation check fails if they drift.
 
-## What is different here
-
-Three properties, each with its evidence and its limit:
-
-- **It answers with a stored source passage or says UNKNOWN; it is not always
-  right.** On the 80 frozen questions of question set v1 it gave 11 answers,
-  all correct, and 69 UNKNOWN, where three
-  language models answering closed book gave 11–28 wrong answers each. On 394
-  new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
-  from another article; the models gave 80–233 wrong answers each. On 80
-  questions without a correct answer it still answered 6 of the 40 with a false
-  premise, so it does not always refuse. On 985 newer frozen questions, written
-  after the change it tests, a development build answered 423: 405 correct and 18
-  wrong; two BM25 search engines on the same bank found more (531–558 correct)
-  and gave more wrong answers (40–41). On 987 more frozen questions the same
-  build answered 432: 416 correct and 16 wrong, and the engines again found
-  more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
-  questions it answered 465: 447 correct and 18 wrong; the engines found more
-  (588–616 correct) with more wrong answers (33–36).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
-- **Knowledge is printed, not trained.** New knowledge is written into memory;
-  no fine-tuning or LoRA run is involved. In the public tools this is the
-  collection you build from your own files: add a document and cite it exactly;
-  replace it and the old citation is refused.
-- **Saved snapshots survive a killed process.** The public snapshot tools keep the previous
-  copy through injected I/O failures, permission denial and a full disk
-  ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)), and a growing collection
-  killed at random moments loses no acknowledged snapshot
-  ([crash series](docs/CRASH-SERIES.md)). Power-loss durability is not
-  established.
-
 ## What you can check without the private code
 
 GEL's own answers come from a private implementation and its bank, so they
@@ -160,198 +194,37 @@ cannot be re-run from this checkout. Everything around them can:
 | What | How | You need |
 |:---|:---|:---|
 | The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
-| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on Linux or macOS |
-| The scoring of every recorded answer, GEL's and the models' | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
-| The language models' side of the comparisons | send the published questions and prompts to the same models, then score your answers with `answer-bench score` ([set and method](docs/answer-or-abstain/README.md)) | a free Groq account |
-| That a private result was not changed after publication | each result lists the SHA-256 of its private evidence ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
+| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on a Unix host |
+| The scoring of every recorded answer | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
+| That a private result was not changed after publication | where a result lists an evidence identity, it is the SHA-256 of its private artifacts; the ranking, resident-read and integrity-gate rows have none ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
 
 An independent run of the public tools on a second machine is still missing
 ([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
 
-## Measured GEL results — scope matters
+## External checks
 
-> **PRIVATE MEASUREMENT — not runnable from this repository.** The GEL answers
-> and timings in this section come from the separate private implementation and
-> its private bank. What you can run yourself: the [public checks](#what-the-public-checks-cover)
-> and a re-scoring of every recorded answer (`xtask answer-bench check`).
+Frozen question sets v1 to v7 check private development builds from the
+outside; each set page names the build it measured. Every question, expected
+answer and recorded answer is published, and `xtask answer-bench check`
+re-scores them on every verify run. GEL's main numbers on each set, the
+reference search engines and what has nothing to compare with are on one page:
+[external checks](docs/EXTERNAL-CHECKS.md).
 
-These are **author-run measurements of a separate private implementation**,
-not benchmarks of this public checkout or an LLM leaderboard.
-They are reported here without publishing the private engine.
+## Private measurements
 
-| Operation | Observations | Measured result | What it establishes |
-|:---|---:|:---|:---|
-| Resident read at a known address | 40 | p50 **53.872 µs**, p95 **79.640 µs**, p99 **90.009 µs**; 40/40 reference matches | Addressed read after loading into RAM, not semantic search |
-| Source-integrity gate | 1,000 source fragments; 5 controls each | **1,000 valid payloads admitted; 4,000 invalid cases rejected** | Changed payload, missing address, wrong source and stale catalog generation are distinguished |
-| Single Q8 ranking | 400 source-text probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
-| Quad ranking | Same 400 source-text probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
+Author-run diagnostics of the separate private implementation (ranking within a
+known slot, resident read times, the answer verdict and the kill series of its
+store) cannot be re-run from this checkout. They are listed with their scope in
+[measured progress](docs/MEASURED-PROGRESS.md), with the SHA-256 of their
+private artifacts where one is given (the ranking, resident-read and
+integrity-gate rows have none), and the [claim registry](docs/CLAIMS.md) lists
+them as `MEASURED_LOCAL`.
 
-The logical ranking bank contains **1M fragments across four 250k slots**;
-these probes do **not** search all 1M candidates. One empty probe remains in
-the quality denominator. Integrity controls use a separate 1,000-fragment
-PL/EN catalog, not the million-record bank. The gate is an experimental
-CPU adapter, tested offline in a Linux sandbox, not a deployed service.
+## The public collection tool
 
-Percentiles use nearest-rank; with N=40, p99 is the maximum. These are
-single-host diagnostic runs, not independently replicated measurements.
-Matching source bytes does not establish truth or understanding.
-Neither hardware-level memory computation nor a speedup over LLMs is
-established by these tests.
-
-The underlying logs and private harness remain outside this checkout.
-**These rows are not independently reproducible from the public release.**
-Public-tool demonstrations and their reproducible evidence above retain
-their own, separate scope. No private version identifiers, source code,
-knowledge banks or credentials are included here.
-
-### New measurements: ranking improvement and source-field dialogue
-
-![Animated measured-results table: Quad top-1 improved from 77.5% to 92.75% on 400 known-slot source probes. Source-field dialogue has microsecond medians on a separate five-article pilot. Groq batches are a different task; no speedup ratio.](media/presentation/measured-progress.svg)
-
-Animation highlights rows only; it is **not execution footage or a timing scale**.
-All numbers remain visible, with a reduced-motion mode and the text table below.
-These author-run private experiments do not change the public implementation.
-
-| Experiment | Earlier result | Updated measurement | Scope |
-|:---|:---|:---|:---|
-| Quad top-1 | 310/400 (77.5%) | **371/400 (92.75%)** | Same 400 source-text probes; known 250k slot within a 1M bank |
-| Quad top-10 | 361/400 (90.25%) | **396/400 (99%)** | Not natural-question accuracy or global 1M search |
-| Single Q8 top-1 / top-10 | 368/400 / 393/400 | **379/400 / 397/400** | Single still outperforms Quad on this diagnostic |
-| Source-field dialogue | Separate task | **p50 2.054–4.819 µs** across five field questions and three runs | Five articles in RAM; finished source-bound text, not a million-record search |
-| Two-source whole-field comparison | Separate task | **p50 19.417–21.220 µs** across three runs | Exact field comparison, not unrestricted reasoning |
-| Transfer to four new articles | No latency measurement | **6 source-field answers, 2 quotations, 1 limited comparison, 3 UNHANDLED, 1 UNKNOWN** | 13 PL questions; not 9/13 accuracy |
-
-The timing pilot used 1,000 warm repetitions **per question per run**.
-The slowest retained warm observation was **711.017 µs**; medians are not
-worst-case guarantees. Newer quotation/list support was not timed in that
-campaign. A quotation is not a verified semantic decision.
-
-[All 13 timing rows, provenance and limitations](docs/MEASURED-PROGRESS.md).
-The Groq table below remains a separate supplied-source decision diagnostic;
-**no GEL/Groq speedup ratio follows from these different tasks**.
-
-### Answer verdict: answer only when the lead is clear
-
-Measured after the v0.5.0 release with the same private implementation as the
-ranking rows above. The original column uses the same 1M bank. After the three
-changes the searched answer bank holds 167,854 passages per slot, 671,416 in all;
-to keep the slots equal, every slot was cut at its end to the size of the
-smallest, which removed about a quarter of the English passages the changes left.
-GEL answers only when its best passage leads the runner-up by a
-threshold fixed in advance (set on a different corpus); otherwise it
-returns UNKNOWN. Three changes to the private build were measured one at a time
-(duplicate handling, answer-bank scope and an encoder variant); their details
-remain private.
-
-| Stored passages read back (ranked within their slot) | Original bank (1M passages) | After the three changes (671,416 passages) |
-|:---|---:|---:|
-| Probes | 9,998 | 50,000 |
-| Answered | 7,693 (76.9%) | 46,376 (92.8%) |
-| Correct (same article), share of the answers | 7,515 (97.7%) | **46,353 (99.95%)** |
-| Wrong, share of all probes | 178 (1.78%) | **23 (0.046%)** |
-| UNKNOWN | 2,305 (23.1%) | 3,624 (7.2%) |
-
-Two of the four slots reach a 95% Wilson lower bound of at least 0.999 (0.9993
-and 0.9994); the other two reach 0.9984 and 0.9986. The probes are stored
-passages, not questions. Counts are exact; the original-bank row was earlier
-given as 10,000 probes and 77.0% answered, where 2 empty probes are not counted
-and 7,693 of 9,998 is 76.9%.
-
-| 80 natural questions of question set v1 (40 PL, 40 EN), all four slots of the 671,416-passage bank searched | Without verification | With source verification |
-|:---|---:|---:|
-| Top-1 from the right article | 27 (34%) | **40 (50%)** |
-| Answers given | 9 (1 wrong) | **11 (all correct)** |
-| UNKNOWN | 71 | 69 |
-
-The questions were written by the project's AI coding assistant for randomly
-sampled passages and frozen before any run. Verification compares a question
-with the stored sources of its best candidates; its threshold was set on a separate
-calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
-not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md),
-44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md) and 47% (465 of 990) on
-[question set v6](docs/answer-or-abstain-v6/README.md).
-
-[Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
-
-### Side by side with three language models
-
-The same 80 frozen questions (question set v1) went to GEL RAM and, closed book, to three
-language models on the Groq API, in one recorded run with one scoring rule.
-GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
-models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
-
-| Same 80 questions | Answered | Correct | Wrong | UNKNOWN |
-|:---|---:|---:|---:|---:|
-| GEL RAM (local bank, answers with the source passage) | 11 | 11 | **0** | 69 |
-| GPT-OSS-120B (Groq API, closed book) | 31 | 10 | 21 | 49 |
-| GPT-OSS-20B (Groq API, closed book) | 36 | 8 | 28 | 44 |
-| Qwen3.8-27B (Groq API, closed book) | 17 | 6 | 11 | 63 |
-
-[![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong. GPT-OSS-20B: 8 correct, 28 wrong. Qwen3.8-27B: 6 correct, 11 wrong.](media/beside-groq/all-80-answers.png)](docs/GEL-BESIDE-GROQ.md)
-
-The two sides do different jobs: GEL looks facts up in a bank it holds, the
-models answer from training. On 10 of GEL's 11 answers no model was correct; on
-12 other questions a model was correct where GEL said UNKNOWN. The visible model
-answers were two words at the median; the GPT-OSS models also generated 51 and
-154 hidden reasoning tokens per question on average. GEL returns the stored
-source passage (33 words at the median). Times are recorded, not compared: GEL
-0.25 s for all 80 locally, the models 59–371 ms per question at the median over
-the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
-· [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
-· [Try your own system on the same questions](docs/answer-or-abstain/README.md)
-
-**No-answer control.** 80 more questions have no correct answer: 40 ask about
-invented subjects, 40 carry a false premise about an entry in the bank. GEL
-answered none of the invented ones and 6 of the false premises; it can still
-return a passage that matches a question without answering it. The models
-answered 3–22 and 2–16. [No-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
-
-**A larger frozen question set (v2).** 394 new questions (198 PL, 196 EN), drawn at
-random from the bank and frozen before any system ran, went to the same four
-systems in one run on 2026-09-29. GEL answered 63 and said UNKNOWN to 331:
-**59 correct and 4 wrong** — each wrong answer a passage from another article,
-three of them disambiguation pages, all four in Polish. The models answered
-123–283 and gave **80–233 wrong answers each**.
-
-| Same 394 questions (question set v2) | Answered | Correct | Wrong | UNKNOWN |
-|:---|---:|---:|---:|---:|
-| GEL RAM (local bank, answers with the source passage) | 63 | 59 | **4** | 331 |
-| GPT-OSS-120B (Groq API, closed book) | 223 | 92 | 131 | 171 |
-| GPT-OSS-20B (Groq API, closed book) | 283 | 50 | 233 | 111 |
-| Qwen3.8-27B (Groq API, closed book) | 123 | 43 | 80 | 271 |
-
-[Question set v2: every question, answer and review decision](docs/answer-or-abstain-v2/README.md)
-
-### Same supplied-source task: GEL adapter and models served by Groq
-
-Twelve development claims (six PL, six EN), with the same supplied Wikipedia
-passages and prompts. **One timed batch per language and profile**, not six
-latency observations. Label agreement is separate from citation/format validity.
-
-| System / profile | Language | Batch time | Labels matching working gold | Label + required structure | S/R decisions |
-|:---|:---:|---:|---:|---:|---:|
-| GEL bounded adapter R0 | PL | **85.851 µs** | 2/6 | 2/6 | **0/6** |
-| GEL bounded adapter R0 | EN | **78.057 µs** | 2/6 | 2/6 | **0/6** |
-| Groq / Qwen R0 | PL | 537.134 ms | 5/6 | 5/6 | 5/6 |
-| Groq / Qwen R0 | EN | 552.672 ms | 6/6 | 6/6 | 4/6 |
-| Groq / GPT-OSS-20B R1 | PL | 818.245 ms | 5/6 | 1/6 | 5/6 |
-| Groq / GPT-OSS-20B R1 | EN | 879.478 ms | protocol rejected | 0/6 | 0/6 admitted |
-| Groq / GPT-OSS-120B R1 | PL | 1219.564 ms | 5/6 | 5/6 | 5/6 |
-| Groq / GPT-OSS-120B R1 | EN | 1035.560 ms | 6/6 | 1/6 | 4/6 |
-
-**GEL returned UNKNOWN for every claim because the grammar was unsupported.**
-Its microsecond times measure parsing and abstention, not successful semantic
-decisions; the 2/6 agreement is the always-UNKNOWN baseline.
-Groq times include HTTP/network and generation. There is **no justified
-GEL/LLM speedup multiplier** here, and N=1 does not support latency percentiles.
-The adapter is not a complete GEL application or an Ocean retrieval benchmark.
-
-Earlier 20B and 120B PL attempts were incomplete at the 1024-token limit
-(1383.914 ms and 2407.528 ms). They are retained in the
-[protocol, exact times and failure notes](docs/GEL-GROQ-DIAGNOSTIC.md).
-This small, development-exposed comparison is not independently validated
-or a general model ranking. Private code, banks and API credentials stay private.
+Build a collection from your own UTF-8 files, quote it exactly and reopen it
+with the pin you kept. It is phrase lookup, not question answering; start with
+the [quick start](#quick-start).
 
 ### What you can inspect
 
@@ -382,6 +255,10 @@ No generated terminal mockup or illustrative timing is used as execution evidenc
 
 ## Quick start
 
+> **Version 0.6.0.** The instructions below use the `v0.6.0` tag. Record the exact
+> commit you test.
+> [Release notes](RELEASE-NOTES-v0.6.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+
 Use a new checkout. Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs)
 first. Cloning, toolchain installation and dependency fetching need a network;
 the final command uses locked offline dependencies. Run each line separately,
@@ -390,7 +267,7 @@ including in Windows PowerShell.
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout v0.5.3
+git checkout v0.6.0
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
@@ -501,7 +378,8 @@ cargo run --locked --offline --release -p gel-phase-quad --example quad_playgrou
 | [Project map](docs/START-HERE.md) | [Verified results and scope](docs/VERIFIED-RESULTS.md) | [Public roadmap](docs/ROADMAP.md) |
 | [Evidence Lab](docs/EVIDENCE-LAB.md) | [Publication fault tests](docs/PUBLICATION-FAULT-TESTS.md) | [Publication status](CANDIDATE-STATUS.md) |
 | [Batch interface](docs/EVIDENCE-BATCH.md) | [Source bundle verification](docs/SOURCE-BUNDLE.md) | [Media index](media/INDEX.md) |
-| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.5.3.md) |
+| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.6.0.md) |
+| [Q8 contract](docs/Q8-QUAD.md) · [Reader16](docs/READER16.md) | [Claim registry](docs/CLAIMS.md) · [Crash series](docs/CRASH-SERIES.md) | [External checks](docs/EXTERNAL-CHECKS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) |
 
 Earlier README versions and the notes of earlier releases are no longer kept in
 the tree; they remain in the git history. Detailed reports and raw evidence

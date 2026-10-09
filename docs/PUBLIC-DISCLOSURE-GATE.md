@@ -24,14 +24,13 @@ the tree (not `target` or `.git`; binary files are skipped) and fails on any of:
 - **Polish prose**: documentation in Markdown, SVG and HTML is English only. A line
   with a letter used only in Polish fails, except in code blocks and inline code
   and in the paths that quote Polish data (the answer-or-abstain sets, the
-  evidence records, the two side-by-side pages and crate fixtures).
+  evidence records and crate fixtures).
 
 `xtask verify` runs the gate, so every pull request and release check runs it
 too. Final marker: `PUBLIC_DISCLOSURE_GATE=PASS`.
 
-**What it does not do.** It holds no list of words: a list kept in a public file,
-even as hashes, can be recovered by guessing, so wording is reviewed before
-publication outside this repository. It does not read pull request or release
-descriptions, commit messages, branch names, text inside images or films, or
-compiled binaries. It is not a review of meaning: a description that gives away
+**What it does not do.** It holds no list of private words; wording is reviewed
+outside this repository, before publication. It does not read pull request or
+release descriptions, commit messages, branch names, text inside images or films,
+or compiled binaries. It is not a review of meaning: a description that gives away
 a private mechanism in ordinary words passes.

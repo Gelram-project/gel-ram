@@ -59,8 +59,7 @@ This is compatibility checking, **not cryptographic authentication**. A sender
 can maliciously relabel a payload. An explicit regression test demonstrates
 that limitation. Trusted manifests/signatures are still needed at trust boundaries.
 Descriptors are in-memory values; no stable wire format, migration or private
-decoder compatibility is introduced. This change does not claim to fix all
-private variants merely because their names also contain Quad Grid.
+decoder compatibility is introduced.
 
 ## Measurement protocol (2026-09-11)
 

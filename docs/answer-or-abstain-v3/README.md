@@ -212,6 +212,29 @@ Tantivy's median time is lower than GEL RAM's. GEL RAM's slowest questions are
 faster: its p99 is 10.1–10.6 ms, against 11.8–14.8 ms for Tantivy. Memory and
 disk use were not measured on the same terms and are not compared here.
 
+## What has nothing to compare with
+
+The search engines on these pages are a reference for one narrow task, scored
+the same way for every system: return one stored passage for a question, or
+UNKNOWN. The question sets measure the answers of private builds; they do not
+measure the record, the reader or the memory beneath them, and the parts below
+have no counterpart in that task, so no number here compares them:
+
+- **One record, four exact views.** One 1,152-byte Q8 record is read through
+  four equivalent views without four copies; each view's score equals a
+  separate reference read bit for bit, and each of the 48 recorded comparison
+  runs behind the README record card ends with `Q8_QUAD_EXACT=PASS`
+  ([contract](../Q8-QUAD.md), [the 48 runs](../evidence-q8-current/README.md)).
+- **Reader16.** One fused comparison of two records returns 16 judgments; they
+  are not 16 independent measurements ([Reader16](../READER16.md)).
+- **F0 memory physics.** The cost of the memory the records live in is measured
+  in nanoseconds and GiB/s instead of assumed ([method](../PERFORMANCE.md)).
+
+Hardware-level memory computation, the direction of the project, is not
+established by any run on these pages or in this repository
+([claim registry](../CLAIMS.md)). UNKNOWN is not unique to GEL RAM: at their
+thresholds the engines also return UNKNOWN.
+
 ## Limits
 
 - The questions and accepted spellings were written by the project's AI coding

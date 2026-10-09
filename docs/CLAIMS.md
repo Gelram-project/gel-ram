@@ -17,20 +17,18 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-resident-addressed-read | timing | MEASURED_LOCAL |
 | gel-source-integrity-controls | integrity | MEASURED_LOCAL |
 | gel-single-quad-slot-ranking | ranking | MEASURED_LOCAL |
-| gel-groq-supplied-source-diagnostic | comparison | MEASURED_LOCAL |
 | gel-slot-ranking-update | ranking | MEASURED_LOCAL |
 | gel-source-field-dialogue-timing | timing | MEASURED_LOCAL |
 | gel-new-article-transfer | retrieval | MEASURED_LOCAL |
 | gel-answer-verdict-self-read | retrieval | MEASURED_LOCAL |
 | gel-natural-question-answers | retrieval | MEASURED_LOCAL |
-| gel-beside-groq-closed-book | comparison | MEASURED_LOCAL |
-| gel-beside-groq-no-answer | comparison | MEASURED_LOCAL |
+| gel-answer-set-v2 | retrieval | MEASURED_LOCAL |
 | store-kill-during-learning | persistence | MEASURED_LOCAL |
-| gel-beside-groq-v2 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v3 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v4 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v5 | comparison | MEASURED_LOCAL |
 | gel-beside-bm25-v6 | comparison | MEASURED_LOCAL |
+| gel-beside-bm25-v7 | comparison | MEASURED_LOCAL |
 | source-roundtrip | bytes | EXECUTABLE_CHECK |
 | stale-citation | provenance | EXECUTABLE_CHECK |
 | hash-not-structure | structure | EXECUTABLE_CHECK |
@@ -38,6 +36,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | no-cross-document | retrieval | EXECUTABLE_CHECK |
 | numeric-loss | numeric | SEPARATE_GATE |
 | ranking-oracle | ranking | SEPARATE_GATE |
+| q8-one-record-four-views | bytes | SEPARATE_GATE |
 | mutation-memory | memory | MEASURED_LOCAL |
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
@@ -59,6 +58,8 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | commercial-advantage | comparison | NOT_ESTABLISHED |
 <!-- REGISTRY-END -->
 
+Rows named gel-beside-bm25-* are external checks; see [what has nothing to compare with](EXTERNAL-CHECKS.md#what-has-nothing-to-compare-with).
+
 PASS applies only to the stated finite fixture and its counterexample. It does
 not prove arbitrary-language understanding, all possible malformed inputs or
 truth of source content. Bytes, numeric loss, ranking and context are separate
@@ -70,7 +71,8 @@ Deferred entries deliberately stay open.
 An open row carries one of four states — SEPARATE_GATE, MEASURED_LOCAL,
 NOT_VERIFIED or NOT_ESTABLISHED — and the registry rejects any other word, so a
 row cannot declare itself passed. The registry covers the tools added for
-v0.5.0 and every timing table shown in the README; the GEL sketch-search and
+v0.5.0 and every timing table of the [measured progress](MEASURED-PROGRESS.md)
+page; the GEL sketch-search and
 Ocean full-scan rows are author-reported and cannot be re-run from this
 checkout.
 

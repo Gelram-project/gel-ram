@@ -113,8 +113,8 @@ that still contradicts the source. Every change is listed in
 
 After the manual review; automatic scores in brackets where they differ. The
 tables are generated from the recorded answers (`answer-bench tables`), and
-`answer-bench check`, run by `xtask verify`, fails if this README or the
-[side-by-side comparison](../GEL-BESIDE-GROQ.md) shows other numbers.
+`answer-bench check`, run by `xtask verify`, fails if this README shows other
+numbers.
 
 <!-- ANSWER-BENCH-RESULTS-BEGIN -->
 | With an answer | Rules | Answered | Correct | Wrong | UNKNOWN | Errors |

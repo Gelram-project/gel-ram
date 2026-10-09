@@ -1,25 +1,36 @@
-//! answer_or_abstain_v1 to v6 (docs/answer-or-abstain*): score any
+//! answer_or_abstain_v1 to v7 (docs/answer-or-abstain*): score any
 //! system's answers with the published rules or the stricter ones, and check
 //! that every published number is reproduced from the recorded answers.
 //!
 //! `check` re-scores the recorded answers of every system of every set,
 //! renders the result tables and fails unless the README of the set contains
-//! exactly those tables and the side-by-side document contains the rows it
-//! publishes. It also verifies every source-passage hash and the set identity.
+//! exactly those tables. It also verifies every source-passage hash and the set
+//! identity.
 //! It re-scores recorded text; it does not re-run any system.
 use std::{collections::HashMap, fmt::Write as _, fs, path::Path};
 
 /// A recorded system: file name and the name printed in the tables.
 type System = (&'static str, &'static str);
 
+/// The part without an answer: how many questions and which kinds, in table order.
+struct NoAnswerPart {
+    count: usize,
+    kinds: &'static [Kind],
+}
+/// For the sets that have no part without an answer.
+const NO_PART: NoAnswerPart = NoAnswerPart {
+    count: 0,
+    kinds: &[],
+};
+
 /// One published set: its folder, identity name, parts and questions per part.
 struct SetDef {
     dir: &'static str,
     name: &'static str,
     parts: &'static [Set],
+    /// Questions of the part with an answer.
     count: usize,
-    /// Whether docs/GEL-BESIDE-GROQ.md publishes rows re-scored from this set.
-    side_by_side: bool,
+    no_answer: NoAnswerPart,
     /// The systems whose answers the set records, in table order.
     systems: &'static [System],
     /// Whether the README also shows precision and language splits with Wilson intervals.
@@ -33,7 +44,10 @@ const V1: SetDef = SetDef {
     name: "answer_or_abstain_v1",
     parts: &[Set::WithAnswer, Set::NoAnswer],
     count: 80,
-    side_by_side: true,
+    no_answer: NoAnswerPart {
+        count: 80,
+        kinds: &[Kind::Invented, Kind::FalsePremise],
+    },
     systems: &SYSTEMS,
     precision: false,
     paired: &[],
@@ -43,7 +57,7 @@ const V2: SetDef = SetDef {
     name: "answer_or_abstain_v2",
     parts: &[Set::WithAnswer],
     count: 394,
-    side_by_side: false,
+    no_answer: NO_PART,
     systems: &SYSTEMS,
     precision: false,
     paired: &[],
@@ -53,7 +67,7 @@ const V3: SetDef = SetDef {
     name: "answer_or_abstain_v3",
     parts: &[Set::WithAnswer],
     count: 979,
-    side_by_side: false,
+    no_answer: NO_PART,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-first-run", "GEL RAM, first run"),
@@ -76,7 +90,7 @@ const V4: SetDef = SetDef {
     name: "answer_or_abstain_v4",
     parts: &[Set::WithAnswer],
     count: 985,
-    side_by_side: false,
+    no_answer: NO_PART,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -104,7 +118,7 @@ const V5: SetDef = SetDef {
     name: "answer_or_abstain_v5",
     parts: &[Set::WithAnswer],
     count: 987,
-    side_by_side: false,
+    no_answer: NO_PART,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -135,7 +149,7 @@ const V6: SetDef = SetDef {
     name: "answer_or_abstain_v6",
     parts: &[Set::WithAnswer],
     count: 990,
-    side_by_side: false,
+    no_answer: NO_PART,
     systems: &[
         ("gel-ram", "GEL RAM"),
         ("gel-ram-precise", "GEL RAM, precise setting"),
@@ -154,7 +168,41 @@ const V6: SetDef = SetDef {
         ("gel-ram-precise", "sqlite-fts5-strict"),
     ],
 };
-const SETS: [&SetDef; 6] = [&V1, &V2, &V3, &V4, &V5, &V6];
+const V7: SetDef = SetDef {
+    dir: "docs/answer-or-abstain-v7",
+    name: "answer_or_abstain_v7",
+    parts: &[Set::WithAnswer, Set::NoAnswer],
+    count: 982,
+    no_answer: NoAnswerPart {
+        count: 599,
+        kinds: &[Kind::Absent, Kind::Invented],
+    },
+    systems: &[
+        ("gel-ram", "GEL RAM"),
+        ("gel-ram-precise", "GEL RAM, precise setting"),
+        ("gel-ram-candidate", "GEL RAM, candidate change"),
+        (
+            "gel-ram-candidate-precise",
+            "GEL RAM, candidate change, precise setting",
+        ),
+        ("tantivy-bm25", "Tantivy BM25, threshold"),
+        ("tantivy-bm25-strict", "Tantivy BM25, strict threshold"),
+        ("tantivy-bm25-top1", "Tantivy BM25, always top 1"),
+        ("sqlite-fts5", "SQLite FTS5, threshold"),
+        ("sqlite-fts5-strict", "SQLite FTS5, strict threshold"),
+        ("sqlite-fts5-top1", "SQLite FTS5, always top 1"),
+    ],
+    precision: true,
+    paired: &[
+        ("gel-ram-candidate", "gel-ram"),
+        ("gel-ram-candidate-precise", "gel-ram-precise"),
+        ("gel-ram", "tantivy-bm25-strict"),
+        ("gel-ram", "sqlite-fts5-strict"),
+        ("gel-ram-precise", "tantivy-bm25-strict"),
+        ("gel-ram-precise", "sqlite-fts5-strict"),
+    ],
+};
+const SETS: [&SetDef; 7] = [&V1, &V2, &V3, &V4, &V5, &V6, &V7];
 const SYSTEMS: [System; 4] = [
     ("gel-ram", "GEL RAM"),
     ("gpt-oss-120b", "GPT-OSS-120B"),
@@ -218,10 +266,41 @@ impl Verdict {
     }
 }
 
+/// What a question is: answerable from its source passage, or why it has no answer.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Kind {
+    Answer,
+    /// A synthetic subject made up for the set.
+    Invented,
+    /// A real subject with a premise its source passage does not state or contradicts.
+    FalsePremise,
+    /// A real Wikipedia topic whose article is not in the bank.
+    Absent,
+}
+
+impl Kind {
+    /// The kind's slot in `Totals` when a system answered it anyway.
+    fn slot(self) -> usize {
+        match self {
+            Kind::Invented => 4,
+            Kind::Answer | Kind::FalsePremise => 5,
+            Kind::Absent => 8,
+        }
+    }
+    fn label(self) -> &'static str {
+        match self {
+            Kind::Answer => "with an answer",
+            Kind::Invented => "invented",
+            Kind::FalsePremise => "false premise",
+            Kind::Absent => "topic not in the bank",
+        }
+    }
+}
+
 struct Question {
     /// Groups of (spelling, is_stem); a stem is marked with a trailing `*` in the file.
     accepted: Vec<Vec<(String, bool)>>,
-    invented: bool,
+    kind: Kind,
     /// Language of the question: `pl` or `en`.
     lang: String,
 }
@@ -231,19 +310,19 @@ struct Answer {
     passage: bool,
 }
 
-/// correct, wrong, unknown, rejected, answered (invented), answered (false premise), review, errors.
+/// correct, wrong, unknown, rejected, answered (invented), answered (false premise), review,
+/// errors, answered (topic not in the bank).
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
-struct Totals([usize; 8]);
+struct Totals([usize; 9]);
 
 impl Totals {
-    fn add(&mut self, v: Verdict, invented: bool) {
+    fn add(&mut self, v: Verdict, kind: Kind) {
         let i = match v {
             Verdict::Correct => 0,
             Verdict::Wrong => 1,
             Verdict::Unknown => 2,
             Verdict::Rejected => 3,
-            Verdict::Answered if invented => 4,
-            Verdict::Answered => 5,
+            Verdict::Answered => kind.slot(),
             Verdict::Review => 6,
             Verdict::Error => 7,
         };
@@ -261,10 +340,11 @@ impl Totals {
                 t[7]
             ),
             Set::NoAnswer => format!(
-                "answered_anyway={} (invented={} false_premise={}) unknown={} rejected={} review={} errors={}",
-                t[4] + t[5],
+                "answered_anyway={} (invented={} false_premise={} absent={}) unknown={} rejected={} review={} errors={}",
+                t[4] + t[5] + t[8],
                 t[4],
                 t[5],
+                t[8],
                 t[2],
                 t[3],
                 t[6],
@@ -397,7 +477,8 @@ fn check_source(nr: usize, f: &[&str]) -> Result<(), String> {
     Ok(())
 }
 
-fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String> {
+/// The questions of one part; `kinds` lists the kinds the part without an answer may hold.
+fn questions(set: Set, text: &str, count: usize, kinds: &[Kind]) -> Result<Vec<Question>, String> {
     let mut out: Vec<Option<Question>> = (0..count).map(|_| None).collect();
     let mut seen = vec![false; count];
     for f in rows(text) {
@@ -406,10 +487,24 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
             Some(l @ (&"pl" | &"en")) => l.to_string(),
             _ => return Err(format!("question {nr}: language must be pl or en")),
         };
-        let q = match set {
-            Set::WithAnswer if f.len() == 11 && !f[4].is_empty() => {
+        let kind = match (set, f.len(), f.get(2)) {
+            (Set::WithAnswer, 11, _) if !f[4].is_empty() => Kind::Answer,
+            (Set::NoAnswer, 12, Some(&"invented")) => Kind::Invented,
+            (Set::NoAnswer, 12, Some(&"false-premise")) => Kind::FalsePremise,
+            (Set::NoAnswer, 12, Some(&"absent")) => Kind::Absent,
+            _ => return Err(format!("question {nr}: unexpected fields")),
+        };
+        if set == Set::NoAnswer && !kinds.contains(&kind) {
+            return Err(format!(
+                "question {nr}: kind {} is not part of this set",
+                kind.label()
+            ));
+        }
+        let mut accepted = Vec::new();
+        match kind {
+            Kind::Answer => {
                 check_source(nr, &f[5..11])?;
-                let accepted = f[4]
+                accepted = f[4]
                     .split(';')
                     .map(|g| {
                         g.split('|')
@@ -420,33 +515,30 @@ fn questions(set: Set, text: &str, count: usize) -> Result<Vec<Question>, String
                             .collect()
                     })
                     .collect();
-                Question {
-                    accepted,
-                    invented: false,
-                    lang,
-                }
             }
-            Set::NoAnswer if f.len() == 12 && f[2] == "invented" => {
+            Kind::Invented => {
                 if f[5].is_empty() || f[6..].iter().any(|x| !x.is_empty()) {
                     return Err(format!(
                         "question {nr}: invented subject needs checked names only"
                     ));
                 }
-                Question {
-                    accepted: Vec::new(),
-                    invented: true,
-                    lang,
-                }
             }
-            Set::NoAnswer if f.len() == 12 && f[2] == "false-premise" => {
+            Kind::FalsePremise => check_source(nr, &f[6..12])?,
+            // A topic outside the bank: the names checked against the bank and the passage
+            // the question was written from, which the bank does not hold.
+            Kind::Absent => {
+                if f[5].is_empty() {
+                    return Err(format!(
+                        "question {nr}: a topic not in the bank needs its checked names"
+                    ));
+                }
                 check_source(nr, &f[6..12])?;
-                Question {
-                    accepted: Vec::new(),
-                    invented: false,
-                    lang,
-                }
             }
-            _ => return Err(format!("question {nr}: unexpected fields")),
+        }
+        let q = Question {
+            accepted,
+            kind,
+            lang,
         };
         out[nr - 1] = Some(q);
     }
@@ -544,9 +636,23 @@ fn score(set: Set, rules: Rules, qs: &[Question], given: &HashMap<usize, Answer>
 fn totals(qs: &[Question], verdicts: &[Verdict]) -> Totals {
     let mut t = Totals::default();
     for (q, v) in qs.iter().zip(verdicts) {
-        t.add(*v, q.invented);
+        t.add(*v, q.kind);
     }
     t
+}
+
+/// Questions in one part of a set.
+fn count(def: &SetDef, set: Set) -> usize {
+    match set {
+        Set::WithAnswer => def.count,
+        Set::NoAnswer => def.no_answer.count,
+    }
+}
+
+/// The questions of one part of a set, read from its question file.
+fn part_questions(root: &Path, def: &SetDef, set: Set) -> Result<Vec<Question>, String> {
+    let file = root.join(def.dir).join(question_file(set));
+    questions(set, &read(&file)?, count(def, set), def.no_answer.kinds)
 }
 
 /// One system scored on one part of a set under one rule set.
@@ -567,12 +673,12 @@ type Results = Vec<Scored>;
 fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
     let mut out = Vec::new();
     for &set in def.parts {
-        let dir = root.join(def.dir);
-        let qs = questions(set, &read(&dir.join(question_file(set)))?, def.count)?;
-        let rec = dir.join("recorded").join(set_name(set));
-        let review = reviews(set, def.systems, &read(&rec.join("review.txt"))?, def.count)?;
+        let n = count(def, set);
+        let qs = part_questions(root, def, set)?;
+        let rec = root.join(def.dir).join("recorded").join(set_name(set));
+        let review = reviews(set, def.systems, &read(&rec.join("review.txt"))?, n)?;
         for &(system, _) in def.systems {
-            let given = answers(&read(&rec.join(format!("{system}.txt")))?, def.count)?;
+            let given = answers(&read(&rec.join(format!("{system}.txt")))?, n)?;
             for rules in [Rules::Published, Rules::Strict] {
                 let auto = score(set, rules, &qs, &given);
                 let mut reviewed = auto.clone();
@@ -583,7 +689,7 @@ fn results(root: &Path, def: &SetDef) -> Result<Results, String> {
                 }
                 let mut by_lang = [Totals::default(); 2];
                 for (q, v) in qs.iter().zip(&reviewed) {
-                    by_lang[usize::from(q.lang == "en")].add(*v, q.invented);
+                    by_lang[usize::from(q.lang == "en")].add(*v, q.kind);
                 }
                 out.push(Scored {
                     set,
@@ -643,16 +749,21 @@ fn render(def: &SetDef, results: &Results) -> String {
         );
     }
     if results.iter().any(|r| r.set == Set::NoAnswer) {
-        s.push_str("\n| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n");
+        let kinds = def.no_answer.kinds;
+        let names: Vec<&str> = kinds.iter().map(|k| k.label()).collect();
+        let _ = write!(s, "\n| Without an answer | Rules | Answered anyway: {} | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n", names.join(" / "));
         for r in results.iter().filter(|r| r.set == Set::NoAnswer) {
             let (a, v) = (r.auto.0, r.reviewed.0);
+            let anyway: Vec<String> = kinds
+                .iter()
+                .map(|k| cell(a[k.slot()], v[k.slot()]))
+                .collect();
             let _ = writeln!(
                 s,
-                "| {} | {} | {} / {} | {} | {} | {} | {} |",
+                "| {} | {} | {} | {} | {} | {} | {} |",
                 display(def, r.system),
                 rules_name(r.rules),
-                cell(a[4], v[4]),
-                cell(a[5], v[5]),
+                anyway.join(" / "),
                 cell(a[2], v[2]),
                 cell(a[3], v[3]),
                 cell(a[6], v[6]),
@@ -662,6 +773,9 @@ fn render(def: &SetDef, results: &Results) -> String {
     }
     if def.precision {
         s.push_str(&precision_table(def, results));
+        if def.parts.len() == 2 {
+            s.push_str(&all_questions_table(def, results));
+        }
     }
     if !def.paired.is_empty() {
         s.push_str(&paired_table(def, results));
@@ -688,6 +802,43 @@ fn precision_table(def: &SetDef, results: &Results) -> String {
             display(def, r.system),
             share(t[0], t[0] + t[1]),
             share(t[1], t.iter().sum())
+        );
+    }
+    s
+}
+
+/// Both parts together (published rules, after the review): correct answers, wrong answers (a
+/// wrong answer to a question with one, any answer to a question without one) and UNKNOWN,
+/// and correct / wrong for each language.
+fn all_questions_table(def: &SetDef, results: &Results) -> String {
+    let n = def.count + def.no_answer.count;
+    let mut s = format!("\n| All {n} questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |\n|---|---:|---:|---:|---:|---:|\n");
+    let anyway = |t: &Totals| t.0[4] + t.0[5] + t.0[8];
+    for &(system, _) in def.systems {
+        let part = |set: Set| {
+            results
+                .iter()
+                .find(|r| r.set == set && r.rules == Rules::Published && r.system == system)
+        };
+        let (Some(w), Some(b)) = (part(Set::WithAnswer), part(Set::NoAnswer)) else {
+            continue;
+        };
+        let lang = |i: usize| {
+            let (a, c) = (&w.by_lang[i], &b.by_lang[i]);
+            format!("{} / {}", a.0[0], a.0[1] + anyway(c))
+        };
+        let (tw, tb) = (&w.reviewed, &b.reviewed);
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} + {} = {} | {} | {} | {} |",
+            display(def, system),
+            tw.0[0],
+            tw.0[1],
+            anyway(tb),
+            tw.0[1] + anyway(tb),
+            tw.0[2] + tb.0[2],
+            lang(0),
+            lang(1)
         );
     }
     s
@@ -769,35 +920,6 @@ fn wilson(k: usize, n: usize) -> (f64, f64) {
     ((c - r) / d, (c + r) / d)
 }
 
-/// Rows of the summary table in docs/GEL-BESIDE-GROQ.md (published rules, after the review).
-fn side_by_side_rows(def: &SetDef, results: &Results) -> Vec<String> {
-    results
-        .iter()
-        .filter(|r| r.set == Set::WithAnswer && r.rules == Rules::Published)
-        .map(|r| {
-            let t = r.reviewed.0;
-            let answered = t[0] + t[1];
-            let (lo, hi) = wilson(t[0], answered);
-            let conditions = if r.system == "gel-ram" {
-                "local bank, answers with a source passage"
-            } else {
-                "Groq API, closed book"
-            };
-            format!(
-                "| {} | {conditions} | {answered} | {} | {} | {} | {} | {}/{answered} ({:.0}–{:.0}%) |",
-                display(def, r.system),
-                t[0],
-                t[1],
-                t[2],
-                t[7],
-                t[0],
-                100.0 * lo,
-                100.0 * hi
-            )
-        })
-        .collect()
-}
-
 /// SHA-256 over the names and hashes of every data file of the set, in a fixed order.
 fn set_identity(root: &Path, def: &SetDef) -> Result<String, String> {
     let dir = root.join(def.dir);
@@ -853,16 +975,6 @@ pub fn check(root: &Path) -> Result<(), String> {
                 "{}: README results differ from the re-scored recorded answers; run `answer-bench tables`",
                 def.name
             ));
-        }
-        if def.side_by_side {
-            let side = read(&root.join("docs/GEL-BESIDE-GROQ.md"))?;
-            for row in side_by_side_rows(def, &results) {
-                if !side.contains(&row) {
-                    return Err(format!(
-                        "docs/GEL-BESIDE-GROQ.md lacks the re-scored row: {row}"
-                    ));
-                }
-            }
         }
         let identity = set_identity(root, def)?;
         if !readme.contains(&format!("`{}` · SHA-256 `{identity}`", def.name)) {
@@ -925,12 +1037,8 @@ pub fn run(args: &[String]) -> Result<(), String> {
         }
         ["score", spec, file] => {
             let (def, set) = find_part(spec)?;
-            let qs = questions(
-                set,
-                &read(&root.join(def.dir).join(question_file(set)))?,
-                def.count,
-            )?;
-            let given = answers(&read(Path::new(file))?, def.count)?;
+            let qs = part_questions(root, def, set)?;
+            let given = answers(&read(Path::new(file))?, count(def, set))?;
             let verdicts = score(set, rules, &qs, &given);
             for (i, v) in verdicts.iter().enumerate() {
                 println!("{}\t{}", i + 1, v.name());
@@ -957,7 +1065,7 @@ mod tests {
                 .iter()
                 .map(|g| g.iter().map(|(a, s)| (a.to_string(), *s)).collect())
                 .collect(),
-            invented: false,
+            kind: Kind::Answer,
             lang: "pl".into(),
         }
     }
@@ -1038,7 +1146,7 @@ mod tests {
     fn a_negation_is_not_automatically_a_rejection_under_strict_rules() {
         let question = Question {
             accepted: Vec::new(),
-            invented: true,
+            kind: Kind::Invented,
             lang: "pl".into(),
         };
         for t in [
@@ -1147,10 +1255,34 @@ mod tests {
             )
         };
         assert_eq!(
-            questions(Set::WithAnswer, &row("en"), 1).unwrap()[0].lang,
+            questions(Set::WithAnswer, &row("en"), 1, &[]).unwrap()[0].lang,
             "en"
         );
-        assert!(questions(Set::WithAnswer, &row("de"), 1).is_err());
+        assert!(questions(Set::WithAnswer, &row("de"), 1, &[]).is_err());
+    }
+
+    #[test]
+    fn a_topic_not_in_the_bank_needs_checked_names_and_its_source() {
+        let passage = "a b";
+        let row = |names: &str, hash: &str| {
+            format!("1\ten\tabsent\tq\tnote\t{names}\tt\tu\td\tz\t{hash}\t{passage}\n")
+        };
+        let ok = row("t", &sha256(passage));
+        let both = [Kind::Absent, Kind::Invented];
+        let q = questions(Set::NoAnswer, &ok, 1, &both).unwrap();
+        assert_eq!(q[0].kind, Kind::Absent);
+        assert!(questions(Set::NoAnswer, &row("", &sha256(passage)), 1, &both).is_err());
+        assert!(questions(Set::NoAnswer, &row("t", &sha256("other")), 1, &both).is_err());
+        // A kind the set does not list is refused.
+        assert!(questions(Set::NoAnswer, &ok, 1, &[Kind::Invented, Kind::FalsePremise]).is_err());
+        // Answered anyway, it is counted apart from invented subjects and false premises.
+        let mut t = Totals::default();
+        t.add(Verdict::Answered, Kind::Absent);
+        t.add(Verdict::Answered, Kind::Invented);
+        assert_eq!(
+            t.describe(Set::NoAnswer),
+            "answered_anyway=2 (invented=1 false_premise=0 absent=1) unknown=0 rejected=0 review=0 errors=0"
+        );
     }
 
     #[test]
