@@ -14,7 +14,8 @@ hardware-level memory computation.** The goal is a text AI that answers in
 Polish and English from what it holds, or says it does not know.
 
 The step that prints text into records is private, so the Q8 records in this
-checkout are synthetic and its tools do not answer natural-language questions.
+checkout hold synthetic values or literal bytes, and its tools do not
+answer natural-language questions.
 This repository does not establish hardware-level memory computation
 ([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
 not a result.
@@ -76,6 +77,7 @@ git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
+cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
 cargo run --locked --offline -p xtask -- mutation-matrix
 cargo run --locked --offline -p xtask -- crash-series 20
@@ -84,6 +86,7 @@ cargo run --locked --offline --release -p gel-physics -- 5
 
 | Run | Line to check | What it shows | Its limit |
 |:---|:---|:---|:---|
+| Your bytes, one record | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED`, `GEL_LIVE_LAB_LITERAL=PASS` | The first 1,024 bytes of a regular file you name in place of README.md (1 byte to 64 MiB), in one record; its four views restored bit for bit; a changed byte rejected under the pin ([how](docs/LIVE-LAB.md#your-own-bytes-in-one-record)) | Literal bytes, not GEL knowledge printing; no meaning and no search |
 | One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
 | Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three public file formats is refused under the original pin | A finite matrix, not every possible corruption |
 | Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
@@ -108,6 +111,7 @@ or a command.
 | Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
 | Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
 | Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
+| Your bytes in one Q8 record (`gel-live-lab --literal`, over `gel-phase-quad`) | The first 1,024 bytes of one file as the values of one record, active where a byte was placed; each of the four views is restored to it with 0 different bits; its 1,164-byte file is rejected under the pin after any 1-byte change. Literal bytes, not GEL knowledge printing | `every_byte_value_restores_through_every_view` · `a_changed_byte_anywhere_is_rejected` · [live lab](docs/LIVE-LAB.md#your-own-bytes-in-one-record) |
 | F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
 
 Tests hold four equalities:
@@ -121,8 +125,9 @@ written store         == reopened store        (gel-store: persistence_roundtrip
 
 `cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,
 the store, Reader16 and the structural rebuild in one run and prints
-`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not turn text into
-records; that step and its bank are private.
+`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not print text into
+records as GEL does: `--literal` only places bytes, and the printing step and its
+bank are private.
 
 ## See it in action
 

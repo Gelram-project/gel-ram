@@ -54,15 +54,18 @@ The following capabilities are present on public `main`:
 
 ## v0.6.0
 
-A documentation and evidence release; public file formats and third-party dependencies
-are unchanged from v0.5.3. `answer-bench` gains question sets v6 and v7, with a third kind
-of question without an answer.
+A documentation and evidence release with one new command mode,
+`gel-live-lab --literal` (with `--save` and `--reopen`), its `literal` module in
+gel-live-lab and one new function in gel-source, `write_file_new`; public file
+formats and third-party dependencies are unchanged from v0.5.3. `answer-bench`
+gains question sets v6 and v7, with a third kind of question without an answer.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | Answer-or-abstain set v6: 990 new questions frozen before any run, used internally before (an experiment and an analysis of its errors) without changing any build or setting; the v4 build unchanged beside two BM25 engines, the third held-out set with the same result | 8bfb3df (PR #62) | `xtask answer-bench check` | [set v6](answer-or-abstain-v6/README.md), [what has nothing to compare with](EXTERNAL-CHECKS.md#what-has-nothing-to-compare-with) | questions from an independent writer; a held-out check of the next change |
 | Answer-or-abstain set v7: 982 new questions with an answer and 599 whose answer is not in the bank (real topics outside it and invented subjects), frozen before any run; the v4 build unchanged beside two BM25 engines and a candidate change that was rolled back; answer-bench counts a third kind of question without an answer | v0.6.0 | `xtask answer-bench check` | [set v7](answer-or-abstain-v7/README.md), [what has nothing to compare with](EXTERNAL-CHECKS.md#what-has-nothing-to-compare-with) | questions from an independent writer; a held-out check of the next change |
 | First screen returns to the record: one Q8 record with four exact views, exact bytes or a refusal, the crash series and commands to run; question sets and search-engine references moved to docs/EXTERNAL-CHECKS.md with a section on what has nothing to compare with; language-model pages, films, side-by-side records and the four claim rows of those comparisons removed from the tree (in the git history); the GEL numbers of set v2 registered on their own as `gel-answer-set-v2` | v0.6.0 | `tools/readme_presentation.rs`, workflow `readme-presentation`, `xtask verify` | [README](../README.md), [external checks](EXTERNAL-CHECKS.md) | a human review of the rendered page |
+| Your bytes in one record: `gel-live-lab --literal FILE` places the first 1,024 bytes of one file into one Q8 record, shows its four views, restores each with 0 different bits and rejects its 1,164-byte file under the pin after a 1-byte change; literal bytes, not GEL knowledge printing; registered as the executable check `q8-literal-record` | v0.6.0 | `cargo test --locked --offline -p gel-live-lab`, `xtask claims` | [live lab](LIVE-LAB.md#your-own-bytes-in-one-record) | a run on a host outside the project |
 
 ## v0.5.3
 

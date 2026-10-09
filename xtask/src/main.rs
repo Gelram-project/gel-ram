@@ -930,6 +930,7 @@ fn runtime_examples() -> Result<(), String> {
     let specs: &[&[&str]] = &[
         &["-p", "gel-source", "--example", "source_build"],
         &["-p", "gel-live-lab", "--", "--demo"],
+        &["-p", "gel-live-lab", "--", "--literal", "README.md"],
         &[
             "-p",
             "gel-live-lab",

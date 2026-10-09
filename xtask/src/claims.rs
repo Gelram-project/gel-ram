@@ -257,6 +257,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "q8-literal-record",
+        dimension: "bytes",
+        scope: "the first 1024 bytes of one caller-owned file placed byte for byte into one public Q8 record (gel-live-lab --literal); literal bytes, not GEL knowledge printing",
+        input: "Polish text with combining marks and emoji, one longer and one shorter than a record; the four public views and one Q8DEMO01 file with a retained pin",
+        expected: "the gel-live-lab module agrees with an expectation built from the public gel-phase-quad API alone: view 0 holds the bytes, view 2 holds them reversed at the end, views 1 and 3 add one offset; active only where a byte was placed; every view is restored with 0 different bits; a 1164-byte file; a 1-byte body change is rejected under the pin although the format still decodes",
+        counterexample: "read as GEL printing knowledge, as compression, as four copies of the file, or as a search over its text",
+        source: "crates/gel-live-lab/src/literal.rs",
+        evidence: Evidence::Probe(literal_record),
+    },
+    Claim {
         id: "mutation-memory",
         dimension: "memory",
         scope: "streamed versus historical mutation",
@@ -458,6 +468,55 @@ fn roundtrip() -> Result<bool, String> {
     Ok(loaded.to_bytes() == bytes
         && loaded.root() == c.root()
         && Collection::from_bytes(&changed, c.root()).is_err())
+}
+/// An expectation built from the public gel-phase-quad API alone must equal the
+/// gel-live-lab module the row names, value for value.
+fn literal_record() -> Result<bool, String> {
+    use gel_live_lab::literal;
+    use gel_phase_quad::{fixture, grid::DIM, Reader, Record};
+    let long = "Zażo\u{301}łć gęślą jaźń 🦀\n".repeat(60).into_bytes();
+    let short = "Zażółć 🦀".as_bytes().to_vec();
+    let mut ok = literal::SEED == 510051 && long.len() > DIM && short.len() < DIM;
+    for bytes in [long, short] {
+        let n = bytes.len().min(DIM);
+        let record = Record::new(
+            std::array::from_fn(|j| if j < n { bytes[j] } else { 0 }),
+            &std::array::from_fn(|j| j < n),
+        );
+        let reader = Reader::new(510051);
+        let mut want = [[0u8; DIM]; 4];
+        for pole in 0..4u8 {
+            want[usize::from(pole)] = reader.bound_view(&record, pole)?.parts().1.phase;
+        }
+        // P1 adds an offset to P0, P2 mirrors P0, P3 adds the same offset to P2.
+        // For seed 510051 the first offset is 168 and 4 of 1024 offsets are 0,
+        // computed outside Rust from the published seed expansion.
+        ok &= want[1][0].wrapping_sub(want[0][0]) == 168
+            && (0..DIM).filter(|&j| want[1][j] == want[0][j]).count() == 4;
+        ok &= (0..DIM).all(|j| {
+            let offset = want[1][j].wrapping_sub(want[0][j]);
+            want[0][j] == record.phase()[j]
+                && want[2][DIM - 1 - j] == record.phase()[j]
+                && want[3][j] == want[2][j].wrapping_add(offset)
+        });
+        let lit = literal::from_bytes(&bytes)?;
+        let views = literal::views(lit.record())?;
+        ok &= lit.placed() == n
+            && lit.record().active_mask() == record.active_mask()
+            && views.values == want
+            && views.restored == [true; 4]
+            && views.different_bits == 0;
+        let raw = literal::encode(lit.record())?;
+        let pin = digest(&raw);
+        let mut changed = raw.clone();
+        changed[12 + n / 2] ^= 1;
+        ok &= raw == fixture::encode(std::slice::from_ref(&record))?
+            && raw.len() == 1164
+            && literal::check(&raw, &pin).is_ok()
+            && literal::check(&changed, &pin).is_err()
+            && fixture::decode(&changed).is_ok();
+    }
+    Ok(ok)
 }
 fn stale() -> Result<bool, String> {
     let mut c = Collection::new();

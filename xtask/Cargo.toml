@@ -8,6 +8,7 @@ license-file.workspace = true
 
 [dependencies]
 gel-core = { path = "../crates/gel-core" }
+gel-live-lab = { path = "../crates/gel-live-lab" }
 gel-phase-quad = { path = "../crates/gel-phase-quad" }
 gel-source = { path = "../crates/gel-source" }
 

@@ -197,6 +197,7 @@ name = "xtask"
 version = "0.6.0"
 dependencies = [
  "gel-core",
+ "gel-live-lab",
  "gel-phase-quad",
  "gel-source",
 ]

@@ -2,8 +2,10 @@
 
 Date: 2026-10-09
 
-v0.6.0 is a documentation and evidence release. The public libraries, file
-formats, Rust pin and third-party dependencies are unchanged from v0.5.3; the
+v0.6.0 is a documentation and evidence release with one new command mode,
+`gel-live-lab --literal` (with `--save` and `--reopen`), its `literal` module in
+gel-live-lab and one new function in gel-source, `write_file_new`. File formats,
+the Rust pin and third-party dependencies are unchanged from v0.5.3; the
 workspace version moves to 0.6.0. Every change since v0.5.3 is listed with its
 commit in the
 [roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.6.0/docs/ROADMAP.md).
@@ -16,8 +18,8 @@ hardware-level memory computation. The goal is a text AI that answers in Polish
 and English from what it holds, or says it does not know. **The text AI is a
 goal, not a result of this repository**, and hardware-level memory computation
 is not established: the claim registry lists it as `NOT_ESTABLISHED`. The step
-that prints text into records is private, so the Q8 records in this checkout are
-synthetic.
+that prints text into records is private, so the Q8 records in this checkout
+hold synthetic values or literal bytes.
 
 ## The first screen shows the record again
 
@@ -37,16 +39,29 @@ The README now opens with what the public code holds and how to check it:
 - **A killed process loses nothing it confirmed.** In the recorded crash series
   the tool was killed at random moments in 200 trials: 0 of 2,683 acknowledged
   snapshots were lost. A process kill is not a power cut.
-- **Run it now and the memory core.** Four commands, each with the line it ends
-  with and its limit, and a table of the public core (the 128-byte record, the
-  store, Reader16, the exact structural rebuild, the four views and F0 memory
-  physics), each part with the test that checks it.
+- **Run it now and the memory core.** Five commands, each with the line to check
+  and its limit, and a table of the public core (the 128-byte record, the store,
+  Reader16, the exact structural rebuild, the four views and F0 memory physics)
+  and of your bytes in one record, each part with the test that checks it.
 
-The claim registry gains `q8-one-record-four-views` as a `SEPARATE_GATE` row,
-and the four rows of the language-model comparisons leave it; the GEL numbers of
-set v2 keep a row of their own, `gel-answer-set-v2`.
+The claim registry gains `q8-one-record-four-views` as a `SEPARATE_GATE` row and
+`q8-literal-record` as an executable check, and the four rows of the
+language-model comparisons leave it; the GEL numbers of set v2 keep a row of
+their own, `gel-answer-set-v2`.
 The banner and the full-page edition carry the same line: knowledge printed, not
 trained.
+
+## Your bytes in one record
+
+`gel-live-lab --literal FILE` places the first 1,024 bytes of a regular file
+you choose into one Q8 record and shows its four views. Each view is restored to
+the record with 0 different bits, and the record's 1,164-byte Q8DEMO01 file is
+rejected under its pin after any 1-byte change. `--save` writes the file without
+replacing an existing path; `--reopen PIN PATH` accepts it only under the retained pin and
+only in the literal shape. These are literal bytes, not GEL knowledge printing;
+no score or time is computed and nothing is searched. `gel-source` exposes the
+existing no-replace publisher as `write_file_new` for this file. The interactive
+lab's Q8 line now reads "256 levels per value".
 
 ## Question set v7: an external check
 

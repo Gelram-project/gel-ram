@@ -138,6 +138,16 @@ pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, Bund
     write_bytes_new(path, &encode(value))
 }
 
+/// Publish a caller-encoded file of at most `MAX_TEXT` bytes, such as one Q8DEMO01
+/// record, with the same no-replace publisher as bundles. Returns the SHA-256 pin
+/// of exactly the bytes written. The caller validates the format.
+pub fn write_file_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleError> {
+    if bytes.len() > MAX_TEXT {
+        return Err(Error::Limit.into());
+    }
+    write_bytes_new(path, bytes)
+}
+
 /// Internal shared no-replace publisher. Callers enforce their format limits.
 pub(crate) fn write_bytes_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleError> {
     publish_with(path, bytes, &mut SystemPublication)

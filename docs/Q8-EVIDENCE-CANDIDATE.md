@@ -36,6 +36,7 @@ Do not place generated banks inside the source tree's release allow-list.
 ## Numeric fixture contract
 
 Q8DEMO01 is a testing interchange format, NOT a new persistent GEL store.
+`gel-live-lab --literal FILE --save NEW_PATH` writes one literal record in it.
 It has eight magic bytes, a little-endian u32 record count, then exactly
 count records of 1024 phase bytes and 128 activity-mask bytes. Mask bit j
 is bit `(j % 8)` of mask byte `(j / 8)`, least-significant bit first.

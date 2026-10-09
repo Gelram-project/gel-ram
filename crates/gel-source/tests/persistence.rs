@@ -1,5 +1,6 @@
 use gel_source::{
-    import_text, load_bundle, read_regular, write_bundle_new, Address, BundleError, Error,
+    digest, import_text, load_bundle, read_regular, write_bundle_new, write_file_new, Address,
+    BundleError, Error, MAX_TEXT,
 };
 use std::{
     fs,
@@ -58,6 +59,25 @@ fn persisted_roundtrip_and_no_temporary_files() {
             0o600
         );
     }
+}
+#[test]
+fn small_file_publication_returns_its_pin_and_keeps_the_limit() {
+    let root = Scratch::new();
+    let path = root.0.join("record.q8");
+    let bytes = b"caller-encoded bytes";
+    assert_eq!(write_file_new(&path, bytes).unwrap(), digest(bytes));
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+    assert!(write_file_new(&path, b"other").is_err());
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+    let at_limit = root.0.join("at-limit");
+    assert!(write_file_new(&at_limit, &vec![0; MAX_TEXT]).is_ok());
+    fs::remove_file(&at_limit).unwrap();
+    let over = root.0.join("over");
+    assert!(matches!(
+        write_file_new(&over, &vec![0; MAX_TEXT + 1]),
+        Err(BundleError::Data(Error::Limit))
+    ));
+    assert_eq!(fs::read_dir(&root.0).unwrap().count(), 1);
 }
 #[test]
 fn existing_file_is_never_overwritten() {

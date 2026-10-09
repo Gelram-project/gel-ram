@@ -1,14 +1,83 @@
 #![forbid(unsafe_code)]
-use gel_live_lab::Lab;
+use gel_live_lab::{literal, parse_pin, Lab};
+use gel_source::digest;
+use std::ffi::OsString;
 use std::io::{self, BufRead, IsTerminal, Read, Write};
+use std::path::Path;
+const USAGE: &str = "usage: gel-live-lab --help";
+/// `--literal FILE [--save NEW_PATH]` or `--reopen TRUSTED_SHA256 PATH`.
+/// Paths need not be UTF-8; a path starting with `--` is taken as a misplaced flag.
+fn literal_run(args: &[OsString]) -> Result<(), String> {
+    let word = |i: usize| args.get(i).and_then(|a| a.to_str());
+    let path = |i: usize| match args.get(i) {
+        Some(a) if !a.to_string_lossy().starts_with("--") => Ok(Path::new(a)),
+        _ => Err(USAGE.to_string()),
+    };
+    let (lit, save) = match (word(0), args.len()) {
+        (Some("--literal"), 2) => (literal::read(path(1)?)?, None),
+        (Some("--literal"), 4) if word(2) == Some("--save") => {
+            (literal::read(path(1)?)?, Some(path(3)?))
+        }
+        (Some("--reopen"), 3) => {
+            let pin = parse_pin(word(1).ok_or(USAGE)?)?;
+            (literal::reopen(path(2)?, &pin)?, None)
+        }
+        _ => return Err(USAGE.into()),
+    };
+    let views = literal::views(lit.record())?;
+    let raw = literal::encode(lit.record())?;
+    let pin = digest(&raw);
+    // Every 97th byte, plus the first and last placed value and the last byte.
+    let positions: Vec<usize> = (0..raw.len())
+        .step_by(97)
+        .chain([12, 12 + lit.placed() - 1, raw.len() - 1])
+        .collect();
+    let rejected = literal::tamper_rejected(&raw, &pin, &positions);
+    if !literal::passed(&views, rejected) {
+        print!(
+            "{}",
+            literal::report(
+                &lit,
+                &views,
+                &pin,
+                rejected,
+                "Not written: the check failed."
+            )
+        );
+        return Err("literal record check failed".into());
+    }
+    // Written only after every check passed.
+    let line = match save {
+        Some(new_path) => {
+            if literal::save(new_path, lit.record())? != pin {
+                return Err("saved bytes differ from the checked record".into());
+            }
+            "SAVED without replacing any file. Retain the pin independently."
+        }
+        None if lit.total().is_none() => {
+            "REOPEN=PASS | the file matches the retained pin; record restored."
+        }
+        None => "Not written. Add --save NEW_PATH to keep it, then --reopen PIN PATH.",
+    };
+    print!("{}", literal::report(&lit, &views, &pin, rejected, line));
+    println!("GEL_LIVE_LAB_LITERAL=PASS");
+    Ok(())
+}
 fn run() -> Result<(), String> {
-    let args: Vec<_> = std::env::args().skip(1).collect();
+    let raw: Vec<OsString> = std::env::args_os().skip(1).collect();
+    if matches!(
+        raw.first().and_then(|a| a.to_str()),
+        Some("--literal" | "--reopen")
+    ) {
+        return literal_run(&raw);
+    }
+    let args: Vec<&str> = raw.iter().map(|a| a.to_str().unwrap_or("\u{0}")).collect();
     if args == ["--help"] {
-        println!("gel-live-lab [--plain | --demo]\nOffline terminal laboratory. No network or LLM. open PATH imports UTF-8.\nfind PHRASE searches source lines; match N selects a result.\nsave NEW_PATH writes plaintext. load TRUSTED_SHA256 PATH reopens it.\nText and synthetic Q8 are separate panels, not a semantic encoder.\nUse only directories you control. Never paste commands as document text.");
+        println!("gel-live-lab [--plain | --demo | --literal FILE [--save NEW_PATH] | --reopen SHA256 PATH]\nOffline terminal laboratory. No network or LLM. open PATH imports UTF-8.\nfind PHRASE searches source lines; match N selects a result.\nsave NEW_PATH writes plaintext. load TRUSTED_SHA256 PATH reopens it.\nText and synthetic Q8 are separate panels, not a semantic encoder.\n--literal FILE places the first 1,024 bytes of one regular file into one Q8\nrecord and shows its four views; --save keeps it without replacing a file and\n--reopen checks it under the retained pin.\nLiteral bytes, not GEL knowledge printing.\nUse only directories you control. Never paste commands as document text.");
         return Ok(());
     }
     if !args.is_empty() && args != ["--plain"] && args != ["--demo"] {
-        return Err("usage: gel-live-lab --help".into());
+        return Err(USAGE.into());
     }
     let color = args.is_empty()
         && io::stdout().is_terminal()
