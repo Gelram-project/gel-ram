@@ -193,7 +193,7 @@ a9affa2602478ce15f4bc94ff7c3a429af4e397f4191ca1c76df825067ead30e  docs/TOPK-BENC
 594c79b49aac7d1c1f329b0c761c8faf330df3fdfa42c5ea53fe5518a96d0ac5  docs/TRY-IT.md
 e7db1f9c94e13154a0ceb2bb03b52396834e794eb490c45e2236c71fe2beb45c  docs/UPDATE-RESTART-SCENARIO.md
 af7e00b72fc5329082f07c631b5065110976aaec5978d6d3bdc7026bc7d1a8ea  docs/VALIDATION-v0.2.1.md
-9466a5f64519df2e1987106e0214a18b23fb5863b99b8e394c356379dac4504f  docs/VERIFIED-RESULTS.md
+77fa87e8ab2dbd9a579f2603bedf410a58d5dfac51155afe55ba43771de2c45f  docs/VERIFIED-RESULTS.md
 230da962a9edb5a9d77b344bd21c4332323bf485f9e985a7b8ebaf50e88019a3  docs/answer-or-abstain-v2/README.md
 6cb4aebd370d98477a1dfecaa18529176ea93f3c8ab6f955e0b8178b4ef246b5  docs/answer-or-abstain-v2/recorded/with-answer/gel-ram.txt
 986ea6cacadc722f759a055e32bde7def0d3572c26349c44b722e1acb7d9e3d1  docs/answer-or-abstain-v2/recorded/with-answer/gpt-oss-120b.txt
@@ -250,7 +250,7 @@ aa8f460b883881cfdcbcf6d904065f4c23d4b2158ffa09f9d836a85a87d2469f  docs/answer-or
 bd57a255df3ce1bfdb6a2a39e305df471cf8ec9c8aa7207d7c94b52fb7d2424c  docs/answer-or-abstain-v6/recorded/with-answer/tantivy-bm25-top1.txt
 ca647bffedc368c360d24e4a3c6170e8c8cb93c45113570ba26960114385e7af  docs/answer-or-abstain-v6/recorded/with-answer/tantivy-bm25.txt
 f6f810793790b135040aa99aee4d8cf609bd2e999dc483a3ee7cbde2817b0ac3  docs/answer-or-abstain-v6/with-answer-questions.txt
-2ae3356b9a133f83304193c1dcf73e36a883ebdab8d32968a241525dd1e0f1d1  docs/answer-or-abstain-v7/README.md
+737164f476ec8d24a3f6102e3ecc3fa134bb404c64a904e25457c2b1821d92ed  docs/answer-or-abstain-v7/README.md
 977d506e9ee2f12a446ea9fd456e14a4d09fc8626b113252848b29a05547deb3  docs/answer-or-abstain-v7/no-answer-questions.txt
 12ee26f4d0d1ca51ebd9f2b2169ac7b2fea6c862f4160eebbd078a2c918200a6  docs/answer-or-abstain-v7/recorded/no-answer/gel-ram-candidate-precise.txt
 2c526c131d859ae7728bb85f17c15150291a572f20d220b0f0c1404ad894672d  docs/answer-or-abstain-v7/recorded/no-answer/gel-ram-candidate.txt

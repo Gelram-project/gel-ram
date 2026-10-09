@@ -264,6 +264,52 @@ the published ones.
 
 Times were not measured on this set.
 
+## The same build on a collection 14.8 times larger
+
+After the recorded runs, the same build at the same two settings answered the same 1,581
+questions on a collection 14.8 times larger. It held the 671,416 passages of the bank and
+9,282,387 passages of further Wikipedia articles from the same dumps, 9,953,803 passages in all.
+
+- **Each article is held once.** Articles the bank already holds were left out of the added
+  passages.
+- **The 400 articles that the questions about topics outside the bank were written from were
+  left out too.**
+- **Recording:** one run per setting on 2026-10-08, with five predictions frozen before the run.
+  This is a private check: only the numbers below are published, not the answers or the larger
+  collection. The answers were scored by the same rules and reviewed the same way.
+
+| Published rules, after the review | The bank (671,416 passages) | 9,953,803 passages |
+|---|---:|---:|
+| Balanced setting: correct / wrong / UNKNOWN, 982 questions with an answer | 413 / 12 / 557 | 317 / 16 / 649 |
+| Balanced setting: precision (95% Wilson) | 97.2% (95.1–98.4%) | 95.2% (92.3–97.0%) |
+| Balanced setting: answered without an answer, topic not in the bank / invented | 18 / 8 | 22 / 5 |
+| Precise setting: correct / wrong / UNKNOWN | 291 / 3 / 688 | 207 / 4 / 771 |
+| Precise setting: precision (95% Wilson) | 99.0% (97.0–99.7%) | 98.1% (95.2–99.3%) |
+| Precise setting: answered without an answer, topic not in the bank / invented | 2 / 1 | 6 / 0 |
+
+- **Precision stayed within the 95% intervals of the bank's results, and the larger collection
+  mostly brought silence, not errors.** Correct answers fell by 23% at the balanced setting and by
+  29% at the precise one, about equally in Polish and English. At the balanced setting 105 answers that were correct on the bank became UNKNOWN and
+  1 became wrong.
+  - In 77 of those 105, the source passage still came first, but not clearly enough for the
+    setting to answer.
+  - In the other 28, a passage of another article came first, again not clearly enough to answer.
+- **Some topics outside the bank are not outside the larger collection.** Their articles were left
+  out, but other articles state some of the same facts. Of the 22 answers at the balanced setting
+  to questions about such topics, 5 state the expected fact from another article; at the precise
+  setting 3 of 6 do. By the rules of the set they still count as answered. In substance, the
+  answers to questions without an answer that were wrong went from 25 to 22 at the balanced
+  setting, and stayed at 3 at the precise one.
+- **Three predictions held, two failed.**
+  - **Held:** no more correct answers than on the bank; no more answers to questions without an
+    answer and no more wrong answers than chance allows.
+  - **Failed:** 26 correct answers whose source passage had not been among the first four
+    candidates on the bank were predicted to be lost, keeping at most 3. 12 were kept, because
+    the added articles compete less with these passages than predicted.
+  - **Failed:** a prediction of the work per question missed by 0.18% because one term was left
+    out of the formula. With that term the count matches exactly. The work grows in proportion to
+    the number of passages.
+
 ## Limits
 
 - **Who wrote the set and did the review:** the project's AI coding assistant wrote the
