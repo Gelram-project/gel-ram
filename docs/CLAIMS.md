@@ -38,6 +38,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | ranking-oracle | ranking | SEPARATE_GATE |
 | q8-one-record-four-views | bytes | SEPARATE_GATE |
 | q8-literal-record | bytes | EXECUTABLE_CHECK |
+| record-history-exact | bytes | EXECUTABLE_CHECK |
 | mutation-memory | memory | MEASURED_LOCAL |
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
@@ -55,6 +56,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | gel-sketch-search | timing | MEASURED_LOCAL |
 | ocean-full-scan | timing | MEASURED_LOCAL |
 | media-full-review | presentation | NOT_VERIFIED |
+| record-history-durability | persistence | NOT_ESTABLISHED |
 | hardware-memory-compute | mechanism | NOT_ESTABLISHED |
 | commercial-advantage | comparison | NOT_ESTABLISHED |
 <!-- REGISTRY-END -->

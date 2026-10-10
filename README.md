@@ -88,7 +88,7 @@ cargo run --locked --offline --release -p gel-physics -- 5
 |:---|:---|:---|:---|
 | Your bytes, one record | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED`, `GEL_LIVE_LAB_LITERAL=PASS` | The first 1,024 bytes of a regular file you name in place of README.md (1 byte to 64 MiB), in one record; its four views restored bit for bit; a changed byte rejected under the pin ([how](docs/LIVE-LAB.md#your-own-bytes-in-one-record)) | Literal bytes, not GEL knowledge printing; no meaning and no search |
 | One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
-| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three public file formats is refused under the original pin | A finite matrix, not every possible corruption |
+| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three file formats in the matrix is refused under the original pin | A finite matrix, not every possible corruption |
 | Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
 | F0 memory physics | `GEL_PHYSICS_F0_V3`, then ns per step and GiB/s from 48 KiB to 256 MiB and random 32/64/128-byte fetches in a 64 MiB working set | What your own memory costs, measured instead of assumed | Nanoseconds and GiB/s only, no cycles; compare rows only within one machine and one output tag |
 
@@ -110,17 +110,19 @@ or a command.
 | Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single header bit flip, payload byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
 | Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
 | Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
+| Record history (`gel-history`) | Every state appended to the history of one 128-byte record is stored as a literal copy or as the XOR residual from the state before it, never more than two residuals from a literal, and is rebuilt bit for bit, also from the reopened file; the decoder accepts only the bytes the encoder writes | `long_history_is_exact_and_residual_depth_never_exceeds_two` · `a_depth_byte_that_lies_is_refused` · [contract](docs/RECORD-HISTORY.md) |
 | Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
 | Your bytes in one Q8 record (`gel-live-lab --literal`, over `gel-phase-quad`) | The first 1,024 bytes of one file as the values of one record, active where a byte was placed; each of the four views is restored to it with 0 different bits; its 1,164-byte file is rejected under the pin after any 1-byte change. Literal bytes, not GEL knowledge printing | `every_byte_value_restores_through_every_view` · `a_changed_byte_anywhere_is_rejected` · [live lab](docs/LIVE-LAB.md#your-own-bytes-in-one-record) |
 | F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
 
-Tests hold four equalities:
+Tests hold five equalities:
 
 ```text
 reference result      == optimized result      (gel-kernel: kernel_matches_reference)
 full Top-K            == progressive Top-K     (gel-reader)
 original record bytes == rebuilt record bytes  (gel-structural)
 written store         == reopened store        (gel-store: persistence_roundtrip_and_payload_corruption_rejection)
+appended state        == rebuilt state         (gel-history: long_history_is_exact_and_residual_depth_never_exceeds_two)
 ```
 
 `cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,

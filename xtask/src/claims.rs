@@ -267,6 +267,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Probe(literal_record),
     },
     Claim {
+        id: "record-history-exact",
+        dimension: "bytes",
+        scope: "public gel-history on synthetic ORB128 states; the history of one record",
+        input: "a walk of 11 synthetic states changing 0 to 120 bits per step, its GELHIS01 bytes, the bytes with one bit changed, a file whose depth byte does not continue its chain and a file holding a dense residual",
+        expected: "every entry equals an expectation built from the public gel-structural residual alone: a residual entry is its serialized length plus 10 bytes, kept only when smaller than the 129-byte literal and at most two residuals from a literal; the file length is the 48-byte header plus those entries; every state rebuilt bit for bit after reopening; the changed, chain-breaking and dense files refused",
+        counterexample: "read as a compression ratio for real data, as tamper-proof storage (CRC64 is not a pin), as power-loss durability, or as storage that does not grow with every state",
+        source: "crates/gel-history/src/lib.rs",
+        evidence: Evidence::Probe(record_history),
+    },
+    Claim {
         id: "mutation-memory",
         dimension: "memory",
         scope: "streamed versus historical mutation",
@@ -437,6 +447,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("NOT_VERIFIED"),
     },
     Claim {
+        id: "record-history-durability",
+        dimension: "persistence",
+        scope: "write_atomic of a history file under process kill and power cut",
+        input: "a kill series or a power-cut test of gel-history saving; none has been run",
+        expected: "not established: the history file format is outside the crash series",
+        counterexample: "an atomic rename in the code read as a measured survival of a process kill or a power cut",
+        source: "docs/RECORD-HISTORY.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
         id: "hardware-memory-compute",
         dimension: "mechanism",
         scope: "hardware-level memory computation",
@@ -516,6 +536,100 @@ fn literal_record() -> Result<bool, String> {
             && literal::check(&changed, &pin).is_err()
             && fixture::decode(&changed).is_ok();
     }
+    Ok(ok)
+}
+/// An expectation built from the public gel-structural residual alone must
+/// equal what gel-history stores, entry for entry and byte for byte.
+fn record_history() -> Result<bool, String> {
+    use gel_core::{crc64_ecma, splitmix64, GelError, ORB_WORDS};
+    use gel_history::{HistoryEntry, RecordHistory};
+    use gel_orb::Orb1024;
+    use gel_structural::Residual;
+    let text = |e: GelError| e.to_string();
+    let mut words = [0u64; ORB_WORDS];
+    for (i, word) in words.iter_mut().enumerate() {
+        *word = splitmix64(2026 + i as u64);
+    }
+    let mut states = vec![Orb1024::from_words(words)];
+    for (step, k) in [0usize, 3, 92, 93, 1, 64, 120, 7, 7, 7]
+        .into_iter()
+        .enumerate()
+    {
+        let mut next = states[step];
+        for j in 0..k {
+            let bit = (step * 101 + 37 * j) % 1024;
+            next.words_mut()[bit / 64] ^= 1u64 << (bit % 64);
+        }
+        states.push(next);
+    }
+    let mut history = RecordHistory::new();
+    let (mut ok, mut depth, mut want_len, mut literals) = (true, 0u8, 48usize, 0);
+    let mut offsets = Vec::new();
+    for (i, state) in states.iter().enumerate() {
+        ok &= history.append(*state).map_err(text)? == i;
+        let kept = i
+            .checked_sub(1)
+            .map(|p| (p, Residual::from_exact_xor(state, &states[p])))
+            .filter(|(_, r)| depth < 2 && r.serialized_len() + 10 < 129);
+        offsets.push(want_len);
+        ok &= match (&history.entries()[i], kept) {
+            (HistoryEntry::Literal(stored), None) => {
+                (depth, literals) = (0, literals + 1);
+                want_len += 129;
+                stored == state
+            }
+            (
+                HistoryEntry::Residual {
+                    parent,
+                    depth: stored_depth,
+                    residual,
+                },
+                Some((p, r)),
+            ) => {
+                depth += 1;
+                want_len += r.serialized_len() + 10;
+                *parent as usize == p && *stored_depth == depth && *residual == r
+            }
+            _ => false,
+        };
+    }
+    let bytes = history.to_bytes().map_err(text)?;
+    let reopened = RecordHistory::from_bytes(&bytes, 11, (bytes.len() - 48) as u64);
+    ok &= literals == 5
+        && bytes.len() == want_len
+        && history.encoded_len() == want_len
+        && reopened.and_then(|h| h.exact_history()).map_err(text)? == states;
+    // Header fields as the format states them, CRC64s recomputed.
+    let reseal = |mut file: Vec<u8>, count: u64| {
+        let payload_len = (file.len() - 48) as u64;
+        let payload_crc = crc64_ecma(&file[48..]);
+        file[16..24].copy_from_slice(&count.to_le_bytes());
+        file[24..32].copy_from_slice(&payload_len.to_le_bytes());
+        file[32..40].copy_from_slice(&payload_crc.to_le_bytes());
+        let header_crc = crc64_ecma(&file[..40]);
+        file[40..48].copy_from_slice(&header_crc.to_le_bytes());
+        file
+    };
+    let open = |file: &[u8]| RecordHistory::from_bytes(file, u64::MAX, u64::MAX);
+    let mut changed = bytes.clone();
+    *changed.last_mut().ok_or("empty history file")? ^= 1;
+    // Entry 2 is two residuals from its literal; its depth byte (after the tag
+    // and the 4-byte parent) now says 1.
+    let mut lying = bytes.clone();
+    lying[offsets[2] + 5] = 1;
+    let mut dense = bytes[..offsets[1]].to_vec();
+    dense.extend_from_slice(&[1, 0, 0, 0, 0, 1, 1]);
+    dense.extend_from_slice(&[0u8; 128]);
+    ok &= reseal(bytes.clone(), 11) == bytes
+        && open(&changed) == Err(GelError::CorruptStore)
+        && open(&reseal(lying, 11))
+            == Err(GelError::InvalidResidual(
+                "residual depth does not continue its parent chain",
+            ))
+        && open(&reseal(dense, 2))
+            == Err(GelError::InvalidResidual(
+                "dense residual is not written by this format",
+            ));
     Ok(ok)
 }
 fn stale() -> Result<bool, String> {

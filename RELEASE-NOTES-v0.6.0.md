@@ -4,8 +4,9 @@ Date: 2026-10-09
 
 v0.6.0 is a documentation and evidence release with one new command mode,
 `gel-live-lab --literal` (with `--save` and `--reopen`), its `literal` module in
-gel-live-lab and one new function in gel-source, `write_file_new`. File formats,
-the Rust pin and third-party dependencies are unchanged from v0.5.3; the
+gel-live-lab, one new function in gel-source, `write_file_new`, and one new
+library crate, `gel-history`, with its own file format GELHIS01. The other file
+formats, the Rust pin and third-party dependencies are unchanged from v0.5.3; the
 workspace version moves to 0.6.0. Every change since v0.5.3 is listed with its
 commit in the
 [roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.6.0/docs/ROADMAP.md).
@@ -41,13 +42,15 @@ The README now opens with what the public code holds and how to check it:
   snapshots were lost. A process kill is not a power cut.
 - **Run it now and the memory core.** Five commands, each with the line to check
   and its limit, and a table of the public core (the 128-byte record, the store,
-  Reader16, the exact structural rebuild, the four views and F0 memory physics)
-  and of your bytes in one record, each part with the test that checks it.
+  Reader16, the exact structural rebuild, the record history, the four views and
+  F0 memory physics) and of your bytes in one record, each part with the test
+  that checks it.
 
 The claim registry gains `q8-one-record-four-views` as a `SEPARATE_GATE` row and
 `q8-literal-record` as an executable check, and the four rows of the
 language-model comparisons leave it; the GEL numbers of set v2 keep a row of
-their own, `gel-answer-set-v2`.
+their own, `gel-answer-set-v2`. The record history adds `record-history-exact`
+as an executable check and `record-history-durability` as `NOT_ESTABLISHED`.
 The banner and the full-page edition carry the same line: knowledge printed, not
 trained.
 
@@ -62,6 +65,21 @@ only in the literal shape. These are literal bytes, not GEL knowledge printing;
 no score or time is computed and nothing is searched. `gel-source` exposes the
 existing no-replace publisher as `write_file_new` for this file. The interactive
 lab's Q8 line now reads "256 levels per value".
+
+## Record history
+
+`gel-history` keeps every state appended to one 128-byte record, as a literal
+copy or as the XOR residual from the state before it, at most two residuals from
+a literal, and rebuilds each state bit for bit, also after reopening its
+GELHIS01 file. The decoder accepts only the bytes the encoder writes, so one
+history has one file. A residual holds at most 92 changed bits; 93 are stored
+as a literal. The file grows with every state: on synthetic walks of 3,000
+states it takes 155,048 bytes when nothing changes and 387,048 bytes for
+unrelated states. CRC64 is not a pin, a valid older history is not detected,
+and survival of a process kill or a power cut while saving is not established.
+`cargo run --locked --offline --release -p gel-history --example record_history`
+prints the table and ends with `RECORD_HISTORY=PASS`; see
+[record history](https://github.com/Gelram-project/gel-ram/blob/v0.6.0/docs/RECORD-HISTORY.md).
 
 ## Question set v7: an external check
 

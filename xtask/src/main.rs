@@ -942,6 +942,7 @@ fn runtime_examples() -> Result<(), String> {
         &["-p", "gel-cli", "--example", "quantization_matrix"],
         &["-p", "gel-cli", "--example", "precision_matrix"],
         &["-p", "gel-source", "--example", "collection_review"],
+        &["-p", "gel-history", "--example", "record_history"],
     ];
     let mut commands = Vec::new();
     for spec in specs {
@@ -1093,6 +1094,7 @@ fn verify() -> Result<(), String> {
         ("gel-source", "source_build", vec![]),
         ("gel-source", "collection_review", vec![]),
         ("gel-cli", "quantization_matrix", vec![]),
+        ("gel-history", "record_history", vec![]),
     ] {
         let mut command = vec![
             "run",

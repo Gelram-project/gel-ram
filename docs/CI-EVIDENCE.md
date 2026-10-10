@@ -93,7 +93,7 @@ qualified by crate; each declared name is currently defined once.
 
 ## Native command sequencing
 
-The portable workflow runs its six release demonstrations through the Rust
+The portable workflow runs its eight release demonstrations through the Rust
 command below. Each native ExitStatus is checked before starting the next
 command; neither PowerShell's final exit status nor a printed PASS substitutes
 for that check. The same process runner is used by ordinary xtask commands.

@@ -72,6 +72,15 @@ name = "gel-core"
 version = "0.6.0"
 
 [[package]]
+name = "gel-history"
+version = "0.6.0"
+dependencies = [
+ "gel-core",
+ "gel-orb",
+ "gel-structural",
+]
+
+[[package]]
 name = "gel-kernel"
 version = "0.6.0"
 dependencies = [
@@ -197,7 +206,10 @@ name = "xtask"
 version = "0.6.0"
 dependencies = [
  "gel-core",
+ "gel-history",
  "gel-live-lab",
+ "gel-orb",
  "gel-phase-quad",
  "gel-source",
+ "gel-structural",
 ]

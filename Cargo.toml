@@ -7,6 +7,7 @@ members = [
   "crates/gel-kernel",
   "crates/gel-reader",
   "crates/gel-structural",
+  "crates/gel-history",
   "crates/gel-store",
   "crates/gel-source",
   "crates/gel-live-lab",

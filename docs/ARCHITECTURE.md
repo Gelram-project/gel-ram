@@ -62,3 +62,5 @@ A structural delta is allowed only when it beats literal storage after metadata 
 - segment-local index (`u16`).
 
 The public codec does not yet prescribe a global graph or prototype-pool size. Those are workload/topology decisions and must be chosen from F0/F2 measurements.
+
+The record history (`gel-history`) uses the same residual on a linear history of one record: the parent of a residual is always the entry before it, at most two residuals follow a literal, and every state is rebuilt bit for bit ([record history](RECORD-HISTORY.md)).

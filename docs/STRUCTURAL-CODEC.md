@@ -54,3 +54,8 @@ Version 0.2 exposes exact in-memory encode/decode and representation-size
 accounting. Structural records are not yet serialized into the flat `.gel` v2
 store. A future on-disk structural format requires its own canonical byte
 encoding, parser, integrity contract and compatibility tests.
+
+Since v0.6.0, `gel-history` writes one linear history of ORB128 states to a file
+of its own, GELHIS01, with a canonical decoder: one history has exactly one file
+([record history](RECORD-HISTORY.md)). It is not the `.gel` store and not a
+structural format with a prototype pool.
