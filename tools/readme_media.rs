@@ -90,13 +90,21 @@ fn wrap(text: &str) -> String {
     for l in text.lines() {
         let l = l.replace('\t', "  ");
         let chars: Vec<_> = l.chars().filter(|c| !c.is_control()).collect();
-        if chars.is_empty() {
+        // Break after the last space within 72 characters; only a word longer
+        // than a whole line is cut. The space stays at the line end, so joining
+        // the lines gives the input back.
+        let mut start = 0;
+        while chars.len() - start > 72 {
+            let cut = match chars[start..start + 72].iter().rposition(|c| *c == ' ') {
+                Some(space) if space > 0 => start + space + 1,
+                _ => start + 72,
+            };
+            out.extend(&chars[start..cut]);
             out.push('\n');
+            start = cut;
         }
-        for ch in chars.chunks(72) {
-            out.extend(ch);
-            out.push('\n');
-        }
+        out.extend(&chars[start..]);
+        out.push('\n');
     }
     out
 }
@@ -478,6 +486,17 @@ mod tests {
         let output = super::wrap(&input);
         assert_eq!(output.lines().collect::<String>(), input);
         assert!(output.lines().all(|l| l.chars().count() <= 72));
+    }
+    #[test]
+    fn breaks_between_words_and_keeps_every_character() {
+        let input = "word ".repeat(20) + "end";
+        let output = super::wrap(&input);
+        assert_eq!(output.lines().collect::<String>(), input);
+        let lines: Vec<_> = output.lines().collect();
+        assert_eq!(lines.len(), 2);
+        assert!(lines[0].ends_with(' ') && lines[0].chars().count() <= 72);
+        assert!(lines[1].starts_with("word"));
+        assert_eq!(super::wrap("a\n\nb"), "a\n\nb\n");
     }
     #[test]
     fn missing_observation_is_not_a_pass() {
