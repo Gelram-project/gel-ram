@@ -1,4 +1,4 @@
-source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
+source_commit=04ba12e65b390dd6306063279ccc9dab6aac3caa
 SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
 
 PROGRAM=gel-evidence
@@ -13,13 +13,13 @@ STDOUT
 GEL EVIDENCE LAB | RUST | OFFLINE | NO LLM
 Source lookup, not conversation. Timers exclude terminal rendering. No automatic saving.
 gel> ADDED id=1 bytes=30
-gel> FIND=HIT documents=1 matching_lines=1 shown=1 skipped_lines=0 search_ns=9478
+gel> FIND=HIT documents=1 matching_lines=1 shown=1 skipped_lines=0 search_ns=11431
 RESULT 1 doc=1 title=original.txt bytes=0..29
 QUOTE The sample pressure is 2 bar.
 CONTEXT bytes=0..29 omitted_before=false omitted_after=true bounded_not_complete_sentence=true
 The sample pressure is 2 bar.
 gel> CITATION=PASS document_sha256=025aed51e4f27437ea61ee4a2e54825af59ca406539d72e8673bc6edd3efcd69 collection_sha256=0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d; correspondence, not truth
-gel> SAVED revision=1 save_ns=1570190
+gel> SAVED revision=1 save_ns=13436783
 BUNDLE_SHA256=0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d; retain independently
 gel> Closed. Only explicitly saved snapshots persist.
 
@@ -32,8 +32,8 @@ exit
 STDOUT
 GEL EVIDENCE LAB | RUST | OFFLINE | NO LLM
 Source lookup, not conversation. Timers exclude terminal rendering. No automatic saving.
-gel> REOPEN=PASS revision=1 load_ns=22121
-gel> FIND=HIT documents=1 matching_lines=1 shown=1 skipped_lines=0 search_ns=6372
+gel> REOPEN=PASS revision=1 load_ns=12714
+gel> FIND=HIT documents=1 matching_lines=1 shown=1 skipped_lines=0 search_ns=11021
 RESULT 1 doc=1 title=original.txt bytes=0..29
 QUOTE The sample pressure is 2 bar.
 CONTEXT bytes=0..29 omitted_before=false omitted_after=true bounded_not_complete_sentence=true

@@ -54,20 +54,12 @@ Expected failure cases have checked nonzero exits. Full human visual acceptance 
 
 [Complete transcript](05-integrity.txt) · [Full-size animation](05-integrity-light.gif)
 
-## 6. GEL and grep. Compare answers first.
+## 6. Your bytes in one record. Four views back.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="06-compare-dark.gif">
-  <img alt="GEL and grep. Compare answers first." src="06-compare-light.gif" width="1000">
+  <source media="(prefers-color-scheme: dark)" srcset="07-literal-dark.gif">
+  <img alt="Your bytes in one record. Four views back." src="07-literal-light.gif" width="1000">
 </picture>
 
-[Complete transcript](06-compare.txt) · [Full-size animation](06-compare-light.gif)
+[Complete transcript](07-literal.txt) · [Full-size animation](07-literal-light.gif)
 
-
-## Historical comparison boundary
-
-The sixth replay retains the answer classification produced at its recorded
-source revision. That checker used counts plus a capped preview, not complete
-line-set equality. The current checker is stronger; the original replay and
-transcript are unchanged and are not a new benchmark. See the
-[comparison contract](../../docs/BENCHMARK-GREP.md).

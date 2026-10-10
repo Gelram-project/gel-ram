@@ -1,0 +1,46 @@
+source_commit=04ba12e65b390dd6306063279ccc9dab6aac3caa
+SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
+
+PROGRAM=gel-live-lab --literal original.txt --save record.q8
+STDOUT
+  GEL LIVE LAB  /  LITERAL RECORD  /  OFFLINE  /  NO LLM
+  ========================================================================
+  Literal bytes, not GEL knowledge printing: the step that prints text
+  into GEL records is private and is not part of this command.
+  SOURCE | caller-selected file, path not displayed | 30 B, first 30 B placed
+  RECORD | 1024 values of 256 levels + 128-byte activity mask = 1152 B | active 30/1024
+  ------------------------------------------------------------------------
+  P0 identity        | "The sample pressure is 2 bar.\n"
+  P1 offset          | fc 75 d9 7d bb b7 cc 53 57 86 30 0d e4 be 17 df  (offset view, not text)
+  P2 mirror          | "\n.rab 2 si erusserp elpmas ehT"  (the bytes above, reversed, at the end)
+  P3 mirror + offset | 77 db 05 97 5b 4f f7 fa b9 ee 84 3d 46 c2 72 8e  (offset view, not text)
+  ROUNDTRIP=4/4 DIFFERENT_BITS=0 | each view restored to the original record
+  ------------------------------------------------------------------------
+  Q8DEMO01 | 1164 B | pin 73a3c92263cedf7c99c6fca32404fd311242b2f06d7ebced229473e5c228aa32
+  SAVED without replacing any file. Retain the pin independently.
+  TAMPER=REJECTED | a 1-byte change in a RAM copy is checked against the pin
+  4 views of 1 record, not 4 copies
+GEL_LIVE_LAB_LITERAL=PASS
+
+PROGRAM=gel-live-lab --reopen 73a3c92263cedf7c99c6fca32404fd311242b2f06d7ebced229473e5c228aa32 record.q8
+STDOUT
+  GEL LIVE LAB  /  LITERAL RECORD  /  OFFLINE  /  NO LLM
+  ========================================================================
+  Literal bytes, not GEL knowledge printing: the step that prints text
+  into GEL records is private and is not part of this command.
+  SOURCE | saved Q8DEMO01 record, path not displayed | file length not stored | 30 B placed
+  RECORD | 1024 values of 256 levels + 128-byte activity mask = 1152 B | active 30/1024
+  ------------------------------------------------------------------------
+  P0 identity        | "The sample pressure is 2 bar.\n"
+  P1 offset          | fc 75 d9 7d bb b7 cc 53 57 86 30 0d e4 be 17 df  (offset view, not text)
+  P2 mirror          | "\n.rab 2 si erusserp elpmas ehT"  (the bytes above, reversed, at the end)
+  P3 mirror + offset | 77 db 05 97 5b 4f f7 fa b9 ee 84 3d 46 c2 72 8e  (offset view, not text)
+  ROUNDTRIP=4/4 DIFFERENT_BITS=0 | each view restored to the original record
+  ------------------------------------------------------------------------
+  Q8DEMO01 | 1164 B | pin 73a3c92263cedf7c99c6fca32404fd311242b2f06d7ebced229473e5c228aa32
+  REOPEN=PASS | the file matches the retained pin; record restored.
+  TAMPER=REJECTED | a 1-byte change in a RAM copy is checked against the pin
+  4 views of 1 record, not 4 copies
+GEL_LIVE_LAB_LITERAL=PASS
+
+RECORDER_CHECK=saved_pin_equals_independent_sha256

@@ -31,9 +31,9 @@ const SCENES: &[(&str, &str, &str)] = &[
         "A changed-byte copy is rejected against the original trusted hash.",
     ),
     (
-        "06-compare",
-        "GEL and grep. Answers before speed.",
-        "See matching and differing answers. No universal speedup is claimed.",
+        "07-literal",
+        "Your bytes. One record. Four views back.",
+        "Place a file's first bytes in one record, restore its four views and reject a changed byte.",
     ),
 ];
 /// Four checked facts; the counts are read from the repository by `fact_counts`.
@@ -94,8 +94,8 @@ const CHIPS: &[(&str, &str, &str, &str)] = &[
         "#ff7b72",
     ),
     (
-        "06 · ANSWERS BEFORE SPEED",
-        "M4 8h15l-3-3M20 16H5l3 3",
+        "06 · YOUR BYTES, ONE RECORD",
+        "M5 3h14v18H5zM8 7h8M8 11h8M8 15h5",
         "#0b7285",
         "#39c5cf",
     ),
@@ -1863,7 +1863,7 @@ fn run() -> Result<()> {
         "media/gifs/03-backup.txt",
         "media/gifs/04-reproduce.txt",
         "media/gifs/05-integrity.txt",
-        "media/gifs/06-compare.txt",
+        "media/gifs/07-literal.txt",
     ];
     let saved: Vec<_> = immutable
         .iter()
