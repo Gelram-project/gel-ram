@@ -1,4 +1,4 @@
-source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
+source_commit=04ba12e65b390dd6306063279ccc9dab6aac3caa
 SANITIZATION=absolute checkout and scratch prefixes replaced; stdout retained
 
 OPERATION=copy snapshot and XOR its last byte with 1; original untouched
@@ -7,9 +7,9 @@ STDIN
 load 0861b55dda00495e85e7dcb86c2d8fcc1dcc01460016b7e0f21ca7bddc22700d corrupted.gelset
 exit
 STDOUT
-{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.4.0"}
+{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.6.0"}
 {"schema":"gel-evidence/1","record":"result","seq":1,"command":"load","status":"ERROR","error":"COLLECTION_INTEGRITY"}
-{"schema":"gel-evidence/1","record":"summary","executed":1,"not_run":1,"statuses":{"OK":0,"HIT":0,"UNKNOWN":0,"INCOMPLETE":0,"ERROR":1},"exit_code":2,"peak_rss_kb":2140}
+{"schema":"gel-evidence/1","record":"summary","executed":1,"not_run":1,"statuses":{"OK":0,"HIT":0,"UNKNOWN":0,"INCOMPLETE":0,"ERROR":1},"exit_code":2,"peak_rss_kb":2236}
 
 STDERR
 ERROR seq=1 command=load COLLECTION_INTEGRITY

@@ -1,36 +1,36 @@
 FORMAT=GEL_README_MEDIA_1
-source_commit=ace20f3ba6c29abbf363902e17244a114ed4699a
-source_manifest_sha256=6243db388b8c8679993353e258e6735c6d879922f478847c5fee2929d67546cb
+source_commit=04ba12e65b390dd6306063279ccc9dab6aac3caa
+source_manifest_sha256=01efd2bfc5d2860dc8513e4f66696b9c40d556fc1fd748ddf144f3d57543de79
 recording=real_public_cli_processes
 presentation=edited_log_replay_not_screen_capture_or_wall_time
 fixture=synthetic_pressure_text
 new_measurement_claim=none
-platform=linux_ci
+platform=linux_author_host
 human_visual_acceptance=OPEN
-rustc 1.85.0 (4d91de4e4 2025-02-17)
-ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers
-sha256 9e01ffa4b8ffe327a71a6d7c40d56a1ab3e805b2e0574999b486cd9fe9285a0c  media/gifs/01-evidence-light.gif
-sha256 29e639a9475e0d2c6a67bb229fcd07370c64efffd2342f50e6bb7b11a04aaead  media/gifs/01-evidence-light.png
-sha256 237f4f8618eb8e2b719d2c8a2506ac765a23a5ad6f5f63062c678b2dccd53e41  media/gifs/01-evidence-dark.gif
-sha256 6736f687c90ca4bae70faaff1e10d66333d9ed4bb8117839e82c394884277f28  media/gifs/01-evidence-dark.png
-sha256 80f3f205cb613013a90b5b0fbfb354ca2caf827ac2e151f319909b2733d1eb81  media/gifs/02-stale-light.gif
-sha256 122bed346770e6cc7407038164e8ee411a7b28b753800e6e9f294c6f757cc0a9  media/gifs/02-stale-light.png
-sha256 318c72fde8d34635ba59046f6dfab657347873cdb774d064edd75670e450bed1  media/gifs/02-stale-dark.gif
-sha256 12d6689c8bc17227bafa24359c0a0e754a49f15875756f52326101c88614a523  media/gifs/02-stale-dark.png
-sha256 498164162e63e8f7b6552911775bf0a06963e92bc1eafd6f86389dab6d2938da  media/gifs/03-backup-light.gif
-sha256 84d24540eab4739ca8cf1b34e1951a70272786d05803a8be88dae15925cf010c  media/gifs/03-backup-light.png
-sha256 2f99fece6c91187aa310b161143a4da9fd8c15493ac866c56e332354bb2f1d20  media/gifs/03-backup-dark.gif
-sha256 536832ac62ed1dbafc8191882e54a50027cfe8ee68bd910be6b74e10239ef688  media/gifs/03-backup-dark.png
-sha256 337281dca65313b18a23f6b325e63a030d9c962002efdf70b412a6ff575734f5  media/gifs/04-reproduce-light.gif
-sha256 4cba21ee66190fb3b6f3b03b1ca21bd58e6cbbb41220ebc92227080bbdd6ef30  media/gifs/04-reproduce-light.png
-sha256 fb62682857c129b694c95d0504fee3a9d64ba2395437129647547c38e5197e94  media/gifs/04-reproduce-dark.gif
-sha256 c770e7fbcf2833785fe045a04e10f95bcfba25921c43a5df93a580225cc601be  media/gifs/04-reproduce-dark.png
-sha256 13901bd9a30a7ac7717c80962747fa356f4c1953d7caa4f58f1c3d5517936eb1  media/gifs/05-integrity-light.gif
-sha256 6486e16d673103733410c8b61644513c044104a722f98a9498bab6f4a0cdfd4b  media/gifs/05-integrity-light.png
-sha256 68646d05819a6c0c73a1cf97172a82efb9167e4cf075c16e06f22f56ecc13b88  media/gifs/05-integrity-dark.gif
-sha256 dd63479081858ee17f675511e656579534549ff93289455c98f12a0f5bfd7995  media/gifs/05-integrity-dark.png
-sha256 1d05cebff9acc9178a963e124c1a991ca69ffb9ab83c38e8891fb85772c7ac83  media/gifs/06-compare-light.gif
-sha256 700234b782874f5ef1b6fef819d7dd804dcec457b4f4fb903060a31ef92f381c  media/gifs/06-compare-light.png
-sha256 bd42eab15422c4498d54581838bdfdf5b8c2e1e76bda705484a79d2ec48441dc  media/gifs/06-compare-dark.gif
-sha256 4d7c067828a56367a0d60f492f82489b964e3ed71ddf99e1eb8361e61c6b3e6b  media/gifs/06-compare-dark.png
+rustc 1.97.0 (2d8144b78 2026-07-07)
+ffmpeg version 6.1.1-3ubuntu5+esm10 Copyright (c) 2000-2023 the FFmpeg developers
+sha256 53636b0287f01a2651191d954d974e384c91c686b5e3d4bb55bbe3102da18f57  media/gifs/01-evidence-light.gif
+sha256 4a6e692d1e8a0b86788d2a0e3ee9657e6e6440224f64e3dfbed09c22c105cfe3  media/gifs/01-evidence-light.png
+sha256 0bb3403ce698f2e5ce6fcc70c04c25a276265e6781b56627b6ca33bb8a8e9d1d  media/gifs/01-evidence-dark.gif
+sha256 dba278f6e2f0a81d4704e7bf652e22df349a9f5e88798db8d886afbe0ded2883  media/gifs/01-evidence-dark.png
+sha256 ca2606ca4e62cc298841f07bc0edcb1c11177ec4ed819a5bc5284fe5533a634c  media/gifs/02-stale-light.gif
+sha256 ea2a12aedc96dd0abd88b5d73817c98bcfbabfa68dcedd6132bb71d9b571a18d  media/gifs/02-stale-light.png
+sha256 389e6f5f1b9f320a4d85a96122344e77fbcace48fdc0794273738d779d08f7b2  media/gifs/02-stale-dark.gif
+sha256 a117038d615597d4cba2b54fadbb6dad3ef44abe01df515e59df2a89b93f1d0a  media/gifs/02-stale-dark.png
+sha256 82f46988e1b2863180768f11e77fcaf911cb89eeebd63e1e84e1d792932e27fa  media/gifs/03-backup-light.gif
+sha256 46a309b109085bb02487924bfcffde13df933f619dab1a0e5fdcd0144bbe1e1f  media/gifs/03-backup-light.png
+sha256 2184ebaaf47fdf5cb086dc2267d6d91c78a7d30ae35c6322f73ad73f2776b610  media/gifs/03-backup-dark.gif
+sha256 d3e9f5ca90cc52fc0575bdab8d380f6c77597f1d39907db2c6694fd9242286bf  media/gifs/03-backup-dark.png
+sha256 1adb7e15937b10372e0c19160972cf29581ac17f819d442609457b48d49ba77f  media/gifs/04-reproduce-light.gif
+sha256 c2bff0a465523f468914f0a04d4f1291e0070d20da7919787e273561a9e4fddc  media/gifs/04-reproduce-light.png
+sha256 dcaa8afae19d72af698270f4649fd98dd1eb1a3a3bb9271d7ab8c9fb07ac7e2e  media/gifs/04-reproduce-dark.gif
+sha256 cea27d1bcb3757430b7685bec6611b923247b63ecfa77ba1c75b9d8e4dad7f33  media/gifs/04-reproduce-dark.png
+sha256 ba6e1e8449c45bffc80923e200fdc502b36616d6c9a8b126be2b79008e7df496  media/gifs/05-integrity-light.gif
+sha256 c49159370d28a1b5b7f1d6b61b369bc53814de733641f40f83a9671c6533300e  media/gifs/05-integrity-light.png
+sha256 da4b7699891e9ad334ed7f28155415d305dd08a56620f3b2506dc9187db86719  media/gifs/05-integrity-dark.gif
+sha256 8ded780ada24b9beb953f6579f69754c92afa4a0e2dc4153edb5b4152621e277  media/gifs/05-integrity-dark.png
+sha256 603423555fe9ab91d721bc0667c07af7830ff7fc5fbf7f8a7ebea372fc418c33  media/gifs/07-literal-light.gif
+sha256 4d494435ff510eb122448d5f0c8541fa97ba9b5c12f608e6b04e8e198cd9562f  media/gifs/07-literal-light.png
+sha256 2659273a529620a822a47a17cbeb1d73bed30920c81dc9eb893e7891b8eb45fd  media/gifs/07-literal-dark.gif
+sha256 5829514c64f0f50367a8f1dab0ee06d0e76e369fe916789171f88806e2ca4537  media/gifs/07-literal-dark.png
 MEDIA_DECODE=PASS all 12 GIFs, 3 frames each, 1000x460, 12 seconds
