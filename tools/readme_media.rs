@@ -15,7 +15,7 @@ const ITEMS: [(&str, &str); 6] = [
     ("03-backup", "Backup. Inspect. Restore to a new path."),
     ("04-reproduce", "One command. Inspect every result."),
     ("05-integrity", "One changed byte. Trusted pin rejects it."),
-    ("06-compare", "GEL and grep. Compare answers first."),
+    ("07-literal", "Your bytes in one record. Four views back."),
 ];
 fn capture(
     program: &str,
@@ -99,6 +99,24 @@ fn wrap(text: &str) -> String {
         }
     }
     out
+}
+/// The allow-list without its media/gifs entries; every other entry is kept as written.
+fn drop_gallery_pins(text: &str) -> R<String> {
+    let (open, close) = ("    (\n        \"media/gifs/", "\n    ),\n");
+    let mut out = String::with_capacity(text.len());
+    let mut rest = text;
+    let mut dropped = 0;
+    while let Some(at) = rest.find(open) {
+        out.push_str(&rest[..at]);
+        let end = rest[at..].find(close).ok_or("unterminated gallery pin")? + at + close.len();
+        rest = &rest[end..];
+        dropped += 1;
+    }
+    if dropped == 0 {
+        return Err("no earlier gallery pins found".into());
+    }
+    out.push_str(rest);
+    Ok(out)
 }
 fn picture(base: &str, alt: &str) -> String {
     format!("<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"{base}-dark.gif\">\n  <img alt=\"{alt}\" src=\"{base}-light.gif\" width=\"1000\">\n</picture>\n")
@@ -257,6 +275,8 @@ fn main() -> R<()> {
     let backup = backup.to_str().ok_or("binary path")?;
     let xtask = root.join("target/debug/xtask");
     let xtask = xtask.to_str().ok_or("binary path")?;
+    let lab = root.join("target/release/gel-live-lab");
+    let lab = lab.to_str().ok_or("binary path")?;
     fs::write(temp.join("original.txt"), "The sample pressure is 2 bar.\n")?;
     fs::write(temp.join("revised.txt"), "The sample pressure is 3 bar.\n")?;
     let first_in = "add original.txt\nfind sample pressure\nproof 1\nsave snapshot.gelset\nexit\n";
@@ -312,6 +332,21 @@ fn main() -> R<()> {
     let (refusal, refusal_err) = capture(ev, &["--batch"], &temp, &corrupt_in, 2)?;
     contains(&refusal, "\"status\":\"ERROR\"")?;
     contains(&refusal, "\"error\":\"COLLECTION_INTEGRITY\"")?;
+    let literal_args = ["--literal", "original.txt", "--save", "record.q8"];
+    let literal = checked(lab, &literal_args, &temp, "", 0)?;
+    for m in [
+        "ROUNDTRIP=4/4 DIFFERENT_BITS=0",
+        "TAMPER=REJECTED",
+        "SAVED without replacing any file",
+        "GEL_LIVE_LAB_LITERAL=PASS",
+    ] {
+        contains(&literal, m)?;
+    }
+    let literal_pin = hash(&temp.join("record.q8"))?;
+    contains(&literal, &format!("pin {literal_pin}"))?;
+    let reopened = checked(lab, &["--reopen", &literal_pin, "record.q8"], &temp, "", 0)?;
+    contains(&reopened, "REOPEN=PASS")?;
+    contains(&reopened, "GEL_LIVE_LAB_LITERAL=PASS")?;
     println!("MEDIA_RECORDING=CLI_CASES_PASSED starting strict reproduction");
     // This is the real reproduction runner, not a simulated stream of PASS labels.
     checked(
@@ -336,15 +371,13 @@ fn main() -> R<()> {
         &rep,
         "REPRODUCTION=PASS pass=3 fail=0 skipped=0 not_run=0 isolation=VERIFIED",
     )?;
-    let answers = fs::read_to_string(rep_dir.join("bench/answers.tsv"))
-        .map_err(|e| format!("read benchmark answers.tsv: {e}"))?;
     let all=[
         format!("PROGRAM=gel-evidence\nPROCESS=1\nSTDIN\n{first_in}STDOUT\n{first}\nPROCESS=2\nSTDIN\n{reopen_in}STDOUT\n{reopen}\nRECORDER_CHECK=quote_before_equals_quote_after\n"),
         format!("PROGRAM=gel-evidence --batch\nSTDIN\n{stale_in}STDOUT\n{stale}\nSTDERR\n{stale_err}\nEXPECTED_AND_OBSERVED_EXIT=2\n"),
         format!("PROGRAM=gel-backup\ncreate {pin} snapshot.gelset backup\n{b1}\ninspect {pin} backup\n{b2}\nrestore {pin} backup restored.gelset\n{b3}\nRECORDER_CHECK=restored_bytes_equal_snapshot_bytes\n"),
         rep,
         format!("OPERATION=copy snapshot and XOR its last byte with 1; original untouched\nPROGRAM=gel-evidence --batch\nSTDIN\n{corrupt_in}STDOUT\n{refusal}\nSTDERR\n{refusal_err}\nEXPECTED_AND_OBSERVED_EXIT=2\n"),
-        format!("Recorded answer agreement, not a speed claim.\n{}\n", answers),
+        format!("PROGRAM=gel-live-lab {}\nSTDOUT\n{literal}\nPROGRAM=gel-live-lab --reopen {literal_pin} record.q8\nSTDOUT\n{reopened}\nRECORDER_CHECK=saved_pin_equals_independent_sha256\n", literal_args.join(" ")),
     ];
     let rep_lines = all[3]
         .lines()
@@ -352,22 +385,26 @@ fn main() -> R<()> {
         .collect::<Vec<_>>()
         .join("\n");
     let refusal_line = line(&refusal, "\"status\":\"ERROR\"")?;
-    let rows = answers.lines().take(3).collect::<Vec<_>>().join("\n");
+    let lit = |text: &str, needle: &str| line(text, needle).map(|l| l.trim().to_owned());
     let cards=vec![
         vec![format!("$ gel-evidence\nadd original.txt\nfind sample pressure\n\n{}\n{q}",excerpt(&first,"ADDED")?),format!("proof 1\nsave snapshot.gelset\n\n{}\n\nBUNDLE_SHA256=\n{pin}", "CITATION=PASS"),format!("New OS process: gel-evidence\nload SAVED_SHA256 snapshot.gelset\nfind sample pressure\n\n{}\n{q}\n\nRecorder verified: quote bytes unchanged.",excerpt(&reopen,"REOPEN=PASS")?)],
         vec![format!("$ gel-evidence --batch\nadd original.txt\nfind sample pressure\n\n{q}"),"replace 1 revised.txt\n\nObserved JSON field:\n\"previous_citations_invalidated\":true".into(),"proof 1\n\nObserved JSON field:\n\"error\":\"NO_CURRENT_RESULT\"\n\nObserved process exit: 2".into()],
         vec![format!("$ gel-backup create SAVED_SHA256 snapshot.gelset backup\n\n{b1}"),format!("$ gel-backup inspect SAVED_SHA256 backup\n\n{b2}"),format!("$ gel-backup restore SAVED_SHA256 backup restored.gelset\n\n{b3}\nRecorder verified: restored bytes equal original.")],
-        vec!["$ xtask reproduce reproduction\n    --require-isolation --strict\n\nExecuted inside: unshare --user --net\nThis clip replays the completed report.".into(),rep_lines,format!("Observed final report:\n\n{}\n\nHosted Linux run; not an independent second host.",line(&all[3],"REPRODUCTION=PASS")?)],
+        vec!["$ xtask reproduce reproduction\n    --require-isolation --strict\n\nExecuted inside: unshare --user --net\nThis clip replays the completed report.".into(),rep_lines,format!("Observed final report:\n\n{}\n\nAuthor-run Linux host; not an independent second host.",line(&all[3],"REPRODUCTION=PASS")?)],
         vec!["Copy the saved snapshot.\nFlip its final byte with XOR 1.\n\nThe original remains untouched.\nThe trusted SHA-256 is unchanged.".into(),format!("$ gel-evidence --batch\nload SAVED_SHA256 corrupted.gelset\n\nObserved JSON result:\n{refusal_line}"),"Observed process exit: 2\n\nPin mismatch is not structural-parser coverage.\nThe finite mutation campaign is linked separately.\nA hash checks bytes, not the truth of a source.".into()],
-        vec!["GEL and grep: answer agreement\n\nRecorded by xtask reproduce.\nGEL normalizes Unicode and tokenizes phrases.\ngrep uses different matching rules.".into(),format!("Observed answer-table excerpt:\n\n{rows}"),"A shared corpus is not identical semantics.\n\nKeep both SAME and DIFFERENT rows.\nUse the complete answer table linked below.\nThis animation makes no speed claim.".into()],
+        vec![format!("$ gel-live-lab --literal original.txt\n    --save record.q8\n\n{}\n{}\n\n{}",lit(&literal,"SOURCE |")?,lit(&literal,"RECORD |")?,lit(&literal,"P0 identity")?),format!("{}\n{}\n{}\n\n{}",lit(&literal,"P1 offset")?,lit(&literal,"P2 mirror")?,lit(&literal,"P3 mirror")?,lit(&literal,"ROUNDTRIP=")?),format!("$ gel-live-lab --reopen SAVED_SHA256 record.q8\n\n{}\n{}\n\nLiteral bytes, not GEL knowledge printing.\nNo score or time is computed.",lit(&reopened,"REOPEN=PASS")?,lit(&literal,"TAMPER=")?)],
     ];
     println!("MEDIA_RECORDING=COMPLETE rendering six scenarios");
     let dir = root.join("media/gifs");
+    // The new gallery replaces the old one as a whole; the checkout was clean above.
+    if dir.exists() {
+        fs::remove_dir_all(&dir)?;
+    }
     fs::create_dir(&dir)?;
     fs::copy(temp.join("original.txt"), dir.join("source-original.txt"))?;
     fs::copy(temp.join("revised.txt"), dir.join("source-revised.txt"))?;
     let mut pins = Vec::new();
-    let mut manifest=format!("FORMAT=GEL_README_MEDIA_1\nsource_commit={source}\nsource_manifest_sha256={source_pin}\nrecording=real_public_cli_processes\npresentation=edited_log_replay_not_screen_capture_or_wall_time\nfixture=synthetic_pressure_text\nnew_measurement_claim=none\nplatform=linux_ci\nhuman_visual_acceptance=OPEN\n");
+    let mut manifest=format!("FORMAT=GEL_README_MEDIA_1\nsource_commit={source}\nsource_manifest_sha256={source_pin}\nrecording=real_public_cli_processes\npresentation=edited_log_replay_not_screen_capture_or_wall_time\nfixture=synthetic_pressure_text\nnew_measurement_claim=none\nplatform=linux_author_host\nhuman_visual_acceptance=OPEN\n");
     for tool in ["rustc", "ffmpeg"] {
         manifest.push_str(
             &checked(
@@ -403,42 +440,17 @@ fn main() -> R<()> {
     fs::write(dir.join("MANIFEST.txt"), &manifest)?;
     let mut gallery=String::from("# Six public workflow replays\n\nThese are edited replays of real CLI logs, not original screen captures.\nThe four-second cards are editorial pacing, never measured latency.\n[Source run and asset hashes](MANIFEST.txt) · [Static view](STATIC.md) · [Media rights](../RIGHTS.md)\n\nNo private application or invented benchmark is shown. Placeholders such as SAVED_SHA256\nabbreviate command display only; the exact executed arguments are in each transcript.\nCommands shown after gel-evidence are its stdin, not unsupported command-line subcommands.\nExpected failure cases have checked nonzero exits. Full human visual acceptance remains open.\n\n");
     let mut static_view=String::from("# Static view without animated images\n\nPosters and complete text transcripts of each edited replay.\n[Provenance](MANIFEST.txt) · [Media rights](../RIGHTS.md)\n\n");
-    let mut section=String::from("## See it in action\n\n**Actual public-tool runs, presented as six edited log replays.**\n[Static view](media/gifs/STATIC.md) · [Full gallery and transcripts](media/gifs/README.md) · [Source and hashes](media/gifs/MANIFEST.txt)\n\nEach animation lasts 12 seconds. Card pacing is editorial, not execution time.\nLight and dark variants match the README theme; these are not product UI screenshots.\n\n");
+    // The README section that shows these replays is built by tools/readme_presentation.rs.
     for (i, (slug, title)) in ITEMS.iter().enumerate() {
         gallery.push_str(&format!("## {}. {title}\n\n{}\n[Complete transcript]({slug}.txt) · [Full-size animation]({slug}-light.gif)\n\n",i+1,picture(slug,title)));
         static_view.push_str(&format!("## {}. {title}\n\n<picture>\n<source media=\"(prefers-color-scheme: dark)\" srcset=\"{slug}-dark.png\">\n<img alt=\"{title}\" src=\"{slug}-light.png\" width=\"1000\">\n</picture>\n\n[Complete transcript]({slug}.txt) · [Full-size animation]({slug}-light.gif)\n\n",i+1));
-        if i == 0 {
-            section.push_str(&format!(
-                "{}\n[Read the full source/restart transcript](media/gifs/{slug}.txt)\n\n",
-                picture(&format!("media/gifs/{slug}"), title)
-            ));
-        } else {
-            section.push_str(&format!("<details>\n<summary><strong>{}. {title}</strong></summary>\n\n{}\n[Complete transcript](media/gifs/{slug}.txt) · [Full-size animation](media/gifs/{slug}-light.gif)\n\n</details>\n\n",i+1,picture(&format!("media/gifs/{slug}"),title)));
-        }
     }
-    section.push_str("The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),\nits [original process logs](media/EVIDENCE-LAB-GUIDE.md) and\n[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.\nThe new replays do not close that review.\n\n");
     fs::write(dir.join("README.md"), gallery)?;
     fs::write(dir.join("STATIC.md"), static_view)?;
-    let readme = fs::read_to_string(root.join("README.md"))?;
-    let start = readme
-        .find("## See it in action\n")
-        .ok_or("README section start")?;
-    let end = readme
-        .find("### What you can inspect\n")
-        .ok_or("README section end")?;
-    if end <= start {
-        return Err("section order".into());
-    }
-    fs::write(
-        root.join("README.md"),
-        format!("{}{}{}", &readme[..start], section, &readme[end..]),
-    )?;
-    let index = root.join("media/INDEX.md");
-    let old = fs::read_to_string(&index)?;
-    fs::write(index,format!("# Animated workflow gallery\n\n[Six edited public CLI replays](gifs/README.md) · [Static accessible view](gifs/STATIC.md) · [Provenance](gifs/MANIFEST.txt)\n\nLight/dark cards are derived from newly executed public CLI logs. They are not\nnew film recordings or latency measurements. The original films below are unchanged.\n\n{old}"))?;
-    // Add exact pins to the existing allow-list, never a blanket GIF extension exception.
+    // Replace the gallery's exact pins in the allow-list: drop every earlier
+    // media/gifs entry, then add the new ones; never a blanket GIF exception.
     let main = root.join("xtask/src/main.rs");
-    let text = fs::read_to_string(&main)?;
+    let text = drop_gallery_pins(&fs::read_to_string(&main)?)?;
     let marker = "const REVIEWED_ASSETS: &[(&str, &str)] = &[\n";
     if text.matches(marker).count() != 1 {
         return Err("asset-list marker ambiguous".into());
@@ -478,6 +490,17 @@ mod tests {
             super::excerpt("gel> QUOTE 2 bar", "QUOTE ").unwrap(),
             "QUOTE 2 bar"
         );
+    }
+    #[test]
+    fn only_gallery_pins_are_dropped() {
+        let keep = "    (\n        \"media/presentation/a.svg\",\n        \"11\",\n    ),\n";
+        let gif = "    (\n        \"media/gifs/06-compare-light.gif\",\n        \"22\",\n    ),\n";
+        let text = format!("head\n{keep}{gif}{gif}{keep}tail\n");
+        assert_eq!(
+            super::drop_gallery_pins(&text).unwrap(),
+            format!("head\n{keep}{keep}tail\n")
+        );
+        assert!(super::drop_gallery_pins(&format!("head\n{keep}")).is_err());
     }
     #[test]
     fn six_distinct_scenarios() {
