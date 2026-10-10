@@ -14,6 +14,8 @@ models gave in one recorded run on 2026-09-29. This is the new frozen set the
 it before the run. The next set, [v3](../answer-or-abstain-v3/README.md), puts GEL
 beside two BM25 search engines on the same bank.
 
+What has nothing to compare with: [external checks](../EXTERNAL-CHECKS.md#what-has-nothing-to-compare-with).
+
 **What changed from v1**
 
 - **Five times larger and drawn at random**: 400 passages drawn by a fixed seed

@@ -1,5 +1,6 @@
 //! Offline interactive evidence laboratory, not an answer generator or semantic encoder.
 #![forbid(unsafe_code)]
+pub mod literal;
 use gel_phase_quad::{grid::DIM, Policy, Reader, Record};
 use gel_source::{
     digest, hex, import_text, load_bundle, read_regular, write_bundle_new, Address, Corpus,
@@ -48,7 +49,7 @@ pub fn quad(c: QuadConfig) -> Result<QuadResult, String> {
     if c.stride > DIM || c.noise > DIM || c.pole > 3 {
         return Err("Quad parameter out of range".into());
     }
-    let reader = Reader::new(510051);
+    let reader = Reader::new(literal::SEED);
     let original = Record::new(std::array::from_fn(|j| j as u8), &[true; DIM]);
     let body = Record::new(
         std::array::from_fn(|j| {
@@ -356,7 +357,7 @@ impl Lab {
         out += "  ------------------------------------------------------------------------\n";
         out += "  Q QUAD | SEPARATE synthetic numeric record, NOT an encoding of this text\n";
         out += &format!(
-            "  Phase={} mask_stride={} noise={} | Record={} B, 256 phase levels\n",
+            "  Phase={} mask_stride={} noise={} | Record={} B, 256 levels per value\n",
             self.config.phase, self.config.stride, self.config.noise, q.record_bytes
         );
         for i in 0..4 {

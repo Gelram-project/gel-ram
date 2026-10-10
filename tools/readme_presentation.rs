@@ -3,7 +3,7 @@
 use std::{fs, io::Write, path::Path, process::Command};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// The release whose sources the page links to and checks out.
-const RELEASE: &str = "v0.5.3";
+const RELEASE: &str = "v0.6.0";
 const SCENES: &[(&str, &str, &str)] = &[
     (
         "01-evidence",
@@ -106,7 +106,7 @@ const HTML: &str = r####"<!doctype html>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; object-src 'none'">
-<title>GEL RAM | Evidence Lab | Multimedia guide</title>
+<title>GEL RAM | Multimedia guide</title>
 <style>
 :root{color-scheme:light dark;--bg:#f6f9ff;--paper:#fff;--ink:#102949;--muted:#485e77;--line:#cbdcf0;--blue:#0969da;--soft:#e9f3ff;--shadow:0 18px 48px #24497112}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 95% 0%,#d8eaff 0,transparent 55%),var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -124,14 +124,14 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <div class="page">
 <header><div class="brand-row"><div><div class="brand">
 __BRAND_LOGO__
-<div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Your documents. Exact quotes. A restart you can check.</p></div>
+<div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
 <div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">Local CLI</span><span class="chip">Source-linked media</span></div></div></div>
 <nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
 <div class="view-tools"><label for="still-mode">Show still images</label><a href="__DOC__/media/gifs/MANIFEST.txt">Media provenance</a><span>12-second edited replays, not wall time</span></div>
 <main id="content">
 <section class="hero" aria-labelledby="hero-heading">
 <figure><a class="media-link" href="media/gifs/01-evidence-light.gif" aria-label="Open the exact quotes and restart animation at full size">__HERO__</a><figcaption>Real public CLI output, edited into three readable cards.<br><a href="media/gifs/01-evidence.txt">Full transcript and source revision</a> · <a href="media/gifs/01-evidence-dark.gif">Dark full-size version</a></figcaption></figure>
-<div><p class="eyebrow">Inspect the source. Keep the evidence.</p><h1 id="hero-heading">Find the passage.<br>Check the source.</h1><p class="hero-lead">Load your text, retrieve exact quotations and check that a saved collection reopens with the expected bytes.</p><ul class="checks"><li>Source text, identifiers and byte ranges</li><li>SHA-256 pins retained independently</li><li>Explicit refusal after source replacement</li><li>Public Rust tools, without an LLM</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">Source correspondence is not source truth. This is phrase retrieval, not unrestricted question answering.</p></div>
+<div><p class="eyebrow">Inspect the source. Keep the evidence.</p><h1 id="hero-heading">Find the passage.<br>Check the source.</h1><p class="hero-lead">Load your text, retrieve exact quotations and check that a saved collection reopens with the expected bytes.</p><ul class="checks"><li>Source text, identifiers and byte ranges</li><li>SHA-256 pins retained independently</li><li>Explicit refusal after source replacement</li><li>Public Rust tools, offline on your CPU</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">Source correspondence is not source truth. This is phrase retrieval, not unrestricted question answering.</p></div>
 </section>
 <section class="section flow" aria-label="How a citation is checked">__FLOW__<div class="facts">__FACTS__</div></section>
 <section class="section" id="workflows" aria-labelledby="workflow-heading"><div class="section-heading"><p class="eyebrow">Six workflows. Their original evidence.</p><h2 id="workflow-heading">See it in action</h2><p>These are edited replays of recorded public command output, not product screenshots or new benchmark runs. Open each image at full size to read the terminal text.</p></div><div class="grid">__CARDS__</div>
@@ -159,51 +159,131 @@ const NATIVE: &str = r####"# GEL RAM
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/presentation/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/header-still-light.svg">
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
-  <img alt="GEL RAM. Evidence you can inspect. Ask, retrieve, verify, or say you don't know. Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core." src="media/presentation/header-light.svg" width="1200">
+  <img alt="GEL RAM. Knowledge printed, not trained. One stored record, four exact views, 1,152 bytes. Read back exactly; it can say UNKNOWN; a process kill, not a power cut, loses nothing it confirmed. Logo: a glass cube of record cells around an accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
 
-**What GEL RAM is working toward.** A text AI whose knowledge is written into
-memory rather than trained into model weights, so adding knowledge needs no
-fine-tuning. It answers in Polish or English from that knowledge and shows the
-source it used, or says plainly that it does not know, and it holds a free
-conversation in both languages. A copy kept on disk means a restart or a crash
-loses nothing that was saved. **This is the goal, not a result of this
-repository**: the sections below state exactly what has been checked so far.
+**GEL RAM prints knowledge into memory as fixed Q8 records, instead of training
+it into model weights, and reads the records back exactly, working toward
+hardware-level memory computation.** The goal is a text AI that answers in
+Polish and English from what it holds, or says it does not know.
 
-**Where the numbers below come from.** The answers counted in the cards were
-given by a private development build and its private bank, not by the tools in
-this checkout. The first card is the newest frozen question set (v6); the example and
-the answer grid show an earlier run on question set v1, the 80 questions also put to
-three language models. Every question is published with its expected answer
-and source passage: [the 990 of question set v6](docs/answer-or-abstain-v6/with-answer-questions.txt),
-[the 987 of question set v5](docs/answer-or-abstain-v5/with-answer-questions.txt),
-[the 985 of question set v4](docs/answer-or-abstain-v4/with-answer-questions.txt)
-and [the 80 of question set v1](docs/answer-or-abstain/with-answer-questions.txt). So is
-every recorded answer, and `xtask answer-bench check` re-scores them on each
-verify run. Free conversation has not been measured yet.
+The step that prints text into records is private, so the Q8 records in this
+checkout hold synthetic values or literal bytes, and its tools do not
+answer natural-language questions.
+This repository does not establish hardware-level memory computation
+([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
+not a result.
 
-__RESULTS__
+## One record, four exact views
 
-__FLOW__
+__RECORD__
 
-**What this checkout runs.** Local Rust tools for phrase lookup in your own
-files: exact source-bound quotations, refusal of a stale citation and
-independently pinned snapshots. They do not answer natural-language questions;
-that is the goal above.
+A record is stored once: 1,024 one-byte values and a 128-byte activity mask,
+1,152 bytes. The reader exposes four equivalent views of it and, for each view,
+returns the score a separate read of a materialized copy gives, bit for bit on
+the same build and platform. Four packed copies would take 4,608 bytes. Four
+views are not four independent memories, four votes or a 4× speedup, and 1,152
+bytes is the record, not process memory. On the author's private ranking check,
+a different task, Single still outperforms Quad in this run: top-1 379 against
+371 of 400. [How each part is checked](#the-memory-core)
 
-__FACTS__
+## Exact bytes, or a refusal
 
-[Quick start](#quick-start) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [Reproduce](#reproduce-the-checks) · [Documentation](#documentation) · [License](#about-and-licensing)
+__HERO__
 
-> **Version 0.5.3.** The instructions below use the `v0.5.3` tag. Record the exact
-> commit you test.
-> [Release notes](RELEASE-NOTES-v0.5.3.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+The public collection tool builds a collection from your own files; it does not
+print Q8 records, but it follows the same rule. Each quotation comes back byte
+for byte with its byte range; replace a document and its earlier citation is
+refused; change one byte of a saved snapshot and loading it with the pin you
+kept fails. A matching pin proves these are the bytes you kept, not that the
+source is true; a hash is not a signature.
+Replays of real public-tool runs: [this one, as text](media/gifs/__HERO_ID__.txt) · [old citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [all six](#see-it-in-action)
 
-**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
-Open that file from this checkout in a browser for the responsive blue-panel layout,
-light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this repository does not enable Pages.
-[Presentation guide](docs/README-PRESENTATION.md).
+## A killed process loses nothing it confirmed
+
+In the recorded crash series the public collection tool was killed at random
+moments in 200 trials while its collection grew: 0 of 2,683 acknowledged
+snapshots were lost, none was partial, and every trial resumed to the
+uninterrupted result ([crash series](docs/CRASH-SERIES.md)). Injected write
+failures, permission denial and a full disk leave the previous snapshot intact
+([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). A separate private series
+checked 235,712 confirmed records after kills; none was lost. A process kill is
+not a power cut: power-loss durability is not established.
+
+## UNKNOWN when the bank does not hold the answer
+
+Of 599 frozen questions written to have no answer in the bank (399 about real
+topics outside it, checked by title, and 200 about invented subjects; the set
+page lists one exception), a private development build said UNKNOWN to 573 and
+answered 26. Silence costs answers too: it said UNKNOWN to 557 of the 982
+questions that have one. The build and its bank are private;
+`xtask answer-bench check` re-scores every recorded answer.
+[Question set v7 and its limits](docs/answer-or-abstain-v7/README.md)
+
+## Run it now
+
+Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs). Cloning, the
+toolchain and the fetch need a network; after that Cargo runs offline. No model
+and no private data are involved. Run each line separately:
+
+```sh
+git clone https://github.com/Gelram-project/gel-ram.git
+cd gel-ram
+rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+cargo fetch --locked
+cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
+cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
+cargo run --locked --offline -p xtask -- mutation-matrix
+cargo run --locked --offline -p xtask -- crash-series 20
+cargo run --locked --offline --release -p gel-physics -- 5
+```
+
+| Run | Line to check | What it shows | Its limit |
+|:---|:---|:---|:---|
+| Your bytes, one record | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED`, `GEL_LIVE_LAB_LITERAL=PASS` | The first 1,024 bytes of a regular file you name in place of README.md (1 byte to 64 MiB), in one record; its four views restored bit for bit; a changed byte rejected under the pin ([how](docs/LIVE-LAB.md#your-own-bytes-in-one-record)) | Literal bytes, not GEL knowledge printing; no meaning and no search |
+| One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
+| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three file formats in the matrix is refused under the original pin | A finite matrix, not every possible corruption |
+| Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
+| F0 memory physics | `GEL_PHYSICS_F0_V3`, then ns per step and GiB/s from 48 KiB to 256 MiB and random 32/64/128-byte fetches in a 64 MiB working set | What your own memory costs, measured instead of assumed | Nanoseconds and GiB/s only, no cycles; compare rows only within one machine and one output tag |
+
+`cargo run --locked --offline -p xtask -- verify` runs the full public check,
+including a smaller `quad_compare` run and, on Unix hosts, a five-trial crash
+series; it ends with `GEL_VERIFY_ALL=PASS`.
+
+[The memory core](#the-memory-core) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [External checks](docs/EXTERNAL-CHECKS.md) · [Quick start](#quick-start) · [Documentation](#documentation) · [License](#about-and-licensing)
+
+## The memory core
+
+The public core holds fixed records, reads them exactly and measures the memory
+they live in. Each row names a test (`cargo test --locked --offline -p CRATE`)
+or a command.
+
+| Part | What it does | Check it |
+|:---|:---|:---|
+| ORB128 record (`gel-orb`) | One fixed 1,024-bit record of 128 bytes, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
+| Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single header bit flip, payload byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
+| Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
+| Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
+| Record history (`gel-history`) | Every state appended to the history of one 128-byte record is stored as a literal copy or as the XOR residual from the state before it, never more than two residuals from a literal, and is rebuilt bit for bit, also from the reopened file; the decoder accepts only the bytes the encoder writes | `long_history_is_exact_and_residual_depth_never_exceeds_two` · `a_depth_byte_that_lies_is_refused` · [contract](docs/RECORD-HISTORY.md) |
+| Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
+| Your bytes in one Q8 record (`gel-live-lab --literal`, over `gel-phase-quad`) | The first 1,024 bytes of one file as the values of one record, active where a byte was placed; each of the four views is restored to it with 0 different bits; its 1,164-byte file is rejected under the pin after any 1-byte change. Literal bytes, not GEL knowledge printing | `every_byte_value_restores_through_every_view` · `a_changed_byte_anywhere_is_rejected` · [live lab](docs/LIVE-LAB.md#your-own-bytes-in-one-record) |
+| F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
+
+Tests hold five equalities:
+
+```text
+reference result      == optimized result      (gel-kernel: kernel_matches_reference)
+full Top-K            == progressive Top-K     (gel-reader)
+original record bytes == rebuilt record bytes  (gel-structural)
+written store         == reopened store        (gel-store: persistence_roundtrip_and_payload_corruption_rejection)
+appended state        == rebuilt state         (gel-history: long_history_is_exact_and_residual_depth_never_exceeds_two)
+```
+
+`cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,
+the store, Reader16 and the structural rebuild in one run and prints
+`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not print text into
+records as GEL does: `--literal` only places bytes, and the printing step and its
+bank are private.
 
 ## See it in action
 
@@ -211,11 +291,7 @@ source, not as a hosted page; this repository does not enable Pages.
 Each animation lasts 12 seconds; pacing is editorial, not execution time.
 [Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
 
-__HERO_CHIP__
-
-__HERO__
-
-[Full transcript](media/gifs/__HERO_ID__.txt) · [Full-size dark replay](media/gifs/__HERO_ID__-dark.gif)
+__FLOW__
 
 ### Six workflows, one evidence trail
 
@@ -230,7 +306,15 @@ its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
 [open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
 New presentation is not a new execution, benchmark or human acceptance.
 
+**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
+Open that file from this checkout in a browser for the responsive blue-panel layout,
+light/dark backgrounds and a still-image control. GitHub displays HTML files as
+source, not as a hosted page; this repository does not enable Pages.
+[Presentation guide](docs/README-PRESENTATION.md).
+
 ## What the public checks cover
+
+__FACTS__
 
 __WALL__
 
@@ -249,37 +333,6 @@ committed report; `xtask verify` regenerates it and fails on any difference.
 Both images are drawn from these files when the presentation is built, and the
 read-only presentation check fails if they drift.
 
-## What is different here
-
-Three properties, each with its evidence and its limit:
-
-- **It answers with a stored source passage or says UNKNOWN; it is not always
-  right.** On the 80 frozen questions of question set v1 it gave 11 answers,
-  all correct, and 69 UNKNOWN, where three
-  language models answering closed book gave 11–28 wrong answers each. On 394
-  new frozen questions it answered 63: 59 correct and 4 wrong, each a passage
-  from another article; the models gave 80–233 wrong answers each. On 80
-  questions without a correct answer it still answered 6 of the 40 with a false
-  premise, so it does not always refuse. On 985 newer frozen questions, written
-  after the change it tests, a development build answered 423: 405 correct and 18
-  wrong; two BM25 search engines on the same bank found more (531–558 correct)
-  and gave more wrong answers (40–41). On 987 more frozen questions the same
-  build answered 432: 416 correct and 16 wrong, and the engines again found
-  more (567–597 correct) with more wrong answers (43–47). On 990 further frozen
-  questions it answered 465: 447 correct and 18 wrong; the engines found more
-  (588–616 correct) with more wrong answers (33–36).
-  [Side by side](docs/GEL-BESIDE-GROQ.md) · [question set v2](docs/answer-or-abstain-v2/README.md) · [question set v4](docs/answer-or-abstain-v4/README.md) · [question set v5](docs/answer-or-abstain-v5/README.md) · [question set v6](docs/answer-or-abstain-v6/README.md) · [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
-- **Knowledge is printed, not trained.** New knowledge is written into memory;
-  no fine-tuning or LoRA run is involved. In the public tools this is the
-  collection you build from your own files: add a document and cite it exactly;
-  replace it and the old citation is refused.
-- **Saved snapshots survive a killed process.** The public snapshot tools keep the previous
-  copy through injected I/O failures, permission denial and a full disk
-  ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)), and a growing collection
-  killed at random moments loses no acknowledged snapshot
-  ([crash series](docs/CRASH-SERIES.md)). Power-loss durability is not
-  established.
-
 ## What you can check without the private code
 
 GEL's own answers come from a private implementation and its bank, so they
@@ -288,206 +341,45 @@ cannot be re-run from this checkout. Everything around them can:
 | What | How | You need |
 |:---|:---|:---|
 | The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
-| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on Linux or macOS |
-| The scoring of every recorded answer, GEL's and the models' | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
-| The language models' side of the comparisons | send the published questions and prompts to the same models, then score your answers with `answer-bench score` ([set and method](docs/answer-or-abstain/README.md)) | a free Groq account |
-| That a private result was not changed after publication | each result lists the SHA-256 of its private evidence ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
+| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on a Unix host |
+| The scoring of every recorded answer | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
+| That a private result was not changed after publication | where a result lists an evidence identity, it is the SHA-256 of its private artifacts; the ranking, resident-read and integrity-gate rows have none ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
 
 An independent run of the public tools on a second machine is still missing
 ([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
 
-## Measured GEL results — scope matters
+## External checks
 
-> **PRIVATE MEASUREMENT — not runnable from this repository.** The GEL answers
-> and timings in this section come from the separate private implementation and
-> its private bank. What you can run yourself: the [public checks](#what-the-public-checks-cover)
-> and a re-scoring of every recorded answer (`xtask answer-bench check`).
+Frozen question sets v1 to v7 check private development builds from the
+outside; each set page names the build it measured. Every question, expected
+answer and recorded answer is published, and `xtask answer-bench check`
+re-scores them on every verify run. GEL's main numbers on each set, the
+reference search engines and what has nothing to compare with are on one page:
+[external checks](docs/EXTERNAL-CHECKS.md).
 
-These are **author-run measurements of a separate private implementation**,
-not benchmarks of this public checkout or an LLM leaderboard.
-They are reported here without publishing the private engine.
+## Private measurements
 
-| Operation | Observations | Measured result | What it establishes |
-|:---|---:|:---|:---|
-| Resident read at a known address | 40 | p50 **53.872 µs**, p95 **79.640 µs**, p99 **90.009 µs**; 40/40 reference matches | Addressed read after loading into RAM, not semantic search |
-| Source-integrity gate | 1,000 source fragments; 5 controls each | **1,000 valid payloads admitted; 4,000 invalid cases rejected** | Changed payload, missing address, wrong source and stale catalog generation are distinguished |
-| Single Q8 ranking | 400 source-text probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
-| Quad ranking | Same 400 source-text probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
+Author-run diagnostics of the separate private implementation (ranking within a
+known slot, resident read times, the answer verdict and the kill series of its
+store) cannot be re-run from this checkout. They are listed with their scope in
+[measured progress](docs/MEASURED-PROGRESS.md), with the SHA-256 of their
+private artifacts where one is given (the ranking, resident-read and
+integrity-gate rows have none), and the [claim registry](docs/CLAIMS.md) lists
+them as `MEASURED_LOCAL`.
 
-The logical ranking bank contains **1M fragments across four 250k slots**;
-these probes do **not** search all 1M candidates. One empty probe remains in
-the quality denominator. Integrity controls use a separate 1,000-fragment
-PL/EN catalog, not the million-record bank. The gate is an experimental
-CPU adapter, tested offline in a Linux sandbox, not a deployed service.
+## The public collection tool
 
-Percentiles use nearest-rank; with N=40, p99 is the maximum. These are
-single-host diagnostic runs, not independently replicated measurements.
-Matching source bytes does not establish truth or understanding.
-Neither hardware-level memory computation nor a speedup over LLMs is
-established by these tests.
-
-The underlying logs and private harness remain outside this checkout.
-**These rows are not independently reproducible from the public release.**
-Public-tool demonstrations and their reproducible evidence above retain
-their own, separate scope. No private version identifiers, source code,
-knowledge banks or credentials are included here.
-
-### New measurements: ranking improvement and source-field dialogue
-
-![Animated measured-results table: Quad top-1 improved from 77.5% to 92.75% on 400 known-slot source probes. Source-field dialogue has microsecond medians on a separate five-article pilot. Groq batches are a different task; no speedup ratio.](media/presentation/measured-progress.svg)
-
-Animation highlights rows only; it is **not execution footage or a timing scale**.
-All numbers remain visible, with a reduced-motion mode and the text table below.
-These author-run private experiments do not change the public implementation.
-
-| Experiment | Earlier result | Updated measurement | Scope |
-|:---|:---|:---|:---|
-| Quad top-1 | 310/400 (77.5%) | **371/400 (92.75%)** | Same 400 source-text probes; known 250k slot within a 1M bank |
-| Quad top-10 | 361/400 (90.25%) | **396/400 (99%)** | Not natural-question accuracy or global 1M search |
-| Single Q8 top-1 / top-10 | 368/400 / 393/400 | **379/400 / 397/400** | Single still outperforms Quad on this diagnostic |
-| Source-field dialogue | Separate task | **p50 2.054–4.819 µs** across five field questions and three runs | Five articles in RAM; finished source-bound text, not a million-record search |
-| Two-source whole-field comparison | Separate task | **p50 19.417–21.220 µs** across three runs | Exact field comparison, not unrestricted reasoning |
-| Transfer to four new articles | No latency measurement | **6 source-field answers, 2 quotations, 1 limited comparison, 3 UNHANDLED, 1 UNKNOWN** | 13 PL questions; not 9/13 accuracy |
-
-The timing pilot used 1,000 warm repetitions **per question per run**.
-The slowest retained warm observation was **711.017 µs**; medians are not
-worst-case guarantees. Newer quotation/list support was not timed in that
-campaign. A quotation is not a verified semantic decision.
-
-[All 13 timing rows, provenance and limitations](docs/MEASURED-PROGRESS.md).
-The Groq table below remains a separate supplied-source decision diagnostic;
-**no GEL/Groq speedup ratio follows from these different tasks**.
-
-### Answer verdict: answer only when the lead is clear
-
-Measured after the v0.5.0 release with the same private implementation as the
-ranking rows above. The original column uses the same 1M bank. After the three
-changes the searched answer bank holds 167,854 passages per slot, 671,416 in all;
-to keep the slots equal, every slot was cut at its end to the size of the
-smallest, which removed about a quarter of the English passages the changes left.
-GEL answers only when its best passage leads the runner-up by a
-threshold fixed in advance (set on a different corpus); otherwise it
-returns UNKNOWN. Three changes to the private build were measured one at a time
-(duplicate handling, answer-bank scope and an encoder variant); their details
-remain private.
-
-| Stored passages read back (ranked within their slot) | Original bank (1M passages) | After the three changes (671,416 passages) |
-|:---|---:|---:|
-| Probes | 9,998 | 50,000 |
-| Answered | 7,693 (76.9%) | 46,376 (92.8%) |
-| Correct (same article), share of the answers | 7,515 (97.7%) | **46,353 (99.95%)** |
-| Wrong, share of all probes | 178 (1.78%) | **23 (0.046%)** |
-| UNKNOWN | 2,305 (23.1%) | 3,624 (7.2%) |
-
-Two of the four slots reach a 95% Wilson lower bound of at least 0.999 (0.9993
-and 0.9994); the other two reach 0.9984 and 0.9986. The probes are stored
-passages, not questions. Counts are exact; the original-bank row was earlier
-given as 10,000 probes and 77.0% answered, where 2 empty probes are not counted
-and 7,693 of 9,998 is 76.9%.
-
-| 80 natural questions of question set v1 (40 PL, 40 EN), all four slots of the 671,416-passage bank searched | Without verification | With source verification |
-|:---|---:|---:|
-| Top-1 from the right article | 27 (34%) | **40 (50%)** |
-| Answers given | 9 (1 wrong) | **11 (all correct)** |
-| UNKNOWN | 71 | 69 |
-
-The questions were written by the project's AI coding assistant for randomly
-sampled passages and frozen before any run. Verification compares a question
-with the stored sources of its best candidates; its threshold was set on a separate
-calibration set of 80 questions. 11 of 11 has a 95% Wilson lower bound of about 0.74, so this is
-not a precision claim. Answering natural questions remains the open problem: 14%
-answered here, 43% (423 of 985) on the later [question set v4](docs/answer-or-abstain-v4/README.md),
-44% (432 of 987) on [question set v5](docs/answer-or-abstain-v5/README.md) and 47% (465 of 990) on
-[question set v6](docs/answer-or-abstain-v6/README.md).
-
-[Protocol, per-slot results and evidence identities](docs/MEASURED-PROGRESS.md).
-
-### Side by side with three language models
-
-The same 80 frozen questions (question set v1) went to GEL RAM and, closed book, to three
-language models on the Groq API, in one recorded run with one scoring rule.
-GEL answered 11 and said UNKNOWN to 69; **none of its answers was wrong**. The
-models could also say UNKNOWN, yet **11–28 of their answers were wrong**.
-
-| Same 80 questions | Answered | Correct | Wrong | UNKNOWN |
-|:---|---:|---:|---:|---:|
-| GEL RAM (local bank, answers with the source passage) | 11 | 11 | **0** | 69 |
-| GPT-OSS-120B (Groq API, closed book) | 31 | 10 | 21 | 49 |
-| GPT-OSS-20B (Groq API, closed book) | 36 | 8 | 28 | 44 |
-| Qwen3.8-27B (Groq API, closed book) | 17 | 6 | 11 | 63 |
-
-[![Each of the 80 questions as one cell per system. GEL RAM: 11 correct, 0 wrong, 69 UNKNOWN. GPT-OSS-120B: 10 correct, 21 wrong. GPT-OSS-20B: 8 correct, 28 wrong. Qwen3.8-27B: 6 correct, 11 wrong.](media/beside-groq/all-80-answers.png)](docs/GEL-BESIDE-GROQ.md)
-
-The two sides do different jobs: GEL looks facts up in a bank it holds, the
-models answer from training. On 10 of GEL's 11 answers no model was correct; on
-12 other questions a model was correct where GEL said UNKNOWN. The visible model
-answers were two words at the median; the GPT-OSS models also generated 51 and
-154 hidden reasoning tokens per question on average. GEL returns the stored
-source passage (33 words at the median). Times are recorded, not compared: GEL
-0.25 s for all 80 locally, the models 59–371 ms per question at the median over
-the network. [All 80 answers, times, prompts, review and limits](docs/GEL-BESIDE-GROQ.md)
-· [Replay of every question (5 min)](media/beside-groq/GEL-BESIDE-GROQ-80-QUESTIONS-EN.mp4)
-· [Try your own system on the same questions](docs/answer-or-abstain/README.md)
-
-**No-answer control.** 80 more questions have no correct answer: 40 ask about
-invented subjects, 40 carry a false premise about an entry in the bank. GEL
-answered none of the invented ones and 6 of the false premises; it can still
-return a passage that matches a question without answering it. The models
-answered 3–22 and 2–16. [No-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md)
-
-**A larger frozen question set (v2).** 394 new questions (198 PL, 196 EN), drawn at
-random from the bank and frozen before any system ran, went to the same four
-systems in one run on 2026-09-29. GEL answered 63 and said UNKNOWN to 331:
-**59 correct and 4 wrong** — each wrong answer a passage from another article,
-three of them disambiguation pages, all four in Polish. The models answered
-123–283 and gave **80–233 wrong answers each**.
-
-| Same 394 questions (question set v2) | Answered | Correct | Wrong | UNKNOWN |
-|:---|---:|---:|---:|---:|
-| GEL RAM (local bank, answers with the source passage) | 63 | 59 | **4** | 331 |
-| GPT-OSS-120B (Groq API, closed book) | 223 | 92 | 131 | 171 |
-| GPT-OSS-20B (Groq API, closed book) | 283 | 50 | 233 | 111 |
-| Qwen3.8-27B (Groq API, closed book) | 123 | 43 | 80 | 271 |
-
-[Question set v2: every question, answer and review decision](docs/answer-or-abstain-v2/README.md)
-
-### Same supplied-source task: GEL adapter and models served by Groq
-
-Twelve development claims (six PL, six EN), with the same supplied Wikipedia
-passages and prompts. **One timed batch per language and profile**, not six
-latency observations. Label agreement is separate from citation/format validity.
-
-| System / profile | Language | Batch time | Labels matching working gold | Label + required structure | S/R decisions |
-|:---|:---:|---:|---:|---:|---:|
-| GEL bounded adapter R0 | PL | **85.851 µs** | 2/6 | 2/6 | **0/6** |
-| GEL bounded adapter R0 | EN | **78.057 µs** | 2/6 | 2/6 | **0/6** |
-| Groq / Qwen R0 | PL | 537.134 ms | 5/6 | 5/6 | 5/6 |
-| Groq / Qwen R0 | EN | 552.672 ms | 6/6 | 6/6 | 4/6 |
-| Groq / GPT-OSS-20B R1 | PL | 818.245 ms | 5/6 | 1/6 | 5/6 |
-| Groq / GPT-OSS-20B R1 | EN | 879.478 ms | protocol rejected | 0/6 | 0/6 admitted |
-| Groq / GPT-OSS-120B R1 | PL | 1219.564 ms | 5/6 | 5/6 | 5/6 |
-| Groq / GPT-OSS-120B R1 | EN | 1035.560 ms | 6/6 | 1/6 | 4/6 |
-
-**GEL returned UNKNOWN for every claim because the grammar was unsupported.**
-Its microsecond times measure parsing and abstention, not successful semantic
-decisions; the 2/6 agreement is the always-UNKNOWN baseline.
-Groq times include HTTP/network and generation. There is **no justified
-GEL/LLM speedup multiplier** here, and N=1 does not support latency percentiles.
-The adapter is not a complete GEL application or an Ocean retrieval benchmark.
-
-Earlier 20B and 120B PL attempts were incomplete at the 1024-token limit
-(1383.914 ms and 2407.528 ms). They are retained in the
-[protocol, exact times and failure notes](docs/GEL-GROQ-DIAGNOSTIC.md).
-This small, development-exposed comparison is not independently validated
-or a general model ranking. Private code, banks and API credentials stay private.
+Build a collection from your own UTF-8 files, quote it exactly and reopen it
+with the pin you kept. It is phrase lookup, not question answering; start with
+the [quick start](#quick-start).
 
 "####;
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
-reduced motion is requested), result panels drawn from the recorded answers of
-frozen question sets v6 and v1 and from the claim registry, each panel naming its set, an
+reduced motion is requested), a card of one stored Q8 record drawn from the 48
+recorded comparison runs in docs/evidence-q8-current, an
 animated 3D scene of the citation check, a strip of checked facts, colour-coded
 workflow badges, six real GIF previews and two 3D graphics of the public checks.
 The adjacent
@@ -514,12 +406,16 @@ map, the Unix-only exclusion list of the CI evidence collector and the committed
 mutation matrix report. The property-map graphic shows the rule the collector
 enforces on each CI platform, not the result of a particular run. A change to
 any of these sources makes the read-only check fail until the images are rebuilt.
+The record card is drawn the same way from the recorded comparison runs: the
+builder refuses to draw it when a run lacks its PASS line or the runs disagree
+on a byte count. A change to any of those runs makes the read-only check fail
+until the card is rebuilt.
 
 ## Preservation and source
 
 The presentation belongs to the __RELEASE__ source. Earlier README versions are
 no longer kept in the tree; they remain in the git history. The README keeps its
-technical content below the presentation unchanged, including the quick-start
+hand-maintained part below the generated region, including the quick-start
 checkout of the __RELEASE__ tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
@@ -1400,147 +1296,6 @@ fn bars_picture() -> String {
         1200,
     )
 }
-/// The recorded side-by-side run, read from the published evidence file: one
-/// verdict letter per question (C correct, W wrong, U UNKNOWN, E error) for each
-/// system, and question 41 as the worked example.
-struct Recorded {
-    systems: Vec<(&'static str, Vec<u8>)>,
-    question: String,
-    passage: String,
-    answers: Vec<(&'static str, String, u8)>,
-}
-const RECORDED: &str = "docs/evidence-side-by-side/side-by-side.txt";
-const RECORDED_SYSTEMS: [(&str, &str); 4] = [
-    ("GEL RAM", "GEL"),
-    ("GPT-OSS-120B", "gpt-oss-120b"),
-    ("GPT-OSS-20B", "gpt-oss-20b"),
-    ("Qwen3.8-27B", "qwen3.8-27b"),
-];
-impl Recorded {
-    fn read() -> Result<Recorded> {
-        let text = fs::read_to_string(RECORDED)?;
-        let header: Vec<&str> = text
-            .lines()
-            .find_map(|l| l.strip_prefix("# nr\t"))
-            .ok_or("missing evidence header")?
-            .split('\t')
-            .collect();
-        let col = |name: &str| {
-            header
-                .iter()
-                .position(|h| *h == name)
-                .map(|i| i + 1)
-                .ok_or(format!("missing evidence column {name}"))
-        };
-        let rows: Vec<Vec<&str>> = text
-            .lines()
-            .filter(|l| !l.starts_with('#') && !l.is_empty())
-            .map(|l| l.split('\t').collect())
-            .collect();
-        if rows.len() != 80
-            || rows
-                .iter()
-                .enumerate()
-                .any(|(i, r)| r[0] != (i + 1).to_string())
-        {
-            return Err("the evidence file must hold questions 1 to 80 in order".into());
-        }
-        let letter = |v: &str| match v {
-            "CORRECT" => b'C',
-            "WRONG" => b'W',
-            "UNKNOWN" => b'U',
-            _ => b'E',
-        };
-        let mut systems = Vec::new();
-        for (name, id) in RECORDED_SYSTEMS {
-            let c = col(id)?;
-            systems.push((name, rows.iter().map(|r| letter(r[c])).collect()));
-        }
-        let ex = &rows[40];
-        let mut answers = Vec::new();
-        for (name, id) in RECORDED_SYSTEMS.iter().skip(1) {
-            answers.push((
-                *name,
-                ex[col(&format!("{id}_answer"))?].to_string(),
-                letter(ex[col(id)?]),
-            ));
-        }
-        Ok(Recorded {
-            systems,
-            question: ex[col("question")?].to_string(),
-            passage: ex[col("GEL_source_excerpt")?].to_string(),
-            answers,
-        })
-    }
-    /// Correct, wrong and UNKNOWN answers of one system.
-    fn counts(&self, i: usize) -> (usize, usize, usize) {
-        let v = &self.systems[i].1;
-        let n = |c: u8| v.iter().filter(|x| **x == c).count();
-        (n(b'C'), n(b'W'), n(b'U'))
-    }
-}
-/// How many claims the registry in docs/CLAIMS.md holds in each evidence mode.
-fn statuses() -> Result<Vec<(&'static str, usize)>> {
-    let text = fs::read_to_string("docs/CLAIMS.md")?;
-    let table = text
-        .split_once("<!-- REGISTRY-BEGIN -->")
-        .and_then(|(_, rest)| rest.split_once("<!-- REGISTRY-END -->"))
-        .ok_or("missing claim registry")?
-        .0;
-    let modes: Vec<&str> = table
-        .lines()
-        .filter(|l| l.starts_with("| ") && !l.starts_with("| ID"))
-        .filter_map(|l| l.split('|').nth(3).map(str::trim))
-        .collect();
-    let order = [
-        "EXECUTABLE_CHECK",
-        "SEPARATE_GATE",
-        "MEASURED_LOCAL",
-        "NOT_VERIFIED",
-        "NOT_ESTABLISHED",
-    ];
-    if modes.is_empty() || modes.iter().any(|m| !order.contains(m)) {
-        return Err("unexpected claim registry mode".into());
-    }
-    Ok(order
-        .iter()
-        .map(|m| (*m, modes.iter().filter(|x| *x == m).count()))
-        .collect())
-}
-fn esc(s: &str) -> String {
-    s.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
-}
-/// Greedy word wrap into at most `lines` lines; the last line ends with "…" when cut.
-fn wrap(s: &str, width: usize, lines: usize) -> Vec<String> {
-    let mut out: Vec<String> = vec![String::new()];
-    for word in s.split_whitespace() {
-        let last = out.last_mut().unwrap_or_else(|| unreachable!());
-        if !last.is_empty() && last.chars().count() + 1 + word.chars().count() > width {
-            out.push(word.to_string());
-        } else {
-            if !last.is_empty() {
-                last.push(' ');
-            }
-            last.push_str(word);
-        }
-    }
-    if out.len() > lines {
-        out.truncate(lines);
-        if let Some(l) = out.last_mut() {
-            l.push('…');
-        }
-    }
-    out
-}
-fn wilson_low(k: usize, n: usize) -> f64 {
-    let (z, n, p) = (1.96f64, n as f64, k as f64 / n as f64);
-    let c = p + z * z / (2.0 * n);
-    let r = z * (p * (1.0 - p) / n + z * z / (4.0 * n * n)).sqrt();
-    (c - r) / (1.0 + z * z / n)
-}
 const RESULT_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}";
 fn result_card(dark: bool, h: u32, text: (&str, &str), body: &str) -> String {
     let t = theme(dark);
@@ -1552,425 +1307,179 @@ fn result_card(dark: bool, h: u32, text: (&str, &str), body: &str) -> String {
         body,
     )
 }
-/// The headline set: the newest frozen question set, read from its README results block,
-/// which `answer-bench check` compares number by number with the recorded answers.
-struct Headline {
-    questions: usize,
-    pl: usize,
-    en: usize,
-    answered: usize,
-    correct: usize,
-    wrong: usize,
-    unknown: usize,
-    /// (correct, wrong) of the two search engines at the same selection rule.
-    engines: [(usize, usize); 2],
-    /// (correct, wrong) of GEL RAM at its precise setting and of both engines at their strict threshold.
-    precise: (usize, usize),
-    strict: [(usize, usize); 2],
+/// The recorded comparison runs the record card is drawn from.
+const RECORD_DIR: &str = "docs/evidence-q8-current";
+/// The verdict line every recorded run must end with.
+const Q8_PASS: &str = "Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED";
+/// A stored record: one-byte values and an activity mask of one bit per value.
+const RECORD_VALUES: usize = 1024;
+const RECORD_MASK: usize = 128;
+/// What the recorded comparison runs of the four views state: how many runs there
+/// are, how many end with the exact verdict, and the byte counts they all agree on.
+struct Q8Runs {
+    n: usize,
+    ok: usize,
+    /// One stored record.
+    record: usize,
+    /// Four packed copies of it, which are not stored.
+    packed: usize,
+    /// The materialized reference layout used for checking.
+    frames: usize,
 }
-const HEADLINE_DIR: &str = "docs/answer-or-abstain-v6";
-/// The question set the first card shows, as named in the README.
-const HEADLINE_SET: &str = "v6";
-impl Headline {
-    fn read() -> Result<Headline> {
-        let readme = fs::read_to_string(format!("{HEADLINE_DIR}/README.md"))?;
-        let row = |name: &str| -> Result<Vec<usize>> {
-            let prefix = format!("| {name} | published |");
-            let line = readme
+impl Q8Runs {
+    fn read() -> Result<Q8Runs> {
+        let mut names: Vec<String> = fs::read_dir(RECORD_DIR)?
+            .map(|e| e.map(|e| e.file_name().to_string_lossy().into_owned()))
+            .collect::<std::io::Result<_>>()?;
+        names.retain(|n| n.starts_with("v2-") && n.ends_with(".txt"));
+        names.sort();
+        let texts = names
+            .iter()
+            .map(|n| fs::read_to_string(format!("{RECORD_DIR}/{n}")))
+            .collect::<std::io::Result<Vec<_>>>()?;
+        Q8Runs::from_texts(&texts)
+    }
+    /// Refuses to give numbers unless every run has exactly one verdict line, the
+    /// exact one, and all runs agree on every byte count the card shows.
+    fn from_texts(texts: &[String]) -> Result<Q8Runs> {
+        let value = |text: &str, key: &str| -> Result<usize> {
+            let found = text
+                .split_whitespace()
+                .find_map(|w| w.strip_prefix(key)?.strip_prefix('='))
+                .ok_or(format!("a recorded run has no {key}"))?;
+            Ok(found.parse::<usize>()?)
+        };
+        let mut sizes = Vec::new();
+        let mut ok = 0;
+        for text in texts {
+            let verdicts: Vec<&str> = text
                 .lines()
-                .find(|l| l.starts_with(&prefix))
-                .ok_or(format!("missing results row {name}"))?;
-            let mut out = Vec::new();
-            for cell in line[prefix.len()..].split('|').map(str::trim) {
-                if let Some(n) = cell.split_whitespace().next() {
-                    out.push(n.parse::<usize>()?);
-                }
-            }
-            Ok(out)
-        };
-        let g = row("GEL RAM")?;
-        let (t, f) = (
-            row("Tantivy BM25, threshold")?,
-            row("SQLite FTS5, threshold")?,
-        );
-        let (p, ts, fs_) = (
-            row("GEL RAM, precise setting")?,
-            row("Tantivy BM25, strict threshold")?,
-            row("SQLite FTS5, strict threshold")?,
-        );
-        let text = fs::read_to_string(format!("{HEADLINE_DIR}/with-answer-questions.txt"))?;
-        let langs: Vec<&str> = text
-            .lines()
-            .filter(|l| !l.starts_with('#') && !l.is_empty())
-            .filter_map(|l| l.split('\t').nth(1))
-            .collect();
-        let pl = langs.iter().filter(|l| **l == "pl").count();
-        let en = langs.iter().filter(|l| **l == "en").count();
-        let [answered, correct, wrong, unknown, 0] = g[..] else {
-            return Err(
-                "GEL RAM row: expected answered, correct, wrong, UNKNOWN and 0 errors".into(),
-            );
-        };
-        if answered != correct + wrong
-            || answered + unknown != pl + en
-            || [&t, &f, &p, &ts, &fs_].iter().any(|r| r.len() < 3)
-        {
-            return Err("headline numbers do not add up".into());
+                .filter(|l| l.starts_with("Q8_QUAD_EXACT="))
+                .collect();
+            ok += usize::from(verdicts == [Q8_PASS]);
+            sizes.push([
+                value(text, "canonical_record_bytes")?,
+                value(text, "packed_four_record_bytes")?,
+                value(text, "materialized_four_frame_bytes")?,
+            ]);
         }
-        // The first card states both comparisons in words; refuse to draw it if the data disagree.
-        let more_and_worse = [&t, &f].iter().all(|r| r[1] > correct && r[2] > wrong);
-        let strict_more = [&ts, &fs_].iter().all(|r| r[1] > p[1]);
-        if !more_and_worse || !strict_more {
-            return Err("the comparison stated on the first card no longer holds".into());
+        let Some(&[record, packed, frames]) = sizes.first() else {
+            return Err("no recorded comparison runs".into());
+        };
+        if ok != texts.len() {
+            return Err(format!(
+                "{} of {} recorded runs lack {Q8_PASS}",
+                texts.len() - ok,
+                texts.len()
+            )
+            .into());
         }
-        Ok(Headline {
-            questions: pl + en,
-            pl,
-            en,
-            answered,
-            correct,
-            wrong,
-            unknown,
-            engines: [(t[1], t[2]), (f[1], f[2])],
-            precise: (p[1], p[2]),
-            strict: [(ts[1], ts[2]), (fs_[1], fs_[2])],
+        if sizes.iter().any(|s| *s != [record, packed, frames]) {
+            return Err("the recorded runs disagree on a byte count".into());
+        }
+        if record != RECORD_VALUES + RECORD_MASK || packed != 4 * record {
+            return Err("the recorded byte counts no longer match the card's wording".into());
+        }
+        Ok(Q8Runs {
+            n: texts.len(),
+            ok,
+            record,
+            packed,
+            frames,
         })
     }
-    fn engines(&self) -> String {
-        let [(a, x), (b, y)] = self.engines;
-        both(a, b, x, y)
-    }
 }
-/// "a–b" with the smaller number first, or one number when both are equal.
-fn span(a: usize, b: usize) -> String {
-    if a == b {
-        a.to_string()
-    } else {
-        format!("{}–{}", a.min(b), a.max(b))
-    }
-}
-/// Correct and wrong answers of two systems: "531–558 correct and 40–41 wrong", "378–379 correct and 3 wrong each".
-fn both(a: usize, b: usize, x: usize, y: usize) -> String {
-    let each = |p: usize, q: usize| if p == q { " each" } else { "" };
-    format!(
-        "{} correct{} and {} wrong{}",
-        span(a, b),
-        each(a, b),
-        span(x, y),
-        each(x, y)
-    )
-}
-/// What the first result card says, as its description and as the README alternative text.
-fn glance_text(h: &Headline) -> String {
-    let [(a, x), (b, y)] = h.strict;
-    // Engines with more correct answers and no more wrong ones are ahead; otherwise only "more answers" is stated.
-    let verdict = if x <= h.precise.1 && y <= h.precise.1 {
-        "so there the engines are ahead"
-    } else {
-        "so there the engines find more answers"
-    };
-    format!("Private development build, frozen question set {HEADLINE_SET}: on {} new questions ({} Polish, {} English) GEL RAM at its balanced setting gave {} correct answers, each with its source passage, {} wrong and {} UNKNOWN. Two BM25 search engines on the same bank and rule gave {}: they find more answers, GEL RAM gives fewer wrong ones. At the precise setting GEL RAM gave {} correct and {} wrong, the engines at their strict threshold {}, {verdict}. Every recorded answer is re-scored by the public verify run; the build itself is private.", h.questions, h.pl, h.en, h.correct, h.wrong, h.unknown, h.engines(), h.precise.0, h.precise.1, both(a, b, x, y))
-}
-fn glance(dark: bool, h: &Headline) -> String {
-    let t = theme(dark);
-    let low = wilson_low(h.correct, h.answered);
-    let precision = 100.0 * h.correct as f64 / h.answered as f64;
-    let cols = [
-        (
-            format!("{} / {}", h.correct, h.questions),
-            t.accent,
-            "correct answers",
-            "each with its source passage".to_string(),
-        ),
-        (
-            h.wrong.to_string(),
-            t.ink,
-            "wrong among answered",
-            format!(
-                "precision {precision:.1}% · Wilson ≥ {:.1}%",
-                (1000.0 * low).floor() / 10.0
-            ),
-        ),
-        (
-            h.unknown.to_string(),
-            t.ink,
-            "UNKNOWN",
-            "said instead of guessing".to_string(),
-        ),
-    ];
-    let mut body = format!(
-        r#"<text class="kick" x="40" y="48">PRIVATE DEVELOPMENT BUILD · QUESTION SET {} · {} QUESTIONS · {} POLISH, {} ENGLISH · ONE RECORDED RUN</text>"#,
-        HEADLINE_SET.to_uppercase(),
-        h.questions,
-        h.pl,
-        h.en
-    );
-    for (i, (big, colour, label, note)) in cols.iter().enumerate() {
-        let x = 40 + i * 285;
-        body.push_str(&format!(r#"<text x="{x}" y="118" font-size="52" class="b" style="fill:{colour}">{big}</text><text x="{x}" y="150" font-size="18" class="b">{label}</text><text x="{x}" y="174" font-size="14" class="mut">{note}</text>"#));
-    }
-    let [(a, x), (b, y)] = h.engines;
-    body.push_str(&format!(r#"<path d="M890 76V182" stroke="{}"/><text x="920" y="118" font-size="52" class="b">{}</text><text x="920" y="150" font-size="18" class="b">BM25 engines, correct</text><text x="920" y="174" font-size="14" class="mut">same bank · {} wrong</text>"#, t.line, span(a, b), span(x, y)));
-    result_card(
-        dark,
-        206,
-        ("Evidence you can inspect", &glance_text(h)),
-        &body,
-    )
-}
-fn path_card(dark: bool) -> String {
-    let t = theme(dark);
-    let steps = [
-        ("QUESTION", "in natural language"),
-        ("RETRIEVAL", "search the whole bank"),
-        ("SOURCE", "one stored passage"),
-        ("ANSWER / UNKNOWN", "answer only when it is clear"),
-        ("EVIDENCE", "source, hash, recorded run"),
-    ];
-    let mut body =
-        String::from(r#"<text class="kick" x="40" y="44">WHAT HAPPENS TO A QUESTION</text>"#);
-    for (i, (name, note)) in steps.iter().enumerate() {
-        let x = 40 + i * 232;
-        let stroke = if i == 3 { t.accent } else { t.line };
-        body.push_str(&format!(r#"<rect x="{x}" y="64" width="200" height="72" rx="14" fill="{}" stroke="{stroke}" stroke-width="2"/><text x="{}" y="96" font-size="15" class="b" text-anchor="middle" letter-spacing="1">{name}</text><text x="{}" y="120" font-size="13" class="mut" text-anchor="middle">{note}</text>"#, t.bg[0], x + 100, x + 100));
-        if i < steps.len() - 1 {
-            let a = x + 204;
-            body.push_str(&format!(r#"<path d="M{a} 100H{} M{} 94L{} 100L{} 106" stroke="{}" stroke-width="2" fill="none"/>"#, a + 22, a + 16, a + 23, a + 16, t.muted));
+/// A count with a comma between groups of three digits: 1152 is "1,152".
+fn grouped(n: usize) -> String {
+    let digits = n.to_string();
+    let mut out = String::new();
+    for (i, c) in digits.chars().enumerate() {
+        if i > 0 && (digits.len() - i) % 3 == 0 {
+            out.push(',');
         }
+        out.push(c);
     }
-    result_card(dark, 160, ("What happens to a question", "Question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence: source, hash and recorded run."), &body)
+    out
 }
-fn pill(x: usize, y: usize, verdict: u8, t: &Theme) -> String {
-    let (label, colour) = match verdict {
-        b'C' => ("CORRECT", t.green[2]),
-        b'W' => ("WRONG", t.red[2]),
-        b'U' => ("UNKNOWN", t.muted),
-        _ => ("ERROR", t.amber[2]),
-    };
-    format!(
-        r##"<rect x="{x}" y="{y}" width="96" height="24" rx="12" fill="{colour}"/><text x="{}" y="{}" font-size="12" class="b" text-anchor="middle" style="fill:#ffffff" letter-spacing="1">{label}</text>"##,
-        x + 48,
-        y + 16
-    )
+/// What the record card says, as its description and as the README alternative text.
+fn record_text(r: &Q8Runs) -> String {
+    format!("One stored Q8 record: {} one-byte values and a {RECORD_MASK}-byte activity mask, {} bytes, read through four equivalent views without four copies. Four packed copies would take {} bytes; the reference layout used for checking takes {} bytes. {} of {} recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories.", grouped(RECORD_VALUES), grouped(r.record), grouped(r.packed), grouped(r.frames), r.ok, r.n)
 }
-/// A rounded inner panel of a two-column card.
-fn panel(x: usize, w: usize, h: usize, t: &Theme) -> String {
-    format!(
-        r#"<rect x="{x}" y="20" width="{w}" height="{h}" rx="16" fill="{}" fill-opacity=".6" stroke="{}"/>"#,
-        t.bg[0], t.line
-    )
-}
-fn example(dark: bool, r: &Recorded) -> String {
+/// One stored record drawn to scale as values and mask, the four views it is read
+/// through, the sizes it is compared with, and the verdict of every recorded run.
+fn record_card(dark: bool, r: &Q8Runs) -> String {
     let t = theme(dark);
-    let mut b = panel(20, 570, 420, t) + &panel(610, 570, 420, t);
-    b.push_str(
-        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · #41 OF 80</text>"#,
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="48">ONE STORED Q8 RECORD</text><text x="40" y="118" font-size="52" class="b" style="fill:{}">{} B</text><text x="40" y="150" font-size="16" class="mut">{} one-byte values + {RECORD_MASK}-byte activity mask</text>"#,
+        t.accent,
+        grouped(r.record),
+        grouped(RECORD_VALUES)
     );
-    for (i, l) in wrap(&r.question, 50, 2).iter().enumerate() {
+    // The record as one bar: values, then the mask, to scale.
+    let (x0, y0, w, h) = (40.0, 178.0, 400.0, 56.0);
+    let split = w * RECORD_VALUES as f64 / r.record as f64;
+    b.push_str(&format!(
+        r#"<defs><clipPath id="rec"><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8"/></clipPath></defs><g clip-path="url(#rec)"><rect x="{x0}" y="{y0}" width="{split:.1}" height="{h}" fill="{}"/><rect x="{:.1}" y="{y0}" width="{:.1}" height="{h}" fill="{}"/>"#,
+        t.blue[0],
+        x0 + split,
+        w - split,
+        t.amber[0]
+    ));
+    for k in 1..16 {
+        let x = x0 + split * f64::from(k) / 16.0;
         b.push_str(&format!(
-            r#"<text x="44" y="{}" font-size="20" class="b">{}</text>"#,
-            94 + i * 26,
-            esc(l)
+            r#"<path d="M{x:.1} {y0}v{h}" stroke="{}" stroke-width="1" opacity=".35"/>"#,
+            t.blue[2]
         ));
     }
     b.push_str(&format!(
-        r#"<text x="44" y="164" font-size="17" class="b">GEL RAM</text>{}"#,
-        pill(134, 148, r.systems[0].1[40], t)
+        r#"</g><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8" fill="none" stroke="{}" stroke-width="2"/><text class="mono" x="{x0}" y="254" font-size="12">{} B values</text><text class="mono" x="{}" y="254" font-size="12" text-anchor="end">{RECORD_MASK} B mask</text>"#,
+        t.ink,
+        grouped(RECORD_VALUES),
+        x0 + w
     ));
-    b.push_str(r#"<text x="44" y="196" font-size="13" class="mut">returned this stored source passage:</text>"#);
-    for (i, l) in wrap(&r.passage, 64, 7).iter().enumerate() {
+    // Four views of the same stored bytes, each joined to the record.
+    for i in 0..4 {
+        let y = 64.0 + 50.0 * f64::from(i);
+        let cy = y + 19.0;
         b.push_str(&format!(
-            r#"<text x="44" y="{}" font-size="15">{}</text>"#,
-            222 + i * 22,
-            esc(l)
+            r#"<path d="M{} {}C510 {} 500 {cy} 560 {cy}" stroke="{c}" stroke-width="2" fill="none"/><rect x="560" y="{y}" width="180" height="38" rx="10" fill="{}" stroke="{c}" stroke-width="2"/><text x="650" y="{}" font-size="16" class="b" text-anchor="middle">view {}</text>"#,
+            x0 + w,
+            y0 + h / 2.0,
+            y0 + h / 2.0,
+            t.bg[0],
+            y + 25.0,
+            i + 1,
+            c = t.accent
         ));
     }
-    b.push_str(r#"<text x="44" y="418" font-size="12" class="mut">Wikipedia passage (CC BY-SA 4.0) as stored in the GEL bank</text>"#);
-    b.push_str(
-        r#"<text class="kick" x="634" y="56">SAME QUESTION · THREE MODELS, CLOSED BOOK</text>"#,
-    );
-    for (i, (name, answer, v)) in r.answers.iter().enumerate() {
-        let y = 104 + i * 88;
-        b.push_str(&format!(
-            r#"<text x="634" y="{y}" font-size="17" class="b">{name}</text>{}"#,
-            pill(1060, y - 17, *v, t)
-        ));
-        for (j, l) in wrap(answer, 62, 2).iter().enumerate() {
-            b.push_str(&format!(
-                r#"<text x="634" y="{}" font-size="15">{}</text>"#,
-                y + 28 + j * 20,
-                esc(l)
-            ));
-        }
-    }
-    b.push_str(r#"<text x="634" y="392" font-size="14" class="mut">All three give a reason the source does not give.</text><text x="634" y="414" font-size="14" class="mut">GEL returns the passage that states it.</text>"#);
-    result_card(dark, 460, ("One question, four systems", &format!("Private build, earlier run on question set v1, question 41: {} GEL RAM returned the source passage: {} The three models answered: {}.", r.question, r.passage, r.answers.iter().map(|a| a.1.as_str()).collect::<Vec<_>>().join(" / "))), &b)
-}
-const BREAK: [(&str, &str, &str); 4] = [
-    (
-        "Change one byte of a saved copy",
-        "the pin you kept no longer matches",
-        "REFUSED",
-    ),
-    (
-        "Change the source after citing it",
-        "the old citation is out of date",
-        "REFUSED",
-    ),
-    (
-        "Restart and reopen the snapshot",
-        "a new process, the same pin",
-        "SAME CITATION",
-    ),
-    (
-        "Back up, restore to a new path",
-        "the restored copy is compared",
-        "CHECKED EQUAL",
-    ),
-];
-fn dots(dark: bool, r: &Recorded) -> String {
-    let t = theme(dark);
-    let mut b = panel(20, 720, 360, t) + &panel(760, 420, 360, t);
-    b.push_str(
-        r#"<text class="kick" x="44" y="56">PRIVATE BUILD · QUESTION SET V1 · 80 QUESTIONS, SAME RULE</text>"#,
-    );
-    for (row, (name, verdicts)) in r.systems.iter().enumerate() {
-        let (ok, wrong, unknown) = r.counts(row);
-        let y = 104 + row * 62;
-        b.push_str(&format!(r#"<text x="44" y="{y}" font-size="16" class="b">{name}</text><text x="44" y="{}" font-size="12" class="mut">{ok} correct · {wrong} wrong · {unknown} UNKNOWN</text>"#, y + 19));
-        for (i, v) in verdicts.iter().enumerate() {
-            let cx = 252.0 + i as f64 * 5.6 + if i >= 40 { 6.0 } else { 0.0 };
-            let cy = y as f64 + 2.0;
-            b.push_str(&match v {
-                b'C' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.green[1]),
-                b'W' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.red[1]),
-                b'U' => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2" fill="none" stroke="{}" stroke-width="1"/>"#, t.muted),
-                _ => format!(r#"<circle cx="{cx:.1}" cy="{cy}" r="2.4" fill="{}"/>"#, t.amber[1]),
-            });
-        }
-    }
-    b.push_str(&format!(r#"<circle cx="50" cy="352" r="4" fill="{}"/><text x="60" y="357" font-size="12" class="mut">correct</text><circle cx="124" cy="352" r="4" fill="{}"/><text x="134" y="357" font-size="12" class="mut">wrong</text><circle cx="190" cy="352" r="3.4" fill="none" stroke="{}" stroke-width="1.2"/><text x="200" y="357" font-size="12" class="mut">UNKNOWN · 1–40 Polish, 41–80 English · models via the Groq API, closed book</text>"#, t.green[1], t.red[1], t.muted));
-    b.push_str(r#"<text class="kick" x="784" y="56">TRY TO BREAK GEL · PUBLIC TOOL</text>"#);
-    for (i, (what, why, outcome)) in BREAK.iter().enumerate() {
-        let y = 104 + i * 62;
-        b.push_str(&format!(r#"<text x="784" y="{y}" font-size="15" class="b">{what}</text><text x="784" y="{}" font-size="12" class="mut">{why}</text><text x="1156" y="{}" font-size="12" class="b" text-anchor="end" letter-spacing="1" style="fill:{}">{outcome}</text>"#, y + 19, y + 19, t.good));
-    }
-    b.push_str(r#"<text x="784" y="357" font-size="12" class="mut">Each is recorded; the recordings are linked below.</text>"#);
-    let desc = r
-        .systems
-        .iter()
-        .enumerate()
-        .map(|(i, (name, _))| {
-            let (a, b, c) = r.counts(i);
-            format!("{name}: {a} correct, {b} wrong, {c} UNKNOWN")
-        })
-        .collect::<Vec<_>>()
-        .join(". ");
-    result_card(dark, 400, ("Answer or abstain, and try to break GEL", &format!("Private build, earlier run on question set v1 (80 questions, an earlier build), beside three language models answering closed book. {desc}. The public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.")), &b)
-}
-fn surface(dark: bool, s: &[(&str, usize)], h: &Headline) -> String {
-    let t = theme(dark);
-    let mut b = panel(20, 540, 400, t) + &panel(580, 600, 400, t);
-    b.push_str(r#"<text class="kick" x="44" y="56">TRUTH SURFACE · CLAIMS BY STATUS</text>"#);
-    for (i, (mode, n)) in s.iter().enumerate() {
-        let (colour, meaning) = match *mode {
-            "EXECUTABLE_CHECK" => (t.green[1], "run against the library in CI"),
-            "SEPARATE_GATE" => (t.blue[1], "checked by its own gate or report"),
-            "MEASURED_LOCAL" => (t.amber[1], "measured by the owner; not re-runnable here"),
-            "NOT_VERIFIED" => (t.muted, "open: not verified yet"),
-            _ => (t.muted, "not shown, so not claimed"),
-        };
-        let y = 100 + i * 56;
-        b.push_str(&format!(r#"<circle cx="54" cy="{}" r="8" fill="{colour}"/><text x="74" y="{y}" font-size="13" class="mono">{mode}</text><text x="74" y="{}" font-size="12" class="mut">{meaning}</text><text x="530" y="{}" font-size="26" class="b" text-anchor="end">{n}</text>"#, y - 4, y + 19, y + 8));
-    }
-    b.push_str(r#"<text x="44" y="400" font-size="13" class="mut">None is marked as independently reproduced: none has been.</text>"#);
-    b.push_str(r#"<text class="kick" x="604" y="56">OPEN QUESTIONS · GOALS, NOT RESULTS</text>"#);
-    let items = [
-        (
-            "Natural question coverage",
-            format!(
-                "now {} of {} correct on question set {HEADLINE_SET}, {} wrong",
-                h.correct, h.questions, h.wrong
-            ),
-            "most of a new frozen set answered, still 0 wrong",
-        ),
-        (
-            "Answer form",
-            "now the whole source passage".to_string(),
-            "a short answer taken from that passage",
-        ),
-        (
-            "Questions without an answer",
-            "public control: 0/40 invented, 6/40 false premises answered".to_string(),
-            "0 answered in both groups on a new frozen control",
-        ),
-        (
-            "Independent reproduction",
-            "now none recorded".to_string(),
-            "a first external run of xtask verify",
-        ),
-    ];
-    for (i, (title, now, goal)) in items.iter().enumerate() {
-        let y = 98 + i * 72;
-        b.push_str(&format!(r#"<circle cx="616" cy="{}" r="13" fill="none" stroke="{}" stroke-width="2"/><text x="616" y="{}" font-size="13" class="b" text-anchor="middle">{}</text><text x="642" y="{y}" font-size="15" class="b">{title}</text><text x="642" y="{}" font-size="13" class="mut">{}</text><text x="642" y="{}" font-size="13" style="fill:{}">goal: {} · not achieved yet</text>"#, y - 5, t.accent, y, i + 1, y + 20, esc(now), y + 39, t.accent, esc(goal)));
-    }
-    b.push_str(r#"<text x="604" y="400" font-size="13" class="mut">A goal becomes a result only when published with its frozen protocol and evidence.</text>"#);
-    let desc = s
-        .iter()
-        .map(|(m, n)| format!("{n} {m}"))
-        .collect::<Vec<_>>()
-        .join(", ");
-    result_card(dark, 440, ("Truth surface, open questions and goals", &format!("Claims in the registry by status: {desc}; none is marked as independently reproduced. Goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.")), &b)
-}
-fn result_path(name: &str, dark: bool) -> String {
-    format!(
-        "media/presentation/{name}-{}.svg",
-        if dark { "dark" } else { "light" }
+    b.push_str(&format!(
+        r#"<text class="kick" x="780" y="96">FOR COMPARISON</text><text x="780" y="132" font-size="17" class="b">four packed copies: {} B</text><text x="780" y="154" font-size="13" class="mut">not stored; the record is kept once</text><text x="780" y="196" font-size="16" class="b">reference layout used for checking: {} B</text><text x="780" y="218" font-size="13" class="mut">four materialized views, built to check each score</text>"#,
+        grouped(r.packed),
+        grouped(r.frames)
+    ));
+    b.push_str(&format!(
+        r#"<rect x="40" y="272" width="1120" height="34" rx="17" fill="{}" stroke="{}"/><text class="mono" x="60" y="294" font-size="14"><tspan class="b" style="fill:{}">{} of {} recorded runs:</tspan> Q8_QUAD_EXACT=PASS · SEMANTIC_ACCURACY=NOT_MEASURED</text><text x="40" y="338" font-size="13" class="mut">Record payload only; process memory is additional. Four views are not four independent memories.</text>"#,
+        t.bg[0],
+        t.line,
+        t.good,
+        r.ok,
+        r.n
+    ));
+    result_card(
+        dark,
+        360,
+        ("One stored Q8 record, four exact views", &record_text(r)),
+        &b,
     )
 }
-/// The result graphics in README order: file stem, light body, dark body and an alternative text read from the same data.
-fn results() -> Result<Vec<(&'static str, String, String, String)>> {
-    let r = Recorded::read()?;
-    let h = Headline::read()?;
-    let s = statuses()?;
-    let both = |f: &dyn Fn(bool) -> String| (f(false), f(true));
-    let mut out = Vec::new();
-    let (l, d) = both(&|dark| glance(dark, &h));
-    out.push((
-        "glance",
-        l,
-        d,
-        format!("Evidence you can inspect. {}", glance_text(&h)),
-    ));
-    let (l, d) = both(&path_card);
-    out.push(("question-path", l, d, "What happens to a question: question, retrieval from the whole bank, one stored source passage, an answer only when it is clear or UNKNOWN, and the evidence.".to_string()));
-    let (l, d) = both(&|dark| example(dark, &r));
-    out.push(("example-41", l, d, format!("Private build, earlier run on question set v1, question 41 of 80: {} GEL RAM returned the stored source passage; the three models, closed book, gave a reason the source does not give.", r.question)));
-    let (l, d) = both(&|dark| dots(dark, &r));
-    out.push(("answer-dots", l, d, format!("Private build, earlier run on question set v1, 80 questions, an earlier build beside three language models answering closed book. {}. Try to break GEL: the public tool refuses a changed byte and a stale citation, reopens a snapshot with the same citation after a restart and checks a restored backup.", r.systems.iter().enumerate().map(|(i, (n, _))| { let (a, b, c) = r.counts(i); format!("{n}: {a} correct, {b} wrong, {c} UNKNOWN") }).collect::<Vec<_>>().join(". "))));
-    let (l, d) = both(&|dark| surface(dark, &s, &h));
-    out.push(("truth-surface", l, d, format!("Claims by status: {}; none is marked as independently reproduced. Open questions and goals, not results: more natural questions answered with no wrong answers, a short answer taken from the source, 0 answers in both groups of a new frozen no-answer control, and an independent reproduction.", s.iter().map(|(m, n)| format!("{n} {m}")).collect::<Vec<_>>().join(", "))));
-    Ok(out)
-}
-/// The README block of result pictures, from the same data as the graphics.
-fn results_block() -> Result<String> {
-    let mut s = String::new();
-    for (i, (name, _, _, alt)) in results()?.iter().enumerate() {
-        if i > 0 {
-            s.push_str("\n\n");
-        }
-        s.push_str(&themed(
-            &result_path(name, false),
-            &result_path(name, true),
-            &esc(alt),
-            1200,
-        ));
-        if *name == "answer-dots" {
-            s.push_str("\n\nRecordings: [changed byte refused](media/gifs/05-integrity-light.gif) · [stale citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [backup restored](media/gifs/03-backup-light.gif)");
-        }
-    }
-    s.push_str("\n\n[Full comparison](docs/GEL-BESIDE-GROQ.md) · [Claim registry](docs/CLAIMS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) · [Try it yourself](#quick-start) · [Documentation](#documentation)");
-    Ok(s)
+fn record_picture(r: &Q8Runs) -> String {
+    themed(
+        "media/presentation/record-light.svg",
+        "media/presentation/record-dark.svg",
+        &record_text(r),
+        1200,
+    )
 }
 /// Points of a quad as SVG text.
 fn quad(p: &[Point; 4]) -> String {
@@ -2055,8 +1564,8 @@ fn glass_cube(
     }
     (back, front)
 }
-/// The opening logo: a large glass cube of source cells that turns slowly, its cells brightening in rings
-/// from the accent core, above soft rings on the floor. Drawn, not recorded; `animated` false gives the still.
+/// The opening logo: a large glass cube of record cells that turns slowly around the accent core.
+/// Drawn, not recorded; `animated` false gives the still.
 fn hero(dark: bool, animated: bool) -> String {
     let t = theme(dark);
     let (c, s, pitch) = ((320.0, 206.0), 104.0, 0.42);
@@ -2069,20 +1578,6 @@ fn hero(dark: bool, animated: bool) -> String {
         r#"<defs><radialGradient id="glow"><stop offset="0" stop-color="{0}" stop-opacity=".32"/><stop offset="1" stop-color="{0}" stop-opacity="0"/></radialGradient></defs><ellipse cx="{1}" cy="{2}" rx="250" ry="210" fill="url(#glow)"/>"#,
         t.accent, c.0, c.1
     );
-    // Soft rings spreading on the floor.
-    let floor = c.1 + s * 1.55;
-    for k in 0..3 {
-        let ring = if animated {
-            format!(
-                r#"<animate attributeName="rx" dur="6s" begin="{0}s" repeatCount="indefinite" values="30;230"/><animate attributeName="ry" dur="6s" begin="{0}s" repeatCount="indefinite" values="7;52"/><animate attributeName="opacity" dur="6s" begin="{0}s" repeatCount="indefinite" values=".55;0"/>"#,
-                -2 * k
-            )
-        } else {
-            String::new()
-        };
-        let rx = 80.0 + 60.0 * k as f64;
-        b.push_str(&format!(r#"<ellipse cx="{}" cy="{floor:.1}" rx="{rx}" ry="{:.1}" fill="none" stroke="{}" stroke-width="1.6" opacity="{:.2}">{ring}</ellipse>"#, c.0, rx * 0.22, t.accent, 0.45 - 0.12 * k as f64));
-    }
     let bob = if animated {
         r#"<animateTransform attributeName="transform" type="translate" dur="6s" repeatCount="indefinite" values="0 0;0 -9;0 0" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>"#
     } else {
@@ -2090,7 +1585,7 @@ fn hero(dark: bool, animated: bool) -> String {
     };
     let (back, front) = glass_cube(&yaws, animated, pitch, c, s, t.accent, 1.0);
     b.push_str(&format!(r#"<g>{bob}{back}"#));
-    // Three layers of source cells; they brighten in rings spreading out from the core.
+    // Three layers of record cells around the core; they turn with the cube.
     let step = 2.0 / 3.0;
     let cell = 0.13 * s;
     for layer in [-1.0, 0.0, 1.0] {
@@ -2115,12 +1610,7 @@ fn hero(dark: bool, animated: bool) -> String {
                         .iter()
                         .map(|q| format!("{:.1}", q.1 - cell / 2.0))
                         .collect();
-                    let delay = (i * i + layer * layer + j * j).sqrt() * 0.7;
-                    animate("x", &xs)
-                        + &animate("y", &ys)
-                        + &format!(
-                            r#"<animate attributeName="opacity" dur="4.2s" begin="-{delay:.2}s" repeatCount="indefinite" values=".35;1;.35"/>"#
-                        )
+                    animate("x", &xs) + &animate("y", &ys)
                 } else {
                     String::new()
                 };
@@ -2133,13 +1623,18 @@ fn hero(dark: bool, animated: bool) -> String {
     b.push_str(&core_front);
     b.push_str(&front);
     b.push_str("</g>");
-    b.push_str(&format!(r#"<text x="640" y="196" font-size="86" class="b" letter-spacing="2">GEL RAM</text><text x="644" y="248" font-size="32">Evidence you can inspect</text><text x="644" y="296" font-size="22" style="fill:{}">Ask. Retrieve. Verify. Or say you don't know.</text><text x="644" y="336" font-size="15" class="mut">Exact source quotes · pinned snapshots · answer or UNKNOWN</text>"#, t.accent));
+    b.push_str(&format!(r#"<text x="640" y="196" font-size="86" class="b" letter-spacing="2">GEL RAM</text><text x="644" y="248" font-size="32">Knowledge printed, not trained</text><text x="644" y="296" font-size="22" style="fill:{}">One record. Four exact views. 1,152 bytes.</text><text x="644" y="336" font-size="15" class="mut">Read back exactly · can say UNKNOWN · a kill loses nothing confirmed</text>"#, t.accent));
     let desc = if animated {
-        "Animated logo: a large glass cube of source cells turns slowly while its cells brighten in rings from the accent core and soft rings spread beneath it."
+        "Animated logo: a glass cube of record cells turns slowly around an accent core."
     } else {
-        "The logo, still: a large glass cube of source cells around an accent core."
+        "The logo, still: a glass cube of record cells around an accent core."
     };
-    result_card(dark, 440, ("GEL RAM — Evidence you can inspect", desc), &b)
+    result_card(
+        dark,
+        440,
+        ("GEL RAM — Knowledge printed, not trained", desc),
+        &b,
+    )
 }
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
@@ -2163,6 +1658,14 @@ fn assets() -> Result<Vec<(String, String)>> {
             header_still(true),
         ),
     ];
+    let runs = Q8Runs::read()?;
+    for dark in [false, true] {
+        let theme = if dark { "dark" } else { "light" };
+        out.push((
+            format!("media/presentation/record-{theme}.svg"),
+            record_card(dark, &runs),
+        ));
+    }
     for dark in [false, true] {
         let theme = if dark { "dark" } else { "light" };
         let path = |name: &str| format!("media/presentation/{name}-{theme}.svg");
@@ -2172,10 +1675,6 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((path("bars"), bars(dark, &evidence)));
         out.push((path("logo"), logo(dark, true)));
         out.push((path("logo-still"), logo(dark, false)));
-    }
-    for (name, light, dark, _) in results()? {
-        out.push((result_path(name, false), light));
-        out.push((result_path(name, true), dark));
     }
     for i in 0..CHIPS.len() {
         for dark in [false, true] {
@@ -2217,19 +1716,19 @@ fn native_intro() -> String {
     grid.push_str("</table>\n");
     // The opening preview is the most telling one: a changed byte is refused.
     let (hero_id, hero_title, _) = SCENES[4];
+    // Without its data the card is not drawn; the placeholder then stays and fails the checks.
+    let record = Q8Runs::read()
+        .map(|r| record_picture(&r))
+        .unwrap_or_else(|e| format!("__RECORD__ {e}"));
     NATIVE
+        .replace("__RECORD__", &record)
         .replace("__FLOW__", &flow_picture())
         .replace("__FACTS__", &facts_picture())
         .replace("__WALL__", &wall_picture())
         .replace("__BARS__", &bars_picture())
-        .replace("__HERO_CHIP__", &chip_picture(4))
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
-        .replace(
-            "__RESULTS__",
-            &results_block().unwrap_or_else(|e| format!("__RESULTS_ERROR__ {e}")),
-        )
 }
 fn rewrite_readme(before: &str) -> Result<String> {
     let marker = "### What you can inspect\n";
@@ -2316,6 +1815,7 @@ fn check_page(text: &str) -> Result<()> {
         "__brand_logo__",
         "__hero_chip__",
         "__hero_id__",
+        "__record__",
     ] {
         if low.contains(bad) {
             return Err(format!("unexpected active/remote/unresolved markup: {bad}").into());
@@ -2470,7 +1970,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 26 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 18 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -2488,6 +1988,7 @@ mod tests {
                 "__HERO__",
                 "__GRID__",
                 "__RESULTS__",
+                "__RECORD__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
@@ -2534,67 +2035,95 @@ mod tests {
         }
     }
     #[test]
-    fn results_follow_the_recorded_answers() {
-        let r = Recorded::read().unwrap();
-        let (ok, wrong, unknown) = r.counts(0);
-        assert_eq!(ok + wrong + unknown, 80);
-        let h = Headline::read().unwrap();
-        assert_eq!(h.answered + h.unknown, h.questions);
-        assert!(
-            HEADLINE_DIR.ends_with(&format!("-{HEADLINE_SET}")),
-            "the first card names the set it is drawn from"
-        );
-        let g = glance(false, &h);
-        assert!(g.contains(&format!(">{} / {}<", h.correct, h.questions)));
-        assert!(g.contains(&format!(">{}<", h.wrong)) && g.contains(&format!(">{}<", h.unknown)));
-        assert!(g.contains(&format!(
-            "PRIVATE DEVELOPMENT BUILD · QUESTION SET {}",
-            HEADLINE_SET.to_uppercase()
-        )));
-        let [(a, _), (b, _)] = h.engines;
-        assert!(g.contains(&format!(">{}<", span(a, b))));
-        assert_eq!(span(3, 3), "3");
-        assert_eq!(both(379, 378, 3, 3), "378–379 correct and 3 wrong each");
-        let repeated = g
-            .split(|c: char| !(c.is_ascii_digit() || c == '–'))
-            .any(|t| {
-                t.split_once('–')
-                    .is_some_and(|(x, y)| !x.is_empty() && x == y)
-            });
-        assert!(!repeated, "a range never repeats one number");
-        assert!(g.contains("At the precise setting") && g.contains("so there the engines"));
-        assert!(
-            !g.contains("read-back"),
-            "stored passages read back are not questions and stay off the question card"
-        );
-        let d = dots(true, &r);
-        assert_eq!(d.matches("<circle").count(), 4 * 80 + 3);
-        let e = example(false, &r);
-        assert!(
-            d.contains("PRIVATE BUILD · QUESTION SET V1")
-                && e.contains("PRIVATE BUILD · QUESTION SET V1")
-        );
-        assert!(r.question.contains("Sudbury") && e.contains("House of Lords"));
-        assert!(
-            r.answers.iter().all(|a| a.2 == b'W'),
-            "question 41 is the published example"
-        );
+    fn record_card_follows_the_recorded_runs() {
+        let r = Q8Runs::read().unwrap();
+        assert_eq!((r.n, r.ok), (48, 48));
+        assert_eq!((r.record, r.packed, r.frames), (1152, 4608, 8192));
+        assert_eq!(RECORD_VALUES + RECORD_MASK, r.record);
+        for dark in [false, true] {
+            let c = record_card(dark, &r);
+            for want in [
+                "1,152 B",
+                "4,608 B",
+                "8,192 B",
+                "48 of 48 recorded runs",
+                "view 1",
+                "view 2",
+                "view 3",
+                "view 4",
+                "SEMANTIC_ACCURACY=NOT_MEASURED",
+            ] {
+                assert!(c.contains(want), "{want}");
+            }
+            assert!(!c.contains("P0") && !c.contains("view 5"));
+            // The banner states the record size the runs record.
+            assert!(header(dark).contains(&format!(" {} bytes.<", grouped(r.record))));
+        }
+        assert!(native_intro().contains(&record_text(&r)));
+        // The card draws the numbers it is given, not those of the recorded runs.
+        let other = Q8Runs {
+            n: 3,
+            ok: 2,
+            record: 2000,
+            packed: 8000,
+            frames: 9000,
+        };
+        for dark in [false, true] {
+            let c = record_card(dark, &other);
+            for want in ["2 of 3 recorded runs", "2,000 B", "8,000 B", "9,000 B"] {
+                assert!(c.contains(want), "{want}");
+            }
+            for stale in ["48 of 48", "1,152 B", "4,608 B", "8,192 B"] {
+                assert!(!c.contains(stale), "{stale}");
+            }
+        }
+        assert_eq!(grouped(0), "0");
+        assert_eq!(grouped(999), "999");
+        assert_eq!(grouped(1152), "1,152");
+        assert_eq!(grouped(1234567), "1,234,567");
+        // The card is not drawn from runs that are not all exact or that disagree.
+        let run = |record: usize, verdict: &str| {
+            format!(
+                "canonical_record_bytes={record} materialized_four_frame_bytes=8192 packed_four_record_bytes={}\n{verdict}\n",
+                4 * record
+            )
+        };
+        let pass = run(1152, Q8_PASS);
+        assert!(Q8Runs::from_texts(&[pass.clone(), pass.clone()]).is_ok());
+        let fail = run(1152, "Q8_QUAD_EXACT=FAIL SEMANTIC_ACCURACY=NOT_MEASURED");
+        for bad in [
+            vec![pass.clone(), fail],
+            vec![pass.clone(), run(1152, "")],
+            vec![format!("{pass}{Q8_PASS}\n")],
+            vec![pass.clone(), pass.replace("=8192", "=8193")],
+            vec![pass.clone(), run(1153, Q8_PASS)],
+            vec![run(1153, Q8_PASS), run(1153, Q8_PASS)],
+            vec![pass.replace("packed_four_record_bytes=4608", "")],
+            Vec::new(),
+        ] {
+            assert!(Q8Runs::from_texts(&bad).is_err(), "{bad:?}");
+        }
     }
     #[test]
-    fn goals_are_labelled_and_claims_are_counted() {
-        let h = Headline::read().unwrap();
-        let s = statuses().unwrap();
+    fn banner_draws_the_cube_only() {
         for dark in [false, true] {
-            let g = surface(dark, &s, &h);
-            assert!(g.contains("GOALS, NOT RESULTS") && g.contains("none has been"));
-            assert_eq!(g.matches("· not achieved yet").count(), 4);
+            for banner in [header(dark), header_still(dark)] {
+                assert!(!banner.contains(r#"attributeName="rx""#));
+                assert!(!banner.contains(r#"dur="4.2s""#));
+            }
         }
-        let rows = fs::read_to_string("docs/CLAIMS.md")
-            .unwrap()
-            .lines()
-            .filter(|l| l.starts_with("| ") && !l.starts_with("| ID"))
-            .count();
-        assert_eq!(s.iter().map(|(_, n)| n).sum::<usize>(), rows);
+    }
+    #[test]
+    fn first_screen_prints_first() {
+        let s = native_intro();
+        let at = |needle: &str| s.find(needle).unwrap_or_else(|| panic!("missing {needle}"));
+        let print = at("**GEL RAM prints knowledge into memory as fixed Q8 records");
+        let goal = at("The goal is a text AI");
+        let limit = at("`NOT_ESTABLISHED`");
+        let core = at("## The memory core");
+        assert!(print < goal && goal < core);
+        // The limit of the opening sentence stays on the first screen, before the record.
+        assert!(goal < limit && limit < at("## One record, four exact views"));
     }
     #[test]
     fn bars_show_a_mismatch() {
@@ -2669,7 +2198,8 @@ mod tests {
             assert!(s.contains(".l0,.l1,.l2,.ray,.hit,.seal{animation:none;opacity:1}"));
             for banner in [header(dark), header_still(dark)] {
                 assert!(
-                    banner.contains(">GEL RAM<") && banner.contains(">Evidence you can inspect<")
+                    banner.contains(">GEL RAM<")
+                        && banner.contains(">Knowledge printed, not trained<")
                 );
             }
         }

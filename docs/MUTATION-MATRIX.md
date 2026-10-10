@@ -8,7 +8,9 @@ A finite, explicit matrix of byte-level mutations of the three public file
 formats: GELSRC01 source bundles, GELSET01 collection snapshots and the Q8DEMO01
 numeric fixture. `xtask verify` runs it and requires the regenerated report to
 equal the committed [matrix-r1.txt](evidence-mutation/matrix-r1.txt) (tab-separated) byte for
-byte.
+byte. GELHIS01 record-history files are outside the matrix; their tests change
+every single bit and cut every length of one 30-state file
+([record history](RECORD-HISTORY.md)).
 
 ## Two pin modes for every mutant
 

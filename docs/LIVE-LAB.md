@@ -1,7 +1,9 @@
 # GEL Live Lab
 
-An interactive English-language terminal demonstration of the public Rust core.
-Everything runs locally. No LLM, network service, GPU backend or subscription.
+An interactive English-language terminal demonstration of the public Rust core,
+plus a non-interactive `--literal` mode that places a file's bytes in a record
+([below](#your-own-bytes-in-one-record)). Everything runs locally. No LLM,
+network service, GPU backend or subscription.
 This is a laboratory, not an unrestricted chatbot.
 
 Of the three repository films, two preview a separate private application and
@@ -45,7 +47,8 @@ limited to 16 MiB and 512 query bytes; larger imports remain readable with
 `read`. Multi-node catalogs are refused by `find` to avoid joining unrelated
 documents. No ranking, semantic segmentation or natural-language QA is implied.
 
-The numeric panel is **separate synthetic Q8 data**, not an encoding of the text.
+In the interactive lab the numeric panel is **separate synthetic Q8 data**, not an
+encoding of the text; only `--literal` places a file's bytes in a record, unchanged.
 Four colored rows show the first 16 phase codes in four reversible coordinate
 views. `view 0..3` highlights a row, `phase 0..255` shifts the body phase,
 `mask 0..1024` changes active-mask stride (0 disables all body dimensions), and
@@ -90,6 +93,43 @@ Files are **plaintext**, not encrypted. Use directories you control;
 the same path-race and filesystem-durability limits described in the
 [source persistence guide](SOURCE-BUILDER.md) apply. No automatic save, scan of
 personal directories, upload or background server runs. Importing is not training.
+
+## Your own bytes in one record
+
+```sh
+cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
+cargo run --locked --offline --release -p gel-live-lab -- --literal YOUR_FILE --save NEW_PATH
+cargo run --locked --offline --release -p gel-live-lab -- --reopen YOUR_RETAINED_PIN NEW_PATH
+```
+
+`--literal` places the first 1024 bytes of one regular file into one public Q8
+record: value j is byte j, active where a byte was placed, zero beyond. A byte is
+already one of the 256 levels, so nothing is rounded. These are literal bytes, not
+GEL knowledge printing: the step that prints text into GEL records is private and
+is not here.
+
+The report shows the four views of that one record, each only where it holds the
+first bytes. View P0 holds the bytes, as text when they are UTF-8 and in hex
+otherwise; P2 holds the same bytes reversed at the end of the record, shown as
+text only when they are plain ASCII and in hex otherwise; P1 and P3 add a seeded
+offset, so they are shown in hex and are not text. Each view is restored to the record and compared bit for bit:
+`ROUNDTRIP=4/4 DIFFERENT_BITS=0`. No score or time is computed and nothing is
+searched. Only one file argument is accepted.
+
+The record is encoded as one Q8DEMO01 file of 1164 bytes
+([format](../crates/gel-phase-quad/src/fixture.rs)). Every byte of its 1152-byte
+record body is valid to the decoder, so a changed value byte still decodes as a
+record and the SHA-256 pin you retain detects it; a changed header byte is refused
+by the decoder, and `--reopen` also refuses a record that is not of the literal
+shape. The report changes one byte of a RAM copy at several positions,
+after checking that the unchanged bytes pass, and must show `TAMPER=REJECTED`. The
+command ends with `GEL_LIVE_LAB_LITERAL=PASS` only when both checks pass. `--save`
+then writes the file without replacing an existing path and prints the pin;
+`--reopen PIN PATH` accepts the file only if it matches the pin and holds exactly
+one record of the literal shape (active on the first positions, zero beyond), then
+shows `REOPEN=PASS`. Empty files, files over 64 MiB, directories and symbolic
+links are refused. Only `--save` writes anything. Registry row:
+`q8-literal-record` in [claims](CLAIMS.md).
 
 ## What the times mean
 

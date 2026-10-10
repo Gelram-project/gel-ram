@@ -16,7 +16,9 @@ pub mod collection;
 pub mod context;
 pub mod document;
 pub use builder::{CorpusBuilder, EncodedCorpus};
-pub use bundle::{import_text, load_bundle, read_regular, write_bundle_new, BundleError};
+pub use bundle::{
+    import_text, load_bundle, read_regular, write_bundle_new, write_file_new, BundleError,
+};
 mod parts;
 pub use parts::LeadPartsError;
 use sha2::{Digest, Sha256};

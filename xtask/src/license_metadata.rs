@@ -62,8 +62,9 @@ pub fn check(root: &Path) -> Result<(), String> {
         .map_err(|e| format!("{}: {e}", file.strip_prefix(root).unwrap().display()))?;
         count += 1;
     }
-    // Root + existing members + the reviewed public Live Lab member.
-    if count != 14 {
+    // Root + existing members + the reviewed public Live Lab member and the
+    // reviewed record-history member.
+    if count != 15 {
         return Err(format!(
             "unexpected manifest count {count}; review workspace changes"
         ));

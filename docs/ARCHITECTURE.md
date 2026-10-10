@@ -31,8 +31,10 @@ reduction that preserves the scores of four matching reversible coordinate
 views. Archive and BodyActivity have distinct mask semantics; see the contract.
 
 This is separate from the 128-byte binary ORB and v2 store shown above: no Q8
-persistence format or automatic text-to-phase encoder is added. Shared
-scoring only applies to equivalent views of the same contents, not four
+persistence format or automatic text-to-phase encoder is added.
+`gel-live-lab --literal` places a file's bytes unchanged as values and can save
+that one record in the existing Q8DEMO01 fixture file; it adds no format and is
+not a text-to-phase encoder. Shared scoring only applies to equivalent views of the same contents, not four
 different records. The public module does not implement hardware-level
 memory computation or native knowledge inference. Worker budgets are bounded per
 call; serial fallback handles worker-start refusal, not every panic or OOM.
@@ -60,3 +62,5 @@ A structural delta is allowed only when it beats literal storage after metadata 
 - segment-local index (`u16`).
 
 The public codec does not yet prescribe a global graph or prototype-pool size. Those are workload/topology decisions and must be chosen from F0/F2 measurements.
+
+The record history (`gel-history`) uses the same residual on a linear history of one record: the parent of a residual is always the entry before it, at most two residuals follow a literal, and every state is rebuilt bit for bit ([record history](RECORD-HISTORY.md)).

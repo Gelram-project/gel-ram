@@ -66,13 +66,13 @@ Wikipedia articles, word for word, and the questions paraphrase them:
 
 - the answer-or-abstain sets in [docs/answer-or-abstain](docs/answer-or-abstain/README.md),
   [v2](docs/answer-or-abstain-v2/README.md), [v3](docs/answer-or-abstain-v3/README.md),
-  [v4](docs/answer-or-abstain-v4/README.md), [v5](docs/answer-or-abstain-v5/README.md) and
-  [v6](docs/answer-or-abstain-v6/README.md): question files and recorded answers;
-- the side-by-side pages [GEL beside Groq](docs/GEL-BESIDE-GROQ.md) and
-  [no-answer control](docs/GEL-BESIDE-GROQ-NO-ANSWER.md), the records in
-  `docs/evidence-side-by-side/` and the recordings and images in `media/beside-groq/`;
-- the README example card, which quotes the source passage of question 41 of question set
-  v1: `media/presentation/example-41-light.svg` and `media/presentation/example-41-dark.svg`.
+  [v4](docs/answer-or-abstain-v4/README.md), [v5](docs/answer-or-abstain-v5/README.md),
+  [v6](docs/answer-or-abstain-v6/README.md) and [v7](docs/answer-or-abstain-v7/README.md):
+  question files and recorded answers, and in v7 the passages of articles outside the bank
+  that its questions without an answer were written from;
+- earlier side-by-side pages, records and media and a README example card that quoted
+  these passages; they were removed from the tree, and their copies in the git history
+  remain under CC BY-SA 4.0.
 
 Wikipedia text is licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License (CC BY-SA 4.0, <https://creativecommons.org/licenses/by-sa/4.0/>).

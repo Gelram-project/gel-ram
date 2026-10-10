@@ -7,6 +7,37 @@ These measurements concern a separate private implementation, not this public
 checkout. Private source, banks and credentials are not included. This is an
 aggregate disclosure, not a publicly reproducible benchmark or an LLM leaderboard.
 
+## Resident read, source-integrity gate and the first ranking run
+
+These are **author-run measurements of a separate private implementation**,
+not benchmarks of this public checkout.
+They are reported here without publishing the private engine.
+
+| Operation | Observations | Measured result | What it establishes |
+|:---|---:|:---|:---|
+| Resident read at a known address | 40 | p50 **53.872 µs**, p95 **79.640 µs**, p99 **90.009 µs**; 40/40 reference matches | Addressed read after loading into RAM, not semantic search |
+| Source-integrity gate | 1,000 source fragments; 5 controls each | **1,000 valid payloads admitted; 4,000 invalid cases rejected** | Changed payload, missing address, wrong source and stale catalog generation are distinguished |
+| Single Q8 ranking | 400 source-text probes | top-1 **368/400 (92%)**; top-10 **393/400 (98.25%)** | Ranking within the known 250k-record slot |
+| Quad ranking | Same 400 source-text probes | top-1 **310/400 (77.5%)**; top-10 **361/400 (90.25%)** | Same diagnostic task; Quad did not outperform Single in this run |
+
+The logical ranking bank contains **1M fragments across four 250k slots**;
+these probes do **not** search all 1M candidates. One empty probe remains in
+the quality denominator. Integrity controls use a separate 1,000-fragment
+PL/EN catalog, not the million-record bank. The gate is an experimental
+CPU adapter, tested offline in a Linux sandbox, not a deployed service.
+
+Percentiles use nearest-rank; with N=40, p99 is the maximum. These are
+single-host diagnostic runs, not independently replicated measurements.
+Matching source bytes does not establish truth or understanding.
+Neither hardware-level memory computation nor any speedup is
+established by these tests.
+
+The underlying logs and private harness remain outside this checkout.
+**These rows are not independently reproducible from the public release.**
+Public-tool demonstrations and their reproducible evidence in the
+[README](../README.md) retain their own, separate scope. No private version
+identifiers, source code, knowledge banks or credentials are included here.
+
 ## Ranking update
 
 Same 400 source-text probes, 500k PL + 500k EN bank split into four 250k slots.
@@ -72,27 +103,11 @@ data independently reproducible or establish source truth.
 | Transfer questions | 4645a55e858e3fb5c9ddbbf08a9e43e303301b2d0ffa6a89d1ebfad26934df3a |
 | Transfer output | e477db6d267567f9356a0e389c9c4692634d0f227dc354863f3f1777c75eb26b |
 
-## Relation to Groq and animation
-
-[Existing Groq diagnostic](GEL-GROQ-DIAGNOSTIC.md) reports the separate
-supplied-source decision task, including incomplete attempts and protocol
-errors. The graphic's 537.134–1219.564 ms range covers six completed HTTP
-batches, not percentiles and not six flawless responses.
-GEL's bounded adapter returned only UNKNOWN on that shared task.
-No cross-task speedup multiplier is justified.
-
-The SVG contains static figures and CSS row highlights, no scripts, external
-resources, tracking or private code. The full table stays visible when
-animation is unsupported or reduced motion is requested. Animation pacing
-does not represent measured execution. Existing repository licensing applies.
-
 ## Answer verdict — measured after the v0.5.0 release
 
 Same private implementation as the ranking section above. The original bank is
-the same 1M PL/EN bank (four slots of 250,000 passages). The four-slot measurement
-needs slots of equal size, so after each change every slot was cut at its end to
-the size of the smallest one. After the changes below the searched answer bank
-holds 167,854 passages per slot, 671,416 in all. A verdict
+the same 1M PL/EN bank (four slots of 250,000 passages). After the changes below
+the searched answer bank holds 167,854 passages per slot, 671,416 in all. A verdict
 answers only when the best passage leads the
 runner-up by more than a threshold that was fixed in advance
 from a different corpus and never tuned on these probes. Correct means the
@@ -107,7 +122,7 @@ answers given, wrong answers a share of all probes.
 | Original bank | 250,000 | 9,998 | 7,693 (76.9%) | 7,515 | 178 | 2,305 (23.1%) | 97.7% | 1.78% |
 | Change 1: duplicate handling | 231,033 | 10,000 | 8,374 (83.7%) | 8,257 | 117 | 1,626 (16.3%) | 98.6% | 1.17% |
 | Change 2: answer-bank scope | 167,854 | 10,000 | 8,852 (88.5%) | 8,748 | 104 | 1,148 (11.5%) | 98.8% | 1.04% |
-| Change 3: encoder variant (selection sample) | 167,854 | 10,000 | 9,282 (92.8%) | 9,276 | 6 | 718 (7.2%) | 99.94% | 0.06% |
+| Change 3: a variant of the private build (selection sample) | 167,854 | 10,000 | 9,282 (92.8%) | 9,276 | 6 | 718 (7.2%) | 99.94% | 0.06% |
 | Same, validation sample | 167,854 | 9,600 | 8,940 (93.1%) | 8,936 | 4 | 660 (6.9%) | 99.96% | 0.04% |
 | Same, large sample | 167,854 | 50,000 | 46,376 (92.8%) | 46,353 | 23 | 3,624 (7.2%) | 99.95% | 0.046% |
 
@@ -115,18 +130,16 @@ In the original-bank run 2 of the 10,000 sampled probes were empty and are not
 counted; earlier versions of this page gave 10,000 probes and 77.0% answered for
 that row, where 7,693 of 9,998 is 76.9%.
 
-The encoder setting was chosen among three variants named before the run, on
+The variant was chosen among three named before the run, on
 the selection sample; the validation and large samples use different probe
 steps. Large sample per slot: correct answers 0.9997, 0.9991, 0.9998, 0.9993;
 95% Wilson lower bounds 0.9993, 0.9984, 0.9994, 0.9986. At equal bank size, a
 control with the reference sections kept reached 83.8% answered and 1.26% wrong,
 so the gain from that stage is not an effect of the smaller bank. Leaving those
 sections out changes the scope of the answer bank (Polish slots −26–27%, English
-−3–5%); they remain available as sources. The smaller Polish slot then set the
-common size of 167,854 passages: the cut to equal slots removed a further 3,457
-passages from the other Polish slot and 51,790 and 56,605 from the two English
-slots, so the English half of the final bank is about a quarter smaller than the
-scope change alone would leave.
+−3–5%); they remain available as sources. The final bank holds 167,854 passages
+per slot, so its English half is about a quarter smaller than the scope change
+alone would leave.
 
 ## Natural questions on the final answer bank
 
@@ -150,10 +163,6 @@ Calibration at the chosen threshold: 14 answers, 14 correct. 11/11 on the test
 set has a 95% Wilson lower bound of about 0.74; this small assistant-written set
 is not an independent benchmark and supports no precision rate. The open
 problem is coverage: 14% of the questions are answered.
-
-The same 80 questions were later put, closed book, to three language models on
-the Groq API in one recorded run with one scoring rule:
-[GEL beside three language models](GEL-BESIDE-GROQ.md).
 
 ## Evidence identities — answer verdict
 

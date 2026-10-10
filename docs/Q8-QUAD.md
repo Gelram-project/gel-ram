@@ -14,7 +14,10 @@ A Record holds 1024 phase indices in Z256 and 1024 explicit activity bits:
 1024 + 128 = 1152 bytes on the tested ABI. This is an in-memory representation,
 not a new persistence/serialization format. It is not an exact conversion of
 arbitrary floating-point data into 128 bytes. Quantization loses phase precision;
-the readout preserves the already encoded Q8 values.
+the readout preserves the already encoded Q8 values. A byte is already one of the
+256 levels, so `gel-live-lab --literal FILE` places the first 1024 bytes of a file
+into one record without rounding anything ([live lab](LIVE-LAB.md)). Those are
+literal bytes, not the way GEL stores knowledge: the printing step is private.
 
 With active query indices Q, the histogram counts `(q[j] - b[j]) mod 256`.
 The result is `sum_d histogram[d] * cos(2*pi*d/256) / len(Q)`.
@@ -35,9 +38,9 @@ The four poles combine coordinate reversal and seeded additive offsets modulo 25
 Both sides must use the same seed, pole and transformed masks. Their difference
 histograms are then equal. `SharedScore::at_pole` exposes the same scalar for
 each valid pole; it does not calculate four independent confidence votes.
-Cross-pole comparisons, different transforms and four different contents are
-outside this shortcut. Grid also retains a small Z5 geometry helper for
-compatibility tests; no private codec, residual encoder or text features are exported.
+Cross-pole comparisons and different transforms are outside this shortcut. Grid
+also retains a small Z5 geometry helper for compatibility tests; no private codec,
+residual encoder or text features are exported.
 
 ## Resources and errors
 

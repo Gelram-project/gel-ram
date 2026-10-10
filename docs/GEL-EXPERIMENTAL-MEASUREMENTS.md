@@ -57,7 +57,7 @@ task and establish no end-to-end advantage.
   tasks. Do not divide their times to claim an end-to-end speedup.
 - No 1M/10M sketch replay or equivalence to the Q8 top-10 ranking is established here.
 - The computations execute on CPU with data in memory. Hardware-level memory
-  computing, operation without CPU and permanent CPU-cache residency are not proven.
+  computation and permanent CPU-cache residency are not proven.
 - There is no measured superiority over a named commercial system.
 
 A valid next comparison needs the same corpus, queries, accuracy target,

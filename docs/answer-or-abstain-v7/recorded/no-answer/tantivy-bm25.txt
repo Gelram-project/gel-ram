@@ -1,0 +1,600 @@
+# Tantivy 0.22.1 (BM25) over the same bank, passages searched together with their article title and section heading; the answer shown is the stored passage itself; query = the words of the question joined by OR; answers when (s1 - s2) / s1 exceeds 0.110 (the smallest threshold with precision >= 0.95 on v1 + v2), otherwise UNKNOWN; one run on 2026-10-08, after the set was frozen. nr, answer, kind (passage = a stored source passage returned as the answer). UNKNOWN = abstained.
+1	UNKNOWN
+2	UNKNOWN
+3	UNKNOWN
+4	Apil-kin Apil-kin Apil-kin – władca gutejski, następca Kuruma, który według Sumeryjskiej listy królów miał rządzić Sumerem przez 3 lata	passage
+5	UNKNOWN
+6	UNKNOWN
+7	Jest to badanie żył, służące wykryciu chorób takich jak zakrzepica, zespół górnego otworu klatki piersiowej. Flebografia jest metodą inwazyjną – pomimo stosowania metod badań takich jak tomografia komputerowa czy rezonans magnetyczny, w przypadku wyżej wymienionych chorób złotym standardem pozostaje nadal inwazyjna flebografia. W badaniu tym podaje się środek kontrastowy do dwóch żył odłokciowych, a jego zaletą jest fakt możliwości równoczesnego pomiaru ciśnień. Wadami badania są oczywiście powikłania jakie mogą wystąpić w związku ze stosowaniem metody inwazyjnej, dlatego też pomimo ciągłego stosowania tejże metody, odchodzi się od niej na rzecz tomografii komputerowej z opcją angio	passage
+8	UNKNOWN
+9	UNKNOWN
+10	UNKNOWN
+11	UNKNOWN
+12	UNKNOWN
+13	UNKNOWN
+14	UNKNOWN
+15	UNKNOWN
+16	UNKNOWN
+17	UNKNOWN
+18	UNKNOWN
+19	UNKNOWN
+20	UNKNOWN
+21	Australia na Mistrzostwach Świata w Lekkoatletyce 2011 Australia na Mistrzostwach Świata w Lekkoatletyce 2011 Australia na Mistrzostwach Świata w Lekkoatletyce 2011 Flaga Australii Flaga Australii Kod IAAF AUS Mistrzostwa Świata w Lekkoatletyce 2011 – Taegu Zawodnicy 47 Medale Złoto 1 Srebro 1 Brąz 1 Razem 3 Australia na Mistrzostwach Świata w Lekkoatletyce 2011 – reprezentacja Australii podczas czempionatu w Berlinie liczyła 47 zawodników	passage
+22	Wobec rosnących cen surowców energetycznych, dom energooszczędny staje się jednym z kluczowych tematów w budownictwie jednorodzinnym. Ograniczenie kosztów energii elektrycznej oraz cieplnej możliwe jest dzięki redukcji strat ciepła do otoczenia, wykorzystaniu alternatywnych źródeł ciepła w miejsce kosztownych w eksploatacji pieców gazowych i elektrycznych, a także poprzez instalację systemów automatycznego sterowania budynkiem. Systemy te pozwalają na efektywne zarządzanie zużyciem mediów. W przyszłości przewiduje się upowszechnienie tzw. inteligentnych liczników energii, które jako element inteligentnych systemów elektroenergetycznych umożliwią optymalizację zużycia energii elektrycznej w ciągu doby.	passage
+23	UNKNOWN
+24	UNKNOWN
+25	UNKNOWN
+26	UNKNOWN
+27	UNKNOWN
+28	UNKNOWN
+29	UNKNOWN
+30	UNKNOWN
+31	UNKNOWN
+32	UNKNOWN
+33	UNKNOWN
+34	UNKNOWN
+35	UNKNOWN
+36	UNKNOWN
+37	UNKNOWN
+38	UNKNOWN
+39	UNKNOWN
+40	UNKNOWN
+41	UNKNOWN
+42	Królewicz Artur, pierworodny syn Henryka VII i jego żony Elżbiety, urodził się 8 miesięcy po ślubie rodziców, dlatego powszechnie uważa się, że był wcześniakiem	passage
+43	UNKNOWN
+44	UNKNOWN
+45	UNKNOWN
+46	UNKNOWN
+47	UNKNOWN
+48	UNKNOWN
+49	UNKNOWN
+50	UNKNOWN
+51	UNKNOWN
+52	UNKNOWN
+53	UNKNOWN
+54	UNKNOWN
+55	UNKNOWN
+56	UNKNOWN
+57	Organizacji Specjalnych Akcji Bojowych Armii Krajowej dokonał zamachu bombowego na pociąg z żołnierzami Wehrmachtu stojący na Dworcu Głównym we Wrocławiu. Zginęły 4 osoby, a kilkanaście zostało rannych. 1944 – Na Podkarpaciu rozbił się należący do RAF samolot Handley Page Halifax wykonujący zrzut dla AK	passage
+58	UNKNOWN
+59	UNKNOWN
+60	Główny otwór jaskini znajduje się w południowo-wschodniej ścianie Brzusznej Skały. W głąb skały prowadzi od niego szczelina, mająca w początkowej części wysokość do 5 m i szerokość do 2 m dołem, ku górze klinowato zwężająca się. Ku zachodowi odgałęzia się od niej dwumetrowej długości korytarzyk, dalej przechodzący w niedostępną szczelinę. Około 2 m za nim w głównej szczelinie jaskini jest dwumetrowej wysokości próg, nad którym znajduje się zaklinowany głaz. Za nim szczelina zwęża się i doprowadza do niewielkiej salki o rozmiarach 2 × 1 m, zaś szczelina górą wychodzi niewielkim otworem powyżej skalnej półki na północno-wschodniej ścianie. Przy progu od szczeliny odgałęzia się meandrujący korytarzyk o długości 2 m i wysokości 70 cm. Na jego ścianach są grzybkowe nacieki	passage
+61	UNKNOWN
+62	UNKNOWN
+63	UNKNOWN
+64	UNKNOWN
+65	UNKNOWN
+66	1375 – Mikołaj z Kórnika został biskupem poznańskim. 1391 – Książę Władysław Opolczyk, bez zgody króla Polski Władysława II Jagiełły, oddał w zastaw krzyżakom zamek w Złotorii nad Drwęcą. Stało się to bezpośrednią przyczyną wybuchu wojny pomiędzy księciem a królem. 1472 – W trakcie wojny z królem Kazimierzem IV Jagiellończykiem biskup warmiński Mikołaj Tungen, przy pomocy zaciężnych zwerbowanych w Prusach Krzyżackich, zajął Braniewo. 1653 – Wybuchł wielki pożar Orszy (obecnie na Białorusi). 1656 – Potop szwedzki: zwycięstwo wojsk szwedzkich w bitwie pod Kłeckiem. 1657 – Potop szwedzki: rozpoczęło się szwedzkie oblężenie twierdzy w Brześciu. 1756 – Wielki pożar Skoczowa. 1764 – W Warszawie rozpoczęły się obrady Sejmu konwokacyjnego. 1765 – Król Stanisław August Poniatowski ustanowił Order Świętego Stanisława. 1794 – Insurekcja kościuszkowska: Tadeusz Kościuszko wydał Uniwersał połaniecki znoszący poddaństwo osobiste chłopów, zakazujący ich rugowania z gruntu oraz zmniejszający wymiar pańszczyzny. Zwycięstwo wojsk rosyjskich w bitwie pod Polanami. 1859 – W Poznaniu odsłonięto pomnik Adama Mickiewicza. 1863 – Powstanie styczniowe: zwycięstwo powstańców w bitwie pod Birżami. 1873 – Zainaugurowała działalność Akademia Umiejętności w Krakowie. 1919: Otwarto Wszechnicę Piastowską – obecny Uniwersytet im. Adama Mickiewicza w Poznaniu. Utworzono Państwowy Instytut Geologiczny. 1940: Gestapo dokonało aresztowania 69 oficerów Policji Polskiej Generalnego Gubernatorstwa dystryktu warszawskiego, na czele z komendantem ppłk Marianem Kozielewskim. W okupowanym Toruniu założono niemiecki klub sportowy SV Thorn. 1944 – W KL Plaszow miał miejsce tzw. apel zdrowotny (wielka selekcja wszystkich więźniów)	passage
+67	UNKNOWN
+68	UNKNOWN
+69	UNKNOWN
+70	UNKNOWN
+71	Barwy dopełniające w przestrzeni RGB czerwona i błękitna (cyjanowa) niebieska i żółta zielona i fioletoworóżowa (magenta)	passage
+72	UNKNOWN
+73	UNKNOWN
+74	UNKNOWN
+75	UNKNOWN
+76	Kościół Niepokalanego Poczęcia NMP klasztor warowny karmelitów Bosych z XVII w., ufundowany przez Janusza Tyszkiewicza Kościół Niepokalanego Poczęcia NMP z XVIII w. z cudownym obrazem Matki Bożej Berdyczowskiej. kościół farny pw. św. Barbary z 1826 roku, w którym ślub wzięli Honoré de Balzac i Ewelina Hańska pałac Radziwiłłów z XVIII i XIX wieku sobór prawosławny św. Mikołaja z lat 1908–1910 zamek obronny na stoku góry, odbudowany po zniszczeniu przez Fedora Tyszkiewicza	passage
+77	Pierwsza drużyna straży ogniowej w Bielinach powstała w latach 1878–1880. Jej założycielami byli ks. Wojciech Harmata, Jan Walas i Stanisław Kobylański. W 1923 r. wybudowano pierwszą remizę. W roku 1947 udało się sprowadzić z Krakowa pierwszy wóz bojowy Studebaker, który służył w jednostce kilka lat. 25 maja 1972 r. jednostka otrzymała samochód pożarniczy marki „Żuk" GLM. W 1981 r. odbyła się uroczystość z okazji wręczenia jednostce OSP Sztandaru i obchodów 100-lecia powstania Straży. Sztandar został udekorowany „Złotym Znakiem Związku". W latach 1985–1989 budowano nową remizę, którą oddano do użytku w dniu 17 maja 1989 r. Obecnym Prezesem Zarządu jest Piotr Surma. Baza techniczna OSP mieści się przy drodze powiatowej. W niedzielę 22 maja 2011 r. w Bielinach obchodzono powiatowy dzień strażaka oraz jubileusz 130-lecia Ochotniczej Straży Pożarnej w Bielinach z tej okazji Urząd Gminy i Miasta w Ulanowie wydał „Kronikę Ochotniczej Straży Pożarnej w Bielinach” autorstwa regionalisty Józefa Mroczka. Organizatorem obchodów była Komenda Powiatowa Państwowej Straży Pożarnej w Nisku, Oddział Powiatowy Związku OSP w Nisku oraz OSP w Bielinach. Obecna siła bojowa jednostki to lekki wóz bojowy GLBA 1/1,2 – Mercedes Benz 508 D oraz średni GBA 3/16 VOLVO 4X4 FL Jednostka od grudnia 2017 roku jest włączona do KSRG	passage
+78	UNKNOWN
+79	UNKNOWN
+80	UNKNOWN
+81	Na planecie Ixen zaczyna brakować energii. Gdy cała się wyczerpie planetę czeka zagłada. Ratunkiem mogą być wysokoenergetyczne kryształy P-tonium, które znajdują się na planecie Sipro-5. Jedyną nadzieją są astronauci Vognaut, Numnaut i Tommynaut. Niestety dwóch z nich ginie – pozostaje tylko Tommynaut ze swym psem Beak-Beak, który postanawia wyruszyć na Sipro-5.	passage
+82	Blumeriella jaapii występuje we wszystkich rejonach świata, w których uprawia się drzewa pestkowe. Największe szkody wyrządza na plantacjach wiśni i czereśni, a zwłaszcza tej pierwszej, ale stwierdzono występowanie tego gatunku także na innych drzewach pestkowych	passage
+83	UNKNOWN
+84	UNKNOWN
+85	UNKNOWN
+86	UNKNOWN
+87	Trzyletnie dziecko z rozpoznaniem zaburzeń ze spektrum autyzmu, które brało udział w programie terapeutycznym ukierunkowanym na rozwój komunikacji, wskazuje terapeutce rybę w akwarium	passage
+88	UNKNOWN
+89	UNKNOWN
+90	UNKNOWN
+91	UNKNOWN
+92	UNKNOWN
+93	UNKNOWN
+94	UNKNOWN
+95	Anime music video Anime music video Anime music video (AMV) – typ teledysków, tworzonych przez połączenie dowolnej muzyki z pociętymi i przerobionymi scenami z jednego lub więcej anime za pomocą specjalnych programów służących do liniowej i nieliniowej edycji wideo, lecz tak by zaistniał związek rytmiczny bądź fabularny (lub oba) pomiędzy anime a muzyką. Tworzeniem AMV zajmują się fani anime i mangi.	passage
+96	27 października 1993 r. na wniosek rodziny Kestenbaumów Jad Waszem uhonorował rodzinę Likosów (Piotra, Apolonię i Natalię) tytułem Sprawiedliwy wśród Narodów Świata	passage
+97	UNKNOWN
+98	UNKNOWN
+99	UNKNOWN
+100	UNKNOWN
+101	UNKNOWN
+102	UNKNOWN
+103	UNKNOWN
+104	UNKNOWN
+105	UNKNOWN
+106	UNKNOWN
+107	UNKNOWN
+108	Według etatów brytyjskich, każda dywizja pancerna powinna posiadać co najmniej 15 wozów dowodzenia. Znalazły się one również w wyposażeniu Polskich Sił Zbrojnych, a przede wszystkim w 1 Dywizji Pancernej.	passage
+109	UNKNOWN
+110	UNKNOWN
+111	UNKNOWN
+112	UNKNOWN
+113	UNKNOWN
+114	do śmierci. Zmarł 27 sierpnia 1979. Pochowany został na cmentarzu w Katowicach Ligocie. W 2010 uchwałą Rady Miasta Katowice poświęcono kompozytorowi skwer w Ligocie, znajdujący się przy skrzyżowaniu ulic Panewnickiej i Piotrowickiej	passage
+115	UNKNOWN
+116	UNKNOWN
+117	UNKNOWN
+118	Postać Alfa jest wzmiankowana w kronice Wiganda z Marburga. W 1361 roku litewski książę Kiejstut został pojmany przez rycerzy krzyżackich i uwięziony w zamku w Malborku (współcześnie za jego miejsce uwięzienia uznaje się celę Witolda na zamku wysokim w Malborku	passage
+119	W 1868 roku Adrian Baraniecki założył Wyższe Kursy dla Kobiet, które razem z Muzeum Techniczno-Przemysłowym znalazły swoją siedzibę w klasztorze oo. franciszkanów przy ul. Franciszkańskiej 4. Studentki mogły wybierać spośród trzech wydziałów: Historyczno-Literackim, Przyrodniczym i Sztuk Pięknych. W gronie pedagogów znaleźli się wybitni uczeni, w tym profesorowie Uniwersytetu Jagiellońskiego. Kierownikiem Wydziału Sztuk Pięknych, zwanego także Wydziałem Artystycznym, był najpierw Władysław Łuszczkiewicz (1868–1875), a potem Jan Matejko (1875–1893)	passage
+120	UNKNOWN
+121	UNKNOWN
+122	UNKNOWN
+123	Alice – włoska piosenkarka Alice Babs – szwedzka piosenkarka Alice Coltrane – amerykańska pianistka, harfistka i kompozytorka jazzowa Alice Cooper – amerykański muzyk rockowy Alice Temple – angielska piosenkarka i kompozytorka	passage
+124	Aaron (herb kościelny) Aaron (herb kościelny) Aaron Aaron – herb kapituły krakowskiej i wileńskiej. Herb przedstawia w polu błękitnym trzy złote korony szlacheckie w układzie 2 i 1. Według tradycji herb został przyniesiony do Polski przez pochodzącego z Kolonii zakonnika Aarona, po objęciu przez niego biskupstwa krakowskiego w 1046 roku. Pierwsze zachowane wyobrażenie herbu pochodzi z roku 1296, kiedy pojawił się na pieczęci biskupa krakowskiego Jana Muskaty. W XIV wieku trzy korony zostały umieszczone na pieczęci większej kapituły krakowskiej. Od 2016 tarcza herbowa z trzema koronami uzupełniona o insygnia biskupie jest oficjalnym herbem archidiecezji krakowskiej	passage
+125	UNKNOWN
+126	UNKNOWN
+127	UNKNOWN
+128	UNKNOWN
+129	Główny bohater trylogii gier Mass Effect, który jest komandorem, otrzymał nazwisko Shepard dla upamiętnienia astronauty. USNS „Alan Shepard” okręt USA. New Shepard, statek kosmiczny Blue Origin. Stowarzyszenie Uczestników Lotów Kosmicznych (Association of Space Explorers) przyznało mu pośmiertnie dwie odznaki Universal Astronaut Insignia: za lot suborbitalny (nr 1) i za lot orbitalny (nr 48)	passage
+130	Sukces Magomiedowa nie pozostał niezauważony i z rekordem 19-3 został zakontraktowany przez czołową organizację Professional Fighters League na udział w turnieju wagi średniej w 2018 roku. W drodze do play-offów turnieju w lipcu i sierpniu znokautował Brazylijczyków Danillo Villeforta i Andersona Goncalvesa w pierwszej rundzie	passage
+131	20 lutego 2018 roku na platformie dystrybucji cyfrowej Microsoft Store ukazała się reedycja gry o tytule Age of Empires: Definitive Edition. Edycja zawiera zarówno oryginalną grę, jak i dodatek The Rise of Rome. Odświeżona edycja działa na silniku graficznym oryginalnej gry, mimo to twórcy całkowicie zmodyfikowali interfejs graficzny oraz zaimplementowali wsparcie dla rozdzielczości 4K	passage
+132	Delecja (1), duplikacja (2) i inwersja (3) to aberracje chromosomowe związane z etiologią zaburzeń ze spektrum autyzmu. Badania bliźniąt wskazują na zasadnicze znaczenie czynników genetycznych w powstawaniu zaburzeń ze spektrum autyzmu. W dwóch wielkoskalowych badaniach zgodność występowania autyzmu u bliźniąt monozygotycznych wyraźnie przeważała nad zgodnością zaobserwowaną u bliźniąt dwuzygotycznych. W jednym z owych badań poziomy zgodności wyniosły odpowiednio 36% versus 0%, zaś w drugim badaniu 96% versus 27%. Podobnie występowanie zaburzeń ze spektrum autyzmu jest częstsze u rodzeństwa dzieci z tymi zaburzeniami, niż w populacji ogólnej. Z kolei różnorodność manifestacji zaburzeń ze spektrum autyzmu w obrębie poszczególnych rodzin wskazuje na złożoność sposobów ich dziedziczenia. U rodzeństwa osób autystycznych stwierdza się także istotnie wyższą częstość występowania pomniejszych zaburzeń poznawczych i deficytów umiejętności społecznych, których niskie nasilenie sprawia, że nie spełniają one kryteriów rozpoznania zaburzeń ze spektrum autyzmu. W około 15% przypadków zaburzeń ze spektrum autyzmu udaje się określić, jaka mutacja genetyczna jest odpowiedzialna za ich wystąpienie – do najczęstszych z nich należą	passage
+133	UNKNOWN
+134	Kariera polityczna Bresztyenszky’ego rozpoczęła się od pozycji radnego miejskiego w Zagrzebiu. Za panowania swojego kolegi ze studenckiej ławy, bana Karola Khuen-Hedervaryja, przyłączył się do unionistycznej Partii Ludowej i głośno krytykował panujący reżim. Prywatnie był serdecznym przyjacielem bana, ale jego zaciętym przeciwnikiem politycznym. Z arcybiskupem Josefem Stadlerem, Bresztyenszky stworzył czasopismo Bałkany, w którym bronił idei zjednoczenia kościołów katolickich i prawosławnych. Bresztyenszky dążył do wielkiej koalicji chorwackich partii opozycyjnych. W 1902 r. nastąpiło zjednoczenie Partii Prawa i Niezależnej Partii Narodowej, pod nazwą Chorwacka Opozycja. Gdy dołączyły do nich ugrupowania prawicowe, koalicja zmieniła nazwę na Chorwacką Partię Prawa, a Bresztyenszky został wybrany na jej prezesa i został członkiem parlamentu	passage
+135	UNKNOWN
+136	UNKNOWN
+137	UNKNOWN
+138	UNKNOWN
+139	UNKNOWN
+140	UNKNOWN
+141	1990 – wydawnictwo CDN opublikowało przekład powieści, autorstwa Macieja Słomczyńskiego pod tytułem Skośnie w lewo. 1995 – nakładem Wydawnictwa Literackiego ukazał się przekład Rafała Śmietany zatytułowany Z nieprawej strony. 2006 – wydawnictwo Muza SA wydało przekład Michała Kłobukowskiego pod tytułem Nieprawe godło.	passage
+142	UNKNOWN
+143	UNKNOWN
+144	UNKNOWN
+145	W walce wieczoru drugiej nocy WrestleManii 39, Roman Reigns pokonał Cody’ego Rhodesa, aby zachować niekwestionowane mistrzostwo WWE Universal po interwencji Paula Heymana i Solo Sikoa	passage
+146	UNKNOWN
+147	UNKNOWN
+148	UNKNOWN
+149	UNKNOWN
+150	UNKNOWN
+151	UNKNOWN
+152	UNKNOWN
+153	UNKNOWN
+154	UNKNOWN
+155	UNKNOWN
+156	UNKNOWN
+157	W Bobrownikach znajduje się Szkoła Podstawowa im. Tadeusza Kościuszki oraz przedszkole. Do 2001 roku istniał zespół szkół im. Ludwika Waryńskiego, w którego skład wchodziły szkoła podstawowa i gimnazjum. Sama historia szkoły podstawowej sięga XIX wieku, kiedy to mieszkańcy postawili pierwszy jej budynek, jeszcze drewniany. Dopiero przed II wojną światową zaczęła się budowa nowej już kamiennej szkoły, jednak wojna przerwała prace, które zostały wznowione dopiero w 1947, a zakończone w 1950. W roku 2002 odbyła się renowacja boiska szkolnego, łącznie z wymianą nawierzchni i budową bieżni.	passage
+158	UNKNOWN
+159	UNKNOWN
+160	liczba miejsc siedzących: 1988 wymiary boiska: 45x28, wysokość hali 12,7 m. Arena jest usytuowana u zbiegu ulic Jana III Sobieskiego i Bolesława Chrobrego na terenie działki Stadionu Miejskiego (ul. Chrobrego 50b). Jest to budynek o powierzchni użytkowej 6116 m² i kubaturze 49291 m³, w konstrukcji stalowo-żelbetowej, w formie dwóch przenikających się brył. Głównym projektantem i autorem projektu był architekt Radek Guzowski. Generalnym wykonawcą areny było konsorcjum firm: Mostostal Warszawa S.A. i Mostostal Puławy S.A, a jej otwarcie miało miejsce we wrześniu 2010 r. W Arenie Legionowo, mogą odbywać się zawody na szczeblu ogólnopolskim i międzynarodowym. Na co dzień obiekt jest użytkowany przez legionowskie kluby sportowe. Przewiduje się udostępnianie hali dla klubów sportowych z innych miast, polskich związków sportowych, na organizacje rozgrywek, treningów i zgrupowań. Mecze w Arenie mogą rozgrywać zespoły siatkówki, koszykówki, piłki ręcznej, piłki halowej. Mogą się tam odbywać również wystawy, koncerty itp. Obiekt posiada w ofercie: Fitness Club, siłownia, ścianka wspinaczkowa, sala konferencyjna, wypożyczalnia rowerów.	passage
+161	Arsenal VG 70 jest jedną z pierwszych konstrukcji powojennych, w budowie której francuscy inżynierowie zmierzyli się z napędem odrzutowym. Głównym projektantem samolotu był inżynier Jean Galtier. Pomimo tego, że VG 70 był już powojenną maszyną to jego projekt odwoływał się do rozwiązań konstrukcyjnych zastosowanych podczas budowy samolotu Sud-Ouest SO.6000 Triton, który powstał na deskach kreślarskich jeszcze podczas trwania niemieckiej okupacji. Po raz pierwszy samolot wzniósł się w powietrze 23 czerwca 1948 roku i miał służyć zbadaniu zachowania się maszyny podczas lotów z bardzo dużymi prędkościami poddźwiękowymi.	passage
+162	Kamilla Chołoniewska, żona; Kamilla Florentyna Maria Chołoniewska z domu Głuchowska (1877–1936), działaczka społeczna, pisarka, dziennikarka, nauczycielka i przedsiębiorca. Antoni i Kamilla mieli dwóch synów, Mieczysława i Bolesława. Bolesław zmarł w 1942 r. w obozie koncentracyjnym Auschwitz podczas II wojny światowej. Mieczysław i jego żona Leandra mieli dwoje dzieci, córkę Kamilę i syna Jacka. Urodzony w 1957 roku Jacek jest polskim przedsiębiorcą, niezależnym dziennikarzem i ekspertem ekonomicznym, doktorem nauk fizycznych. Synem kuzyna Antoniego Chołoniewskiego, Stanisława, był oficer kawalerii Andrzej Chołoniewski	passage
+163	UNKNOWN
+164	UNKNOWN
+165	UNKNOWN
+166	UNKNOWN
+167	UNKNOWN
+168	UNKNOWN
+169	UNKNOWN
+170	UNKNOWN
+171	UNKNOWN
+172	Johannes Vetter i Norweżka Sigrid Borge. W rzucie młotem wygrali Polak Paweł Fajdek oraz Białorusinka Hanna Małyszczyk. Malwina Kopron była trzecia. Wśród mężczyzn najwięcej punktów uzyskała reprezentacja Ukrainy, natomiast u kobiet Niemki. Polki uplasowały się na drugim miejscu. 11 marca zakończył się 47. sezon Pucharu Europy w narciarstwie alpejskim mężczyzn. zakończył się 47. sezon Pucharu Europy w narciarstwie alpejskim kobiet. zakończył się 28. sezon Pucharu Kontynentalnego w kombinacji norweskiej mężczyzn. W klasyfikacji generalnej triumfował Austriak Thomas Jöbstl. Puchar Narodów trafił w ręce reprezentacji jego kraju. zakończył się 1. sezon Pucharu Kontynentalnego w kombinacji norweskiej kobiet. Zwycięstwo w punktacji odniosła Rosjanka Stiefanija Nadymowa. 17 marca zakończył się 52. sezon Pucharu Świata w narciarstwie alpejskim mężczyzn. Siódmą kryształową kulę za wygranie klasyfikacji generalnej z rzędu zdobył Marcel Hirscher. Austriak triumfował także w klasyfikacji slalomu i slalomu giganta. Szwajcar Beat Feuz został najlepszym zjazdowcem, z kolei Norweg Kjetil Jansrud zwyciężył w zmaganiach supergiganta. W superkombinacji wygrał Włoch Peter Fill. zakończył się 52. sezon Pucharu Świata w narciarstwie alpejskim kobiet. Po raz drugi z rzędu w klasyfikacji ogólnej triumfowała Mikaela Shiffrin. Amerykanka wygrała także klasyfikację slalomistek. Włoszka Sofia Goggia zwyciężyła w rywalizacji zjazdu, Szwajcarka Wendy Holdener w superkombinacji, reprezentantka Lichtenschteinu Tina Weirather w slalomie gigancie, natomiast Niemka Viktoria Rebensburg w slalomie gigancie. zakończył się 27. sezon Pucharu Kontynentalnego w skokach narciarskich mężczyzn. W klasyfikacji końcowej zwyciężył Norweg Marius Lindvik. W zmaganiach drużynowych najwięcej punktów zdobyli Słoweńcy. zakończył się 14. sezon Pucharu Kontynentalnego w skokach narciarskich kobiet. Indywidualnie najlepsza okazała się Rosjanka Lidija Jakowlewa, która wspólnie ze swoją reprezentacją sięgnęła także po	passage
+173	UNKNOWN
+174	UNKNOWN
+175	W czasie powstania sztab Żydowskiej Organizacji Bojowej znajdował się przy ul. Miłej 29, zaś po jego wykryciu przeniósł się do schronu przy Miłej 18	passage
+176	UNKNOWN
+177	UNKNOWN
+178	UNKNOWN
+179	Aqua (informatyka) Aqua (informatyka) Aqua – graficzny interfejs użytkownika w systemie operacyjnym OS X. Po raz pierwszy został zastosowany w wersji 10.0 „Cheetah”, zaprezentowanym przez Apple Computer, Inc. 13 września 2001 roku	passage
+180	UNKNOWN
+181	UNKNOWN
+182	UNKNOWN
+183	Źródła różnią się co do tego, w jaki sposób wyżej wymienione formacje otrzymały swój przydomek. Według Buffalo Soldiers National Museum nazwę tę nadali żołnierzom Indianie z plemienia Szejenów zimą 1867 r. Pisarz Walter Hill, opierając się na wspomnieniach pułkownika Benjamina Griersona, który formował 10 regiment, twierdzi, iż nazwa pochodzi od Komanczy i powstała w czasie kampanii w 1871 roku. Istnieją również różne teorie co do tego, czemu 10 regiment zyskał taki właśnie przydomek. Część uważa, iż chodziło tu o znaczną wartość bojową oddziału, przez co zyskał on sobie szacunek wśród wrogów. Inni natomiast upatrują źródła nazwy w podobieństwie kręconych włosów służących w oddziale Afroamerykanów do bawolej sierści. Z czasem nazwa „Buffalo Soldiers” przylgnęła do innych Afroamerykańskich oddziałów. W dzisiejszych czasach określa się tym mianem jednostki będące spadkobiercami 9 i 10 regimentu kawalerii	passage
+184	Swoją karierę zawodniczą rozpoczął w Fjölnir. W 2005 roku trafił do klubu Breiðablik UBK. W 2010 roku został piłkarzem belgijskiego KSC Lokeren. W 2012 roku przebywał na wypożyczeniu w Helsingborgs IF. W sierpniu 2012 odszedł do SC Heerenveen. W lipcu 2014 przeszedł do hiszpańskiego Realu Sociedad.	passage
+185	UNKNOWN
+186	Strumień początkowo znany był jako Stream D – wszystkie strumienie lodowe zasilające Lodowiec Szelfowy Rossa oznaczano kolejnymi literami alfabetu w kolejności ich położenia z południa na północ	passage
+187	Plan budowy obwodnicy Dublina pojawił się w latach 70. XX wieku, budowę pierwszych odcinków rozpoczęto w latach 80., a do użytku trasę oddano w 1990 roku. Początkowo trasa miała charakter drogi dwujezdniowej z sygnalizacją świetlną na części skrzyżowań	passage
+188	UNKNOWN
+189	UNKNOWN
+190	UNKNOWN
+191	UNKNOWN
+192	UNKNOWN
+193	Orzeczenie imienne, tak w języku greckim, jak i łacińskim, wyraża się najczęściej rzeczownikiem w mianowniku z czasownikiem „być”, np. gr. Ὁ διδάσκαλος φιλόσοφος ἐστιν, łac. Magister philosophus est. Możliwa jest jednak też konstrukcja z biernikiem, np. Νομίζω τὸν διδάσκαλον φιλόσοφον εἶναι – „Uważam, że nauczyciel jest filozofem”. W zdaniu tym obydwa rzeczowniki użyte są w bierniku, jednak przed orzecznikiem nie stosuje się po grecku rodzajnika, co przy swobodnym szyku wyrazów umożliwia jednoznaczne zrozumienie zdania. Łacina nie ma rodzajników, a zatem tego samego typu wyrażenie może być dwuznaczne: Magistrum philosophum habeo może znaczyć zarówno „uważam nauczyciela za filozofa”, jak i „uważam filozofa za nauczyciela”. Decyzja musi tu zapaść na podstawie kontekstu.	passage
+194	UNKNOWN
+195	Ukończył stomatologię na Uniwersytecie Medycznym w Kijowie z tytułem doktora. W latach 2005–2009 był gubernatorem Idlib, 2009-2012 Tartusu i 2012-2016 As-Suwajdy. W 2016 roku został wybrany na członka Zgromadzenia Ludowego. Od 2018 roku pełni urząd ministra ds. handlu wewnętrznego i ochrony konsumentów.	passage
+196	UNKNOWN
+197	Kaplan prowadził badania w obszarach innowacji, wartości klienta (CLV) oraz marketingu relacji, skupiając się na analizowaniu i opisywaniu transformacji cyfrowej w zarządzaniu i marketingu. Z ponad 22 000 odwołaniami do jego publikacji w Google Scholar, Kaplan został zaliczony przez John Wiley & Sons do grona 50 najlepszych autorów w dziedzinie biznesu i zarządzania. Kaplan otrzymał też nagrodę dla najlepszego artykułu Best Article Award przyznawaną co roku przez Business Horizons i sponsorowaną przez Elsevier, za publikację „If you love something, let it go mobile: Mobile marketing and mobile social media 4x4"	passage
+198	UNKNOWN
+199	UNKNOWN
+200	UNKNOWN
+201	UNKNOWN
+202	UNKNOWN
+203	UNKNOWN
+204	UNKNOWN
+205	UNKNOWN
+206	UNKNOWN
+207	UNKNOWN
+208	UNKNOWN
+209	UNKNOWN
+210	Candidate Party Gustavs Zemgals Democratic Centre Voldemārs Zāmuēls Democratic Centre Frīdrihs Vesmanis LSDSP Pēteris Juraševskis LSDSP Alberts Kviesis Latvian Farmers' Union	passage
+211	UNKNOWN
+212	UNKNOWN
+213	UNKNOWN
+214	Japanese waka poet Daini no Sanmi, lady-in-waiting to dowager Grand Empress Shōshi, is married to Fujiwara no Kanetaka. Japanese waka poet Sagami divorces, returns to Kyoto and becomes a lady-in-waiting to Imperial Princess Shushi. Murder of the daughter of the late Japanese Emperor Kazan, a lady-in-waiting to Shōshi who orders an investigation. Jiaozi, the world's first paper-printed money, which later greatly benefits the economy of the Song dynasty, originates in the Sichuan province of China. Sultan Mahmud of Ghazni sacks the Hindu religious center of Somnath and takes away a booty of 20 million dinars (approximate date).	passage
+215	UNKNOWN
+216	UNKNOWN
+217	UNKNOWN
+218	UNKNOWN
+219	UNKNOWN
+220	UNKNOWN
+221	At the 1976 games, amputees and visually impaired athletes competed for the first time; previous editions of the Paralympic Games had included only wheelchair athletes. Within the sport of athletics, new wheelchair racing distances of 200 m, 400 m, 800 m and 1500 m were added. Shooting and goalball, both previously demonstration events, were included as official medal sports.	passage
+222	UNKNOWN
+223	UNKNOWN
+224	UNKNOWN
+225	UNKNOWN
+226	UNKNOWN
+227	UNKNOWN
+228	UNKNOWN
+229	UNKNOWN
+230	An Indian Pattern Carrier Mk IIA named 'Dhar IV', North Africa, 10 April 1942 of the type used by 3rd Indian Motor Brigade. In December 1940, during the Second World War, the regiment was mechanised. It formed part of the 3rd Indian Motor Brigade, which was initially part of the 1st Indian Armoured Division.	passage
+231	UNKNOWN
+232	Volcanism in Papua New Guinea is due to the ongoing subduction of oceanic crust beneath the island due to plate tectonics. Mount Lamington is situated within the Hydrographers Range; a small, forested coastal mountain range. The mountain range is the remnant of a heavily eroded Quaternary stratovolcano. The dominant rock types are andesite and basaltic andesite. While a majority of the range's eruptive history occurred during the Pleistocene, the presence of cinder cones and craters on the southern flank of the range suggest volcanism also took place during the Holocene. The mountain lies adjacent to the Owen Stanley Range. Nearby volcanoes include Mount Suckling and Mount Victory.	passage
+233	The Big Thompson River is a tributary of the South Platte River, approximately 78 miles (126 km) long, in the U.S. state of Colorado.	passage
+234	UNKNOWN
+235	See also: Earthquake prediction and Earthquake sensitivity There were unusual noises, peculiar animal behaviors, lights and a change in the weather prior to the mainshock. In Ahu, two hours before the earthquake, cattle, horses, chickens, dogs, cats and other livestock made unusual sounds. In areas which would eventually experience intense (VIII–IX) shaking, animals ran, flew or barked. Loud sounds emitted from the ground and was heard in Maralbexi. The sounds were described as similar to thunder, an airplane or gun blasts. In Artux, it was heard from the west, while at Shule, it was heard from the north. Lights were observed at Jiashi, Shufu, Artux and other places within the meizoseismal area. At Jiashi, these were described as "fire" and "lightning". At Shufu, a meteor-like fireball was observed. The weather was also unusually windy and rainy—there was also hail shortly before the mainshock struck.	passage
+236	The College of International Management and Business Faculty of the Budapest Business School is located in the district. Cinkota is also the home of the secondary school, Szerb Antal Gimnázium.	passage
+237	UNKNOWN
+238	UNKNOWN
+239	UNKNOWN
+240	in Detroit. It featured the hit songs, "Too Busy Thinking About My Baby" (R&B No. 1, pop No. 4) and "That's The Way Love Is" (No. 2 soul, No. 7 pop). Let the Sunshine In by Diana Ross & the Supremes was released on May 26 and reached No. 7 on the R&B albums chart. It featured the hit single, "I'm Livin' in Shame" (No. 10 pop). Pretties for You by Alice Cooper was released on June 30. The Stooges, the debut studio album from The Stooges, was released on August 5. The album was ranked at No. 185 on Rolling Stone list of the "500 Greatest Albums of All Time". The album included the single, "I Wanna Be Your Dog" which was ranked at No. 438 on Rolling Stone's list of the 500 Greatest Songs of All Time. My Cherie Amour by Stevie Wonder was released on August 29. It featured the hit songs, "My Cherie Amour (pop No. 4) and "Yester-Me, Yester-You, Yesterday" (pop No. 7, R&B No. 5). Puzzle People by The Temptations was released on September 23 and reached No. 5 on the pop albums chart. It featured the No. 1 single "I Can't Get Next to You". Cream of the Crop, the final regular album by The Supremes to feature Diana Ross, was released on November 3. The album featured "Someday We'll Be Together", the final No. 1 hit of the 1960s. Four in Blue by The Miracles was released on November 3 and reached No. 3 in the R&B albums chart. Diana Ross Presents The Jackson 5 by The Jackson 5 was released on December 18 and reached No. 5 on the pop albums chart and No. 1 on the R&B albums chart. Recorded at Motown's Hitsville U.S.A. studio in Detroit, the album featured the No. 1 hit single, "I Want You Back". Grand Funk, the second studio album by Grand Funk Railroad, was released on December 29 and reached No. 11 on the pop albums chart.	passage
+241	UNKNOWN
+242	UNKNOWN
+243	Scrooge, directed by Leedham Bantock, starring Seymour Hicks, based on the 1843 novella A Christmas Carol by Charles Dickens	passage
+244	UNKNOWN
+245	Main article: Common Language Infrastructure .NET supports the following cross-platform scenarios: ASP.NET Core web apps, command-line/console apps, libraries and Universal Windows Platform apps. Prior to .NET Core 3.0, it did not implement Windows Forms or Windows Presentation Foundation (WPF), which render the standard GUI for desktop software on Windows.	passage
+246	Old 10th Avenue Bridge seen from the west side, 1880s. 10th Avenue Bridge under construction in 1927. A bridge known as the "10th Avenue Bridge" was built upstream from the current bridge in 1874.	passage
+247	Main article: Parochial Memories of 1758 The prime minister also ordered the collection of factual data, sending a query to all parishes of the country regarding the earthquake and its effects. Questions included: At what time did the earthquake begin and how long did it last? Did you perceive the shock to be greater from one direction than another, say from north to south? Did buildings seem to fall more to one side than the other? How many people died, including names of distinguished persons? Did the sea rise or fall first, and how many hands did it rise above the normal? If fire broke out, how long did it last and what damage did it cause?	passage
+248	UNKNOWN
+249	The Hazratbal Shrine in 2010 The Blessed Relic was brought to Indian city of Bijapur in 1635 by Syed Abdullah Madani. It was then passed through his son Syed Hamid to a Kashmiri businessman named Nooruddin. In the late 17th century, the Mughal emperor Aurangzeb imprisoned Nooruddin and seized the relic, moving it to the Sufi tomb in Ajmer. Aurangzeb returned the relic in 1700 after Nooruddin had died. The relic was preserved by his descendants and kept in a place that later became the Hazratbal Shrine.	passage
+250	UNKNOWN
+251	UNKNOWN
+252	1st League Classic champions, promoted and relegated teams: Season Group 1 Group 2 Group 3 Group 4 Promoted Play-Off Winners Relegated 1999–2000 Chênois Wangen bei Olten Locarno Vaduz Wangen bei Olten & Locarno No Relegation 2000–01 Serrières Concordia Vaduz — Concordia & Vaduz 2001–02 Colombier Schaffhausen Malcantone Agno Wohlen & Schaffhausen 2002–03 Meyrin YF Juventus Malcantone Agno Bulle, Chiasso Malcantone Agno & Meyrin Rapperswil-Jona & Stade Nyonnais 2003–04 Étoile-Carouge YF Juventus Locarno YF Juventus & Baulmes FC Altstetten & Vevey Sports 2004–05 Lausanne-Sport Biel-Bienne Tuggen Lausanne-Sport & Locarno No Relegation 2005–06 Servette Biel-Bienne Tuggen Delémont & Servette 2006–07 Étoile-Carouge Basel U-21 Red Star Zürich Cham & Gossau 2007–08 Nyon Basel U-21 Baden Biel-Bienne & Stade Nyonnais FC Brugg & SC Zofingen 2008–09 Étoile-Carouge Basel U-21 Chiasso Le Mont & Kriens Red Star Zürich & FC La Tour/Le Pâquier 2009–10 Sion U-21 YF Juventus Chiasso Chiasso & Delémont SC Cham & FC Emmenbrücke 2010–11 Meyrin Schötz Brühl Brühl & Étoile-Carouge SC Bümpliz 78, CS Chênois, US Terre-Sainte, FC Laufen, SC Buochs & Zug 94 2011–12 FC Sion II BSC Old Boys FC Tuggen 11 promoted clubs No Relegation 2012–13 FC Le Mont FC Baden SC Cham FC Le Mont & FC Köniz UGS Genève, ES FC Malley, SV Muttenz, SC Dornach, FC Kreuzlingen & CS Biaschesi 2013–14 SC Düdingen Neuchâtel Xamax USV Eschen/Mauren Neuchâtel Xamax & FC Rapperswil-Jona FC Bulle, SC Zofingen, FC Thun II, Chur 97 & SV Höngg 2014–15 FC Stade Lausanne-Ouchy SC Cham FC Wettswil-Bonstetten SC Cham & SC Kriens FC Meyrin, FC Monthey, Concordia Basel, FC Grenchen, FC Lugano II & AC Taverne 2015–16 FC Stade Lausanne-Ouchy FC Münsingen FC Baden FC Bavois, FC La Chaux-de-Fonds & FC United Zürich Signal FC Bernex-Confignon, US Terre-Sainte, FC Bern, FC Dietikon & FC Kosova 2016–17 Yverdon Sport FC FC Luzern II FC Gossau Yverdon Sport FC & FC Stade Lausanne-Ouchy FC La Sarraz-Eclépens, FC Wangen bei Olten, FC Muri, FC	passage
+253	UNKNOWN
+254	UNKNOWN
+255	UNKNOWN
+256	UNKNOWN
+257	UNKNOWN
+258	UNKNOWN
+259	Chimnaji Appa, Maratha military commander who liberated the western coast of India from Portuguese rule Suraj Mal, ruler of Bharatpur State in Rajasthan, born in February Bhim Singh Rana, ruler of princely state Gohad, in northwestern Madhya Pradesh	passage
+260	UNKNOWN
+261	UNKNOWN
+262	UNKNOWN
+263	UNKNOWN
+264	UNKNOWN
+265	UNKNOWN
+266	1520 Sedgwick Avenue has been called "the birthplace of hip hop." As hip hop grew throughout the Bronx, 1520 was a starting point where Clive Campbell, later known as DJ Kool Herc, presided over parties in the community room at a pivotal point in the genre's history.	passage
+267	UNKNOWN
+268	UNKNOWN
+269	UNKNOWN
+270	UNKNOWN
+271	UNKNOWN
+272	UNKNOWN
+273	UNKNOWN
+274	UNKNOWN
+275	Atlantic Coast Line's headquarters are moved from Wilmington, North Carolina, to Jacksonville, Florida. Construction is completed on Mexico's Chihuahua al Pacífico which linked the city of Chihuahua, Chihuahua, to the town of Los Mochis, Sinaloa, near the Pacific coast. Nationalization of rail transport in Paraguay. The first eight DC powered VL10 (i.e. Vladimir Lenin class) freight locomotives built at Tbilisi. The introduction in Sweden of the first SJ T43 locomotives opens the way for the phasing out of steam power on Swedish railways. The world's last Mallet locomotive is built in Japan, BB84 for the Indonesian State Railway Corporation's 750 mm (	passage
+276	UNKNOWN
+277	UNKNOWN
+278	UNKNOWN
+279	UNKNOWN
+280	This minor planet was named after the small village of Ostanin, the birthplace of the discoverer, Pelageya Shajn. The village is located in Perm Krai, now part of the Russian Volga district.	passage
+281	UNKNOWN
+282	UNKNOWN
+283	UNKNOWN
+284	UNKNOWN
+285	UNKNOWN
+286	Hindus in the United Provinces of Agra and Oudh demanded that Hindi be made an official language in place of Urdu. Urdu/Hindi Controversy.	passage
+287	UNKNOWN
+288	UNKNOWN
+289	Airplane on the inaugural flight of the first Qantas service from Charleville to Cloncurry, Queensland, 1922 November 2 – (Australia) Qantas started scheduled service between Charleville and Cloncurry after the first major air contract was landed in November 1922, its first regular airmail/passenger route.	passage
+290	25 out of 32 Olympic Council of Asia members participated in these games. Iran sent only one official and did not participate in the games due to the political situation in Iran at the time. Democratic Kampuchea also did not send any athletes and were represented by two officials.	passage
+291	UNKNOWN
+292	UNKNOWN
+293	UNKNOWN
+294	UNKNOWN
+295	UNKNOWN
+296	Farm Creek is a tributary of the Illinois River, flowing southwest through Tazewell County and directly through East Peoria. Its watershed spans nearly sixty square miles of mostly rural and suburban land.	passage
+297	Main article: Parochial Memories of 1758 The prime minister also ordered the collection of factual data, sending a query to all parishes of the country regarding the earthquake and its effects. Questions included: At what time did the earthquake begin and how long did it last? Did you perceive the shock to be greater from one direction than another, say from north to south? Did buildings seem to fall more to one side than the other? How many people died, including names of distinguished persons? Did the sea rise or fall first, and how many hands did it rise above the normal? If fire broke out, how long did it last and what damage did it cause?	passage
+298	UNKNOWN
+299	UNKNOWN
+300	UNKNOWN
+301	UNKNOWN
+302	UNKNOWN
+303	UNKNOWN
+304	UNKNOWN
+305	UNKNOWN
+306	UNKNOWN
+307	The 1851 schedules have been digitized and are available at subscription websites. The schedules are of high importance to genealogists since 1851 was the first year in which a place of birth or parish was recorded. Microdata from the 1851 population census are freely available through the North Atlantic Population Project.	passage
+308	UNKNOWN
+309	UNKNOWN
+310	No one from the men's basketball team was selected in the 1978 NBA draft. However, Jim Spanarkel was drafted 16th overall in the 1979 NBA draft. Also, Mike Gminski was picked 7th overall in the 1980 NBA Draft, and Gene Banks and Kenny Dennard were picked 28th and 78th in the 1981 NBA draft, respectively.	passage
+311	The headquarters of the On Leong Merchant Association is moved to N.Y, New York. Johnny Torrio, under the alias J.T. McCarthy, opens a saloon on New York's James Street and Walker Street which operates as a bordello. Hiring several former James Street Gang members, of which he was a member as a teenager, as protection he becomes involved in Paul Kelly's Five Points Gang becoming a top lieutenant by the following year. February 2 – Monk Eastman is arrested after fleeing from a failed robbery. Without protection from Tammany Hall, he is later sentenced to ten years in Sing Sing Prison.	passage
+312	Winners are listed first highlighted in boldface. Best Written Musical The Sound of Music, Screenplay by Ernest Lehamn; Based on the stage musical book by Howard Lindsay and Russel Crouse Best Written American Drama The Pawnbroker, Screenplay by Morton S. Fine and David Friedkin; Based on the novel by Edward Lewis Wallant A Patch of Blue, Screenplay by Guy Green; Based on the novel Be Ready with Bells and Drums by Elizabeth Kata The Spy Who Came in from the Cold, Screenplay by Paul Dehn and Guy Trosper; Based on the novel by John le Carré The Collector, Screenplay by Stanley Mann and John Kohn; Based on the novel by John Fowles Ship of Fools, Screenplay by Abby Mann; Based on the novel by Katherine Anne Porter Best Written American Comedy A Thousand Clowns, Screenplay by Herb Gardner Cat Ballou, Screenplay by Walter Newman and Frank Pierson; Based on the novel by Roy Chanslor That Darn Cat!, Screenplay by Mildred Gordon, Gordon Gordon and Bill Walsh; Based on the novel Undercover Cat by The Gordons The Great Race, Screenplay by Arthur A. Ross; Story by Blake Edwards and Arthur A. Ross What's New Pussycat, Written by Woody Allen	passage
+313	UNKNOWN
+314	UNKNOWN
+315	UNKNOWN
+316	UNKNOWN
+317	UNKNOWN
+318	UNKNOWN
+319	UNKNOWN
+320	UNKNOWN
+321	No. Nat. Player Class Pos Height Weight DoB Hometown Previous team James S. Babbitt (C) Senior F 1893-10-13 [[New York City|New York, New York]] !">New York, New York John P. Harding Jr. Senior F [[Saranac Lake, New York]] !">Saranac Lake, New York Watson G. Harding Sophomore F 1895-09-10 [[Saranac Lake, New York]] !">Saranac Lake, New York Converse Hill Sophomore D [[Lexington, Massachusetts]] !">Lexington, Massachusetts Francis T. Hunter Senior D 1893-06-24 [[New Rochelle, New York]] !">New Rochelle, New York Robert A. Murphy Junior 1890-06-12 [[Philadelphia]], [[Pennsylvania]] !">Philadelphia, Pennsylvania Ralph J. Myers Senior G [[Pittsburgh]], [[Pennsylvania]] !">Pittsburgh, Pennsylvania Frederick Spiegelberg Jr. Senior F 1895-11-17 [[New York City|New York, New York]] !">New York, New York	passage
+322	UNKNOWN
+323	UNKNOWN
+324	UNKNOWN
+325	UNKNOWN
+326	UNKNOWN
+327	10 DOL 10 DOL Map of 10 DOL Gram Panchayat 10 DOL is a gram panchayat in the Rawla Mandi tehsil of the Anupgarh district of Rajasthan, India. It is located in south west of Rawla tehsil.	passage
+328	UNKNOWN
+329	UNKNOWN
+330	UNKNOWN
+331	UNKNOWN
+332	UNKNOWN
+333	UNKNOWN
+334	UNKNOWN
+335	Main article: Swimming at the 1896 Summer Olympics Alfréd Hajós, the first Olympic champion in swimming, is one of only two Olympians to have won medals in both sport and art competitions The swimming competition was held in the open sea because the organizers had refused to spend the money necessary for a specially constructed stadium. Nearly 20,000 spectators lined the Bay of Zea off the Piraeus coast to watch the events. The water in the bay was cold, and the competitors suffered during their races. There were three open events (men's 100-metre freestyle, men's 500-metre freestyle, and men's 1200 metre freestyle), in addition to a special event open only to Greek sailors, all of which were held on the same day (11 April).	passage
+336	Level Competition Team Regional league Svenska Bollspelsförbundets serie 1902 Djurgårdens IF Svenska Bollspelsförbundets andra serie 1902 Östermalms IF Championship Cup Svenska Mästerskapet 1902 Örgryte IS Cup competition Kamratmästerskapen 1902 IFK Eskilstuna Rosenska Pokalen 1902 Gefle IF	passage
+337	UNKNOWN
+338	UNKNOWN
+339	UNKNOWN
+340	UNKNOWN
+341	UNKNOWN
+342	UNKNOWN
+343	UNKNOWN
+344	UNKNOWN
+345	UNKNOWN
+346	UNKNOWN
+347	UNKNOWN
+348	UNKNOWN
+349	UNKNOWN
+350	UNKNOWN
+351	UNKNOWN
+352	UNKNOWN
+353	UNKNOWN
+354	The earthquake damaged 16 rural areas and four cities in Dagestan. At least 25 percent of the territory, where more than 50% of the population lived, was affected. The cities of Buynaksk, Khasavyurt, Kizilyurt and Makhachkala were particularly hard hit.	passage
+355	UNKNOWN
+356	UNKNOWN
+357	UNKNOWN
+358	UNKNOWN
+359	UNKNOWN
+360	UNKNOWN
+361	UNKNOWN
+362	UNKNOWN
+363	UNKNOWN
+364	UNKNOWN
+365	UNKNOWN
+366	UNKNOWN
+367	UNKNOWN
+368	Pope Pius X condemned the law in the February 1906 encyclical Vehementer Nos as a unilateral break of the 1801 Concordat; he later condemned it again in his August 1906 encyclical Gravissimo officii munere, declaring it a "nefarious law" and calling French Catholics to "defend the religion of your Fatherland".	passage
+369	UNKNOWN
+370	UNKNOWN
+371	UNKNOWN
+372	UNKNOWN
+373	UNKNOWN
+374	UNKNOWN
+375	UNKNOWN
+376	Name Status Authors Age Location Notes Images Allosaurus Valid Marsh Late Jurassic (Kimmeridgian-Tithonian) Portugal US ( Colorado, Montana, New Mexico, Oklahoma, South Dakota, North Dakota, Nebraska, Kansas, Texas, Arizona, Utah, Idaho and Wyoming) An allosaurid theropod. The type species is A. fragilis. Allosaurus. Amphicoelias Nomen dubium Cope Late Jurassic US ( Colorado) A diplodocoid sauropod. The type species is A. altus. Amphicoelias true size Apatodon Nomen dubium Marsh US ( Colorado) Possible subjective synonym of Allosaurus. The type species is A. mirus. Apatosaurus Valid Marsh Late Jurassic US ( Colorado, New Mexico, Oklahoma, Utah) An apatosaurine diplodocid. The type species is A. ajax. Apatosaurus Atlantosaurus Nomen dubium Marsh Late Jurassic US A replacement name for Titanosaurus Marsh (1877). Camarasaurus Valid Edward Drinker Cope Late Jurassic US ( Colorado, Utah) A camarasaurid. The type species is C. supremus. Camarasaurus Caulodon Jr. synonym Cope Late Jurassic US Junior subjective synonym of Camarasaurus. Dryptosaurus Valid Othniel Charles Marsh Late Cretaceous (Maastrichtian) US ( New Jersey) Replacement name for Laelaps Cope (1866). Dryptosaurus Dystrophaeus Valid Cope Late Jurassic US A eusauropod of unknown affinities. The type species is D. viaemalae. Nanosaurus Valid Othniel Charles Marsh Late Jurassic US ( Colorado and Wyoming) An ornithischian. The type species is N. agilis. Stegosaurus Valid Othniel Charles Marsh Late Jurassic Portugal US ( Colorado, Utah and Wyoming) A stegosaur. The type species is S. armatus. Stegosaurus Tichosteus Nomen dubium Cope US Affinities unknown. The type species is T. lucasanus. Titanosaurus Nomen dubium Lydekker Late Cretaceous (Maastrichtian) India A titanosaur. The type species is T. indicus. Titanosaurus Preoccupied. Marsh Preoccupied by a genus erected by Richard Lydekker this same year, later renamed Atlantosaurus. The type species is T. montanus.	passage
+377	UNKNOWN
+378	UNKNOWN
+379	William Copeland Borlase - The Dolmens of Ireland: their distribution, structural characteristics, and affinities in other countries, together with the folklore attaching to them; supplemented by considerations on the anthropology, ethnology, and traditions of the Irish people (3 vols, London).	passage
+380	UNKNOWN
+381	UNKNOWN
+382	UNKNOWN
+383	UNKNOWN
+384	UNKNOWN
+385	UNKNOWN
+386	UNKNOWN
+387	UNKNOWN
+388	Lauren Vélez, Dexter Laura Cerón, ER Alana De La Garza, Law & Order Cote de Pablo, NCIS Paula Garcés, The Shield Julie Gonzalo, Eli Stone Eva La Rue, CSI: Miami Justina Machado, ER Dania Ramirez, Heroes Francia Raisa, The Secret Life of the American Teenager Sara Ramirez, Grey's Anatomy Michelle Rodriguez, Lost Roselyn Sanchez, Without A Trace Paola Turbay, The Secret Life of the American Teenager; The Closer	passage
+389	May 24 – Margaret of Bohemia, Queen of Hungary (d. 1349) October 27 – Yi Seong-gye, Korean founder of the Joseon Dynasty Gülçiçek Hatun, first wife of Ottoman Sultan Murad I Marko Mrnjavčević, de jure Serbian king Milica, wife of Prince Lazar of Serbia (d. 1405) Tiphaine Raguenel, Breton astrologer (d. 1373)	passage
+390	Main article: 100% Love (soundtrack) The music and background score was composed by Sukumar's regular associate Devi Sri Prasad. The album consisted of 8 songs which included 2 bit songs in the first release and 2 another bit songs in the next release. Chandrabose, Ramajogayya Sastry and Sri Mani penned the Lyrics. The album was released on 2 April 2011 at Rock Gardens in Hyderabad in a star-studded promotional event on Aditya Music label, with the audio being launched by Nagarjuna, Allu Arjun and Ram Pothineni.	passage
+391	UNKNOWN
+392	The protein encoded by this gene is a microsomal enzyme that catalyzes the conversion of the stress hormone cortisol to the inactive metabolite cortisone. In addition, the encoded protein can catalyze the reverse reaction, the conversion of cortisone to cortisol. Too much cortisol can lead to central obesity, and a particular variation in this gene has been associated with obesity and insulin resistance in children. Two transcript variants encoding the same protein have been found for this gene.	passage
+393	UNKNOWN
+394	In January 2013 Havoc announced the first single to be, "Tell Me to My Face" which features fellow rapper Royce da 5'9".	passage
+395	UNKNOWN
+396	ACC Synthase is 450-516 amino acid long sequence depending on the species of plant from which it is extracted. Though it is comparable in the species in which it is found, its COOH-terminal domain is more variable, leading to differences such as oligomerization. The COOH-terminal domain is responsible for oligomerization. In most ACC Synthase producing cells, ACC Synthase exists as a dimer. However, in some we find a monomer ("which is more active and efficient [than its dimer counterpart").	passage
+397	UNKNOWN
+398	Black Pond Brook Black Pond Brook Black Pond Brook – rzeka w stanie Connecticut, w hrabstwie Windham Black Pond Brook – rzeka w stanie New Hampshire, w hrabstwie Hillsborough Black Pond Brook – rzeka w stanie Nowy Jork, w hrabstwie Putnam	passage
+399	There is a fourteen-point silver star marking the traditional spot of Jesus’ birth in the Basilica of the Nativity in Bethlehem. According to the genealogy of Jesus in the Gospel of Matthew, “...there were fourteen generations in all from Abraham to David, fourteen generations from David to the exile to Babylon, and fourteen from the exile to the Messiah” (Matthew 1:17).	passage
+400	UNKNOWN
+401	UNKNOWN
+402	UNKNOWN
+403	UNKNOWN
+404	UNKNOWN
+405	UNKNOWN
+406	UNKNOWN
+407	UNKNOWN
+408	UNKNOWN
+409	UNKNOWN
+410	Urodziła się 29 października 1965 roku w Tarnobrzegu w rodzinie artystycznej. Matka Izabella Nawe z domu Binek – śpiewaczka operowa (sopran koloraturowy)	passage
+411	UNKNOWN
+412	UNKNOWN
+413	UNKNOWN
+414	Dennis wyszła za mąż 21 września 2013 za Jessego Guilmette’a, wrestlera występującego pod pseudonimem ringowym Braxton Sutter	passage
+415	UNKNOWN
+416	UNKNOWN
+417	UNKNOWN
+418	UNKNOWN
+419	UNKNOWN
+420	UNKNOWN
+421	„Antelope” został zbudowany w 1546 roku jako okręt z napędem wiosłowo-żaglowym. W momencie budowy jego wyporność wynosiła 300 ton, uzbrojenie składało się z 30 dział, załoga liczyła 170 osób	passage
+422	UNKNOWN
+423	UNKNOWN
+424	UNKNOWN
+425	UNKNOWN
+426	UNKNOWN
+427	Schronisko PTTK na Błatniej powstało w latach 1925–1926. Zostało wybudowane przez niemieckie Towarzystwo Turystyczne „Przyjaciele Przyrody” (niem. Touristen-Verein „Naturfreunde”) z Aleksandrowic. W 1945 zostało przejęte przez Polskie Towarzystwo Tatrzańskie, następnie Polskie Towarzystwo Turystyczno-Krajoznawcze	passage
+428	Szopka kaszubska (1925, niezachowany) We Gwiôzdkę (1930, przerobiony) Duchy w klasztorze (1934, niezachowany) Ksążę bez dzecy Spiącé uejskue. Dramat kaszubski w czterech odsłonach, Wejherowo 1937 Hanka sę żeni. Wesele kaszubskie w pięciu aktach z muzyką i śpiewem, Wejherowo 1937 (zawiera nuty) Dzéwczę i miedza. Dramat kaszubski w pięciu aktach, Wejherowo 1938 (zawiera słowniczek i nuty) Gwiôzdka ze Gduńska. Dramat w czterech obrazach, Wejherowo 1939, Wyd. ZK-P, Gdańsk 1988 (zawiera słowniczek) Budzta spiącëch, Wejherowo 1939 Przebudzenie (1939, niezachowany) Ostatna gwiôzdka Mestwina czyli Słoneczniécié pomorscié. Dramat w dwóch obrazach, Wyd. ZK-P, Gdańsk 1985 (zawiera słowniczek) Wesele kociewskie, Wydawnictwo Morskie, Gdynia 1959 (zawiera przypisy, objaśnienia i nuty prawie 60 melodii)	passage
+429	UNKNOWN
+430	UNKNOWN
+431	UNKNOWN
+432	W czasach kolonialnych w okolicy były zakładane plantacje kakao. W 1937 roku w mieście powstała pierwsza na Madagaskarze fabryka czekolady Chocolaterie Robert, którą założyło francuskie małżeństwo Robert. W 1958 roku fabryka została sprzedana rodzinie Berger i przeniesiona do Antananarywy	passage
+433	UNKNOWN
+434	Tom Tytuł i rok wydania polskiego Tytuł i rok wydania oryginalnego Uwagi 1 Kroniki Armady (2011) Tome 1 (2004) W wersji polskiej dwa pierwsze albumy oraz jedna historia z albumu trzeciego ukazały się w jednym tomie zbiorczym. 2 Tome 2 (2005) 3 Tome 3 (2006) 4 Tome 4 (2006) W wersji polskiej jedna historia z albumu czwartego oraz dwie historie z albumu szóstego ukazały się w ww. tomie zbiorczym. 5 Tome 5 (2008) 6 Tome 6 (2008)	passage
+435	UNKNOWN
+436	UNKNOWN
+437	UNKNOWN
+438	Benitoit został odkryty w 1907 roku przez poszukiwacza Jamesa M. Coucha na górze San Benito, w Kalifornii, mniej więcej w połowie drogi między San Francisco a Los Angeles. Couch początkowo sądził, że odkryty minerał jest szafirem, ponieważ miał podobny kolor. W 1909 roku próbka została przesłana na Uniwersytet Kalifornijski w Berkeley, gdzie mineralog George Louderback ustalił, że jest to nieznany wcześniej minerał. Szafir (korund) ma twardość 9 w skali Mohsa, natomiast benitoit jest znacznie bardziej miękki, co wykluczyło tę możliwość. Louderback nadał minerałowi nazwę „benitoit” od rzeki San Benito i hrabstwa San Benito, gdzie został odkryty	passage
+439	UNKNOWN
+440	UNKNOWN
+441	UNKNOWN
+442	UNKNOWN
+443	Skala Zieleń Złoto Pantone 348 C 116 C RGB (szesnastkowo) 0–132–61 (#00843D) 255–205–0 (#FFCD00) CMYK 100%–0%–54%–48% 0%–20%–100%–0% Australijska akacja Z uwagi na to, iż flaga Australii nie zawiera żadnego z kolorów tradycyjnie już kojarzonych z tym krajem, przez lata nie było pewności, jakie barwy należy traktować jako australijskie barwy narodowe: czerwoną, białą i niebieską (barwy flagi), niebieską i złotą (barwy wieńca z herbu, na którym opiera się Commonwealth Star) czy też zieloną i złotą	passage
+444	UNKNOWN
+445	UNKNOWN
+446	UNKNOWN
+447	UNKNOWN
+448	2000: nagroda Festiwalu Słuchowisk Polskiego Radia w Rzeszowie za rolę w słuchowisku Dorra 2006: wyróżnienie aktorskie Festiwalu Teatru Polskiego Radia i Teatru Telewizji Polskiej „Dwa Teatry” w Sopocie za rolę w spektaklu telewizyjnym Skaza 2016: nagroda Festiwalu Filmowego w Gdyni za pierwszoplanową rolę kobiecą w filmie Ostatnia rodzina 2016: nagroda Onetu „Odkrycie Festiwalu” przyznana podczas Festiwalu Filmowego w Gdyni za rolę w filmie Ostatnia rodzina 2016: nominacja do nagrody Festiwalu Aktorstwa Filmowego im. Tadeusza Szymkowa „Złoty Szczeniak” w kategorii Najlepsza pierwszoplanowa rola kobieca za rolę w filmie Ostatnia rodzina 2017: nagroda Koszalińskiego Festiwalu Debiutów Filmowych „Młodzi i Film” za rolę kobiecą za „wielką kreację aktorską” w filmie Ostatnia rodzina 2017: Orzeł w kategorii Najlepsza główna rola kobieca za rolę w filmie Ostatnia rodzina 2017: Grand Prix Festiwalu Teatru Polskiego Radia i Teatru Telewizji Polskiej „Dwa Teatry” w Sopocie za rolę w spektaklu telewizyjnym Posprzątane 2018: nominacja do Nagrody Polskiego Kina Niezależnego im. Jana Machulskiego w kategorii Najlepsza aktorka za rolę w filmie Nazywam się Julita 2018: nagroda Festiwalu Filmowego w Gdyni za drugoplanową rolę kobiecą w filmie Jak pies z kotem 2019: Orzeł w kategorii Najlepsza drugoplanowa rola kobieca za rolę w filmie Jak pies z kotem 2019: nagroda Festiwalu Aktorstwa Filmowego im. Tadeusza Szymkowa „Złoty Szczeniak” za pierwszoplanową kreację aktorską kobiecą w filmie Boże Ciało 2020: Orzeł w kategorii Najlepsza główna rola kobieca za rolę w filmie Boże Ciało 2020: nagroda Festiwalu Filmowego w Gdyni za drugoplanową rolę kobiecą w filmie Sweat 2022: nominacja do Orła w kategorii Najlepsza drugoplanowa rola kobieca za rolę w filmie Żeby nie było śladów	passage
+449	UNKNOWN
+450	UNKNOWN
+451	UNKNOWN
+452	UNKNOWN
+453	UNKNOWN
+454	6:05 rano lokalnego czasu. zatonął indonezyjski prom pasażerski; zaginęło ponad 400 osób. ETA dokonała zamachu na lotnisku w Madrycie, w którym zginęły dwie osoby, a ponad 20 zostało rannych. został pochowany James Brown. 31 grudnia: Saddam Husajn został pochowany w swojej rodzinnej miejscowości Al-Audża. 3 osoby zginęły, a 40 zostało rannych w serii zamachów bombowych w stolicy Tajlandii Bangkoku.	passage
+455	American Malacological Society American Malacological Society American Malacological Society (AMS) – amerykańskie stowarzyszenie malakologiczne. Stowarzyszenie to zostało założone w 1931 roku pod nazwą American Malacological Union przez 191 naukowców, zbieraczy i innych osób zainteresowanych mięczakami, głównie dzięki wysiłkom Normana W. Lermonda. W 1964 liczyło już 838 członków. Do roku 1990 liczba członków utrzymywała się powyżej 700, później zaczęła jednak spadać i w 2010 wynosiła mniej więcej tyle, co w momencie założenia. Obecnie jego członkami są przede wszystkim profesjonalni malakolodzy	passage
+456	UNKNOWN
+457	Na podstawie obserwacji zmian krzywej blasku oraz radarowych odkryto naturalnego satelitę tej planetoidy, mniejszą planetoidę o średnicy szacowanej na ok. 160 m	passage
+458	UNKNOWN
+459	Ojciec Any był siatkarzem. Ana chciała iść w jego ślady. W jej rodzinnym mieście nie było klubu siatkarskiego dla kobiet, więc zapisała się do klubu piłki ręcznej (ŽRK Velenje)	passage
+460	Alpine A610 - tył Wprowadzony na rynek w 1991 roku model A610 zewnętrznie bardzo przypominał poprzednika, różniąc się od niego głównie chowanymi przednimi reflektorami. Choć zachowano firmową koncepcję konstrukcyjną, wprowadzono do niej liczne zmiany. Powiększony do 3 l silnik V6 rozwijał moc 250 KM. Samochód osiągał prędkość maksymalną 265 km/h i rozpędzał się do "setki" w około 6 s. Mimo korzystnej ceny, sprzedaż auta nie uzyskała zadowalających rezultatów i jego produkcję zakończono w 1995 roku, a firma Alpine zajęła się wytwarzaniem poszycia nadwozia dla niektórych modeli Renault.	passage
+461	UNKNOWN
+462	UNKNOWN
+463	Wraz z artystą plastykiem Januszem Nowierskim zaprojektował kilka współcześnie użytkowanych herbów jednostek samorządowych, m.in.: herb gminy Pniewy, herb gminy Przechlewo, herb gminy Kąkolewnica, herb gminy Zakrzew, herb miasta i gminy Działoszyn, herb gminy Somianka	passage
+464	UNKNOWN
+465	UNKNOWN
+466	UNKNOWN
+467	UNKNOWN
+468	UNKNOWN
+469	UNKNOWN
+470	UNKNOWN
+471	UNKNOWN
+472	Jaskinię odkrył Mariusz Zaruski w 1912 roku podczas jednej z akcji ratowniczych TOPR w ścianie Wielkiej Turni. Jej opis i plan sporządziła w 1981 roku I. Luty przy pomocy A. Skarżyńskiego	passage
+473	Cape Race Cape Race Mapa Nowej Fundlandii Widok na latarnię morską Cape Race – przylądek w północno-wschodniej Kanadzie, na południowym krańcu półwyspu Avalon, należącego do Nowej Fundlandii. Znaczek pocztowy z widokiem latarni Obecna nazwa pochodzi od wcześniejszej, portugalskiej nazwy Cabo Raso. Wybrzeże Cape Race jest klifowe, jego wysokość wynosi do 30 metrów ponad wodę. Średnio przez 158 dni w roku jest pokryty mgłą. W 1856 zbudowano na nim pierwszą, żeliwną latarnię morską z lampą naftową, zaś w 1907 roku wybudowano nową, betonową latarnię, z lampą wyposażoną w soczewkę Fresnela. Starą latarnię przeniesiono na Cape North, a obecnie stoi ona przed ottawskim muzeum techniki.	passage
+474	UNKNOWN
+475	UNKNOWN
+476	UNKNOWN
+477	Bedil Abdur Ghadir Bedil Abdur Ghadir Bedil Abdur Ghadir (1642-1720) – poeta-filozof, mistyk; tworzył w języku dari; jego poetyckie dzieło Kollijat składa się z 16 ksiąg (prawie 147 000 wierszy). Głównym jego dziełem jest masnawi zatytułowane Erfran (Mistyczne poznanie). Pisał także poezję. Uznawany za jednego z najwybitniejszych twórców stylu poetyckiego zwanego indyjskim, charakteryzującego się skomplikowanymi metaforami, zawiłą konstrukcją zdań.	passage
+478	UNKNOWN
+479	UNKNOWN
+480	UNKNOWN
+481	UNKNOWN
+482	UNKNOWN
+483	Anupama Chopra Anupama Chopra Anupama Chopra (ur. 31 października 1962) – autorka książek, dziennikarka i krytyk filmowy. Napisała kilka książek o kinie indyjskim i jest recenzentem filmów w NDTV i India Today. Dziennikarka filmowa (New York Times, Los Angeles Times, Variety).	passage
+484	Zjazd założycielski odbył się 17 kwietnia 1994 roku. Partia została zarejestrowana przez władze 3 czerwca 1994 roku i przeszła pomyślnie obowiązkowy proces ponownej rejestracji 13 września 1999 roku	passage
+485	UNKNOWN
+486	UNKNOWN
+487	UNKNOWN
+488	UNKNOWN
+489	UNKNOWN
+490	UNKNOWN
+491	UNKNOWN
+492	Zamieszkuje w strefie tropikalnej, w słonej wodzie, najczęściej jednak lubi przebywać w wodach słonawych z domieszką wód słodkich	passage
+493	UNKNOWN
+494	UNKNOWN
+495	UNKNOWN
+496	Pierwsza edycja mistrzostw Grecji odbyła się w 1951 roku (wygrana przez Filoskakikos EA), jednak później nie organizowano rozgrywek o randze mistrzowskiej aż do roku 1970. Wówczas powstała Alpha Ethniki; pierwszą edycję wygrał Panathinaikos AO	passage
+497	UNKNOWN
+498	UNKNOWN
+499	UNKNOWN
+500	UNKNOWN
+501	UNKNOWN
+502	UNKNOWN
+503	One new club joined the league, although the number of clubs remained at 12 after Barry District left to join the Southern League. Trowbridge Town, rejoining the league after leaving in 1907.	passage
+504	UNKNOWN
+505	1,4-butanesultone is a viscous, clear, colorless and odorless liquid which reacts in boiling water (to 4-hydroxybutanesulfonic acid) and alcohols (to 4-alkoxybutanesulfonic acid) and dissolves in many organic solvents. At temperatures below the melting point, the compound crystallizes giving "large, magnificent plates".	passage
+506	UNKNOWN
+507	UNKNOWN
+508	UNKNOWN
+509	UNKNOWN
+510	UNKNOWN
+511	UNKNOWN
+512	UNKNOWN
+513	UNKNOWN
+514	UNKNOWN
+515	UNKNOWN
+516	Palmer Cooper-Bristol Mk II / Bristol 1971cc 6cyl Did not qualify DNQ Lionel Bulcraig Northland Special / Mercury 4005cc V8 Did not qualify DNA Tom Clark Ferrari Super Squalo 555 / Ferrari 3431cc 4cyl Did Not Attend DNA Tom Clark Lotus Eleven / Climax 1098cc 4cyl Did Not Attend DNA Jack Malcolm Cooper-Bristol Mk II / Bristol 1971cc 6cyl Did Not Attend DNA Johnny Buza HWM / Alta 1960cc 4cyl s/c Did Not Attend Source:	passage
+517	UNKNOWN
+518	UNKNOWN
+519	UNKNOWN
+520	UNKNOWN
+521	UNKNOWN
+522	UNKNOWN
+523	The Olympic regatta Main article: Sailing at the 1900 Summer Olympics The 1900 sailing regatta differs from every other Olympic regatta in a number of ways. In most classes, there were two distinct "finals", boats were assigned time handicaps according to their weight within each class and cash prizes were handed out to the winner of each race. The IOC initially recognized the winner of the first race in each class as Olympic champion except in the case of the 10-20 ton class, which was decided on aggregate time over three races. However currently the participants of both first and second races in 3 classes (0-0.5t, 1-2t and 2-3t) are present in the	passage
+524	UNKNOWN
+525	UNKNOWN
+526	UNKNOWN
+527	UNKNOWN
+528	UNKNOWN
+529	UNKNOWN
+530	UNKNOWN
+531	UNKNOWN
+532	UNKNOWN
+533	UNKNOWN
+534	UNKNOWN
+535	UNKNOWN
+536	UNKNOWN
+537	This minor planet was named after the flowering plant Salvia (sage), a genus of herbs or shrubs that belong to the mint family. The official naming citation was mentioned in The Names of the Minor Planets by Paul Herget in 1955 (H 102).	passage
+538	The team was coached by Les Amos and managed by Bill Swift and Colin Siddle. Travers Hardwick was captain in all three Test Matches and in each of the eight other tour matches in which he appeared. Tommy Baxter captained the side against Newcastle. The Rugby League News published a Team Photo, Player Details (Occupation, Age, Height and Weight) and pen portraits of the tourists: Backs and Forwards which listed their club and provincial team. Player	passage
+539	UNKNOWN
+540	UNKNOWN
+541	UNKNOWN
+542	UNKNOWN
+543	UNKNOWN
+544	DMI has excellent solvating ability for both inorganic and organic compounds. In many applications, DMI (as well as DMPU) can be used as a substitute or replacement for the carcinogenic solvent HMPA.	passage
+545	UNKNOWN
+546	UNKNOWN
+547	UNKNOWN
+548	UNKNOWN
+549	UNKNOWN
+550	UNKNOWN
+551	UNKNOWN
+552	UNKNOWN
+553	UNKNOWN
+554	UNKNOWN
+555	UNKNOWN
+556	UNKNOWN
+557	UNKNOWN
+558	UNKNOWN
+559	UNKNOWN
+560	UNKNOWN
+561	UNKNOWN
+562	UNKNOWN
+563	UNKNOWN
+564	UNKNOWN
+565	UNKNOWN
+566	UNKNOWN
+567	UNKNOWN
+568	UNKNOWN
+569	UNKNOWN
+570	Due to health concerns, Churchill did not go to Sweden for the award ceremony. Instead, Lady Clementine Churchill, his wife, accompanied by their daughter Mary Soames, travelled to Stockholm to receive the Prize on his behalf in December of the same year.	passage
+571	UNKNOWN
+572	UNKNOWN
+573	UNKNOWN
+574	Mohamad et al. (2005) found that the curcuminoids 1,7-bis(4-hydroxyphenyl)-1,4,6-heptatrien-3-one, demethoxycurcumin, and 16-hydroxylabda-8(17),11,13-trien-15,16-olide inhibit lipid peroxidation more potently than does alpha-tocopherol.	passage
+575	UNKNOWN
+576	UNKNOWN
+577	UNKNOWN
+578	UNKNOWN
+579	UNKNOWN
+580	A 1641 portrait of Erik Iversen Nordal, painted by Elias Fiigenschoug Elias Fiigenschoug's portrait of Erik Iversen Nordal, is painted. (It is located in Leikanger Church, where Nordal served as priest from 1618 to 1658). The construction of a new Town Hall of Christiania was finished (the building is now called the "Old Town Hall") .	passage
+581	UNKNOWN
+582	UNKNOWN
+583	UNKNOWN
+584	UNKNOWN
+585	UNKNOWN
+586	UNKNOWN
+587	UNKNOWN
+588	UNKNOWN
+589	UNKNOWN
+590	UNKNOWN
+591	UNKNOWN
+592	UNKNOWN
+593	UNKNOWN
+594	UNKNOWN
+595	UNKNOWN
+596	UNKNOWN
+597	UNKNOWN
+598	UNKNOWN
+599	UNKNOWN

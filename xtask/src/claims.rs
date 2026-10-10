@@ -33,7 +33,7 @@ const CLAIMS: &[Claim] = &[
         input: "author-retained addressed read timing series after RAM load",
         expected: "p50 53.872 us, p95 79.640 us; no global search or semantic decision claim",
         counterexample: "addressed lookup latency presented as full Ocean search latency",
-        source: "README.md",
+        source: "docs/MEASURED-PROGRESS.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -43,7 +43,7 @@ const CLAIMS: &[Claim] = &[
         input: "valid, corrupt, missing, wrong-source and stale-generation cases",
         expected: "1000 valid admitted and 4000 invalid rejected; no semantic correctness inferred",
         counterexample: "matching source bytes treated as proof of a claim or general understanding",
-        source: "README.md",
+        source: "docs/MEASURED-PROGRESS.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -53,17 +53,7 @@ const CLAIMS: &[Claim] = &[
         input: "same probes for Single and Quad, including one empty probe in quality denominator",
         expected: "Single top1 368/400 and top10 393/400; Quad 310/400 and 361/400",
         counterexample: "slot ranking described as global million-record semantic recall or Quad superiority",
-        source: "README.md",
-        evidence: Evidence::Deferred("MEASURED_LOCAL"),
-    },
-    Claim {
-        id: "gel-groq-supplied-source-diagnostic",
-        dimension: "comparison",
-        scope: "12 development claims, six per language, one timed batch per profile/language",
-        input: "private GEL adapter and Groq Qwen/GPT-OSS responses; incomplete attempts retained",
-        expected: "GEL all UNKNOWN; HTTP and adapter times separate; label and structure scores separate",
-        counterexample: "microsecond grammar refusal claimed faster successful reasoning or N=1 used for percentiles",
-        source: "docs/GEL-GROQ-DIAGNOSTIC.md",
+        source: "docs/MEASURED-PROGRESS.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -100,7 +90,7 @@ const CLAIMS: &[Claim] = &[
         id: "gel-answer-verdict-self-read",
         dimension: "retrieval",
         scope: "separate private implementation after three measured changes; answer bank of 671,416 passages (167,854 per slot); 50,000 stored-passage probes ranked within their slot",
-        input: "verdict lead threshold fixed in advance from another corpus; encoder variant chosen on a separate sample",
+        input: "verdict lead threshold fixed in advance from another corpus; a variant of the private build chosen on a separate sample",
         expected: "46,376 of 50,000 answered (92.8%): 46,353 correct (99.95% of answers) and 23 wrong (0.046% of probes)",
         counterexample: "self-read precision presented as natural-question accuracy, global 1M search or an unchanged bank",
         source: "docs/MEASURED-PROGRESS.md",
@@ -117,23 +107,13 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
-        id: "gel-beside-groq-closed-book",
-        dimension: "comparison",
-        scope: "the same 80 frozen PL/EN questions, one run: GEL from its bank, three Groq models closed book",
-        input: "one scoring rule for all (expected fact from the source passage); UNKNOWN counted separately",
-        expected: "GEL 11 correct, 0 wrong, 69 UNKNOWN; models 6-10 correct and 11-28 wrong answers each",
-        counterexample: "read as a speed comparison, an engine ranking or superiority over language models",
-        source: "docs/GEL-BESIDE-GROQ.md",
-        evidence: Evidence::Deferred("MEASURED_LOCAL"),
-    },
-    Claim {
-        id: "gel-beside-groq-no-answer",
-        dimension: "comparison",
-        scope: "80 frozen PL/EN questions with no correct answer: 40 invented subjects, 40 false premises about bank entries",
-        input: "right reply is UNKNOWN or rejecting the premise; answering anyway is wrong, including a GEL passage",
-        expected: "GEL answered 0 of 40 invented and 6 of 40 false premises; models 3-22 and 2-16",
-        counterexample: "read as GEL never answering a question without an answer, or as better than every model",
-        source: "docs/GEL-BESIDE-GROQ-NO-ANSWER.md",
+        id: "gel-answer-set-v2",
+        dimension: "retrieval",
+        scope: "394 frozen PL/EN questions drawn at random (answer_or_abstain_v2), one run of the private build from its bank",
+        input: "questions and accepted spellings fixed by SHA-256 before the run; one scoring rule; the manual review listed",
+        expected: "GEL 63 answers, 59 correct, 4 wrong, 331 UNKNOWN",
+        counterexample: "read as GEL never answering wrongly, or as independent of the question writer",
+        source: "docs/answer-or-abstain-v2/README.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -144,16 +124,6 @@ const CLAIMS: &[Claim] = &[
         expected: "0 of 235,712 confirmed records lost; every reopen check passed; every resume equal to the run without a kill",
         counterexample: "read as power-loss durability, as a large-store result, or as reproducible from this checkout",
         source: "docs/MEASURED-PROGRESS.md",
-        evidence: Evidence::Deferred("MEASURED_LOCAL"),
-    },
-    Claim {
-        id: "gel-beside-groq-v2",
-        dimension: "comparison",
-        scope: "394 frozen PL/EN questions drawn at random (answer_or_abstain_v2), one run: GEL from its bank, three Groq models closed book",
-        input: "questions, accepted spellings, prompts and protocol fixed by SHA-256 before any system ran; one rule for all; the manual review listed",
-        expected: "GEL 63 answers, 59 correct, 4 wrong, 331 UNKNOWN; models 80-233 wrong answers each",
-        counterexample: "read as GEL never answering wrongly, as a speed comparison, or as independent of the question writer",
-        source: "docs/answer-or-abstain-v2/README.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -194,6 +164,16 @@ const CLAIMS: &[Claim] = &[
         expected: "GEL 465 answers, 447 correct, 18 wrong (96.1%); precise setting 313 correct, 2 wrong; engines at the same rule 588-616 correct, 33-36 wrong",
         counterexample: "read as GEL finding more answers than BM25, as 99% precision across sets, as a released build, or as a tuned BM25 baseline",
         source: "docs/answer-or-abstain-v6/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "gel-beside-bm25-v7",
+        dimension: "comparison",
+        scope: "982 new PL/EN questions with an answer and 599 without one in the bank (399 about real topics outside it, 200 about invented subjects) (answer_or_abstain_v7), frozen before any run and not used before; the v4 build unchanged, fixed on v1 + v2, and one candidate change fixed before the draw; GEL beside Tantivy BM25 and SQLite FTS5 on the same bank",
+        input: "one run per system; settings of the build and the engines chosen on v1 + v2 by one rule (precision >= 0.95 or >= 0.99), the candidate's two settings fixed before the draw; one scoring rule for all; the blind manual review listed",
+        expected: "GEL 425 answers, 413 correct, 12 wrong (97.2%) and 26 answers to the 599 questions without one; precise setting 291 correct, 3 wrong, 3 answers without one; engines at the strict threshold 380-384 correct with 34-38 wrong in all; the candidate change 245 correct, 11 wrong in all, rolled back",
+        counterexample: "read as GEL finding more answers than BM25 at the same rule, as 99% precision across sets, as proof that a topic is absent from the bank, as a released build, or as a tuned BM25 baseline",
+        source: "docs/answer-or-abstain-v7/README.md",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -267,6 +247,36 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "q8-one-record-four-views",
+        dimension: "bytes",
+        scope: "public gel-phase-quad Record and Reader on synthetic records",
+        input: "quad_compare scores every record through four materialized reference views per query; xtask verify runs it",
+        expected: "a 1152-byte record; each view's score bit-identical to the shared read on the same build and platform; Q8_QUAD_EXACT=PASS",
+        counterexample: "read as four independent memories, four votes, a 4x speedup, process RAM or semantic accuracy",
+        source: "docs/Q8-QUAD.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "q8-literal-record",
+        dimension: "bytes",
+        scope: "the first 1024 bytes of one caller-owned file placed byte for byte into one public Q8 record (gel-live-lab --literal); literal bytes, not GEL knowledge printing",
+        input: "Polish text with combining marks and emoji, one longer and one shorter than a record; the four public views and one Q8DEMO01 file with a retained pin",
+        expected: "the gel-live-lab module agrees with an expectation built from the public gel-phase-quad API alone: view 0 holds the bytes, view 2 holds them reversed at the end, views 1 and 3 add one offset; active only where a byte was placed; every view is restored with 0 different bits; a 1164-byte file; a 1-byte body change is rejected under the pin although the format still decodes",
+        counterexample: "read as GEL printing knowledge, as compression, as four copies of the file, or as a search over its text",
+        source: "crates/gel-live-lab/src/literal.rs",
+        evidence: Evidence::Probe(literal_record),
+    },
+    Claim {
+        id: "record-history-exact",
+        dimension: "bytes",
+        scope: "public gel-history on synthetic ORB128 states; the history of one record",
+        input: "a walk of 11 synthetic states changing 0 to 120 bits per step, its GELHIS01 bytes, the bytes with one bit changed, a file whose depth byte does not continue its chain and a file holding a dense residual",
+        expected: "every entry equals an expectation built from the public gel-structural residual alone: a residual entry is its serialized length plus 10 bytes, kept only when smaller than the 129-byte literal and at most two residuals from a literal; the file length is the 48-byte header plus those entries; every state rebuilt bit for bit after reopening; the changed, chain-breaking and dense files refused",
+        counterexample: "read as a compression ratio for real data, as tamper-proof storage (CRC64 is not a pin), as power-loss durability, or as storage that does not grow with every state",
+        source: "crates/gel-history/src/lib.rs",
+        evidence: Evidence::Probe(record_history),
+    },
+    Claim {
         id: "mutation-memory",
         dimension: "memory",
         scope: "streamed versus historical mutation",
@@ -329,9 +339,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "answer-bench-rescoring",
         dimension: "scoring",
-        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979, v4 with 985, v5 with 987 and v6 with 990 with an answer; recorded answers of four systems (v1, v2), eight (v3, v6), eleven (v4) and ten (v5)",
+        scope: "answer-or-abstain sets: v1 with 80 questions with an answer and 80 without, v2 with 394 with an answer, v3 with 979, v4 with 985, v5 with 987, v6 with 990 with an answer, and v7 with 982 with an answer and 599 without; recorded answers of four systems (v1, v2), eight (v3, v6), eleven (v4) and ten (v5, v7)",
         input: "xtask answer-bench check re-scores every recorded answer with the published and strict rules",
-        expected: "each set README, including the v3 and v4 precision and paired tables, and the v1 side-by-side table equal the re-scored results; passage hashes and set identities match",
+        expected: "each set README, including the v3 and v4 precision and paired tables, equal the re-scored results; passage hashes and set identities match",
         counterexample: "re-scoring read as re-running GEL or the models",
         source: "docs/answer-or-abstain/README.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
@@ -437,6 +447,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("NOT_VERIFIED"),
     },
     Claim {
+        id: "record-history-durability",
+        dimension: "persistence",
+        scope: "write_atomic of a history file under process kill and power cut",
+        input: "a kill series or a power-cut test of gel-history saving; none has been run",
+        expected: "not established: the history file format is outside the crash series",
+        counterexample: "an atomic rename in the code read as a measured survival of a process kill or a power cut",
+        source: "docs/RECORD-HISTORY.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
         id: "hardware-memory-compute",
         dimension: "mechanism",
         scope: "hardware-level memory computation",
@@ -468,6 +488,149 @@ fn roundtrip() -> Result<bool, String> {
     Ok(loaded.to_bytes() == bytes
         && loaded.root() == c.root()
         && Collection::from_bytes(&changed, c.root()).is_err())
+}
+/// An expectation built from the public gel-phase-quad API alone must equal the
+/// gel-live-lab module the row names, value for value.
+fn literal_record() -> Result<bool, String> {
+    use gel_live_lab::literal;
+    use gel_phase_quad::{fixture, grid::DIM, Reader, Record};
+    let long = "Zażo\u{301}łć gęślą jaźń 🦀\n".repeat(60).into_bytes();
+    let short = "Zażółć 🦀".as_bytes().to_vec();
+    let mut ok = literal::SEED == 510051 && long.len() > DIM && short.len() < DIM;
+    for bytes in [long, short] {
+        let n = bytes.len().min(DIM);
+        let record = Record::new(
+            std::array::from_fn(|j| if j < n { bytes[j] } else { 0 }),
+            &std::array::from_fn(|j| j < n),
+        );
+        let reader = Reader::new(510051);
+        let mut want = [[0u8; DIM]; 4];
+        for pole in 0..4u8 {
+            want[usize::from(pole)] = reader.bound_view(&record, pole)?.parts().1.phase;
+        }
+        // P1 adds an offset to P0, P2 mirrors P0, P3 adds the same offset to P2.
+        // For seed 510051 the first offset is 168 and 4 of 1024 offsets are 0,
+        // computed outside Rust from the published seed expansion.
+        ok &= want[1][0].wrapping_sub(want[0][0]) == 168
+            && (0..DIM).filter(|&j| want[1][j] == want[0][j]).count() == 4;
+        ok &= (0..DIM).all(|j| {
+            let offset = want[1][j].wrapping_sub(want[0][j]);
+            want[0][j] == record.phase()[j]
+                && want[2][DIM - 1 - j] == record.phase()[j]
+                && want[3][j] == want[2][j].wrapping_add(offset)
+        });
+        let lit = literal::from_bytes(&bytes)?;
+        let views = literal::views(lit.record())?;
+        ok &= lit.placed() == n
+            && lit.record().active_mask() == record.active_mask()
+            && views.values == want
+            && views.restored == [true; 4]
+            && views.different_bits == 0;
+        let raw = literal::encode(lit.record())?;
+        let pin = digest(&raw);
+        let mut changed = raw.clone();
+        changed[12 + n / 2] ^= 1;
+        ok &= raw == fixture::encode(std::slice::from_ref(&record))?
+            && raw.len() == 1164
+            && literal::check(&raw, &pin).is_ok()
+            && literal::check(&changed, &pin).is_err()
+            && fixture::decode(&changed).is_ok();
+    }
+    Ok(ok)
+}
+/// An expectation built from the public gel-structural residual alone must
+/// equal what gel-history stores, entry for entry and byte for byte.
+fn record_history() -> Result<bool, String> {
+    use gel_core::{crc64_ecma, splitmix64, GelError, ORB_WORDS};
+    use gel_history::{HistoryEntry, RecordHistory};
+    use gel_orb::Orb1024;
+    use gel_structural::Residual;
+    let text = |e: GelError| e.to_string();
+    let mut words = [0u64; ORB_WORDS];
+    for (i, word) in words.iter_mut().enumerate() {
+        *word = splitmix64(2026 + i as u64);
+    }
+    let mut states = vec![Orb1024::from_words(words)];
+    for (step, k) in [0usize, 3, 92, 93, 1, 64, 120, 7, 7, 7]
+        .into_iter()
+        .enumerate()
+    {
+        let mut next = states[step];
+        for j in 0..k {
+            let bit = (step * 101 + 37 * j) % 1024;
+            next.words_mut()[bit / 64] ^= 1u64 << (bit % 64);
+        }
+        states.push(next);
+    }
+    let mut history = RecordHistory::new();
+    let (mut ok, mut depth, mut want_len, mut literals) = (true, 0u8, 48usize, 0);
+    let mut offsets = Vec::new();
+    for (i, state) in states.iter().enumerate() {
+        ok &= history.append(*state).map_err(text)? == i;
+        let kept = i
+            .checked_sub(1)
+            .map(|p| (p, Residual::from_exact_xor(state, &states[p])))
+            .filter(|(_, r)| depth < 2 && r.serialized_len() + 10 < 129);
+        offsets.push(want_len);
+        ok &= match (&history.entries()[i], kept) {
+            (HistoryEntry::Literal(stored), None) => {
+                (depth, literals) = (0, literals + 1);
+                want_len += 129;
+                stored == state
+            }
+            (
+                HistoryEntry::Residual {
+                    parent,
+                    depth: stored_depth,
+                    residual,
+                },
+                Some((p, r)),
+            ) => {
+                depth += 1;
+                want_len += r.serialized_len() + 10;
+                *parent as usize == p && *stored_depth == depth && *residual == r
+            }
+            _ => false,
+        };
+    }
+    let bytes = history.to_bytes().map_err(text)?;
+    let reopened = RecordHistory::from_bytes(&bytes, 11, (bytes.len() - 48) as u64);
+    ok &= literals == 5
+        && bytes.len() == want_len
+        && history.encoded_len() == want_len
+        && reopened.and_then(|h| h.exact_history()).map_err(text)? == states;
+    // Header fields as the format states them, CRC64s recomputed.
+    let reseal = |mut file: Vec<u8>, count: u64| {
+        let payload_len = (file.len() - 48) as u64;
+        let payload_crc = crc64_ecma(&file[48..]);
+        file[16..24].copy_from_slice(&count.to_le_bytes());
+        file[24..32].copy_from_slice(&payload_len.to_le_bytes());
+        file[32..40].copy_from_slice(&payload_crc.to_le_bytes());
+        let header_crc = crc64_ecma(&file[..40]);
+        file[40..48].copy_from_slice(&header_crc.to_le_bytes());
+        file
+    };
+    let open = |file: &[u8]| RecordHistory::from_bytes(file, u64::MAX, u64::MAX);
+    let mut changed = bytes.clone();
+    *changed.last_mut().ok_or("empty history file")? ^= 1;
+    // Entry 2 is two residuals from its literal; its depth byte (after the tag
+    // and the 4-byte parent) now says 1.
+    let mut lying = bytes.clone();
+    lying[offsets[2] + 5] = 1;
+    let mut dense = bytes[..offsets[1]].to_vec();
+    dense.extend_from_slice(&[1, 0, 0, 0, 0, 1, 1]);
+    dense.extend_from_slice(&[0u8; 128]);
+    ok &= reseal(bytes.clone(), 11) == bytes
+        && open(&changed) == Err(GelError::CorruptStore)
+        && open(&reseal(lying, 11))
+            == Err(GelError::InvalidResidual(
+                "residual depth does not continue its parent chain",
+            ))
+        && open(&reseal(dense, 2))
+            == Err(GelError::InvalidResidual(
+                "dense residual is not written by this format",
+            ));
+    Ok(ok)
 }
 fn stale() -> Result<bool, String> {
     let mut c = Collection::new();

@@ -13,9 +13,9 @@ They neither disclose nor validate the private implementation.
 
 **English text equivalent.** One stored record has four reversible coordinate
 views P0–P3. Applying the matching transform to query and candidate preserves
-the score under the documented policy. Each view uses the whole record, not
-just its positive or negative phase components. The picture does not specify
-the actual permutation or phase-offset arrays; use the code and tests.
+the score under the documented policy. Each view uses the whole record. The
+picture does not specify the actual permutation or offset arrays; use the code
+and tests.
 
 Q8 means **256 phase levels**. The public in-memory Record holds 1024 phase
 bytes and 128 activity-mask bytes: **1152 bytes**, with additional runtime

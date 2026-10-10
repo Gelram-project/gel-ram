@@ -2,9 +2,9 @@
 //!
 //! The public tree must not carry user directory paths, network addresses,
 //! credentials, or e-mail addresses other than the published contacts. The gate
-//! holds no list of words: a list kept in a public file, even as hashes, can be
-//! recovered by guessing. Wording is reviewed before publication, outside this
-//! repository; see docs/PUBLIC-DISCLOSURE-GATE.md for what this gate does not cover.
+//! holds no list of private words. Wording is reviewed before publication,
+//! outside this repository; see docs/PUBLIC-DISCLOSURE-GATE.md for what this
+//! gate does not cover.
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -182,12 +182,7 @@ fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
 
 /// Paths whose Polish text is quoted data (questions, recorded answers, frozen records),
 /// not documentation prose.
-const POLISH_DATA_PATHS: &[&str] = &[
-    "docs/answer-or-abstain",
-    "docs/evidence-",
-    "docs/GEL-BESIDE-GROQ.md",
-    "docs/GEL-BESIDE-GROQ-NO-ANSWER.md",
-];
+const POLISH_DATA_PATHS: &[&str] = &["docs/answer-or-abstain", "docs/evidence-"];
 
 /// Documentation prose is English only. In Markdown, SVG and HTML files outside the data
 /// paths, a line with a letter used only in Polish is a finding; Markdown code blocks and

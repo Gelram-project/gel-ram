@@ -2,7 +2,7 @@
 //! No serialization or bank migration is introduced. Low-level Grid APIs remain available.
 use crate::{grid::DIM, Reader, Record, View};
 
-/// The existing public Q8 modulo-mask/mirror algorithm; not a donor phase-offset reader.
+/// The existing public Q8 modulo-mask/mirror algorithm.
 pub const Q8_MASK_MIRROR_V1: u32 = 1;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
