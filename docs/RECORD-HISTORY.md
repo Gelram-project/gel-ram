@@ -105,9 +105,10 @@ reason.
   state it holds; the smaller size holds for the file only.
 - A residual names its parent in 32 bits; an append that needs a larger parent
   index fails.
-- The format is outside the crash series and the
-  [format mutation matrix](MUTATION-MATRIX.md); a process kill or a power cut
-  during saving is not measured.
+- The format is outside the [format mutation matrix](MUTATION-MATRIX.md).
+  A process kill during saving is tested by the
+  [kill series](CRASH-SERIES.md#the-record-history-one-file-replaced-while-it-grows);
+  a power cut is not.
 - Nothing here concerns meaning, ranking or answers.
 
 ## Tests
@@ -139,5 +140,13 @@ In `crates/gel-history/src/lib.rs`:
 - `a_dense_residual_is_never_encoded`
 - `a_leftover_temporary_file_does_not_block_saving`
 
+In `xtask/src/history_crash_series.rs`, for the kill series:
+
+- `the_walk_mixes_residuals_and_literals_and_grows_every_step`
+- `a_cut_or_changed_file_is_partial_and_an_older_one_is_lost`
+- `acknowledgements_must_follow_one_by_one`
+- `the_in_place_control_writes_the_same_bytes_and_temporaries_are_counted`
+
 The [claim registry](CLAIMS.md) lists `record-history-exact` as an executable
-check and `record-history-durability` as `NOT_ESTABLISHED`.
+check, the kill series `record-history-kill-series` as `SEPARATE_GATE` and
+`record-history-durability`, now a power cut only, as `NOT_ESTABLISHED`.

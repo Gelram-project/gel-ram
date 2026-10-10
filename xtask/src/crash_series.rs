@@ -35,7 +35,7 @@ fn document(i: usize) -> (String, String) {
 }
 
 /// splitmix64, so a seed always gives the same kill schedule.
-struct Rng(u64);
+pub(crate) struct Rng(pub(crate) u64);
 impl Rng {
     fn next(&mut self) -> u64 {
         self.0 = self.0.wrapping_add(0x9e37_79b9_7f4a_7c15);
@@ -45,7 +45,7 @@ impl Rng {
         z ^ (z >> 31)
     }
     /// Uniform in 1..=max.
-    fn upto(&mut self, max: u64) -> u64 {
+    pub(crate) fn upto(&mut self, max: u64) -> u64 {
         1 + self.next() % max.max(1)
     }
 }
