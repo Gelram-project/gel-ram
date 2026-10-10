@@ -98,6 +98,28 @@ was lost, no file was partial, every trial resumed to the uninterrupted result
 and the control left a partial file. `xtask verify` runs 5 trials on Unix hosts,
 without the control.
 
+### Recorded run
+
+[history-crash-series-linux.txt](evidence-crash/history-crash-series-linux.txt)
+is one run of 200 trials and 20 control trials on the author's Linux machine
+(ext4, Rust 1.85.0, the debug build of xtask), with every trial's kill time,
+counts and the time the fresh process needed to reopen the file:
+
+| Trials | Acknowledged states | Acknowledged lost | Partial | Resumed to the uninterrupted result | Killed mid-save | Reopen before resuming, median / p95 / max |
+|---:|---:|---:|---:|---:|---:|:---|
+| 200 | 23,379 | **0** | **0** | 200 | 181 | 1.6 / 3.9 / 5.2 ms |
+
+In 98 trials a temporary file was left, and in 83 the file already held the
+next, unacknowledged history; never both. 5 kills came after the last save and
+2 before the first. In the control, 14 of 20 kills left a partial file; the
+other 6 came between two rewrites.
+
+From about trial 80 another workload ran on the machine and the writer slowed
+from about 12 to about 21 ms per state, while the kill window had been set by
+the uninterrupted run before it. Kills therefore landed earlier in the writing
+than planned, and few after the last save; what is checked after each kill is
+the same.
+
 ### What it does not show
 
 - The limits above hold here too: a process kill, not a power cut, and one file
