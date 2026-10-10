@@ -52,6 +52,23 @@ commands one per line (`&&` is not available there). The comparison step needs
 grep and sha256sum on the PATH (Git Bash provides both); without them it is
 SKIPPED with the reason, and the other steps still count.
 
+## A short witness
+
+The full run above takes a while. A shorter witness checks the three claims of
+the first screen on your own machine, the first one on a file you choose:
+
+```text
+cargo run --locked --offline --release -p gel-live-lab -- --literal YOUR_FILE
+cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
+cargo run --locked --offline -p xtask -- crash-series 20
+```
+
+Each command ends with one line to report: `GEL_LIVE_LAB_LITERAL=PASS`,
+`Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` and `CRASH_SERIES=PASS …`, or
+the line where it stopped. Add the commit (`git rev-parse HEAD`), the operating
+system and the CPU model. The pin of the literal record identifies your file, so
+you may leave it out. The crash series runs on Unix hosts only.
+
 ## Report it
 
 Open a [reproduction issue](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
