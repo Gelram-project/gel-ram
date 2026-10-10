@@ -57,7 +57,7 @@ The following capabilities are present on public `main`:
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
-| README replays: the sixth scene now records `gel-live-lab --literal` saving a record and `--reopen` checking it under the pin, instead of the answer comparison with grep; all six replays were recorded again on the author's Linux host, with card lines broken between words | this change | `tools/readme_media.rs` | [gallery](../media/gifs/README.md), [source and hashes](../media/gifs/MANIFEST.txt) | human visual acceptance of the replays; a recording on a host outside the project |
+| README replays: the sixth scene now records `gel-live-lab --literal` saving a record and `--reopen` checking it under the pin, instead of the answer comparison with grep; all six replays were recorded again on the author's Linux host, with card lines broken between words | PR #66 | `tools/readme_media.rs` | [gallery](../media/gifs/README.md), [source and hashes](../media/gifs/MANIFEST.txt) | human visual acceptance of the replays; a recording on a host outside the project |
 
 ## v0.6.0
 
