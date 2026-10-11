@@ -267,6 +267,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Probe(literal_record),
     },
     Claim {
+        id: "q8-record-save-stopped",
+        dimension: "persistence",
+        scope: "one Q8DEMO01 literal record of 1,164 bytes saved without replacing a file (gel-live-lab --save) through gel-source write_file_new_with",
+        input: "a child process ended at 23 known points of the save (after 0 to 19 pieces of 64 bytes, after the flush, after the link, after the directory flush), each confirmed by a marker; a naive writer stopped at the 21 points of the first stage as control",
+        expected: "the new path holds nothing or the whole record under its pin at all 23 points; a fresh save succeeds where it was free and is refused where the record is; the naive writer leaves part of a record at 19 points; cut files are refused and a zeroed 4 KiB block is caught by the pin only",
+        counterexample: "part of a record at the new path, a point never reached counted as passed, a control without a partial file, or the test read as power-loss durability",
+        source: "docs/PUBLICATION-FAULT-TESTS.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "q8-score-bits-across-platforms",
         dimension: "numeric",
         scope: "public Z256 Q8 scores: the 256 cosine values of the public Reader and 1,048,576 scores of a synthetic bank",

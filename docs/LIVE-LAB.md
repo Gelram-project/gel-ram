@@ -128,8 +128,10 @@ then writes the file without replacing an existing path and prints the pin;
 `--reopen PIN PATH` accepts the file only if it matches the pin and holds exactly
 one record of the literal shape (active on the first positions, zero beyond), then
 shows `REOPEN=PASS`. Empty files, files over 64 MiB, directories and symbolic
-links are refused. Only `--save` writes anything. Registry row:
-`q8-literal-record` in [claims](CLAIMS.md).
+links are refused. Only `--save` writes anything. A save stopped at any of 23
+known points leaves nothing or the whole record at the new path, never part of
+it ([stopped at known points](PUBLICATION-FAULT-TESTS.md#a-q8-record-save-stopped-at-known-points)).
+Registry rows: `q8-literal-record` and `q8-record-save-stopped` in [claims](CLAIMS.md).
 
 ## Same bits on your machine
 
