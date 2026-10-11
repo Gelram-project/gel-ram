@@ -191,7 +191,7 @@ fn run(o: Options) -> Result<(), String> {
             }
         }
     }
-    let cos = std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos());
+    let cos = grid::cos256();
     let policy = if o.masked {
         Policy::BodyActivity
     } else {
@@ -339,7 +339,7 @@ mod argument_tests {
                 .collect();
             let query = &bank[0];
             let active = std::array::from_fn(|p| indices(&query[p]));
-            let cos = std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos());
+            let cos = grid::cos256();
             for masked in [false, true] {
                 let mut expected = vec![[f64::NAN; P]; bank.len()];
                 assert!(!reference_scan(

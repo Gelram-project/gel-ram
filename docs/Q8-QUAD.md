@@ -22,8 +22,15 @@ literal bytes, not the way GEL stores knowledge: the printing step is private.
 With active query indices Q, the histogram counts `(q[j] - b[j]) mod 256`.
 The result is `sum_d histogram[d] * cos(2*pi*d/256) / len(Q)`.
 Histogram reduction uses the fixed order 0..255. The same-pole transformed
-reference uses that same reduction order, allowing a bitwise comparison on
-the same build/platform; libm/cos bits across all platforms are not promised.
+reference uses that same reduction order, allowing a bitwise comparison.
+The 256 values `cos(2*pi*d/256)` are a frozen table of binary64 bits,
+`grid::COS256_BITS`: the values glibc 2.39 gives on the author's Linux host,
+not the platform's maths library. Before the table, macOS on arm64 gave a
+different last bit at 13 of the 256 levels and Windows on x86_64 at 7, so Q8
+scores were not the same bits on every platform; with it they are, on every
+platform that computes IEEE-754 binary64 sums and quotients.
+`gel-live-lab --witness` checks this on the machine it runs on
+([same bits on your machine](LIVE-LAB.md#same-bits-on-your-machine)).
 
 - `Policy::Archive` deliberately ignores body activity for historical comparison.
   Inactive body phases can contribute. Do not interpret it as a missing-data gate.

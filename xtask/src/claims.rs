@@ -267,6 +267,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Probe(literal_record),
     },
     Claim {
+        id: "q8-score-bits-across-platforms",
+        dimension: "numeric",
+        scope: "public Z256 Q8 scores: the 256 cosine values of the public Reader and 1,048,576 scores of a synthetic bank",
+        input: "gel-live-lab --witness and a test of the 256 table bits on each CI platform (Linux, macOS arm64, Windows x86_64), against SHA-256 pins recorded on the author's Linux host",
+        expected: "the same bits on every platform: the reader uses the frozen table grid::COS256_BITS, not the platform's maths library, which gave a different last bit at 13 levels on macOS and 7 on Windows before the table",
+        counterexample: "a platform whose witness reports MISMATCH, or the table read as a claim about the accuracy of any maths library",
+        source: "docs/LIVE-LAB.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "record-history-exact",
         dimension: "bytes",
         scope: "public gel-history on synthetic ORB128 states; the history of one record",

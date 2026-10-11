@@ -138,7 +138,7 @@ fn benchmark(bank: &[Record], rounds: usize, masked: bool) -> Result<(), String>
         .iter()
         .map(|r| reference::frames(r.phase(), &r.active_mask(), &grid))
         .collect();
-    let cos = std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos());
+    let cos = grid::cos256();
     let mut one = vec![0.0; bank.len()];
     let mut four = vec![[0.0; 4]; bank.len()];
     let mut shared = Vec::with_capacity(bank.len());
@@ -373,7 +373,7 @@ mod tests {
     fn single_oracle_and_empty_masks() {
         let bank = decode(&synthetic(4).unwrap()).unwrap();
         let empty = Record::new([0; DIM], &[false; DIM]);
-        let cos = std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos());
+        let cos = grid::cos256();
         assert!(canonical(&empty, &bank[0], true, &cos).is_none());
         assert!(benchmark(&[empty], 1, true).is_err());
         benchmark(&bank, 1, true).unwrap();

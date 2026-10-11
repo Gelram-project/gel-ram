@@ -68,7 +68,7 @@ fn evaluate(c: Config) -> Option<f64> {
     let elapsed = start.elapsed().as_nanos();
     let fa = reference::frames(a.phase(), &a.active_mask(), &g);
     let fb = reference::frames(b.phase(), &b.active_mask(), &g);
-    let cos: [f64; 256] = std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.).cos());
+    let cos: [f64; 256] = grid::cos256();
     println!(
         "phase={} mask_stride={} noise_dimensions={} policy=BodyActivity",
         c.phase, c.mask, c.noise

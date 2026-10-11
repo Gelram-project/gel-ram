@@ -45,9 +45,7 @@ pub fn mean4(x: [f64; 4]) -> f64 {
 mod tests {
     use super::*;
     fn table() -> Vec<f64> {
-        (0..256)
-            .map(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos())
-            .collect()
+        crate::grid::cos256().to_vec()
     }
     #[test]
     fn zero_phase_is_not_silence() {

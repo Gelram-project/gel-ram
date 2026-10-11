@@ -104,7 +104,7 @@ impl Reader {
     pub fn new(seed: u64) -> Self {
         Self {
             grid: Grid::new(256, seed).expect("fixed valid grid"),
-            cos: std::array::from_fn(|j| (std::f64::consts::TAU * j as f64 / 256.0).cos()),
+            cos: grid::cos256(),
         }
     }
     pub fn prepare(&self, record: Record) -> Query {
