@@ -131,6 +131,40 @@ shows `REOPEN=PASS`. Empty files, files over 64 MiB, directories and symbolic
 links are refused. Only `--save` writes anything. Registry row:
 `q8-literal-record` in [claims](CLAIMS.md).
 
+## Same bits on your machine
+
+```sh
+cargo run --locked --offline --release -p gel-live-lab -- --witness
+```
+
+A public Q8 score is a sum of 256 cosine values weighted by a histogram
+([Q8-QUAD](Q8-QUAD.md)), and the cosines come from your platform's maths
+library when the reader starts. `--witness` checks whether your machine gives
+the same bits as the author's:
+
+- it reads each of the 256 values through the public `Reader`, with one active
+  position whose symbol difference is that level, so each score is exactly one
+  cosine;
+- it reads 1,048,576 scores of a synthetic bank, 1,024 queries against 1,024
+  records;
+- it compares both with bits frozen in
+  [witness.rs](../crates/gel-live-lab/src/witness.rs), recorded on the
+  author's Linux host (x86_64, glibc 2.39, Rust 1.85.0; debug and release builds
+  gave the same bits) before any other run.
+
+```text
+WITNESS_TABLE=MATCH levels=256 differing=0 sha256=738d15af93756c68a256af78e4d5fe8bed9628c3b1e5c25038c0c64f6b36ad97
+WITNESS_SCORES=MATCH scores=1048576 sha256=3c09bb543d6e55eccd18a59b1c5e0c453d62c430ede8f7fee29cf300a2670cf0
+WITNESS=MATCH platform=linux-x86_64 | bits frozen on the author's Linux host before any other run
+```
+
+On a different machine a `MISMATCH` names the first differing level with both
+bit patterns, and the command exits 1. That is a result, not a fault of the
+witness: public Q8 scores on that machine differ in their last bits. Please
+report all three lines with the commit, the operating system and the CPU. The
+same 256 bits are checked by a test on every CI platform. Nothing is written
+and no time is measured.
+
 ## What the times mean
 
 - Source time covers quote retrieval and validation, not disk import or drawing.

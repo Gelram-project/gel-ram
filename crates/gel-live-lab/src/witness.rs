@@ -1,8 +1,8 @@
 //! Silicon witness: does this machine compute the same bits?
 //!
 //! Every public Q8 score is a sum of 256 cosine values weighted by a histogram
-//! of phase differences. The cosines come from the platform's maths library at
-//! run time. The witness reads all 256 of them through the public `Reader`, one
+//! of Q8 symbol differences (docs/Q8-QUAD.md). The cosines come from the
+//! platform's maths library at run time. The witness reads all 256 of them through the public `Reader`, one
 //! active position per level, so each score is exactly one cosine, and then
 //! reads 1,048,576 scores of a synthetic bank. Both are compared with bits
 //! frozen in this file, recorded on the author's Linux host before any other run.
@@ -87,7 +87,7 @@ const TABLE: [u64; 256] = [
 /// SHA-256 of the 1,048,576 score bits, little-endian, query by query.
 const SCORES_SHA256: &str = "3c09bb543d6e55eccd18a59b1c5e0c453d62c430ede8f7fee29cf300a2670cf0";
 
-/// The score the public reader gives for a phase difference of `level` at one
+/// The score the public reader gives for a symbol difference of `level` at one
 /// active position: that level's cosine, bit for bit.
 pub fn table(reader: &Reader) -> [u64; 256] {
     let mut active = [false; DIM];
@@ -103,7 +103,7 @@ pub fn table(reader: &Reader) -> [u64; 256] {
     })
 }
 
-/// A synthetic record: splitmix64 phases, about two thirds of positions active.
+/// A synthetic record: splitmix64 symbols, about two thirds of positions active.
 fn record(seed: u64) -> Record {
     let mut state = seed;
     let mut next = move || {
@@ -140,6 +140,16 @@ pub fn compare(observed: &[u64; 256], expected: &[u64; 256]) -> (usize, Option<u
     (differing.len(), differing.first().copied())
 }
 
+/// Every differing level as `level:ulps`, the signed distance in units in the
+/// last place (both values have the same sign at every level).
+pub fn differences(observed: &[u64; 256], expected: &[u64; 256]) -> String {
+    (0..256)
+        .filter(|&i| observed[i] != expected[i])
+        .map(|i| format!("{i}:{:+}", observed[i] as i64 - expected[i] as i64))
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
 /// The witness report and whether this machine matched the frozen bits.
 pub fn run() -> (String, bool) {
     let reader = Reader::new(SEED);
@@ -157,8 +167,10 @@ pub fn run() -> (String, bool) {
     );
     if let Some(level) = first {
         report.push_str(&format!(
-            " first_level={level} expected=0x{:016x} observed=0x{:016x}",
-            TABLE[level], observed[level]
+            " first_level={level} expected=0x{:016x} observed=0x{:016x} levels_ulps={}",
+            TABLE[level],
+            observed[level],
+            differences(&observed, &TABLE)
         ));
     }
     report.push_str(&format!(
@@ -186,6 +198,10 @@ mod tests {
         changed[201] ^= 1;
         assert_eq!(compare(&TABLE, &TABLE), (0, None));
         assert_eq!(compare(&changed, &TABLE), (2, Some(200)));
+        changed[200] = TABLE[200] + 1;
+        changed[201] = TABLE[201] - 2;
+        assert_eq!(differences(&changed, &TABLE), "200:+1,201:-2");
+        assert_eq!(differences(&TABLE, &TABLE), "");
     }
 
     #[test]
@@ -206,9 +222,10 @@ mod tests {
         assert_eq!(
             differing,
             0,
-            "{}-{}: first differing level {first:?}",
+            "{}-{}: first differing level {first:?}; level:ulps {}",
             std::env::consts::OS,
-            std::env::consts::ARCH
+            std::env::consts::ARCH,
+            differences(&observed, &TABLE)
         );
     }
 }
