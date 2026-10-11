@@ -15,7 +15,7 @@ This project publishes evidence, so a report is not only about code execution.
 
 ## Fix policy
 
-Fixes, when made, land only on current public `main` (version line 0.6.0) and reach users through a later release. Tagged releases are not moved or patched in place. No fix, response time or support is promised.
+Fixes, when made, land only on current public `main` (version line 0.6.1) and reach users through a later release. Tagged releases are not moved or patched in place. No fix, response time or support is promised.
 
 ## Supported versions
 
