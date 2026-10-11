@@ -55,16 +55,19 @@ SKIPPED with the reason, and the other steps still count.
 ## A short witness
 
 The full run above takes a while. A shorter witness checks the three claims of
-the first screen on your own machine, the first one on a file you choose:
+the first screen on your own machine, the first one on a file you choose, and
+then whether your machine computes the same score bits as the author's:
 
 ```text
 cargo run --locked --offline --release -p gel-live-lab -- --literal YOUR_FILE
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
 cargo run --locked --offline -p xtask -- crash-series 20
+cargo run --locked --offline --release -p gel-live-lab -- --witness
 ```
 
 Each command ends with one line to report: `GEL_LIVE_LAB_LITERAL=PASS`,
-`Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` and `CRASH_SERIES=PASS …`, or
+`Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED`, `CRASH_SERIES=PASS …` and
+`WITNESS=MATCH …` or `WITNESS=MISMATCH …` ([same bits on your machine](LIVE-LAB.md#same-bits-on-your-machine)), or
 the line where it stopped. Add the commit (`git rev-parse HEAD`), the operating
 system and the CPU model. The pin of the literal record identifies your file, so
 you may leave it out. The crash series runs on Unix hosts only.

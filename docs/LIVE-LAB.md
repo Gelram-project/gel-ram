@@ -131,6 +131,51 @@ shows `REOPEN=PASS`. Empty files, files over 64 MiB, directories and symbolic
 links are refused. Only `--save` writes anything. Registry row:
 `q8-literal-record` in [claims](CLAIMS.md).
 
+## Same bits on your machine
+
+```sh
+cargo run --locked --offline --release -p gel-live-lab -- --witness
+```
+
+A public Q8 score is a sum of 256 cosine values weighted by a histogram
+([Q8-QUAD](Q8-QUAD.md)). `--witness` checks whether your machine computes the
+same score bits as the author's:
+
+- it reads each of the 256 values through the public `Reader`, with one active
+  position whose symbol difference is that level, so each score is exactly one
+  cosine;
+- it reads 1,048,576 scores of a synthetic bank, 1,024 queries against 1,024
+  records;
+- it compares both with SHA-256 pins in
+  [witness.rs](../crates/gel-live-lab/src/witness.rs), recorded on the
+  author's Linux host (x86_64, glibc 2.39, Rust 1.85.0; debug and release builds
+  gave the same bits) before any other run;
+- for information only, it shows where your platform's own cosine differs from
+  the table the scores use.
+
+```text
+WITNESS_TABLE=MATCH levels=256 differing=0 sha256=738d15af93756c68a256af78e4d5fe8bed9628c3b1e5c25038c0c64f6b36ad97
+WITNESS_SCORES=MATCH scores=1048576 sha256=3c09bb543d6e55eccd18a59b1c5e0c453d62c430ede8f7fee29cf300a2670cf0
+WITNESS_LIBM levels=256 differing=0 levels_ulps= | this platform's own cosine, which the scores do not use
+WITNESS=MATCH platform=linux-x86_64 | bits pinned on the author's Linux host before any other run
+```
+
+**What the first run found.** The first version of the witness took the
+cosines from each platform's maths library, as the reader did then. On the
+three CI platforms Linux matched, macOS on arm64 gave a different last bit at 13
+of the 256 levels and Windows on x86_64 at 7, each by one unit in the last
+place: the same Q8 score was not the same bits on every platform. The reader
+now uses a frozen table, `grid::COS256_BITS`, the values glibc 2.39 gives on the
+author's host, so scores no longer depend on the maths library; the
+`WITNESS_LIBM` line still shows where yours differs.
+
+A `MISMATCH` names the first differing level with both bit patterns and every
+differing level with its distance in units in the last place, and the command
+exits 1: public Q8 scores on that machine differ from the author's. Please report
+all four lines with the commit, the operating system and the CPU. The 256 table
+bits are checked by a test on every CI platform, and `xtask runtime-examples`
+runs the whole witness. Nothing is written and no time is measured.
+
 ## What the times mean
 
 - Source time covers quote retrieval and validation, not disk import or drawing.

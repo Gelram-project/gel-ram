@@ -72,8 +72,17 @@ fn run() -> Result<(), String> {
         return literal_run(&raw);
     }
     let args: Vec<&str> = raw.iter().map(|a| a.to_str().unwrap_or("\u{0}")).collect();
+    if args == ["--witness"] {
+        let (report, matched) = gel_live_lab::witness::run();
+        print!("{report}");
+        return if matched {
+            Ok(())
+        } else {
+            Err("this machine computes different bits; please report the lines above".into())
+        };
+    }
     if args == ["--help"] {
-        println!("gel-live-lab [--plain | --demo | --literal FILE [--save NEW_PATH] | --reopen SHA256 PATH]\nOffline terminal laboratory. No network or LLM. open PATH imports UTF-8.\nfind PHRASE searches source lines; match N selects a result.\nsave NEW_PATH writes plaintext. load TRUSTED_SHA256 PATH reopens it.\nText and synthetic Q8 are separate panels, not a semantic encoder.\n--literal FILE places the first 1,024 bytes of one regular file into one Q8\nrecord and shows its four views; --save keeps it without replacing a file and\n--reopen checks it under the retained pin.\nLiteral bytes, not GEL knowledge printing.\nUse only directories you control. Never paste commands as document text.");
+        println!("gel-live-lab [--plain | --demo | --witness | --literal FILE [--save NEW_PATH] | --reopen SHA256 PATH]\n--witness checks that this machine computes the frozen score bits.\nOffline terminal laboratory. No network or LLM. open PATH imports UTF-8.\nfind PHRASE searches source lines; match N selects a result.\nsave NEW_PATH writes plaintext. load TRUSTED_SHA256 PATH reopens it.\nText and synthetic Q8 are separate panels, not a semantic encoder.\n--literal FILE places the first 1,024 bytes of one regular file into one Q8\nrecord and shows its four views; --save keeps it without replacing a file and\n--reopen checks it under the retained pin.\nLiteral bytes, not GEL knowledge printing.\nUse only directories you control. Never paste commands as document text.");
         return Ok(());
     }
     if !args.is_empty() && args != ["--plain"] && args != ["--demo"] {
