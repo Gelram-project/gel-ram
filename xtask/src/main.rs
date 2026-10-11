@@ -933,6 +933,7 @@ fn runtime_examples() -> Result<(), String> {
         &["-p", "gel-source", "--example", "source_build"],
         &["-p", "gel-live-lab", "--", "--demo"],
         &["-p", "gel-live-lab", "--", "--literal", "README.md"],
+        &["-p", "gel-live-lab", "--", "--witness"],
         &[
             "-p",
             "gel-live-lab",

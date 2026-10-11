@@ -1,6 +1,7 @@
 //! Offline interactive evidence laboratory, not an answer generator or semantic encoder.
 #![forbid(unsafe_code)]
 pub mod literal;
+pub mod witness;
 use gel_phase_quad::{grid::DIM, Policy, Reader, Record};
 use gel_source::{
     digest, hex, import_text, load_bundle, read_regular, write_bundle_new, Address, Corpus,
