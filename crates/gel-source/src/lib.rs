@@ -17,7 +17,8 @@ pub mod context;
 pub mod document;
 pub use builder::{CorpusBuilder, EncodedCorpus};
 pub use bundle::{
-    import_text, load_bundle, read_regular, write_bundle_new, write_file_new, BundleError,
+    import_text, load_bundle, read_regular, write_bundle_new, write_file_new, write_file_new_with,
+    BundleError, PublicationIo,
 };
 mod parts;
 pub use parts::LeadPartsError;

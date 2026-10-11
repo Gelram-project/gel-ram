@@ -1,9 +1,11 @@
 # Snapshot publication fault matrix
 
-The public source/collection publisher now has an internal, statically dispatched
-I/O boundary for deterministic tests. Production still uses ordinary write_all,
-file sync, no-replace hard link and (on Unix) parent-directory sync. There is no
-runtime option to weaken these operations.
+The public source/collection publisher has a statically dispatched I/O boundary
+for deterministic tests, `gel_source::PublicationIo`, which
+`write_file_new_with` accepts for one caller-encoded file. Production still uses
+ordinary write_all, file sync, no-replace hard link and (on Unix)
+parent-directory sync. There is no runtime option to weaken these operations, and
+the release binaries call only the plain functions.
 
 | Injected condition | Expected API result | New destination | Previous snapshot |
 |---|---|---|---|
@@ -56,6 +58,47 @@ cargo run --locked --offline --release -p gel-source --example full_disk_publica
 
 Neither is a power-cut test. Existing separate SIGKILL tests retain their
 narrower process-crash scope.
+
+## A Q8 record save stopped at known points
+
+```sh
+cargo test --locked --offline -p gel-live-lab --test torn_write
+```
+
+The file `gel-live-lab --literal FILE --save NEW_PATH` writes, one Q8DEMO01
+record of 1,164 bytes, is published through `write_file_new_with` by a child
+process (the test binary run again) whose I/O steps write 64 bytes at a time
+and end the process at one point: nothing after that point runs, no destructor
+and no cleanup. The child prints a marker just before it stops, and the test
+requires the marker, so a point that was never reached cannot pass.
+
+| Stage | Points | New path afterwards | Temporary file left |
+|---|---|---|---|
+| Temporary file | after 0 to 19 pieces of 64 bytes, and after its flush (21) | absent | 1, holding what was written |
+| Linked | after the hard link (1) | the whole record under its pin | 1, the same bytes |
+| Directory flushed | after the parent flush, before the temporary file is removed (1) | the whole record under its pin | 1, the same bytes |
+
+At every one of the 23 points the new path holds nothing or the whole record,
+reopened as `--reopen` does; never part of it. A fresh save afterwards succeeds
+where the path was free and is refused where the record is already there, which
+it leaves unchanged.
+
+**Control.** A naive writer that creates the new path and writes the same
+pieces straight into it is stopped at the same 21 points of the first stage:
+it leaves part of a record at 19 of them (after 0 to 18 pieces) and a whole one
+at the last two. The test requires those 19, so a check that cannot see a
+partial file fails. Replacing the publisher with the naive writer in the child
+makes the first test fail.
+
+The format explains why the pin is needed: the decoder refuses a file cut
+after 0, 8 or 12 bytes, after the 1,024 values of the record or one byte short,
+and a file one byte longer, but an eight-record file whose bytes 4096 to 8191 are
+zeroed, as a file system can leave a block, still decodes, because every byte is
+a valid value or mask byte. Only the SHA-256 pin kept with the file tells it
+apart.
+
+Ending a process at a point is not a power cut. The test runs on Linux, macOS
+and Windows in CI; the directory flush exists on Unix only.
 The old measured publisher remains preserved as
 [bundle.measured.rs.txt](evidence-collection/bundle.measured.rs.txt).
 

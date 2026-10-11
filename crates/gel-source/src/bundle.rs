@@ -142,10 +142,22 @@ pub fn write_bundle_new(path: &Path, value: &EncodedCorpus) -> Result<Hash, Bund
 /// record, with the same no-replace publisher as bundles. Returns the SHA-256 pin
 /// of exactly the bytes written. The caller validates the format.
 pub fn write_file_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleError> {
+    write_file_new_with(path, bytes, &mut SystemPublication)
+}
+
+/// [`write_file_new`] with the four I/O steps of the publication taken from
+/// `io`, so a test can fail or stop the process at a known step. Every other
+/// step (the exclusive temporary file, the order of the steps and the removal of
+/// the temporary file) is the publisher's own.
+pub fn write_file_new_with(
+    path: &Path,
+    bytes: &[u8],
+    io: &mut impl PublicationIo,
+) -> Result<Hash, BundleError> {
     if bytes.len() > MAX_TEXT {
         return Err(Error::Limit.into());
     }
-    write_bytes_new(path, bytes)
+    publish_with(path, bytes, io)
 }
 
 /// Internal shared no-replace publisher. Callers enforce their format limits.
@@ -153,7 +165,12 @@ pub(crate) fn write_bytes_new(path: &Path, bytes: &[u8]) -> Result<Hash, BundleE
     publish_with(path, bytes, &mut SystemPublication)
 }
 
-trait PublicationIo {
+/// The I/O steps of a no-replace publication, in the order the publisher calls
+/// them: write the bytes to the exclusive temporary file, flush it, link it to
+/// the new path (which fails if the path exists) and flush the parent directory.
+/// The default methods do the real I/O; [`write_file_new_with`] takes an
+/// implementation that overrides some of them, for fault and crash tests.
+pub trait PublicationIo {
     fn write(&mut self, file: &mut File, bytes: &[u8]) -> std::io::Result<()> {
         file.write_all(bytes)
     }
