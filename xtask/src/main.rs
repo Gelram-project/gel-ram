@@ -6,6 +6,7 @@ mod ci_evidence;
 mod claims;
 mod crash_series;
 mod disclosure;
+mod history_crash_series;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
@@ -301,7 +302,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -1017,8 +1018,11 @@ fn verify() -> Result<(), String> {
     if cfg!(unix) {
         let report = crash_series::run(&gel_evidence_binary(workspace_root()?), 5, 20_260_929)?;
         println!("{}", report.lines().last().unwrap_or(""));
+        let report = history_crash_series::run(5, 20_261_010, 0)?;
+        println!("{}", report.lines().last().unwrap_or(""));
     } else {
         println!("CRASH_SERIES=SKIPPED not a Unix host");
+        println!("HISTORY_CRASH_SERIES=SKIPPED not a Unix host");
     }
     mutation_matrix::check(workspace_root()?)?;
     println!(
@@ -1167,6 +1171,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("claims") => claims::check(workspace_root()?),
         Some("roadmap") => roadmap::check(workspace_root()?),
         Some("crash-series") => crash_series_cmd(&args[1..]),
+        Some("history-crash-series") => history_crash_series_cmd(&args[1..]),
+        Some("history-writer") => history_crash_series::writer(&args[1..]),
         Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
@@ -1454,5 +1460,21 @@ fn crash_series_cmd(args: &[String]) -> Result<(), String> {
         "{}",
         crash_series::run(&gel_evidence_binary(workspace_root()?), trials, seed)?
     );
+    Ok(())
+}
+
+/// `history-crash-series [TRIALS] [SEED] [CONTROL_TRIALS]`: kills the
+/// `history-writer` of this binary and prints the full report.
+fn history_crash_series_cmd(args: &[String]) -> Result<(), String> {
+    let number = |i: usize, default: u64| -> Result<u64, String> {
+        args.get(i)
+            .map_or(Ok(default), |s| s.parse().map_err(|e| format!("{s}: {e}")))
+    };
+    let (trials, seed, control) = (
+        number(0, 200)? as usize,
+        number(1, 20_261_010)?,
+        number(2, 20)? as usize,
+    );
+    print!("{}", history_crash_series::run(trials, seed, control)?);
     Ok(())
 }

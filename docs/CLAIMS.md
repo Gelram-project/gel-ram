@@ -44,6 +44,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
 | crash-series-no-acknowledged-loss | persistence | SEPARATE_GATE |
+| record-history-kill-series | persistence | SEPARATE_GATE |
 | batch-contract | interface | SEPARATE_GATE |
 | answer-bench-rescoring | scoring | SEPARATE_GATE |
 | backup-restore | persistence | SEPARATE_GATE |
