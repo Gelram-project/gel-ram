@@ -7,6 +7,7 @@ mod claims;
 mod crash_series;
 mod disclosure;
 mod history_crash_series;
+mod history_mutation_matrix;
 mod isolation;
 mod license_metadata;
 mod measured_sources;
@@ -302,7 +303,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -1025,6 +1026,7 @@ fn verify() -> Result<(), String> {
         println!("HISTORY_CRASH_SERIES=SKIPPED not a Unix host");
     }
     mutation_matrix::check(workspace_root()?)?;
+    history_mutation_matrix::check(workspace_root()?)?;
     println!(
         "PROPERTY_MAP_FORMAT=PASS rows={}",
         property_map::read(workspace_root()?)?.len()
@@ -1163,6 +1165,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("reproduce") => reproduction::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
+        Some("history-mutation-matrix") => history_mutation_matrix::run(&args[1..]),
         Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
         Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),

@@ -50,6 +50,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | backup-restore | persistence | SEPARATE_GATE |
 | network-isolation | environment | SEPARATE_GATE |
 | format-mutations | structure | SEPARATE_GATE |
+| history-format-mutations | structure | SEPARATE_GATE |
 | binary-packages | distribution | SEPARATE_GATE |
 | property-map | test-scope | SEPARATE_GATE |
 | grep-comparison | comparison | MEASURED_LOCAL |

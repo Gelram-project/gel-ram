@@ -19,28 +19,28 @@ use std::{fmt::Write as _, fs, path::Path};
 const REPORT: &str = "docs/evidence-mutation/matrix-r1.txt";
 
 #[derive(Clone, Copy)]
-enum Int {
+pub(crate) enum Int {
     U32,
     U64,
 }
 
-struct Region {
-    name: String,
-    start: usize,
-    end: usize,
+pub(crate) struct Region {
+    pub(crate) name: String,
+    pub(crate) start: usize,
+    pub(crate) end: usize,
     int: Option<Int>,
 }
 
 /// Base file, its regions and the mutants derived from it.
 type Case = (Vec<u8>, Vec<Region>, Vec<Mutant>);
 
-struct Mutant {
-    region: String,
-    operator: String,
-    bytes: Vec<u8>,
+pub(crate) struct Mutant {
+    pub(crate) region: String,
+    pub(crate) operator: String,
+    pub(crate) bytes: Vec<u8>,
 }
 
-fn region(name: &str, start: usize, end: usize, int: Option<Int>) -> Region {
+pub(crate) fn region(name: &str, start: usize, end: usize, int: Option<Int>) -> Region {
     Region {
         name: name.into(),
         start,
@@ -66,7 +66,7 @@ fn write_int(bytes: &mut [u8], r: &Region, kind: Int, value: u64) {
 }
 
 /// The same finite operator set for every format; identity mutations are skipped.
-fn generic(base: &[u8], regions: &[Region]) -> Vec<Mutant> {
+pub(crate) fn generic(base: &[u8], regions: &[Region]) -> Vec<Mutant> {
     let mut out = Vec::new();
     let mut push = |region: &str, operator: &str, bytes: Vec<u8>| {
         if bytes != base {
@@ -126,12 +126,12 @@ fn generic(base: &[u8], regions: &[Region]) -> Vec<Mutant> {
 
 /// `ACCEPT` with the read content (compared, not shown) or `REJECT:CLASS`.
 #[derive(PartialEq, Eq)]
-enum Reading {
+pub(crate) enum Reading {
     Accept(String),
     Reject(String),
 }
 impl Reading {
-    fn label(&self) -> String {
+    pub(crate) fn label(&self) -> String {
         match self {
             Self::Accept(_) => "ACCEPT".into(),
             Self::Reject(class) => format!("REJECT:{class}"),
@@ -453,7 +453,7 @@ fn gelsrc_case(dir: &Path) -> Result<Case, String> {
 
 // ---------- matrix ----------
 
-fn row(out: &mut String, cells: [&str; 8]) {
+pub(crate) fn row(out: &mut String, cells: [&str; 8]) {
     out.push_str(&cells.join("\t"));
     out.push('\n');
 }

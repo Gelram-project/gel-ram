@@ -12,8 +12,54 @@ use std::{
     fs,
     hint::black_box,
     io::{Read, Write},
+    path::Path,
     time::Instant,
 };
+
+/// Publishes `data` at a path that must not exist yet: a sibling temporary file
+/// is written and flushed, then hard-linked to `path`, which never replaces an
+/// existing file. An interrupted run leaves at most the temporary file, never a
+/// partial file under `path`.
+fn write_new(path: &Path, data: &[u8]) -> Result<(), String> {
+    let parent = path
+        .parent()
+        .filter(|p| !p.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    let name = path.file_name().ok_or("NEW_PATH names no file")?;
+    let mut created = None;
+    for n in 0..32 {
+        let tmp = parent.join(format!(
+            ".{}.{}-{n}.tmp",
+            name.to_string_lossy(),
+            std::process::id()
+        ));
+        let mut options = fs::OpenOptions::new();
+        options.write(true).create_new(true);
+        #[cfg(unix)]
+        std::os::unix::fs::OpenOptionsExt::mode(&mut options, 0o600);
+        match options.open(&tmp) {
+            Ok(file) => {
+                created = Some((tmp, file));
+                break;
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+    let (tmp, mut file) = created.ok_or("no free temporary name next to NEW_PATH")?;
+    let published = file
+        .write_all(data)
+        .and_then(|()| file.sync_all())
+        .and_then(|()| fs::hard_link(&tmp, path));
+    drop(file);
+    let _ = fs::remove_file(&tmp);
+    published.map_err(|e| e.to_string())?;
+    #[cfg(unix)]
+    fs::File::open(parent)
+        .and_then(|dir| dir.sync_all())
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
 
 use gel_phase_quad::fixture::{decode, MAGIC, MAX_BYTES, MAX_RECORDS};
 
@@ -182,12 +228,7 @@ fn run(args: &[String]) -> Result<(), String> {
             .parse::<usize>()
             .map_err(|_| "invalid record count")?;
         let data = synthetic(count)?;
-        let mut file = fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&args[1])
-            .map_err(|e| e.to_string())?;
-        file.write_all(&data).map_err(|e| e.to_string())?;
+        write_new(Path::new(&args[1]), &data)?;
         println!(
             "Q8_SYNTHETIC_FIXTURE_CREATED records={count} bytes={}",
             data.len()
