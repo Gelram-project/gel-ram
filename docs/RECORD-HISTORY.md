@@ -105,7 +105,8 @@ reason.
   state it holds; the smaller size holds for the file only.
 - A residual names its parent in 32 bits; an append that needs a larger parent
   index fails.
-- The format is outside the [format mutation matrix](MUTATION-MATRIX.md).
+- The [format mutation matrix](MUTATION-MATRIX.md#gelhis01-record-history-files)
+  of GELHIS01 changes one 338-byte file of four states, not every possible file.
   A process kill during saving is tested by the
   [kill series](CRASH-SERIES.md#the-record-history-one-file-replaced-while-it-grows);
   a power cut is not.
@@ -147,6 +148,14 @@ In `xtask/src/history_crash_series.rs`, for the kill series:
 - `acknowledgements_must_follow_one_by_one`
 - `the_in_place_control_writes_the_same_bytes_and_temporaries_are_counted`
 
+In `xtask/src/history_mutation_matrix.rs`, for the format mutation matrix:
+
+- `the_reference_crc_has_the_ecma_182_check_value`
+- `the_base_file_is_338_bytes_and_the_regions_cover_it_in_order`
+- `the_reference_rebuilds_the_four_states_of_the_base_file`
+- `resealing_leaves_a_changed_crc_field_alone`
+
 The [claim registry](CLAIMS.md) lists `record-history-exact` as an executable
-check, the kill series `record-history-kill-series` as `SEPARATE_GATE` and
+check, the kill series `record-history-kill-series` and the format mutation
+matrix `history-format-mutations` as `SEPARATE_GATE`, and
 `record-history-durability`, now a power cut only, as `NOT_ESTABLISHED`.

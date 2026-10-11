@@ -387,6 +387,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "history-format-mutations",
+        dimension: "structure",
+        scope: "a GELHIS01 record-history fixture of four states, 338 bytes",
+        input: "a finite matrix of 151 mutants with their CRC64 fields recomputed, a reference reader with its own CRC-64/ECMA-182, and a reader without the canonical-form rule as control",
+        expected: "every mutant rejected under the original pin; with a recomputed pin the library and the reference agree on every row and the 14 accepted changes rebuild the same states; report equal to the recorded matrix",
+        counterexample: "a row where the library and the reference disagree, or a reader without the canonical-form rule passing the control",
+        source: "docs/MUTATION-MATRIX.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "binary-packages",
         dimension: "distribution",
         scope: "CI-built packages for three targets",

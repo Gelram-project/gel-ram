@@ -30,7 +30,10 @@ cargo run --locked --offline --release -p gel-phase-quad --example quad_evidence
 
 The generated 32-record file is 36,876 bytes. SHA256:
 `2997a04ce8a1b9d7b7b8a03e64d718a3353e6963bc6872b27db180a99bf5b055`.
-Generation refuses to overwrite. Use `--help` for the interface.
+Generation refuses to overwrite. It writes and flushes a temporary file next to
+the new path and only then links it into place, so the new name is never given
+to a partly written file; a kill during generation is not tested. On Unix the
+new file has mode 0600. Use `--help` for the interface.
 Do not place generated banks inside the source tree's release allow-list.
 
 ## Numeric fixture contract

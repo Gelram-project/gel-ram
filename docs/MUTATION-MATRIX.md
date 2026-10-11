@@ -8,9 +8,8 @@ A finite, explicit matrix of byte-level mutations of the three public file
 formats: GELSRC01 source bundles, GELSET01 collection snapshots and the Q8DEMO01
 numeric fixture. `xtask verify` runs it and requires the regenerated report to
 equal the committed [matrix-r1.txt](evidence-mutation/matrix-r1.txt) (tab-separated) byte for
-byte. GELHIS01 record-history files are outside the matrix; their tests change
-every single bit and cut every length of one 30-state file
-([record history](RECORD-HISTORY.md)).
+byte. GELHIS01 record-history files have a matrix of their own, with its own
+report, described [below](#gelhis01-record-history-files).
 
 ## Two pin modes for every mutant
 
@@ -72,6 +71,52 @@ turns exactly that row into FAIL.
   phase value and mask bit is a valid record.
 - GELSET01 accepts control characters such as NUL inside a document's text (it
   is valid UTF-8); titles reject them. Text is displayed escaped.
+
+## GELHIS01 record-history files
+
+```text
+cargo run --locked --offline -p xtask -- history-mutation-matrix
+```
+
+A [record history](RECORD-HISTORY.md) file carries two CRC64 fields of its own,
+over the header and over the payload. A mutant whose CRC64 no longer fits would
+only show that the checksum works, so every GELHIS01 mutant has its CRC64 fields
+recomputed, as anyone who rewrites the file can do, and the structural rules
+decide. Two kinds of mutant keep a CRC64 that does not fit: those that change a
+CRC64 field themselves, and one changed state byte left under the old payload
+CRC64. Like Q8DEMO01, the file has no pin of its own, so the original-pin rows
+are rejected by the caller's retained SHA-256 before the file is read.
+
+- **Fixture:** four states of one record, 338 bytes: a literal, a residual
+  with 3 changed bits, a residual with 1 more, and a literal again because the
+  residual depth limit is reached.
+- **Regions:** the seven header fields and every field of the four entries (tag,
+  state; parent, depth, form, count, length and packed positions), 25 regions in
+  all, with the operators above. Three mutants are added: the unsealed state
+  byte, the second entry stored as a literal although its residual fits, and the
+  third entry naming the first as its parent with a depth that fits that chain.
+- **Expected result:** a small reference reader written from the format
+  description in [record history](RECORD-HISTORY.md), with its own
+  CRC-64/ECMA-182, independent of the gel-history decoder. It reads in file order,
+  so the first rule a mutant breaks names the class: `MAGIC`, `HEADER_CRC`,
+  `VERSION`, `HEADER`, `LIMIT`, `LENGTH`, `PAYLOAD_CRC`, `ENTRY` or `CANONICAL`.
+  When a mutant is accepted, every state the library rebuilds must equal the
+  reference's.
+- **Negative control:** a reader without the canonical-form rule must differ
+  from the reference on at least one mutant.
+
+`xtask verify` requires the regenerated report to equal the committed
+[history-matrix-r1.txt](evidence-mutation/history-matrix-r1.txt) byte for byte:
+
+```text
+HISTORY_MUTATION_MATRIX=PASS mutants=151 rows=302 accepted_valid_changes=14 failed=0 negative_control_distinguishing_mutants=2
+```
+
+The 14 accepted mutants change a byte of a stored state (8) or a packed
+position that stays strictly increasing (6): each is a different valid history.
+A changed padding bit after the last position is refused. With the
+canonical-form rule removed from the library, the two canonical-form mutants
+are accepted and those two rows fail.
 
 ## Limits
 
