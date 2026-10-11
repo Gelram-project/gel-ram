@@ -3,7 +3,7 @@
 use std::{fs, io::Write, path::Path, process::Command};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// The release whose sources the page links to and checks out.
-const RELEASE: &str = "v0.6.0";
+const RELEASE: &str = "v0.6.1";
 const SCENES: &[(&str, &str, &str)] = &[
     (
         "01-evidence",
