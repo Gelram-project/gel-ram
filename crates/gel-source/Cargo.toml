@@ -6,7 +6,9 @@ rust-version.workspace = true
 license-file.workspace = true
 publish = false
 [dependencies]
-sha2 = "=0.10.9"
 unicode-normalization = "=0.1.25"
+[dev-dependencies]
+# Only an independent oracle for the tests of the crate's own SHA-256.
+sha2 = "=0.10.9"
 [lints]
 workspace = true
