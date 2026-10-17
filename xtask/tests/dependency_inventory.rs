@@ -51,16 +51,19 @@ fn inventory_matches_every_locked_external_package() {
 #[test]
 fn rejects_stale_extra_duplicate_or_missing_inventory_entries() {
     for edited in [
-        INVENTORY.replace("| sha2 | 0.10.9 |", "| sha2 | 0.0.0 |"),
         INVENTORY.replace(
-            "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "| unicode-normalization | 0.1.25 |",
+            "| unicode-normalization | 0.0.0 |",
+        ),
+        INVENTORY.replace(
+            "5fd4f6878c9cb28d874b009da9e8d183b5abc80117c40bbd187a1fde336be6e8",
             "bad",
         ),
         format!("{INVENTORY}\n| extra | 1 | MIT | upstream |\n"),
-        format!("{INVENTORY}\n| sha2 | 0.10.9 | MIT | upstream |\n"),
+        format!("{INVENTORY}\n| unicode-normalization | 0.1.25 | MIT | upstream |\n"),
         INVENTORY
             .lines()
-            .filter(|line| !line.starts_with("| sha2 |"))
+            .filter(|line| !line.starts_with("| unicode-normalization |"))
             .collect::<Vec<_>>()
             .join("\n"),
     ] {
