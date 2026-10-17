@@ -136,12 +136,6 @@ mod tests {
     use super::*;
     use crate::hex;
 
-    /// An independent implementation, used only by these tests.
-    fn oracle(bytes: &[u8]) -> [u8; 32] {
-        use sha2::Digest;
-        sha2::Sha256::digest(bytes).into()
-    }
-
     /// Deterministic bytes that are not a simple repetition.
     fn message(len: usize) -> Vec<u8> {
         let mut state = 0x9e37_79b9_7f4a_7c15u64 ^ len as u64;
@@ -184,17 +178,23 @@ mod tests {
 
     #[test]
     fn every_length_up_to_1024_bytes_agrees_with_an_independent_implementation() {
+        // The SHA-256 of the 1,025 digests of message(0..=1024) joined, computed
+        // with RustCrypto sha2 0.10.9 on 2026-10-17, before that crate left the tree.
+        let mut joined = Vec::new();
         for len in 0..=1024 {
-            let m = message(len);
-            assert_eq!(sha256(&m), oracle(&m), "length {len}");
+            joined.extend_from_slice(&sha256(&message(len)));
         }
+        assert_eq!(
+            hex(&sha256(&joined)),
+            "e4992c13ead0cbd6248587f54c370c9fa9ecc561be6953a72b411209eff8f3cc"
+        );
     }
 
     #[test]
     fn feeding_a_message_in_pieces_gives_the_digest_of_the_whole() {
         for len in 0..=130 {
             let m = message(len);
-            let whole = oracle(&m);
+            let whole = sha256(&m);
             for cut in 0..=len {
                 let mut h = Sha256::new();
                 h.update(&m[..cut]);
@@ -225,6 +225,6 @@ mod tests {
             h.update(text.as_bytes());
             joined.extend_from_slice(text.as_bytes());
         }
-        assert_eq!(h.finalize(), oracle(&joined));
+        assert_eq!(h.finalize(), sha256(&joined));
     }
 }

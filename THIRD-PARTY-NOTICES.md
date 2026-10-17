@@ -12,18 +12,8 @@ The current source tree records the following external crates in `Cargo.lock`:
 
 | Crate | Locked version |
 | --- | --- |
-| block-buffer | 0.10.4 |
-| cfg-if | 1.0.4 |
-| cpufeatures | 0.2.17 |
-| crypto-common | 0.1.7 |
-| digest | 0.10.7 |
-| generic-array | 0.14.7 |
-| libc | 0.2.189 |
-| sha2 | 0.10.9 |
 | tinyvec | 1.13.3 |
-| typenum | 1.20.1 |
 | unicode-normalization | 0.1.25 |
-| version_check | 0.9.5 |
 
 These packages are dependency references fetched from their upstream distribution sources; they are not relicensed under GEL RAM NCRL 1.0 by this repository.
 
