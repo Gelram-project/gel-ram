@@ -37,13 +37,19 @@ Run cargo fetch --locked once on a clean machine, then:
     cargo run --locked --offline -p gel-source --example source_readout
     cargo run --locked --offline -p xtask -- verify
 
-The SHA-256 implementation is the pinned RustCrypto sha2 dependency, not a
-new home-made hash. Its transitive dependencies are recorded in Cargo.lock.
-CI fetches those locked dependencies before the existing offline checks.
+SHA-256 is the standard FIPS 180-4 digest, implemented in gel-source itself
+(`crates/gel-source/src/sha256.rs`, safe Rust); it is not a new hash and every earlier pin stays
+valid. Its tests check the FIPS 180-2 example messages, including one million
+`a`, and compare it with the RustCrypto sha2 crate, kept only as a test
+dependency, for every length up to 1,024 bytes and every way of feeding a short
+message in pieces. Without `unsafe` it cannot use the processor's SHA
+instructions: on the author's machine it hashes about 274 MB/s against about
+1,736 MB/s for sha2 with SHA-NI, so integrity timings measured with sha2 are not
+comparable with new runs.
 
 ## Provenance and release boundary
 
-This module uses the RustCrypto sha2 crate for SHA-256 and bounds TSV splitting
+This module uses its own FIPS 180-4 SHA-256 and bounds TSV splitting
 to nine fields. The catalog and
 passage contracts are preserved. GEL RAM-owned material is under
 GEL RAM NCRL 1.0 ([licensing](../LICENSING.md)); the extraction was first
