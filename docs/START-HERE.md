@@ -7,10 +7,12 @@ project without reading the entire repository.
 
 GEL RAM prints knowledge into memory as fixed Q8 records, instead of training it
 into model weights, and reads the records back exactly, working toward
-hardware-level memory computation. The goal is a text AI that answers in Polish
-and English from what it holds, or says it does not know. This repository does
+hardware-level memory computation. The goal is a text AI that holds a free
+conversation in Polish and English: it answers in sentences of its own, not
+pasted excerpts, from what it holds, shows the source it relied on, and says it
+does not know when it holds nothing on the question. This repository does
 not establish hardware-level memory computation ([claim registry](CLAIMS.md):
-`NOT_ESTABLISHED`); the text AI is a goal, not a result. The public repository contains the reproducible subset: source provenance, integrity gates,
+`NOT_ESTABLISHED`); the text AI is a goal, not a result ([goal](GOAL.md)). The public repository contains the reproducible subset: source provenance, integrity gates,
 Q8 numeric experiments, persistent source bundles, an offline Live Lab, the
 multi-document [Evidence Lab](EVIDENCE-LAB.md) with exact citations and pinned
 snapshots, frozen answer-or-abstain question sets in Polish and English, and
