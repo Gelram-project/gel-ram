@@ -74,7 +74,7 @@ The redistributed excerpt of *The Rust Programming Language* remains MIT-license
 
 Wikipedia passages quoted in the measurement sets, the side-by-side records and media, and the README example card remain under CC BY-SA 4.0 and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 7.
 
-The Unicode normalization tables in `crates/gel-source/src/nfc_tables.rs` are a modified form of Unicode Character Database 15.1.0 data files, and `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` is an unmodified Unicode data file. Both remain under the Unicode License v3, with its full text in `crates/gel-source/LICENSE-UNICODE.txt`, and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 2a.
+The Unicode normalization tables in `crates/gel-source/src/nfc_tables.rs` are a modified form of Unicode Character Database 15.1.0 data files, and `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the files in `crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode data files. All remain under the Unicode License v3, with its full text in `crates/gel-source/LICENSE-UNICODE.txt`, and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 2a.
 
 ## 9. Contributions and CLA privacy
 

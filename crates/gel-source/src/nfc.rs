@@ -1,13 +1,18 @@
 //! Unicode Normalization Form C (UAX #15), written for this crate.
 //!
-//! A string is decomposed canonically (Hangul syllables by arithmetic, other
-//! characters by the recursive canonical decomposition mappings), its
+//! A string that passes the NFC_Quick_Check rule is returned as it is.
+//! Otherwise it is decomposed canonically (Hangul syllables by arithmetic,
+//! other characters by the recursive canonical decomposition mappings), its
 //! combining marks are put in canonical order, and it is recomposed: each
 //! starter is combined with the next unblocked character that forms a primary
-//! composite with it. The tables in `nfc_tables.rs` come from the Unicode
-//! Character Database; the tests run the Unicode NormalizationTest of the same
-//! version and compare every code point with an earlier implementation.
-use crate::nfc_tables::{CANONICAL_COMBINING_CLASS, CANONICAL_DECOMPOSITION, PRIMARY_COMPOSITE};
+//! composite with it. Each character's combining class is looked up once, so
+//! the cost grows as n log n in the length of a run of combining marks. The
+//! tables in `nfc_tables.rs` come from the Unicode Character Database; the
+//! tests run the Unicode NormalizationTest of the same version and compare
+//! every code point with an earlier implementation.
+use crate::nfc_tables::{
+    CANONICAL_COMBINING_CLASS, CANONICAL_DECOMPOSITION, NFC_QUICK_CHECK, PRIMARY_COMPOSITE,
+};
 
 const S_BASE: u32 = 0xAC00;
 const L_BASE: u32 = 0x1100;
@@ -19,29 +24,84 @@ const T_COUNT: u32 = 28;
 const N_COUNT: u32 = V_COUNT * T_COUNT;
 const S_COUNT: u32 = L_COUNT * N_COUNT;
 
-fn combining_class(c: u32) -> u8 {
-    match CANONICAL_COMBINING_CLASS.binary_search_by(|&(first, last, _)| {
-        if last < c {
-            std::cmp::Ordering::Less
-        } else if first > c {
-            std::cmp::Ordering::Greater
-        } else {
-            std::cmp::Ordering::Equal
-        }
-    }) {
-        Ok(i) => CANONICAL_COMBINING_CLASS[i].2,
-        Err(_) => 0,
-    }
+/// Every code point below this one has combining class 0 and NFC_Quick_Check
+/// Yes (checked against the tables by a test).
+const FIRST_NOT_TRIVIAL: u32 = 0x0300;
+/// The Hangul Jamo block, U+1100..U+11FF.
+const JAMO_BLOCK: std::ops::RangeInclusive<u32> = 0x1100..=0x11FF;
+
+#[cfg(test)]
+thread_local! {
+    /// Combining-class lookups made by this thread, for the cost test.
+    static LOOKUPS: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
 }
 
-fn decompose(c: u32, out: &mut Vec<u32>) {
-    if (S_BASE..S_BASE + S_COUNT).contains(&c) {
-        let s = c - S_BASE;
-        out.push(L_BASE + s / N_COUNT);
-        out.push(V_BASE + (s % N_COUNT) / T_COUNT);
-        if s % T_COUNT != 0 {
-            out.push(T_BASE + s % T_COUNT);
+/// The value of the range of `table` that contains `c`.
+fn in_range<T: Copy>(table: &[(u32, u32, T)], c: u32) -> Option<T> {
+    table
+        .binary_search_by(|&(first, last, _)| {
+            if last < c {
+                std::cmp::Ordering::Less
+            } else if first > c {
+                std::cmp::Ordering::Greater
+            } else {
+                std::cmp::Ordering::Equal
+            }
+        })
+        .ok()
+        .map(|i| table[i].2)
+}
+
+fn combining_class(c: u32) -> u8 {
+    #[cfg(test)]
+    LOOKUPS.with(|n| n.set(n.get() + 1));
+    in_range(CANONICAL_COMBINING_CLASS, c).unwrap_or(0)
+}
+
+/// True when `s` is certainly in NFC by the NFC_Quick_Check rule of UAX #15:
+/// no character has NFC_Quick_Check No or Maybe, and the nonzero combining
+/// classes never decrease.
+fn is_nfc_by_quick_check(s: &str) -> bool {
+    let mut last = 0;
+    for c in s.chars() {
+        let c = c as u32;
+        if c < FIRST_NOT_TRIVIAL {
+            last = 0;
+            continue;
         }
+        if in_range(NFC_QUICK_CHECK, c).is_some() {
+            return false;
+        }
+        let class = combining_class(c);
+        if class != 0 && last > class {
+            return false;
+        }
+        last = class;
+    }
+    true
+}
+
+/// Appends the full canonical decomposition of `c`, each code point with its
+/// combining class.
+fn decompose(c: u32, out: &mut Vec<(u8, u32)>) {
+    if (S_BASE..S_BASE + S_COUNT).contains(&c) {
+        // Hangul jamo all have combining class 0.
+        let s = c - S_BASE;
+        out.push((0, L_BASE + s / N_COUNT));
+        out.push((0, V_BASE + (s % N_COUNT) / T_COUNT));
+        if s % T_COUNT != 0 {
+            out.push((0, T_BASE + s % T_COUNT));
+        }
+        return;
+    }
+    // The Hangul Jamo block has no decompositions and no nonzero classes, and
+    // nothing below the first decomposition decomposes (both checked by a test).
+    if JAMO_BLOCK.contains(&c) {
+        out.push((0, c));
+        return;
+    }
+    if c < CANONICAL_DECOMPOSITION[0].0 {
+        out.push((combining_class(c), c));
         return;
     }
     match CANONICAL_DECOMPOSITION.binary_search_by_key(&c, |&(cp, _, _)| cp) {
@@ -52,7 +112,7 @@ fn decompose(c: u32, out: &mut Vec<u32>) {
                 decompose(second, out);
             }
         }
-        Err(_) => out.push(c),
+        Err(_) => out.push((combining_class(c), c)),
     }
 }
 
@@ -74,29 +134,32 @@ fn compose(first: u32, second: u32) -> Option<u32> {
 
 /// `s` in Normalization Form C.
 pub(crate) fn nfc(s: &str) -> String {
-    let mut decomposed: Vec<u32> = Vec::with_capacity(s.len());
+    if is_nfc_by_quick_check(s) {
+        return s.to_owned();
+    }
+    let mut decomposed: Vec<(u8, u32)> = Vec::with_capacity(s.len());
     for c in s.chars() {
         decompose(c as u32, &mut decomposed);
     }
     // Canonical ordering: a stable sort of each run of nonzero classes.
-    for i in 1..decomposed.len() {
-        let class = combining_class(decomposed[i]);
-        if class == 0 {
+    let mut i = 0;
+    while i < decomposed.len() {
+        if decomposed[i].0 == 0 {
+            i += 1;
             continue;
         }
-        let mut j = i;
-        while j > 0 && combining_class(decomposed[j - 1]) > class {
-            decomposed.swap(j - 1, j);
-            j -= 1;
+        let start = i;
+        while i < decomposed.len() && decomposed[i].0 != 0 {
+            i += 1;
         }
+        decomposed[start..i].sort_by_key(|&(class, _)| class);
     }
     // Canonical composition. `last` is the class of the last character kept
     // after the current starter; None means the next character is adjacent.
     let mut out: Vec<u32> = Vec::with_capacity(decomposed.len());
     let mut starter: Option<usize> = None;
     let mut last: Option<u8> = None;
-    for c in decomposed {
-        let class = combining_class(c);
+    for (class, c) in decomposed {
         if let Some(at) = starter {
             let blocked = last.is_some_and(|l| l >= class);
             if !blocked {
@@ -141,6 +204,53 @@ mod tests {
         assert!(CANONICAL_COMBINING_CLASS
             .windows(2)
             .all(|w| w[0].1 < w[1].0 && w[0].0 <= w[0].1));
+        assert_eq!(NFC_QUICK_CHECK.len(), 115);
+        assert!(NFC_QUICK_CHECK
+            .windows(2)
+            .all(|w| w[0].1 < w[1].0 && w[0].0 <= w[0].1));
+        let count = |maybe: bool| -> u32 {
+            NFC_QUICK_CHECK
+                .iter()
+                .filter(|r| r.2 == maybe)
+                .map(|r| r.1 - r.0 + 1)
+                .sum()
+        };
+        assert_eq!((count(false), count(true)), (1120, 111));
+        // The shortcuts the code takes: nothing below U+0300 has a class or a
+        // Quick_Check other than Yes, and the Hangul jamo are starters.
+        assert_eq!(CANONICAL_COMBINING_CLASS[0].0, FIRST_NOT_TRIVIAL);
+        assert_eq!(NFC_QUICK_CHECK[0].0, FIRST_NOT_TRIVIAL);
+        for c in JAMO_BLOCK {
+            assert_eq!(combining_class(c), 0, "{c:04X}");
+        }
+        assert!(CANONICAL_DECOMPOSITION
+            .iter()
+            .all(|&(cp, _, _)| !JAMO_BLOCK.contains(&cp)));
+        assert!(JAMO_BLOCK.contains(&L_BASE) && JAMO_BLOCK.contains(&(T_BASE + T_COUNT - 1)));
+        assert_eq!(CANONICAL_DECOMPOSITION[0].0, 0x00C0);
+    }
+
+    /// The worst run of combining marks a 4096-byte line can hold: every class
+    /// 220 mark comes after every class 230 mark. Sorting them by insertion,
+    /// looking each class up again, took over a million lookups.
+    #[test]
+    fn reversed_combining_marks_cost_one_class_lookup_per_character() {
+        let line = format!("a{}{}", "\u{0301}".repeat(1023), "\u{0316}".repeat(1024));
+        assert_eq!(line.len(), 4095);
+        let before = LOOKUPS.with(std::cell::Cell::get);
+        let out = nfc(&line);
+        let lookups = LOOKUPS.with(std::cell::Cell::get) - before;
+        let expected = format!(
+            "\u{00E1}{}{}",
+            "\u{0316}".repeat(1024),
+            "\u{0301}".repeat(1022)
+        );
+        assert_eq!(out, expected);
+        assert!(lookups <= 2 * 2048, "{lookups} class lookups");
+        // Text already in NFC below U+0300, as most Polish text is, needs none.
+        let before = LOOKUPS.with(std::cell::Cell::get);
+        assert_eq!(nfc("Zażółć gęślą jaźń"), "Zażółć gęślą jaźń");
+        assert_eq!(LOOKUPS.with(std::cell::Cell::get), before);
     }
 
     #[test]
@@ -178,12 +288,19 @@ mod tests {
 
     /// The SHA-256 of NFC of every scalar value, each followed by the byte 0xFF,
     /// computed with unicode-normalization 0.1.25 on 2026-10-17 before that
-    /// crate left the tree.
+    /// crate left the tree; ICU4X icu_normalizer 2.3.0 gives the same bytes.
     #[test]
     fn every_scalar_value_gives_the_same_bytes_as_the_earlier_implementation() {
         let mut joined = Vec::new();
         for c in (0..=0x10FFFFu32).filter_map(char::from_u32) {
-            joined.extend_from_slice(nfc(&c.to_string()).as_bytes());
+            let once = nfc(&c.to_string());
+            assert_eq!(
+                nfc(&once),
+                once,
+                "NFC is not idempotent at {:04X}",
+                c as u32
+            );
+            joined.extend_from_slice(once.as_bytes());
             joined.push(0xFF);
         }
         assert_eq!(
@@ -192,12 +309,9 @@ mod tests {
         );
     }
 
-    /// 100,000 seeded strings of 1 to 8 characters drawn from every code point
-    /// with a combining class or a canonical decomposition, the Hangul jamo and
-    /// three syllables, and a to z; the pin was computed with
-    /// unicode-normalization 0.1.25 on 2026-10-17.
-    #[test]
-    fn random_mixtures_give_the_same_bytes_as_the_earlier_implementation() {
+    /// Every code point with a combining class or a canonical decomposition,
+    /// the Hangul jamo and three syllables, and a to z.
+    fn pool() -> Vec<char> {
         let mut pool = std::collections::BTreeSet::new();
         for &(first, last, _) in CANONICAL_COMBINING_CLASS {
             pool.extend(first..=last);
@@ -217,26 +331,98 @@ mod tests {
         );
         let pool: Vec<char> = pool.into_iter().filter_map(char::from_u32).collect();
         assert_eq!(pool.len(), 4291);
-        let mut state = 20_261_017u64;
-        let mut next = || {
+        pool
+    }
+
+    /// SplitMix64 from `seed`.
+    fn splitmix(mut state: u64) -> impl FnMut() -> u64 {
+        move || {
             state = state.wrapping_add(0x9e37_79b9_7f4a_7c15);
             let mut z = state;
             z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
             z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
             z ^ (z >> 31)
-        };
+        }
+    }
+
+    /// 100,000 seeded strings of 1 to 8 characters drawn from the pool; the pin
+    /// was computed with unicode-normalization 0.1.25 on 2026-10-17, and ICU4X
+    /// icu_normalizer 2.3.0 gives the same bytes.
+    #[test]
+    fn random_mixtures_give_the_same_bytes_as_the_earlier_implementation() {
+        let pool = pool();
+        let mut next = splitmix(20_261_017);
         let mut joined = Vec::new();
+        let mut previous = (String::new(), String::new());
         for _ in 0..100_000 {
             let len = 1 + (next() % 8) as usize;
             let s: String = (0..len)
                 .map(|_| pool[(next() % pool.len() as u64) as usize])
                 .collect();
-            joined.extend_from_slice(nfc(&s).as_bytes());
+            let once = nfc(&s);
+            // Idempotent, and a line break splits normalization: search
+            // normalizes each line on its own.
+            assert_eq!(nfc(&once), once, "{s:?}");
+            assert_eq!(
+                nfc(&format!("{}\n{s}", previous.0)),
+                format!("{}\n{once}", previous.1),
+                "{s:?}"
+            );
+            joined.extend_from_slice(once.as_bytes());
             joined.push(0xFF);
+            previous = (s, once);
         }
         assert_eq!(
             hex(&digest(&joined)),
             "aae6bd9d024213096cd9ff09ece256d27e526380541c84c7e57575af04649832"
+        );
+    }
+
+    /// Five long lines (the worst and best order of 2047 combining marks, Polish
+    /// text, decomposed and composed Hangul) and 10,000 seeded strings of 1 to 64
+    /// characters, two thirds of them combining marks. The pin was computed on
+    /// 2026-10-17 with ICU4X icu_normalizer 2.3.0, an independent
+    /// implementation.
+    #[test]
+    fn adversarial_strings_give_the_same_bytes_as_an_independent_implementation() {
+        let pool = pool();
+        let marks: Vec<char> = CANONICAL_COMBINING_CLASS
+            .iter()
+            .flat_map(|&(a, b, _)| a..=b)
+            .filter_map(char::from_u32)
+            .collect();
+        let mut next = splitmix(18);
+        let mut strings = vec![
+            format!("a{}{}", "\u{0301}".repeat(1023), "\u{0316}".repeat(1024)),
+            format!("a{}{}", "\u{0316}".repeat(1024), "\u{0301}".repeat(1023)),
+            "Zażółć gęślą jaźń, źdźbło i łódź. ".repeat(40),
+            "\u{1100}\u{1161}\u{11A8}".repeat(450),
+            "한국어 문장은 대부분 완성형 음절로 쓴다 ".repeat(40),
+        ];
+        for _ in 0..10_000 {
+            let len = 1 + (next() % 64) as usize;
+            strings.push(
+                (0..len)
+                    .map(|_| {
+                        if next() % 3 == 0 {
+                            pool[(next() % pool.len() as u64) as usize]
+                        } else {
+                            marks[(next() % marks.len() as u64) as usize]
+                        }
+                    })
+                    .collect(),
+            );
+        }
+        let mut joined = Vec::new();
+        for s in &strings {
+            let once = nfc(s);
+            assert_eq!(nfc(&once), once, "{s:?}");
+            joined.extend_from_slice(once.as_bytes());
+            joined.push(0xFF);
+        }
+        assert_eq!(
+            hex(&digest(&joined)),
+            "5bf7396d264d8230559cdd002a85997e417bb7e276d7dc39f26f09f2e390e3fe"
         );
     }
 

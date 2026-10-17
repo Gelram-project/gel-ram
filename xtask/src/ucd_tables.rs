@@ -18,7 +18,7 @@ fn range(s: &str) -> Result<(u32, u32), String> {
 }
 
 /// The tables as Rust source.
-fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [usize; 4]), String> {
+fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [usize; 5]), String> {
     let version = normalization_props
         .lines()
         .next()
@@ -66,12 +66,30 @@ fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [u
         }
     }
     let mut excluded = BTreeSet::new();
+    let mut quick_check: Vec<(u32, u32, bool)> = Vec::new();
     for line in normalization_props.lines() {
         let data = line.split('#').next().unwrap_or("");
         let f: Vec<&str> = data.split(';').map(str::trim).collect();
         if f.len() >= 2 && f[1] == "Full_Composition_Exclusion" {
             let (a, b) = range(f[0])?;
             excluded.extend(a..=b);
+        }
+        if f.len() >= 3 && f[1] == "NFC_QC" {
+            let (a, b) = range(f[0])?;
+            match f[2] {
+                "M" => quick_check.push((a, b, true)),
+                "N" => quick_check.push((a, b, false)),
+                _ => return Err(format!("NFC_QC value: {line}")),
+            }
+        }
+    }
+    quick_check.sort_unstable();
+    let mut merged: Vec<(u32, u32, bool)> = Vec::new();
+    for (a, b, maybe) in quick_check {
+        match merged.last_mut() {
+            Some(last) if last.2 == maybe && last.1 + 1 == a => last.1 = b,
+            Some(last) if last.1 >= a => return Err(format!("NFC_QC ranges overlap at {a:04X}")),
+            _ => merged.push((a, b, maybe)),
         }
     }
     let mut composition: Vec<(u32, u32, u32)> = decomposition
@@ -85,6 +103,7 @@ fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [u
         decomposition.len(),
         excluded.len(),
         composition.len(),
+        merged.len(),
     ];
     let mut out = String::new();
     let _ = writeln!(
@@ -97,13 +116,15 @@ fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [u
          // transformed into Rust tables. Used under the Unicode License v3, whose full\n\
          // text is crates/gel-source/LICENSE-UNICODE.txt; see THIRD-PARTY-NOTICES.md.\n\
          // Counts: {} combining-class ranges, {} canonical decompositions,\n\
-         // {} Full_Composition_Exclusion code points, {} primary composites.\n",
+         // {} Full_Composition_Exclusion code points, {} primary composites,\n\
+         // {} NFC_QC ranges (No or Maybe).\n",
         gel_source::hex(&gel_source::digest(unicode_data.as_bytes())),
         gel_source::hex(&gel_source::digest(normalization_props.as_bytes())),
         counts[0],
         counts[1],
         counts[2],
         counts[3],
+        counts[4],
     );
     let _ = writeln!(
         out,
@@ -145,6 +166,15 @@ fn generate(unicode_data: &str, normalization_props: &str) -> Result<(String, [u
             .map(|(a, b, cp)| format!("(0x{a:04X}, 0x{b:04X}, 0x{cp:04X}),"))
             .collect(),
     );
+    table(
+        "NFC_QUICK_CHECK",
+        "(first, last, maybe) for every range of code points whose NFC_Quick_Check is not Yes, sorted; maybe is false for No.",
+        "(u32, u32, bool)",
+        merged
+            .iter()
+            .map(|(a, b, maybe)| format!("(0x{a:04X}, 0x{b:04X}, {maybe}),"))
+            .collect(),
+    );
     while out.ends_with("\n\n") {
         out.pop();
     }
@@ -169,8 +199,8 @@ pub fn run(args: &[String]) -> Result<(), String> {
         .and_then(|mut f| std::io::Write::write_all(&mut f, out.as_bytes()))
         .map_err(|e| format!("{new_file}: {e}"))?;
     println!(
-        "UCD_TABLES=WRITTEN ccc_ranges={} decompositions={} full_composition_exclusions={} primary_composites={} file={new_file}",
-        counts[0], counts[1], counts[2], counts[3]
+        "UCD_TABLES=WRITTEN ccc_ranges={} decompositions={} full_composition_exclusions={} primary_composites={} nfc_qc_ranges={} file={new_file}",
+        counts[0], counts[1], counts[2], counts[3], counts[4]
     );
     Ok(())
 }
@@ -189,15 +219,36 @@ mod tests {
                     0958;DEVANAGARI LETTER QA;Lo;0;L;0915 093C;;;;N;;;;;\n\
                     AC00;<Hangul Syllable, First>;Lo;0;L;;;;;N;;;;;\n\
                     D7A3;<Hangul Syllable, Last>;Lo;0;L;;;;;N;;;;;\n";
-        let props = "# DerivedNormalizationProps-15.1.0.txt\n0340          ; Full_Composition_Exclusion # Mn\n0958          ; Full_Composition_Exclusion # Lo\n";
+        let props = "# DerivedNormalizationProps-15.1.0.txt\n0340          ; Full_Composition_Exclusion # Mn\n0958          ; Full_Composition_Exclusion # Lo\n\
+                     0300..0301    ; NFC_QC; M # Mn\n0340          ; NFC_QC; N # Mn\n0341          ; NFC_QC; N # Mn\n0958          ; NFC_QC; N # Lo\n";
         let (out, counts) = generate(data, props).unwrap();
         // 0300 and 0301 are adjacent and share a class; 0340 is not adjacent.
-        assert_eq!(counts, [2, 3, 2, 1]);
+        // NFC_QC: 0340 and 0341 merge; 0300..0301 (Maybe) and 0958 stay apart.
+        assert_eq!(counts, [2, 3, 2, 1, 3]);
         assert!(out.contains("UNICODE_VERSION: (u8, u8, u8) = (15, 1, 0);"));
         assert!(out.contains("(0x0300, 0x0301, 230), (0x0340, 0x0340, 230),"));
         assert!(out.contains("(0x0340, 0x0300, 0x0000),"));
         assert!(out.contains("(0x0041, 0x0300, 0x00C0),"));
         assert!(!out.contains("0x0958)"));
+        assert!(out
+            .contains("(0x0300, 0x0301, true), (0x0340, 0x0341, false), (0x0958, 0x0958, false),"));
         assert!(generate(data, "# no header\n").is_err());
+        let overlap = format!("{props}0301          ; NFC_QC; N # Mn\n");
+        assert!(generate(data, &overlap).is_err());
+    }
+
+    /// The tables in the tree are exactly what this generator makes from the
+    /// UCD 15.1.0 files kept beside them.
+    #[test]
+    fn the_tables_in_the_tree_are_regenerated_byte_for_byte() {
+        let (out, counts) = generate(
+            include_str!("../../crates/gel-source/tests/data/ucd-15.1.0/UnicodeData.txt"),
+            include_str!(
+                "../../crates/gel-source/tests/data/ucd-15.1.0/DerivedNormalizationProps.txt"
+            ),
+        )
+        .unwrap();
+        assert_eq!(counts, [388, 2061, 1120, 941, 115]);
+        assert!(out == include_str!("../../crates/gel-source/src/nfc_tables.rs"));
     }
 }
