@@ -8,21 +8,38 @@ Third-party software, documentation, data, artwork, standards text, generated ma
 
 ## 2. Current non-vendored Rust dependency inventory
 
-The current source tree records the following external crates in `Cargo.lock`:
+The current source tree records no external crates in `Cargo.lock`: every crate
+in it is a member of this workspace. Earlier releases referenced registry
+packages fetched from their upstream distribution sources; they were never
+relicensed under GEL RAM NCRL 1.0 by this repository.
 
-| Crate | Locked version |
-| --- | --- |
-| tinyvec | 1.13.3 |
-| unicode-normalization | 0.1.25 |
+The [exact inventory](docs/DEPENDENCY-INVENTORY.md) is checked against
+`Cargo.lock` by a test: a registry package added to the lock without its row,
+archive checksum, declared license and upstream repository fails the build. It
+does not replace the upstream license text or approve a future binary
+redistribution.
 
-These packages are dependency references fetched from their upstream distribution sources; they are not relicensed under GEL RAM NCRL 1.0 by this repository.
+For any package added later, the authoritative license is the license information and license text shipped by that exact upstream package version. This file intentionally does not paraphrase or replace those upstream terms.
 
-The [exact inventory](docs/DEPENDENCY-INVENTORY.md) records archive checksums,
-declared license expressions, upstream repositories and license-file hashes
-checked against the exact cached crate archives. It does not replace the
-upstream license text or approve a future binary redistribution.
+## 2a. Unicode data (Unicode License v3)
 
-The authoritative license for each package is the license information and license text shipped by that exact upstream package version. This file intentionally does not paraphrase or replace those upstream terms.
+Copyright (c) 1991-2023 Unicode, Inc. Unicode Normalization Form C in
+`crates/gel-source` uses tables derived from the Unicode Character Database
+15.1.0 (the data files UnicodeData.txt and DerivedNormalizationProps.txt):
+
+- `crates/gel-source/src/nfc_tables.rs` is a modified form of those data files:
+  the canonical combining classes, canonical decomposition mappings and primary
+  composites were transformed into Rust tables by `cargo run -p xtask -- ucd-tables`.
+  The file header names the UCD version and the SHA-256 of both inputs. These
+  tables are compiled into the release binaries.
+- `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the two input
+  files in `crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode
+  data files, used only by tests (the second to regenerate the tables).
+
+Both are used under the Unicode License v3, whose full text is
+[crates/gel-source/LICENSE-UNICODE.txt](crates/gel-source/LICENSE-UNICODE.txt)
+and accompanies every release package. They are not GEL RAM-owned material and
+are not licensed under GEL RAM NCRL 1.0.
 
 ## 3. Release-package rule
 

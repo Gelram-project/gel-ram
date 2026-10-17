@@ -23,6 +23,7 @@ mod reproduce;
 mod reproduction;
 mod roadmap;
 mod source_bundle;
+mod ucd_tables;
 mod workflow_policy;
 
 use std::ffi::OsStr;
@@ -303,7 +304,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -1180,6 +1181,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
+        Some("ucd-tables") => ucd_tables::run(&args[1..]),
         Some("rust-only") => rust_only(),
         Some("licensing") => licensing(),
         Some("ci-policy") => ci_policy(),

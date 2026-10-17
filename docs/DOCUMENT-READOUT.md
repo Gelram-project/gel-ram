@@ -70,3 +70,57 @@ negation/order, whole tokens, result/line/query limits, conflicting quotes,
 differential comparison, actual pinned-source spans and mutation rejection.
 These are implementation regressions, not independent semantic accuracy labels.
 The caller still owns authorization, persistence and secret management.
+
+## Unicode normalization
+
+NFC is implemented in gel-source itself (`crates/gel-source/src/nfc.rs`,
+UAX #15: canonical decomposition, canonical ordering, canonical composition),
+with tables generated from the Unicode Character Database 15.1.0 by
+`cargo run -p xtask -- ucd-tables`. The two UCD files it reads are kept
+unmodified in `crates/gel-source/tests/data/ucd-15.1.0`, and a test regenerates
+the tables from them and requires the same bytes.
+
+**Versions.** Normalization follows Unicode 15.1.0; lowercasing is the Rust
+standard library's `to_lowercase`, which follows Unicode 16.0.0 on the Rust
+1.85 toolchain the releases are built with. Search normalizes the query and
+each line when it runs and stores nothing normalized, so a later table version
+changes only which lines match, never stored data.
+
+**Checks.**
+
+- All 19,074 data lines of NormalizationTest 15.1.0 pass, and every scalar
+  value it does not list is unchanged.
+- NFC of every scalar value, and of 100,000 seeded strings built from the
+  characters that take part in normalization, is byte-identical to the output
+  of unicode-normalization 0.1.25 (the crate used up to v0.6.1, recorded before
+  it left the tree) and of ICU4X icu_normalizer 2.3.0.
+- NFC of 10,005 adversarial strings (long runs of combining marks, Hangul, and
+  strings two thirds of whose characters are combining marks) is byte-identical
+  to ICU4X icu_normalizer 2.3.0. This is the only check that catches an
+  unstable sort of combining marks.
+- NFC is idempotent on every string above, and a line break splits it:
+  NFC(a + "\n" + b) = NFC(a) + "\n" + NFC(b), so normalizing line by line is
+  the same as normalizing the text.
+
+**Difference from v0.6.1.** unicode-normalization 0.1.25 followed Unicode 17.0.
+On NormalizationTest 17.0.0 this implementation differs on 162 of 20,034 lines,
+and each of them contains a character assigned after Unicode 15.1; it agrees on
+every line made only of characters assigned in 15.1, as the Unicode stability
+policy requires. Matching therefore differs from v0.6.1 only on text containing
+characters assigned in Unicode 16.0 or 17.0.
+
+**Cost.** Text that passes the NFC_Quick_Check rule (most text, all Polish text
+among it) is returned without normalization. Otherwise each character's
+combining class is looked up once and each run of combining marks is sorted
+with a stable n log n sort; a test counts the lookups on the worst 4095-byte
+line. Latency on the author's machine:
+
+```sh
+cargo run --release --locked --offline -p gel-source --example nfc_bench -- 200
+```
+
+Median of five runs against v0.6.1, alternating in one session (p50 per line):
+2047 combining marks in reverse order 1.06×, in canonical order 1.48×, Polish
+0.49×, decomposed Hangul jamo 1.55×, Hangul syllables 1.04×. A document of 4096
+lines of reversed marks takes 0.58 s; an earlier draft of this change, which
+sorted marks by insertion, took 53 s, and the lookup-count test now rejects it.
