@@ -9,6 +9,19 @@ It is neither byte-substring matching nor semantic
 question answering. Negation and role order remain in the returned quote;
 conflicting source lines are not resolved into a single true statement.
 
+NFC is implemented in gel-source itself (`crates/gel-source/src/nfc.rs`,
+UAX #15: canonical decomposition, canonical ordering, canonical composition),
+with tables generated from the Unicode Character Database 15.1.0 by
+`cargo run -p xtask -- ucd-tables`. Its tests run all 19,074 data lines of the
+Unicode NormalizationTest 15.1.0 and check that every other scalar value is
+unchanged, and two pins recorded before the earlier crate
+(unicode-normalization 0.1.25) left the tree: NFC of every scalar value, and
+of 100,000 seeded strings built from the characters that take part in
+normalization, are byte-identical to that crate's output. That crate followed
+a later Unicode version, so matching can differ from v0.6.1 only on text that
+contains characters assigned in Unicode 16.0 or later. Lowercasing is the
+Rust standard library's `to_lowercase` and is unchanged.
+
 Limits: 16 MiB text, 512 query bytes, 1–32 query words, 4096 bytes per line,
 four returned lines in source order. All matching eligible lines are counted.
 Overlong lines are counted as skipped. No match with skipped lines is an

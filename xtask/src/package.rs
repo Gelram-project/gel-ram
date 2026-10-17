@@ -31,6 +31,8 @@ const PROJECT_FILES: &[&str] = &[
 /// License files of the statically linked Rust standard library, as shipped
 /// with the toolchain in `share/doc/rust`.
 const TOOLCHAIN_LICENSES: &[&str] = &["COPYRIGHT", "LICENSE-APACHE", "LICENSE-MIT"];
+/// License of the Unicode data compiled into gel-source's normalization tables.
+const UNICODE_LICENSE: &str = "crates/gel-source/LICENSE-UNICODE.txt";
 
 fn output(cmd: &mut Command) -> Result<String, String> {
     let out = cmd.output().map_err(|e| format!("{cmd:?}: {e}"))?;
@@ -419,6 +421,14 @@ pub fn run(args: &[String]) -> Result<(), String> {
         fs::write(to.join(file), bytes).map_err(|e| e.to_string())?;
     }
     let _ = writeln!(info, "statically_linked=Rust standard library {release}, license files in licenses/rust-{release}");
+    let unicode = pkg.join("licenses").join("unicode-data");
+    fs::create_dir_all(&unicode).map_err(|e| e.to_string())?;
+    fs::copy(
+        root.join(UNICODE_LICENSE),
+        unicode.join("LICENSE-UNICODE.txt"),
+    )
+    .map_err(|e| format!("{UNICODE_LICENSE}: {e}"))?;
+    info.push_str("compiled_in=Unicode Character Database 15.1.0 normalization tables, license in licenses/unicode-data\n");
     info.push_str("not_shipped=the target's system C runtime, linked dynamically\n");
     for file in PROJECT_FILES {
         let base = Path::new(file).file_name().ok_or("project file name")?;

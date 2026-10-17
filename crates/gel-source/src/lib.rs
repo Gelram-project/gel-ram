@@ -22,6 +22,8 @@ pub use bundle::{
 };
 mod parts;
 pub use parts::LeadPartsError;
+mod nfc;
+mod nfc_tables;
 mod sha256;
 pub type Hash = [u8; 32];
 /// The SHA-256 digest of `bytes` (FIPS 180-4, this crate's own implementation).

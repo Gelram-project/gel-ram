@@ -11,6 +11,7 @@ fn measured_path(name: &str) -> &str {
         "crates/gel-source/src/collection.rs" => {
             "docs/evidence-collection/collection.measured.rs.txt"
         }
+        "crates/gel-source/src/document.rs" => "docs/evidence-collection/document.measured.rs.txt",
         other => other,
     }
 }

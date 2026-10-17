@@ -62,9 +62,10 @@ the predecessor's full v2 integrity; its single-writer assumption still applies.
 - SHA-256 is implemented in gel-source itself (FIPS 180-4, safe Rust,
   `crates/gel-source/src/sha256.rs`), checked against the FIPS 180-2 example
   messages and against a pin of digests made with RustCrypto sha2 0.10.9 before
-  that crate left the tree. Cargo.lock still pins two third-party packages, for
-  Unicode normalization (unicode-normalization and tinyvec); fetch them before
-  offline verification.
+  that crate left the tree. Unicode Normalization Form C is implemented there
+  too (`crates/gel-source/src/nfc.rs`, tables from the Unicode Character
+  Database 15.1.0), checked with the Unicode NormalizationTest of the same
+  version. Cargo.lock lists no third-party packages.
 - The workspace unsafe-code prohibition does not apply transitively to third-party
   dependencies; their locked upstream sources remain a separate trust boundary.
 - Source passages are untrusted content even after hash verification. Consumers
