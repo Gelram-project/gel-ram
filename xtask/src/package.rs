@@ -522,6 +522,23 @@ mod tests {
         assert_eq!(sums, expected);
     }
 
+    /// The package ships this exact Unicode License v3 text with the tables
+    /// compiled from Unicode data; replacing or emptying it fails here.
+    #[test]
+    fn the_unicode_license_shipped_with_the_tables_is_the_reviewed_text() {
+        let text = fs::read(
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("..")
+                .join(UNICODE_LICENSE),
+        )
+        .unwrap();
+        assert!(text.starts_with(b"UNICODE LICENSE V3\n"));
+        assert_eq!(
+            gel_source::hex(&gel_source::digest(&text)),
+            "f7db81051789b729fea528a63ec4c938fdcb93d9d61d97dc8cc2e9df6d47f2a1"
+        );
+    }
+
     #[test]
     fn inventory_reads_license_files_and_skips_the_archive() {
         let text = "### a 1.0\n\n```text\n".to_string()

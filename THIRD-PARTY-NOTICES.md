@@ -32,8 +32,9 @@ Copyright (c) 1991-2023 Unicode, Inc. Unicode Normalization Form C in
   composites were transformed into Rust tables by `cargo run -p xtask -- ucd-tables`.
   The file header names the UCD version and the SHA-256 of both inputs. These
   tables are compiled into the release binaries.
-- `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` is an unmodified
-  Unicode data file, used only by a test.
+- `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the two input
+  files in `crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode
+  data files, used only by tests (the second to regenerate the tables).
 
 Both are used under the Unicode License v3, whose full text is
 [crates/gel-source/LICENSE-UNICODE.txt](crates/gel-source/LICENSE-UNICODE.txt)

@@ -31,6 +31,7 @@ tools (FFmpeg, Xvfb, xterm) are not shipped in the source package.
 
 The normalization tables in `crates/gel-source/src/nfc_tables.rs` are derived
 from the Unicode Character Database 15.1.0, and
-`crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` is a Unicode data
-file, both under the Unicode License v3 (`crates/gel-source/LICENSE-UNICODE.txt`);
+`crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the two files in
+`crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode data files, all
+under the Unicode License v3 (`crates/gel-source/LICENSE-UNICODE.txt`);
 see [third-party notices](../THIRD-PARTY-NOTICES.md).
