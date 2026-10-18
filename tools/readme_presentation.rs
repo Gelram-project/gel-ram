@@ -164,15 +164,18 @@ const NATIVE: &str = r####"# GEL RAM
 
 **GEL RAM prints knowledge into memory as fixed Q8 records, instead of training
 it into model weights, and reads the records back exactly, working toward
-hardware-level memory computation.** The goal is a text AI that answers in
-Polish and English from what it holds, or says it does not know.
+hardware-level memory computation.** The goal is a text AI that holds a free
+conversation in Polish and English: it answers in sentences of its own, not
+pasted excerpts, from what it holds, shows the source it relied on, and says it
+does not know when it holds nothing on the question.
 
 The step that prints text into records is private, so the Q8 records in this
 checkout hold synthetic values or literal bytes, and its tools do not
-answer natural-language questions.
+answer natural-language questions; its document tools return exact quotations,
+not sentences of their own.
 This repository does not establish hardware-level memory computation
 ([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
-not a result.
+not a result ([the goal and its four commitments](docs/GOAL.md)).
 
 ## One record, four exact views
 
