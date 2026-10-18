@@ -119,8 +119,20 @@ line. Latency on the author's machine:
 cargo run --release --locked --offline -p gel-source --example nfc_bench -- 200
 ```
 
-Median of five runs against v0.6.1, alternating in one session (p50 per line):
-2047 combining marks in reverse order 1.06×, in canonical order 1.48×, Polish
-0.49×, decomposed Hangul jamo 1.55×, Hangul syllables 1.04×. A document of 4096
-lines of reversed marks takes 0.58 s; an earlier draft of this change, which
-sorted marks by insertion, took 53 s, and the lookup-count test now rejects it.
+Against v0.6.1, five rounds alternating with it in one session while other work
+loaded the machine, p50 per line divided by v0.6.1's p50 in the same round
+(lowest–highest of the five rounds; below 1 is faster):
+
+| Line | This change / v0.6.1 |
+|---|---|
+| Polish text | 0.36–0.88 |
+| Hangul syllables | 0.87–1.82 |
+| 2047 combining marks in reverse class order | 0.93–2.14 |
+| 2047 combining marks in canonical order | 1.40–1.86 |
+| Decomposed Hangul jamo | 1.41–1.95 |
+
+Only Polish text is faster in every round, and only canonically ordered marks and
+decomposed jamo are slower in every round; the other two lines are within the
+noise of this machine. A document of 4096 lines of reversed marks took
+0.54–0.63 s (v0.6.1: 0.39–0.57 s); an earlier draft of this change, which sorted
+marks by insertion, took 53 s, and the lookup-count test now rejects it.

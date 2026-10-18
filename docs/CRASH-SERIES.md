@@ -47,6 +47,11 @@ last snapshot:
 |---:|---:|---:|---:|---:|---:|:---|
 | 200 | 2,683 | **0** | **0** | 200 | 153 | 2.3 / 4.5 / 4.5 ms |
 
+The reopen times were measured while gel-source hashed with the RustCrypto sha2
+crate. Its own SHA-256 now hashes about 6.3 times slower on the author's machine
+([source readout](SOURCE-READOUT.md)), so a new series would measure longer
+reopen times; the counts of lost and partial snapshots do not depend on it.
+
 In 151 trials a temporary file was left, and in 74 a complete snapshot existed
 that had not been acknowledged; none was partial. 28 kills came after the last
 save and 6 before the first. Run it on your own machine: a different result is
