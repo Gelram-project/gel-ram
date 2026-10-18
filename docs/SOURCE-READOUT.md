@@ -40,9 +40,9 @@ Run cargo fetch --locked once on a clean machine, then:
 SHA-256 is the standard FIPS 180-4 digest, implemented in gel-source itself
 (`crates/gel-source/src/sha256.rs`, safe Rust); it is not a new hash and every earlier pin stays
 valid. Its tests check the FIPS 180-2 example messages, including one million
-`a`, and compare it with the RustCrypto sha2 crate, kept only as a test
-dependency, for every length up to 1,024 bytes and every way of feeding a short
-message in pieces. Without `unsafe` it cannot use the processor's SHA
+`a`, compare it for every length up to 1,024 bytes with digests made by the
+RustCrypto sha2 crate before that crate left the tree, and check every way of
+feeding a short message in pieces. Without `unsafe` it cannot use the processor's SHA
 instructions: on the author's machine it hashes about 274 MB/s against about
 1,736 MB/s for sha2 with SHA-NI, so integrity timings measured with sha2 are not
 comparable with new runs.
