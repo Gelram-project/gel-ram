@@ -1,6 +1,5 @@
 //! Bounded, source-extractive document search. No semantic truth or LLM claims.
 use std::ops::Range;
-use unicode_normalization::UnicodeNormalization;
 
 pub const MAX_TEXT: usize = 16 << 20;
 pub const MAX_QUERY: usize = 512;
@@ -16,7 +15,7 @@ pub struct Search {
 fn normalized_words_text(s: &str) -> String {
     // Lowercasing is context-sensitive for Greek sigma. Treat its final and
     // non-final forms alike on both sides; this is not full Unicode casefold.
-    s.nfc().collect::<String>().to_lowercase().replace('ς', "σ")
+    crate::nfc::nfc(s).to_lowercase().replace('ς', "σ")
 }
 fn words(s: &str) -> impl Iterator<Item = String> + '_ {
     // Normalize before splitting: combining marks must stay with their letters.

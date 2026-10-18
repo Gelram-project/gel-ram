@@ -37,7 +37,7 @@ fn check(lock: &str, inventory: &str) -> Result<(), &'static str> {
             return Err("malformed or duplicate inventory row");
         }
     }
-    if expected.is_empty() || actual != expected {
+    if actual != expected {
         return Err("dependency list differs from lock");
     }
     Ok(())
@@ -50,23 +50,29 @@ fn inventory_matches_every_locked_external_package() {
 
 #[test]
 fn rejects_stale_extra_duplicate_or_missing_inventory_entries() {
-    for edited in [
-        INVENTORY.replace(
-            "| unicode-normalization | 0.1.25 |",
-            "| unicode-normalization | 0.0.0 |",
+    // A registry package that is not in the tree, with the row and archive line
+    // the inventory would need for it.
+    let block = "\n[[package]]\nname = \"extra\"\nversion = \"1.0.0\"\nsource = \"registry+https://github.com/rust-lang/crates.io-index\"\nchecksum = \"00ff\"\n";
+    let row = "| extra | 1.0.0 | MIT | upstream |";
+    let archive = "00ff  extra-1.0.0.crate";
+    let lock = format!("{LOCK}{block}");
+    // The check accepts a lock and an inventory that agree, so the refusals below
+    // come from the edit, not from a check that refuses everything.
+    check(&lock, &format!("{INVENTORY}\n{row}\n{archive}\n")).unwrap();
+    for (lock, inventory) in [
+        (LOCK.to_string(), format!("{INVENTORY}\n{row}\n")),
+        (LOCK.to_string(), format!("{INVENTORY}\n{row}\n{row}\n")),
+        (lock.clone(), INVENTORY.to_string()),
+        (lock.clone(), format!("{INVENTORY}\n{row}\n")),
+        (lock.clone(), format!("{INVENTORY}\n{archive}\n")),
+        (
+            lock.clone(),
+            format!(
+                "{INVENTORY}\n{}\n{archive}\n",
+                row.replace("1.0.0", "0.9.0")
+            ),
         ),
-        INVENTORY.replace(
-            "5fd4f6878c9cb28d874b009da9e8d183b5abc80117c40bbd187a1fde336be6e8",
-            "bad",
-        ),
-        format!("{INVENTORY}\n| extra | 1 | MIT | upstream |\n"),
-        format!("{INVENTORY}\n| unicode-normalization | 0.1.25 | MIT | upstream |\n"),
-        INVENTORY
-            .lines()
-            .filter(|line| !line.starts_with("| unicode-normalization |"))
-            .collect::<Vec<_>>()
-            .join("\n"),
     ] {
-        assert!(check(LOCK, &edited).is_err());
+        assert!(check(&lock, &inventory).is_err(), "{inventory}");
     }
 }

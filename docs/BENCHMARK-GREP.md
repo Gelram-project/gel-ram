@@ -99,6 +99,14 @@ time is most of GEL's workload time. The GEL process's peak resident set size
 was 2.8–2.9 MB in every run. These numbers describe this small corpus on this
 host only; they establish no speed advantage.
 
+Revision dc38282 hashed with the RustCrypto sha2 crate, which uses the
+processor's SHA instructions. gel-source now computes SHA-256 itself in safe
+Rust, about 6.3 times slower in hashing on the author's machine
+([source readout](SOURCE-READOUT.md)). A new run would therefore measure a
+slower integrity-process and slightly slower process-workload phase; that
+difference comes from the hash implementation, not from the readout, and r1
+is not to be compared with such a run without saying so.
+
 ## CI
 
 Linux CI runs `--answers-only` on every revision: it proves the comparison
