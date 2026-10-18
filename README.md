@@ -60,8 +60,9 @@ not a power cut: power-loss durability is not established.
 
 Of 599 frozen questions written to have no answer in the bank (399 about real
 topics outside it, checked by title, and 200 about invented subjects; the set
-page lists one exception), a private development build said UNKNOWN to 573 and
-answered 26. Silence costs answers too: it said UNKNOWN to 557 of the 982
+page lists two that the bank does answer), a private development build said
+UNKNOWN to 573 and answered 25; its one other answer is a passage that holds the
+answer. Silence costs answers too: it said UNKNOWN to 557 of the 982
 questions that have one. The build and its bank are private;
 `xtask answer-bench check` re-scores every recorded answer.
 [Question set v7 and its limits](docs/answer-or-abstain-v7/README.md)

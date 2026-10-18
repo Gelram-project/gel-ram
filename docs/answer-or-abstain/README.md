@@ -102,6 +102,12 @@ Without an answer, UNKNOWN is right, a rejection of the premise is right, and
 anything else is wrong, including a returned passage. The negation words are
 listed in `xtask/src/answer_bench.rs`.
 
+One exception, added on 2026-10-18 after the run: a returned passage that is,
+byte for byte, the passage the question was written from is counted apart, as
+not an error. It is the right record; whether it supports or contradicts the
+premise can be read in it. Until then such passages were counted as answered
+anyway.
+
 The manual review is not part of the scorer. It may change a verdict only when
 an answer states the expected fact in other words, or rejects a premise in words
 the list does not know, or when a matched spelling or negation sits in an answer
@@ -128,22 +134,25 @@ numbers.
 | Qwen3.8-27B | published | 17 | 6 (5) | 11 (12) | 63 | 0 |
 | Qwen3.8-27B | strict | 17 | 6 (5) | 11 (12) | 63 | 0 |
 
-| Without an answer | Rules | Answered anyway: invented / false premise | UNKNOWN | Rejected the premise | Needs review | Errors |
-|---|---|---:|---:|---:|---:|---:|
-| GEL RAM | published | 0 / 6 | 74 | 0 | 0 | 0 |
-| GEL RAM | strict | 0 / 6 | 74 | 0 | 0 | 0 |
-| GPT-OSS-120B | published | 4 (5) / 5 (7) | 68 | 3 (0) | 0 | 0 |
-| GPT-OSS-120B | strict | 4 (5) / 5 (7) | 68 | 3 (0) | 0 | 0 |
-| GPT-OSS-20B | published | 22 (23) / 16 (17) | 40 | 2 (0) | 0 | 0 |
-| GPT-OSS-20B | strict | 22 (23) / 16 (17) | 40 | 2 (0) | 0 | 0 |
-| Qwen3.8-27B | published | 3 / 2 | 75 | 0 | 0 | 0 |
-| Qwen3.8-27B | strict | 3 / 2 | 75 | 0 | 0 | 0 |
+| Without an answer | Rules | Answered anyway: invented / false premise | Not an error: own source passage / held in the bank | UNKNOWN | Rejected the premise | Needs review | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| GEL RAM | published | 0 / 1 | 5 / 0 | 74 | 0 | 0 | 0 |
+| GEL RAM | strict | 0 / 1 | 5 / 0 | 74 | 0 | 0 | 0 |
+| GPT-OSS-120B | published | 4 (5) / 5 (7) | 0 / 0 | 68 | 3 (0) | 0 | 0 |
+| GPT-OSS-120B | strict | 4 (5) / 5 (7) | 0 / 0 | 68 | 3 (0) | 0 | 0 |
+| GPT-OSS-20B | published | 22 (23) / 16 (17) | 0 / 0 | 40 | 2 (0) | 0 | 0 |
+| GPT-OSS-20B | strict | 22 (23) / 16 (17) | 0 / 0 | 40 | 2 (0) | 0 | 0 |
+| Qwen3.8-27B | published | 3 / 2 | 0 / 0 | 75 | 0 | 0 | 0 |
+| Qwen3.8-27B | strict | 3 / 2 | 0 / 0 | 75 | 0 | 0 | 0 |
 <!-- ANSWER-BENCH-RESULTS-END -->
 
 Under the strict rules every recorded verdict is the same as under the
 published ones. GEL answered none of the synthetic subjects. On false premises
-it returned six passages that match the question without answering it; four of
-them contradict the premise.
+it returned six passages that match the question without answering it. Five of
+them are the passage the question was written from, and four of those
+contradict the premise; they are counted apart as not an error (before
+2026-10-18: 6 answered anyway). The sixth is another record and stays an answer
+to a question without one.
 
 ## How we compare
 

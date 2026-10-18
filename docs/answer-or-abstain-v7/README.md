@@ -162,28 +162,28 @@ exact sign test (McNemar's exact test) on those questions.
 | SQLite FTS5, always top 1 | published | 982 | 762 (775) | 220 (207) | 0 | 0 |
 | SQLite FTS5, always top 1 | strict | 982 | 762 (775) | 220 (207) | 0 | 0 |
 
-| Without an answer | Rules | Answered anyway: topic not in the bank / invented | UNKNOWN | Rejected the premise | Needs review | Errors |
-|---|---|---:|---:|---:|---:|---:|
-| GEL RAM | published | 18 / 8 | 573 | 0 | 0 | 0 |
-| GEL RAM | strict | 18 / 8 | 573 | 0 | 0 | 0 |
-| GEL RAM, precise setting | published | 2 / 1 | 596 | 0 | 0 | 0 |
-| GEL RAM, precise setting | strict | 2 / 1 | 596 | 0 | 0 | 0 |
-| GEL RAM, candidate change | published | 5 / 3 | 591 | 0 | 0 | 0 |
-| GEL RAM, candidate change | strict | 5 / 3 | 591 | 0 | 0 | 0 |
-| GEL RAM, candidate change, precise setting | published | 0 / 0 | 599 | 0 | 0 | 0 |
-| GEL RAM, candidate change, precise setting | strict | 0 / 0 | 599 | 0 | 0 | 0 |
-| Tantivy BM25, threshold | published | 87 / 33 | 479 | 0 | 0 | 0 |
-| Tantivy BM25, threshold | strict | 87 / 33 | 479 | 0 | 0 | 0 |
-| Tantivy BM25, strict threshold | published | 18 / 7 | 574 | 0 | 0 | 0 |
-| Tantivy BM25, strict threshold | strict | 18 / 7 | 574 | 0 | 0 | 0 |
-| Tantivy BM25, always top 1 | published | 399 / 200 | 0 | 0 | 0 | 0 |
-| Tantivy BM25, always top 1 | strict | 399 / 200 | 0 | 0 | 0 | 0 |
-| SQLite FTS5, threshold | published | 105 / 39 | 455 | 0 | 0 | 0 |
-| SQLite FTS5, threshold | strict | 105 / 39 | 455 | 0 | 0 | 0 |
-| SQLite FTS5, strict threshold | published | 20 / 9 | 570 | 0 | 0 | 0 |
-| SQLite FTS5, strict threshold | strict | 20 / 9 | 570 | 0 | 0 | 0 |
-| SQLite FTS5, always top 1 | published | 399 / 200 | 0 | 0 | 0 | 0 |
-| SQLite FTS5, always top 1 | strict | 399 / 200 | 0 | 0 | 0 | 0 |
+| Without an answer | Rules | Answered anyway: topic not in the bank / invented | Not an error: own source passage / held in the bank | UNKNOWN | Rejected the premise | Needs review | Errors |
+|---|---|---:|---:|---:|---:|---:|---:|
+| GEL RAM | published | 17 / 8 | 0 / 1 | 573 | 0 | 0 | 0 |
+| GEL RAM | strict | 17 / 8 | 0 / 1 | 573 | 0 | 0 | 0 |
+| GEL RAM, precise setting | published | 2 / 1 | 0 / 0 | 596 | 0 | 0 | 0 |
+| GEL RAM, precise setting | strict | 2 / 1 | 0 / 0 | 596 | 0 | 0 | 0 |
+| GEL RAM, candidate change | published | 4 / 3 | 0 / 1 | 591 | 0 | 0 | 0 |
+| GEL RAM, candidate change | strict | 4 / 3 | 0 / 1 | 591 | 0 | 0 | 0 |
+| GEL RAM, candidate change, precise setting | published | 0 / 0 | 0 / 0 | 599 | 0 | 0 | 0 |
+| GEL RAM, candidate change, precise setting | strict | 0 / 0 | 0 / 0 | 599 | 0 | 0 | 0 |
+| Tantivy BM25, threshold | published | 85 / 33 | 0 / 2 | 479 | 0 | 0 | 0 |
+| Tantivy BM25, threshold | strict | 85 / 33 | 0 / 2 | 479 | 0 | 0 | 0 |
+| Tantivy BM25, strict threshold | published | 16 / 7 | 0 / 2 | 574 | 0 | 0 | 0 |
+| Tantivy BM25, strict threshold | strict | 16 / 7 | 0 / 2 | 574 | 0 | 0 | 0 |
+| Tantivy BM25, always top 1 | published | 397 / 200 | 0 / 2 | 0 | 0 | 0 | 0 |
+| Tantivy BM25, always top 1 | strict | 397 / 200 | 0 / 2 | 0 | 0 | 0 | 0 |
+| SQLite FTS5, threshold | published | 103 / 39 | 0 / 2 | 455 | 0 | 0 | 0 |
+| SQLite FTS5, threshold | strict | 103 / 39 | 0 / 2 | 455 | 0 | 0 | 0 |
+| SQLite FTS5, strict threshold | published | 18 / 9 | 0 / 2 | 570 | 0 | 0 | 0 |
+| SQLite FTS5, strict threshold | strict | 18 / 9 | 0 / 2 | 570 | 0 | 0 | 0 |
+| SQLite FTS5, always top 1 | published | 397 / 200 | 0 / 2 | 0 | 0 | 0 | 0 |
+| SQLite FTS5, always top 1 | strict | 397 / 200 | 0 / 2 | 0 | 0 | 0 | 0 |
 
 | Published rules, after the review | Precision (95% Wilson) | Wrong among all questions (95% Wilson) | Polish: correct / answered | English: correct / answered |
 |---|---|---|---:|---:|
@@ -198,18 +198,18 @@ exact sign test (McNemar's exact test) on those questions.
 | SQLite FTS5, strict threshold | 97.7% (95.7–98.8%) | 0.9% (0.5–1.7%) | 247 / 255 | 137 / 138 |
 | SQLite FTS5, always top 1 | 77.6% (74.9–80.1%) | 22.4% (19.9–25.1%) | 380 / 487 | 382 / 495 |
 
-| All 1581 questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |
-|---|---:|---:|---:|---:|---:|
-| GEL RAM | 413 | 12 + 26 = 38 | 1130 | 238 / 26 | 175 / 12 |
-| GEL RAM, precise setting | 291 | 3 + 3 = 6 | 1284 | 170 / 5 | 121 / 1 |
-| GEL RAM, candidate change | 245 | 3 + 8 = 11 | 1325 | 152 / 6 | 93 / 5 |
-| GEL RAM, candidate change, precise setting | 176 | 1 + 0 = 1 | 1404 | 105 / 1 | 71 / 0 |
-| Tantivy BM25, threshold | 550 | 43 + 120 = 163 | 868 | 312 / 97 | 238 / 66 |
-| Tantivy BM25, strict threshold | 380 | 9 + 25 = 34 | 1167 | 242 / 24 | 138 / 10 |
-| Tantivy BM25, always top 1 | 750 | 232 + 599 = 831 | 0 | 370 / 416 | 380 / 415 |
-| SQLite FTS5, threshold | 581 | 43 + 144 = 187 | 813 | 325 / 108 | 256 / 79 |
-| SQLite FTS5, strict threshold | 384 | 9 + 29 = 38 | 1159 | 247 / 25 | 137 / 13 |
-| SQLite FTS5, always top 1 | 762 | 220 + 599 = 819 | 0 | 380 / 406 | 382 / 413 |
+| All 1581 questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | Not an error, without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |
+|---|---:|---:|---:|---:|---:|---:|
+| GEL RAM | 413 | 12 + 25 = 37 | 1 | 1130 | 238 / 25 | 175 / 12 |
+| GEL RAM, precise setting | 291 | 3 + 3 = 6 | 0 | 1284 | 170 / 5 | 121 / 1 |
+| GEL RAM, candidate change | 245 | 3 + 7 = 10 | 1 | 1325 | 152 / 5 | 93 / 5 |
+| GEL RAM, candidate change, precise setting | 176 | 1 + 0 = 1 | 0 | 1404 | 105 / 1 | 71 / 0 |
+| Tantivy BM25, threshold | 550 | 43 + 118 = 161 | 2 | 868 | 312 / 95 | 238 / 66 |
+| Tantivy BM25, strict threshold | 380 | 9 + 23 = 32 | 2 | 1167 | 242 / 22 | 138 / 10 |
+| Tantivy BM25, always top 1 | 750 | 232 + 597 = 829 | 2 | 0 | 370 / 414 | 380 / 415 |
+| SQLite FTS5, threshold | 581 | 43 + 142 = 185 | 2 | 813 | 325 / 106 | 256 / 79 |
+| SQLite FTS5, strict threshold | 384 | 9 + 27 = 36 | 2 | 1159 | 247 / 23 | 137 / 13 |
+| SQLite FTS5, always top 1 | 762 | 220 + 597 = 817 | 2 | 0 | 380 / 404 | 382 / 413 |
 
 | The same questions: first beside second | Correct only in the first / only in the second | Wrong only in the first / only in the second |
 |---|---:|---:|
@@ -228,18 +228,20 @@ the published ones.
   413 correct and 12 wrong. Its precision was 97.2% (95% Wilson interval 95.1–98.4%). On the
   earlier sets it was 95.6% on v1 + v2, where the setting was chosen, 95.7% on v4, 96.3% on v5
   and 96.1% on v6.
-- **Questions without an answer in the bank:** GEL RAM answered 18 of the 399 about topics
-  outside the bank and 8 of the 200 about invented subjects, and said `UNKNOWN` to the other 573.
-  - **All 1,581 questions:** 413 correct and 38 wrong (2.4%).
+- **Questions without an answer in the bank:** GEL RAM answered 17 of the 399 about topics
+  outside the bank and 8 of the 200 about invented subjects, and said `UNKNOWN` to 573. One more
+  answer, to question 124, is a passage that does hold the answer (see the limits below); until
+  2026-10-18 it counted as the 18th.
+  - **All 1,581 questions:** 413 correct and 37 wrong (2.3%).
 - **Beside the search engines at their strict thresholds**, which give about as many wrong answers
-  in all (34 and 38):
+  in all (32 and 36):
   - the engines answered 380 and 384 questions correctly; GEL RAM answered 413;
   - question by question, GEL RAM answered correctly 119 and 117 questions that the engines did
     not, and the engines 86 and 88 that GEL RAM did not (p = 0.025 and p = 0.050);
   - in English GEL RAM gave 175 correct answers, the engines 138 and 137; in Polish 238, the
     engines 242 and 247.
-  - At their plain thresholds the engines gave 550 and 581 correct answers, with 163 and 187
-    wrong in all; they answered 87 and 105 of the questions about topics outside the bank.
+  - At their plain thresholds the engines gave 550 and 581 correct answers, with 161 and 185
+    wrong in all; they answered 85 and 103 of the questions about topics outside the bank.
 - **At the precise setting GEL RAM gave 291 correct and 3 wrong answers**, a precision of 99.0%
   (97.0–99.7%). It answered 3 of the 599 questions without an answer: 6 wrong in all, 0.4% of all
   questions. On v4 to v6 the same setting gave 97.2%, 99.7% and 99.4%, so four sets together do
@@ -296,11 +298,20 @@ abstain on 574 and 570 of the 599 questions without an answer.
   because the bank of 671,416 passages is not published.
 - **Topics outside the bank are checked by their titles.** A topic can still be in the bank under
   another word form or inside another article.
-  - **Question 96 of the second part is such a case.** It asks which title Yad Vashem gave Natalia
-    Likos in 1993. A bank passage states it: "Jad Waszem uhonorował rodzinę Likosów (Piotra,
-    Apolonię i Natalię) tytułem Sprawiedliwy wśród Narodów Świata".
-  - The candidate change and both engine runs at their strict thresholds returned that passage.
-    By the rules it counts as an answer to a question without one, and it is left so.
+  - **Questions 96 and 124 of the second part are such cases.** Question 96 asks which title
+    Yad Vashem gave Natalia Likos in 1993. A bank passage states it: "Jad Waszem uhonorował
+    rodzinę Likosów (Piotra, Apolonię i Natalię) tytułem Sprawiedliwy wśród Narodów Świata".
+    Question 124 asks on which Kraków bishop's seal three crowns first appeared, by one hypothesis
+    about the arms of Pabianice. A bank passage about another coat of arms states it: "Pierwsze
+    zachowane wyobrażenie herbu pochodzi z roku 1296, kiedy pojawił się na pieczęci biskupa
+    krakowskiego Jana Muskaty".
+  - The candidate change and all six engine runs returned the first passage; GEL RAM at its
+    balanced setting and all six engine runs returned the second.
+  - Until 2026-10-18 these answers counted as answers to a question without one. Since then
+    [held-in-bank.txt](held-in-bank.txt) lists the two questions with the answering words, and a
+    returned passage containing them is counted apart, as not an error, for every system alike.
+    The file is a correction, not part of the frozen set: the set identity and the recorded
+    answers are unchanged.
 - **Invented subjects are checked against the bank only.** The checked names occur in no bank
   passage, which does not prove that such a subject exists nowhere.
 - **The questions** ask about randomly drawn passages, so many concern narrow facts. They test
