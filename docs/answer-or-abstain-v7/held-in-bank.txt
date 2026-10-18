@@ -1,0 +1,5 @@
+# Questions of the part without an answer that a bank passage answers after all (added 2026-10-18).
+# Not part of the frozen set: the set identity and the recorded answers are unchanged.
+# nr<TAB>words of the answering bank passage. A returned passage containing them is scored HELD, not as an answer to a question without one.
+96	tytułem Sprawiedliwy wśród Narodów Świata
+124	pieczęci biskupa krakowskiego Jana Muskaty

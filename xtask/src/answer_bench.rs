@@ -250,6 +250,12 @@ enum Verdict {
     Answered,
     Review,
     Error,
+    /// Without an answer: the returned passage is the very passage the question was written
+    /// from. The right record; whether it states the premise is the reader's to see.
+    OwnSource,
+    /// Without an answer: the returned passage contains the answer, which the bank does hold
+    /// although the question was written as having none (listed in `held-in-bank.txt`).
+    Held,
 }
 
 impl Verdict {
@@ -262,6 +268,8 @@ impl Verdict {
             Verdict::Answered => "ANSWERED",
             Verdict::Review => "REVIEW",
             Verdict::Error => "ERROR",
+            Verdict::OwnSource => "OWN_SOURCE",
+            Verdict::Held => "HELD",
         }
     }
 }
@@ -303,6 +311,10 @@ struct Question {
     kind: Kind,
     /// Language of the question: `pl` or `en`.
     lang: String,
+    /// Without an answer: the passage the question was written from, when it has one.
+    source: Option<String>,
+    /// Without an answer: words of a bank passage that answers it after all.
+    held: Option<String>,
 }
 
 struct Answer {
@@ -311,9 +323,9 @@ struct Answer {
 }
 
 /// correct, wrong, unknown, rejected, answered (invented), answered (false premise), review,
-/// errors, answered (topic not in the bank).
+/// errors, answered (topic not in the bank), own source passage, held in the bank.
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
-struct Totals([usize; 9]);
+struct Totals([usize; 11]);
 
 impl Totals {
     fn add(&mut self, v: Verdict, kind: Kind) {
@@ -325,6 +337,8 @@ impl Totals {
             Verdict::Answered => kind.slot(),
             Verdict::Review => 6,
             Verdict::Error => 7,
+            Verdict::OwnSource => 9,
+            Verdict::Held => 10,
         };
         self.0[i] += 1;
     }
@@ -340,11 +354,13 @@ impl Totals {
                 t[7]
             ),
             Set::NoAnswer => format!(
-                "answered_anyway={} (invented={} false_premise={} absent={}) unknown={} rejected={} review={} errors={}",
+                "answered_anyway={} (invented={} false_premise={} absent={}) own_source={} held={} unknown={} rejected={} review={} errors={}",
                 t[4] + t[5] + t[8],
                 t[4],
                 t[5],
                 t[8],
+                t[9],
+                t[10],
                 t[2],
                 t[3],
                 t[6],
@@ -437,7 +453,15 @@ fn verdict(set: Set, rules: Rules, q: &Question, answer: Option<&Answer>) -> Ver
                 Verdict::Wrong
             }
         }
-        // A returned source passage is an answer: its words are not read as a rejection.
+        // The record the question was written from is not an error, and neither is a passage
+        // that answers a question the bank does answer after all.
+        Set::NoAnswer if a.passage && q.source.as_deref() == Some(a.text.as_str()) => {
+            Verdict::OwnSource
+        }
+        Set::NoAnswer if a.passage && q.held.as_deref().is_some_and(|h| a.text.contains(h)) => {
+            Verdict::Held
+        }
+        // Any other returned passage is an answer: its words are not read as a rejection.
         Set::NoAnswer if a.passage || !negates(&a.text) => Verdict::Answered,
         // A negation may reject the premise or sit next to an invented fact: strict rules leave it to review.
         Set::NoAnswer => match rules {
@@ -535,10 +559,16 @@ fn questions(set: Set, text: &str, count: usize, kinds: &[Kind]) -> Result<Vec<Q
                 check_source(nr, &f[6..12])?;
             }
         }
+        let source = match kind {
+            Kind::FalsePremise | Kind::Absent => Some(f[11].to_owned()),
+            Kind::Answer | Kind::Invented => None,
+        };
         let q = Question {
             accepted,
             kind,
             lang,
+            source,
+            held: None,
         };
         out[nr - 1] = Some(q);
     }
@@ -649,10 +679,40 @@ fn count(def: &SetDef, set: Set) -> usize {
     }
 }
 
-/// The questions of one part of a set, read from its question file.
+/// The questions of one part of a set, read from its question file; without an answer, with
+/// the corrections of `held-in-bank.txt` when the set has that file.
 fn part_questions(root: &Path, def: &SetDef, set: Set) -> Result<Vec<Question>, String> {
-    let file = root.join(def.dir).join(question_file(set));
-    questions(set, &read(&file)?, count(def, set), def.no_answer.kinds)
+    let dir = root.join(def.dir);
+    let mut qs = questions(
+        set,
+        &read(&dir.join(question_file(set)))?,
+        count(def, set),
+        def.no_answer.kinds,
+    )?;
+    let held = dir.join(HELD_FILE);
+    if set == Set::NoAnswer && held.exists() {
+        held_in_bank(&read(&held)?, &mut qs)?;
+    }
+    Ok(qs)
+}
+
+/// Questions written as having no answer that a bank passage answers after all.
+const HELD_FILE: &str = "held-in-bank.txt";
+
+/// Exactly `nr<TAB>words`: the words of the bank passage that answer question `nr`.
+fn held_in_bank(text: &str, qs: &mut [Question]) -> Result<(), String> {
+    let mut seen = vec![false; qs.len()];
+    for f in rows(text) {
+        let [nr, words] = f.as_slice() else {
+            return Err(format!("{HELD_FILE}: expected nr and the answering words"));
+        };
+        let nr = question_number(nr, &mut seen)?;
+        if words.trim().is_empty() {
+            return Err(format!("{HELD_FILE}: question {nr} has no words"));
+        }
+        qs[nr - 1].held = Some((*words).to_owned());
+    }
+    Ok(())
 }
 
 /// One system scored on one part of a set under one rule set.
@@ -751,7 +811,7 @@ fn render(def: &SetDef, results: &Results) -> String {
     if results.iter().any(|r| r.set == Set::NoAnswer) {
         let kinds = def.no_answer.kinds;
         let names: Vec<&str> = kinds.iter().map(|k| k.label()).collect();
-        let _ = write!(s, "\n| Without an answer | Rules | Answered anyway: {} | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|\n", names.join(" / "));
+        let _ = write!(s, "\n| Without an answer | Rules | Answered anyway: {} | Not an error: own source passage / held in the bank | UNKNOWN | Rejected the premise | Needs review | Errors |\n|---|---|---:|---:|---:|---:|---:|---:|\n", names.join(" / "));
         for r in results.iter().filter(|r| r.set == Set::NoAnswer) {
             let (a, v) = (r.auto.0, r.reviewed.0);
             let anyway: Vec<String> = kinds
@@ -760,10 +820,12 @@ fn render(def: &SetDef, results: &Results) -> String {
                 .collect();
             let _ = writeln!(
                 s,
-                "| {} | {} | {} | {} | {} | {} | {} |",
+                "| {} | {} | {} | {} / {} | {} | {} | {} | {} |",
                 display(def, r.system),
                 rules_name(r.rules),
                 anyway.join(" / "),
+                cell(a[9], v[9]),
+                cell(a[10], v[10]),
                 cell(a[2], v[2]),
                 cell(a[3], v[3]),
                 cell(a[6], v[6]),
@@ -808,11 +870,12 @@ fn precision_table(def: &SetDef, results: &Results) -> String {
 }
 
 /// Both parts together (published rules, after the review): correct answers, wrong answers (a
-/// wrong answer to a question with one, any answer to a question without one) and UNKNOWN,
-/// and correct / wrong for each language.
+/// wrong answer to a question with one, any other answer to a question without one), answers
+/// to a question without one that are not an error (its own source passage, or held in the
+/// bank) and UNKNOWN, and correct / wrong for each language.
 fn all_questions_table(def: &SetDef, results: &Results) -> String {
     let n = def.count + def.no_answer.count;
-    let mut s = format!("\n| All {n} questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |\n|---|---:|---:|---:|---:|---:|\n");
+    let mut s = format!("\n| All {n} questions, published rules, after the review | Correct | Wrong: wrong answer + answered without an answer | Not an error, without an answer | UNKNOWN | Polish: correct / wrong | English: correct / wrong |\n|---|---:|---:|---:|---:|---:|---:|\n");
     let anyway = |t: &Totals| t.0[4] + t.0[5] + t.0[8];
     for &(system, _) in def.systems {
         let part = |set: Set| {
@@ -830,12 +893,13 @@ fn all_questions_table(def: &SetDef, results: &Results) -> String {
         let (tw, tb) = (&w.reviewed, &b.reviewed);
         let _ = writeln!(
             s,
-            "| {} | {} | {} + {} = {} | {} | {} | {} |",
+            "| {} | {} | {} + {} = {} | {} | {} | {} | {} |",
             display(def, system),
             tw.0[0],
             tw.0[1],
             anyway(tb),
             tw.0[1] + anyway(tb),
+            tb.0[9] + tb.0[10],
             tw.0[2] + tb.0[2],
             lang(0),
             lang(1)
@@ -1067,6 +1131,8 @@ mod tests {
                 .collect(),
             kind: Kind::Answer,
             lang: "pl".into(),
+            source: None,
+            held: None,
         }
     }
     fn a(text: &str) -> Answer {
@@ -1148,6 +1214,8 @@ mod tests {
             accepted: Vec::new(),
             kind: Kind::Invented,
             lang: "pl".into(),
+            source: None,
+            held: None,
         };
         for t in [
             "Nie zdobyła Oscara.",
@@ -1281,8 +1349,62 @@ mod tests {
         t.add(Verdict::Answered, Kind::Invented);
         assert_eq!(
             t.describe(Set::NoAnswer),
-            "answered_anyway=2 (invented=1 false_premise=0 absent=1) unknown=0 rejected=0 review=0 errors=0"
+            "answered_anyway=2 (invented=1 false_premise=0 absent=1) own_source=0 held=0 unknown=0 rejected=0 review=0 errors=0"
         );
+    }
+
+    #[test]
+    fn the_own_source_passage_and_a_held_answer_are_not_errors() {
+        let mut question = Question {
+            accepted: Vec::new(),
+            kind: Kind::FalsePremise,
+            lang: "pl".into(),
+            source: Some("Rozpoczął służbę w 9. Pułku Huzarów.".into()),
+            held: Some("tytułem Sprawiedliwy".into()),
+        };
+        let passage = |t: &str| Answer {
+            text: t.to_owned(),
+            passage: true,
+        };
+        for rules in [Rules::Published, Rules::Strict] {
+            let v = |a: &Answer, q: &Question| verdict(Set::NoAnswer, rules, q, Some(a));
+            // The very passage the question was written from, byte for byte.
+            let own = passage("Rozpoczął służbę w 9. Pułku Huzarów.");
+            assert_eq!(v(&own, &question), Verdict::OwnSource);
+            // Another passage, or the same words given as text, is still an answer.
+            assert_eq!(
+                v(&passage("Rozpoczął służbę."), &question),
+                Verdict::Answered
+            );
+            assert_eq!(
+                v(&a("Rozpoczął służbę w 9. Pułku Huzarów."), &question),
+                Verdict::Answered
+            );
+            // A passage holding the listed words answers a question the bank does answer.
+            let held =
+                passage("Jad Waszem uhonorował ich tytułem Sprawiedliwy wśród Narodów Świata.");
+            assert_eq!(v(&held, &question), Verdict::Held);
+            question.held = None;
+            assert_eq!(v(&held, &question), Verdict::Answered);
+            question.held = Some("tytułem Sprawiedliwy".into());
+        }
+        let mut t = Totals::default();
+        t.add(Verdict::OwnSource, Kind::FalsePremise);
+        t.add(Verdict::Held, Kind::Absent);
+        assert_eq!(
+            t.describe(Set::NoAnswer),
+            "answered_anyway=0 (invented=0 false_premise=0 absent=0) own_source=1 held=1 unknown=0 rejected=0 review=0 errors=0"
+        );
+        // The corrections file: one row per question, words required, numbers in range.
+        let mut qs = vec![Question {
+            held: None,
+            ..question
+        }];
+        held_in_bank("1\ttytułem\n", &mut qs).unwrap();
+        assert_eq!(qs[0].held.as_deref(), Some("tytułem"));
+        assert!(held_in_bank("1\t \n", &mut qs).is_err());
+        assert!(held_in_bank("2\ttytułem\n", &mut qs).is_err());
+        assert!(held_in_bank("1\ta\n1\tb\n", &mut qs).is_err());
     }
 
     #[test]
