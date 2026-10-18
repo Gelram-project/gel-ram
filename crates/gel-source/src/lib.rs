@@ -22,10 +22,11 @@ pub use bundle::{
 };
 mod parts;
 pub use parts::LeadPartsError;
-use sha2::{Digest, Sha256};
+mod sha256;
 pub type Hash = [u8; 32];
+/// The SHA-256 digest of `bytes` (FIPS 180-4, this crate's own implementation).
 pub fn digest(bytes: &[u8]) -> Hash {
-    Sha256::digest(bytes).into()
+    sha256::sha256(bytes)
 }
 use std::collections::BTreeMap;
 

@@ -59,12 +59,13 @@ the predecessor's full v2 integrity; its single-writer assumption still applies.
 ## Hardening in place
 
 - `unsafe_code = "forbid"` in `[workspace.lints.rust]`, applied to every crate through `[lints] workspace = true`, and `#![forbid(unsafe_code)]` at the root of every crate, `xtask` included; the workspace contains no `unsafe`.
-- The source catalog uses RustCrypto SHA-256 (sha2 0.10.9). Cargo.lock pins its
-  transitive dependencies; fetch them before offline verification. This is a
-  change from the dependency-free historical core.
+- SHA-256 is implemented in gel-source itself (FIPS 180-4, safe Rust,
+  `crates/gel-source/src/sha256.rs`), checked against the FIPS 180-2 example
+  messages and, in the tests only, against RustCrypto sha2 0.10.9. Cargo.lock still
+  pins third-party packages for Unicode normalization and for that test
+  dependency; fetch them before offline verification.
 - The workspace unsafe-code prohibition does not apply transitively to third-party
-  dependencies. SHA-256 and CPU feature detection may use platform-specific unsafe
-  implementations; their locked upstream sources remain a separate trust boundary.
+  dependencies; their locked upstream sources remain a separate trust boundary.
 - Source passages are untrusted content even after hash verification. Consumers
   must escape them for their output context; never execute them or treat embedded
   instructions as authorization.
