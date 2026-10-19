@@ -241,12 +241,7 @@ impl RamStore {
         let mut orbs = Vec::new();
         orbs.try_reserve_exact(count)
             .map_err(|_| GelError::AllocationFailed)?;
-        let mut bytes = [0u8; ORB_BYTES];
-        for _ in 0..count {
-            file.read_exact(&mut bytes)?;
-            check.update(&bytes);
-            orbs.push(Orb1024::from_le_bytes(&bytes)?);
-        }
+        stream_payload(&mut file, count, &mut check, Some(&mut orbs))?;
         let verification = check.finish()?;
         Ok(RamStore {
             header: verification.header,
@@ -260,8 +255,8 @@ impl RamStore {
 ///
 /// Runs exactly the header, limit and file-length checks of
 /// [`RamStore::open_verified_with_limits`], then streams the payload through
-/// one 128-byte stack buffer to check the payload digest. No payload is
-/// retained: memory use is constant regardless of file size. The report keeps
+/// one fixed buffer of at most 1 MiB to check the payload digest. No payload
+/// is retained: memory use is constant regardless of file size. The report keeps
 /// the actual on-disk source format separate from the protected v2 header a
 /// loaded store would carry.
 pub fn verify_file(path: impl AsRef<Path>, limits: OpenLimits) -> Result<Verification, GelError> {
@@ -270,12 +265,55 @@ pub fn verify_file(path: impl AsRef<Path>, limits: OpenLimits) -> Result<Verific
         count,
         mut check,
     } = open_validated(path.as_ref(), limits)?;
-    let mut bytes = [0u8; ORB_BYTES];
-    for _ in 0..count {
-        file.read_exact(&mut bytes)?;
-        check.update(&bytes);
-    }
+    stream_payload(&mut file, count, &mut check, None)?;
     check.finish()
+}
+
+/// Records per payload read or write: 8192 records, 1 MiB.
+const IO_BLOCK_RECORDS: usize = 8192;
+
+/// Reads `count` records in blocks of [`IO_BLOCK_RECORDS`], feeds every block
+/// to the digests and, when `orbs` is given, appends the decoded records.
+///
+/// The digests are streaming, so the result does not depend on the block
+/// size. A failed read returns the error `read_exact` reports, exactly as a
+/// read of one record at a time would; the records read before it cannot
+/// change the outcome because decoding 128 bytes cannot fail.
+fn stream_payload<R: Read>(
+    reader: &mut R,
+    count: usize,
+    check: &mut PayloadCheck,
+    mut orbs: Option<&mut Vec<Orb1024>>,
+) -> Result<(), GelError> {
+    let mut buffer = vec![0u8; count.min(IO_BLOCK_RECORDS) * ORB_BYTES];
+    let mut remaining = count;
+    while remaining > 0 {
+        let records = remaining.min(IO_BLOCK_RECORDS);
+        let block = &mut buffer[..records * ORB_BYTES];
+        reader.read_exact(block)?;
+        check.update(block);
+        if let Some(orbs) = orbs.as_deref_mut() {
+            for record in block.chunks_exact(ORB_BYTES) {
+                orbs.push(Orb1024::from_le_bytes(record)?);
+            }
+        }
+        remaining -= records;
+    }
+    Ok(())
+}
+
+/// Writes the records in blocks of [`IO_BLOCK_RECORDS`], one `write_all` per
+/// block. The bytes are the records' little-endian encodings in order.
+fn write_payload<W: Write>(writer: &mut W, orbs: &[Orb1024]) -> Result<(), GelError> {
+    let mut buffer = vec![0u8; orbs.len().min(IO_BLOCK_RECORDS) * ORB_BYTES];
+    for records in orbs.chunks(IO_BLOCK_RECORDS) {
+        let block = &mut buffer[..records.len() * ORB_BYTES];
+        for (bytes, orb) in block.chunks_exact_mut(ORB_BYTES).zip(records) {
+            bytes.copy_from_slice(&orb.to_le_bytes());
+        }
+        writer.write_all(block)?;
+    }
+    Ok(())
 }
 
 /// A file whose header passed every check that precedes the payload.
@@ -307,7 +345,7 @@ impl PayloadCheck {
         }
     }
 
-    fn update(&mut self, bytes: &[u8; ORB_BYTES]) {
+    fn update(&mut self, bytes: &[u8]) {
         match self {
             Self::V2 { crc, .. } => crc.update(bytes),
             Self::V1 { checksum, crc, .. } => {
@@ -431,9 +469,7 @@ fn write_atomic_bytes(path: &Path, header: Header, orbs: &[Orb1024]) -> Result<(
     let (tmp, mut file) = create_temp_file(path)?;
     let write_result = (|| -> Result<(), GelError> {
         file.write_all(&header.encode())?;
-        for orb in orbs {
-            file.write_all(&orb.to_le_bytes())?;
-        }
+        write_payload(&mut file, orbs)?;
         file.sync_all()?;
         Ok(())
     })();
@@ -1255,5 +1291,413 @@ mod tests {
         assert_eq!(short_header, 64);
         assert_eq!(length_mismatch, 128);
         assert_eq!(short_header + length_mismatch, 192);
+    }
+
+    // ---- block I/O against the one-record-at-a-time reference ---------------
+
+    /// The payload reader before block I/O: one `read_exact` per record.
+    fn reference_stream_payload<R: Read>(
+        reader: &mut R,
+        count: usize,
+        check: &mut PayloadCheck,
+        mut orbs: Option<&mut Vec<Orb1024>>,
+    ) -> Result<(), GelError> {
+        let mut bytes = [0u8; ORB_BYTES];
+        for _ in 0..count {
+            reader.read_exact(&mut bytes)?;
+            check.update(&bytes);
+            if let Some(orbs) = orbs.as_deref_mut() {
+                orbs.push(Orb1024::from_le_bytes(&bytes)?);
+            }
+        }
+        Ok(())
+    }
+
+    /// The payload writer before block I/O: one `write_all` per record.
+    fn reference_write_payload<W: Write>(writer: &mut W, orbs: &[Orb1024]) -> Result<(), GelError> {
+        for orb in orbs {
+            writer.write_all(&orb.to_le_bytes())?;
+        }
+        Ok(())
+    }
+
+    /// `open_verified_with_limits` and `verify_file` before block I/O, as
+    /// one comparable text: the result, and the records on success.
+    fn reference_open_and_verify(path: &Path) -> (String, String, Vec<Orb1024>) {
+        let loaded = (|| -> Result<(Verification, Vec<Orb1024>), GelError> {
+            let Validated {
+                mut file,
+                count,
+                mut check,
+            } = open_validated(path, OpenLimits::UNLIMITED)?;
+            let mut orbs = Vec::new();
+            orbs.try_reserve_exact(count)
+                .map_err(|_| GelError::AllocationFailed)?;
+            reference_stream_payload(&mut file, count, &mut check, Some(&mut orbs))?;
+            Ok((check.finish()?, orbs))
+        })();
+        let streamed = (|| -> Result<Verification, GelError> {
+            let Validated {
+                mut file,
+                count,
+                mut check,
+            } = open_validated(path, OpenLimits::UNLIMITED)?;
+            reference_stream_payload(&mut file, count, &mut check, None)?;
+            check.finish()
+        })();
+        match loaded {
+            Ok((verification, orbs)) => {
+                (format!("{verification:?}"), format!("{streamed:?}"), orbs)
+            }
+            Err(error) => (format!("{error:?}"), format!("{streamed:?}"), Vec::new()),
+        }
+    }
+
+    fn current_open_and_verify(path: &Path) -> (String, String, Vec<Orb1024>) {
+        let streamed = verify_file(path, OpenLimits::UNLIMITED);
+        match RamStore::open_verified_unbounded(path) {
+            Ok(store) => (
+                format!(
+                    "{:?}",
+                    Verification {
+                        source_format: store.source_format(),
+                        header: store.header(),
+                    }
+                ),
+                format!("{streamed:?}"),
+                store.orbs().to_vec(),
+            ),
+            Err(error) => (format!("{error:?}"), format!("{streamed:?}"), Vec::new()),
+        }
+    }
+
+    fn seeded_orbs(count: usize, seed: u64) -> Vec<Orb1024> {
+        (0..count)
+            .map(|i| orb(splitmix64(seed ^ (i as u64).wrapping_mul(0x9E37_79B9))))
+            .collect()
+    }
+
+    /// Record counts around every block edge, plus seeded ones.
+    fn edge_counts() -> Vec<usize> {
+        let b = IO_BLOCK_RECORDS;
+        let mut counts = vec![0, 1, 2, b - 1, b, b + 1, 2 * b, 2 * b + 1, 20_000];
+        for seed in 0..4u64 {
+            counts.push((splitmix64(seed + 700) % (3 * b as u64)) as usize);
+        }
+        counts
+    }
+
+    #[test]
+    fn block_io_files_match_record_at_a_time_reference() {
+        let path = path("block-io-differential");
+        let mut cases = 0usize;
+        for (index, count) in edge_counts().into_iter().enumerate() {
+            let records = seeded_orbs(count, 1_000 + index as u64);
+            let generation = 40 + index as u64;
+            let store = RamStore::from_orbs(records.clone(), Generation(generation));
+            store.write_atomic(&path).unwrap();
+            let written = fs::read(&path).unwrap();
+            let mut reference = store.header().encode().to_vec();
+            reference_write_payload(&mut reference, &records).unwrap();
+            assert_eq!(written, reference, "write bytes, {count} records");
+            assert_eq!(written, v2_file_bytes(&records, generation));
+
+            let legacy = legacy_v1_file_bytes(&records, generation);
+            for (format, original) in [written, legacy].into_iter().enumerate() {
+                // Release builds check both formats; debug builds (slow
+                // bitwise CRC) alternate between them.
+                if cfg!(debug_assertions) && (index + format) % 2 == 1 {
+                    continue;
+                }
+                let payload = original.len() - HEADER_BYTES;
+                let mut variants = vec![original.clone()];
+                if payload > 0 {
+                    for offset in [0, payload / 2, payload - 1] {
+                        let mut flipped = original.clone();
+                        flipped[HEADER_BYTES + offset] ^= 0x5A;
+                        variants.push(flipped);
+                    }
+                    let mut short = original.clone();
+                    short.pop();
+                    variants.push(short);
+                }
+                for (variant, bytes) in variants.iter().enumerate() {
+                    fs::write(&path, bytes).unwrap();
+                    let expected = reference_open_and_verify(&path);
+                    let actual = current_open_and_verify(&path);
+                    assert_eq!(actual, expected, "{count} records, variant {variant}");
+                    if variant == 0 {
+                        assert_eq!(actual.2, records);
+                    } else if variant <= 3 {
+                        assert_eq!(actual.0, "CorruptStore");
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        let _ = fs::remove_file(path);
+        // 13 counts, 5 variants each, 1 for the empty store.
+        let formats = if cfg!(debug_assertions) { 1 } else { 2 };
+        assert_eq!(cases, formats * (12 * 5 + 1));
+    }
+
+    /// Serves `data[..end]` in pieces of seeded length, with seeded
+    /// `Interrupted` errors, then either ends or fails.
+    struct ScriptedReader<'a> {
+        data: &'a [u8],
+        pos: usize,
+        end: usize,
+        fault: Option<std::io::ErrorKind>,
+        rng: u64,
+    }
+
+    impl Read for ScriptedReader<'_> {
+        fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+            self.rng = splitmix64(self.rng);
+            if self.rng % 5 == 0 {
+                return Err(std::io::ErrorKind::Interrupted.into());
+            }
+            if self.pos >= self.end {
+                return match self.fault {
+                    Some(kind) => Err(std::io::Error::new(kind, "scripted fault")),
+                    None => Ok(0),
+                };
+            }
+            let piece =
+                [1, 7, 127, 128, 129, 4096, 1 << 20, usize::MAX][(self.rng >> 8) as usize % 8];
+            let n = buf.len().min(self.end - self.pos).min(piece);
+            buf[..n].copy_from_slice(&self.data[self.pos..self.pos + n]);
+            self.pos += n;
+            Ok(n)
+        }
+    }
+
+    /// Accepts pieces of seeded length with seeded `Interrupted` errors and
+    /// fails (or accepts nothing) once `limit` bytes are taken.
+    struct ScriptedWriter {
+        taken: Vec<u8>,
+        limit: usize,
+        fault: Option<std::io::ErrorKind>,
+        rng: u64,
+    }
+
+    impl Write for ScriptedWriter {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.rng = splitmix64(self.rng);
+            if self.rng % 5 == 0 {
+                return Err(std::io::ErrorKind::Interrupted.into());
+            }
+            if self.taken.len() >= self.limit {
+                return match self.fault {
+                    Some(kind) => Err(std::io::Error::new(kind, "scripted fault")),
+                    None => Ok(0),
+                };
+            }
+            let piece =
+                [1, 7, 127, 128, 129, 4096, 1 << 20, usize::MAX][(self.rng >> 8) as usize % 8];
+            let n = buf.len().min(self.limit - self.taken.len()).min(piece);
+            self.taken.extend_from_slice(&buf[..n]);
+            Ok(n)
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    fn payload_check(records: &[Orb1024], legacy: bool, payload: &[u8]) -> PayloadCheck {
+        if legacy {
+            PayloadCheck::V1 {
+                record_count: records.len() as u64,
+                expected_checksum: checksum64(payload),
+                checksum: Checksum64::new(),
+                crc: Crc64Ecma::new(),
+            }
+        } else {
+            PayloadCheck::V2 {
+                header: Header::new(records.len() as u64, Generation(3), crc64_ecma(payload)),
+                crc: Crc64Ecma::new(),
+            }
+        }
+    }
+
+    /// Runs both readers over the same scripted stream and returns their
+    /// outcomes: read result, digest verdict, decoded records.
+    fn both_reads(
+        records: &[Orb1024],
+        stream: &[u8],
+        end: usize,
+        fault: Option<std::io::ErrorKind>,
+        legacy: bool,
+        load: bool,
+        seed: u64,
+    ) -> [(String, String, Vec<Orb1024>); 2] {
+        let payload: Vec<u8> = records.iter().flat_map(|orb| orb.to_le_bytes()).collect();
+        let mut out = Vec::new();
+        for reference in [false, true] {
+            let mut reader = ScriptedReader {
+                data: stream,
+                pos: 0,
+                end,
+                fault,
+                rng: seed ^ u64::from(reference),
+            };
+            let mut check = payload_check(records, legacy, &payload);
+            let mut orbs = Vec::new();
+            let sink = if load { Some(&mut orbs) } else { None };
+            let result = if reference {
+                reference_stream_payload(&mut reader, records.len(), &mut check, sink)
+            } else {
+                stream_payload(&mut reader, records.len(), &mut check, sink)
+            };
+            // On a read error the callers return it and drop the digests and
+            // the records, so only the error itself is observable.
+            out.push(match result {
+                Ok(()) => ("Ok(())".to_string(), format!("{:?}", check.finish()), orbs),
+                Err(error) => (format!("Err({error:?})"), String::new(), Vec::new()),
+            });
+        }
+        [out.remove(0), out.remove(0)]
+    }
+
+    #[test]
+    fn block_reads_match_record_reads_on_short_reads_faults_and_ends() {
+        let kinds = [
+            None,
+            Some(std::io::ErrorKind::Other),
+            Some(std::io::ErrorKind::PermissionDenied),
+        ];
+        let mut cases = 0usize;
+        for (index, count) in edge_counts().into_iter().enumerate() {
+            let records = seeded_orbs(count, 5_000 + index as u64);
+            let payload: Vec<u8> = records.iter().flat_map(|orb| orb.to_le_bytes()).collect();
+            let mut corrupt = payload.clone();
+            if let Some(byte) = corrupt.last_mut() {
+                *byte ^= 1;
+            }
+            for trial in 0..6u64 {
+                let seed = splitmix64(((index as u64) << 8) | trial);
+                let len = payload.len();
+                let end = match trial {
+                    0 | 1 => len,
+                    2 => len.saturating_sub(1),
+                    3 => len.saturating_sub(ORB_BYTES),
+                    _ => (seed % (len as u64 + 1)) as usize,
+                };
+                let combos = [(false, false), (false, true), (true, false), (true, true)];
+                let modes = kinds.iter().flat_map(|&fault| {
+                    combos
+                        .iter()
+                        .map(move |&(legacy, load)| (fault, legacy, load))
+                });
+                // Release builds run every mode; debug builds (slow bitwise
+                // CRC) rotate through them, one per trial.
+                let pick = (index * 6 + trial as usize) % 12;
+                for (mode, (fault, legacy, load)) in modes.enumerate() {
+                    if cfg!(debug_assertions) && mode != pick {
+                        continue;
+                    }
+                    let stream = if trial == 1 { &corrupt } else { &payload };
+                    let [actual, expected] =
+                        both_reads(&records, stream, end, fault, legacy, load, seed);
+                    assert_eq!(
+                        actual, expected,
+                        "{count} records, end {end}, fault {fault:?}, legacy {legacy}, load {load}"
+                    );
+                    if end == len && trial == 0 {
+                        assert_eq!(actual.0, "Ok(())");
+                        assert!(actual.1.starts_with("Ok("));
+                        if load {
+                            assert_eq!(actual.2, records);
+                        }
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        let modes = if cfg!(debug_assertions) { 1 } else { 3 * 4 };
+        assert_eq!(cases, 13 * 6 * modes);
+    }
+
+    #[test]
+    fn block_writes_match_record_writes_on_short_writes_and_faults() {
+        let kinds = [
+            None,
+            Some(std::io::ErrorKind::Other),
+            Some(std::io::ErrorKind::StorageFull),
+        ];
+        let mut cases = 0usize;
+        for (index, count) in edge_counts().into_iter().enumerate() {
+            let records = seeded_orbs(count, 9_000 + index as u64);
+            let len = count * ORB_BYTES;
+            for trial in 0..5u64 {
+                let seed = splitmix64(((index as u64) << 8) | trial | 0x8000);
+                let limit = match trial {
+                    0 => usize::MAX,
+                    1 => len,
+                    2 => len.saturating_sub(1),
+                    _ => (seed % (len as u64 + 1)) as usize,
+                };
+                for fault in kinds {
+                    let mut outcomes = Vec::new();
+                    for reference in [false, true] {
+                        let mut writer = ScriptedWriter {
+                            taken: Vec::new(),
+                            limit,
+                            fault,
+                            rng: seed ^ u64::from(reference),
+                        };
+                        let result = if reference {
+                            reference_write_payload(&mut writer, &records)
+                        } else {
+                            write_payload(&mut writer, &records)
+                        };
+                        outcomes.push((format!("{result:?}"), writer.taken));
+                    }
+                    assert_eq!(
+                        outcomes[0], outcomes[1],
+                        "{count} records, limit {limit}, fault {fault:?}"
+                    );
+                    if limit >= len {
+                        assert_eq!(outcomes[0].0, "Ok(())");
+                        assert_eq!(outcomes[0].1.len(), len);
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        assert_eq!(cases, 13 * 5 * 3);
+    }
+
+    /// The largest store the default budget admits, 2,097,152 records
+    /// (256 MiB). Release builds only: the bitwise CRC makes it slow
+    /// without optimization.
+    #[test]
+    fn block_reads_match_record_reads_at_the_default_budget() {
+        if cfg!(debug_assertions) {
+            return;
+        }
+        let count = DEFAULT_MAX_RECORDS as usize;
+        let records = seeded_orbs(count, 77);
+        let mut payload = Vec::with_capacity(count * ORB_BYTES);
+        reference_write_payload(&mut payload, &records).unwrap();
+        let mut blocked = Vec::with_capacity(count * ORB_BYTES);
+        write_payload(&mut blocked, &records).unwrap();
+        assert!(blocked == payload);
+        drop(blocked);
+        let len = payload.len();
+        for (end, load) in [
+            (len, true),
+            (len - 1, false),
+            (len - ORB_BYTES * 3 + 5, false),
+        ] {
+            let [actual, expected] = both_reads(&records, &payload, end, None, false, load, 3);
+            assert!(actual == expected, "end {end}");
+            if end == len {
+                assert_eq!(actual.0, "Ok(())");
+                assert!(actual.1.starts_with("Ok("));
+                assert!(actual.2 == records);
+            }
+        }
     }
 }
