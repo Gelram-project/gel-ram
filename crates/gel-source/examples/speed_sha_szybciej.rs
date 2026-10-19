@@ -1,0 +1,67 @@
+//! Timing probe for `gel_source::digest` (SHA-256). Cases:
+//! `large`: one digest of MAX_TEXT (64 MiB) of deterministic bytes;
+//! `small`: 65,536 digests of messages of 0..=127 bytes (every padding case).
+//! Prints `SPEED name=<case> run=<i> ns=<n>` per run and finally
+//! `SPEED_CHECK sha256=<hex>`, the digest of every produced digest, so that two
+//! builds can be checked for identical output. Usage: `speed_sha_szybciej [R]`
+//! (repetitions, default 9).
+use gel_source::{digest, hex, MAX_TEXT};
+use std::{hint::black_box, time::Instant};
+
+const SMALL: usize = 65_536;
+
+fn bytes(len: usize) -> Vec<u8> {
+    let mut state = 0x9e37_79b9_7f4a_7c15u64;
+    (0..len)
+        .map(|_| {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            (state >> 24) as u8
+        })
+        .collect()
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let runs: usize = std::env::args()
+        .nth(1)
+        .unwrap_or_else(|| "9".into())
+        .parse()?;
+    if !(1..=1000).contains(&runs) {
+        return Err("repetitions must be 1..=1000".into());
+    }
+    let data = bytes(MAX_TEXT);
+    let mut first: Option<Vec<u8>> = None;
+    for run in 0..runs {
+        let mut produced = Vec::with_capacity(32 * (SMALL + 1));
+
+        let at = Instant::now();
+        let large = digest(black_box(&data));
+        let ns = at.elapsed().as_nanos();
+        black_box(&large);
+        println!("SPEED name=large run={run} ns={ns}");
+        produced.extend_from_slice(&large);
+
+        let mut small = vec![[0u8; 32]; SMALL];
+        let at = Instant::now();
+        for (i, out) in small.iter_mut().enumerate() {
+            let start = (i * 61) % (MAX_TEXT - 128);
+            *out = digest(black_box(&data[start..start + (i % 128)]));
+        }
+        let ns = at.elapsed().as_nanos();
+        black_box(&small);
+        println!("SPEED name=small run={run} ns={ns}");
+        for d in &small {
+            produced.extend_from_slice(d);
+        }
+
+        match &first {
+            None => first = Some(produced),
+            Some(f) if *f != produced => return Err(format!("run {run} differs").into()),
+            Some(_) => {}
+        }
+    }
+    let outputs = first.unwrap_or_default();
+    println!("SPEED_CHECK sha256={}", hex(&digest(&outputs)));
+    Ok(())
+}
