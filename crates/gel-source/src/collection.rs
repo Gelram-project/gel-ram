@@ -217,16 +217,27 @@ impl Collection {
         Ok(())
     }
     pub fn search(&self, phrase: &str) -> Result<Search, String> {
+        self.search_with_plan(phrase, None)
+    }
+    fn search_with_plan(
+        &self,
+        phrase: &str,
+        plan: Option<document::Plan>,
+    ) -> Result<Search, String> {
         // Validate even an empty collection. Never concatenate document boundaries.
-        document::search("", phrase)?;
+        let query = document::Query::parse(phrase)?;
+        let texts: Vec<&str> = self.documents.values().map(|d| d.text.as_str()).collect();
+        if texts.iter().any(|t| t.len() > document::MAX_TEXT) {
+            return Err("DOCUMENT_SEARCH_LIMIT".into());
+        }
         let mut out = Search {
             hits: Vec::new(),
             matching_lines: 0,
             skipped_long_lines: 0,
             documents_examined: 0,
         };
-        for d in self.documents.values() {
-            let found = document::search(&d.text, phrase)?;
+        let results = document::search_texts(&texts, &query, plan);
+        for (d, found) in self.documents.values().zip(results) {
             out.documents_examined += 1;
             out.matching_lines += found.matching_lines;
             out.skipped_long_lines += found.skipped_long_lines;
@@ -372,5 +383,129 @@ impl<'a> Cursor<'a> {
         Ok(u64::from_le_bytes(
             self.take(8)?.try_into().map_err(|_| "COLLECTION_LENGTH")?,
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The collection search of v0.6.1 over the reference document search.
+    fn search_reference(c: &Collection, phrase: &str) -> Result<Search, String> {
+        document::search_reference("", phrase)?;
+        let mut out = Search {
+            hits: Vec::new(),
+            matching_lines: 0,
+            skipped_long_lines: 0,
+            documents_examined: 0,
+        };
+        for d in c.documents.values() {
+            let found = document::search_reference(&d.text, phrase)?;
+            out.documents_examined += 1;
+            out.matching_lines += found.matching_lines;
+            out.skipped_long_lines += found.skipped_long_lines;
+            for span in found.passages {
+                if out.hits.len() < MAX_RESULTS {
+                    out.hits.push(Hit {
+                        root: c.root,
+                        document_id: d.id,
+                        document_hash: d.hash,
+                        quote: d.text[span.clone()].into(),
+                        span,
+                    });
+                }
+            }
+        }
+        Ok(out)
+    }
+
+    fn summary(s: &Result<Search, String>) -> Result<String, String> {
+        let s = s.as_ref().map_err(Clone::clone)?;
+        let mut out = format!(
+            "{} {} {}\n",
+            s.matching_lines, s.skipped_long_lines, s.documents_examined
+        );
+        for h in &s.hits {
+            out.push_str(&format!(
+                "{:?} {} {:?} {:?} {:?}\n",
+                h.root, h.document_id, h.document_hash, h.span, h.quote
+            ));
+        }
+        Ok(out)
+    }
+
+    #[test]
+    fn parallel_collection_search_matches_reference() {
+        let mut seed = 1234_u64;
+        for case in 0..60 {
+            let mut builder = CollectionBuilder::new();
+            for i in 0..case % 23 {
+                let text = match (case + i) % 4 {
+                    0 => "Ada not approved\r\n".repeat(1 + i % 7),
+                    _ => {
+                        let t = document::sample_text(&mut seed, 1 + (case + i) % 25);
+                        if t.is_empty() {
+                            "x".into()
+                        } else {
+                            t
+                        }
+                    }
+                };
+                builder.add(&format!("Document {i}"), &text).unwrap();
+            }
+            let mut c = builder.build();
+            if case % 5 == 4 && c.documents.len() > 2 {
+                // Gaps in the id order.
+                let id = *c.documents.keys().nth(1).unwrap();
+                c.remove(id).unwrap();
+            }
+            for phrase in [
+                "ada not",
+                "Ada not approved",
+                "łódź",
+                "οσ",
+                "a",
+                "missing token",
+                "!!!",
+                "",
+                "x\ty",
+            ] {
+                let expected = summary(&search_reference(&c, phrase));
+                assert_eq!(
+                    summary(&c.search(phrase)),
+                    expected,
+                    "case {case} {phrase:?}"
+                );
+                for plan in [document::Plan::forced(3, 1), document::Plan::forced(6, 41)] {
+                    assert_eq!(
+                        summary(&c.search_with_plan(phrase, Some(plan))),
+                        expected,
+                        "case {case} {phrase:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn large_collection_takes_the_parallel_path_and_matches_reference() {
+        let mut seed = 99_u64;
+        let mut builder = CollectionBuilder::new();
+        for i in 0..40 {
+            let mut text = String::new();
+            while text.len() < 64 << 10 {
+                text.push_str(&document::sample_text(&mut seed, 32));
+            }
+            builder.add(&format!("Document {i}"), &text).unwrap();
+        }
+        let c = builder.build();
+        assert!(c.text_bytes() > 2 << 20);
+        for phrase in ["ada not", "łódź", "οσ", "x123", "missing token"] {
+            assert_eq!(
+                summary(&c.search(phrase)),
+                summary(&search_reference(&c, phrase)),
+                "{phrase:?}"
+            );
+        }
     }
 }

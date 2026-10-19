@@ -134,9 +134,21 @@ fn compose(first: u32, second: u32) -> Option<u32> {
 
 /// `s` in Normalization Form C.
 pub(crate) fn nfc(s: &str) -> String {
+    nfc_cow(s).into_owned()
+}
+
+/// `s` in Normalization Form C, borrowed when `s` already passes the quick check.
+pub(crate) fn nfc_cow(s: &str) -> std::borrow::Cow<'_, str> {
     if is_nfc_by_quick_check(s) {
-        return s.to_owned();
+        std::borrow::Cow::Borrowed(s)
+    } else {
+        std::borrow::Cow::Owned(normalize(s))
     }
+}
+
+/// Decomposition, canonical ordering and composition of a string that did not
+/// pass the quick check.
+fn normalize(s: &str) -> String {
     let mut decomposed: Vec<(u8, u32)> = Vec::with_capacity(s.len());
     for c in s.chars() {
         decompose(c as u32, &mut decomposed);
