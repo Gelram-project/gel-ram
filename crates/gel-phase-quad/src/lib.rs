@@ -72,6 +72,25 @@ pub fn effective_workers(requested: usize, records: usize) -> Result<usize, &'st
     let available = std::thread::available_parallelism().map_or(1, usize::from);
     budget(requested, records, available)
 }
+/// Bodies scored together inside one scan chunk.
+const LANES: usize = 4;
+
+/// Calls `f` with the phase difference of every position that counts: query
+/// support, intersected with body activity unless the policy is Archive.
+/// Positions are visited word by word over the set mask bits.
+#[inline(always)]
+fn for_each_difference(q: &Query, body: &Record, policy: Policy, mut f: impl FnMut(usize)) {
+    let archive = matches!(policy, Policy::Archive);
+    for (w, (&qm, &bm)) in q.record.mask.iter().zip(&body.mask).enumerate() {
+        let mut m = if archive { qm } else { qm & bm };
+        while m != 0 {
+            let j = w * 64 + m.trailing_zeros() as usize;
+            f(q.record.phase[j].wrapping_sub(body.phase[j]) as usize);
+            m &= m - 1;
+        }
+    }
+}
+
 /// Execution facts of one scan, for timing reports.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ScanReport {
@@ -122,11 +141,7 @@ impl Reader {
             return None;
         }
         let mut hist = [0u32; 256];
-        for &j in &q.active {
-            if matches!(policy, Policy::Archive) || (body.mask[j / 64] >> (j % 64)) & 1 != 0 {
-                hist[q.record.phase[j].wrapping_sub(body.phase[j]) as usize] += 1;
-            }
-        }
+        for_each_difference(q, body, policy, |d| hist[d] += 1);
         let s = hist
             .iter()
             .zip(self.cos)
@@ -134,6 +149,25 @@ impl Reader {
             .sum::<f64>()
             / q.active.len() as f64;
         Some(SharedScore(s))
+    }
+    /// Scores `LANES` bodies of a nonempty query at once. Each lane runs the
+    /// same multiply-then-add sequence over bins 0..255 as [`Self::read`],
+    /// followed by the same division, so every score keeps its bits.
+    fn read_lanes(&self, q: &Query, bodies: &[Record], policy: Policy, scores: &mut [SharedScore]) {
+        let mut hist = [[0u32; LANES]; 256];
+        for (lane, body) in bodies.iter().enumerate() {
+            for_each_difference(q, body, policy, |d| hist[d][lane] += 1);
+        }
+        let mut acc = [-0.0f64; LANES];
+        for (counts, &c) in hist.iter().zip(&self.cos) {
+            for (a, &n) in acc.iter_mut().zip(counts) {
+                *a += n as f64 * c;
+            }
+        }
+        let support = q.active.len() as f64;
+        for (score, a) in scores.iter_mut().zip(acc) {
+            *score = SharedScore(a / support);
+        }
     }
     /// `false` = UNKNOWN query; clears stale output. `true` may include an empty bank.
     /// Reuses the allocation; only canonical records are scanned.
@@ -183,7 +217,12 @@ impl Reader {
             });
         }
         let fill = |records: &[Record], scores: &mut [SharedScore]| {
-            for (record, score) in records.iter().zip(scores) {
+            let mut groups = records.chunks_exact(LANES);
+            let mut outs = scores.chunks_exact_mut(LANES);
+            for (group, out) in (&mut groups).zip(&mut outs) {
+                self.read_lanes(q, group, policy, out);
+            }
+            for (record, score) in groups.remainder().iter().zip(outs.into_remainder()) {
                 *score = self
                     .read(q, record, policy)
                     .expect("nonempty prepared query");
@@ -276,6 +315,126 @@ mod tests {
                 }
             }
         }
+    }
+    /// The per-position scoring loop that `read` and `scan_into` replaced,
+    /// kept verbatim as the differential reference.
+    fn read_reference(
+        reader: &Reader,
+        q: &Query,
+        body: &Record,
+        policy: Policy,
+    ) -> Option<SharedScore> {
+        if q.active.is_empty() {
+            return None;
+        }
+        let mut hist = [0u32; 256];
+        for &j in &q.active {
+            if matches!(policy, Policy::Archive) || (body.mask[j / 64] >> (j % 64)) & 1 != 0 {
+                hist[q.record.phase[j].wrapping_sub(body.phase[j]) as usize] += 1;
+            }
+        }
+        let s = hist
+            .iter()
+            .zip(reader.cos)
+            .map(|(&n, c)| n as f64 * c)
+            .sum::<f64>()
+            / q.active.len() as f64;
+        Some(SharedScore(s))
+    }
+    struct SplitMix(u64);
+    impl SplitMix {
+        fn next(&mut self) -> u64 {
+            self.0 = self.0.wrapping_add(0x9e3779b97f4a7c15);
+            let mut z = self.0;
+            z = (z ^ (z >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94d049bb133111eb);
+            z ^ (z >> 31)
+        }
+        /// Activity with probability `per_256 / 256` at each position.
+        fn mask(&mut self, per_256: u64) -> [bool; DIM] {
+            std::array::from_fn(|_| self.next() % 256 < per_256)
+        }
+        fn phase(&mut self) -> Carrier {
+            std::array::from_fn(|_| self.next() as u8)
+        }
+    }
+    fn single(bits: &[usize]) -> [bool; DIM] {
+        std::array::from_fn(|j| bits.contains(&j))
+    }
+    #[test]
+    fn mask_walk_and_lanes_match_the_per_position_reference_bit_for_bit() {
+        let mut checked = 0usize;
+        for seed in 0..4u64 {
+            let reader = Reader::new(seed * 7919 + 1);
+            let mut rng = SplitMix(seed ^ 0x51ed_270b_d1c3_a4f1);
+            let base = rng.phase();
+            let mut queries: Vec<Record> = Vec::new();
+            for per_256 in [0, 1, 4, 64, 128, 171, 252, 256] {
+                queries.push(Record::new(rng.phase(), &rng.mask(per_256)));
+            }
+            for bits in [
+                &[0][..],
+                &[63],
+                &[64],
+                &[1023],
+                &[0, 1023],
+                &[63, 64, 127, 960],
+            ] {
+                queries.push(Record::new(rng.phase(), &single(bits)));
+            }
+            queries.push(Record::new(base, &std::array::from_fn(|j| j >= DIM - 64)));
+            let bank: Vec<Record> = (0..1031)
+                .map(|n| {
+                    let phase = match n % 11 {
+                        // Zero and opposite differences against the base query.
+                        0 => base,
+                        1 => base.map(|p| p.wrapping_add(128)),
+                        _ => rng.phase(),
+                    };
+                    let active = match n % 7 {
+                        0 => [false; DIM],
+                        1 => [true; DIM],
+                        2 => single(&[n % DIM]),
+                        k => rng.mask([64, 171, 255, 128][k - 3]),
+                    };
+                    Record::new(phase, &active)
+                })
+                .collect();
+            let mut out = vec![SharedScore(f64::NAN); 3];
+            for record in &queries {
+                let q = reader.prepare(record.clone());
+                for policy in [Policy::Archive, Policy::BodyActivity] {
+                    let expected: Vec<Option<u64>> = bank
+                        .iter()
+                        .map(|b| {
+                            read_reference(&reader, &q, b, policy).map(|s| s.value().to_bits())
+                        })
+                        .collect();
+                    let direct: Vec<Option<u64>> = bank
+                        .iter()
+                        .map(|b| reader.read(&q, b, policy).map(|s| s.value().to_bits()))
+                        .collect();
+                    assert_eq!(direct, expected, "read, seed {seed}");
+                    for len in (0..=9).chain([129, 1031]) {
+                        for workers in [1, 2, 3, 7, usize::MAX] {
+                            let scored = reader
+                                .scan_into(&q, &bank[..len], policy, workers, &mut out)
+                                .unwrap();
+                            if q.active.is_empty() {
+                                assert!(!scored && out.is_empty());
+                                continue;
+                            }
+                            assert!(scored);
+                            let got: Vec<Option<u64>> =
+                                out.iter().map(|s| Some(s.value().to_bits())).collect();
+                            assert_eq!(got, expected[..len], "scan, seed {seed} len {len}");
+                            checked += len;
+                        }
+                    }
+                }
+            }
+        }
+        assert!(checked > 100_000);
     }
     #[test]
     fn invalid_budget_clears_stale_scores_and_recovers() {
