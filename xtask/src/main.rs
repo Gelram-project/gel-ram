@@ -1000,6 +1000,84 @@ fn run_release_binary<S: AsRef<OsStr>>(package: &str, args: &[S]) -> Result<(), 
     }
 }
 
+/// Release examples that `verify` runs. Its one release build compiles them together
+/// with every library and binary, so each later `cargo run` step only executes.
+const VERIFY_RELEASE_EXAMPLES: &[(&str, &str)] = &[
+    ("gel-source", "collection_recheck"),
+    ("gel-phase-quad", "quad_compare"),
+    ("gel-phase-quad", "quad_evidence"),
+    ("gel-phase-quad", "quad_playground"),
+    ("gel-source", "source_readout"),
+    ("gel-source", "source_parts"),
+    ("gel-source", "source_real"),
+    ("gel-source", "source_find"),
+    ("gel-source", "source_build"),
+    ("gel-source", "collection_review"),
+    ("gel-cli", "quantization_matrix"),
+    ("gel-history", "record_history"),
+];
+
+/// Examples that `verify` runs one after another, in order, with their arguments.
+const VERIFY_LOOP_EXAMPLES: &[(&str, &str, &[&str])] = &[
+    ("gel-phase-quad", "quad_playground", &["--demo"]),
+    ("gel-source", "source_readout", &[]),
+    ("gel-source", "source_parts", &[]),
+    ("gel-source", "source_real", &[]),
+    ("gel-source", "source_find", &[]),
+    ("gel-source", "source_build", &[]),
+    ("gel-source", "collection_review", &[]),
+    ("gel-cli", "quantization_matrix", &[]),
+    ("gel-history", "record_history", &[]),
+];
+
+/// `cargo build --release` of every library and binary (the default targets) plus
+/// every entry of `VERIFY_RELEASE_EXAMPLES`, in one cargo invocation.
+fn verify_release_build_args() -> Vec<&'static str> {
+    let mut args = vec![
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "--workspace",
+        "--lib",
+        "--bins",
+    ];
+    for (_, example) in VERIFY_RELEASE_EXAMPLES {
+        args.extend(["--example", example]);
+    }
+    args
+}
+
+/// `cargo run --release -p <package> --example <example> -- <args>` for an example
+/// that the verify release build has already compiled.
+fn release_example_args<'a>(
+    package: &'a str,
+    example: &'a str,
+    args: &[&'a str],
+) -> Result<Vec<&'a str>, String> {
+    if !VERIFY_RELEASE_EXAMPLES
+        .iter()
+        .any(|&(p, e)| p == package && e == example)
+    {
+        return Err(format!(
+            "{package} example {example} is not in the verify release build"
+        ));
+    }
+    let mut command = vec![
+        "run",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        package,
+        "--example",
+        example,
+        "--",
+    ];
+    command.extend_from_slice(args);
+    Ok(command)
+}
+
 fn verify() -> Result<(), String> {
     rust_only()?;
     licensing()?;
@@ -1009,10 +1087,7 @@ fn verify() -> Result<(), String> {
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
     recorder_lint::check(workspace_root()?)?;
-    run(
-        "cargo",
-        &["build", "--locked", "--offline", "--release", "--workspace"],
-    )?;
+    run("cargo", &verify_release_build_args())?;
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
@@ -1039,18 +1114,11 @@ fn verify() -> Result<(), String> {
     )?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
+        &release_example_args(
             "gel-source",
-            "--example",
             "collection_recheck",
-            "--",
-            "docs/evidence-collection/r1",
-        ],
+            &["docs/evidence-collection/r1"],
+        )?,
     )?;
     run("cargo", TEST_ARGS)?;
     run_release_binary("gel-cli", &["selftest"])?;
@@ -1058,65 +1126,27 @@ fn verify() -> Result<(), String> {
     run_release_binary("gel-bench", &["8192", "3", "1"])?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
+        &release_example_args(
             "gel-phase-quad",
-            "--example",
             "quad_compare",
-            "--",
-            "--orbs",
-            "32",
-            "--rounds",
-            "3",
-            "--workers",
-            "2",
-            "--sparse",
-            "1",
-        ],
+            &[
+                "--orbs",
+                "32",
+                "--rounds",
+                "3",
+                "--workers",
+                "2",
+                "--sparse",
+                "1",
+            ],
+        )?,
     )?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
-            "gel-phase-quad",
-            "--example",
-            "quad_evidence",
-            "--",
-            "--demo",
-        ],
+        &release_example_args("gel-phase-quad", "quad_evidence", &["--demo"])?,
     )?;
-    for (package, example, args) in [
-        ("gel-phase-quad", "quad_playground", vec!["--demo"]),
-        ("gel-source", "source_readout", vec![]),
-        ("gel-source", "source_parts", vec![]),
-        ("gel-source", "source_real", vec![]),
-        ("gel-source", "source_find", vec![]),
-        ("gel-source", "source_build", vec![]),
-        ("gel-source", "collection_review", vec![]),
-        ("gel-cli", "quantization_matrix", vec![]),
-        ("gel-history", "record_history", vec![]),
-    ] {
-        let mut command = vec![
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
-            package,
-            "--example",
-            example,
-            "--",
-        ];
-        command.extend(args);
-        run("cargo", &command)?;
+    for (package, example, args) in VERIFY_LOOP_EXAMPLES {
+        run("cargo", &release_example_args(package, example, args)?)?;
     }
     run(
         "cargo",
@@ -1483,4 +1513,270 @@ fn history_crash_series_cmd(args: &[String]) -> Result<(), String> {
     );
     print!("{}", history_crash_series::run(trials, seed, control)?);
     Ok(())
+}
+
+#[cfg(test)]
+mod verify_release_build_tests {
+    use super::*;
+
+    /// The release build `verify` ran before every example was compiled in it.
+    const REFERENCE_BUILD: &[&str] =
+        &["build", "--locked", "--offline", "--release", "--workspace"];
+
+    /// The literal `cargo run` argument lists `verify` used for its examples, in order.
+    fn reference_runs() -> Vec<Vec<&'static str>> {
+        let mut runs: Vec<Vec<&'static str>> = vec![
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-source",
+                "--example",
+                "collection_recheck",
+                "--",
+                "docs/evidence-collection/r1",
+            ],
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-phase-quad",
+                "--example",
+                "quad_compare",
+                "--",
+                "--orbs",
+                "32",
+                "--rounds",
+                "3",
+                "--workers",
+                "2",
+                "--sparse",
+                "1",
+            ],
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-phase-quad",
+                "--example",
+                "quad_evidence",
+                "--",
+                "--demo",
+            ],
+        ];
+        for (package, example, args) in [
+            ("gel-phase-quad", "quad_playground", vec!["--demo"]),
+            ("gel-source", "source_readout", vec![]),
+            ("gel-source", "source_parts", vec![]),
+            ("gel-source", "source_real", vec![]),
+            ("gel-source", "source_find", vec![]),
+            ("gel-source", "source_build", vec![]),
+            ("gel-source", "collection_review", vec![]),
+            ("gel-cli", "quantization_matrix", vec![]),
+            ("gel-history", "record_history", vec![]),
+        ] {
+            runs.push(reference_run(package, example, args));
+        }
+        runs
+    }
+
+    /// The loop body `verify` used to build one example command.
+    fn reference_run<'a>(package: &'a str, example: &'a str, args: Vec<&'a str>) -> Vec<&'a str> {
+        let mut command = vec![
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            package,
+            "--example",
+            example,
+            "--",
+        ];
+        command.extend(args);
+        command
+    }
+
+    /// The same example commands as `verify` now composes them, in the same order.
+    fn current_runs() -> Vec<Vec<&'static str>> {
+        let mut runs = vec![
+            release_example_args(
+                "gel-source",
+                "collection_recheck",
+                &["docs/evidence-collection/r1"],
+            )
+            .unwrap(),
+            release_example_args(
+                "gel-phase-quad",
+                "quad_compare",
+                &[
+                    "--orbs",
+                    "32",
+                    "--rounds",
+                    "3",
+                    "--workers",
+                    "2",
+                    "--sparse",
+                    "1",
+                ],
+            )
+            .unwrap(),
+            release_example_args("gel-phase-quad", "quad_evidence", &["--demo"]).unwrap(),
+        ];
+        for (package, example, args) in VERIFY_LOOP_EXAMPLES {
+            runs.push(release_example_args(package, example, args).unwrap());
+        }
+        runs
+    }
+
+    fn example_of(run: &[&'static str]) -> (&'static str, &'static str) {
+        let at = |flag: &str| {
+            let i = run.iter().position(|a| *a == flag).unwrap();
+            run[i + 1]
+        };
+        (at("-p"), at("--example"))
+    }
+
+    #[test]
+    fn example_commands_match_the_reference_literals() {
+        assert_eq!(current_runs(), reference_runs());
+    }
+
+    #[test]
+    fn release_build_is_the_reference_build_plus_every_run_example() {
+        let build = verify_release_build_args();
+        assert_eq!(&build[..REFERENCE_BUILD.len()], REFERENCE_BUILD);
+        let rest = &build[REFERENCE_BUILD.len()..];
+        assert_eq!(&rest[..2], ["--lib", "--bins"]);
+        let built: Vec<&str> = rest[2..]
+            .chunks(2)
+            .map(|pair| {
+                assert_eq!(pair.len(), 2);
+                assert_eq!(pair[0], "--example");
+                pair[1]
+            })
+            .collect();
+        let mut ran: Vec<(&str, &str)> = reference_runs().iter().map(|r| example_of(r)).collect();
+        assert_eq!(ran.len(), 12);
+        ran.sort_unstable();
+        ran.dedup();
+        assert_eq!(ran.len(), 12, "every example runs once");
+        let mut table = VERIFY_RELEASE_EXAMPLES.to_vec();
+        table.sort_unstable();
+        assert_eq!(
+            table, ran,
+            "the build table is exactly the set of run examples"
+        );
+        let mut built_sorted = built.clone();
+        built_sorted.sort_unstable();
+        let mut names: Vec<&str> = ran.iter().map(|(_, e)| *e).collect();
+        names.sort_unstable();
+        assert_eq!(built_sorted, names);
+        assert_eq!(
+            built,
+            VERIFY_RELEASE_EXAMPLES
+                .iter()
+                .map(|(_, e)| *e)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn every_built_example_is_one_unique_workspace_target() {
+        let root = workspace_root().unwrap();
+        let mut all: Vec<(String, String)> = Vec::new();
+        let crates = root.join("crates");
+        for krate in fs::read_dir(&crates).unwrap() {
+            let krate = krate.unwrap().path();
+            let package = krate.file_name().unwrap().to_string_lossy().into_owned();
+            let Ok(entries) = fs::read_dir(krate.join("examples")) else {
+                continue;
+            };
+            for entry in entries {
+                let path = entry.unwrap().path();
+                let name = if path.is_dir() {
+                    if !path.join("main.rs").is_file() {
+                        continue;
+                    }
+                    path.file_name().unwrap().to_string_lossy().into_owned()
+                } else if path.extension().is_some_and(|x| x == "rs") {
+                    path.file_stem().unwrap().to_string_lossy().into_owned()
+                } else {
+                    continue;
+                };
+                all.push((package.clone(), name));
+            }
+        }
+        assert!(!root.join("xtask/examples").exists());
+        for (package, example) in VERIFY_RELEASE_EXAMPLES {
+            let hits: Vec<&(String, String)> = all.iter().filter(|(_, e)| e == example).collect();
+            assert_eq!(hits.len(), 1, "{example} must name one workspace example");
+            assert_eq!(hits[0].0, *package, "{example} lives in {package}");
+        }
+    }
+
+    #[test]
+    fn seeded_argument_lists_compose_like_the_reference_loop() {
+        const POOL: &[&str] = &[
+            "--demo",
+            "--",
+            "-p",
+            "--example",
+            "",
+            "x",
+            "--orbs",
+            "32",
+            "docs/a b",
+            "ą",
+        ];
+        let mut state: u64 = 0x9e37_79b9_7f4a_7c15;
+        let mut next = || {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            state
+        };
+        for round in 0..4096 {
+            let (package, example) =
+                VERIFY_RELEASE_EXAMPLES[(next() as usize) % VERIFY_RELEASE_EXAMPLES.len()];
+            let len = if round < 16 {
+                round % 2
+            } else {
+                (next() % 9) as usize
+            };
+            let args: Vec<&str> = (0..len)
+                .map(|_| POOL[(next() as usize) % POOL.len()])
+                .collect();
+            assert_eq!(
+                release_example_args(package, example, &args).unwrap(),
+                reference_run(package, example, args.clone())
+            );
+        }
+    }
+
+    #[test]
+    fn examples_outside_the_build_are_refused() {
+        for (package, example) in [
+            ("gel-cli", "data_integrity"),
+            ("gel-source", "collection_campaign"),
+            ("gel-cli", "precision_matrix"),
+            ("gel-reader", "topk_compare"),
+            ("gel-cli", "record_history"),
+            ("gel-source", "quad_compare"),
+            ("", ""),
+        ] {
+            assert_eq!(
+                release_example_args(package, example, &[]),
+                Err(format!(
+                    "{package} example {example} is not in the verify release build"
+                ))
+            );
+        }
+    }
 }
