@@ -75,8 +75,17 @@ directories whose paths differ in name and length, builds the package in each
 with `package-binaries`, and compares the three binaries byte for byte. It
 prints the SHA-256 of each binary of both builds and `REBUILD=IDENTICAL` or
 `REBUILD=DIFFERENT`; a difference is an error unless `--report-only` is given.
-The check job of the binaries workflow runs it with `--report-only` on Linux,
-macOS and Windows and prints the result for each platform.
+When two builds differ it also prints, for each binary, how many bytes differ,
+where the first difference is, and the printable strings only one build holds.
+The check job of the binaries workflow runs it on Linux, macOS and Windows and
+fails when the two builds differ.
+
+The recipe passes `/Brepro` to the Windows linker and `-oso_prefix` with the
+checkout directory to the Apple linker. Without them the first CI runs found
+two builds of one commit different: on Windows in 20 header bytes (a time stamp
+and a debug identifier), on macOS in 48 bytes (the image UUID and the
+code-signature hashes over it). With them all three platforms gave identical
+binaries; the Linux binaries did not change.
 
 Measured on the author's machine (Ubuntu 24.04, Rust 1.85.0):
 

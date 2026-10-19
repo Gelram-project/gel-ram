@@ -46,7 +46,7 @@ jobs:
           grep -q '  licenses/unicode-data/LICENSE-UNICODE.txt$' SHA256SUMS.txt
           cmp licenses/unicode-data/LICENSE-UNICODE.txt "$GITHUB_WORKSPACE/crates/gel-source/LICENSE-UNICODE.txt"
       - name: Build the package twice and compare (docs/BINARIES.md)
-        run: cargo run --locked --offline -p xtask -- rebuild-check "${{ runner.temp }}/gel-rebuild" --report-only
+        run: cargo run --locked --offline -p xtask -- rebuild-check "${{ runner.temp }}/gel-rebuild"
 
   release:
     if: github.event_name == 'workflow_dispatch'
