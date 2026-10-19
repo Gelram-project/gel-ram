@@ -134,6 +134,9 @@ impl Session {
                     .collect(),
             ),
             "find" => {
+                // The collection SHA-256 is computed on first use after a change;
+                // compute it here so search_ns still times the search alone.
+                self.bank.root();
                 let start = Instant::now();
                 let result = self.bank.search(arg)?;
                 let search_ns = start.elapsed().as_nanos();

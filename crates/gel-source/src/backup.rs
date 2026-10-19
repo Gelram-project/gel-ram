@@ -8,7 +8,7 @@
 //! but makes restore refuse. The manifest is not a signature: the caller's
 //! independently retained snapshot pin decides which backup is trusted.
 use crate::{
-    bundle::write_bytes_new,
+    bundle::{write_bytes_new, write_bytes_new_pinned},
     collection::{Collection, MAX_DOCUMENTS, MAX_TITLE, MAX_TOTAL_TEXT},
     digest, hex, read_regular, BundleError, Hash,
 };
@@ -121,15 +121,28 @@ fn parse_manifest(text: &str) -> Option<(usize, String, usize, u64)> {
         .then_some((bytes, sha256, documents, revision))
 }
 
+/// What a backup needs from a parsed snapshot.
+struct Snapshot {
+    bytes: Vec<u8>,
+    documents: usize,
+    revision: u64,
+}
+
 /// Reads a snapshot and accepts it only if it matches the pin and parses.
-fn verified_snapshot(path: &Path, pin: Hash) -> Result<(Vec<u8>, Collection), String> {
+/// The bytes are hashed once; the parse accepts and refuses exactly what
+/// `Collection::from_bytes` does for them, with the same error.
+fn verified_snapshot(path: &Path, pin: Hash) -> Result<Snapshot, String> {
     let bytes =
         read_regular(path, MAX_SNAPSHOT).map_err(|e| format!("SNAPSHOT_READ {}", io_text(&e)))?;
     if digest(&bytes) != pin {
         return Err("SNAPSHOT_PIN_MISMATCH".into());
     }
-    let collection = Collection::from_bytes(&bytes, pin)?;
-    Ok((bytes, collection))
+    let (documents, revision) = Collection::verified_shape(&bytes)?;
+    Ok(Snapshot {
+        bytes,
+        documents,
+        revision,
+    })
 }
 
 /// Tells "no backup" apart from "complete backup, name not yet durable" after
@@ -145,13 +158,15 @@ fn classify_created(dir: &Path, pin: Hash, error: String) -> CreateError {
 /// published last and is the only commit point.
 pub fn create(snapshot: &Path, pin: Hash, dir: &Path) -> Result<State, CreateError> {
     let failed = CreateError::NotCreated;
-    let (bytes, collection) = verified_snapshot(snapshot, pin).map_err(failed)?;
+    let Snapshot {
+        bytes,
+        documents,
+        revision,
+    } = verified_snapshot(snapshot, pin).map_err(failed)?;
     fs::create_dir(dir).map_err(|e| failed(format!("BACKUP_DIR {e}")))?;
     sync_dir(parent(dir)).map_err(|e| failed(format!("BACKUP_DIR_SYNC {e}")))?;
-    write_bytes_new(&dir.join(SNAPSHOT), &bytes)
+    write_bytes_new_pinned(&dir.join(SNAPSHOT), &bytes, pin)
         .map_err(|e| failed(format!("SNAPSHOT_COPY {}", io_text(&e))))?;
-    let documents = collection.documents().count();
-    let revision = collection.revision();
     let text = manifest(bytes.len(), &pin, documents, revision);
     write_bytes_new(&dir.join(MANIFEST), text.as_bytes())
         .map_err(|e| classify_created(dir, pin, format!("MANIFEST {}", io_text(&e))))?;
@@ -184,10 +199,10 @@ fn state(dir: &Path, pin: Hash) -> Result<State, String> {
         return Ok(State::Untrusted);
     }
     match verified_snapshot(&dir.join(SNAPSHOT), pin) {
-        Ok((found, collection))
-            if found.len() == bytes
-                && collection.documents().count() == documents
-                && collection.revision() == revision =>
+        Ok(found)
+            if found.bytes.len() == bytes
+                && found.documents == documents
+                && found.revision == revision =>
         {
             Ok(State::Complete {
                 bytes,
@@ -252,8 +267,9 @@ pub fn restore(dir: &Path, pin: Hash, target: &Path) -> Result<usize, RestoreErr
     if fs::symlink_metadata(target).is_ok() {
         return Err(RestoreError::Refused("TARGET_EXISTS".into()));
     }
-    let (bytes, _) = verified_snapshot(&dir.join(SNAPSHOT), pin).map_err(RestoreError::Refused)?;
-    match write_bytes_new(target, &bytes) {
+    let Snapshot { bytes, .. } =
+        verified_snapshot(&dir.join(SNAPSHOT), pin).map_err(RestoreError::Refused)?;
+    match write_bytes_new_pinned(target, &bytes, pin) {
         Ok(_) => Ok(bytes.len()),
         Err(e) => Err(classify(target, pin, io_text(&e))),
     }

@@ -13,6 +13,11 @@ pub mod backup;
 mod builder;
 mod bundle;
 pub mod collection;
+/// The earlier collection source, unchanged, which computed its root on every
+/// change. Tests compare the current collection with it.
+#[cfg(test)]
+#[allow(dead_code)]
+mod collection_eager_reference;
 pub mod context;
 pub mod document;
 pub use builder::{CorpusBuilder, EncodedCorpus};
@@ -146,6 +151,19 @@ impl Corpus {
         }
         if digest(catalog) != catalog_pin || digest(text) != text_pin {
             return Err(Error::Integrity);
+        }
+        Self::load_verified(catalog, text, catalog_pin, text_pin)
+    }
+    /// `load` for a caller that already holds `catalog_pin == digest(catalog)` and
+    /// `text_pin == digest(text)`: the same result without hashing either again.
+    pub(crate) fn load_verified(
+        catalog: &[u8],
+        text: &[u8],
+        catalog_pin: Hash,
+        text_pin: Hash,
+    ) -> Result<Self, Error> {
+        if catalog.len() > MAX_CATALOG || text.len() > MAX_TEXT {
+            return Err(Error::Limit);
         }
         let raw = std::str::from_utf8(catalog).map_err(|_| Error::Format)?;
         let text = std::str::from_utf8(text).map_err(|_| Error::Format)?;

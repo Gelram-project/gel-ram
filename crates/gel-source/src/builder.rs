@@ -132,7 +132,8 @@ impl EncodedCorpus {
     /// Validates through the existing reader. Serialized remote bundles must
     /// instead use pins from a separately trusted manifest with Corpus::load.
     pub fn load(&self) -> Result<Corpus, Error> {
-        Corpus::load(&self.catalog, &self.text, self.catalog_pin, self.text_pin)
+        // `finish` computed both pins from these private, never-modified bytes.
+        Corpus::load_verified(&self.catalog, &self.text, self.catalog_pin, self.text_pin)
     }
 }
 
