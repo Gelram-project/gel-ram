@@ -79,6 +79,41 @@ pub fn crc64_ecma(bytes: &[u8]) -> u64 {
     crc.finish()
 }
 
+/// Byte tables for CRC-64/ECMA-182 (MSB-first). `[0][b]` is the CRC of
+/// the single byte `b` from a zero register; `[k][b]` is `[k - 1][b]`
+/// advanced by one more zero byte. Built at compile time.
+static CRC64_TABLES: [[u64; 256]; 8] = crc64_tables();
+
+const fn crc64_tables() -> [[u64; 256]; 8] {
+    let mut tables = [[0u64; 256]; 8];
+    let mut b = 0;
+    while b < 256 {
+        let mut crc = (b as u64) << 56;
+        let mut bit = 0;
+        while bit < 8 {
+            crc = if (crc & 0x8000_0000_0000_0000) != 0 {
+                (crc << 1) ^ CRC64_ECMA_POLY
+            } else {
+                crc << 1
+            };
+            bit += 1;
+        }
+        tables[0][b] = crc;
+        b += 1;
+    }
+    let mut k = 1;
+    while k < 8 {
+        let mut b = 0;
+        while b < 256 {
+            let prev = tables[k - 1][b];
+            tables[k][b] = (prev << 8) ^ tables[0][(prev >> 56) as usize];
+            b += 1;
+        }
+        k += 1;
+    }
+    tables
+}
+
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Crc64Ecma {
     state: u64,
@@ -89,17 +124,29 @@ impl Crc64Ecma {
         Self { state: 0 }
     }
 
+    /// Feeds `bytes` into the running CRC. Eight bytes are folded per step
+    /// with eight 256-entry tables; the remaining tail goes one byte at a
+    /// time. The state between calls is only the CRC register, so any split
+    /// of the input gives the same result.
     pub fn update(&mut self, bytes: &[u8]) {
+        let t = &CRC64_TABLES;
         let mut crc = self.state;
-        for &byte in bytes {
-            crc ^= (byte as u64) << 56;
-            for _ in 0..8 {
-                crc = if (crc & 0x8000_0000_0000_0000) != 0 {
-                    (crc << 1) ^ CRC64_ECMA_POLY
-                } else {
-                    crc << 1
-                };
-            }
+        let mut chunks = bytes.chunks_exact(8);
+        for chunk in &mut chunks {
+            let mut word = [0u8; 8];
+            word.copy_from_slice(chunk);
+            let x = crc ^ u64::from_be_bytes(word);
+            crc = t[7][(x >> 56) as usize]
+                ^ t[6][((x >> 48) as u8) as usize]
+                ^ t[5][((x >> 40) as u8) as usize]
+                ^ t[4][((x >> 32) as u8) as usize]
+                ^ t[3][((x >> 24) as u8) as usize]
+                ^ t[2][((x >> 16) as u8) as usize]
+                ^ t[1][((x >> 8) as u8) as usize]
+                ^ t[0][(x as u8) as usize];
+        }
+        for &byte in chunks.remainder() {
+            crc = (crc << 8) ^ t[0][(((crc >> 56) as u8) ^ byte) as usize];
         }
         self.state = crc;
     }
@@ -201,6 +248,133 @@ mod tests {
         incremental.update(&bytes[17..129]);
         incremental.update(&bytes[129..]);
         assert_eq!(incremental.finish(), crc64_ecma(&bytes));
+    }
+
+    /// The original bit-serial update, kept as the reference for the
+    /// table-driven one. `state` is the running register.
+    fn crc64_bitwise(state: u64, bytes: &[u8]) -> u64 {
+        let mut crc = state;
+        for &byte in bytes {
+            crc ^= (byte as u64) << 56;
+            for _ in 0..8 {
+                crc = if (crc & 0x8000_0000_0000_0000) != 0 {
+                    (crc << 1) ^ CRC64_ECMA_POLY
+                } else {
+                    crc << 1
+                };
+            }
+        }
+        crc
+    }
+
+    /// A second, separately written bit-serial form (top bit tested by
+    /// shift, literal polynomial), so the reference does not rest on one text.
+    fn crc64_independent(bytes: &[u8]) -> u64 {
+        let mut crc = 0u64;
+        for &byte in bytes {
+            crc ^= u64::from(byte) << 56;
+            for _ in 0..8 {
+                crc = if crc >> 63 == 1 {
+                    (crc << 1) ^ 0x42f0_e1eb_a9ea_3693
+                } else {
+                    crc << 1
+                };
+            }
+        }
+        crc
+    }
+
+    fn seeded_bytes(seed: u64, len: usize) -> Vec<u8> {
+        let mut out = Vec::with_capacity(len);
+        let mut i = 0u64;
+        while out.len() < len {
+            let word = splitmix64(seed ^ i.wrapping_mul(0xA076_1D64_78BD_642F));
+            for byte in word.to_le_bytes() {
+                if out.len() < len {
+                    out.push(byte);
+                }
+            }
+            i += 1;
+        }
+        out
+    }
+
+    #[test]
+    fn crc_tables_match_their_definition() {
+        for (k, table) in CRC64_TABLES.iter().enumerate() {
+            for (b, &entry) in table.iter().enumerate() {
+                // Byte `b` followed by `k` zero bytes.
+                let mut bytes = vec![0u8; k + 1];
+                bytes[0] = b as u8;
+                assert_eq!(entry, crc64_bitwise(0, &bytes), "T{k}[{b}]");
+            }
+        }
+    }
+
+    #[test]
+    fn table_crc_matches_bitwise_reference_on_seeded_inputs() {
+        // Edge cases: empty, all-zero and all-one bytes, every length that
+        // crosses the 8-byte step, and a nonzero starting register.
+        for len in 0..=64usize {
+            for fill in [0x00u8, 0xFF, 0x80, 0x01] {
+                let bytes = vec![fill; len];
+                assert_eq!(
+                    crc64_ecma(&bytes),
+                    crc64_bitwise(0, &bytes),
+                    "fill {fill} len {len}"
+                );
+            }
+        }
+        for seed in 0..64u64 {
+            let buffer = seeded_bytes(seed, 2048);
+            for len in 0..=2048usize {
+                let bytes = &buffer[..len];
+                let expected = crc64_bitwise(0, bytes);
+                assert_eq!(crc64_ecma(bytes), expected, "seed {seed} len {len}");
+                if len % 97 == 0 || len < 32 {
+                    assert_eq!(crc64_independent(bytes), expected, "seed {seed} len {len}");
+                }
+            }
+            // Streaming with random 1..=15 byte pieces, so pieces start at
+            // every phase of the 8-byte step.
+            let mut rng = splitmix64(seed ^ 0x5EED);
+            let mut at = 0usize;
+            let mut streamed = Crc64Ecma::new();
+            while at < buffer.len() {
+                rng = splitmix64(rng);
+                let piece = 1 + (rng % 15) as usize;
+                let end = (at + piece).min(buffer.len());
+                streamed.update(&buffer[at..end]);
+                assert_eq!(
+                    streamed.finish(),
+                    crc64_bitwise(0, &buffer[..end]),
+                    "seed {seed} prefix {end}"
+                );
+                at = end;
+            }
+            // A nonzero register entering update.
+            let start = splitmix64(seed ^ 0xC0FFEE);
+            for len in [0usize, 1, 7, 8, 9, 15, 16, 17, 127, 128, 129, 2047] {
+                let mut crc = Crc64Ecma { state: start };
+                crc.update(&buffer[..len]);
+                assert_eq!(
+                    crc.finish(),
+                    crc64_bitwise(start, &buffer[..len]),
+                    "seed {seed} start len {len}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn table_crc_matches_bitwise_reference_on_a_large_buffer() {
+        let bytes = seeded_bytes(0xB16, (1 << 20) + 13);
+        assert_eq!(crc64_ecma(&bytes), crc64_bitwise(0, &bytes));
+        let mut records = Crc64Ecma::new();
+        for chunk in bytes.chunks(ORB_BYTES) {
+            records.update(chunk);
+        }
+        assert_eq!(records.finish(), crc64_independent(&bytes));
     }
 
     #[test]
