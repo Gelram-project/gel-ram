@@ -67,6 +67,42 @@ fn compare(a: &Path, b: &Path) -> Result<Vec<(String, String, String)>, String> 
     Ok(rows)
 }
 
+/// Printable runs of at least eight ASCII characters.
+fn strings(bytes: &[u8]) -> std::collections::BTreeSet<&[u8]> {
+    bytes
+        .split(|b| !(0x20..0x7f).contains(b))
+        .filter(|s| s.len() >= 8)
+        .collect()
+}
+
+/// Where two builds of one binary differ: sizes, how many bytes differ (equal
+/// sizes only), the first differing offset, and up to three printable strings
+/// that only one of them contains.
+fn difference(name: &str, a: &[u8], b: &[u8]) -> String {
+    let first = a.iter().zip(b).position(|(x, y)| x != y);
+    let count = if a.len() == b.len() {
+        a.iter().zip(b).filter(|(x, y)| x != y).count().to_string()
+    } else {
+        "sizes differ".into()
+    };
+    let (sa, sb) = (strings(a), strings(b));
+    let only = |x: &std::collections::BTreeSet<&[u8]>, y: &std::collections::BTreeSet<&[u8]>| {
+        x.difference(y)
+            .take(3)
+            .map(|s| String::from_utf8_lossy(&s[..s.len().min(120)]).into_owned())
+            .collect::<Vec<_>>()
+            .join(" | ")
+    };
+    format!(
+        "REBUILD_DIFF {name} sizes={}/{} differing_bytes={count} first_offset={} only_first=[{}] only_second=[{}]\n",
+        a.len(),
+        b.len(),
+        first.map_or("-".into(), |o| o.to_string()),
+        only(&sa, &sb),
+        only(&sb, &sa)
+    )
+}
+
 pub fn run(args: &[String]) -> Result<(), String> {
     let usage = "usage: cargo run --locked --offline -p xtask -- rebuild-check NEW_DIR_OUTSIDE_CHECKOUT [--report-only]";
     let (dir, report_only) = match args {
@@ -74,22 +110,14 @@ pub fn run(args: &[String]) -> Result<(), String> {
         [dir, flag] if flag == "--report-only" => (dir, true),
         _ => return Err(usage.into()),
     };
-    let root = super::workspace_root()?
-        .canonicalize()
-        .map_err(|e| e.to_string())?;
-    let out = Path::new(dir);
-    if out
-        .parent()
-        .filter(|p| !p.as_os_str().is_empty())
-        .unwrap_or(Path::new("."))
-        .canonicalize()
-        .map_err(|e| e.to_string())?
-        .starts_with(&root)
-    {
+    // Absolute, not canonical: on Windows a canonical path is a verbatim
+    // `\\?\` path, which git and tar do not open.
+    let root = std::path::absolute(super::workspace_root()?).map_err(|e| e.to_string())?;
+    let out = std::path::absolute(dir).map_err(|e| e.to_string())?;
+    if out.starts_with(&root) {
         return Err("output directory must be outside the source checkout".into());
     }
-    fs::create_dir(out).map_err(|e| format!("new output directory required: {e}"))?;
-    let out = out.canonicalize().map_err(|e| e.to_string())?;
+    fs::create_dir(&out).map_err(|e| format!("new output directory required: {e}"))?;
     let tar = out.join("source.tar");
     run_in(
         &root,
@@ -137,6 +165,14 @@ pub fn run(args: &[String]) -> Result<(), String> {
             "REBUILD_FILE {name} first={a} second={b} same={}",
             if a == b { "yes" } else { "no" }
         );
+        if a != b {
+            let read = |p: &PathBuf| fs::read(p.join(name)).map_err(|e| e.to_string());
+            text.push_str(&difference(
+                name,
+                &read(&packages[0])?,
+                &read(&packages[1])?,
+            ));
+        }
     }
     let verdict = if differing == 0 {
         "IDENTICAL"
@@ -200,5 +236,19 @@ mod tests {
         fs::write(b.join(&last), b"").unwrap();
         assert!(compare(&a, &b).is_err());
         fs::remove_dir_all(&base).unwrap();
+    }
+
+    #[test]
+    fn a_difference_names_its_offset_and_the_strings_only_one_build_has() {
+        let a = b"\x7fELF\x00/build/one/target/x\x00same text here\x00";
+        let b = b"\x7fELF\x00/build/two/target/x\x00same text here\x00";
+        let note = difference("bin", a, b);
+        assert!(
+            note.contains("sizes=40/40 differing_bytes=3 first_offset=12"),
+            "{note}"
+        );
+        assert!(note.contains("only_first=[/build/one/target/x]"), "{note}");
+        assert!(note.contains("only_second=[/build/two/target/x]"), "{note}");
+        assert!(difference("bin", b"short", b"longer").contains("differing_bytes=sizes differ"));
     }
 }
