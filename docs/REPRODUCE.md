@@ -54,23 +54,34 @@ SKIPPED with the reason, and the other steps still count.
 
 ## A short witness
 
-The full run above takes a while. A shorter witness checks the three claims of
-the first screen on your own machine, the first one on a file you choose, and
-then whether your machine computes the same score bits as the author's:
+The full run above takes a while. One shorter command checks the claims of the
+first screen on your own machine and prints one block to paste into a report:
 
 ```text
-cargo run --locked --offline --release -p gel-live-lab -- --literal YOUR_FILE
-cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
-cargo run --locked --offline -p xtask -- crash-series 20
-cargo run --locked --offline --release -p gel-live-lab -- --witness
+cargo run --locked --offline -p xtask -- witness NEW_DIR_OUTSIDE_CHECKOUT [YOUR_FILE]
 ```
 
-Each command ends with one line to report: `GEL_LIVE_LAB_LITERAL=PASS`,
-`Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED`, `CRASH_SERIES=PASS …` and
-`WITNESS=MATCH …` or `WITNESS=MISMATCH …` ([same bits on your machine](LIVE-LAB.md#same-bits-on-your-machine)), or
-the line where it stopped. Add the commit (`git rev-parse HEAD`), the operating
-system and the CPU model. The pin of the literal record identifies your file, so
-you may leave it out. The crash series runs on Unix hosts only.
+It runs six steps, each as its own process, and reads each step's result from the
+line that program prints:
+
+| Step | What it runs | Passing line |
+|---|---|---|
+| literal | `gel-live-lab --literal YOUR_FILE` (README.md when you name none): your bytes in one record, four views restored, a changed byte refused | `GEL_LIVE_LAB_LITERAL=PASS` |
+| quad | `gel-phase-quad --example quad_compare`: every score of the four views equals the reference bit for bit | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` |
+| crash-series | `xtask crash-series 20`: 20 kills of a writing process; no acknowledged snapshot lost | `CRASH_SERIES=PASS …` |
+| history-crash-series | `xtask history-crash-series 5 20261010 5`: 5 kills of a record-history writer, with 5 in-place control trials | `HISTORY_CRASH_SERIES=PASS …` |
+| history-mutation-matrix | `xtask history-mutation-matrix`: 151 changed record-history files, read by the library and a reference reader | `HISTORY_MUTATION_MATRIX=PASS …` |
+| same-bits | `gel-live-lab --witness`: your machine's score bits against the author's pins ([same bits on your machine](LIVE-LAB.md#same-bits-on-your-machine)) | `WITNESS=MATCH …` |
+
+A step passes only when its process succeeds and its last line of that kind is the
+passing one; a missing line is a failure. Every step runs even when an earlier one
+fails. The two kill series need a Unix host and are SKIPPED elsewhere, with the
+reason. The block names the commit, the operating system, CPU, memory and rustc,
+each step's line and the block's own SHA-256, and ends with
+`GEL_WITNESS=PASS|FAIL pass=… fail=… skipped=…`. It contains no path, user name
+or host name; the same block is in NEW_DIR/WITNESS.txt, and each step's whole
+output is in NEW_DIR/<step>.log. On the author's machine (24 threads) the six
+steps take about 70 seconds.
 
 ## Report it
 
