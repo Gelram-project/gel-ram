@@ -103,6 +103,28 @@ fn difference(name: &str, a: &[u8], b: &[u8]) -> String {
     )
 }
 
+/// `path` with `.` dropped and each `..` removing the component before it,
+/// without touching the file system. `std::path::absolute` keeps `..`, so
+/// `checkout/../out` would otherwise look like a path inside the checkout.
+fn lexical(path: &Path) -> PathBuf {
+    let mut out = PathBuf::new();
+    for component in path.components() {
+        match component {
+            std::path::Component::CurDir => {}
+            std::path::Component::ParentDir => {
+                out.pop();
+            }
+            other => out.push(other),
+        }
+    }
+    out
+}
+
+/// Whether `path` lies inside `root`, both compared in lexical form.
+fn inside(path: &Path, root: &Path) -> bool {
+    lexical(path).starts_with(lexical(root))
+}
+
 pub fn run(args: &[String]) -> Result<(), String> {
     let usage = "usage: cargo run --locked --offline -p xtask -- rebuild-check NEW_DIR_OUTSIDE_CHECKOUT [--report-only]";
     let (dir, report_only) = match args {
@@ -114,7 +136,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
     // `\\?\` path, which git and tar do not open.
     let root = std::path::absolute(super::workspace_root()?).map_err(|e| e.to_string())?;
     let out = std::path::absolute(dir).map_err(|e| e.to_string())?;
-    if out.starts_with(&root) {
+    if inside(&out, &root) {
         return Err("output directory must be outside the source checkout".into());
     }
     fs::create_dir(&out).map_err(|e| format!("new output directory required: {e}"))?;
@@ -197,6 +219,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parent_components_are_resolved_before_the_inside_check() {
+        let root = Path::new("/w/gel-ram");
+        assert!(!inside(Path::new("/w/gel-ram/../gel-rebuild"), root));
+        assert!(!inside(Path::new("/w/gel-ram/./../x/../gel-rebuild"), root));
+        assert!(inside(Path::new("/w/gel-ram/target/../out"), root));
+        assert!(inside(Path::new("/w/gel-ram/./out"), root));
+        assert!(!inside(Path::new("/w/gel-ram-other"), root));
+        assert!(inside(Path::new("/w/x/../gel-ram/out"), root));
+    }
 
     #[test]
     fn missing_or_empty_binaries_are_errors_and_equal_bytes_match() {
