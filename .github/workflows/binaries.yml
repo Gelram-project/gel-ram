@@ -47,6 +47,8 @@ jobs:
           cmp licenses/unicode-data/LICENSE-UNICODE.txt "$GITHUB_WORKSPACE/crates/gel-source/LICENSE-UNICODE.txt"
       - name: One-command witness (docs/REPRODUCE.md)
         run: cargo run --locked --offline -p xtask -- witness "${{ runner.temp }}/gel-witness"
+      - name: Build the package twice and compare (docs/BINARIES.md)
+        run: cargo run --locked --offline -p xtask -- rebuild-check "${{ runner.temp }}/gel-rebuild"
 
   release:
     if: github.event_name == 'workflow_dispatch'
