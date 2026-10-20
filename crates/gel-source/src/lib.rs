@@ -30,6 +30,20 @@ pub type Hash = [u8; 32];
 pub fn digest(bytes: &[u8]) -> Hash {
     sha256::sha256(bytes)
 }
+/// The SHA-256 digest of everything `reader` yields, read in 64 KiB pieces;
+/// equal to `digest` of the same bytes. Interrupted reads are retried.
+pub fn digest_reader(mut reader: impl std::io::Read) -> std::io::Result<Hash> {
+    let mut hash = sha256::Sha256::new();
+    let mut buffer = vec![0u8; 64 << 10];
+    loop {
+        match reader.read(&mut buffer) {
+            Ok(0) => return Ok(hash.finalize()),
+            Ok(n) => hash.update(&buffer[..n]),
+            Err(e) if e.kind() == std::io::ErrorKind::Interrupted => {}
+            Err(e) => return Err(e),
+        }
+    }
+}
 use std::collections::BTreeMap;
 
 pub const MAX_TEXT: usize = 64 * 1024 * 1024;
