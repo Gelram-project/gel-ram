@@ -1648,7 +1648,8 @@ mod last;
         // An include that does not exist in B is an error, not a silent skip.
         fs::remove_file(src.join("tools/inner.rs")).unwrap();
         let err = example_files(&src, "p", "x").unwrap_err();
-        assert!(err.contains("tools/inner.rs"), "{err}");
+        let inner = Path::new("tools").join("inner.rs");
+        assert!(err.contains(&inner.display().to_string()), "{err}");
         fs::remove_dir_all(&src).unwrap();
     }
 
@@ -1713,7 +1714,8 @@ mod last;
         fs::write(a2.join("crates/p/src/r.rs"), "// other r\n").unwrap();
         let before_a2 = listing(&a2);
         let err = Placed::plan(&a2, &files, true).unwrap_err();
-        assert!(err.contains("crates/p/src/r.rs"), "{err}");
+        let r = Path::new("crates").join("p").join("src").join("r.rs");
+        assert!(err.contains(&r.display().to_string()), "{err}");
         let mut placed = Placed::default();
         assert!(placed.place_all(&a2, &files, true).is_err());
         drop(placed);
