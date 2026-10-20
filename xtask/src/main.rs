@@ -24,6 +24,7 @@ mod reproduction;
 mod roadmap;
 mod source_bundle;
 mod ucd_tables;
+mod witness;
 mod workflow_policy;
 
 use std::ffi::OsStr;
@@ -304,7 +305,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
@@ -1165,6 +1166,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
         Some("reproduce") => reproduction::run(&args[1..]),
+        Some("witness") => witness::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("history-mutation-matrix") => history_mutation_matrix::run(&args[1..]),
