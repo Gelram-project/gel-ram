@@ -8,7 +8,7 @@
 //! but makes restore refuse. The manifest is not a signature: the caller's
 //! independently retained snapshot pin decides which backup is trusted.
 use crate::{
-    bundle::write_bytes_new,
+    bundle::{write_bytes_new, write_bytes_new_pinned},
     collection::{Collection, MAX_DOCUMENTS, MAX_TITLE, MAX_TOTAL_TEXT},
     digest, hex, read_regular, BundleError, Hash,
 };
@@ -121,15 +121,28 @@ fn parse_manifest(text: &str) -> Option<(usize, String, usize, u64)> {
         .then_some((bytes, sha256, documents, revision))
 }
 
+/// What a backup needs from a parsed snapshot.
+struct Snapshot {
+    bytes: Vec<u8>,
+    documents: usize,
+    revision: u64,
+}
+
 /// Reads a snapshot and accepts it only if it matches the pin and parses.
-fn verified_snapshot(path: &Path, pin: Hash) -> Result<(Vec<u8>, Collection), String> {
+/// The bytes are hashed once; the parse accepts and refuses exactly what
+/// `Collection::from_bytes` does for them, with the same error.
+fn verified_snapshot(path: &Path, pin: Hash) -> Result<Snapshot, String> {
     let bytes =
         read_regular(path, MAX_SNAPSHOT).map_err(|e| format!("SNAPSHOT_READ {}", io_text(&e)))?;
     if digest(&bytes) != pin {
         return Err("SNAPSHOT_PIN_MISMATCH".into());
     }
-    let collection = Collection::from_bytes(&bytes, pin)?;
-    Ok((bytes, collection))
+    let (documents, revision) = Collection::verified_shape(&bytes)?;
+    Ok(Snapshot {
+        bytes,
+        documents,
+        revision,
+    })
 }
 
 /// Tells "no backup" apart from "complete backup, name not yet durable" after
@@ -145,13 +158,15 @@ fn classify_created(dir: &Path, pin: Hash, error: String) -> CreateError {
 /// published last and is the only commit point.
 pub fn create(snapshot: &Path, pin: Hash, dir: &Path) -> Result<State, CreateError> {
     let failed = CreateError::NotCreated;
-    let (bytes, collection) = verified_snapshot(snapshot, pin).map_err(failed)?;
+    let Snapshot {
+        bytes,
+        documents,
+        revision,
+    } = verified_snapshot(snapshot, pin).map_err(failed)?;
     fs::create_dir(dir).map_err(|e| failed(format!("BACKUP_DIR {e}")))?;
     sync_dir(parent(dir)).map_err(|e| failed(format!("BACKUP_DIR_SYNC {e}")))?;
-    write_bytes_new(&dir.join(SNAPSHOT), &bytes)
+    write_bytes_new_pinned(&dir.join(SNAPSHOT), &bytes, pin)
         .map_err(|e| failed(format!("SNAPSHOT_COPY {}", io_text(&e))))?;
-    let documents = collection.documents().count();
-    let revision = collection.revision();
     let text = manifest(bytes.len(), &pin, documents, revision);
     write_bytes_new(&dir.join(MANIFEST), text.as_bytes())
         .map_err(|e| classify_created(dir, pin, format!("MANIFEST {}", io_text(&e))))?;
@@ -167,41 +182,65 @@ fn is_temporary(name: &str) -> bool {
 }
 
 fn state(dir: &Path, pin: Hash) -> Result<State, String> {
+    state_with_snapshot(dir, pin).map(|(state, _)| state)
+}
+
+/// `state`, together with the snapshot bytes it verified: they are returned
+/// only for `State::Complete` (pin, parse and manifest all matched) and are
+/// empty for every other state.
+fn state_with_snapshot(dir: &Path, pin: Hash) -> Result<(State, Vec<u8>), String> {
     let manifest_path = dir.join(MANIFEST);
     let text = match read_regular(&manifest_path, MAX_MARKER) {
         Ok(text) => text,
         Err(BundleError::Io(e)) if e.kind() == io::ErrorKind::NotFound => {
-            return Ok(State::Incomplete)
+            return Ok((State::Incomplete, Vec::new()))
         }
-        Err(e) => return Ok(State::Corrupt(format!("MANIFEST_READ {}", io_text(&e)))),
+        Err(e) => {
+            return Ok((
+                State::Corrupt(format!("MANIFEST_READ {}", io_text(&e))),
+                Vec::new(),
+            ))
+        }
     };
     let Some((bytes, sha256, documents, revision)) =
         std::str::from_utf8(&text).ok().and_then(parse_manifest)
     else {
-        return Ok(State::Corrupt("MANIFEST_FORMAT".into()));
+        return Ok((State::Corrupt("MANIFEST_FORMAT".into()), Vec::new()));
     };
     if sha256 != hex(&pin) {
-        return Ok(State::Untrusted);
+        return Ok((State::Untrusted, Vec::new()));
     }
     match verified_snapshot(&dir.join(SNAPSHOT), pin) {
-        Ok((found, collection))
-            if found.len() == bytes
-                && collection.documents().count() == documents
-                && collection.revision() == revision =>
+        Ok(found)
+            if found.bytes.len() == bytes
+                && found.documents == documents
+                && found.revision == revision =>
         {
-            Ok(State::Complete {
-                bytes,
-                documents,
-                revision,
-            })
+            Ok((
+                State::Complete {
+                    bytes,
+                    documents,
+                    revision,
+                },
+                found.bytes,
+            ))
         }
-        Ok(_) => Ok(State::Corrupt("MANIFEST_SNAPSHOT_DISAGREE".into())),
-        Err(e) => Ok(State::Corrupt(e)),
+        Ok(_) => Ok((
+            State::Corrupt("MANIFEST_SNAPSHOT_DISAGREE".into()),
+            Vec::new(),
+        )),
+        Err(e) => Ok((State::Corrupt(e), Vec::new())),
     }
 }
 
 /// Reports the backup state from the files alone; writes nothing.
 pub fn inspect(dir: &Path, pin: Hash) -> Result<Inspection, String> {
+    inspect_with_snapshot(dir, pin).map(|(inspection, _)| inspection)
+}
+
+/// `inspect`, together with the snapshot bytes verified for a complete state
+/// (empty otherwise), so `restore` publishes them without reading them again.
+fn inspect_with_snapshot(dir: &Path, pin: Hash) -> Result<(Inspection, Vec<u8>), String> {
     let mut withdrawn = false;
     let mut temporaries = 0;
     let mut unexpected = Vec::new();
@@ -215,16 +254,22 @@ pub fn inspect(dir: &Path, pin: Hash) -> Result<Inspection, String> {
             _ => unexpected.push(name),
         }
     }
-    let state = if unexpected.is_empty() {
-        state(dir, pin)?
+    let (state, snapshot) = if unexpected.is_empty() {
+        state_with_snapshot(dir, pin)?
     } else {
-        State::Corrupt(format!("UNEXPECTED_ENTRY {}", unexpected.join(",")))
+        (
+            State::Corrupt(format!("UNEXPECTED_ENTRY {}", unexpected.join(","))),
+            Vec::new(),
+        )
     };
-    Ok(Inspection {
-        state,
-        withdrawn,
-        temporaries,
-    })
+    Ok((
+        Inspection {
+            state,
+            withdrawn,
+            temporaries,
+        },
+        snapshot,
+    ))
 }
 
 /// Tells "nothing published" apart from "published, name not yet durable"
@@ -237,9 +282,11 @@ fn classify(target: &Path, pin: Hash, error: String) -> RestoreError {
 }
 
 /// Publishes the backed-up snapshot at a new path; never replaces a file.
+/// The bytes published are the ones `inspect` read and verified against the
+/// pin and the manifest; they are not read a second time.
 pub fn restore(dir: &Path, pin: Hash, target: &Path) -> Result<usize, RestoreError> {
     let refused = RestoreError::Refused;
-    let found = inspect(dir, pin).map_err(refused)?;
+    let (found, bytes) = inspect_with_snapshot(dir, pin).map_err(refused)?;
     if found.withdrawn {
         return Err(RestoreError::Refused("WITHDRAWN".into()));
     }
@@ -252,8 +299,9 @@ pub fn restore(dir: &Path, pin: Hash, target: &Path) -> Result<usize, RestoreErr
     if fs::symlink_metadata(target).is_ok() {
         return Err(RestoreError::Refused("TARGET_EXISTS".into()));
     }
-    let (bytes, _) = verified_snapshot(&dir.join(SNAPSHOT), pin).map_err(RestoreError::Refused)?;
-    match write_bytes_new(target, &bytes) {
+    // Only `State::Complete` reaches this point, and for it `bytes` is the
+    // verified snapshot.
+    match write_bytes_new_pinned(target, &bytes, pin) {
         Ok(_) => Ok(bytes.len()),
         Err(e) => Err(classify(target, pin, io_text(&e))),
     }
@@ -292,6 +340,13 @@ pub fn delete_pinned(path: &Path, pin: Hash) -> Result<usize, DeleteError> {
     sync_dir(parent(path)).map_err(|e| DeleteError::RemovedUnconfirmed(e.to_string()))?;
     Ok(bytes.len())
 }
+
+/// The earlier restore path, which read and hashed the snapshot a second time,
+/// kept unchanged. Tests compare the current `restore` with it.
+#[cfg(test)]
+#[allow(dead_code)]
+#[path = "backup_restore_reference.rs"]
+mod restore_reference;
 
 #[cfg(test)]
 mod tests {
@@ -530,6 +585,58 @@ mod tests {
             State::Complete { .. }
         ));
         restore(&dir, pin, &s.0.join("back")).unwrap();
+    }
+
+    /// The current restore returns what the earlier one returned and leaves
+    /// the same bytes at the target, including the order of refusals.
+    #[test]
+    fn restore_matches_the_earlier_restore_that_read_the_snapshot_twice() {
+        let s = Scratch::new();
+        let (snap, pin) = snapshot(&s);
+        let mut other = pin;
+        other[3] ^= 1;
+        let complete = s.0.join("complete");
+        create(&snap, pin, &complete).unwrap();
+        let withdrawn = s.0.join("withdrawn");
+        create(&snap, pin, &withdrawn).unwrap();
+        withdraw(&withdrawn, "superseded").unwrap();
+        let corrupt = s.0.join("corrupt");
+        create(&snap, pin, &corrupt).unwrap();
+        let mut bytes = fs::read(corrupt.join(SNAPSHOT)).unwrap();
+        bytes[40] ^= 1;
+        fs::remove_file(corrupt.join(SNAPSHOT)).unwrap();
+        fs::write(corrupt.join(SNAPSHOT), &bytes).unwrap();
+        let incomplete = s.0.join("incomplete");
+        fs::create_dir(&incomplete).unwrap();
+        fs::copy(&snap, incomplete.join(SNAPSHOT)).unwrap();
+        let missing = s.0.join("missing");
+        let dirs = [&complete, &withdrawn, &corrupt, &incomplete, &missing];
+        for (n, dir) in dirs.iter().enumerate() {
+            for trusted in [pin, other] {
+                for occupied in [false, true] {
+                    type Restore = fn(&Path, Hash, &Path) -> Result<usize, RestoreError>;
+                    let outcome = |side: &str, run: Restore| {
+                        let out =
+                            s.0.join(format!("out-{side}-{n}-{}-{occupied}", trusted[3]));
+                        fs::create_dir(&out).unwrap();
+                        let target = out.join("restored.gelset");
+                        if occupied {
+                            fs::write(&target, "keep").unwrap();
+                        }
+                        (run(dir, trusted, &target), fs::read(&target).ok())
+                    };
+                    let new = outcome("new", restore);
+                    let old = outcome("old", restore_reference::restore);
+                    assert_eq!(new, old, "{n} {occupied}");
+                }
+            }
+            let absent = s.0.join("no-such-parent").join("restored.gelset");
+            assert_eq!(
+                restore(dir, pin, &absent),
+                restore_reference::restore(dir, pin, &absent),
+                "{n} unpublished"
+            );
+        }
     }
 
     #[test]

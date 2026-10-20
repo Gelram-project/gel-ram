@@ -1,20 +1,16 @@
 #![forbid(unsafe_code)]
 
-use gel_core::{splitmix64, Crc64Ecma, ORB_BYTES, ORB_WORDS};
+mod setup;
+#[cfg(test)]
+mod setup_reference;
+
+use gel_core::{Crc64Ecma, ORB_BYTES};
 use gel_kernel::{backend, KernelBackend};
 use gel_orb::Orb1024;
 use gel_reader::{top1, top1_threads_report, top_k_progressive, Top1Execution, Top1Fallback};
+use setup::{orb, reference_top_k};
 use std::hint::black_box;
 use std::time::Instant;
-
-fn orb(index: usize, seed: u64) -> Orb1024 {
-    let mut words = [0u64; ORB_WORDS];
-    words[0] = seed ^ index as u64;
-    for (i, w) in words.iter_mut().enumerate().skip(1) {
-        *w = splitmix64(seed ^ index as u64 ^ (i as u64).rotate_left(17));
-    }
-    Orb1024::from_words(words)
-}
 
 fn positive_arg(index: usize, default: usize, name: &str) -> Result<usize, String> {
     let Some(raw) = std::env::args_os().nth(index) else {
@@ -96,26 +92,9 @@ fn require_exact_rounds(exact: usize, rounds: usize) -> Result<(), String> {
     Ok(())
 }
 
-/// Independent per-bit scoring and full sort, outside the timer. Does not
-/// call the ranking insertion, progressive bound or score kernel under test.
-fn reference_top_k(bank: &[Orb1024], query: &Orb1024, k: usize) -> Vec<(usize, u16)> {
-    let mut scores: Vec<_> = bank
-        .iter()
-        .enumerate()
-        .map(|(index, orb)| {
-            let score = (0..1024)
-                .filter(|&bit| {
-                    ((orb.words()[bit / 64] >> (bit % 64)) & 1)
-                        == ((query.words()[bit / 64] >> (bit % 64)) & 1)
-                })
-                .count() as u16;
-            (index, score)
-        })
-        .collect();
-    scores.sort_unstable_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
-    scores.truncate(k);
-    scores
-}
+// `reference_top_k` (in `setup`) is the independent per-bit scoring in
+// full-sort order, outside the timer. It does not call the ranking
+// insertion, progressive bound or score kernel under test.
 
 fn require_top_k(actual: &[(usize, u16)], expected: &[(usize, u16)]) -> Result<(), String> {
     if actual != expected {
@@ -160,7 +139,14 @@ fn run() -> Result<(), String> {
     let mut bank = Vec::new();
     bank.try_reserve_exact(count)
         .map_err(|_| "benchmark bank does not fit in available memory")?;
-    bank.extend((0..count).map(|i| orb(i, GENERATOR_SEED)));
+    // Every page is first written on this thread, as with the serial fill;
+    // then each slot gets its index-pure orb on worker threads.
+    bank.resize(count, Orb1024::ZERO);
+    setup::fill_bank(
+        &mut bank,
+        GENERATOR_SEED,
+        setup::workers_for(count, setup::BANK_ORBS_PER_WORKER),
+    );
     let mut bank_crc = Crc64Ecma::new();
     for orb in &bank {
         bank_crc.update(&orb.to_le_bytes());
@@ -412,6 +398,24 @@ mod tests {
             let (got, _) = top_k_progressive(&bank, &query, 8);
             assert!(require_top_k(&got, &reference_top_k(&bank, &query, 8)).is_ok());
         }
+    }
+
+    #[test]
+    fn threaded_setup_matches_the_serial_reference() {
+        const SEED: u64 = 0x4745_4C00_4245_4E43;
+        let bank = setup_reference::compare_bank(
+            &[0, 1, 2, 3, 7, 8, 63, 64, 1000, 4097],
+            &[0, 1, 2, 3, 5, 9],
+            SEED,
+        );
+        assert!(bank.all_equal(), "{bank:?}");
+        let pins = setup_reference::compare_crc_pins(SEED, &[(8192, 0x6f03_8d6d_b5b8_839f)]);
+        assert!(pins.all_equal(), "{pins:?}");
+        let small = setup_reference::compare_top_k_small(0..=40, &[1, 2, 3, 5]);
+        assert!(small.all_equal(), "{small:?}");
+        let big = setup_reference::new_bank(3000, SEED, 4);
+        let mid = setup_reference::compare_top_k_bank(&big, &[0, 1000, 2999], &[1, 8], &[1, 3]);
+        assert!(mid.all_equal(), "{mid:?}");
     }
 
     #[test]

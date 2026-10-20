@@ -57,6 +57,22 @@ the release profile uses panic=abort and terminates the process. Caller
 panics and arbitrary allocation failure are not covered. No global worker
 pool or process-wide admission controller is implemented by this API.
 
+`top_k_threads` applies the same chunking and fallback contract to Top-K.
+Each chunk keeps its own Top-K; the joined lists are sorted by score
+descending, then ORB index ascending, and cut to `k`. Every entry of the
+global Top-K is in the Top-K of its chunk and that order is strict, so the
+result equals `top_k` exactly. `top_k_progressive` stays single-threaded:
+its scan order and its stage counters are part of its output.
+
+`top1_many` returns one Top-1 per query from a single pass over the bank in
+blocks of 128 ORBs (16 KiB): every query scans a block with `top1` before the
+next block is read, and a later block replaces a query's winner only with a
+strictly higher score. Entry `q` equals `top1(bank, &queries[q])`, including
+the index, the score and the returned ORB reference. `top1_many_threads`
+applies the `top1_threads` chunking and fallback contract and merges the
+chunk winners query by query with the same lowest-index rule for equal
+scores.
+
 Public ViewSpec fields remain source-compatible. Rotate input is normalized
 modulo 1024 before inverse subtraction, including directly constructed
 values above 1024. All 65536 values of its u16 rotation field are tested.

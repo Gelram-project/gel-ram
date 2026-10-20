@@ -61,6 +61,12 @@ to both reference paths as well. It prints reference and shared-scan fallback
 counts (including warm-up); any such fallback marks the timing comparison as
 degraded, not a normal parallel run. V1/V2 logs keep their own headers.
 
+`Reader::scan_many_into` scores several prepared queries against one bank in
+a single pass and writes the scores row by row, one row per query. Each row
+has the same bits as `scan_into` for that query alone. UNKNOWN queries are
+marked `false` in `ScanManyReport::scored` and their rows hold 0.0. It uses
+the same worker budget, chunks and serial fallback as `scan_into`.
+
 Zero requested workers returns an error and clears output. Score-buffer
 reservation is fallible. Unit tests cover usize::MAX requests, partial chunks,
 empty banks/masks, active zero, invalid poles, buffer reuse and both policies.

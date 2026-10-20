@@ -9,10 +9,10 @@ use std::{
     process::{Command, Output},
 };
 
-const TOOL: &str = "record_evidence.rs";
-const SUPPORT: &str = "record_support.rs";
-const MAIN: &str = "fn main() {";
-const FORBIDDEN: &[&str] = &[
+pub(crate) const TOOL: &str = "record_evidence.rs";
+pub(crate) const SUPPORT: &str = "record_support.rs";
+pub(crate) const MAIN: &str = "fn main() {";
+pub(crate) const FORBIDDEN: &[&str] = &[
     "clippy::unwrap_used",
     "clippy::expect_used",
     "clippy::panic",
@@ -29,7 +29,7 @@ const FORBIDDEN: &[&str] = &[
     "clippy::dbg_macro",
 ];
 /// (name, statement injected at the start of main, lint that must reject it)
-const PROBES: &[(&str, &str, &str)] = &[
+pub(crate) const PROBES: &[(&str, &str, &str)] = &[
     (
         "unwrap",
         r#"let _p: u8 = "7".parse().unwrap();"#,
@@ -74,7 +74,7 @@ const PROBES: &[(&str, &str, &str)] = &[
     ),
 ];
 
-fn clippy_driver(root: &Path) -> Result<PathBuf, String> {
+pub(crate) fn clippy_driver(root: &Path) -> Result<PathBuf, String> {
     let output = Command::new("rustc")
         .args(["--print", "sysroot"])
         .current_dir(root)
@@ -94,7 +94,12 @@ fn clippy_driver(root: &Path) -> Result<PathBuf, String> {
     }
 }
 
-fn lint(root: &Path, driver: &Path, source: &Path, out_dir: &Path) -> Result<Output, String> {
+pub(crate) fn lint(
+    root: &Path,
+    driver: &Path,
+    source: &Path,
+    out_dir: &Path,
+) -> Result<Output, String> {
     let mut command = Command::new(driver);
     command
         .env("CLIPPY_CONF_DIR", root.join("tools").join("recorder-lint"))
@@ -116,52 +121,91 @@ fn lint(root: &Path, driver: &Path, source: &Path, out_dir: &Path) -> Result<Out
         .map_err(|e| format!("{}: {e}", driver.display()))
 }
 
-fn io(path: &Path, e: std::io::Error) -> String {
+pub(crate) fn io(path: &Path, e: std::io::Error) -> String {
     format!("{}: {e}", path.display())
 }
 
+/// The probe work directory: inside the build directory named by
+/// `CARGO_TARGET_DIR` when it is set, otherwise `target/` of the workspace.
+pub(crate) fn work_dir(root: &Path, target_dir: Option<std::ffi::OsString>) -> PathBuf {
+    target_dir
+        .filter(|dir| !dir.is_empty())
+        .map(PathBuf::from)
+        .unwrap_or_else(|| root.join("target"))
+        .join("recorder-lint")
+}
+
 pub fn check(root: &Path) -> Result<(), String> {
+    let work = work_dir(root, std::env::var_os("CARGO_TARGET_DIR"));
+    println!("{}", outcome_in(root, &work)?);
+    Ok(())
+}
+
+/// One probe copy in its own directory, linted.
+fn probe(
+    root: &Path,
+    driver: &Path,
+    work: &Path,
+    source: &str,
+    (name, statement, _): &(&str, &str, &str),
+) -> Result<Output, String> {
+    let tools = root.join("tools");
+    let dir = work.join(name);
+    fs::create_dir_all(&dir).map_err(|e| io(&dir, e))?;
+    let probe_path = dir.join(TOOL);
+    let probed = source.replacen(MAIN, &format!("{MAIN}\n    {statement}"), 1);
+    fs::write(&probe_path, probed).map_err(|e| io(&probe_path, e))?;
+    let support = dir.join(SUPPORT);
+    fs::copy(tools.join(SUPPORT), &support).map_err(|e| io(&support, e))?;
+    lint(root, driver, &probe_path, &dir)
+}
+
+/// The PASS line or the first failure. The clean run and every probe run
+/// concurrently, each with its own output directory; results are judged in
+/// the fixed order clean tool, source, `fn main() {` count, then `PROBES`.
+pub(crate) fn outcome_in(root: &Path, work: &Path) -> Result<String, String> {
     let driver = clippy_driver(root)?;
     let tools = root.join("tools");
-    let work = root.join("target").join("recorder-lint");
     // Fresh probe copies on every run; an earlier probe is never reused.
     if work.exists() {
-        fs::remove_dir_all(&work).map_err(|e| io(&work, e))?;
+        fs::remove_dir_all(work).map_err(|e| io(work, e))?;
     }
-    fs::create_dir_all(&work).map_err(|e| io(&work, e))?;
+    fs::create_dir_all(work).map_err(|e| io(work, e))?;
 
-    let clean = lint(root, &driver, &tools.join(TOOL), &work)?;
+    let path = tools.join(TOOL);
+    let source = fs::read_to_string(&path).map_err(|e| io(&path, e));
+    let probes = match &source {
+        Ok(text) if text.matches(MAIN).count() == 1 => PROBES.len(),
+        _ => 0,
+    };
+    let mut runs = super::tree_scan::ordered(1 + probes, |job| match (job, &source) {
+        (0, _) => lint(root, &driver, &path, work),
+        (_, Ok(text)) => probe(root, &driver, work, text, &PROBES[job - 1]),
+        (_, Err(error)) => Err(error.clone()),
+    })
+    .into_iter();
+
+    let clean = runs.next().expect("the clean run is job 0")?;
     if !clean.status.success() {
         return Err(format!(
             "RECORDER_LINT=FAIL\n{}",
             String::from_utf8_lossy(&clean.stderr)
         ));
     }
-
-    let path = tools.join(TOOL);
-    let source = fs::read_to_string(&path).map_err(|e| io(&path, e))?;
-    if source.matches(MAIN).count() != 1 {
+    if source?.matches(MAIN).count() != 1 {
         return Err("RECORDER_LINT=FAIL: expected exactly one `fn main() {`".into());
     }
-    for (name, statement, expected) in PROBES {
-        let dir = work.join(name);
-        fs::create_dir_all(&dir).map_err(|e| io(&dir, e))?;
-        let probe_path = dir.join(TOOL);
-        let probed = source.replacen(MAIN, &format!("{MAIN}\n    {statement}"), 1);
-        fs::write(&probe_path, probed).map_err(|e| io(&probe_path, e))?;
-        let support = dir.join(SUPPORT);
-        fs::copy(tools.join(SUPPORT), &support).map_err(|e| io(&support, e))?;
-        let probe = lint(root, &driver, &probe_path, &dir)?;
+    for ((name, _, expected), probe) in PROBES.iter().zip(runs) {
+        let probe = probe?;
         if probe.status.success() || !String::from_utf8_lossy(&probe.stderr).contains(expected) {
             return Err(format!(
                 "RECORDER_LINT=FAIL: probe {name} was not rejected by {expected}"
             ));
         }
     }
-    println!(
+    Ok(format!(
         "RECORDER_LINT=PASS clean_tool=accepted forbidden_lints={} rejected_probes={}",
         FORBIDDEN.len(),
         PROBES.len()
-    );
-    Ok(())
+    ))
 }

@@ -10,6 +10,14 @@
 //! tables in `nfc_tables.rs` come from the Unicode Character Database; the
 //! tests run the Unicode NormalizationTest of the same version and compare
 //! every code point with an earlier implementation.
+//!
+//! The properties of a code point (combining class, NFC_Quick_Check not Yes,
+//! second code point of a primary composite, canonical decomposition) are
+//! read from one two-level table, and primary composites from a hash table;
+//! both are built at compile time from the tables in `nfc_tables.rs`. A
+//! string that fails the quick check is normalized from the last character
+//! before the failure that has combining class 0 and NFC_Quick_Check Yes; the
+//! text before it is copied as it is.
 use crate::nfc_tables::{
     CANONICAL_COMBINING_CLASS, CANONICAL_DECOMPOSITION, NFC_QUICK_CHECK, PRIMARY_COMPOSITE,
 };
@@ -28,62 +36,220 @@ const S_COUNT: u32 = L_COUNT * N_COUNT;
 /// Yes (checked against the tables by a test).
 const FIRST_NOT_TRIVIAL: u32 = 0x0300;
 /// The Hangul Jamo block, U+1100..U+11FF.
+#[cfg(test)]
 const JAMO_BLOCK: std::ops::RangeInclusive<u32> = 0x1100..=0x11FF;
 
 #[cfg(test)]
 thread_local! {
-    /// Combining-class lookups made by this thread, for the cost test.
+    /// Property lookups made by this thread, for the cost test.
     static LOOKUPS: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
 }
 
-/// The value of the range of `table` that contains `c`.
-fn in_range<T: Copy>(table: &[(u32, u32, T)], c: u32) -> Option<T> {
-    table
-        .binary_search_by(|&(first, last, _)| {
-            if last < c {
-                std::cmp::Ordering::Less
-            } else if first > c {
-                std::cmp::Ordering::Greater
-            } else {
-                std::cmp::Ordering::Equal
-            }
-        })
-        .ok()
-        .map(|i| table[i].2)
+/// Code points per block of the property table.
+const BLOCK_SHIFT: u32 = 6;
+const BLOCK: usize = 1 << BLOCK_SHIFT;
+/// Blocks covering U+0000..U+10FFFF.
+const BLOCKS: usize = 0x11_0000 >> BLOCK_SHIFT;
+/// Property bits: the combining class in the low 8 bits, two flags, and the
+/// index in CANONICAL_DECOMPOSITION plus one (0: none) from bit 16.
+pub(crate) const CLASS_MASK: u32 = 0xFF;
+pub(crate) const QUICK_CHECK_NOT_YES: u32 = 1 << 8;
+pub(crate) const COMPOSITE_SECOND: u32 = 1 << 9;
+const DECOMPOSITION_SHIFT: u32 = 16;
+
+/// Marks a block for every code point that has a property.
+const fn used_blocks() -> [bool; BLOCKS] {
+    let mut used = [false; BLOCKS];
+    let mut i = 0;
+    while i < CANONICAL_COMBINING_CLASS.len() {
+        let (first, last, _) = CANONICAL_COMBINING_CLASS[i];
+        let mut b = first >> BLOCK_SHIFT;
+        while b <= last >> BLOCK_SHIFT {
+            used[b as usize] = true;
+            b += 1;
+        }
+        i += 1;
+    }
+    i = 0;
+    while i < NFC_QUICK_CHECK.len() {
+        let (first, last, _) = NFC_QUICK_CHECK[i];
+        let mut b = first >> BLOCK_SHIFT;
+        while b <= last >> BLOCK_SHIFT {
+            used[b as usize] = true;
+            b += 1;
+        }
+        i += 1;
+    }
+    i = 0;
+    while i < CANONICAL_DECOMPOSITION.len() {
+        used[(CANONICAL_DECOMPOSITION[i].0 >> BLOCK_SHIFT) as usize] = true;
+        i += 1;
+    }
+    i = 0;
+    while i < PRIMARY_COMPOSITE.len() {
+        used[(PRIMARY_COMPOSITE[i].1 >> BLOCK_SHIFT) as usize] = true;
+        i += 1;
+    }
+    used
 }
 
-fn combining_class(c: u32) -> u8 {
+const fn used_block_count() -> usize {
+    let used = used_blocks();
+    let (mut n, mut b) = (0, 0);
+    while b < BLOCKS {
+        if used[b] {
+            n += 1;
+        }
+        b += 1;
+    }
+    n
+}
+
+/// Block 0 holds no property; every other block holds at least one.
+const DATA_BLOCKS: usize = 1 + used_block_count();
+// A block number is stored in one byte of `Properties::index`.
+const _: () = assert!(DATA_BLOCKS <= 256);
+
+struct Properties {
+    index: [u8; BLOCKS],
+    data: [[u32; BLOCK]; DATA_BLOCKS],
+}
+
+const fn build_properties() -> Properties {
+    assert!(CANONICAL_DECOMPOSITION.len() < 1 << (32 - DECOMPOSITION_SHIFT));
+    let used = used_blocks();
+    let mut index = [0u8; BLOCKS];
+    let (mut next, mut b) = (1, 0);
+    while b < BLOCKS {
+        if used[b] {
+            index[b] = next as u8;
+            next += 1;
+        }
+        b += 1;
+    }
+    let mut data = [[0u32; BLOCK]; DATA_BLOCKS];
+    let mut i = 0;
+    while i < CANONICAL_COMBINING_CLASS.len() {
+        let (first, last, class) = CANONICAL_COMBINING_CLASS[i];
+        let mut c = first;
+        while c <= last {
+            data[index[(c >> BLOCK_SHIFT) as usize] as usize][c as usize & (BLOCK - 1)] |=
+                class as u32;
+            c += 1;
+        }
+        i += 1;
+    }
+    i = 0;
+    while i < NFC_QUICK_CHECK.len() {
+        let (first, last, _) = NFC_QUICK_CHECK[i];
+        let mut c = first;
+        while c <= last {
+            data[index[(c >> BLOCK_SHIFT) as usize] as usize][c as usize & (BLOCK - 1)] |=
+                QUICK_CHECK_NOT_YES;
+            c += 1;
+        }
+        i += 1;
+    }
+    i = 0;
+    while i < CANONICAL_DECOMPOSITION.len() {
+        let c = CANONICAL_DECOMPOSITION[i].0;
+        data[index[(c >> BLOCK_SHIFT) as usize] as usize][c as usize & (BLOCK - 1)] |=
+            ((i + 1) as u32) << DECOMPOSITION_SHIFT;
+        i += 1;
+    }
+    i = 0;
+    while i < PRIMARY_COMPOSITE.len() {
+        let c = PRIMARY_COMPOSITE[i].1;
+        // `compose` rejects every second code point below this one unread.
+        assert!(c >= FIRST_NOT_TRIVIAL);
+        data[index[(c >> BLOCK_SHIFT) as usize] as usize][c as usize & (BLOCK - 1)] |=
+            COMPOSITE_SECOND;
+        i += 1;
+    }
+    Properties { index, data }
+}
+
+static PROPERTIES: Properties = build_properties();
+
+/// The property bits of `c`.
+pub(crate) fn properties(c: u32) -> u32 {
     #[cfg(test)]
     LOOKUPS.with(|n| n.set(n.get() + 1));
-    in_range(CANONICAL_COMBINING_CLASS, c).unwrap_or(0)
+    let block = PROPERTIES
+        .index
+        .get((c >> BLOCK_SHIFT) as usize)
+        .copied()
+        .unwrap_or(0);
+    PROPERTIES.data[block as usize][c as usize & (BLOCK - 1)]
 }
 
-/// True when `s` is certainly in NFC by the NFC_Quick_Check rule of UAX #15:
+#[cfg(test)]
+fn combining_class(c: u32) -> u8 {
+    (properties(c) & CLASS_MASK) as u8
+}
+
+/// Slots of the primary composite hash table: more than twice the composites.
+const SLOTS: usize = 2048;
+
+const fn slot_of(first: u32, second: u32) -> usize {
+    ((first.wrapping_mul(0x9E37_79B1) ^ second.wrapping_mul(0x85EB_CA77)).wrapping_mul(0xC2B2_AE3D)
+        >> (32 - SLOTS.trailing_zeros())) as usize
+}
+
+/// Open addressing with linear probing: each slot holds the index in
+/// PRIMARY_COMPOSITE plus one, or 0 when empty.
+const fn build_composite_slots() -> [u16; SLOTS] {
+    assert!(PRIMARY_COMPOSITE.len() < SLOTS / 2);
+    let mut slots = [0u16; SLOTS];
+    let mut i = 0;
+    while i < PRIMARY_COMPOSITE.len() {
+        let (first, second, _) = PRIMARY_COMPOSITE[i];
+        let mut slot = slot_of(first, second);
+        while slots[slot] != 0 {
+            slot = (slot + 1) & (SLOTS - 1);
+        }
+        slots[slot] = (i + 1) as u16;
+        i += 1;
+    }
+    slots
+}
+
+static COMPOSITE_SLOTS: [u16; SLOTS] = build_composite_slots();
+
+/// None when `s` is certainly in NFC by the NFC_Quick_Check rule of UAX #15:
 /// no character has NFC_Quick_Check No or Maybe, and the nonzero combining
-/// classes never decrease.
-fn is_nfc_by_quick_check(s: &str) -> bool {
+/// classes never decrease. Otherwise the byte offset of the last character
+/// before the first failing one that has combining class 0 and
+/// NFC_Quick_Check Yes, or 0 when there is none.
+pub(crate) fn quick_check(s: &str) -> Option<usize> {
     let mut last = 0;
-    for c in s.chars() {
+    let mut stable = 0;
+    for (at, c) in s.char_indices() {
         let c = c as u32;
         if c < FIRST_NOT_TRIVIAL {
             last = 0;
+            stable = at;
             continue;
         }
-        if in_range(NFC_QUICK_CHECK, c).is_some() {
-            return false;
+        let properties = properties(c);
+        if properties & QUICK_CHECK_NOT_YES != 0 {
+            return Some(stable);
         }
-        let class = combining_class(c);
+        let class = (properties & CLASS_MASK) as u8;
         if class != 0 && last > class {
-            return false;
+            return Some(stable);
+        }
+        if class == 0 {
+            stable = at;
         }
         last = class;
     }
-    true
+    None
 }
 
 /// Appends the full canonical decomposition of `c`, each code point with its
 /// combining class.
-fn decompose(c: u32, out: &mut Vec<(u8, u32)>) {
+pub(crate) fn decompose(c: u32, out: &mut Vec<(u8, u32)>) {
     if (S_BASE..S_BASE + S_COUNT).contains(&c) {
         // Hangul jamo all have combining class 0.
         let s = c - S_BASE;
@@ -94,29 +260,26 @@ fn decompose(c: u32, out: &mut Vec<(u8, u32)>) {
         }
         return;
     }
-    // The Hangul Jamo block has no decompositions and no nonzero classes, and
-    // nothing below the first decomposition decomposes (both checked by a test).
-    if JAMO_BLOCK.contains(&c) {
+    // Nothing below the first decomposition decomposes or has a nonzero
+    // class (checked by a test).
+    if c < CANONICAL_DECOMPOSITION[0].0 {
         out.push((0, c));
         return;
     }
-    if c < CANONICAL_DECOMPOSITION[0].0 {
-        out.push((combining_class(c), c));
-        return;
-    }
-    match CANONICAL_DECOMPOSITION.binary_search_by_key(&c, |&(cp, _, _)| cp) {
-        Ok(i) => {
-            let (_, first, second) = CANONICAL_DECOMPOSITION[i];
+    let properties = properties(c);
+    match properties >> DECOMPOSITION_SHIFT {
+        0 => out.push(((properties & CLASS_MASK) as u8, c)),
+        i => {
+            let (_, first, second) = CANONICAL_DECOMPOSITION[i as usize - 1];
             decompose(first, out);
             if second != 0 {
                 decompose(second, out);
             }
         }
-        Err(_) => out.push((combining_class(c), c)),
     }
 }
 
-fn compose(first: u32, second: u32) -> Option<u32> {
+pub(crate) fn compose(first: u32, second: u32) -> Option<u32> {
     if (L_BASE..L_BASE + L_COUNT).contains(&first) && (V_BASE..V_BASE + V_COUNT).contains(&second) {
         return Some(S_BASE + ((first - L_BASE) * V_COUNT + (second - V_BASE)) * T_COUNT);
     }
@@ -126,20 +289,74 @@ fn compose(first: u32, second: u32) -> Option<u32> {
     {
         return Some(first + (second - T_BASE));
     }
-    PRIMARY_COMPOSITE
-        .binary_search_by_key(&(first, second), |&(a, b, _)| (a, b))
-        .ok()
-        .map(|i| PRIMARY_COMPOSITE[i].2)
+    if second < FIRST_NOT_TRIVIAL || properties(second) & COMPOSITE_SECOND == 0 {
+        return None;
+    }
+    let mut slot = slot_of(first, second);
+    loop {
+        let entry = COMPOSITE_SLOTS[slot];
+        if entry == 0 {
+            return None;
+        }
+        let (a, b, composite) = PRIMARY_COMPOSITE[entry as usize - 1];
+        if (a, b) == (first, second) {
+            return Some(composite);
+        }
+        slot = (slot + 1) & (SLOTS - 1);
+    }
+}
+
+/// Buffers reused by every normalization through them.
+#[derive(Default)]
+pub(crate) struct Scratch {
+    decomposed: Vec<(u8, u32)>,
+    text: String,
 }
 
 /// `s` in Normalization Form C.
 pub(crate) fn nfc(s: &str) -> String {
-    if is_nfc_by_quick_check(s) {
-        return s.to_owned();
+    match quick_check(s) {
+        None => s.to_owned(),
+        Some(stable) => {
+            let mut scratch = Scratch::default();
+            normalize_from(s, stable, &mut scratch);
+            scratch.text
+        }
     }
-    let mut decomposed: Vec<(u8, u32)> = Vec::with_capacity(s.len());
+}
+
+/// `s` in Normalization Form C: `s` itself when it passes the quick check,
+/// otherwise the text of `scratch`.
+pub(crate) fn nfc_in<'a>(s: &'a str, scratch: &'a mut Scratch) -> &'a str {
+    match quick_check(s) {
+        None => s,
+        Some(stable) => {
+            normalize_from(s, stable, scratch);
+            &scratch.text
+        }
+    }
+}
+
+/// Sets the text of `scratch` to the NFC of `s`, where `s[..stable]` passed the
+/// quick check and `s[stable..]` starts with a character of combining class 0
+/// and NFC_Quick_Check Yes (or `stable` is 0). The full decomposition of such
+/// a character starts with a starter that is never the second code point of
+/// a composite (checked by a test), so nothing before it is reordered or
+/// composed with anything after it, and NFC leaves the prefix as it is.
+fn normalize_from(s: &str, stable: usize, scratch: &mut Scratch) {
+    scratch.text.clear();
+    scratch.text.reserve(s.len());
+    scratch.text.push_str(&s[..stable]);
+    normalize_into(&s[stable..], scratch);
+}
+
+/// Appends to the text of `scratch` the decomposition, canonical ordering and
+/// composition of `s`.
+fn normalize_into(s: &str, scratch: &mut Scratch) {
+    let decomposed = &mut scratch.decomposed;
+    decomposed.clear();
     for c in s.chars() {
-        decompose(c as u32, &mut decomposed);
+        decompose(c as u32, decomposed);
     }
     // Canonical ordering: a stable sort of each run of nonzero classes.
     let mut i = 0;
@@ -154,30 +371,37 @@ pub(crate) fn nfc(s: &str) -> String {
         }
         decomposed[start..i].sort_by_key(|&(class, _)| class);
     }
-    // Canonical composition. `last` is the class of the last character kept
-    // after the current starter; None means the next character is adjacent.
-    let mut out: Vec<u32> = Vec::with_capacity(decomposed.len());
+    // Canonical composition, in place: the first `kept` entries are the
+    // output so far. `last` is the class of the last character kept after
+    // the current starter; None means the next character is adjacent.
+    let mut kept = 0;
     let mut starter: Option<usize> = None;
     let mut last: Option<u8> = None;
-    for (class, c) in decomposed {
+    for i in 0..decomposed.len() {
+        let (class, c) = decomposed[i];
         if let Some(at) = starter {
             let blocked = last.is_some_and(|l| l >= class);
             if !blocked {
-                if let Some(composite) = compose(out[at], c) {
-                    out[at] = composite;
+                if let Some(composite) = compose(decomposed[at].1, c) {
+                    decomposed[at].1 = composite;
                     continue;
                 }
             }
         }
         if class == 0 {
-            starter = Some(out.len());
+            starter = Some(kept);
             last = None;
         } else if starter.is_some() {
             last = Some(class);
         }
-        out.push(c);
+        decomposed[kept] = (class, c);
+        kept += 1;
     }
-    out.into_iter().filter_map(char::from_u32).collect()
+    scratch.text.extend(
+        decomposed[..kept]
+            .iter()
+            .filter_map(|&(_, c)| char::from_u32(c)),
+    );
 }
 
 #[cfg(test)]

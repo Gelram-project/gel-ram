@@ -36,28 +36,24 @@ pub enum Residual {
 impl Residual {
     pub fn from_exact_xor(target: &Orb1024, predictor: &Orb1024) -> Self {
         let mut delta = [0u64; ORB_WORDS];
-        let mut positions = Vec::new();
-        for (i, ((slot, &target_word), &predictor_word)) in delta
+        let mut count = 0usize;
+        for ((slot, &target_word), &predictor_word) in delta
             .iter_mut()
             .zip(target.words().iter())
             .zip(predictor.words().iter())
-            .enumerate()
         {
             *slot = target_word ^ predictor_word;
-            let mut word = *slot;
-            while word != 0 {
-                let bit = word.trailing_zeros() as usize;
-                positions.push((i * 64 + bit) as u16);
-                word &= word - 1;
-            }
+            count += slot.count_ones() as usize;
         }
-        let sparse = pack_positions(&positions);
-        let sparse_len = 1 + 2 + sparse.len();
+        // The packed length depends only on the number of changed bits, so the
+        // sparse/dense choice is made before any position is written.
+        let packed_len = (count * SPARSE_INDEX_BITS).div_ceil(8);
+        let sparse_len = 1 + 2 + packed_len;
         let dense_len = 1 + ORB_BYTES;
         if sparse_len < dense_len {
             Self::Sparse {
-                count: positions.len() as u16,
-                packed_positions: sparse,
+                count: count as u16,
+                packed_positions: pack_delta_positions(&delta, packed_len),
             }
         } else {
             Self::Dense(Orb1024::from_words(delta))
@@ -71,7 +67,7 @@ impl Residual {
                 packed_positions,
             } => {
                 // Counts are meaningful only for a canonical decodable residual.
-                unpack_positions(*count, packed_positions)?;
+                for_each_position(*count, packed_positions, |_| {})?;
                 Ok(*count)
             }
             Self::Dense(delta) => Ok(delta.words().iter().map(|x| x.count_ones() as u16).sum()),
@@ -104,13 +100,14 @@ impl Residual {
                 count,
                 packed_positions,
             } => {
-                let positions = unpack_positions(*count, packed_positions)?;
+                // Positions are applied as they are decoded; on an invalid
+                // encoding the partly changed copy is dropped with the error.
                 let mut out = *predictor;
-                for position in positions {
+                for_each_position(*count, packed_positions, |position| {
                     let word = position as usize >> 6;
                     let bit = position as usize & 63;
                     out.words_mut()[word] ^= 1u64 << bit;
-                }
+                })?;
                 Ok(out)
             }
         }
@@ -226,21 +223,60 @@ pub fn encode_best_prototype(
     target: &Orb1024,
     prototypes: &[Orb1024],
 ) -> Result<(EncodedOrb, Option<usize>), GelError> {
-    let mut best = EncodedOrb::Literal(*target);
-    let mut best_index = None;
+    // A prototype delta is 1 + 1 + 5 + 1 + 2 + ceil(10k / 8) bytes for k changed
+    // bits while its residual is sparse; that length grows strictly with k, and
+    // a dense residual (k > 100) is never smaller than the literal. So the
+    // smallest encoding comes from the first prototype with the fewest changed
+    // bits, or is the literal when even that one does not beat it.
+    let mut best: Option<(usize, u32, u16)> = None;
     for (index, prototype) in prototypes.iter().enumerate() {
         let prototype_id = u32::try_from(index)
             .map_err(|_| GelError::InvalidResidual("prototype index exceeds u32"))?;
-        let candidate =
-            EncodedOrb::encode_against(target, prototype, ParentRef::Prototype(prototype_id), 0)?;
-        if candidate.serialized_len() < best.serialized_len() {
-            best = candidate;
-            best_index = Some(index);
+        let changed = target.hamming_distance(prototype);
+        if best.is_none_or(|(_, _, best_changed)| changed < best_changed) {
+            best = Some((index, prototype_id, changed));
         }
     }
-    Ok((best, best_index))
+    let Some((index, prototype_id, _)) = best else {
+        return Ok((EncodedOrb::Literal(*target), None));
+    };
+    let encoded = EncodedOrb::encode_against(
+        target,
+        &prototypes[index],
+        ParentRef::Prototype(prototype_id),
+        0,
+    )?;
+    let chosen = matches!(encoded, EncodedOrb::Delta { .. }).then_some(index);
+    Ok((encoded, chosen))
 }
 
+/// Packs the set bits of `delta` in ascending order as 10-bit fields, the
+/// same bytes `pack_positions` writes for that position list.
+fn pack_delta_positions(delta: &[u64; ORB_WORDS], packed_len: usize) -> Vec<u8> {
+    let mut out = Vec::with_capacity(packed_len);
+    let mut acc = 0u64;
+    let mut bits = 0usize;
+    for (i, &delta_word) in delta.iter().enumerate() {
+        let mut word = delta_word;
+        while word != 0 {
+            let position = (i * 64 + word.trailing_zeros() as usize) as u64;
+            acc |= position << bits;
+            bits += SPARSE_INDEX_BITS;
+            while bits >= 8 {
+                out.push(acc as u8);
+                acc >>= 8;
+                bits -= 8;
+            }
+            word &= word - 1;
+        }
+    }
+    if bits != 0 {
+        out.push(acc as u8);
+    }
+    out
+}
+
+#[cfg(test)]
 fn pack_positions(positions: &[u16]) -> Vec<u8> {
     let mut out = Vec::with_capacity((positions.len() * SPARSE_INDEX_BITS).div_ceil(8));
     let mut acc = 0u64;
@@ -260,6 +296,57 @@ fn pack_positions(positions: &[u16]) -> Vec<u8> {
     out
 }
 
+/// Decodes the packed positions in order and passes each one to `visit`,
+/// without collecting them. The checks and their order are those of the
+/// reference `unpack_positions`: count and length first, then per position
+/// (a missing byte, a value outside the ORB, an order that is not strictly
+/// increasing), then the padding bits and trailing bytes at the end. On an
+/// error some positions may already have been visited.
+fn for_each_position(
+    count: u16,
+    packed: &[u8],
+    mut visit: impl FnMut(u16),
+) -> Result<(), GelError> {
+    validate_sparse(count, packed)?;
+    let mut acc = 0u64;
+    let mut bits = 0usize;
+    let mut input = packed.iter().copied();
+    let mut last: Option<u16> = None;
+    for _ in 0..count {
+        while bits < SPARSE_INDEX_BITS {
+            let byte = input
+                .next()
+                .ok_or(GelError::InvalidResidual("truncated sparse positions"))?;
+            acc |= (byte as u64) << bits;
+            bits += 8;
+        }
+        let position = (acc & ((1u64 << SPARSE_INDEX_BITS) - 1)) as u16;
+        acc >>= SPARSE_INDEX_BITS;
+        bits -= SPARSE_INDEX_BITS;
+        if position as usize >= ORB_BITS {
+            return Err(GelError::InvalidResidual("sparse position outside ORB"));
+        }
+        if last.is_some_and(|last| position <= last) {
+            return Err(GelError::InvalidResidual(
+                "sparse positions must be strictly increasing",
+            ));
+        }
+        visit(position);
+        last = Some(position);
+    }
+    // The encoder writes zero padding bits after the last position and no
+    // trailing bytes; anything else is not a canonical encoding.
+    if acc != 0 || input.next().is_some() {
+        return Err(GelError::InvalidResidual(
+            "sparse padding bits must be zero",
+        ));
+    }
+    Ok(())
+}
+
+/// The collecting decoder `apply` and `popcount` used before
+/// `for_each_position`; kept as the reference it is compared against.
+#[cfg(test)]
 fn unpack_positions(count: u16, packed: &[u8]) -> Result<Vec<u16>, GelError> {
     validate_sparse(count, packed)?;
     let mut out = Vec::with_capacity(count as usize);
@@ -312,9 +399,23 @@ fn validate_sparse(count: u16, packed: &[u8]) -> Result<(), GelError> {
 }
 
 #[cfg(test)]
+mod popcount_first_reference;
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use gel_core::{splitmix64, ORB_WORDS};
+
+    #[test]
+    fn popcount_first_paths_match_the_earlier_encoder_bit_for_bit() {
+        let groups = crate::popcount_first_reference::identity_cases();
+        let total: usize = groups.iter().map(|group| group.cases).sum();
+        assert!(total > 0, "no comparison ran");
+        for group in groups {
+            assert!(group.cases > 0, "{} ran no comparison", group.name);
+            assert_eq!(group.equal, group.cases, "{}", group.name);
+        }
+    }
 
     fn sample(seed: u64) -> Orb1024 {
         let mut words = [0u64; ORB_WORDS];
@@ -449,6 +550,66 @@ mod tests {
             assert_eq!(residual.popcount().unwrap(), count);
             assert!(residual.apply(&predictor).is_ok());
         }
+    }
+
+    /// The streaming decoder must accept, refuse and order exactly as the
+    /// collecting reference does, with the same error, on valid packings,
+    /// bit flips of them, wrong lengths and random bytes.
+    #[test]
+    fn streaming_positions_equal_the_collecting_reference() {
+        fn streamed(count: u16, packed: &[u8]) -> Result<Vec<u16>, GelError> {
+            let mut out = Vec::new();
+            for_each_position(count, packed, |position| out.push(position))?;
+            Ok(out)
+        }
+        let predictor = sample(812);
+        let mut checked = 0usize;
+        let mut seed = 0x5354_5255_4354_0001u64;
+        let mut cases: Vec<(u16, Vec<u8>)> = Vec::new();
+        for count in (0..=1024u16)
+            .step_by(7)
+            .chain([1, 2, 92, 93, 100, 101, 1023, 1024])
+        {
+            let positions: Vec<u16> = (0..count).collect();
+            let packed = pack_positions(&positions);
+            for bit in (0..packed.len() * 8).step_by(13) {
+                let mut flipped = packed.clone();
+                flipped[bit / 8] ^= 1u8 << (bit % 8);
+                cases.push((count, flipped));
+            }
+            cases.push((count, packed));
+        }
+        for _ in 0..4096 {
+            seed = splitmix64(seed);
+            let count = (seed % 1100) as u16;
+            let expected = (count as usize * SPARSE_INDEX_BITS).div_ceil(8);
+            let len = (expected + (seed >> 40) as usize % 5).saturating_sub(2);
+            let bytes = (0..len)
+                .map(|j| splitmix64(seed ^ j as u64) as u8)
+                .collect::<Vec<u8>>();
+            cases.push((count, bytes));
+        }
+        cases.push((1025, vec![0; 1282]));
+        cases.push((u16::MAX, vec![0; 81_919]));
+        for (count, packed) in cases {
+            let reference = unpack_positions(count, &packed);
+            assert_eq!(streamed(count, &packed), reference, "count={count}");
+            let residual = sparse(count, packed);
+            let expected_apply = reference.as_ref().map(|positions| {
+                let mut out = predictor;
+                for &position in positions {
+                    out.words_mut()[position as usize >> 6] ^= 1u64 << (position & 63);
+                }
+                out
+            });
+            assert_eq!(
+                residual.apply(&predictor),
+                expected_apply.map_err(Clone::clone)
+            );
+            assert_eq!(residual.popcount(), reference.map(|_| count));
+            checked += 1;
+        }
+        assert!(checked > 4096);
     }
 
     #[test]

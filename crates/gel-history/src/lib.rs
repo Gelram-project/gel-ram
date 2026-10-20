@@ -95,9 +95,16 @@ impl RecordHistory {
     /// Rebuilds the state at `index` from its literal and at most
     /// [`MAX_RESIDUAL_DEPTH`] residuals.
     pub fn reconstruct(&self, index: usize) -> Result<Orb1024, GelError> {
+        self.reconstruct_with_hops(index).map(|(state, _)| state)
+    }
+
+    /// [`RecordHistory::reconstruct`] plus the number of residuals it applied.
+    fn reconstruct_with_hops(&self, index: usize) -> Result<(Orb1024, usize), GelError> {
         // An iterative walk with a hard hop bound, so no entry can make it recurse
         // or walk further than the depth limit.
-        let mut chain: Vec<&Residual> = Vec::with_capacity(MAX_RESIDUAL_DEPTH as usize);
+        let mut chain: [Option<&Residual>; MAX_RESIDUAL_DEPTH as usize] =
+            [None; MAX_RESIDUAL_DEPTH as usize];
+        let mut hops = 0usize;
         let mut cursor = index;
         let mut state = loop {
             let entry = self
@@ -113,20 +120,50 @@ impl RecordHistory {
                     if parent >= cursor {
                         return Err(GelError::InvalidResidual("parent must precede child"));
                     }
-                    if chain.len() == MAX_RESIDUAL_DEPTH as usize {
+                    if hops == MAX_RESIDUAL_DEPTH as usize {
                         return Err(GelError::InvalidResidual(
                             "residual chain longer than MAX_RESIDUAL_DEPTH",
                         ));
                     }
-                    chain.push(residual);
+                    chain[hops] = Some(residual);
+                    hops += 1;
                     cursor = parent;
                 }
             }
         };
-        for residual in chain.iter().rev() {
+        for residual in chain[..hops].iter().rev().flatten() {
             state = residual.apply(&state)?;
         }
-        Ok(state)
+        Ok((state, hops))
+    }
+
+    /// The state at `index` and its hop count, given those of `index - 1`.
+    ///
+    /// When the entry is a residual whose parent is `index - 1` and that state
+    /// was rebuilt with fewer than [`MAX_RESIDUAL_DEPTH`] residuals, the walk of
+    /// [`RecordHistory::reconstruct`] would visit the same entries and apply the
+    /// same residuals before this one, so applying this residual to the previous
+    /// state gives the same state or the same error. Every other case takes the
+    /// walk itself.
+    fn rebuild_after(
+        &self,
+        index: usize,
+        previous: Option<(&Orb1024, usize)>,
+    ) -> Result<(Orb1024, usize), GelError> {
+        if let (
+            Some((previous_state, previous_hops)),
+            Some(HistoryEntry::Residual {
+                parent, residual, ..
+            }),
+        ) = (previous, self.entries.get(index))
+        {
+            if index.checked_sub(1) == Some(*parent as usize)
+                && previous_hops < MAX_RESIDUAL_DEPTH as usize
+            {
+                return Ok((residual.apply(previous_state)?, previous_hops + 1));
+            }
+        }
+        self.reconstruct_with_hops(index)
     }
 
     /// The last appended state, or `None` for an empty history.
@@ -140,9 +177,17 @@ impl RecordHistory {
 
     /// Every stored state, rebuilt in order.
     pub fn exact_history(&self) -> Result<Vec<Orb1024>, GelError> {
-        (0..self.entries.len())
-            .map(|index| self.reconstruct(index))
-            .collect()
+        // Rolled forward: each state from the one before it, which gives what
+        // `reconstruct(index)` gives for every index, in the same order.
+        let mut states: Vec<Orb1024> = Vec::with_capacity(self.entries.len());
+        let mut hops = 0usize;
+        for index in 0..self.entries.len() {
+            let previous = states.last().map(|state| (state, hops));
+            let (state, state_hops) = self.rebuild_after(index, previous)?;
+            hops = state_hops;
+            states.push(state);
+        }
+        Ok(states)
     }
 
     /// Length in bytes of [`RecordHistory::to_bytes`], header included.
@@ -199,13 +244,25 @@ impl RecordHistory {
         };
         // Canonical form: every entry must be the one `append` writes for the
         // same states, so one history has exactly one file.
+        // States are rolled forward; each index gives the state, the error and
+        // the expected entry that `reconstruct(index)` and `next_entry(index, _)`
+        // give, because every earlier index was already rebuilt without error.
+        let mut previous: Option<(Orb1024, usize)> = None;
         for index in 0..history.len() {
-            let state = history.reconstruct(index)?;
-            if history.entries[index] != history.next_entry(index, state)? {
+            let (state, hops) =
+                history.rebuild_after(index, previous.as_ref().map(|(s, h)| (s, *h)))?;
+            let expected = match &previous {
+                None => history.next_entry(index, state)?,
+                Some((previous_state, _)) => {
+                    history.entry_after(index - 1, state, previous_state)?
+                }
+            };
+            if history.entries[index] != expected {
                 return Err(GelError::InvalidResidual(
                     "history file is not in canonical form",
                 ));
             }
+            previous = Some((state, hops));
         }
         Ok(history)
     }
@@ -263,12 +320,37 @@ impl RecordHistory {
         let Some(parent) = upto.checked_sub(1) else {
             return Ok(HistoryEntry::Literal(state));
         };
-        let parent_depth = self
-            .entries
+        let parent_depth = self.parent_depth(parent)?;
+        let parent_state = self.reconstruct(parent)?;
+        Self::entry_from(parent, parent_depth, state, &parent_state)
+    }
+
+    /// [`RecordHistory::next_entry`] for `upto = parent + 1` when the state at
+    /// `parent` is already known.
+    fn entry_after(
+        &self,
+        parent: usize,
+        state: Orb1024,
+        parent_state: &Orb1024,
+    ) -> Result<HistoryEntry, GelError> {
+        let parent_depth = self.parent_depth(parent)?;
+        Self::entry_from(parent, parent_depth, state, parent_state)
+    }
+
+    fn parent_depth(&self, parent: usize) -> Result<u8, GelError> {
+        self.entries
             .get(parent)
             .map(entry_depth)
-            .ok_or(GelError::InvalidResidual("index outside history"))?;
-        let residual = Residual::from_exact_xor(&state, &self.reconstruct(parent)?);
+            .ok_or(GelError::InvalidResidual("index outside history"))
+    }
+
+    fn entry_from(
+        parent: usize,
+        parent_depth: u8,
+        state: Orb1024,
+        parent_state: &Orb1024,
+    ) -> Result<HistoryEntry, GelError> {
+        let residual = Residual::from_exact_xor(&state, parent_state);
         let depth = parent_depth + 1;
         if depth > MAX_RESIDUAL_DEPTH || residual_entry_len(&residual) >= LITERAL_ENTRY_BYTES {
             return Ok(HistoryEntry::Literal(state));
@@ -619,6 +701,102 @@ mod tests {
             history.reconstruct(4),
             Err(GelError::InvalidResidual("index outside history"))
         );
+    }
+
+    /// The walk `reconstruct` used before the fixed-size chain, and the
+    /// independent per-index `exact_history` built on it; the references.
+    fn reference_reconstruct(entries: &[HistoryEntry], index: usize) -> Result<Orb1024, GelError> {
+        let mut chain: Vec<&Residual> = Vec::with_capacity(MAX_RESIDUAL_DEPTH as usize);
+        let mut cursor = index;
+        let mut state = loop {
+            let entry = entries
+                .get(cursor)
+                .ok_or(GelError::InvalidResidual("index outside history"))?;
+            match entry {
+                HistoryEntry::Literal(state) => break *state,
+                HistoryEntry::Residual {
+                    parent, residual, ..
+                } => {
+                    let parent = *parent as usize;
+                    if parent >= cursor {
+                        return Err(GelError::InvalidResidual("parent must precede child"));
+                    }
+                    if chain.len() == MAX_RESIDUAL_DEPTH as usize {
+                        return Err(GelError::InvalidResidual(
+                            "residual chain longer than MAX_RESIDUAL_DEPTH",
+                        ));
+                    }
+                    chain.push(residual);
+                    cursor = parent;
+                }
+            }
+        };
+        for residual in chain.iter().rev() {
+            state = residual.apply(&state)?;
+        }
+        Ok(state)
+    }
+
+    // Hand-built histories that break every invariant `append` and
+    // `from_bytes` keep: parents anywhere (also ahead), chains longer than the
+    // bound, lying depths and undecodable residuals. Rolling forward must still
+    // give what the per-index walk gives, value or error.
+    #[test]
+    fn rolled_states_equal_the_per_index_walk_on_broken_histories() {
+        let mut seed = 0x4849_5354_524f_4c4cu64;
+        let mut checked = 0usize;
+        for round in 0..400u64 {
+            seed = splitmix64(seed ^ round);
+            let len = (seed % 9) as usize;
+            let mut entries = Vec::with_capacity(len);
+            let mut state = sample(seed);
+            for i in 0..len {
+                let pick = splitmix64(seed ^ ((i as u64 + 1) * 0x9E37));
+                let next = flip(
+                    state,
+                    &[(pick >> 8) as usize % 1024, (pick >> 20) as usize % 1024],
+                );
+                let entry = match pick % 8 {
+                    0 | 1 => HistoryEntry::Literal(next),
+                    2 => HistoryEntry::Residual {
+                        parent: (pick >> 32) as u32 % (len as u32 + 2),
+                        depth: (pick >> 40) as u8 % 4,
+                        residual: Residual::from_exact_xor(&next, &state),
+                    },
+                    3 => HistoryEntry::Residual {
+                        parent: i.saturating_sub(1) as u32,
+                        depth: 1,
+                        residual: Residual::Sparse {
+                            count: 2,
+                            packed_positions: vec![(pick >> 48) as u8, 0, (pick >> 56) as u8],
+                        },
+                    },
+                    _ => HistoryEntry::Residual {
+                        parent: i.saturating_sub(1 + (pick >> 33) as usize % 2) as u32,
+                        depth: 1,
+                        residual: Residual::from_exact_xor(&next, &state),
+                    },
+                };
+                entries.push(entry);
+                state = next;
+            }
+            let history = RecordHistory {
+                entries: entries.clone(),
+            };
+            let expected: Result<Vec<Orb1024>, GelError> = (0..entries.len())
+                .map(|index| reference_reconstruct(&entries, index))
+                .collect();
+            assert_eq!(history.exact_history(), expected, "round {round}");
+            for index in 0..entries.len() + 2 {
+                assert_eq!(
+                    history.reconstruct(index),
+                    reference_reconstruct(&entries, index),
+                    "round {round} index {index}"
+                );
+                checked += 1;
+            }
+        }
+        assert!(checked > 400);
     }
 
     #[test]
