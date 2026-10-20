@@ -504,4 +504,46 @@ mod tests {
         }
         assert_eq!(h.finalize(), sha256(&joined));
     }
+
+    /// Yields its bytes in pieces of at most `piece`, with an interruption first.
+    struct Pieces<'a> {
+        bytes: &'a [u8],
+        piece: usize,
+        interrupted: bool,
+    }
+    impl std::io::Read for Pieces<'_> {
+        fn read(&mut self, out: &mut [u8]) -> std::io::Result<usize> {
+            if !self.interrupted {
+                self.interrupted = true;
+                return Err(std::io::ErrorKind::Interrupted.into());
+            }
+            let n = self.piece.min(out.len()).min(self.bytes.len());
+            out[..n].copy_from_slice(&self.bytes[..n]);
+            self.bytes = &self.bytes[n..];
+            Ok(n)
+        }
+    }
+
+    #[test]
+    fn digest_reader_gives_the_digest_of_the_whole() {
+        let large = message(3 << 20);
+        for m in (0..=1025).map(message).chain([large]) {
+            for piece in [1, 7, 64 << 10] {
+                if m.len() > 4096 && piece < 64 {
+                    continue;
+                }
+                let reader = Pieces {
+                    bytes: &m,
+                    piece,
+                    interrupted: false,
+                };
+                assert_eq!(
+                    crate::digest_reader(reader).unwrap(),
+                    sha256(&m),
+                    "{} bytes in pieces of {piece}",
+                    m.len()
+                );
+            }
+        }
+    }
 }

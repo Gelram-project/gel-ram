@@ -4,6 +4,7 @@ mod audit_io;
 mod bench_compare;
 mod ci_evidence;
 mod claims;
+mod commitment;
 mod crash_series;
 mod disclosure;
 mod history_crash_series;
@@ -18,6 +19,7 @@ mod process_sequence;
 mod property_map;
 #[cfg(test)]
 mod publication_status_tests;
+mod rebuild_check;
 mod recorder_lint;
 mod reproduce;
 mod reproduction;
@@ -27,6 +29,7 @@ mod speed_ab;
 mod speed_convention;
 mod tree_scan;
 mod ucd_tables;
+mod witness;
 mod workflow_policy;
 
 use std::ffi::OsStr;
@@ -291,7 +294,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 
 // Exact active-license text pin; not evidence of legal approval or authorship.
@@ -920,6 +923,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
         Some("reproduce") => reproduction::run(&args[1..]),
+        Some("witness") => witness::run(&args[1..]),
+        Some("rebuild-check") => rebuild_check::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("history-mutation-matrix") => history_mutation_matrix::run(&args[1..]),
@@ -938,6 +943,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("ucd-tables") => ucd_tables::run(&args[1..]),
+        Some("commitment") => commitment::create(&args[1..]),
+        Some("commitment-check") => commitment::check(&args[1..]),
         Some("rust-only") => rust_only(),
         Some("licensing") => licensing(),
         Some("ci-policy") => ci_policy(),

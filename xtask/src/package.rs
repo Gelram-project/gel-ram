@@ -320,6 +320,15 @@ pub fn run(args: &[String]) -> Result<(), String> {
             flags.push(format!("--remap-path-prefix={}={to}", from.display()));
         }
     }
+    // Linkers that otherwise write a time stamp (MSVC) or derive the image
+    // UUID from object file paths (Apple ld): the same source should give the
+    // same bytes wherever it is checked out (docs/BINARIES.md).
+    if target.contains("windows-msvc") {
+        flags.push("-Clink-arg=/Brepro".into());
+    }
+    if target.contains("apple") {
+        flags.push(format!("-Clink-arg=-Wl,-oso_prefix,{}", root.display()));
+    }
     let target_dir = root.join("target").join("package-build");
     let status = Command::new("cargo")
         .current_dir(root)
