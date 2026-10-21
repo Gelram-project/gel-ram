@@ -1129,21 +1129,29 @@ fn recorder(tallies: &mut Tallies, repo: &Path, scratch: &Path) {
     }
 }
 
-/// The work directory follows `CARGO_TARGET_DIR` and is unchanged without it.
+/// The work directory follows `CARGO_TARGET_DIR` and is unchanged without it;
+/// a relative `CARGO_TARGET_DIR` is taken against the caller's directory.
 fn compare_work_dir(tallies: &mut Tallies) {
     let root = Path::new("repo");
+    let cwd = Path::new("caller");
     let old = root.join("target").join("recorder-lint");
     tallies.check(
         "recorder_work_dir",
-        recorder_lint::work_dir(root, None) == old,
+        recorder_lint::work_dir(root, None, cwd) == old,
     );
     tallies.check(
         "recorder_work_dir",
-        recorder_lint::work_dir(root, Some("".into())) == old,
+        recorder_lint::work_dir(root, Some("".into()), cwd) == old,
     );
     tallies.check(
         "recorder_work_dir",
-        recorder_lint::work_dir(root, Some("build".into())) == Path::new("build/recorder-lint"),
+        recorder_lint::work_dir(root, Some("build".into()), cwd)
+            == Path::new("caller/build/recorder-lint"),
+    );
+    tallies.check(
+        "recorder_work_dir",
+        recorder_lint::work_dir(root, Some("/abs/build".into()), cwd)
+            == Path::new("/abs/build/recorder-lint"),
     );
 }
 
