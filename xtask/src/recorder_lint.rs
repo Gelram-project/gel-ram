@@ -127,16 +127,20 @@ pub(crate) fn io(path: &Path, e: std::io::Error) -> String {
 
 /// The probe work directory: inside the build directory named by
 /// `CARGO_TARGET_DIR` when it is set, otherwise `target/` of the workspace.
-pub(crate) fn work_dir(root: &Path, target_dir: Option<std::ffi::OsString>) -> PathBuf {
+/// A relative `CARGO_TARGET_DIR` is taken against `cwd`, the directory xtask
+/// was started from, as cargo does; the probes run with the workspace as
+/// their current directory, so the path must not stay relative.
+pub(crate) fn work_dir(root: &Path, target_dir: Option<std::ffi::OsString>, cwd: &Path) -> PathBuf {
     target_dir
         .filter(|dir| !dir.is_empty())
-        .map(PathBuf::from)
+        .map(|dir| cwd.join(PathBuf::from(dir)))
         .unwrap_or_else(|| root.join("target"))
         .join("recorder-lint")
 }
 
 pub fn check(root: &Path) -> Result<(), String> {
-    let work = work_dir(root, std::env::var_os("CARGO_TARGET_DIR"));
+    let cwd = std::env::current_dir().map_err(|e| format!("current directory: {e}"))?;
+    let work = work_dir(root, std::env::var_os("CARGO_TARGET_DIR"), &cwd);
     println!("{}", outcome_in(root, &work)?);
     Ok(())
 }
@@ -208,4 +212,31 @@ pub(crate) fn outcome_in(root: &Path, work: &Path) -> Result<String, String> {
         FORBIDDEN.len(),
         PROBES.len()
     ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_work_directory_never_stays_relative() {
+        let root = Path::new("/w/gel-ram");
+        let cwd = Path::new("/elsewhere");
+        assert_eq!(
+            work_dir(root, Some("rel/t".into()), cwd),
+            Path::new("/elsewhere/rel/t/recorder-lint")
+        );
+        assert_eq!(
+            work_dir(root, Some("/abs/t".into()), cwd),
+            Path::new("/abs/t/recorder-lint")
+        );
+        assert_eq!(
+            work_dir(root, None, cwd),
+            Path::new("/w/gel-ram/target/recorder-lint")
+        );
+        assert_eq!(
+            work_dir(root, Some("".into()), cwd),
+            Path::new("/w/gel-ram/target/recorder-lint")
+        );
+    }
 }

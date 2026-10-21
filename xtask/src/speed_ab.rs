@@ -471,7 +471,10 @@ impl Placed {
     fn plan(root: &Path, files: &[Carried], replace_helpers: bool) -> Result<Vec<Step>, String> {
         files
             .iter()
-            .map(|file| Self::precheck(&root.join(&file.rel), file, replace_helpers))
+            .map(|file| {
+                no_link_on_the_way(root, &file.rel)?;
+                Self::precheck(&root.join(&file.rel), file, replace_helpers)
+            })
             .collect()
     }
 
@@ -496,6 +499,8 @@ impl Placed {
             return Err("placement plan does not match the carried files".into());
         }
         for (file, step) in files.iter().zip(plan) {
+            // Checked again here: the tree may have changed since the plan.
+            no_link_on_the_way(root, &file.rel)?;
             let dest = root.join(&file.rel);
             match step {
                 Step::Keep => {}
@@ -591,6 +596,29 @@ fn target_name(tree: Tree, root: &Path) -> String {
     let path = root.to_string_lossy();
     let hash = gel_source::hex(&gel_source::digest(path.as_bytes()));
     format!("{}-{}", tree.label(), &hash[..16])
+}
+
+/// Refuses when any existing component of `root/rel`, from the first below
+/// `root` to the file itself, is a symbolic link: a write through it would
+/// change a file outside the tree.
+fn no_link_on_the_way(root: &Path, rel: &Path) -> Result<(), String> {
+    let mut at = root.to_path_buf();
+    for component in rel.components() {
+        at.push(component);
+        match fs::symlink_metadata(&at) {
+            Ok(meta) if meta.file_type().is_symlink() => {
+                return Err(format!(
+                    "{} is a symbolic link; refusing to place {} through it",
+                    at.display(),
+                    rel.display()
+                ))
+            }
+            Ok(_) => {}
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(()),
+            Err(e) => return Err(format!("{}: {e}", at.display())),
+        }
+    }
+    Ok(())
 }
 
 /// The canonical form `path` will have once created: its nearest existing
@@ -1651,6 +1679,31 @@ mod last;
         let inner = Path::new("tools").join("inner.rs");
         assert!(err.contains(&inner.display().to_string()), "{err}");
         fs::remove_dir_all(&src).unwrap();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symbolic_link_on_the_way_is_refused_before_anything_is_written() {
+        let tree = scratch("link-tree");
+        let outside = scratch("link-outside");
+        fs::create_dir_all(tree.join("crates/p")).unwrap();
+        fs::write(tree.join("crates/p/Cargo.toml"), "[package]\n").unwrap();
+        std::os::unix::fs::symlink(&outside, tree.join("crates/p/examples")).unwrap();
+        let files = vec![Carried {
+            rel: PathBuf::from("crates/p/examples/x.rs"),
+            bytes: b"fn main() {}\n".to_vec(),
+            origin: Origin::Example,
+        }];
+        let err = Placed::plan(&tree, &files, true).unwrap_err();
+        assert!(err.contains("symbolic link"), "{err}");
+        let mut placed = Placed::default();
+        let err = placed.apply(&tree, &files, &[Step::Create]).unwrap_err();
+        assert!(err.contains("symbolic link"), "{err}");
+        drop(placed);
+        assert_eq!(fs::read_dir(&outside).unwrap().count(), 0);
+        for dir in [&tree, &outside] {
+            fs::remove_dir_all(dir).unwrap();
+        }
     }
 
     #[test]
