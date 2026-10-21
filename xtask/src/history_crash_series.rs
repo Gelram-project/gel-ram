@@ -59,7 +59,12 @@ fn expected() -> Result<Vec<Vec<u8>>, String> {
     Ok(out)
 }
 
-/// The control: the file truncated and rewritten in place, in four flushed pieces.
+/// The control: the file truncated and rewritten in place, in four flushed
+/// pieces with a short pause between them, so that almost all of a control
+/// run is spent with a torn file on disk and a kill at a random time almost
+/// always leaves one. Without the pause a fast writer made all five control
+/// kills miss a write on some CI runners, and the series then rightly failed
+/// for want of a working control.
 fn write_in_place(path: &Path, bytes: &[u8]) -> Result<(), String> {
     let mut file = OpenOptions::new()
         .write(true)
@@ -67,7 +72,10 @@ fn write_in_place(path: &Path, bytes: &[u8]) -> Result<(), String> {
         .truncate(true)
         .open(path)
         .map_err(|e| e.to_string())?;
-    for piece in bytes.chunks(bytes.len().div_ceil(4)) {
+    for (i, piece) in bytes.chunks(bytes.len().div_ceil(4)).enumerate() {
+        if i > 0 {
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
         file.write_all(piece)
             .and_then(|()| file.sync_data())
             .map_err(|e| e.to_string())?;
@@ -332,13 +340,19 @@ pub fn run(trials: usize, seed: u64, control_trials: usize) -> Result<String, St
         std::env::temp_dir().join(format!("gel-history-kill-{}-{nonce}", std::process::id()));
     let expected = expected()?;
     let window_ms = reference(&exe, &scratch.join("reference"), "atomic", &expected)?;
+    // A control kill must land while the control still writes: `reference`
+    // returns the uninterrupted run + 20%, and a later trial can finish sooner
+    // than that first, cold run, so a kill drawn from the whole window often
+    // came after the last save. Control kills are drawn from 1..= 5/8 of it,
+    // about three quarters of the uninterrupted run.
     let control_window_ms = if control_trials > 0 {
         reference(
             &exe,
             &scratch.join("control-reference"),
             "in-place",
             &expected,
-        )?
+        )? * 5
+            / 8
     } else {
         0
     };
