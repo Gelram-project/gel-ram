@@ -4,6 +4,7 @@ mod audit_io;
 mod bench_compare;
 mod ci_evidence;
 mod claims;
+mod commitment;
 mod crash_series;
 mod disclosure;
 mod history_crash_series;
@@ -18,12 +19,17 @@ mod process_sequence;
 mod property_map;
 #[cfg(test)]
 mod publication_status_tests;
+mod rebuild_check;
 mod recorder_lint;
 mod reproduce;
 mod reproduction;
 mod roadmap;
 mod source_bundle;
+mod speed_ab;
+mod speed_convention;
+mod tree_scan;
 mod ucd_tables;
+mod witness;
 mod workflow_policy;
 
 use std::ffi::OsStr;
@@ -31,10 +37,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
 
-#[cfg(unix)]
-use std::os::unix::fs::PermissionsExt;
-
-const ALLOWED_EXTENSIONS: &[&str] = &["rs", "md", "toml", "yml", "txt", "gel", "cff"];
 // Exact reviewed media and source archive only; no general binary exception.
 // Pins detect changed bytes; they do not prove decoding safety or semantic truth.
 const REVIEWED_ASSETS: &[(&str, &str)] = &[
@@ -284,18 +286,6 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "6a6b9af2ea626591863d56b6d082613794d52ae1b8f825244ba0b62fecd8b9fd",
     ),
 ];
-const ALLOWED_EXTENSIONLESS: &[&str] = &[
-    "Cargo.lock",
-    "LICENSE",
-    "NOTICE",
-    ".gitignore",
-    ".gitattributes",
-];
-
-/// A backtick-quoted token with one of these extensions is a repository path citation.
-const REFERENCE_EXTENSIONS: &[&str] = &["md", "toml", "txt", "yml", "rs", "lock", "cff"];
-/// A backtick-quoted token starting with one of these prefixes is a repository path citation.
-const REFERENCE_PREFIXES: &[&str] = &["docs/", ".github/", "crates/", "xtask/"];
 
 /// The ticked CLA acknowledgement line from `.github/PULL_REQUEST_TEMPLATE.md`.
 const CLA_ACK_TICKED: &[&str] = &[
@@ -304,9 +294,8 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
-const PROJECT_EMAIL: &str = "gelram.licensing@gmail.com";
 
 // Exact active-license text pin; not evidence of legal approval or authorship.
 fn canonical_license(bytes: &[u8]) -> bool {
@@ -314,36 +303,6 @@ fn canonical_license(bytes: &[u8]) -> bool {
         == "c0b560ffc53ad735c4a6236356ff0cd47d92cf671181e799917975b071e8cd40"
 }
 
-// Narrow accidental-contact check, NOT a general secret or email scanner.
-// A bare domain suffix in source code is not an email address.
-fn has_nonproject_gmail(text: &str) -> bool {
-    text.split(|c: char| !(c.is_ascii_alphanumeric() || ".+-_@".contains(c)))
-        .any(|token| {
-            let token = token.trim_matches('.');
-            let Some((local, domain)) = token.rsplit_once('@') else {
-                return false;
-            };
-            !local.is_empty()
-                && domain.eq_ignore_ascii_case("gmail.com")
-                && !token.eq_ignore_ascii_case(PROJECT_EMAIL)
-        })
-}
-
-fn project_contact_privacy(root: &Path) -> Result<(), String> {
-    let mut files = Vec::new();
-    walk(root, &mut files).map_err(|e| e.to_string())?;
-    for path in files {
-        let bytes = fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-        if let Ok(text) = std::str::from_utf8(&bytes) {
-            if has_nonproject_gmail(text) {
-                // Do not echo a potentially private address into public CI logs.
-                return Err(format!("non-project Gmail address in {}", path.display()));
-            }
-        }
-    }
-    println!("PROJECT_CONTACT_GATE=PASS");
-    Ok(())
-}
 const FMT_CHECK_ARGS: &[&str] = &["fmt", "--all", "--", "--check"];
 const CLIPPY_ARGS: &[&str] = &[
     "clippy",
@@ -363,26 +322,21 @@ const TEST_ARGS: &[&str] = &[
     "--all-targets",
 ];
 
-fn walk(root: &Path, out: &mut Vec<PathBuf>) -> std::io::Result<()> {
-    for entry in fs::read_dir(root)? {
-        let path = entry?.path();
-        if path
-            .file_name()
-            .and_then(|x| x.to_str())
-            .is_some_and(|x| x == "target" || x == ".git")
-        {
-            continue;
-        }
-        let metadata = fs::symlink_metadata(&path)?;
-        if metadata.file_type().is_symlink() {
-            out.push(path);
-        } else if metadata.is_dir() {
-            walk(&path, out)?;
-        } else {
-            out.push(path);
-        }
+/// The walk of `root` that every whole-tree gate reads, with its error as text.
+fn walk(root: &Path) -> Result<tree_scan::Tree, String> {
+    tree_scan::walk(root).map_err(|e| e.to_string())
+}
+
+/// Prints a gate report (standard output lines, then standard error lines) and
+/// returns its result.
+fn emit(report: tree_scan::Report) -> Result<(), String> {
+    for line in &report.stdout {
+        println!("{line}");
     }
-    Ok(())
+    for line in &report.stderr {
+        eprintln!("{line}");
+    }
+    report.result
 }
 
 fn workspace_root() -> Result<&'static Path, String> {
@@ -393,112 +347,16 @@ fn workspace_root() -> Result<&'static Path, String> {
 }
 
 fn rust_only_at(root: &Path) -> Result<(), String> {
-    let mut files = Vec::new();
-    walk(root, &mut files).map_err(|e| e.to_string())?;
-    let mut bad = Vec::new();
-    for path in files {
-        let metadata = fs::symlink_metadata(&path).map_err(|e| e.to_string())?;
-        if metadata.file_type().is_symlink() {
-            bad.push(format!("symlink is not allowed: {}", path.display()));
-            continue;
-        }
-        #[cfg(unix)]
-        if metadata.permissions().mode() & 0o111 != 0 {
-            bad.push(format!(
-                "executable file is not allowed in the release tree: {}",
-                path.display()
-            ));
-            continue;
-        }
-        // Exactly two reviewed, static vector illustrations; not a general
-        // SVG or executable-asset exception. Implementation remains Rust-only.
-        let documentation_image = [
-            "docs/images/public-readout.svg",
-            "docs/images/q8-r2-results.svg",
-        ]
-        .iter()
-        .any(|p| path == root.join(p));
-        let approved_png = REVIEWED_ASSETS
-            .iter()
-            .find(|(name, _)| path == root.join(name));
-        if let Some((_, expected)) = approved_png {
-            if !metadata.is_file() || metadata.len() > 4 * 1024 * 1024 {
-                bad.push(format!(
-                    "invalid reviewed asset size/type: {}",
-                    path.display()
-                ));
-                continue;
-            }
-            let bytes = fs::read(&path).map_err(|e| e.to_string())?;
-            if gel_source::hex(&gel_source::digest(&bytes)) != *expected {
-                bad.push(format!(
-                    "reviewed asset fingerprint mismatch: {}",
-                    path.display()
-                ));
-                continue;
-            }
-        }
-        // Only these reviewed text evidence paths, not a general CSV/sha256 exception.
-        // Their exact bytes are pinned by the enclosing source manifest.
-        let collection_evidence = [
-            "docs/evidence-collection/MEASURED-SOURCES.sha256",
-            "docs/evidence-collection/r1/raw.csv",
-            "docs/evidence-collection/r1/summary.csv",
-            "docs/evidence-gel-components/run-1.csv",
-            "docs/evidence-gel-components/run-2.csv",
-            "docs/evidence-gel-components/run-3.csv",
-        ]
-        .iter()
-        .any(|p| path == root.join(p));
-        if collection_evidence {
-            let bytes = fs::read(&path).map_err(|e| e.to_string())?;
-            if bytes.len() > 1024 * 1024
-                || std::str::from_utf8(&bytes).is_err()
-                || bytes.iter().any(|b| *b == 0 || *b == 27)
-            {
-                bad.push(format!(
-                    "invalid collection text evidence: {}",
-                    path.display()
-                ));
-                continue;
-            }
-        }
-        let allowed = collection_evidence
-            || documentation_image
-            || approved_png.is_some()
-            || path
-                .extension()
-                .and_then(|x| x.to_str())
-                .is_some_and(|ext| ALLOWED_EXTENSIONS.contains(&ext))
-            || path
-                .file_name()
-                .and_then(|x| x.to_str())
-                .is_some_and(|name| ALLOWED_EXTENSIONLESS.contains(&name));
-        if !allowed {
-            bad.push(format!(
-                "file type is outside the release allow-list: {}",
-                path.display()
-            ));
-        }
-    }
-    bad.sort();
-    bad.dedup();
-    if bad.is_empty() {
-        println!("RUST_ONLY_GATE=PASS");
-        Ok(())
-    } else {
-        for message in bad {
-            eprintln!("{message}");
-        }
-        Err("RUST_ONLY_GATE=FAIL".into())
-    }
+    rust_only_in(root, &walk(root)?)
+}
+
+fn rust_only_in(root: &Path, tree: &tree_scan::Tree) -> Result<(), String> {
+    emit(tree_scan::rust_only(root, tree, REVIEWED_ASSETS))
 }
 
 fn disclosure() -> Result<(), String> {
     let root = workspace_root()?;
-    let mut files = Vec::new();
-    walk(root, &mut files).map_err(|e| e.to_string())?;
-    disclosure::check(root, &files)
+    disclosure::check(root, &walk(root)?.paths)
 }
 
 fn rust_only() -> Result<(), String> {
@@ -538,7 +396,12 @@ fn publication_status(text: &str) -> Result<bool, String> {
 }
 
 fn licensing() -> Result<(), String> {
-    let root = workspace_root()?;
+    licensing_with(workspace_root()?, None)
+}
+
+/// The licensing gate; `walked` is the tree walk when the caller already has
+/// one, otherwise the walk happens where the gate first needs it.
+fn licensing_with(root: &Path, walked: Option<&tree_scan::Tree>) -> Result<(), String> {
     let read = |name: &str| fs::read_to_string(root.join(name)).map_err(|e| format!("{name}: {e}"));
     let mode = read("docs/LICENSE-MODE.txt")?;
     let license = read("LICENSE")?;
@@ -553,7 +416,15 @@ fn licensing() -> Result<(), String> {
     {
         return Err("reviewed third-party fixture license is missing or changed".into());
     }
-    license_metadata::check(root)?;
+    let owned;
+    let tree = match walked {
+        Some(tree) => tree,
+        None => {
+            owned = walk(root)?;
+            &owned
+        }
+    };
+    license_metadata::check(root, tree)?;
     if !canonical_license(license.as_bytes()) {
         return Err("LICENSE differs from the pinned active NCRL bytes".into());
     }
@@ -606,7 +477,7 @@ fn licensing() -> Result<(), String> {
         "LEGAL_APPROVED=NO",
         "CANDIDATE-STATUS.md",
     )?;
-    project_contact_privacy(root)?;
+    emit(tree_scan::project_contact(tree))?;
     println!("LICENSING_GATE=PASS");
     println!("LICENSE_MODE={}", mode.trim());
     println!("LICENSE_CHECK_SCOPE=ACTIVE_LICENSE_CONSISTENCY_NOT_LEGAL_CERTIFICATION");
@@ -742,157 +613,9 @@ fn ci_policy() -> Result<(), String> {
     Ok(())
 }
 
-/// Width of a code-fence line (three or more leading backticks), if `line` is one.
-fn fence_width(line: &str) -> Option<usize> {
-    let width = line.trim_start().bytes().take_while(|b| *b == b'`').count();
-    (width >= 3).then_some(width)
-}
-
-/// Contents of the inline code spans in one Markdown line.
-///
-/// A span opens with a run of backticks and closes with the next run of the
-/// same width; a run without a closer is literal text and scanning resumes
-/// after it. Backticks are ASCII, so every slice boundary is a char boundary.
-fn code_spans(line: &str) -> Vec<&str> {
-    let bytes = line.as_bytes();
-    let mut spans = Vec::new();
-    let mut i = 0;
-    while i < bytes.len() {
-        if bytes[i] != b'`' {
-            i += 1;
-            continue;
-        }
-        let open = i;
-        while i < bytes.len() && bytes[i] == b'`' {
-            i += 1;
-        }
-        let width = i - open;
-        let start = i;
-        let mut close = None;
-        while i < bytes.len() {
-            if bytes[i] != b'`' {
-                i += 1;
-                continue;
-            }
-            let run = i;
-            while i < bytes.len() && bytes[i] == b'`' {
-                i += 1;
-            }
-            if i - run == width {
-                close = Some(run);
-                break;
-            }
-        }
-        match close {
-            Some(end) => spans.push(&line[start..end]),
-            None => i = start,
-        }
-    }
-    spans
-}
-
-/// One space of padding on both sides of a span is not part of its content.
-fn strip_span_padding(span: &str) -> &str {
-    if span.len() >= 2 && span.starts_with(' ') && span.ends_with(' ') && !span.trim().is_empty() {
-        &span[1..span.len() - 1]
-    } else {
-        span
-    }
-}
-
-/// Whether a code-span token is shaped like a repository path that must exist.
-fn is_reference(token: &str) -> bool {
-    if token.is_empty()
-        || token
-            .chars()
-            .any(|c| c.is_whitespace() || matches!(c, '<' | '>' | '*' | '{' | '$'))
-    {
-        return false;
-    }
-    if ALLOWED_EXTENSIONLESS.contains(&token) {
-        return true;
-    }
-    if REFERENCE_PREFIXES
-        .iter()
-        .any(|prefix| token.starts_with(prefix))
-    {
-        return true;
-    }
-    if !token
-        .chars()
-        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '_' | '.' | '/' | '-'))
-    {
-        return false;
-    }
-    token
-        .rsplit_once('.')
-        .is_some_and(|(stem, ext)| !stem.is_empty() && REFERENCE_EXTENSIONS.contains(&ext))
-}
-
-/// Repository path citations in a Markdown document as `(line, token)`, lines 1-based.
-/// Fenced code blocks are not scanned.
-fn reference_tokens(text: &str) -> Vec<(usize, &str)> {
-    let mut found = Vec::new();
-    let mut fence = None;
-    for (index, line) in text.lines().enumerate() {
-        if let Some(open) = fence {
-            let closes = fence_width(line).is_some_and(|width| width >= open)
-                && line.trim().trim_start_matches('`').trim().is_empty();
-            if closes {
-                fence = None;
-            }
-            continue;
-        }
-        if let Some(width) = fence_width(line) {
-            fence = Some(width);
-            continue;
-        }
-        for span in code_spans(line) {
-            let token = strip_span_padding(span);
-            if is_reference(token) {
-                found.push((index + 1, token));
-            }
-        }
-    }
-    found
-}
-
 fn docs_refs() -> Result<(), String> {
     let root = workspace_root()?;
-    let mut files = Vec::new();
-    walk(root, &mut files).map_err(|e| e.to_string())?;
-    files.sort();
-    let mut checked = 0usize;
-    let mut missing = Vec::new();
-    for path in files
-        .iter()
-        .filter(|path| path.extension().and_then(OsStr::to_str) == Some("md"))
-    {
-        let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-        let citing = path.strip_prefix(root).unwrap_or(path.as_path());
-        for (line, token) in reference_tokens(&text) {
-            checked += 1;
-            if !root.join(token).exists() {
-                missing.push(format!(
-                    "{}:{line}: missing repository reference: {token}",
-                    citing.display()
-                ));
-            }
-        }
-    }
-    if checked == 0 {
-        return Err("DOCS_REFS_GATE=FAIL: no repository references found in any .md file".into());
-    }
-    if missing.is_empty() {
-        println!("DOCS_REFS_GATE=PASS");
-        println!("DOCS_REFS_CHECKED={checked}");
-        Ok(())
-    } else {
-        for line in &missing {
-            eprintln!("{line}");
-        }
-        Err("DOCS_REFS_GATE=FAIL".into())
-    }
+    emit(tree_scan::docs_refs(root, &walk(root)?))
 }
 
 fn cla_acknowledged(body: &str) -> bool {
@@ -1000,19 +723,99 @@ fn run_release_binary<S: AsRef<OsStr>>(package: &str, args: &[S]) -> Result<(), 
     }
 }
 
+/// Release examples that `verify` runs. Its one release build compiles them together
+/// with every library and binary, so each later `cargo run` step only executes.
+const VERIFY_RELEASE_EXAMPLES: &[(&str, &str)] = &[
+    ("gel-source", "collection_recheck"),
+    ("gel-phase-quad", "quad_compare"),
+    ("gel-phase-quad", "quad_evidence"),
+    ("gel-phase-quad", "quad_playground"),
+    ("gel-source", "source_readout"),
+    ("gel-source", "source_parts"),
+    ("gel-source", "source_real"),
+    ("gel-source", "source_find"),
+    ("gel-source", "source_build"),
+    ("gel-source", "collection_review"),
+    ("gel-cli", "quantization_matrix"),
+    ("gel-history", "record_history"),
+];
+
+/// Examples that `verify` runs one after another, in order, with their arguments.
+const VERIFY_LOOP_EXAMPLES: &[(&str, &str, &[&str])] = &[
+    ("gel-phase-quad", "quad_playground", &["--demo"]),
+    ("gel-source", "source_readout", &[]),
+    ("gel-source", "source_parts", &[]),
+    ("gel-source", "source_real", &[]),
+    ("gel-source", "source_find", &[]),
+    ("gel-source", "source_build", &[]),
+    ("gel-source", "collection_review", &[]),
+    ("gel-cli", "quantization_matrix", &[]),
+    ("gel-history", "record_history", &[]),
+];
+
+/// `cargo build --release` of every library and binary (the default targets) plus
+/// every entry of `VERIFY_RELEASE_EXAMPLES`, in one cargo invocation.
+fn verify_release_build_args() -> Vec<&'static str> {
+    let mut args = vec![
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "--workspace",
+        "--lib",
+        "--bins",
+    ];
+    for (_, example) in VERIFY_RELEASE_EXAMPLES {
+        args.extend(["--example", example]);
+    }
+    args
+}
+
+/// `cargo run --release -p <package> --example <example> -- <args>` for an example
+/// that the verify release build has already compiled.
+fn release_example_args<'a>(
+    package: &'a str,
+    example: &'a str,
+    args: &[&'a str],
+) -> Result<Vec<&'a str>, String> {
+    if !VERIFY_RELEASE_EXAMPLES
+        .iter()
+        .any(|&(p, e)| p == package && e == example)
+    {
+        return Err(format!(
+            "{package} example {example} is not in the verify release build"
+        ));
+    }
+    let mut command = vec![
+        "run",
+        "--locked",
+        "--offline",
+        "--release",
+        "-p",
+        package,
+        "--example",
+        example,
+        "--",
+    ];
+    command.extend_from_slice(args);
+    Ok(command)
+}
+
 fn verify() -> Result<(), String> {
-    rust_only()?;
-    licensing()?;
+    // One walk for every gate that reads the whole tree; none of these gates
+    // writes to the tree.
+    let root = workspace_root()?;
+    let tree = walk(root)?;
+    rust_only_in(root, &tree)?;
+    licensing_with(root, Some(&tree))?;
     ci_policy()?;
-    docs_refs()?;
-    disclosure()?;
+    emit(tree_scan::docs_refs(root, &tree))?;
+    disclosure::check(root, &tree.paths)?;
+    speed_convention::check(root)?;
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
     recorder_lint::check(workspace_root()?)?;
-    run(
-        "cargo",
-        &["build", "--locked", "--offline", "--release", "--workspace"],
-    )?;
+    run("cargo", &verify_release_build_args())?;
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
@@ -1039,18 +842,11 @@ fn verify() -> Result<(), String> {
     )?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
+        &release_example_args(
             "gel-source",
-            "--example",
             "collection_recheck",
-            "--",
-            "docs/evidence-collection/r1",
-        ],
+            &["docs/evidence-collection/r1"],
+        )?,
     )?;
     run("cargo", TEST_ARGS)?;
     run_release_binary("gel-cli", &["selftest"])?;
@@ -1058,65 +854,27 @@ fn verify() -> Result<(), String> {
     run_release_binary("gel-bench", &["8192", "3", "1"])?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
+        &release_example_args(
             "gel-phase-quad",
-            "--example",
             "quad_compare",
-            "--",
-            "--orbs",
-            "32",
-            "--rounds",
-            "3",
-            "--workers",
-            "2",
-            "--sparse",
-            "1",
-        ],
+            &[
+                "--orbs",
+                "32",
+                "--rounds",
+                "3",
+                "--workers",
+                "2",
+                "--sparse",
+                "1",
+            ],
+        )?,
     )?;
     run(
         "cargo",
-        &[
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
-            "gel-phase-quad",
-            "--example",
-            "quad_evidence",
-            "--",
-            "--demo",
-        ],
+        &release_example_args("gel-phase-quad", "quad_evidence", &["--demo"])?,
     )?;
-    for (package, example, args) in [
-        ("gel-phase-quad", "quad_playground", vec!["--demo"]),
-        ("gel-source", "source_readout", vec![]),
-        ("gel-source", "source_parts", vec![]),
-        ("gel-source", "source_real", vec![]),
-        ("gel-source", "source_find", vec![]),
-        ("gel-source", "source_build", vec![]),
-        ("gel-source", "collection_review", vec![]),
-        ("gel-cli", "quantization_matrix", vec![]),
-        ("gel-history", "record_history", vec![]),
-    ] {
-        let mut command = vec![
-            "run",
-            "--locked",
-            "--offline",
-            "--release",
-            "-p",
-            package,
-            "--example",
-            example,
-            "--",
-        ];
-        command.extend(args);
-        run("cargo", &command)?;
+    for (package, example, args) in VERIFY_LOOP_EXAMPLES {
+        run("cargo", &release_example_args(package, example, args)?)?;
     }
     run(
         "cargo",
@@ -1165,12 +923,15 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         None | Some("verify") => verify(),
         Some("report") => reproduce::report(&args[1..]),
         Some("reproduce") => reproduction::run(&args[1..]),
+        Some("witness") => witness::run(&args[1..]),
+        Some("rebuild-check") => rebuild_check::run(&args[1..]),
         Some("isolation-check") => isolation::check(&args[1..]),
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("history-mutation-matrix") => history_mutation_matrix::run(&args[1..]),
         Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
         Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
+        Some("speed-ab") => speed_ab::run(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
@@ -1182,11 +943,14 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
         Some("ucd-tables") => ucd_tables::run(&args[1..]),
+        Some("commitment") => commitment::create(&args[1..]),
+        Some("commitment-check") => commitment::check(&args[1..]),
         Some("rust-only") => rust_only(),
         Some("licensing") => licensing(),
         Some("ci-policy") => ci_policy(),
         Some("docs-refs") => docs_refs(),
         Some("disclosure") => disclosure(),
+        Some("speed-convention") => speed_convention::check(workspace_root()?),
         Some("cla-ack") => cla_ack(),
         Some("fmt") => run("cargo", FMT_CHECK_ARGS),
         Some("clippy") => run("cargo", CLIPPY_ARGS),
@@ -1212,6 +976,10 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tree_scan::{
+        code_spans, has_nonproject_gmail, is_reference, reference_tokens, strip_span_padding,
+        PROJECT_EMAIL,
+    };
 
     #[test]
     fn component_evidence_exception_is_exact_and_text_only() {
@@ -1483,4 +1251,270 @@ fn history_crash_series_cmd(args: &[String]) -> Result<(), String> {
     );
     print!("{}", history_crash_series::run(trials, seed, control)?);
     Ok(())
+}
+
+#[cfg(test)]
+mod verify_release_build_tests {
+    use super::*;
+
+    /// The release build `verify` ran before every example was compiled in it.
+    const REFERENCE_BUILD: &[&str] =
+        &["build", "--locked", "--offline", "--release", "--workspace"];
+
+    /// The literal `cargo run` argument lists `verify` used for its examples, in order.
+    fn reference_runs() -> Vec<Vec<&'static str>> {
+        let mut runs: Vec<Vec<&'static str>> = vec![
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-source",
+                "--example",
+                "collection_recheck",
+                "--",
+                "docs/evidence-collection/r1",
+            ],
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-phase-quad",
+                "--example",
+                "quad_compare",
+                "--",
+                "--orbs",
+                "32",
+                "--rounds",
+                "3",
+                "--workers",
+                "2",
+                "--sparse",
+                "1",
+            ],
+            vec![
+                "run",
+                "--locked",
+                "--offline",
+                "--release",
+                "-p",
+                "gel-phase-quad",
+                "--example",
+                "quad_evidence",
+                "--",
+                "--demo",
+            ],
+        ];
+        for (package, example, args) in [
+            ("gel-phase-quad", "quad_playground", vec!["--demo"]),
+            ("gel-source", "source_readout", vec![]),
+            ("gel-source", "source_parts", vec![]),
+            ("gel-source", "source_real", vec![]),
+            ("gel-source", "source_find", vec![]),
+            ("gel-source", "source_build", vec![]),
+            ("gel-source", "collection_review", vec![]),
+            ("gel-cli", "quantization_matrix", vec![]),
+            ("gel-history", "record_history", vec![]),
+        ] {
+            runs.push(reference_run(package, example, args));
+        }
+        runs
+    }
+
+    /// The loop body `verify` used to build one example command.
+    fn reference_run<'a>(package: &'a str, example: &'a str, args: Vec<&'a str>) -> Vec<&'a str> {
+        let mut command = vec![
+            "run",
+            "--locked",
+            "--offline",
+            "--release",
+            "-p",
+            package,
+            "--example",
+            example,
+            "--",
+        ];
+        command.extend(args);
+        command
+    }
+
+    /// The same example commands as `verify` now composes them, in the same order.
+    fn current_runs() -> Vec<Vec<&'static str>> {
+        let mut runs = vec![
+            release_example_args(
+                "gel-source",
+                "collection_recheck",
+                &["docs/evidence-collection/r1"],
+            )
+            .unwrap(),
+            release_example_args(
+                "gel-phase-quad",
+                "quad_compare",
+                &[
+                    "--orbs",
+                    "32",
+                    "--rounds",
+                    "3",
+                    "--workers",
+                    "2",
+                    "--sparse",
+                    "1",
+                ],
+            )
+            .unwrap(),
+            release_example_args("gel-phase-quad", "quad_evidence", &["--demo"]).unwrap(),
+        ];
+        for (package, example, args) in VERIFY_LOOP_EXAMPLES {
+            runs.push(release_example_args(package, example, args).unwrap());
+        }
+        runs
+    }
+
+    fn example_of(run: &[&'static str]) -> (&'static str, &'static str) {
+        let at = |flag: &str| {
+            let i = run.iter().position(|a| *a == flag).unwrap();
+            run[i + 1]
+        };
+        (at("-p"), at("--example"))
+    }
+
+    #[test]
+    fn example_commands_match_the_reference_literals() {
+        assert_eq!(current_runs(), reference_runs());
+    }
+
+    #[test]
+    fn release_build_is_the_reference_build_plus_every_run_example() {
+        let build = verify_release_build_args();
+        assert_eq!(&build[..REFERENCE_BUILD.len()], REFERENCE_BUILD);
+        let rest = &build[REFERENCE_BUILD.len()..];
+        assert_eq!(&rest[..2], ["--lib", "--bins"]);
+        let built: Vec<&str> = rest[2..]
+            .chunks(2)
+            .map(|pair| {
+                assert_eq!(pair.len(), 2);
+                assert_eq!(pair[0], "--example");
+                pair[1]
+            })
+            .collect();
+        let mut ran: Vec<(&str, &str)> = reference_runs().iter().map(|r| example_of(r)).collect();
+        assert_eq!(ran.len(), 12);
+        ran.sort_unstable();
+        ran.dedup();
+        assert_eq!(ran.len(), 12, "every example runs once");
+        let mut table = VERIFY_RELEASE_EXAMPLES.to_vec();
+        table.sort_unstable();
+        assert_eq!(
+            table, ran,
+            "the build table is exactly the set of run examples"
+        );
+        let mut built_sorted = built.clone();
+        built_sorted.sort_unstable();
+        let mut names: Vec<&str> = ran.iter().map(|(_, e)| *e).collect();
+        names.sort_unstable();
+        assert_eq!(built_sorted, names);
+        assert_eq!(
+            built,
+            VERIFY_RELEASE_EXAMPLES
+                .iter()
+                .map(|(_, e)| *e)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn every_built_example_is_one_unique_workspace_target() {
+        let root = workspace_root().unwrap();
+        let mut all: Vec<(String, String)> = Vec::new();
+        let crates = root.join("crates");
+        for krate in fs::read_dir(&crates).unwrap() {
+            let krate = krate.unwrap().path();
+            let package = krate.file_name().unwrap().to_string_lossy().into_owned();
+            let Ok(entries) = fs::read_dir(krate.join("examples")) else {
+                continue;
+            };
+            for entry in entries {
+                let path = entry.unwrap().path();
+                let name = if path.is_dir() {
+                    if !path.join("main.rs").is_file() {
+                        continue;
+                    }
+                    path.file_name().unwrap().to_string_lossy().into_owned()
+                } else if path.extension().is_some_and(|x| x == "rs") {
+                    path.file_stem().unwrap().to_string_lossy().into_owned()
+                } else {
+                    continue;
+                };
+                all.push((package.clone(), name));
+            }
+        }
+        assert!(!root.join("xtask/examples").exists());
+        for (package, example) in VERIFY_RELEASE_EXAMPLES {
+            let hits: Vec<&(String, String)> = all.iter().filter(|(_, e)| e == example).collect();
+            assert_eq!(hits.len(), 1, "{example} must name one workspace example");
+            assert_eq!(hits[0].0, *package, "{example} lives in {package}");
+        }
+    }
+
+    #[test]
+    fn seeded_argument_lists_compose_like_the_reference_loop() {
+        const POOL: &[&str] = &[
+            "--demo",
+            "--",
+            "-p",
+            "--example",
+            "",
+            "x",
+            "--orbs",
+            "32",
+            "docs/a b",
+            "ą",
+        ];
+        let mut state: u64 = 0x9e37_79b9_7f4a_7c15;
+        let mut next = || {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            state
+        };
+        for round in 0..4096 {
+            let (package, example) =
+                VERIFY_RELEASE_EXAMPLES[(next() as usize) % VERIFY_RELEASE_EXAMPLES.len()];
+            let len = if round < 16 {
+                round % 2
+            } else {
+                (next() % 9) as usize
+            };
+            let args: Vec<&str> = (0..len)
+                .map(|_| POOL[(next() as usize) % POOL.len()])
+                .collect();
+            assert_eq!(
+                release_example_args(package, example, &args).unwrap(),
+                reference_run(package, example, args.clone())
+            );
+        }
+    }
+
+    #[test]
+    fn examples_outside_the_build_are_refused() {
+        for (package, example) in [
+            ("gel-cli", "data_integrity"),
+            ("gel-source", "collection_campaign"),
+            ("gel-cli", "precision_matrix"),
+            ("gel-reader", "topk_compare"),
+            ("gel-cli", "record_history"),
+            ("gel-source", "quad_compare"),
+            ("", ""),
+        ] {
+            assert_eq!(
+                release_example_args(package, example, &[]),
+                Err(format!(
+                    "{package} example {example} is not in the verify release build"
+                ))
+            );
+        }
+    }
 }

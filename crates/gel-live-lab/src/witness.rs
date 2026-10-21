@@ -66,18 +66,67 @@ fn record(seed: u64) -> Record {
     Record::new(phase, &active)
 }
 
+/// Upper bound on the threads that compute the witness scores, the caller included.
+const MAX_SCORE_WORKERS: usize = 64;
+
 /// The bits of every score of `QUERIES` queries against `BODIES` bodies, query by query.
 pub fn scores(reader: &Reader) -> Vec<u8> {
-    let bodies: Vec<Record> = (0..BODIES as u64).map(|b| record(2 * b + 1)).collect();
-    let mut out = Vec::with_capacity(8 * QUERIES * BODIES);
-    for q in 0..QUERIES as u64 {
-        let query = reader.prepare(record(2 * q + 2));
-        for body in &bodies {
-            let bits = reader
-                .read(&query, body, Policy::BodyActivity)
-                .map_or(u64::MAX, |score| score.value().to_bits());
-            out.extend_from_slice(&bits.to_le_bytes());
+    let workers = std::thread::available_parallelism().map_or(1, usize::from);
+    score_grid(reader, 0, QUERIES, BODIES, workers)
+}
+
+/// Scores of queries `first_query..first_query + queries` against bodies
+/// `0..bodies`, query by query, little-endian. Contiguous query ranges go to
+/// at most `workers` threads (the caller included); each range is written at
+/// its own position, so the bytes do not depend on the thread count.
+fn score_grid(
+    reader: &Reader,
+    first_query: u64,
+    queries: usize,
+    bodies: usize,
+    workers: usize,
+) -> Vec<u8> {
+    let records: Vec<Record> = (0..bodies as u64).map(|b| record(2 * b + 1)).collect();
+    let row = 8 * bodies;
+    let mut out = vec![0u8; row * queries];
+    let fill = |first: u64, rows: &mut [u8]| {
+        if row == 0 {
+            return;
         }
+        for (q, cells) in (first..).zip(rows.chunks_exact_mut(row)) {
+            let query = reader.prepare(record(2 * q + 2));
+            for (body, cell) in records.iter().zip(cells.chunks_exact_mut(8)) {
+                let bits = reader
+                    .read(&query, body, Policy::BodyActivity)
+                    .map_or(u64::MAX, |score| score.value().to_bits());
+                cell.copy_from_slice(&bits.to_le_bytes());
+            }
+        }
+    };
+    let workers = workers.clamp(1, MAX_SCORE_WORKERS).min(queries.max(1));
+    if workers == 1 || row == 0 {
+        fill(first_query, &mut out);
+        return out;
+    }
+    let per = queries.div_ceil(workers);
+    let failed = std::thread::scope(|scope| {
+        let (head, rest) = out.split_at_mut(row * per);
+        let mut next = first_query + per as u64;
+        for rows in rest.chunks_mut(row * per) {
+            let first = next;
+            next += per as u64;
+            if std::thread::Builder::new()
+                .spawn_scoped(scope, move || fill(first, rows))
+                .is_err()
+            {
+                return true;
+            }
+        }
+        fill(first_query, head);
+        false
+    });
+    if failed {
+        fill(first_query, &mut out);
     }
     out
 }
@@ -143,6 +192,71 @@ pub fn run() -> (String, bool) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The serial loop `scores` used before it was split by query, kept as the
+    /// reference for the threaded grid.
+    fn scores_reference(
+        reader: &Reader,
+        first_query: u64,
+        queries: usize,
+        bodies: usize,
+    ) -> Vec<u8> {
+        let bodies: Vec<Record> = (0..bodies as u64).map(|b| record(2 * b + 1)).collect();
+        let mut out = Vec::with_capacity(8 * queries * bodies.len());
+        for q in first_query..first_query + queries as u64 {
+            let query = reader.prepare(record(2 * q + 2));
+            for body in &bodies {
+                let bits = reader
+                    .read(&query, body, Policy::BodyActivity)
+                    .map_or(u64::MAX, |score| score.value().to_bits());
+                out.extend_from_slice(&bits.to_le_bytes());
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn threaded_grid_matches_the_serial_loop_on_many_shapes() {
+        let reader = Reader::new(SEED);
+        let mut state = 0x5eed_u64;
+        let mut firsts = vec![0u64];
+        for _ in 0..5 {
+            state = state.wrapping_add(0x9e37_79b9_7f4a_7c15);
+            firsts.push(state % 1_000_000);
+        }
+        for &first in &firsts {
+            for queries in [0, 1, 2, 3, 5, 7, 8, 9, 31, 64, 129] {
+                for bodies in [0, 1, 2, 7, 64] {
+                    let expected = scores_reference(&reader, first, queries, bodies);
+                    for workers in [0, 1, 2, 3, 4, 7, 8, 24, 64, 1000, usize::MAX] {
+                        assert!(
+                            score_grid(&reader, first, queries, bodies, workers) == expected,
+                            "first={first} queries={queries} bodies={bodies} workers={workers}"
+                        );
+                    }
+                }
+            }
+        }
+        for queries in [1, 3, 9] {
+            let expected = scores_reference(&reader, 0, queries, BODIES);
+            for workers in [1, 2, 3, 64] {
+                assert!(score_grid(&reader, 0, queries, BODIES, workers) == expected);
+            }
+        }
+    }
+
+    /// The full witness grid: the threaded path gives the serial bytes and the pin.
+    #[test]
+    #[cfg_attr(debug_assertions, ignore = "full 1024 x 1024 grid; run with --release")]
+    fn full_grid_matches_the_serial_loop_and_the_pin() {
+        let reader = Reader::new(SEED);
+        let expected = scores_reference(&reader, 0, QUERIES, BODIES);
+        assert_eq!(hex(&digest(&expected)), SCORES_SHA256);
+        assert!(scores(&reader) == expected);
+        for workers in [1, 3, 64] {
+            assert!(score_grid(&reader, 0, QUERIES, BODIES, workers) == expected);
+        }
+    }
 
     #[test]
     fn a_changed_level_is_found_and_named() {

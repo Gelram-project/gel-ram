@@ -157,3 +157,11 @@ The generated bank is deterministic and synthetic. Throughput is not semantic re
 Exact progressive bounds may legitimately reject zero candidates, especially
 for Top-K on random-looking data. Report the counters; never describe the
 progressive path as an acceleration unless the measured end-to-end time is lower.
+
+## Comparing two builds
+
+To compare one timing example between a baseline and a candidate tree, with a
+second copy of the baseline as an A/A control, rotated run order and an
+output-identity check, use the [speed comparison](SPEED-AB.md)
+(`xtask speed-ab`). It reports medians and ratios and whether the outputs were
+identical; it does not decide whether a ratio is a gain.

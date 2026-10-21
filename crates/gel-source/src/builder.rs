@@ -1,6 +1,7 @@
 //! Public source-catalog writer. No private encoder, quantization or semantic claims.
 use crate::{
-    digest, hex, Address, Corpus, Error, Hash, MAX_CATALOG, MAX_PASSAGE, MAX_RECORDS, MAX_TEXT,
+    decimal_len, digest, push_decimal, push_hex, Address, Corpus, Error, Hash, MAX_CATALOG,
+    MAX_PASSAGE, MAX_RECORDS, MAX_TEXT,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -76,28 +77,38 @@ impl CorpusBuilder {
         if end > MAX_TEXT {
             return Err(Error::Limit);
         }
-        let row = format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
-            address.node,
-            address.role,
-            entry,
-            self.text.len(),
-            quote.len(),
-            hex(&digest(quote.as_bytes())),
-            hex(title.as_bytes()),
-            hex(section.as_bytes())
-        );
+        // The row is node, role, entry, start, len, sha256, titleHex,
+        // sectionHex: five decimals, 64 + 2 x label hex digits, 8 separators.
+        let start = self.text.len() as u64;
+        let numbers = [address.node, address.role, entry, start, quote.len() as u64];
+        let row_len = numbers.iter().map(|&v| decimal_len(v)).sum::<usize>()
+            + 64
+            + 2 * title.len()
+            + 2 * section.len()
+            + 8;
         if self
             .catalog
             .len()
-            .checked_add(row.len())
+            .checked_add(row_len)
             .ok_or(Error::Limit)?
             > MAX_CATALOG
         {
             return Err(Error::Limit);
         }
+        let row_start = self.catalog.len();
+        self.catalog.reserve(row_len);
+        for v in numbers {
+            push_decimal(&mut self.catalog, v);
+            self.catalog.push('\t');
+        }
+        push_hex(&mut self.catalog, &digest(quote.as_bytes()));
+        self.catalog.push('\t');
+        push_hex(&mut self.catalog, title.as_bytes());
+        self.catalog.push('\t');
+        push_hex(&mut self.catalog, section.as_bytes());
+        self.catalog.push('\n');
+        debug_assert_eq!(self.catalog.len() - row_start, row_len);
         self.text.extend_from_slice(quote.as_bytes());
-        self.catalog.push_str(&row);
         self.addresses.insert(address);
         self.nodes
             .entry(address.node)
@@ -132,7 +143,8 @@ impl EncodedCorpus {
     /// Validates through the existing reader. Serialized remote bundles must
     /// instead use pins from a separately trusted manifest with Corpus::load.
     pub fn load(&self) -> Result<Corpus, Error> {
-        Corpus::load(&self.catalog, &self.text, self.catalog_pin, self.text_pin)
+        // `finish` computed both pins from these private, never-modified bytes.
+        Corpus::load_verified(&self.catalog, &self.text, self.catalog_pin, self.text_pin)
     }
 }
 
