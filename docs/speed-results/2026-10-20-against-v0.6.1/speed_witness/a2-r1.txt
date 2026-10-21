@@ -1,0 +1,11 @@
+SPEED_SETUP example=speed_witness runs=9 queries=1024 bodies=1024 bytes=8388608
+SPEED name=witness_scores run=0 ns=2083036100
+SPEED name=witness_scores run=1 ns=2076823222
+SPEED name=witness_scores run=2 ns=2095960984
+SPEED name=witness_scores run=3 ns=2101045236
+SPEED name=witness_scores run=4 ns=2095551258
+SPEED name=witness_scores run=5 ns=2089022796
+SPEED name=witness_scores run=6 ns=2075655121
+SPEED name=witness_scores run=7 ns=2077778397
+SPEED name=witness_scores run=8 ns=2085805039
+SPEED_CHECK sha256=3c09bb543d6e55eccd18a59b1c5e0c453d62c430ede8f7fee29cf300a2670cf0

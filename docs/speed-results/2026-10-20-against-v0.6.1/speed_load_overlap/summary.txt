@@ -1,0 +1,12 @@
+SPEED_AB case=backup_inspect_64mib a_ns=162607795 a2_ns=137131468 b_ns=155064963 aa=0.843 gain=1.049 runs=27
+SPEED_AB case=bundle_load_512kib a_ns=1446811 a2_ns=1170882 b_ns=3405415 aa=0.809 gain=0.425 runs=27
+SPEED_AB case=bundle_load_64mib a_ns=206504874 a2_ns=169604161 b_ns=233980484 aa=0.821 gain=0.883 runs=27
+SPEED_AB case=bundle_load_64mib_wrong_pin a_ns=61872124 a2_ns=52815401 b_ns=159224686 aa=0.854 gain=0.389 runs=27
+SPEED_AB case=collection_load_512kib a_ns=754108 a2_ns=642909 b_ns=2199356 aa=0.853 gain=0.343 runs=27
+SPEED_AB case=collection_load_64mib a_ns=119828288 a2_ns=103378992 b_ns=170139713 aa=0.863 gain=0.704 runs=27
+SPEED_AB case=collection_load_64mib_wrong_pin a_ns=62171910 a2_ns=52362450 b_ns=151071932 aa=0.842 gain=0.412 runs=27
+SPEED_AB case=encoded_load_64mib a_ns=103091640 a2_ns=85771383 b_ns=43985554 aa=0.832 gain=2.344 runs=27
+SPEED_AB_CHECK tree=a sha256=a911495a740464f32d286cef6904f0f680db1021b38318e300b158cae907d91a
+SPEED_AB_CHECK tree=a2 sha256=a911495a740464f32d286cef6904f0f680db1021b38318e300b158cae907d91a
+SPEED_AB_CHECK tree=b sha256=a911495a740464f32d286cef6904f0f680db1021b38318e300b158cae907d91a
+SPEED_AB_VERDICT=SAME_OUTPUT

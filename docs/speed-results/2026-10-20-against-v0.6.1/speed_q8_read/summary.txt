@@ -1,0 +1,8 @@
+SPEED_AB case=read_active_dense a_ns=120371398 a2_ns=121149360 b_ns=30332347 aa=1.006 gain=3.968 runs=27
+SPEED_AB case=scan_active_dense a_ns=121660864 a2_ns=120674087 b_ns=24760141 aa=0.992 gain=4.914 runs=27
+SPEED_AB case=scan_active_sparse64 a_ns=23556017 a2_ns=23269519 b_ns=12978330 aa=0.988 gain=1.815 runs=27
+SPEED_AB case=scan_archive_dense a_ns=28369026 a2_ns=28171395 b_ns=22643451 aa=0.993 gain=1.253 runs=27
+SPEED_AB_CHECK tree=a sha256=74eef87e0f44451accc5dbb10c2a712efcfcb736a35d6a06aa2fd0bb9f5a4ba2
+SPEED_AB_CHECK tree=a2 sha256=74eef87e0f44451accc5dbb10c2a712efcfcb736a35d6a06aa2fd0bb9f5a4ba2
+SPEED_AB_CHECK tree=b sha256=74eef87e0f44451accc5dbb10c2a712efcfcb736a35d6a06aa2fd0bb9f5a4ba2
+SPEED_AB_VERDICT=SAME_OUTPUT

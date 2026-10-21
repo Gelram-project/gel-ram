@@ -1,0 +1,14 @@
+SPEED_AB case=append_walk_k3_100k a_ns=14285563 a2_ns=14449882 b_ns=13395031 aa=1.012 gain=1.066 runs=27
+SPEED_AB case=exact_history_walk_k3_100k a_ns=3882855 a2_ns=4074206 b_ns=1457960 aa=1.049 gain=2.663 runs=27
+SPEED_AB case=exact_history_walk_k40_100k a_ns=8456520 a2_ns=8559093 b_ns=3142846 aa=1.012 gain=2.691 runs=27
+SPEED_AB case=from_bytes_unrelated_20k a_ns=30513254 a2_ns=30317038 b_ns=1681640 aa=0.994 gain=18.145 runs=27
+SPEED_AB case=from_bytes_walk_k3_100k a_ns=39963895 a2_ns=40989792 b_ns=9022564 aa=1.026 gain=4.429 runs=27
+SPEED_AB case=from_bytes_walk_k40_100k a_ns=77786201 a2_ns=77821527 b_ns=17826158 aa=1.000 gain=4.364 runs=27
+SPEED_AB case=sparse_apply_k3_1m a_ns=18035822 a2_ns=19528064 b_ns=8459835 aa=1.083 gain=2.132 runs=27
+SPEED_AB case=sparse_apply_k92_1m a_ns=138491853 a2_ns=139842709 b_ns=86605528 aa=1.010 gain=1.599 runs=27
+SPEED_AB case=sparse_popcount_k92_1m a_ns=100220036 a2_ns=96186509 b_ns=58250317 aa=0.960 gain=1.721 runs=27
+SPEED_AB case=to_bytes_walk_k3_100k a_ns=29172816 a2_ns=29090141 b_ns=2987623 aa=0.997 gain=9.765 runs=27
+SPEED_AB_CHECK tree=a sha256=871522a5881e63801dfd7300139d40c58aea21f98d684177759c4cbd187af512
+SPEED_AB_CHECK tree=a2 sha256=871522a5881e63801dfd7300139d40c58aea21f98d684177759c4cbd187af512
+SPEED_AB_CHECK tree=b sha256=871522a5881e63801dfd7300139d40c58aea21f98d684177759c4cbd187af512
+SPEED_AB_VERDICT=SAME_OUTPUT

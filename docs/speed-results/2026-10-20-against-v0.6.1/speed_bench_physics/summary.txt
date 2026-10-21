@@ -1,0 +1,8 @@
+SPEED_AB case=gel_bench_1310720_t1 a_ns=1967027583 a2_ns=1990488627 b_ns=559495957 aa=1.012 gain=3.516 runs=9
+SPEED_AB case=gel_bench_1310720_t4 a_ns=2060439232 a2_ns=2061963513 b_ns=524258553 aa=1.001 gain=3.930 runs=9
+SPEED_AB case=gel_bench_8192_t1 a_ns=19624694 a2_ns=19559281 b_ns=6281762 aa=0.997 gain=3.124 runs=9
+SPEED_AB case=gel_physics_r3 a_ns=97457057688 a2_ns=92128426069 b_ns=91558579150 aa=0.945 gain=1.064 runs=9
+SPEED_AB_CHECK tree=a sha256=115c890ccac6ed8afdc17e54babc6531e52bb615c8d5e85ee99acbeaa602387e
+SPEED_AB_CHECK tree=a2 sha256=115c890ccac6ed8afdc17e54babc6531e52bb615c8d5e85ee99acbeaa602387e
+SPEED_AB_CHECK tree=b sha256=115c890ccac6ed8afdc17e54babc6531e52bb615c8d5e85ee99acbeaa602387e
+SPEED_AB_VERDICT=SAME_OUTPUT
