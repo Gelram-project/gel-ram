@@ -2,7 +2,7 @@
 //! Not a general TOML parser or a legal-rights validator.
 use std::{fs, path::Path};
 
-fn validate(text: &str, workspace: bool) -> Result<(), String> {
+pub(crate) fn validate(text: &str, workspace: bool) -> Result<(), String> {
     let section = if workspace {
         "[workspace.package]"
     } else {
@@ -39,24 +39,23 @@ fn validate(text: &str, workspace: bool) -> Result<(), String> {
     Ok(())
 }
 
-pub fn check(root: &Path) -> Result<(), String> {
-    let mut files = Vec::new();
-    super::walk(root, &mut files).map_err(|e| e.to_string())?;
+/// Checks every `Cargo.toml` of a walked tree; the walk already holds the
+/// metadata of each entry, so no manifest is looked up twice.
+pub fn check(root: &Path, tree: &super::tree_scan::Tree) -> Result<(), String> {
+    let root_manifest = root.join("Cargo.toml");
     let mut count = 0;
-    for file in files
-        .into_iter()
-        .filter(|p| p.file_name().is_some_and(|n| n == "Cargo.toml"))
+    for (file, metadata) in tree
+        .paths
+        .iter()
+        .zip(&tree.metadata)
+        .filter(|(p, _)| p.file_name().is_some_and(|n| n == "Cargo.toml"))
     {
-        if fs::symlink_metadata(&file)
-            .map_err(|e| e.to_string())?
-            .file_type()
-            .is_symlink()
-        {
+        if metadata.file_type().is_symlink() {
             return Err("symlinked Cargo manifest".into());
         }
-        let is_root = file == root.join("Cargo.toml");
+        let is_root = *file == root_manifest;
         validate(
-            &fs::read_to_string(&file).map_err(|e| e.to_string())?,
+            &fs::read_to_string(file).map_err(|e| e.to_string())?,
             is_root,
         )
         .map_err(|e| format!("{}: {e}", file.strip_prefix(root).unwrap().display()))?;

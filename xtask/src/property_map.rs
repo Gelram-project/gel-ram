@@ -42,7 +42,7 @@ pub fn parse(text: &str) -> Result<Vec<Row>, String> {
         if cells[2].trim().is_empty() || cells[3].trim().is_empty() {
             return Err(format!("{MAP}: {id} needs a property and a source"));
         }
-        let tests: Vec<String> = super::code_spans(cells[4])
+        let tests: Vec<String> = super::tree_scan::code_spans(cells[4])
             .into_iter()
             .map(str::to_string)
             .collect();

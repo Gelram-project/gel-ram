@@ -101,16 +101,6 @@ fn get(words: &[u64; ORB_WORDS], bit: usize) -> bool {
 }
 
 #[inline]
-fn set(words: &mut [u64; ORB_WORDS], bit: usize, value: bool) {
-    let mask = 1u64 << (bit & 63);
-    if value {
-        words[bit >> 6] |= mask;
-    } else {
-        words[bit >> 6] &= !mask;
-    }
-}
-
-#[inline]
 fn mask_word(seed: u64, word: usize) -> u64 {
     splitmix64(seed ^ (word as u64).wrapping_mul(0xD6E8_FEB8_6659_FD93))
 }
@@ -153,14 +143,18 @@ pub fn apply_view(orb: &Orb1024, spec: ViewSpec) -> Result<Orb1024, GelError> {
         }
         ViewKind::AffinePermutation | ViewKind::AffineMasked => {
             validate_odd(spec.a)?;
+            // Every destination bit is written exactly once, so OR into zero
+            // words equals setting it; the mask XOR is per destination bit, so
+            // it can be applied to whole destination words afterwards.
             let mut out = [0u64; ORB_WORDS];
             for dst in 0..ORB_BITS {
                 let src = (spec.a as usize * dst + spec.b as usize) & 1023;
-                let mut value = get(orb.words(), src);
-                if matches!(spec.kind, ViewKind::AffineMasked) {
-                    value ^= ((mask_word(spec.seed, dst >> 6) >> (dst & 63)) & 1) != 0;
+                out[dst >> 6] |= u64::from(get(orb.words(), src)) << (dst & 63);
+            }
+            if matches!(spec.kind, ViewKind::AffineMasked) {
+                for (w, word) in out.iter_mut().enumerate() {
+                    *word ^= mask_word(spec.seed, w);
                 }
-                set(&mut out, dst, value);
             }
             Ok(Orb1024::from_words(out))
         }
@@ -180,14 +174,18 @@ pub fn invert_view(view: &Orb1024, spec: ViewSpec) -> Result<Orb1024, GelError> 
         ViewKind::XorMask => apply_view(view, spec),
         ViewKind::AffinePermutation | ViewKind::AffineMasked => {
             validate_odd(spec.a)?;
+            // The mask is removed word by word first; an odd multiplier makes
+            // the index map a bijection, so each source bit is written once.
+            let mut unmasked = *view.words();
+            if matches!(spec.kind, ViewKind::AffineMasked) {
+                for (w, word) in unmasked.iter_mut().enumerate() {
+                    *word ^= mask_word(spec.seed, w);
+                }
+            }
             let mut base = [0u64; ORB_WORDS];
             for dst in 0..ORB_BITS {
-                let mut value = get(view.words(), dst);
-                if matches!(spec.kind, ViewKind::AffineMasked) {
-                    value ^= ((mask_word(spec.seed, dst >> 6) >> (dst & 63)) & 1) != 0;
-                }
                 let src = (spec.a as usize * dst + spec.b as usize) & 1023;
-                set(&mut base, src, value);
+                base[src >> 6] |= u64::from(get(&unmasked, dst)) << (src & 63);
             }
             Ok(Orb1024::from_words(base))
         }
@@ -465,6 +463,167 @@ where
     (best, report)
 }
 
+/// ORBs per bank block in [`top1_many`]: 16 KiB, small enough to stay in a
+/// first-level data cache while every query scans it.
+const TOP1_MANY_BLOCK: usize = 128;
+
+/// [`top1`] over one block, kept out of line so the block scan is compiled
+/// as its own loop rather than inside the per-query merge.
+#[inline(never)]
+fn top1_block<'a>(block: &'a [Orb1024], query: &Orb1024) -> Option<(usize, u16, &'a Orb1024)> {
+    top1(block, query)
+}
+
+/// One Top-1 per query, in query order, from a single pass over the bank in
+/// blocks of 128 ORBs: every query scans a block with [`top1`] before the
+/// next block is read. Entry `q` is identical to `top1(bank, &queries[q])`,
+/// including the lowest-index rule for equal scores and the returned ORB
+/// reference: blocks are visited in index order and a later block replaces a
+/// query's winner only with a strictly higher score.
+pub fn top1_many<'a>(
+    bank: &'a [Orb1024],
+    queries: &[Orb1024],
+) -> Vec<Option<(usize, u16, &'a Orb1024)>> {
+    let mut best: Vec<Option<(usize, u16, &'a Orb1024)>> = vec![None; queries.len()];
+    if queries.is_empty() {
+        return best;
+    }
+    for (block_index, block) in bank.chunks(TOP1_MANY_BLOCK).enumerate() {
+        let start = block_index * TOP1_MANY_BLOCK;
+        for (slot, query) in best.iter_mut().zip(queries) {
+            let Some((index, score, orb)) = top1_block(block, query) else {
+                continue;
+            };
+            if slot.as_ref().is_none_or(|x| score > x.1) {
+                *slot = Some((start + index, score, orb));
+            }
+        }
+    }
+    best
+}
+
+/// Exact multi-threaded [`top1_many`]. The bank is split into contiguous
+/// chunks as in [`top1_threads`]; each chunk runs [`top1_many`] on its own
+/// thread (the last chunk on the calling thread), and the per-chunk winners
+/// are merged query by query: highest score wins, equal scores resolve to the
+/// lowest global ORB index. Entry `q` is identical to
+/// `top1(bank, &queries[q])` for every bank, query list and thread count.
+///
+/// The parallel path follows the same contract as [`top1_threads`]: it runs
+/// only when `2 <= threads <= bank.len() / 2` and
+/// `threads <= min(256, 4 * available_parallelism())`; any other value scans
+/// on the calling thread. Thread-start failure joins started workers, then
+/// recomputes the complete result serially. A worker panic can be recovered
+/// only in an unwinding build; panic=abort terminates the process.
+pub fn top1_many_threads<'a>(
+    bank: &'a [Orb1024],
+    queries: &[Orb1024],
+    threads: usize,
+) -> Vec<Option<(usize, u16, &'a Orb1024)>> {
+    let scan = |(start, len): (usize, usize)| {
+        let mut hits = top1_many(&bank[start..start + len], queries);
+        for hit in hits.iter_mut().flatten() {
+            hit.0 += start;
+        }
+        hits
+    };
+    top1_many_threads_with_scan(
+        bank.len(),
+        queries.len(),
+        threads,
+        scan,
+        &mut Top1Spawner::default(),
+    )
+    .0
+}
+
+type Top1Many<'a> = Vec<Option<(usize, u16, &'a Orb1024)>>;
+
+fn top1_many_threads_with_scan<'a, F>(
+    len: usize,
+    queries: usize,
+    threads: usize,
+    scan: F,
+    spawner: &mut Top1Spawner,
+) -> (Top1Many<'a>, Top1Execution)
+where
+    F: Fn((usize, usize)) -> Top1Many<'a> + Sync,
+{
+    let thread_budget = std::thread::available_parallelism()
+        .map_or(1, std::num::NonZeroUsize::get)
+        .saturating_mul(4)
+        .min(256);
+    let mut report = Top1Execution {
+        requested_workers: threads,
+        worker_budget: thread_budget,
+        effective_workers: usize::from(len != 0 && queries != 0),
+        spawned_workers: 0,
+        fallback: None,
+    };
+    if len == 0 || queries == 0 {
+        return (scan((0, len)), report);
+    }
+    if threads <= 1 || threads > len / 2 || threads > thread_budget {
+        if threads > 1 {
+            report.fallback = Some(if threads > thread_budget {
+                Top1Fallback::BudgetExceeded
+            } else {
+                Top1Fallback::BankTooSmall
+            });
+        }
+        return (scan((0, len)), report);
+    }
+    let mut chunks = chunk_bounds(len, threads);
+    let last = chunks.next_back().expect("threads >= 2");
+    let scan = &scan;
+    let parallel = std::thread::scope(|scope| {
+        let mut handles = Vec::with_capacity(threads - 1);
+        for chunk in chunks {
+            match spawner.spawn(scope, move || scan(chunk)) {
+                Ok(handle) => handles.push(handle),
+                Err(_) => {
+                    report.fallback = Some(Top1Fallback::ThreadStartFailed);
+                    break;
+                }
+            }
+        }
+        report.spawned_workers = handles.len();
+        // Run the caller's chunk while children can still be scanning.
+        let mut best = if report.fallback.is_none() {
+            scan(last)
+        } else {
+            Vec::new()
+        };
+        for handle in handles {
+            match handle.join() {
+                Ok(hits) => {
+                    for (slot, hit) in best.iter_mut().zip(hits) {
+                        let Some(hit) = hit else { continue };
+                        let better = slot.is_none_or(|(index, score, _)| {
+                            hit.1 > score || (hit.1 == score && hit.0 < index)
+                        });
+                        if better {
+                            *slot = Some(hit);
+                        }
+                    }
+                }
+                Err(_) => {
+                    report.fallback.get_or_insert(Top1Fallback::WorkerPanicked);
+                }
+            }
+        }
+        best
+    });
+    let best = if report.fallback.is_some() {
+        // The scope has joined every child before the full serial retry.
+        scan((0, len))
+    } else {
+        report.effective_workers = threads;
+        parallel
+    };
+    (best, report)
+}
+
 /// Deterministic descending Top-K; ties are resolved by lower ORB index.
 pub fn top_k(bank: &[Orb1024], query: &Orb1024, k: usize) -> Vec<(usize, u16)> {
     if k == 0 {
@@ -487,12 +646,11 @@ fn insert_top_k(best: &mut Vec<(usize, u16)>, candidate: (usize, u16), k: usize)
             }
         }
     }
-    let pos = best
-        .iter()
-        .position(|&(index, score)| {
-            candidate.1 > score || (candidate.1 == score && candidate.0 < index)
-        })
-        .unwrap_or(best.len());
+    // `best` is sorted by score descending, then index ascending. The first
+    // entry the candidate precedes is the first one that does not precede it.
+    let pos = best.partition_point(|&(index, score)| {
+        score > candidate.1 || (score == candidate.1 && index < candidate.0)
+    });
     if pos < k {
         best.insert(pos, candidate);
         if best.len() > k {
@@ -501,6 +659,115 @@ fn insert_top_k(best: &mut Vec<(usize, u16)>, candidate: (usize, u16), k: usize)
     } else if best.len() < k {
         best.push(candidate);
     }
+}
+
+/// Exact multi-threaded Top-K. The bank is split into `threads` contiguous
+/// chunks; each chunk runs [`top_k`] on its own thread inside
+/// `std::thread::scope` (the last chunk on the calling thread). Every entry of
+/// the global Top-K is in the Top-K of its own chunk, so the per-chunk lists
+/// are joined, sorted by score descending and then by ORB index ascending, and
+/// cut to `k`. That order is strict because indices are distinct, so the
+/// result is identical to `top_k(bank, query, k)` for every bank, query, `k`
+/// and thread count.
+///
+/// The parallel path follows the same contract as [`top1_threads`]: it runs
+/// only when `2 <= threads <= bank.len() / 2` and
+/// `threads <= min(256, 4 * available_parallelism())`; any other value scans
+/// on the calling thread. Thread-start failure joins started workers, then
+/// recomputes the complete result serially. A worker panic can be recovered
+/// only in an unwinding build; panic=abort terminates the process.
+pub fn top_k_threads(
+    bank: &[Orb1024],
+    query: &Orb1024,
+    k: usize,
+    threads: usize,
+) -> Vec<(usize, u16)> {
+    let scan = |(start, len): (usize, usize)| {
+        let mut hits = top_k(&bank[start..start + len], query, k);
+        for hit in &mut hits {
+            hit.0 += start;
+        }
+        hits
+    };
+    top_k_threads_with_scan(bank.len(), k, threads, scan, &mut Top1Spawner::default()).0
+}
+
+fn top_k_threads_with_scan<F>(
+    len: usize,
+    k: usize,
+    threads: usize,
+    scan: F,
+    spawner: &mut Top1Spawner,
+) -> (Vec<(usize, u16)>, Top1Execution)
+where
+    F: Fn((usize, usize)) -> Vec<(usize, u16)> + Sync,
+{
+    let thread_budget = std::thread::available_parallelism()
+        .map_or(1, std::num::NonZeroUsize::get)
+        .saturating_mul(4)
+        .min(256);
+    let mut report = Top1Execution {
+        requested_workers: threads,
+        worker_budget: thread_budget,
+        effective_workers: usize::from(len != 0 && k != 0),
+        spawned_workers: 0,
+        fallback: None,
+    };
+    if len == 0 || k == 0 {
+        return (Vec::new(), report);
+    }
+    if threads <= 1 || threads > len / 2 || threads > thread_budget {
+        if threads > 1 {
+            report.fallback = Some(if threads > thread_budget {
+                Top1Fallback::BudgetExceeded
+            } else {
+                Top1Fallback::BankTooSmall
+            });
+        }
+        return (scan((0, len)), report);
+    }
+    let mut chunks = chunk_bounds(len, threads);
+    let last = chunks.next_back().expect("threads >= 2");
+    let scan = &scan;
+    let parallel = std::thread::scope(|scope| {
+        let mut handles = Vec::with_capacity(threads - 1);
+        for chunk in chunks {
+            match spawner.spawn(scope, move || scan(chunk)) {
+                Ok(handle) => handles.push(handle),
+                Err(_) => {
+                    report.fallback = Some(Top1Fallback::ThreadStartFailed);
+                    break;
+                }
+            }
+        }
+        report.spawned_workers = handles.len();
+        // Run the caller's chunk while children can still be scanning.
+        let mut merged = if report.fallback.is_none() {
+            scan(last)
+        } else {
+            Vec::new()
+        };
+        for handle in handles {
+            match handle.join() {
+                Ok(hits) => merged.extend(hits),
+                Err(_) => {
+                    report.fallback.get_or_insert(Top1Fallback::WorkerPanicked);
+                }
+            }
+        }
+        merged
+    });
+    let best = if report.fallback.is_some() {
+        // The scope has joined every child before the full serial retry.
+        scan((0, len))
+    } else {
+        report.effective_workers = threads;
+        let mut merged = parallel;
+        merged.sort_unstable_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+        merged.truncate(k);
+        merged
+    };
+    (best, report)
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
@@ -988,6 +1255,415 @@ mod tests {
         assert_eq!(stats.rejected_after_32b, 1);
         assert_eq!(stats.rejected_after_64b, 1);
         assert_eq!(stats.full_128b_scores, 3);
+    }
+
+    /// Test-only copy of the former linear-search insertion, kept as the
+    /// reference for the binary-search `insert_top_k`.
+    fn insert_top_k_linear(best: &mut Vec<(usize, u16)>, candidate: (usize, u16), k: usize) {
+        if best.len() == k {
+            if let Some(&(index, score)) = best.last() {
+                if candidate.1 < score || (candidate.1 == score && candidate.0 >= index) {
+                    return;
+                }
+            }
+        }
+        let pos = best
+            .iter()
+            .position(|&(index, score)| {
+                candidate.1 > score || (candidate.1 == score && candidate.0 < index)
+            })
+            .unwrap_or(best.len());
+        if pos < k {
+            best.insert(pos, candidate);
+            if best.len() > k {
+                best.pop();
+            }
+        } else if best.len() < k {
+            best.push(candidate);
+        }
+    }
+
+    /// Test-only copy of the former `top_k`.
+    fn top_k_linear(bank: &[Orb1024], query: &Orb1024, k: usize) -> Vec<(usize, u16)> {
+        if k == 0 {
+            return Vec::new();
+        }
+        let mut best = Vec::<(usize, u16)>::with_capacity(k.min(bank.len()));
+        for (index, orb) in bank.iter().enumerate() {
+            insert_top_k_linear(&mut best, (index, score_xnor(orb, query)), k);
+        }
+        best
+    }
+
+    /// Test-only copy of the former `top_k_progressive`.
+    fn top_k_progressive_linear(
+        bank: &[Orb1024],
+        query: &Orb1024,
+        k: usize,
+    ) -> (Vec<(usize, u16)>, ProgressiveStats) {
+        let mut stats = ProgressiveStats {
+            candidates: bank.len(),
+            ..ProgressiveStats::default()
+        };
+        if k == 0 {
+            return (Vec::new(), stats);
+        }
+        let mut best = Vec::<(usize, u16)>::with_capacity(k.min(bank.len()));
+        for (index, orb) in bank.iter().enumerate() {
+            let threshold = if best.len() == k { best[k - 1].1 } else { 0 };
+            let score = if best.len() == k {
+                let a = orb.words();
+                let b = query.words();
+                let mut mismatches = mismatch_words(&a[..4], &b[..4]);
+                if ORB_BITS as u16 - mismatches < threshold {
+                    stats.rejected_after_32b += 1;
+                    continue;
+                }
+                mismatches += mismatch_words(&a[4..8], &b[4..8]);
+                if ORB_BITS as u16 - mismatches < threshold {
+                    stats.rejected_after_64b += 1;
+                    continue;
+                }
+                mismatches += mismatch_words(&a[8..], &b[8..]);
+                ORB_BITS as u16 - mismatches
+            } else {
+                score_xnor(orb, query)
+            };
+            stats.full_128b_scores += 1;
+            insert_top_k_linear(&mut best, (index, score), k);
+        }
+        (best, stats)
+    }
+
+    /// An ORB whose score against the all-zero query is exactly `score`.
+    fn orb_with_score(score: u16, seed: u64) -> Orb1024 {
+        let ones = ORB_BITS - score as usize;
+        let mut words = [0u64; ORB_WORDS];
+        // Rotate the start so set bits fall in different words per seed.
+        let start = (splitmix64(seed) as usize) % ORB_BITS;
+        for j in 0..ones {
+            let bit = (start + j) % ORB_BITS;
+            words[bit / 64] |= 1 << (bit % 64);
+        }
+        Orb1024::from_words(words)
+    }
+
+    /// Banks with many inserts, many ties, ascending and descending scores,
+    /// and candidates that keep entering just above the current boundary.
+    fn differential_banks(len: usize, seed: u64) -> Vec<(&'static str, Vec<Orb1024>)> {
+        let mut state = seed;
+        let mut next = move || {
+            state = splitmix64(state);
+            state
+        };
+        let random = random_bank(len, seed);
+        let ties = vec![sample(seed); len];
+        let narrow = (0..len)
+            .map(|i| orb_with_score(1020 + (next() % 4) as u16, seed ^ i as u64))
+            .collect();
+        let ascending = (0..len)
+            .map(|i| orb_with_score((i % 1025) as u16, seed + i as u64))
+            .collect();
+        let descending = (0..len)
+            .map(|i| orb_with_score(1024 - (i % 1025) as u16, seed + i as u64))
+            .collect();
+        // A block of perfect scores first, then strictly rising scores: every
+        // later candidate enters the full set at its last position.
+        let tail_entry = (0..len)
+            .map(|i| {
+                if i < len / 4 {
+                    orb_with_score(1024, seed + i as u64)
+                } else {
+                    orb_with_score(((i - len / 4) % 1024) as u16, seed + i as u64)
+                }
+            })
+            .collect();
+        let clustered = (0..len)
+            .map(|_| {
+                let mut orb = sample(seed + next() % 4);
+                for _ in 0..(next() % 24) {
+                    let bit = next() as usize % ORB_BITS;
+                    orb.words_mut()[bit / 64] ^= 1 << (bit % 64);
+                }
+                orb
+            })
+            .collect();
+        vec![
+            ("random", random),
+            ("ties", ties),
+            ("narrow", narrow),
+            ("ascending", ascending),
+            ("descending", descending),
+            ("tail_entry", tail_entry),
+            ("clustered", clustered),
+        ]
+    }
+
+    const DIFF_LENS: [usize; 10] = [0, 1, 2, 3, 7, 33, 64, 257, 1000, 1500];
+
+    fn diff_ks(len: usize) -> Vec<usize> {
+        vec![
+            0,
+            1,
+            2,
+            3,
+            8,
+            32,
+            255,
+            256,
+            257,
+            len.saturating_sub(1),
+            len,
+            len + 1,
+            usize::MAX,
+        ]
+    }
+
+    #[test]
+    fn binary_insertion_equals_linear_insertion_step_by_step() {
+        let mut state = 0x7470_6b31u64;
+        let mut next = move || {
+            state = splitmix64(state);
+            state
+        };
+        for round in 0..400 {
+            let k = [1usize, 2, 3, 5, 8, 32, 256][round % 7];
+            let count = 1 + (next() % 700) as usize;
+            let spread = [1u64, 2, 4, 16, 1025][round % 5];
+            // Distinct indices in a shuffled order, so candidates also arrive
+            // with indices lower than those already kept.
+            let mut indices: Vec<usize> = (0..count).collect();
+            for i in (1..count).rev() {
+                indices.swap(i, (next() % (i as u64 + 1)) as usize);
+            }
+            let mut new = Vec::new();
+            let mut old = Vec::new();
+            for index in indices {
+                let candidate = (index, 1024 - (next() % spread) as u16);
+                insert_top_k(&mut new, candidate, k);
+                insert_top_k_linear(&mut old, candidate, k);
+                assert_eq!(new, old, "round={round} k={k} candidate={candidate:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn top_k_and_progressive_equal_linear_reference_on_seeded_banks() {
+        let zero = Orb1024::from_words([0; ORB_WORDS]);
+        for (seed_index, seed) in [11u64, 0x5eed, 0xdead_beef].into_iter().enumerate() {
+            for len in DIFF_LENS {
+                for (name, bank) in differential_banks(len, seed) {
+                    let mut queries = vec![zero, sample(seed ^ 0xffff)];
+                    if len > 0 {
+                        queries.push(bank[(seed_index * 7) % len]);
+                    }
+                    for query in queries {
+                        for k in diff_ks(len) {
+                            let expected = top_k_linear(&bank, &query, k);
+                            assert_eq!(
+                                top_k(&bank, &query, k),
+                                expected,
+                                "{name} len={len} k={k} seed={seed}"
+                            );
+                            assert_eq!(
+                                top_k_progressive(&bank, &query, k),
+                                top_k_progressive_linear(&bank, &query, k),
+                                "{name} len={len} k={k} seed={seed}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fn assert_top_k_threads_equal(bank: &[Orb1024], query: &Orb1024, k: usize, threads: usize) {
+        assert_eq!(
+            top_k_threads(bank, query, k, threads),
+            top_k(bank, query, k),
+            "len={} k={k} threads={threads}",
+            bank.len()
+        );
+    }
+
+    #[test]
+    fn top_k_threads_equals_top_k_on_seeded_banks() {
+        let zero = Orb1024::from_words([0; ORB_WORDS]);
+        for len in DIFF_LENS {
+            for (_, bank) in differential_banks(len, 0x7468) {
+                for k in diff_ks(len) {
+                    for threads in [0, 1, 2, 3, 8, 17, len / 2, len, len + 1, usize::MAX] {
+                        assert_top_k_threads_equal(&bank, &zero, k, threads);
+                        assert_top_k_threads_equal(&bank, &sample(4_242), k, threads);
+                    }
+                }
+            }
+        }
+        let bank = random_bank(1 << 16, 0x6b6b);
+        for k in [1, 8, 256, 4096] {
+            for threads in [2, 7, 16] {
+                assert_top_k_threads_equal(&bank, &bank[12_345], k, threads);
+            }
+        }
+    }
+
+    #[test]
+    fn top_k_threads_ties_and_winners_at_chunk_edges() {
+        let query = sample(4_343);
+        for len in SIZES.into_iter().filter(|&n| n >= 2) {
+            for threads in THREADS {
+                let edges = chunk_edges(len, threads);
+                for k in [1, 2, 3, edges.len().max(1), len] {
+                    let mut bank = random_bank(len, 1_300);
+                    for &edge in &edges {
+                        bank[edge] = query;
+                    }
+                    bank[len - 1] = query;
+                    assert_top_k_threads_equal(&bank, &query, k, threads);
+                    assert_eq!(
+                        top_k_threads(&bank, &query, k, threads),
+                        bit_reference(&bank, &query, k),
+                        "len={len} k={k} threads={threads}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn top_k_threads_start_refusal_and_panic_fall_back_to_full_scan() {
+        let bank = random_bank(64, 1_400);
+        let query = bank[63];
+        let scan = |(start, len): (usize, usize)| {
+            let mut hits = top_k(&bank[start..start + len], &query, 8);
+            for hit in &mut hits {
+                hit.0 += start;
+            }
+            hits
+        };
+        for fail_at in 0..3 {
+            let mut spawner = Top1Spawner {
+                fail_at: Some(fail_at),
+                attempts: 0,
+            };
+            let (got, report) = top_k_threads_with_scan(bank.len(), 8, 4, scan, &mut spawner);
+            assert_eq!(got, top_k(&bank, &query, 8));
+            assert_eq!(report.spawned_workers, fail_at);
+            assert_eq!(report.effective_workers, 1);
+            assert_eq!(report.fallback, Some(Top1Fallback::ThreadStartFailed));
+        }
+        let (got, report) =
+            top_k_threads_with_scan(bank.len(), 8, 4, scan, &mut Top1Spawner::default());
+        assert_eq!(got, top_k(&bank, &query, 8));
+        assert_eq!(report.effective_workers, 4);
+        assert_eq!(report.spawned_workers, 3);
+        assert_eq!(report.fallback, None);
+    }
+
+    #[test]
+    #[cfg(panic = "unwind")]
+    fn top_k_threads_worker_panic_retries_serially() {
+        let bank = random_bank(16, 1_401);
+        let scan = |(start, len): (usize, usize)| {
+            assert!(!(start == 0 && len == 8), "test-only worker panic");
+            let mut hits = top_k(&bank[start..start + len], &bank[15], 3);
+            for hit in &mut hits {
+                hit.0 += start;
+            }
+            hits
+        };
+        let (got, report) = top_k_threads_with_scan(16, 3, 2, scan, &mut Top1Spawner::default());
+        assert_eq!(got, top_k(&bank, &bank[15], 3));
+        assert_eq!(report.effective_workers, 1);
+        assert_eq!(report.spawned_workers, 1);
+        assert_eq!(report.fallback, Some(Top1Fallback::WorkerPanicked));
+    }
+
+    fn assert_top1_many_equal(bank: &[Orb1024], queries: &[Orb1024], threads: usize) {
+        let serial = top1_many(bank, queries);
+        let threaded = top1_many_threads(bank, queries, threads);
+        assert_eq!(serial.len(), queries.len());
+        assert_eq!(threaded.len(), queries.len());
+        for (q, query) in queries.iter().enumerate() {
+            let expected = top1(bank, query);
+            for got in [serial[q], threaded[q]] {
+                assert_eq!(got, expected, "len={} q={q} threads={threads}", bank.len());
+                if let (Some(e), Some(a)) = (expected, got) {
+                    assert!(std::ptr::eq(e.2, a.2), "len={} q={q}", bank.len());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn top1_many_equals_top1_per_query_on_seeded_banks() {
+        let mut compared = 0usize;
+        for len in [0, 1, 2, 3, 7, 33, 64, 257] {
+            for (_, bank) in differential_banks(len, 1_500 + len as u64) {
+                let mut queries = vec![Orb1024::from_words([0; ORB_WORDS]), sample(77)];
+                queries.extend(bank.iter().take(3).copied());
+                for count in [0, 1, 2, queries.len()] {
+                    for threads in [0, 1, 2, 3, 8, 17, len / 2, len / 2 + 1, usize::MAX] {
+                        assert_top1_many_equal(&bank, &queries[..count], threads);
+                        compared += count;
+                    }
+                }
+            }
+        }
+        assert!(compared > 1_000);
+    }
+
+    #[test]
+    fn top1_many_threads_start_refusal_and_panic_fall_back_to_full_scan() {
+        let bank = vec![sample(1_402); 64];
+        let queries = [bank[0], sample(1_403), Orb1024::from_words([0; ORB_WORDS])];
+        let scan = |(start, len): (usize, usize)| {
+            let mut hits = top1_many(&bank[start..start + len], &queries);
+            for hit in hits.iter_mut().flatten() {
+                hit.0 += start;
+            }
+            hits
+        };
+        let expected: Vec<_> = queries.iter().map(|q| top1(&bank, q)).collect();
+        for fail_at in 0..3 {
+            let mut spawner = Top1Spawner {
+                fail_at: Some(fail_at),
+                attempts: 0,
+            };
+            let (got, report) = top1_many_threads_with_scan(64, 3, 4, scan, &mut spawner);
+            assert_eq!(got, expected);
+            assert_eq!(report.spawned_workers, fail_at);
+            assert_eq!(report.effective_workers, 1);
+            assert_eq!(report.fallback, Some(Top1Fallback::ThreadStartFailed));
+        }
+        let (got, report) =
+            top1_many_threads_with_scan(64, 3, 4, scan, &mut Top1Spawner::default());
+        assert_eq!(got, expected);
+        assert!(got.iter().all(|hit| hit.unwrap().0 == 0));
+        assert_eq!(report.effective_workers, 4);
+        assert_eq!(report.spawned_workers, 3);
+        assert_eq!(report.fallback, None);
+    }
+
+    #[test]
+    #[cfg(panic = "unwind")]
+    fn top1_many_threads_worker_panic_retries_serially() {
+        let bank = random_bank(16, 1_404);
+        let queries = [bank[15], bank[3]];
+        let scan = |(start, len): (usize, usize)| {
+            assert!(!(start == 0 && len == 8), "test-only worker panic");
+            let mut hits = top1_many(&bank[start..start + len], &queries);
+            for hit in hits.iter_mut().flatten() {
+                hit.0 += start;
+            }
+            hits
+        };
+        let (got, report) =
+            top1_many_threads_with_scan(16, 2, 2, scan, &mut Top1Spawner::default());
+        assert_eq!(got, vec![top1(&bank, &bank[15]), top1(&bank, &bank[3])]);
+        assert_eq!(report.effective_workers, 1);
+        assert_eq!(report.spawned_workers, 1);
+        assert_eq!(report.fallback, Some(Top1Fallback::WorkerPanicked));
     }
 
     #[test]

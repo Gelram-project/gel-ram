@@ -79,6 +79,41 @@ pub fn crc64_ecma(bytes: &[u8]) -> u64 {
     crc.finish()
 }
 
+/// Byte tables for CRC-64/ECMA-182 (MSB-first). `[0][b]` is the CRC of
+/// the single byte `b` from a zero register; `[k][b]` is `[k - 1][b]`
+/// advanced by one more zero byte. Built at compile time.
+static CRC64_TABLES: [[u64; 256]; 8] = crc64_tables();
+
+const fn crc64_tables() -> [[u64; 256]; 8] {
+    let mut tables = [[0u64; 256]; 8];
+    let mut b = 0;
+    while b < 256 {
+        let mut crc = (b as u64) << 56;
+        let mut bit = 0;
+        while bit < 8 {
+            crc = if (crc & 0x8000_0000_0000_0000) != 0 {
+                (crc << 1) ^ CRC64_ECMA_POLY
+            } else {
+                crc << 1
+            };
+            bit += 1;
+        }
+        tables[0][b] = crc;
+        b += 1;
+    }
+    let mut k = 1;
+    while k < 8 {
+        let mut b = 0;
+        while b < 256 {
+            let prev = tables[k - 1][b];
+            tables[k][b] = (prev << 8) ^ tables[0][(prev >> 56) as usize];
+            b += 1;
+        }
+        k += 1;
+    }
+    tables
+}
+
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Crc64Ecma {
     state: u64,
@@ -89,24 +124,158 @@ impl Crc64Ecma {
         Self { state: 0 }
     }
 
+    /// Feeds `bytes` into the running CRC. Eight bytes are folded per step
+    /// with eight 256-entry tables; the remaining tail goes one byte at a
+    /// time. The state between calls is only the CRC register, so any split
+    /// of the input gives the same result.
+    ///
+    /// A slice of [`CRC64_PARALLEL_MIN_BYTES`] or more is split into
+    /// segments that are hashed on scoped threads and joined with
+    /// [`crc64_ecma_combine`] in input order; the result is the same value
+    /// as the one-thread path for every length and every thread count.
     pub fn update(&mut self, bytes: &[u8]) {
-        let mut crc = self.state;
-        for &byte in bytes {
-            crc ^= (byte as u64) << 56;
-            for _ in 0..8 {
-                crc = if (crc & 0x8000_0000_0000_0000) != 0 {
-                    (crc << 1) ^ CRC64_ECMA_POLY
-                } else {
-                    crc << 1
-                };
+        if bytes.len() >= CRC64_PARALLEL_MIN_BYTES {
+            let threads = crc64_auto_threads().min(bytes.len() / CRC64_PARALLEL_SEGMENT_MIN);
+            if threads > 1 {
+                self.update_with_threads(bytes, threads);
+                return;
             }
         }
-        self.state = crc;
+        self.state = crc64_update_serial(self.state, bytes);
+    }
+
+    /// Feeds `bytes` as at most `threads` consecutive segments of
+    /// `ceil(len / threads)` bytes. The calling thread hashes the first
+    /// segment from the running register; every other segment is hashed
+    /// from a zero register on its own scoped thread, and the segment CRCs
+    /// are joined left to right with [`crc64_ecma_combine`]. A segment
+    /// whose thread cannot be started is hashed on the calling thread. The
+    /// result equals [`Crc64Ecma::update`] for every input and every
+    /// `threads`; `0` and `1` mean one thread.
+    pub fn update_with_threads(&mut self, bytes: &[u8], threads: usize) {
+        let threads = threads.max(1).min(bytes.len());
+        if threads <= 1 {
+            self.state = crc64_update_serial(self.state, bytes);
+            return;
+        }
+        let segment = bytes.len().div_ceil(threads);
+        let (first, rest) = bytes.split_at(segment);
+        let start = self.state;
+        self.state = std::thread::scope(|scope| {
+            let handles: Vec<_> = rest
+                .chunks(segment)
+                .map(|piece| {
+                    let handle = std::thread::Builder::new()
+                        .spawn_scoped(scope, move || crc64_update_serial(0, piece))
+                        .ok();
+                    (piece, handle)
+                })
+                .collect();
+            let mut crc = crc64_update_serial(start, first);
+            for (piece, handle) in handles {
+                let piece_crc = match handle.map(|h| h.join()) {
+                    Some(Ok(value)) => value,
+                    _ => crc64_update_serial(0, piece),
+                };
+                crc = crc64_ecma_combine(crc, piece_crc, piece.len() as u64);
+            }
+            crc
+        });
     }
 
     pub const fn finish(self) -> u64 {
         self.state
     }
+}
+
+/// Slices at least this long go through the multi-thread path of
+/// [`Crc64Ecma::update`]; shorter slices stay on the calling thread.
+pub const CRC64_PARALLEL_MIN_BYTES: usize = 4 << 20;
+
+/// Smallest segment the automatic path of [`Crc64Ecma::update`] gives to
+/// one thread.
+const CRC64_PARALLEL_SEGMENT_MIN: usize = 1 << 20;
+
+/// Upper bound on threads for the automatic path.
+const CRC64_PARALLEL_MAX_THREADS: usize = 8;
+
+fn crc64_auto_threads() -> usize {
+    static THREADS: std::sync::OnceLock<usize> = std::sync::OnceLock::new();
+    *THREADS.get_or_init(|| {
+        std::thread::available_parallelism()
+            .map(|n| n.get())
+            .unwrap_or(1)
+            .clamp(1, CRC64_PARALLEL_MAX_THREADS)
+    })
+}
+
+/// The one-thread table update: the register after `bytes` starting from
+/// `state`.
+#[inline]
+fn crc64_update_serial(state: u64, bytes: &[u8]) -> u64 {
+    let t = &CRC64_TABLES;
+    let mut crc = state;
+    let mut chunks = bytes.chunks_exact(8);
+    for chunk in &mut chunks {
+        let mut word = [0u8; 8];
+        word.copy_from_slice(chunk);
+        let x = crc ^ u64::from_be_bytes(word);
+        crc = t[7][(x >> 56) as usize]
+            ^ t[6][((x >> 48) as u8) as usize]
+            ^ t[5][((x >> 40) as u8) as usize]
+            ^ t[4][((x >> 32) as u8) as usize]
+            ^ t[3][((x >> 24) as u8) as usize]
+            ^ t[2][((x >> 16) as u8) as usize]
+            ^ t[1][((x >> 8) as u8) as usize]
+            ^ t[0][(x as u8) as usize];
+    }
+    for &byte in chunks.remainder() {
+        crc = (crc << 8) ^ t[0][(((crc >> 56) as u8) ^ byte) as usize];
+    }
+    crc
+}
+
+/// `a * b mod P` over GF(2), with bit `i` holding the coefficient of `x^i`
+/// and `P = x^64 + CRC64_ECMA_POLY`.
+const fn crc64_mulmod(a: u64, b: u64) -> u64 {
+    let mut product = 0u64;
+    let mut bit = 64;
+    while bit > 0 {
+        bit -= 1;
+        product = if (product & 0x8000_0000_0000_0000) != 0 {
+            (product << 1) ^ CRC64_ECMA_POLY
+        } else {
+            product << 1
+        };
+        if (b >> bit) & 1 != 0 {
+            product ^= a;
+        }
+    }
+    product
+}
+
+/// `x^(8 * bytes) mod P`: the factor that moves a register past `bytes`
+/// zero bytes.
+const fn crc64_zero_bytes_factor(mut bytes: u64) -> u64 {
+    let mut factor = 1u64;
+    // x^8, then x^16, x^32, ... by squaring.
+    let mut square = 1u64 << 8;
+    while bytes != 0 {
+        if bytes & 1 != 0 {
+            factor = crc64_mulmod(factor, square);
+        }
+        square = crc64_mulmod(square, square);
+        bytes >>= 1;
+    }
+    factor
+}
+
+/// CRC-64/ECMA of `A` followed by `B`, from `crc_a = crc64_ecma(A)`,
+/// `crc_b = crc64_ecma(B)` and `len_b = B.len()`. Exact for every input:
+/// with init 0 and xorout 0 the register is linear, so
+/// `crc(A || B) = crc(A) * x^(8 * len_b) mod P  xor  crc(B)`.
+pub const fn crc64_ecma_combine(crc_a: u64, crc_b: u64, len_b: u64) -> u64 {
+    crc64_mulmod(crc_a, crc64_zero_bytes_factor(len_b)) ^ crc_b
 }
 
 /// Legacy v1 checksum. Kept only so v0.2 can explicitly read v0.1 stores.
@@ -201,6 +370,205 @@ mod tests {
         incremental.update(&bytes[17..129]);
         incremental.update(&bytes[129..]);
         assert_eq!(incremental.finish(), crc64_ecma(&bytes));
+    }
+
+    /// The original bit-serial update, kept as the reference for the
+    /// table-driven one. `state` is the running register.
+    fn crc64_bitwise(state: u64, bytes: &[u8]) -> u64 {
+        let mut crc = state;
+        for &byte in bytes {
+            crc ^= (byte as u64) << 56;
+            for _ in 0..8 {
+                crc = if (crc & 0x8000_0000_0000_0000) != 0 {
+                    (crc << 1) ^ CRC64_ECMA_POLY
+                } else {
+                    crc << 1
+                };
+            }
+        }
+        crc
+    }
+
+    /// A second, separately written bit-serial form (top bit tested by
+    /// shift, literal polynomial), so the reference does not rest on one text.
+    fn crc64_independent(bytes: &[u8]) -> u64 {
+        let mut crc = 0u64;
+        for &byte in bytes {
+            crc ^= u64::from(byte) << 56;
+            for _ in 0..8 {
+                crc = if crc >> 63 == 1 {
+                    (crc << 1) ^ 0x42f0_e1eb_a9ea_3693
+                } else {
+                    crc << 1
+                };
+            }
+        }
+        crc
+    }
+
+    fn seeded_bytes(seed: u64, len: usize) -> Vec<u8> {
+        let mut out = Vec::with_capacity(len);
+        let mut i = 0u64;
+        while out.len() < len {
+            let word = splitmix64(seed ^ i.wrapping_mul(0xA076_1D64_78BD_642F));
+            for byte in word.to_le_bytes() {
+                if out.len() < len {
+                    out.push(byte);
+                }
+            }
+            i += 1;
+        }
+        out
+    }
+
+    #[test]
+    fn crc_tables_match_their_definition() {
+        for (k, table) in CRC64_TABLES.iter().enumerate() {
+            for (b, &entry) in table.iter().enumerate() {
+                // Byte `b` followed by `k` zero bytes.
+                let mut bytes = vec![0u8; k + 1];
+                bytes[0] = b as u8;
+                assert_eq!(entry, crc64_bitwise(0, &bytes), "T{k}[{b}]");
+            }
+        }
+    }
+
+    #[test]
+    fn table_crc_matches_bitwise_reference_on_seeded_inputs() {
+        // Edge cases: empty, all-zero and all-one bytes, every length that
+        // crosses the 8-byte step, and a nonzero starting register.
+        for len in 0..=64usize {
+            for fill in [0x00u8, 0xFF, 0x80, 0x01] {
+                let bytes = vec![fill; len];
+                assert_eq!(
+                    crc64_ecma(&bytes),
+                    crc64_bitwise(0, &bytes),
+                    "fill {fill} len {len}"
+                );
+            }
+        }
+        for seed in 0..64u64 {
+            let buffer = seeded_bytes(seed, 2048);
+            for len in 0..=2048usize {
+                let bytes = &buffer[..len];
+                let expected = crc64_bitwise(0, bytes);
+                assert_eq!(crc64_ecma(bytes), expected, "seed {seed} len {len}");
+                if len % 97 == 0 || len < 32 {
+                    assert_eq!(crc64_independent(bytes), expected, "seed {seed} len {len}");
+                }
+            }
+            // Streaming with random 1..=15 byte pieces, so pieces start at
+            // every phase of the 8-byte step.
+            let mut rng = splitmix64(seed ^ 0x5EED);
+            let mut at = 0usize;
+            let mut streamed = Crc64Ecma::new();
+            while at < buffer.len() {
+                rng = splitmix64(rng);
+                let piece = 1 + (rng % 15) as usize;
+                let end = (at + piece).min(buffer.len());
+                streamed.update(&buffer[at..end]);
+                assert_eq!(
+                    streamed.finish(),
+                    crc64_bitwise(0, &buffer[..end]),
+                    "seed {seed} prefix {end}"
+                );
+                at = end;
+            }
+            // A nonzero register entering update.
+            let start = splitmix64(seed ^ 0xC0FFEE);
+            for len in [0usize, 1, 7, 8, 9, 15, 16, 17, 127, 128, 129, 2047] {
+                let mut crc = Crc64Ecma { state: start };
+                crc.update(&buffer[..len]);
+                assert_eq!(
+                    crc.finish(),
+                    crc64_bitwise(start, &buffer[..len]),
+                    "seed {seed} start len {len}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn table_crc_matches_bitwise_reference_on_a_large_buffer() {
+        let bytes = seeded_bytes(0xB16, (1 << 20) + 13);
+        assert_eq!(crc64_ecma(&bytes), crc64_bitwise(0, &bytes));
+        let mut records = Crc64Ecma::new();
+        for chunk in bytes.chunks(ORB_BYTES) {
+            records.update(chunk);
+        }
+        assert_eq!(records.finish(), crc64_independent(&bytes));
+    }
+
+    #[test]
+    fn crc_combine_matches_bitwise_reference() {
+        assert_eq!(crc64_zero_bytes_factor(0), 1);
+        assert_eq!(
+            crc64_mulmod(0x1234_5678_9ABC_DEF0, 1),
+            0x1234_5678_9ABC_DEF0
+        );
+        for seed in 0..32u64 {
+            let buffer = seeded_bytes(seed ^ 0xC0B1, 700);
+            let mut rng = splitmix64(seed);
+            for _ in 0..64 {
+                rng = splitmix64(rng);
+                let a = (rng % 350) as usize;
+                let b = ((rng >> 20) % 350) as usize;
+                let (left, right) = buffer[..a + b].split_at(a);
+                assert_eq!(
+                    crc64_ecma_combine(crc64_ecma(left), crc64_ecma(right), b as u64),
+                    crc64_bitwise(0, &buffer[..a + b]),
+                    "seed {seed} a {a} b {b}"
+                );
+            }
+        }
+        // Moving a register past n zero bytes is the same as feeding them.
+        for n in [0usize, 1, 7, 8, 9, 64, 1000, 4097] {
+            let state = splitmix64(n as u64);
+            assert_eq!(
+                crc64_mulmod(state, crc64_zero_bytes_factor(n as u64)),
+                crc64_bitwise(state, &vec![0u8; n]),
+                "zeros {n}"
+            );
+        }
+    }
+
+    #[test]
+    fn threaded_crc_matches_bitwise_reference_for_every_thread_count() {
+        let buffer = seeded_bytes(0x7EAD, 5000);
+        let start = splitmix64(0x5747);
+        for len in (0..=200usize).chain([999, 1000, 1001, 4093, 4096, 4099, 5000]) {
+            let bytes = &buffer[..len];
+            for state in [0, start] {
+                let expected = crc64_bitwise(state, bytes);
+                for threads in (0..=16usize).chain([len, len + 1, usize::MAX]) {
+                    let mut crc = Crc64Ecma { state };
+                    crc.update_with_threads(bytes, threads);
+                    assert_eq!(crc.finish(), expected, "len {len} threads {threads}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn automatic_threaded_path_matches_the_serial_path() {
+        let bytes = seeded_bytes(0xA070, CRC64_PARALLEL_MIN_BYTES + (1 << 20) + 13);
+        for len in [
+            CRC64_PARALLEL_MIN_BYTES - 1,
+            CRC64_PARALLEL_MIN_BYTES,
+            CRC64_PARALLEL_MIN_BYTES + 1,
+            bytes.len(),
+        ] {
+            let expected = crc64_update_serial(0, &bytes[..len]);
+            assert_eq!(crc64_ecma(&bytes[..len]), expected, "len {len}");
+            if len == bytes.len() {
+                assert_eq!(crc64_bitwise(0, &bytes[..len]), expected);
+            }
+        }
+        let start = splitmix64(0xFEED);
+        let mut streamed = Crc64Ecma { state: start };
+        streamed.update(&bytes[..17]);
+        streamed.update(&bytes[17..]);
+        assert_eq!(streamed.finish(), crc64_bitwise(start, &bytes));
     }
 
     #[test]

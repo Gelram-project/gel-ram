@@ -46,7 +46,7 @@ const TOKEN_PREFIXES: &[(&str, usize)] = &[
 ];
 
 /// Findings in one text.
-fn scan(text: &str) -> Vec<String> {
+pub(crate) fn scan(text: &str) -> Vec<String> {
     let mut found = Vec::new();
     // A user name after an absolute user directory; relative paths such as `../media/x`
     // or `main/media/x` are not absolute and are not read.
@@ -70,10 +70,10 @@ fn scan(text: &str) -> Vec<String> {
     }
     // IPv4 addresses outside loopback and the documentation ranges (RFC 5737).
     for part in text.split(|c: char| !(c.is_ascii_digit() || c == '.')) {
-        let octets: Vec<&str> = part.split('.').collect();
-        let ip = octets.len() == 4
-            && octets
-                .iter()
+        // Four octets are exactly three dots; no list of octets is built.
+        let ip = part.bytes().filter(|b| *b == b'.').count() == 3
+            && part
+                .split('.')
                 .all(|o| (1..=3).contains(&o.len()) && o.parse::<u16>().is_ok_and(|v| v <= 255));
         let allowed = part.starts_with("127.")
             || part == "0.0.0.0"
@@ -149,7 +149,7 @@ fn scan(text: &str) -> Vec<String> {
 /// shape of an IPv4 address. Only in those files, and only for that check, an address found
 /// solely inside the quoted passages is not a finding; every other column and every other check
 /// is read as usual.
-fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
+pub(crate) fn quoted_only_address(name: &str, text: &str, finding: &str) -> bool {
     let Some(addr) = finding.strip_prefix("network address ") else {
         return false;
     };
@@ -187,7 +187,7 @@ const POLISH_DATA_PATHS: &[&str] = &["docs/answer-or-abstain", "docs/evidence-"]
 /// Documentation prose is English only. In Markdown, SVG and HTML files outside the data
 /// paths, a line with a letter used only in Polish is a finding; Markdown code blocks and
 /// inline code (identifiers, search examples) are not prose and are skipped.
-fn polish_prose(name: &str, text: &str) -> Vec<String> {
+pub(crate) fn polish_prose(name: &str, text: &str) -> Vec<String> {
     let prose = [".md", ".svg", ".html"].iter().any(|e| name.ends_with(e));
     let crate_fixture = name.starts_with("crates/") && name.contains("/fixtures/");
     if !prose || crate_fixture || POLISH_DATA_PATHS.iter().any(|p| name.starts_with(p)) {
@@ -221,30 +221,18 @@ fn polish_prose(name: &str, text: &str) -> Vec<String> {
 
 /// Scans every file of the tree (not `target` or `.git`); binary files are skipped.
 pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
+    println!("{}", outcome(root, files)?);
+    Ok(())
+}
+
+/// The PASS line, or the FAIL text with every finding in file order. Files are
+/// read and scanned in parallel; findings are merged in the order of `files`.
+pub(crate) fn outcome(root: &Path, files: &[PathBuf]) -> Result<String, String> {
     let (mut scanned, mut bad) = (0usize, Vec::new());
-    for path in files {
-        let Ok(bytes) = fs::read(path) else { continue };
-        if bytes.contains(&0) {
-            continue;
-        }
-        let Ok(text) = String::from_utf8(bytes) else {
-            continue;
-        };
+    let per_file = super::tree_scan::ordered(files.len(), |i| file_findings(root, &files[i]));
+    for findings in per_file.into_iter().flatten() {
         scanned += 1;
-        let name = path
-            .strip_prefix(root)
-            .unwrap_or(path)
-            .display()
-            .to_string();
-        for finding in polish_prose(&name, &text) {
-            bad.push(format!("{name}: {finding}"));
-        }
-        for finding in scan(&text) {
-            if quoted_only_address(&name, &text, &finding) {
-                continue;
-            }
-            bad.push(format!("{name}: {finding}"));
-        }
+        bad.extend(findings);
     }
     if !bad.is_empty() {
         return Err(format!(
@@ -253,8 +241,32 @@ pub fn check(root: &Path, files: &[PathBuf]) -> Result<(), String> {
             bad.join("\n")
         ));
     }
-    println!("PUBLIC_DISCLOSURE_GATE=PASS text_files={scanned}");
-    Ok(())
+    Ok(format!("PUBLIC_DISCLOSURE_GATE=PASS text_files={scanned}"))
+}
+
+/// Findings of one file, or `None` when it is not a scanned text file.
+fn file_findings(root: &Path, path: &Path) -> Option<Vec<String>> {
+    let bytes = fs::read(path).ok()?;
+    if bytes.contains(&0) {
+        return None;
+    }
+    let text = String::from_utf8(bytes).ok()?;
+    let name = path
+        .strip_prefix(root)
+        .unwrap_or(path)
+        .display()
+        .to_string();
+    let mut bad = Vec::new();
+    for finding in polish_prose(&name, &text) {
+        bad.push(format!("{name}: {finding}"));
+    }
+    for finding in scan(&text) {
+        if quoted_only_address(&name, &text, &finding) {
+            continue;
+        }
+        bad.push(format!("{name}: {finding}"));
+    }
+    Some(bad)
 }
 
 #[cfg(test)]

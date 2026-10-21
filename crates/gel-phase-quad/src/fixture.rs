@@ -19,12 +19,18 @@ pub fn decode(raw: &[u8]) -> Result<Vec<Record>, String> {
     if !(1..=MAX_RECORDS).contains(&count) || raw.len() != 12 + count * RECORD_BYTES {
         return Err("invalid record count or exact file length".into());
     }
+    // Bit j%8 of mask byte j/8 is bit j%64 of the little-endian word j/64, so
+    // the 128 mask bytes are the record's sixteen mask words as stored.
     Ok(raw[12..]
         .chunks_exact(RECORD_BYTES)
         .map(|r| {
-            let phase = r[..DIM].try_into().unwrap();
-            let active = std::array::from_fn(|j| r[DIM + j / 8] & (1 << (j % 8)) != 0);
-            Record::new(phase, &active)
+            let (phase, mask) = r.split_at(DIM);
+            Record {
+                phase: phase.try_into().unwrap(),
+                mask: std::array::from_fn(|w| {
+                    u64::from_le_bytes(mask[w * 8..w * 8 + 8].try_into().unwrap())
+                }),
+            }
         })
         .collect())
 }
@@ -33,16 +39,14 @@ pub fn encode(records: &[Record]) -> Result<Vec<u8>, String> {
     if !(1..=MAX_RECORDS).contains(&records.len()) {
         return Err("records must be 1..8192".into());
     }
-    let mut out = MAGIC.to_vec();
+    let mut out = Vec::with_capacity(12 + records.len() * RECORD_BYTES);
+    out.extend_from_slice(MAGIC);
     out.extend_from_slice(&(records.len() as u32).to_le_bytes());
     for record in records {
         out.extend_from_slice(record.phase());
-        let mask = record.active_mask();
-        out.extend((0..DIM / 8).map(|byte| {
-            (0..8).fold(0u8, |bits, bit| {
-                bits | (u8::from(mask[byte * 8 + bit]) << bit)
-            })
-        }));
+        for word in &record.mask {
+            out.extend_from_slice(&word.to_le_bytes());
+        }
     }
     Ok(out)
 }

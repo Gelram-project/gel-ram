@@ -18,6 +18,10 @@
 //! fell to 42 GiB/s against 105 GiB/s for the SSE2 baseline build, because
 //! 64-byte vector loads split cache lines. Compare rows only within one tag.
 
+mod chain;
+#[cfg(test)]
+mod chain_reference;
+
 use gel_core::splitmix64;
 use std::collections::BTreeSet;
 use std::fs;
@@ -63,7 +67,10 @@ fn main() -> Result<(), String> {
     println!("observed_cpu_start={cpu_start}");
     println!("--- pointer_chase ---");
     for &bytes in DEFAULT_SIZES {
-        let (order, samples) = repeat(repeats, || pointer_chase(bytes));
+        // The visit order depends only on `bytes`; every round still builds
+        // its own successor table from it right before its timer.
+        let chain = chain::chain_order(bytes);
+        let (order, samples) = repeat(repeats, || pointer_chase(&chain));
         println!(
             "bytes={bytes} min_ns_per_step={:.3} p50_ns_per_step={:.3} p99_ns_per_step={:.3} execution_order={}",
             samples[0],
@@ -166,20 +173,11 @@ fn percentile(sorted: &[f64], q: f64) -> f64 {
     sorted[index.min(sorted.len() - 1)]
 }
 
-fn pointer_chase(bytes: usize) -> f64 {
-    let slots = (bytes / core::mem::size_of::<usize>()).max(2);
-    let mut order = (0..slots).collect::<Vec<_>>();
-    let mut state = 0x4745_4c00_5048_5953u64 ^ bytes as u64;
-    for i in (1..slots).rev() {
-        state = splitmix64(state);
-        let j = (state as usize) % (i + 1);
-        order.swap(i, j);
-    }
-    let mut next = vec![0usize; slots];
-    for pair in order.windows(2) {
-        next[pair[0]] = pair[1];
-    }
-    next[*order.last().expect("nonempty")] = order[0];
+/// One timed round over a fresh successor table built from `order`
+/// (`chain::chain_order`).
+fn pointer_chase(order: &[usize]) -> f64 {
+    let slots = order.len();
+    let next = chain::build_next(order);
     let steps = slots.saturating_mul(4).max(32_768);
     let mut cursor = order[0];
     let started = Instant::now();
@@ -407,8 +405,16 @@ mod tests {
     }
 
     #[test]
+    fn chain_built_once_matches_the_per_round_builder() {
+        let sizes = [0, 1, 8, 15, 16, 17, 24, 4104, 48 << 10, 1 << 20, 1_000_003];
+        let (cases, equal) = chain_reference::compare_chain(&sizes);
+        assert_eq!(cases, sizes.len() * 3);
+        assert_eq!(equal, cases);
+    }
+
+    #[test]
     fn tiny_physics_probes_produce_finite_positive_values() {
-        assert!(pointer_chase(48 << 10).is_finite());
+        assert!(pointer_chase(&chain::chain_order(48 << 10)).is_finite());
         assert!(sequential_gib_s(48 << 10) > 0.0);
         assert!(random_orb_fetch_ns(1 << 20, 32) > 0.0);
     }
