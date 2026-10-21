@@ -1,0 +1,10 @@
+SPEED_AB case=decode_8192 a_ns=19757118 a2_ns=20063565 b_ns=559512 aa=1.016 gain=35.311 runs=27
+SPEED_AB case=encode_8192 a_ns=5531187 a2_ns=5604395 b_ns=582706 aa=1.013 gain=9.492 runs=27
+SPEED_AB case=grid_view_4poles_8192 a_ns=30677374 a2_ns=30823962 b_ns=31726148 aa=1.005 gain=0.967 runs=27
+SPEED_AB case=prepare_8192 a_ns=30456099 a2_ns=30486927 b_ns=11705564 aa=1.001 gain=2.602 runs=27
+SPEED_AB case=record_new_8192 a_ns=17648413 a2_ns=17789238 b_ns=2215925 aa=1.008 gain=7.964 runs=27
+SPEED_AB case=view_4poles_8192 a_ns=49672182 a2_ns=50320842 b_ns=49671258 aa=1.013 gain=1.000 runs=27
+SPEED_AB_CHECK tree=a sha256=3b49ea7beef8ec8356e9262c1eb68734f727267226bd4e9805ebf5f60146b8bb
+SPEED_AB_CHECK tree=a2 sha256=3b49ea7beef8ec8356e9262c1eb68734f727267226bd4e9805ebf5f60146b8bb
+SPEED_AB_CHECK tree=b sha256=3b49ea7beef8ec8356e9262c1eb68734f727267226bd4e9805ebf5f60146b8bb
+SPEED_AB_VERDICT=SAME_OUTPUT

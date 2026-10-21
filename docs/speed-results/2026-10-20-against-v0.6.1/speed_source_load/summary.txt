@@ -1,0 +1,11 @@
+SPEED_AB case=adds_then_root a_ns=237351997 a2_ns=241622979 b_ns=36702373 aa=1.018 gain=6.467 runs=27
+SPEED_AB case=backup_create a_ns=123184488 a2_ns=121398058 b_ns=122038372 aa=0.985 gain=1.009 runs=27
+SPEED_AB case=backup_inspect a_ns=67838866 a2_ns=59846640 b_ns=85999017 aa=0.882 gain=0.789 runs=27
+SPEED_AB case=backup_restore a_ns=170713448 a2_ns=156745803 b_ns=107484053 aa=0.918 gain=1.588 runs=27
+SPEED_AB case=bundle_load a_ns=78812669 a2_ns=76605918 b_ns=114454506 aa=0.972 gain=0.689 runs=27
+SPEED_AB case=collection_load a_ns=43752586 a2_ns=44461539 b_ns=90603570 aa=1.016 gain=0.483 runs=27
+SPEED_AB case=encoded_load a_ns=40318766 a2_ns=38011535 b_ns=21446304 aa=0.943 gain=1.880 runs=27
+SPEED_AB_CHECK tree=a sha256=f56086fc0f46a1d21efb2ec32623818c914ac017a3cca930dfdfeeaafdb83931
+SPEED_AB_CHECK tree=a2 sha256=f56086fc0f46a1d21efb2ec32623818c914ac017a3cca930dfdfeeaafdb83931
+SPEED_AB_CHECK tree=b sha256=f56086fc0f46a1d21efb2ec32623818c914ac017a3cca930dfdfeeaafdb83931
+SPEED_AB_VERDICT=SAME_OUTPUT

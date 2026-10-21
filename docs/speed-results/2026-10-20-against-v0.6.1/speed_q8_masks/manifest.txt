@@ -1,0 +1,19 @@
+FORMAT=GEL_SPEED_AB_1
+mode=ab
+package=gel-phase-quad example=speed_q8_masks rounds=3
+example_args=[]
+with_bins=[]
+before_run=["a hook that waits until other measurements on the machine have finished (not published)"]
+source_sha256=e8766a4811584a75def93a6847b906dd650e6d5109315f8870eaa88a3fd3d33e  crates/gel-phase-quad/examples/speed_q8_masks.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a root=A revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 root=A2 revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b root=B revision=local-integration-tree (equal to main 876247f in tools/, Cargo.toml, Cargo.lock and crates/ except crates/gel-source/examples/identity_tree_gates.rs) working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a A/crates/gel-phase-quad/examples/speed_q8_masks.rs
+placed tree=a A/tools/speed_support.rs
+placed tree=a2 A2/crates/gel-phase-quad/examples/speed_q8_masks.rs
+placed tree=a2 A2/tools/speed_support.rs
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+restored=yes

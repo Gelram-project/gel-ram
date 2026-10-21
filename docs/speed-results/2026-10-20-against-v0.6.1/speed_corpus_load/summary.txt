@@ -1,0 +1,9 @@
+SPEED_AB case=corpus_load_64mib a_ns=115815271 a2_ns=111788786 b_ns=223376923 aa=0.965 gain=0.518 runs=27
+SPEED_AB case=encoded_load_64mib a_ns=116068457 a2_ns=112142083 b_ns=57479791 aa=0.966 gain=2.019 runs=27
+SPEED_AB case=encoded_load_r50k_16mib a_ns=78463264 a2_ns=74326432 b_ns=50639697 aa=0.947 gain=1.549 runs=27
+SPEED_AB case=reject_first_64mib a_ns=45099757 a2_ns=42480641 b_ns=167856749 aa=0.942 gain=0.269 runs=27
+SPEED_AB case=small_load_256kib a_ns=379233 a2_ns=351982 b_ns=710065 aa=0.928 gain=0.534 runs=27
+SPEED_AB_CHECK tree=a sha256=183a7e74bc8c82f10003ae27fef57d41e90e4ae0573a0dc747b669927cb926ea
+SPEED_AB_CHECK tree=a2 sha256=183a7e74bc8c82f10003ae27fef57d41e90e4ae0573a0dc747b669927cb926ea
+SPEED_AB_CHECK tree=b sha256=183a7e74bc8c82f10003ae27fef57d41e90e4ae0573a0dc747b669927cb926ea
+SPEED_AB_VERDICT=SAME_OUTPUT

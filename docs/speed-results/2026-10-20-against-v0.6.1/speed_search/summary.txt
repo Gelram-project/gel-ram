@@ -1,0 +1,8 @@
+SPEED_AB case=collection_64x1mib a_ns=4684733211 a2_ns=4481643433 b_ns=330666594 aa=0.957 gain=14.168 runs=27
+SPEED_AB case=doc_ascii_16mib a_ns=327109541 a2_ns=311465186 b_ns=38193317 aa=0.952 gain=8.565 runs=27
+SPEED_AB case=doc_ascii_64kib a_ns=1300086 a2_ns=1249380 b_ns=949737 aa=0.961 gain=1.369 runs=27
+SPEED_AB case=doc_polish_16mib a_ns=2033858061 a2_ns=1970732612 b_ns=137780645 aa=0.969 gain=14.762 runs=27
+SPEED_AB_CHECK tree=a sha256=ab84b5fc399802b91d124ebba8ceaf5345a698b7db0c6c65be444235b94eeda8
+SPEED_AB_CHECK tree=a2 sha256=ab84b5fc399802b91d124ebba8ceaf5345a698b7db0c6c65be444235b94eeda8
+SPEED_AB_CHECK tree=b sha256=ab84b5fc399802b91d124ebba8ceaf5345a698b7db0c6c65be444235b94eeda8
+SPEED_AB_VERDICT=SAME_OUTPUT

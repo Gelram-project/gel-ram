@@ -1,0 +1,14 @@
+SPEED_AB case=ascii_16x512kib_t1 a_ns=71726669 a2_ns=62629730 b_ns=59849895 aa=0.873 gain=1.198 runs=27
+SPEED_AB case=ascii_16x512kib_t8 a_ns=14820776 a2_ns=15744934 b_ns=12079980 aa=1.062 gain=1.227 runs=27
+SPEED_AB case=cjk_hangul_16x512kib_t1 a_ns=371970565 a2_ns=332429155 b_ns=194757010 aa=0.894 gain=1.910 runs=27
+SPEED_AB case=cjk_hangul_16x512kib_t8 a_ns=78701106 a2_ns=83197602 b_ns=41883860 aa=1.057 gain=1.879 runs=27
+SPEED_AB case=greek_16x512kib_t1 a_ns=500039594 a2_ns=461294454 b_ns=247612559 aa=0.923 gain=2.019 runs=27
+SPEED_AB case=greek_16x512kib_t8 a_ns=103529305 a2_ns=109950746 b_ns=51651549 aa=1.062 gain=2.004 runs=27
+SPEED_AB case=mixed_16x512kib_t1 a_ns=481434622 a2_ns=432126652 b_ns=232790597 aa=0.898 gain=2.068 runs=27
+SPEED_AB case=mixed_16x512kib_t8 a_ns=102647096 a2_ns=110651868 b_ns=49769386 aa=1.078 gain=2.062 runs=27
+SPEED_AB case=polish_16x512kib_t1 a_ns=395472406 a2_ns=354383822 b_ns=140516341 aa=0.896 gain=2.814 runs=27
+SPEED_AB case=polish_16x512kib_t8 a_ns=83846759 a2_ns=88759268 b_ns=29667962 aa=1.059 gain=2.826 runs=27
+SPEED_AB_CHECK tree=a sha256=b2e4c0b48c4ac13c7670826843cb6149207369e08a019f2bc6657cffd8d35111
+SPEED_AB_CHECK tree=a2 sha256=b2e4c0b48c4ac13c7670826843cb6149207369e08a019f2bc6657cffd8d35111
+SPEED_AB_CHECK tree=b sha256=b2e4c0b48c4ac13c7670826843cb6149207369e08a019f2bc6657cffd8d35111
+SPEED_AB_VERDICT=SAME_OUTPUT
