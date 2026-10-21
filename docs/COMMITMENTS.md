@@ -64,7 +64,8 @@ the tests in `xtask/src/commitment.rs` compare with such a manifest.
 | Date (UTC) | Label | Directories | Files | SHA-256 of the manifest |
 |---|---|---|---|---|
 | 2026-10-20 | Private source tree 1: Rust sources only (`*.rs`, `Cargo.toml`, `Cargo.lock`) | 1,436 | 4,054 | `69c10bd58f5173e11a30b1f27072566d1b4dcbeee504882d7359fd0f1f92fefd` |
+| 2026-10-21 | Private data set 1 | 6 | 44 | `ab5e8b71d8f6d8202065714ceb6c0aa8837dd7fbfb805ef33dcb5022f75da92f` |
 
-The draft of this change first listed `26b84cb5…deafe9` for the same files in an
-earlier manifest format that did not record directories. That digest is
-withdrawn; the line above replaces it.
+The draft of PR #81 first listed `26b84cb5…deafe9` for Private source tree 1 in
+an earlier manifest format that did not record directories. That digest is
+withdrawn; the 2026-10-20 line for Private source tree 1 replaces it.
