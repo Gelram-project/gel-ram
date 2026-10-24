@@ -659,14 +659,31 @@ mod distinct_range_tests {
         let mut rng = Rng(0x5eed_d15c_2026_1024);
         let text = text(&mut rng, 4096);
         let mut seen = [0usize; 2];
+        // Inputs whose every digest is true while two different ranges share
+        // their start, or share their end: a rule that compared only one end
+        // of a range would merge two different passages there.
+        let mut shared = [0usize; 2];
         for input in 0..3000 {
             // Few ranges, so most of them repeat; some lists stay increasing.
-            let ranges: Vec<(usize, usize)> = (0..1 + rng.below(6))
-                .map(|_| {
-                    let s = rng.below(text.len());
-                    (s, s + 1 + rng.below((text.len() - s).min(64)))
-                })
-                .collect();
+            // A new range may take the start or the end of an earlier one.
+            let mut ranges: Vec<(usize, usize)> = Vec::new();
+            for _ in 0..1 + rng.below(6) {
+                let range = match (ranges.len(), rng.below(3)) {
+                    (0, _) | (_, 0) => {
+                        let s = rng.below(text.len());
+                        (s, s + 1 + rng.below((text.len() - s).min(64)))
+                    }
+                    (n, 1) => {
+                        let s = ranges[rng.below(n)].0;
+                        (s, s + 1 + rng.below((text.len() - s).min(64)))
+                    }
+                    (n, _) => {
+                        let e = ranges[rng.below(n)].1;
+                        (e - 1 - rng.below(e.min(64)), e)
+                    }
+                };
+                ranges.push(range);
+            }
             let n = rng.below(80);
             let mut checks: Vec<QuoteCheck> = (0..n)
                 .map(|_| {
@@ -690,8 +707,20 @@ mod distinct_range_tests {
             for threads in [None, Some(0), Some(1), Some(2), Some(3), Some(8)] {
                 assert_eq!(all_match(&text, &checks, threads), old, "{checks:?}");
             }
+            let mut stated: Vec<(usize, usize)> = checks.iter().map(|&(s, e, _)| (s, e)).collect();
+            stated.sort_unstable();
+            stated.dedup();
+            for (side, count) in shared.iter_mut().enumerate() {
+                let key = |r: &(usize, usize)| if side == 0 { r.0 } else { r.1 };
+                let pair = stated
+                    .iter()
+                    .enumerate()
+                    .any(|(i, a)| stated[i + 1..].iter().any(|b| key(a) == key(b)));
+                *count += usize::from(old && pair);
+            }
         }
         assert!(seen[0] > 100 && seen[1] > 100, "{seen:?}");
+        assert!(shared[0] > 100 && shared[1] > 100, "{shared:?}");
     }
     #[test]
     fn conflicting_digests_of_one_range_fail_without_hashing() {
