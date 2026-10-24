@@ -82,6 +82,9 @@ cargo run --locked --offline --release -p <crate> --example <stem> -- [RUNS] ...
 
 `speed_bench_physics` starts the release binaries as child processes; build
 them first with `cargo build --release -p gel-bench -p gel-physics --bins --examples`.
+`speed_bench_checks` does the same for `gel-bench` alone
+(`cargo build --release -p gel-bench --bins --examples`; in `xtask speed-ab`,
+`--with-bins gel-bench`).
 Pin every timing run to one L3 domain as described in `docs/PERFORMANCE.md`.
 
 ## Comparing two trees: A/B with an A/A control
@@ -139,7 +142,8 @@ also a control for changes outside its own crate.
 | `crates/gel-structural/examples/speed_structural_encode.rs` | gel-structural | 6 residual and prototype cases | `apply_near`, `popcount_near` | yes |
 | `crates/gel-history/examples/speed_history.rs` | gel-history | 10 history and sparse residual cases | `to_bytes_walk_k3_100k`; nearly `from_bytes_unrelated_20k` | yes |
 | `crates/gel-bench/examples/speed_bench_physics.rs` | gel-bench | whole `gel-bench` and `gel-physics` runs | nearly `gel_bench_8192_t1` (process start dominates) | yes, after `--bins` |
-| `crates/gel-bench/examples/speed_bench_setup_paired.rs` | gel-bench | 3 setup cases, `<base>_ref` and `<base>_new` | the `_ref` sides | no |
+| `crates/gel-bench/examples/speed_bench_checks.rs` | gel-bench | whole `gel-bench` runs over 1,310,720 orbs (`_t1`, `_t4`), 131,072 and 8,192 orbs; the check covers every non-timing output line | nearly `gel_bench_8192_t1` (process start dominates) | yes, after `--bins` |
+| `crates/gel-bench/examples/speed_bench_setup_paired.rs` | gel-bench | 4 setup cases, `<base>_ref` and `<base>_new` | the `_ref` sides | no |
 | `crates/gel-source/examples/speed_nfc_fast.rs` | gel-source | 8 line cases (200 searches each) and 6 document cases of phrase search over normalization inputs | `ascii_line`, `polish_nfc_line`, `doc_ascii`, `doc_polish_nfc` | yes |
 | `crates/gel-source/examples/speed_corpus_load.rs` | gel-source | 5 catalog load cases, 256 KiB to 64 MiB, one refused | `small_load_256kib`, `reject_first_64mib` | yes |
 | `crates/gel-source/examples/speed_corpus_load_paired.rs` | gel-source | `load_64mib_ref`, `load_64mib_t<T>`, `load_r50k_16mib_ref`, `load_r50k_16mib_t<T>` | the `_ref` sides | no |
@@ -165,7 +169,7 @@ Identity programs:
 | `crates/gel-reader/examples/identity_views.rs` | gel-reader | word-level affine views with the earlier per-bit code |
 | `crates/gel-structural/examples/identity_structural_encode.rs` | gel-structural | popcount-first residual and prototype paths with the earlier code |
 | `crates/gel-history/examples/identity_history_rebuild.rs` | gel-history | streaming sparse residuals and rolled history rebuild with the earlier code |
-| `crates/gel-bench/examples/identity_bench_setup.rs` | gel-bench | threaded bank fill, Top-K reference and chain order with the earlier serial code |
+| `crates/gel-bench/examples/identity_bench_setup.rs` | gel-bench | threaded bank fill, threaded bank CRC, Top-K reference and chain order with the earlier serial code |
 | `crates/gel-source/examples/identity_nfc_fast.rs` | gel-source | table-based normalization properties and reused buffers with the earlier binary-search code, on every scalar value and seeded strings |
 | `crates/gel-source/examples/identity_corpus_load.rs` | gel-source | catalog loading on several threads with the earlier one-thread loader, results and first errors |
 | `crates/gel-source/examples/identity_load_overlap.rs` | gel-source | bundle and snapshot loading with the whole-file digest overlapped with the part digests, which stop early under a wrong pin, with the earlier one-thread code |
