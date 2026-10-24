@@ -147,6 +147,7 @@ also a control for changes outside its own crate.
 | `crates/gel-source/examples/speed_nfc_fast.rs` | gel-source | 8 line cases (200 searches each) and 6 document cases of phrase search over normalization inputs | `ascii_line`, `polish_nfc_line`, `doc_ascii`, `doc_polish_nfc` | yes |
 | `crates/gel-source/examples/speed_corpus_load.rs` | gel-source | 5 catalog load cases, 256 KiB to 64 MiB, one refused | `small_load_256kib`, `reject_first_64mib` | yes |
 | `crates/gel-source/examples/speed_corpus_load_paired.rs` | gel-source | `load_64mib_ref`, `load_64mib_t<T>`, `load_r50k_16mib_ref`, `load_r50k_16mib_t<T>` | the `_ref` sides | no |
+| `crates/gel-source/examples/speed_quote_ranges.rs` | gel-source | 3 catalog load cases whose rows repeat passage ranges, one refused, and 3 with distinct ranges | `distinct_encoded_64mib`, `distinct_r50k_16mib` | yes |
 | `crates/gel-source/examples/speed_load_overlap.rs` | gel-source | 8 bundle, corpus, snapshot and backup load cases, two refused | `bundle_load_512kib`, `collection_load_512kib`, `encoded_load_64mib`, `backup_inspect_64mib` | yes |
 | `crates/gel-source/examples/speed_backup_restore.rs` | gel-source | 6 backup create, inspect and restore cases | `backup_create_64mib`, `backup_inspect_64mib`, `backup_restore_withdrawn_64mib`, `backup_restore_target_exists_64mib` | yes |
 | `crates/gel-source/examples/speed_lowercase.rs` | gel-source | 5 scripts of 16 documents of 512 KiB, `_t1` and `_t<T>` | `ascii_16x512kib_t1`, `ascii_16x512kib_t<T>` | yes |

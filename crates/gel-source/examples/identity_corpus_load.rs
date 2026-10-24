@@ -6,8 +6,9 @@
 //! Inputs are generated from fixed seeds: valid catalogs (small, large,
 //! multibyte, overlapping passages), a digest mismatch in every row combined
 //! with a second error of each kind in every row, several mismatches, the
-//! record limit, and random byte changes of catalogs and texts with both pins
-//! recomputed. A loaded corpus is compared field by field through its full
+//! record limit, random byte changes of catalogs and texts with both pins
+//! recomputed, and rows that repeat a few passage ranges (each hashed once
+//! by the current loader) with a wrong digest in one copy. A loaded corpus is compared field by field through its full
 //! `Debug` form; an error is compared by value, so the reported error must be
 //! the one the row order reaches first.
 //!
@@ -570,6 +571,46 @@ fn several(scale: Scale, rng: &mut Rng) -> Case {
     t
 }
 
+/// Rows that repeat a few passage ranges, in row order and out of it: all
+/// digests true, a wrong digest in one copy of a range, and that combined
+/// with every other error kind in an earlier or a later row.
+fn repeated(scale: Scale, rng: &mut Rng) -> Case {
+    let mut t = Case::new("repeated_ranges");
+    let n = if scale == Scale::Small { 40 } else { 120 };
+    let e = build(rng, n, 3000, true);
+    let text = e.text_bytes();
+    let base = rows(e.catalog_bytes());
+    let inputs = if scale == Scale::Small { 60 } else { 600 };
+    for input in 0..inputs {
+        let distinct = 1 + rng.below(5);
+        let mut r = base.clone();
+        for (k, row) in r.iter_mut().enumerate() {
+            // Sorted repeats for some inputs, scattered ones for the others.
+            let from = if input % 3 == 0 {
+                k * distinct / n
+            } else {
+                rng.below(distinct)
+            };
+            for f in [3, 4, 5] {
+                row[f] = base[from][f].clone();
+            }
+        }
+        compare_pinned(&mut t, &join(&r), text);
+        let j = rng.below(n);
+        if input % 2 == 0 {
+            mismatch(&mut r[j]);
+        } else {
+            // A wrong digest that sorts after every true one.
+            r[j][5] = "f".repeat(64);
+        }
+        compare_pinned(&mut t, &join(&r), text);
+        let i = rng.below(n);
+        break_row(&mut r, i, rng.below(KINDS), text.len());
+        compare_pinned(&mut t, &join(&r), text);
+    }
+    t
+}
+
 /// The record limit: exactly the maximum, one more, and mismatches before it.
 fn limit(scale: Scale) -> Case {
     let mut t = Case::new("record_limit");
@@ -681,6 +722,7 @@ pub fn run_cases(scale: Scale) -> Vec<Case> {
     let (c, d) = random_bytes(scale, &mut rng);
     out.push(c);
     out.push(d);
+    out.push(repeated(scale, &mut rng));
     out
 }
 
