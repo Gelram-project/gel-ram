@@ -624,6 +624,37 @@ mod tests {
         assert_eq!(read(path).unwrap().total(), Some(bytes.len()));
     }
 
+    /// A file whose metadata reports length 0 but which holds more than `DIM`
+    /// bytes: the rest is still counted, so the result and the refusals are
+    /// those of the whole file read. Skipped when no such file is available.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn a_file_reporting_length_zero_with_more_than_dim_bytes_reads_to_its_end() {
+        let path = Path::new("/proc/self/mountinfo");
+        let Ok(bytes) = fs::read(path) else {
+            return;
+        };
+        if bytes.len() <= DIM {
+            return;
+        }
+        assert_eq!(fs::symlink_metadata(path).unwrap().len(), 0);
+        let len = bytes.len();
+        for limit in [0, 1, DIM - 1, DIM, DIM + 1, len - 1, len, MAX_TEXT] {
+            assert_eq!(
+                seen(read_within(path, limit)),
+                seen(read_reference(path, limit)),
+                "limit {limit}"
+            );
+        }
+        assert_eq!(
+            seen(read_within(path, DIM)),
+            Err("Read refused: Data(Limit)".to_string())
+        );
+        let lit = read(path).unwrap();
+        assert_eq!(lit.placed(), DIM);
+        assert_eq!(lit.total(), Some(len));
+    }
+
     #[test]
     fn saved_bytes_have_the_fixture_layout_and_a_fixed_pin() {
         let raw = saved(from_bytes(b"GEL").unwrap().record);
