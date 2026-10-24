@@ -8,7 +8,8 @@
 //! with a second error of each kind in every row, several mismatches, the
 //! record limit, random byte changes of catalogs and texts with both pins
 //! recomputed, and rows that repeat a few passage ranges (each hashed once
-//! by the current loader) with a wrong digest in one copy. A loaded corpus is compared field by field through its full
+//! by the current loader) with a wrong digest in one copy.
+//! A loaded corpus is compared field by field through its full
 //! `Debug` form; an error is compared by value, so the reported error must be
 //! the one the row order reaches first.
 //!

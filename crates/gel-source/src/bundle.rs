@@ -680,13 +680,21 @@ mod tests {
                 if limit >= len {
                     let read = read_regular(&path, limit).unwrap();
                     assert_eq!(read, bytes);
-                    // Only the documented `try_reserve_exact` bound: at least
-                    // the hint plus one spare byte, so the final 0-byte read
-                    // needs no growth. Exact equality would depend on how std
-                    // sizes buffers inside `read_to_end`.
+                    // A band, not an exact value: at least the hint plus one
+                    // spare byte (the documented `try_reserve_exact` bound, so
+                    // the final 0-byte read needs no growth), and at most half
+                    // again plus a little, which no growth by doubling meets.
+                    // Exact equality would depend on how std sizes buffers
+                    // inside `read_to_end`.
+                    let hint = len.min(limit);
                     assert!(
-                        read.capacity() > len.min(limit),
+                        read.capacity() > hint,
                         "len {len} limit {limit} capacity {}",
+                        read.capacity()
+                    );
+                    assert!(
+                        read.capacity() <= hint + 1 + hint / 2 + 64,
+                        "upper len {len} limit {limit} capacity {}",
                         read.capacity()
                     );
                 }

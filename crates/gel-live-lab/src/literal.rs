@@ -580,6 +580,16 @@ mod tests {
             seen(read(&paths[2])),
             Err("Read refused: NotRegular".to_string())
         );
+        // A directory at limit 0 is refused as not regular, as before: the
+        // kind check comes ahead of the size check.
+        assert_eq!(
+            seen(read_within(&paths[2], 0)),
+            seen(read_reference(&paths[2], 0))
+        );
+        assert_eq!(
+            seen(read_within(&paths[2], 0)),
+            Err("Read refused: NotRegular".to_string())
+        );
         let empty = dir.0.join("empty");
         fs::write(&empty, b"").unwrap();
         assert_eq!(
