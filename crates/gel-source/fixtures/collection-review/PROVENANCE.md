@@ -19,7 +19,16 @@ blind independent evaluation, human review, semantic benchmark or new web crawl.
   `201db5a76fefbce5ed893410837ff784c4bcd5c21da966705f692a5c087b2282`
   (5,317 bytes).
 - ocean-scale.txt: frozen project documentation, SHA256
-  `cd1f614ac1c5d92600d38e758ebb0386897050024995d780cfae3a7930f4ecd8`.
+  `dcd3318fd0ac7e6cbd6e09107f22fe6998801acef6e44c5c33e10c6b039a2a48`
+  (2,138 bytes).
+  On 2026-10-24 the page was cut to the scope and limits of the research
+  bundle the owner withdrew on 2026-09-27: the download, the verification
+  steps and the description of the bundle's parts were removed, and the
+  campaign names were replaced by general words. No case query or expected
+  document changed, and all 24 cases give the same result. Outputs recorded
+  between 2026-09-27 and then report the SHA256
+  `cd1f614ac1c5d92600d38e758ebb0386897050024995d780cfae3a7930f4ecd8`
+  (5,674 bytes).
   On 2026-09-27 one limitation sentence (line 76) was reworded to general
   terms; no case query or expected document changed. Outputs recorded before
   then report the earlier SHA256
