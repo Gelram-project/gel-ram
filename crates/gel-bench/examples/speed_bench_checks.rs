@@ -131,4 +131,30 @@ mod tests {
             ]
         );
     }
+
+    /// The excluded keys are pinned: adding, removing or reordering a key
+    /// must be a visible change to this test, not only to review.
+    #[test]
+    fn timing_keys_are_exactly_the_timing_and_scheduling_ones() {
+        assert_eq!(
+            super::TIMING_KEYS,
+            [
+                "elapsed_ns",
+                "query_p50_ns",
+                "query_p95_ns",
+                "query_p99_ns",
+                "query_p99_is_max",
+                "query_ns_execution_order",
+                "orbs_per_sec",
+                "effective_gib_per_sec",
+                "observed_cpu_start",
+                "observed_cpu_end",
+            ]
+        );
+        let checked = "bank_crc64_ecma=6f038d6db5b8839f\nexecution_reports=t1:1\nexecution_reported_scans=5\nquality_flips_1=target:4,hit:4\nnull_top1_index=0\nnull_top1_score=512\ntop1_exact=PASS\nthread_scan_exact=PASS\n";
+        assert_eq!(
+            super::stable_lines(checked),
+            checked.lines().collect::<Vec<_>>()
+        );
+    }
 }
