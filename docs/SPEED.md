@@ -133,6 +133,7 @@ also a control for changes outside its own crate.
 | `crates/gel-source/examples/speed_source_load.rs` | gel-source | 7 add, load and backup cases | `collection_load` | yes |
 | `crates/gel-source/examples/speed_sha256.rs` | gel-source | `large`, `small` | none inside; the A/A' comparison | yes |
 | `crates/gel-source/examples/speed_search.rs` | gel-source | 3 document cases, `collection_64x1mib` | none inside; the A/A' comparison | yes |
+| `crates/gel-source/examples/speed_line_ascii.rs` | gel-source | 6 document cases dominated by the line end search and ASCII check, 512 KiB and 16 MiB | `polish_16mib`, `over_limit_16mib` | yes |
 | `crates/gel-store/examples/speed_store_io.rs` | gel-store | `write_`, `verify_`, `open_<size>mib` | none inside; the A/A' comparison | yes |
 | `crates/gel-structural/examples/speed_structural_encode.rs` | gel-structural | 6 residual and prototype cases | `apply_near`, `popcount_near` | yes |
 | `crates/gel-history/examples/speed_history.rs` | gel-history | 10 history and sparse residual cases | `to_bytes_walk_k3_100k`; nearly `from_bytes_unrelated_20k` | yes |

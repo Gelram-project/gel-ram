@@ -150,12 +150,13 @@ fn scan(text: &str, start: usize, end: usize, query: &Query, buffer: &mut LineBu
     let mut part = Partial::default();
     let mut line_start = start;
     while line_start < end {
-        let line_end = crate::line_end::find(bytes, line_start, end);
+        // One pass finds the line end and whether the line is ASCII.
+        let (line_end, ascii) = crate::line_end::find_ascii(bytes, line_start, end);
         let line = &bytes[line_start..line_end];
         if line.len() > MAX_LINE {
             part.skipped_long_lines += 1;
         } else if !line.is_empty() {
-            let found = if line.is_ascii() {
+            let found = if ascii {
                 query.ascii_possible && ascii_line_matches(line, &query.words)
             } else {
                 normalize_line_into(
@@ -581,6 +582,32 @@ mod tests {
         );
         assert_eq!(found.matching_lines, 3);
         assert_eq!(found.skipped_long_lines, 0);
+    }
+    /// The ASCII check of a line sees every byte before its end and none
+    /// after it: a non-ASCII byte at each position of an eight-byte word,
+    /// before and after every line end, with queries made of the ASCII pieces
+    /// of non-ASCII words, which match only on the ASCII path.
+    #[test]
+    fn ascii_check_stops_at_the_line_end() {
+        let phrases = ["za", "x za", "za x", "zaż", "caf", "cafe", "łódź", "x"];
+        for pad in 0..20 {
+            for tail in ["", "ż", "é", "\u{301}"] {
+                for sep in ["\n", "\r\n", "\r", "\n\n"] {
+                    for after in ["", "ł", "x", "żx"] {
+                        let text = format!("{} za{tail}{sep}{after}za cafe{tail}", "x".repeat(pad));
+                        for phrase in phrases {
+                            let expected = search_reference(&text, phrase);
+                            assert_eq!(search(&text, phrase), expected, "{text:?} {phrase:?}");
+                            let query = Query::parse(phrase).unwrap();
+                            for plan in [Plan::forced(2, 1), Plan::forced(3, 5)] {
+                                let got = search_texts(&[&text], &query, Some(plan));
+                                assert_eq!(Ok(&got[0]), expected.as_ref(), "{text:?} {phrase:?}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     #[test]
     fn sigma_variants_match_without_rewriting_source() {
