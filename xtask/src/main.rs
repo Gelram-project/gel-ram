@@ -279,7 +279,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "docs/images/q8-four-views-en.png",
-        "061a5e99f1fa5ba8380a5b8ed6c60d672904b2b8069382971a60c0192a95c104",
+        "5cfb026dbed930041b42fb2c692d0e58994bd08b80ec497f3fef254cb1aa20a1",
     ),
     (
         "docs/images/evidence-limits-en.png",
