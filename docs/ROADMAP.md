@@ -75,6 +75,13 @@ many paths are faster with the same output bits.
 | Faster paths with the same output bits, one grammar for timing examples and identity programs, and a Rust A/B tool with an A/A control | 876247f (PR #82) | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md), [A/B tool](SPEED-AB.md) | Medians on one machine; paths that hash every byte are still slower than v0.6.1 (table below) |
 | CI reliability: control kills of the history crash series drawn from inside the control run; 40 minutes for portable-build | e1f2c9c (PR #83) | `cargo run -p xtask -- history-crash-series 5 20261010 5` | [reproduce](REPRODUCE.md) | Neither failure was in the code under test |
 
+The PR #74 row describes the tables as merged then. Since then the NFC tables
+are generated with the same command from UCD 16.0.0, the Unicode version of the
+Rust 1.85.0 standard library, which lowercases and splits words, so the search
+path follows one Unicode version; the 15.1.0 files stay for tests that every
+15.1.0 result and property is kept ([document readout](DOCUMENT-READOUT.md#unicode-normalization)).
+Matching can now differ from v0.6.1 only on characters assigned in Unicode 17.0.
+
 ### Measured against v0.6.1
 
 `xtask speed-ab` with A and A2 both at the v0.6.1 tag and B at the library code

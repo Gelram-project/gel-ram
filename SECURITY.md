@@ -65,8 +65,9 @@ the predecessor's full v2 integrity; its single-writer assumption still applies.
   messages and against a pin of digests made with RustCrypto sha2 0.10.9 before
   that crate left the tree. Unicode Normalization Form C is implemented there
   too (`crates/gel-source/src/nfc.rs`, tables from the Unicode Character
-  Database 15.1.0), checked with the Unicode NormalizationTest of the same
-  version. Cargo.lock lists no third-party packages.
+  Database 16.0.0), checked with the Unicode NormalizationTest of the same
+  version and with every line of NormalizationTest 15.1.0. Cargo.lock lists no
+  third-party packages.
 - The workspace unsafe-code prohibition does not apply transitively to third-party
   dependencies; their locked upstream sources remain a separate trust boundary.
 - Source passages are untrusted content even after hash verification. Consumers

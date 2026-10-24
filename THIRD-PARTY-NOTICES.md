@@ -23,18 +23,22 @@ For any package added later, the authoritative license is the license informatio
 
 ## 2a. Unicode data (Unicode License v3)
 
-Copyright (c) 1991-2023 Unicode, Inc. Unicode Normalization Form C in
+Copyright (c) 1991-2024 Unicode, Inc. Unicode Normalization Form C in
 `crates/gel-source` uses tables derived from the Unicode Character Database
-15.1.0 (the data files UnicodeData.txt and DerivedNormalizationProps.txt):
+16.0.0 (the data files UnicodeData.txt and DerivedNormalizationProps.txt):
 
 - `crates/gel-source/src/nfc_tables.rs` is a modified form of those data files:
   the canonical combining classes, canonical decomposition mappings and primary
   composites were transformed into Rust tables by `cargo run -p xtask -- ucd-tables`.
   The file header names the UCD version and the SHA-256 of both inputs. These
   tables are compiled into the release binaries.
-- `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the two input
-  files in `crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode
+- `crates/gel-source/tests/data/NormalizationTest-16.0.0.txt` and the two input
+  files in `crates/gel-source/tests/data/ucd-16.0.0` are unmodified Unicode
   data files, used only by tests (the second to regenerate the tables).
+- `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the two files
+  in `crates/gel-source/tests/data/ucd-15.1.0`, of the version the tables
+  followed before, are unmodified Unicode data files, used only by tests that
+  check that the 16.0.0 tables keep every 15.1.0 result and property.
 
 Both are used under the Unicode License v3, whose full text is
 [crates/gel-source/LICENSE-UNICODE.txt](crates/gel-source/LICENSE-UNICODE.txt)

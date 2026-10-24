@@ -8,8 +8,9 @@
 //! composite with it. Each character's combining class is looked up once, so
 //! the cost grows as n log n in the length of a run of combining marks. The
 //! tables in `nfc_tables.rs` come from the Unicode Character Database; the
-//! tests run the Unicode NormalizationTest of the same version and compare
-//! every code point with an earlier implementation.
+//! tests run the Unicode NormalizationTest of the same version and of the
+//! previous version the tables followed (15.1.0), and compare every code point
+//! with an earlier implementation.
 //!
 //! The properties of a code point (combining class, NFC_Quick_Check not Yes,
 //! second code point of a primary composite, canonical decomposition) are
@@ -417,10 +418,10 @@ mod tests {
     }
 
     #[test]
-    fn the_tables_are_unicode_15_1_with_their_published_counts() {
-        assert_eq!(crate::nfc_tables::UNICODE_VERSION, (15, 1, 0));
-        assert_eq!(CANONICAL_DECOMPOSITION.len(), 2061);
-        assert_eq!(PRIMARY_COMPOSITE.len(), 941);
+    fn the_tables_are_unicode_16_0_with_their_published_counts() {
+        assert_eq!(crate::nfc_tables::UNICODE_VERSION, (16, 0, 0));
+        assert_eq!(CANONICAL_DECOMPOSITION.len(), 2081);
+        assert_eq!(PRIMARY_COMPOSITE.len(), 961);
         assert!(CANONICAL_DECOMPOSITION.windows(2).all(|w| w[0].0 < w[1].0));
         assert!(PRIMARY_COMPOSITE
             .windows(2)
@@ -428,7 +429,8 @@ mod tests {
         assert!(CANONICAL_COMBINING_CLASS
             .windows(2)
             .all(|w| w[0].1 < w[1].0 && w[0].0 <= w[0].1));
-        assert_eq!(NFC_QUICK_CHECK.len(), 115);
+        assert_eq!(CANONICAL_COMBINING_CLASS.len(), 393);
+        assert_eq!(NFC_QUICK_CHECK.len(), 122);
         assert!(NFC_QUICK_CHECK
             .windows(2)
             .all(|w| w[0].1 < w[1].0 && w[0].0 <= w[0].1));
@@ -439,7 +441,7 @@ mod tests {
                 .map(|r| r.1 - r.0 + 1)
                 .sum()
         };
-        assert_eq!((count(false), count(true)), (1120, 111));
+        assert_eq!((count(false), count(true)), (1120, 132));
         // The shortcuts the code takes: nothing below U+0300 has a class or a
         // Quick_Check other than Yes, and the Hangul jamo are starters.
         assert_eq!(CANONICAL_COMBINING_CLASS[0].0, FIRST_NOT_TRIVIAL);
@@ -477,10 +479,32 @@ mod tests {
         assert_eq!(LOOKUPS.with(std::cell::Cell::get), before);
     }
 
-    #[test]
-    fn the_unicode_normalization_test_of_the_same_version_passes() {
-        let text = include_str!("../tests/data/NormalizationTest-15.1.0.txt");
+    const NORMALIZATION_TEST_16_0: &str =
+        include_str!("../tests/data/NormalizationTest-16.0.0.txt");
+    const NORMALIZATION_TEST_15_1: &str =
+        include_str!("../tests/data/NormalizationTest-15.1.0.txt");
+
+    /// One Unicode NormalizationTest file run through `nfc`: every data line
+    /// must satisfy c2 = NFC(c1) = NFC(c2) = NFC(c3) and c4 = NFC(c4) =
+    /// NFC(c5). Returns the version of its header, its number of data lines,
+    /// its distinct data lines and the characters it lists in part 1.
+    fn run_normalization_test(
+        text: &str,
+    ) -> (
+        String,
+        usize,
+        std::collections::BTreeSet<String>,
+        std::collections::BTreeSet<char>,
+    ) {
+        let version = text
+            .lines()
+            .next()
+            .and_then(|l| l.strip_prefix("# NormalizationTest-"))
+            .and_then(|l| l.strip_suffix(".txt"))
+            .expect("NormalizationTest header")
+            .to_owned();
         let mut listed = std::collections::BTreeSet::new();
+        let mut distinct = std::collections::BTreeSet::new();
         let (mut lines, mut part1) = (0, false);
         for line in text.lines() {
             if let Some(part) = line.strip_prefix("@Part") {
@@ -500,14 +524,37 @@ mod tests {
             if part1 {
                 listed.insert(c[0].chars().next().unwrap());
             }
+            distinct.insert(c.join(";"));
             lines += 1;
         }
-        assert_eq!(lines, 19_074);
+        (version, lines, distinct, listed)
+    }
+
+    #[test]
+    fn the_unicode_normalization_test_of_the_same_version_passes() {
+        let (version, lines, distinct, listed) = run_normalization_test(NORMALIZATION_TEST_16_0);
+        let (major, minor, update) = crate::nfc_tables::UNICODE_VERSION;
+        assert_eq!(version, format!("{major}.{minor}.{update}"));
+        assert_eq!((lines, distinct.len()), (19_965, 19_952));
         for c in (0..=0x10FFFFu32).filter_map(char::from_u32) {
             if !listed.contains(&c) {
                 assert_eq!(nfc(&c.to_string()), c.to_string(), "{:04X}", c as u32);
             }
         }
+    }
+
+    /// The results of Unicode 15.1.0, which the 15.1.0 tables gave on every
+    /// line before this crate moved to 16.0.0, are kept: every data line of
+    /// NormalizationTest 15.1.0 passes with the current tables, and each of
+    /// them is also a line of NormalizationTest 16.0.0, unchanged.
+    #[test]
+    fn every_line_of_normalization_test_15_1_gives_the_same_result_with_the_current_tables() {
+        let (version, lines, old, _) = run_normalization_test(NORMALIZATION_TEST_15_1);
+        assert_eq!(version, "15.1.0");
+        assert_eq!((lines, old.len()), (19_074, 19_069));
+        let (_, _, new, _) = run_normalization_test(NORMALIZATION_TEST_16_0);
+        assert_eq!(old.difference(&new).count(), 0);
+        assert_eq!(new.difference(&old).count(), 883);
     }
 
     /// The SHA-256 of NFC of every scalar value, each followed by the byte 0xFF,
@@ -533,8 +580,35 @@ mod tests {
         );
     }
 
-    /// Every code point with a combining class or a canonical decomposition,
-    /// the Hangul jamo and three syllables, and a to z.
+    /// Whether `c` is assigned in Unicode 15.1.0, read from its UnicodeData.txt.
+    fn assigned_in_15_1() -> impl Fn(char) -> bool {
+        let mut ranges: Vec<(u32, u32)> = Vec::new();
+        let mut first = None;
+        for line in include_str!("../tests/data/ucd-15.1.0/UnicodeData.txt").lines() {
+            let mut f = line.split(';');
+            let cp = u32::from_str_radix(f.next().unwrap(), 16).unwrap();
+            let name = f.next().unwrap();
+            if name.ends_with(", First>") {
+                first = Some(cp);
+            } else if name.ends_with(", Last>") {
+                ranges.push((first.take().unwrap(), cp));
+            } else {
+                ranges.push((cp, cp));
+            }
+        }
+        assert!(ranges.windows(2).all(|w| w[0].1 < w[1].0));
+        move |c| {
+            let c = c as u32;
+            let at = ranges.partition_point(|r| r.1 < c);
+            ranges.get(at).is_some_and(|r| r.0 <= c)
+        }
+    }
+
+    /// Every code point assigned in Unicode 15.1.0 with a combining class or a
+    /// canonical decomposition, the Hangul jamo and three syllables, and a to
+    /// z. Code points assigned later are left out so that the pins below,
+    /// computed with earlier implementations on this pool, still apply;
+    /// NormalizationTest 16.0.0 and every scalar value cover them.
     fn pool() -> Vec<char> {
         let mut pool = std::collections::BTreeSet::new();
         for &(first, last, _) in CANONICAL_COMBINING_CLASS {
@@ -553,7 +627,12 @@ mod tests {
                 .chain([0xAC00, 0xAC01, 0xD7A3])
                 .chain(u32::from(b'a')..=u32::from(b'z')),
         );
-        let pool: Vec<char> = pool.into_iter().filter_map(char::from_u32).collect();
+        let assigned = assigned_in_15_1();
+        let pool: Vec<char> = pool
+            .into_iter()
+            .filter_map(char::from_u32)
+            .filter(|&c| assigned(c))
+            .collect();
         assert_eq!(pool.len(), 4291);
         pool
     }
@@ -604,17 +683,21 @@ mod tests {
 
     /// Five long lines (the worst and best order of 2047 combining marks, Polish
     /// text, decomposed and composed Hangul) and 10,000 seeded strings of 1 to 64
-    /// characters, two thirds of them combining marks. The pin was computed on
+    /// characters, two thirds of them combining marks assigned in Unicode
+    /// 15.1.0, the rest from the pool. The pin was computed on
     /// 2026-10-17 with ICU4X icu_normalizer 2.3.0, an independent
     /// implementation.
     #[test]
     fn adversarial_strings_give_the_same_bytes_as_an_independent_implementation() {
         let pool = pool();
+        let assigned = assigned_in_15_1();
         let marks: Vec<char> = CANONICAL_COMBINING_CLASS
             .iter()
             .flat_map(|&(a, b, _)| a..=b)
             .filter_map(char::from_u32)
+            .filter(|&c| assigned(c))
             .collect();
+        assert_eq!(marks.len(), 922);
         let mut next = splitmix(18);
         let mut strings = vec![
             format!("a{}{}", "\u{0301}".repeat(1023), "\u{0316}".repeat(1024)),
