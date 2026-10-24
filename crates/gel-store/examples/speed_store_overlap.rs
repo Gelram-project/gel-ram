@@ -21,7 +21,18 @@
 //!   file of 2,097,152 records;
 //! - `verify_corrupt_256mib`: `verify_file` on a copy of that file whose last
 //!   payload byte is changed (the result is `Err(CorruptStore)`);
-//! - `crc_256mib`: `gel_core::crc64_ecma` on the 256 MiB payload bytes.
+//! - `crc_256mib`: `gel_core::crc64_ecma` on the 256 MiB payload bytes;
+//! - `verify_64mib_tail7`, `open_64mib_tail7`: `verify_file` and
+//!   `open_verified_with_limits` on a v2 file of 524,295 records, whose last
+//!   read block holds 7 records;
+//! - `verify_16mib_tail1`: `verify_file` on a v2 file of 131,073 records,
+//!   whose last read block holds 1 record.
+//!
+//! After the runs, the 131,073-record file is also opened once, untimed, and
+//! its records compared (`open_16mib_tail1` in the check digest): its record
+//! vector of just over 16 MiB, once freed, would raise the allocator's
+//! dynamic mmap threshold and so change the conditions of the cases that
+//! follow it. The expected records of every file stay allocated until the end.
 //!
 //! The first line is `SPEED_SETUP example=speed_store_overlap runs=<R> ...`,
 //! the last `SPEED_CHECK sha256=<hex>`: the SHA-256 of every case name and
@@ -46,6 +57,8 @@ const SEED: u64 = 0x5eed_2026_1024_0002;
 const TINY_RECORDS: usize = 8192;
 const BLOCK_RECORDS: usize = 65_536;
 const MID_RECORDS: usize = 524_288;
+const TAIL_MID_RECORDS: usize = MID_RECORDS + 7;
+const TAIL_SMALL_RECORDS: usize = 2 * BLOCK_RECORDS + 1;
 
 fn next(state: &mut u64) -> u64 {
     *state ^= *state << 13;
@@ -187,6 +200,9 @@ fn main() {
     let tiny = orbs(TINY_RECORDS, &mut state);
     let mid = orbs(MID_RECORDS, &mut state);
     let legacy = orbs(MID_RECORDS, &mut state);
+    // Kept as stores: their records are the expected ones, never copied.
+    let tail_mid = RamStore::from_orbs(orbs(TAIL_MID_RECORDS, &mut state), Generation(36));
+    let tail_small = RamStore::from_orbs(orbs(TAIL_SMALL_RECORDS, &mut state), Generation(37));
 
     let mut files = Files { paths: Vec::new() };
     let big_path = files.path(&dir, "big");
@@ -195,12 +211,20 @@ fn main() {
     let tiny_path = files.path(&dir, "tiny");
     let mid_path = files.path(&dir, "mid");
     let v1_path = files.path(&dir, "v1");
+    let tail_mid_path = files.path(&dir, "tail-mid");
+    let tail_small_path = files.path(&dir, "tail-small");
 
     write_v2(&files, &big_path, &big, 31, "write_big");
     write_v2(&files, &block_path, &block, 32, "write_block");
     write_v2(&files, &tiny_path, &tiny, 33, "write_tiny");
     write_v2(&files, &mid_path, &mid, 34, "write_mid");
     drop(mid);
+    if tail_mid.write_atomic(&tail_mid_path).is_err() {
+        files.fail("write_tail_mid");
+    }
+    if tail_small.write_atomic(&tail_small_path).is_err() {
+        files.fail("write_tail_small");
+    }
     let v1_bytes = v1_file_bytes(&legacy, 35);
     drop(legacy);
     if fs::write(&v1_path, &v1_bytes).is_err() {
@@ -229,6 +253,8 @@ fn main() {
             ("block_records", BLOCK_RECORDS.to_string()),
             ("tiny_records", TINY_RECORDS.to_string()),
             ("mid_records", MID_RECORDS.to_string()),
+            ("tail_mid_records", TAIL_MID_RECORDS.to_string()),
+            ("tail_small_records", TAIL_SMALL_RECORDS.to_string()),
         ],
     );
 
@@ -253,6 +279,25 @@ fn main() {
         let ns = start.elapsed().as_nanos();
         speed::line("crc_256mib", run, ns);
         record(&mut hash, "crc_256mib", &format!("{crc:016x}"));
+
+        let mut session = Session {
+            files: &files,
+            hash: &mut hash,
+            run,
+        };
+        session.verify("verify_64mib_tail7", &tail_mid_path, false);
+        session.open("open_64mib_tail7", &tail_mid_path, tail_mid.orbs());
+        session.verify("verify_16mib_tail1", &tail_small_path, false);
+    }
+
+    // Untimed, after every timed case (see the module documentation).
+    match RamStore::open_verified_with_limits(&tail_small_path, OpenLimits::UNLIMITED) {
+        Ok(loaded) if loaded.orbs() == tail_small.orbs() => record(
+            &mut hash,
+            "open_16mib_tail1",
+            &format!("{:?}|{:?}", loaded.header(), loaded.source_format()),
+        ),
+        _ => files.fail("open_16mib_tail1"),
     }
 
     hash.update(&big_bytes);
@@ -263,6 +308,8 @@ fn main() {
         ("read_tiny", &tiny_path),
         ("read_mid", &mid_path),
         ("read_v1", &v1_path),
+        ("read_tail_mid", &tail_mid_path),
+        ("read_tail_small", &tail_small_path),
     ] {
         match fs::read(path) {
             Ok(bytes) => hash.update(&bytes),

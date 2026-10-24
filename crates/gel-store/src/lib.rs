@@ -255,7 +255,7 @@ impl RamStore {
 ///
 /// Runs exactly the header, limit and file-length checks of
 /// [`RamStore::open_verified_with_limits`], then streams the payload through
-/// two fixed buffers of at most 8 MiB each to check the payload digest. No payload
+/// one fixed buffer of at most 16 MiB (two 8 MiB halves) to check the payload digest. No payload
 /// is retained: memory use is constant regardless of file size. The report keeps
 /// the actual on-disk source format separate from the protected v2 header a
 /// loaded store would carry.
@@ -281,10 +281,10 @@ const READ_BLOCK_RECORDS: usize = 65_536;
 
 /// Reads `count` records in blocks of [`READ_BLOCK_RECORDS`], feeds every
 /// block to the digests in order and, when `orbs` is given, appends the
-/// decoded records. Two buffers of at most 8 MiB each are used: while the
-/// calling thread reads block k+1 into one, scoped threads digest (and
-/// decode) block k from the other. A payload of one block or less is read
-/// with one buffer and no extra thread.
+/// decoded records. One 16 MiB buffer is used as two halves of 8 MiB: while
+/// the calling thread reads block k+1 into one half, scoped threads digest
+/// (and decode) block k from the other. A payload of one block or less is
+/// read with one buffer of at most 8 MiB and no extra thread.
 ///
 /// The digests are streaming, so the result does not depend on the block
 /// size or on which thread fed a block. A failed read returns the error
@@ -322,9 +322,12 @@ fn stream_payload_with<R: Read>(
         return Ok(());
     }
     let block_bytes = READ_BLOCK_RECORDS * ORB_BYTES;
-    let mut current = vec![0u8; block_bytes];
-    let mut next = vec![0u8; block_bytes];
-    reader.read_exact(&mut current)?;
+    // One allocation for both halves: two separate 8 MiB allocations freed
+    // together can push the heap past the allocator's trim threshold, so
+    // that the next buffer, even a small file's, touches fresh pages again.
+    let mut buffer = vec![0u8; 2 * block_bytes];
+    let (mut current, mut next) = buffer.split_at_mut(block_bytes);
+    reader.read_exact(current)?;
     let mut records = READ_BLOCK_RECORDS;
     let mut remaining = count - records;
     while remaining > 0 {
@@ -2053,6 +2056,90 @@ mod tests {
             4 + 5 + 5
         } else {
             (7 + 8 + 5 * 10) * 8
+        };
+        assert_eq!(cases, expected);
+    }
+
+    #[test]
+    fn ragged_last_block_matches_the_previous_reader() {
+        let r = READ_BLOCK_RECORDS;
+        let block = r * ORB_BYTES;
+        let modes = [(false, false), (false, true), (true, false), (true, true)];
+        let mut cases = 0usize;
+        // A last block of one record after two whole blocks, and of seven
+        // records after eight.
+        for (index, (count, tail)) in [(2 * r + 1, 1usize), (8 * r + 7, 7)]
+            .into_iter()
+            .enumerate()
+        {
+            let records = seeded_orbs(count, 19_000 + index as u64);
+            let payload: Vec<u8> = records.iter().flat_map(|orb| orb.to_le_bytes()).collect();
+            let len = payload.len();
+            assert_eq!(len % block, tail * ORB_BYTES);
+            let mut corrupt_last = payload.clone();
+            corrupt_last[len - 1] ^= 0x04;
+            let last_block = len - tail * ORB_BYTES;
+            // (stream, end, fault): whole streams, a fault on the edge of
+            // the last block and an early end inside it.
+            let trials: [(&[u8], usize, Option<std::io::ErrorKind>); 4] = [
+                (&payload, len, None),
+                (&corrupt_last, len, None),
+                (&payload, last_block, Some(std::io::ErrorKind::Other)),
+                (&payload, len - 1, None),
+            ];
+            for (trial, &(stream, end, fault)) in trials.iter().enumerate() {
+                // Debug builds (unoptimized digests) take every other trial
+                // of the longer count, one mode per trial, a different one
+                // for each trial.
+                if cfg!(debug_assertions) && index == 1 && trial % 2 != 0 {
+                    continue;
+                }
+                for (mode, &(legacy, load)) in modes.iter().enumerate() {
+                    if cfg!(debug_assertions) && mode != (trial + index) % modes.len() {
+                        continue;
+                    }
+                    let script = Script {
+                        records: &records,
+                        payload: &payload,
+                        stream,
+                        end,
+                        fault,
+                        legacy,
+                        load,
+                        seed: splitmix64(0x7a11_0000 + ((index as u64) << 8) + trial as u64),
+                    };
+                    let outcomes: Vec<_> = (0..READERS.len())
+                        .map(|which| scripted_read(which, &script))
+                        .collect();
+                    for (which, outcome) in outcomes.iter().enumerate().skip(1) {
+                        assert!(
+                            *outcome == outcomes[0],
+                            "{} differs: {count} records, trial {trial}, legacy {legacy}, \
+                             load {load}",
+                            READERS[which]
+                        );
+                    }
+                    let outcome = &outcomes[0];
+                    match trial {
+                        0 => {
+                            assert_eq!(outcome.0, "Ok(())");
+                            assert!(outcome.1.starts_with("Ok("), "{}", outcome.1);
+                            assert!(!load || outcome.2 == records);
+                        }
+                        1 => {
+                            assert_eq!(outcome.0, "Ok(())");
+                            assert_eq!(outcome.1, "Err(CorruptStore)");
+                        }
+                        _ => assert!(outcome.0.starts_with("Err(Io("), "{}", outcome.0),
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        let expected = if cfg!(debug_assertions) {
+            4 + 2
+        } else {
+            2 * 4 * 4
         };
         assert_eq!(cases, expected);
     }
