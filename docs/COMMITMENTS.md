@@ -65,6 +65,11 @@ the tests in `xtask/src/commitment.rs` compare with such a manifest.
 |---|---|---|---|---|
 | 2026-10-20 | Private source tree 1: Rust sources only (`*.rs`, `Cargo.toml`, `Cargo.lock`) | 1,436 | 4,054 | `69c10bd58f5173e11a30b1f27072566d1b4dcbeee504882d7359fd0f1f92fefd` |
 | 2026-10-21 | Private data set 1 | 6 | 44 | `ab5e8b71d8f6d8202065714ceb6c0aa8837dd7fbfb805ef33dcb5022f75da92f` |
+| 2026-10-24 | Private data set 2 | 6 | 47 | `3bf2af2f93dc1528ed01ff4ab375e8df3cc1b0b3812777d29232d76f1589a970` |
+| 2026-10-24 | Private data set 3 | 2 | 15 | `cdba706fcb71b9b62139ce294f2e01a7af4532ed678e665c8b8db07bc9982816` |
+| 2026-10-24 | Private data set 4 | 0 | 8 | `1188571bed980ab487cbd35fecd91c88605810ddeb3eb5f25c0209b3a3a1957f` |
+| 2026-10-24 | Private data set 5 | 70 | 519 | `9c0ed62b02aedc6f2a201043a505b20f9135ae4bf2e5b092014b7f688fbb4b2e` |
+| 2026-10-24 | Sealed sample 1 | 4 | 129 | `8260b56c0e4f0933d8d4bce4f3950b5b90536d30a99557c9e6d2740455b59c96` |
 
 The draft of PR #81 first listed `26b84cb5…deafe9` for Private source tree 1 in
 an earlier manifest format that did not record directories. That digest is
