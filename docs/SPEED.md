@@ -122,6 +122,7 @@ also a control for changes outside its own crate.
 | `crates/gel-core/examples/speed_crc_large.rs` | gel-core | 6 cases over 256 MiB, 4 MiB and 3 MiB | `blocks1mib_256mib`, `records128_256mib`, `oneshot_3mib` | yes |
 | `crates/gel-core/examples/speed_crc_threads_paired.rs` | gel-core | `crc_256mib_ref`, `_t2`, `_t4`, `_t8`, `_auto` | the `_ref` side | no |
 | `crates/gel-live-lab/examples/speed_witness.rs` | gel-live-lab | `witness_scores` | none inside; the A/A' comparison | yes |
+| `crates/gel-live-lab/examples/speed_literal.rs` | gel-live-lab | 6 `literal::read` cases, 1 B to 64 MiB, one refused | nearly `literal_refused`, `literal_small` | yes |
 | `crates/gel-phase-quad/examples/speed_q8_read.rs` | gel-phase-quad | 4 single-query scan and read cases | the whole example for multi-query and mask changes | yes |
 | `crates/gel-phase-quad/examples/speed_q8_queries.rs` | gel-phase-quad | `queries16_t1`, `queries16_t<T>` | the whole example (single-query scan only) | yes |
 | `crates/gel-phase-quad/examples/speed_q8_queries_paired.rs` | gel-phase-quad | `queries16_t<W>_ref`, `queries16_t<W>_many` | the `_ref` sides | no |

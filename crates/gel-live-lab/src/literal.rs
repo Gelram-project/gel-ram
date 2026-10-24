@@ -7,8 +7,12 @@
 //! every view is shown only where it holds the bytes of the identity preview.
 use crate::safe;
 use gel_phase_quad::{fixture, grid::DIM, Reader, Record};
-use gel_source::{digest, hex, read_regular, write_file_new, Hash, MAX_TEXT};
-use std::path::Path;
+use gel_source::{digest, hex, read_regular, write_file_new, BundleError, Hash, MAX_TEXT};
+use std::{
+    fs::{self, File},
+    io::{ErrorKind, Read},
+    path::Path,
+};
 
 /// The reader seed of the synthetic panel, so both panels share one view profile.
 pub const SEED: u64 = 510051;
@@ -16,6 +20,8 @@ pub const SEED: u64 = 510051;
 pub const SAVED_BYTES: usize = 12 + fixture::RECORD_BYTES;
 const PREVIEW: usize = 56;
 const HEX: usize = 16;
+/// The largest buffer used to count the bytes after the first `DIM`.
+const CHUNK: usize = 64 * 1024;
 
 /// One record holding the first bytes of one file: active exactly on positions
 /// below `placed`, zero beyond. Built only from bytes or from an accepted file.
@@ -41,25 +47,88 @@ impl Literal {
 /// Value j is byte j and is active for j below the placed length; the rest is
 /// inactive and zero. An empty input is refused.
 pub fn from_bytes(bytes: &[u8]) -> Result<Literal, String> {
-    if bytes.is_empty() {
+    place(&bytes[..bytes.len().min(DIM)], bytes.len())
+}
+
+/// The record of a file of `total` bytes whose first bytes are `head`
+/// (`min(total, DIM)` of them).
+fn place(head: &[u8], total: usize) -> Result<Literal, String> {
+    if total == 0 {
         return Err("empty file: no bytes to place".into());
     }
-    let placed = bytes.len().min(DIM);
+    let placed = head.len();
     let record = Record::new(
-        std::array::from_fn(|j| if j < placed { bytes[j] } else { 0 }),
+        std::array::from_fn(|j| if j < placed { head[j] } else { 0 }),
         &std::array::from_fn(|j| j < placed),
     );
     Ok(Literal {
         record,
         placed,
-        total: Some(bytes.len()),
+        total: Some(total),
     })
 }
 
 /// Read one regular file (no symlink, at most `MAX_TEXT` bytes) and place it.
+/// Only the first `DIM` bytes are kept; the rest is counted, not stored.
 pub fn read(path: &Path) -> Result<Literal, String> {
-    let bytes = read_regular(path, MAX_TEXT).map_err(|e| format!("Read refused: {e:?}"))?;
-    from_bytes(&bytes)
+    read_within(path, MAX_TEXT)
+}
+
+fn read_within(path: &Path, limit: usize) -> Result<Literal, String> {
+    let (head, total) = read_head(path, limit).map_err(|e| format!("Read refused: {e:?}"))?;
+    place(&head[..total.min(DIM)], total)
+}
+
+/// One `read` call, retried when interrupted as `read_to_end` does.
+fn read_some(reader: &mut impl Read, buf: &mut [u8]) -> Result<usize, BundleError> {
+    loop {
+        match reader.read(buf) {
+            Err(e) if e.kind() == ErrorKind::Interrupted => {}
+            other => return Ok(other?),
+        }
+    }
+}
+
+/// The first `DIM` bytes and the length of one file, with the checks, the order
+/// and the errors of `read_regular(path, limit)`, but holding at most one
+/// `CHUNK` buffer instead of the whole file.
+fn read_head(path: &Path, limit: usize) -> Result<([u8; DIM], usize), BundleError> {
+    let metadata = fs::symlink_metadata(path)?;
+    if !metadata.is_file() {
+        return Err(BundleError::NotRegular);
+    }
+    if metadata.len() > limit as u64 {
+        return Err(gel_source::Error::Limit.into());
+    }
+    let file = File::open(path)?;
+    if !file.metadata()?.is_file() {
+        return Err(BundleError::NotRegular);
+    }
+    let mut reader = file.take((limit as u64).saturating_add(1));
+    let mut head = [0u8; DIM];
+    let mut total = 0;
+    while total < DIM {
+        match read_some(&mut reader, &mut head[total..])? {
+            0 => break,
+            n => total += n,
+        }
+    }
+    if total == DIM {
+        // A buffer for the announced rest (the length is only a hint), at least
+        // `DIM` so a file reporting length 0 is not read in tiny steps.
+        let rest = metadata.len().saturating_sub(DIM as u64).saturating_add(1);
+        let mut chunk = vec![0u8; rest.clamp(DIM as u64, CHUNK as u64) as usize];
+        loop {
+            match read_some(&mut reader, &mut chunk)? {
+                0 => break,
+                n => total += n,
+            }
+        }
+    }
+    if total > limit {
+        return Err(gel_source::Error::Limit.into());
+    }
+    Ok((head, total))
 }
 
 /// The four public views of one record and whether each restores it exactly.
@@ -411,6 +480,148 @@ mod tests {
     #[test]
     fn empty_input_is_refused() {
         assert!(from_bytes(b"").is_err());
+    }
+
+    /// The earlier `read`, unchanged except for the limit parameter.
+    fn read_reference(path: &Path, limit: usize) -> Result<Literal, String> {
+        let bytes = read_regular(path, limit).map_err(|e| format!("Read refused: {e:?}"))?;
+        from_bytes(&bytes)
+    }
+
+    /// Everything a caller can observe: the record bytes, placed and total, or
+    /// the error text.
+    fn seen(lit: Result<Literal, String>) -> Result<(Vec<u8>, usize, Option<usize>), String> {
+        lit.map(|l| (encode(l.record()).unwrap(), l.placed(), l.total()))
+    }
+
+    struct Dir(std::path::PathBuf);
+    impl Dir {
+        fn new(name: &str) -> Self {
+            let path = std::env::temp_dir().join(format!(
+                "gel-live-lab-literal-{}-{name}",
+                std::process::id()
+            ));
+            let _ = fs::remove_dir_all(&path);
+            fs::create_dir(&path).unwrap();
+            Self(path)
+        }
+    }
+    impl Drop for Dir {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    /// Varied nonzero bytes, so a lost or zero-filled value is visible.
+    fn content(len: usize) -> Vec<u8> {
+        (0..len).map(|i| (i * 131 % 251) as u8 + 1).collect()
+    }
+
+    #[test]
+    fn streamed_read_equals_the_whole_file_read_at_every_boundary() {
+        let dir = Dir::new("boundaries");
+        let lengths = [
+            0,
+            1,
+            2,
+            DIM - 1,
+            DIM,
+            DIM + 1,
+            2 * DIM - 1,
+            CHUNK - 1,
+            CHUNK,
+            CHUNK + 1,
+            CHUNK + DIM - 1,
+            CHUNK + DIM,
+            CHUNK + DIM + 1,
+            3 * CHUNK + 7,
+        ];
+        let mut compared = 0;
+        for len in lengths {
+            let path = dir.0.join(format!("f{len}"));
+            fs::write(&path, content(len)).unwrap();
+            let mut limits = vec![0, 1, DIM - 1, DIM, DIM + 1, len, len + 1, MAX_TEXT];
+            limits.extend(len.checked_sub(1));
+            for limit in limits {
+                assert_eq!(
+                    seen(read_within(&path, limit)),
+                    seen(read_reference(&path, limit)),
+                    "len {len} limit {limit}"
+                );
+                compared += 1;
+            }
+            assert_eq!(seen(read(&path)), seen(read_reference(&path, MAX_TEXT)));
+            if len > 0 {
+                assert_eq!(read(&path).unwrap().total(), Some(len), "{len}");
+            }
+        }
+        assert_eq!(compared, lengths.len() * 8 + lengths.len() - 1);
+    }
+
+    #[test]
+    fn streamed_read_refuses_as_the_whole_file_read() {
+        let dir = Dir::new("refused");
+        let over = dir.0.join("over");
+        File::create(&over)
+            .unwrap()
+            .set_len(MAX_TEXT as u64 + 1)
+            .unwrap();
+        let paths = [over, dir.0.join("missing"), dir.0.clone()];
+        for path in &paths {
+            let new = seen(read(path));
+            assert!(new.is_err(), "{path:?}");
+            assert_eq!(new, seen(read_reference(path, MAX_TEXT)), "{path:?}");
+        }
+        assert_eq!(
+            seen(read(&paths[0])),
+            Err("Read refused: Data(Limit)".to_string())
+        );
+        assert_eq!(
+            seen(read(&paths[2])),
+            Err("Read refused: NotRegular".to_string())
+        );
+        let empty = dir.0.join("empty");
+        fs::write(&empty, b"").unwrap();
+        assert_eq!(
+            seen(read(&empty)),
+            Err("empty file: no bytes to place".to_string())
+        );
+        #[cfg(unix)]
+        {
+            let target = dir.0.join("target");
+            fs::write(&target, b"GEL").unwrap();
+            let link = dir.0.join("link");
+            std::os::unix::fs::symlink(&target, &link).unwrap();
+            assert_eq!(
+                seen(read(&link)),
+                Err("Read refused: NotRegular".to_string())
+            );
+            assert_eq!(seen(read(&link)), seen(read_reference(&link, MAX_TEXT)));
+        }
+    }
+
+    /// A file whose metadata reports length 0 is bounded by the bytes read.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn a_file_reporting_length_zero_is_bounded_by_its_bytes() {
+        let path = Path::new("/proc/self/cmdline");
+        let Ok(bytes) = fs::read(path) else {
+            return;
+        };
+        assert_eq!(fs::symlink_metadata(path).unwrap().len(), 0);
+        assert!(bytes.len() > 1);
+        for limit in [0, 1, bytes.len() - 1, bytes.len(), MAX_TEXT] {
+            assert_eq!(
+                seen(read_within(path, limit)),
+                seen(read_reference(path, limit)),
+                "limit {limit}"
+            );
+        }
+        assert_eq!(
+            seen(read_within(path, 1)),
+            Err("Read refused: Data(Limit)".to_string())
+        );
+        assert_eq!(read(path).unwrap().total(), Some(bytes.len()));
     }
 
     #[test]
