@@ -154,6 +154,7 @@ also a control for changes outside its own crate.
 | `crates/gel-source/examples/speed_catalog_parse.rs` | gel-source | 6 catalog writer, reader and lookup cases over 50,000 records | `quote_k50`, `find_title_k5` | yes |
 | `crates/gel-source/examples/speed_tree_gates.rs` | gel-source | 5 whole-tree `xtask` gates as child processes, optionally `recorder_lint` | `ci_policy` | yes, after building `xtask` |
 | `crates/gel-store/examples/speed_store_crc.rs` | gel-store | 8 build, verify, open and CRC cases, 1 MiB to 256 MiB | `build_1mib`, `verify_1mib`, `open_1mib` | yes |
+| `crates/gel-store/examples/speed_store_overlap.rs` | gel-store | 9 verify, open and CRC cases, 1 MiB to 256 MiB, one refused | `verify_1mib`, `verify_8mib`, `open_8mib`, `crc_256mib` | yes |
 | `crates/gel-reader/examples/speed_top1_many.rs` | gel-reader | `single16_<n>_t1`, `many16_<n>_t1`, `single16_<n>_t<T>`, `many16_<n>_t<T>` over two banks | the `single16_*` cases | yes |
 | `crates/gel-reader/examples/speed_top1_many_paired.rs` | gel-reader | `queries16_<n>_t1_ref`, `_many`, `queries16_<n>_t<T>_ref`, `_many` over two banks | the `_ref` sides | yes |
 | `crates/gel-source/examples/speed_read_regular.rs` | gel-source | `read_regular` of 64 MiB, 16 MiB, 1 MiB and 4 KiB files, `bundle_load_64mib`, `refused_64mib_plus1`, `digest_64mib` | `refused_64mib_plus1`, `digest_64mib` | yes |
