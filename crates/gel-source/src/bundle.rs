@@ -102,12 +102,11 @@ fn encode(value: &EncodedCorpus) -> Vec<u8> {
     bytes
 }
 
-fn decode(bytes: &[u8], trusted_pin: Hash) -> Result<Corpus, Error> {
-    decode_with(
-        bytes,
-        trusted_pin,
-        crate::load_digests::threads_for(bytes.len()),
-    )
+/// The corpus of the bundle `bytes`, which it takes over: the text of the
+/// corpus is the tail of this buffer, not a copy of it.
+fn decode(bytes: Vec<u8>, trusted_pin: Hash) -> Result<Corpus, Error> {
+    let threads = crate::load_digests::threads_for(bytes.len());
+    decode_with(bytes, trusted_pin, threads)
 }
 
 /// [`decode`] on at most `threads` threads; the result is the same for every
@@ -115,37 +114,41 @@ fn decode(bytes: &[u8], trusted_pin: Hash) -> Result<Corpus, Error> {
 /// while the header is checked and the catalog and text are hashed on scoped
 /// threads, which stop early when the pin does not match. The checks are then
 /// applied in the one-thread order: size, pin, header.
-fn decode_with(bytes: &[u8], trusted_pin: Hash, threads: usize) -> Result<Corpus, Error> {
+fn decode_with(bytes: Vec<u8>, trusted_pin: Hash, threads: usize) -> Result<Corpus, Error> {
     if bytes.len() > HEADER + MAX_CATALOG + MAX_TEXT {
         return Err(Error::Limit);
     }
     if threads <= 1 {
-        if digest(bytes) != trusted_pin {
+        if digest(&bytes) != trusted_pin {
             return Err(Error::Integrity);
         }
-        let (catalog, text) = split(bytes)?;
+        let catalog = split(&bytes)?;
         // The independently supplied full-file pin already authenticates these bytes,
         // and these pins are their own digests, so comparing them again cannot fail.
-        return Corpus::load_verified(catalog, text, digest(catalog), digest(text));
+        let catalog_pin = digest(&bytes[catalog.clone()]);
+        let text_pin = digest(&bytes[catalog.end..]);
+        return Corpus::load_verified_owned(bytes, catalog, catalog_pin, text_pin);
     }
-    let parts = crate::load_digests::pinned(bytes, trusted_pin, threads, |left, stop| {
-        split(bytes).map(|(catalog, text)| {
-            let hashes = crate::load_digests::digest_parts(&[catalog, text], left, stop);
-            (catalog, text, hashes[0], hashes[1])
+    let parts = crate::load_digests::pinned(&bytes, trusted_pin, threads, |left, stop| {
+        split(&bytes).map(|catalog| {
+            let parts = [&bytes[catalog.clone()], &bytes[catalog.end..]];
+            let hashes = crate::load_digests::digest_parts(&parts, left, stop);
+            (catalog, hashes[0], hashes[1])
         })
     });
     let Some(parts) = parts else {
         return Err(Error::Integrity);
     };
-    let (catalog, text, catalog_pin, text_pin) = parts?;
+    let (catalog, catalog_pin, text_pin) = parts?;
     // As above: the full-file pin authenticates these bytes, and these pins are
     // their own digests.
-    Corpus::load_verified(catalog, text, catalog_pin, text_pin)
+    Corpus::load_verified_owned(bytes, catalog, catalog_pin, text_pin)
 }
 
-/// The catalog and text of a bundle whose size is already within the limit,
-/// with the header errors in the one-thread order. Borrows; copies nothing.
-fn split(bytes: &[u8]) -> Result<(&[u8], &[u8]), Error> {
+/// The byte range of the catalog of a bundle whose size is already within the
+/// limit; the text is the rest of the bundle after it. The header errors come
+/// in the one-thread order.
+fn split(bytes: &[u8]) -> Result<std::ops::Range<usize>, Error> {
     if bytes.len() < HEADER || &bytes[..8] != MAGIC {
         return Err(Error::Format);
     }
@@ -158,13 +161,13 @@ fn split(bytes: &[u8]) -> Result<(&[u8], &[u8]), Error> {
     if split + text_len as usize != bytes.len() {
         return Err(Error::Format);
     }
-    Ok((&bytes[HEADER..split], &bytes[split..]))
+    Ok(HEADER..split)
 }
 
 /// Requires an independently trusted full-file pin, not one read from this file.
 pub fn load_bundle(path: &Path, trusted_pin: Hash) -> Result<Corpus, BundleError> {
     Ok(decode(
-        &read_regular(path, HEADER + MAX_CATALOG + MAX_TEXT)?,
+        read_regular(path, HEADER + MAX_CATALOG + MAX_TEXT)?,
         trusted_pin,
     )?)
 }
@@ -306,6 +309,10 @@ fn publish_pinned_with(
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// [`super::decode`] of a copy of `bytes`, which keeps the tests on slices.
+    fn decode(bytes: &[u8], trusted_pin: Hash) -> Result<Corpus, Error> {
+        super::decode(bytes.to_vec(), trusted_pin)
+    }
     fn sample() -> EncodedCorpus {
         import_text("Zażółć 🦀\r\nCafe\u{301}".as_bytes(), "Notes").unwrap()
     }
@@ -539,7 +546,7 @@ mod tests {
     }
     fn same_as_reference(bytes: &[u8], pin: Hash, threads: usize) {
         match (
-            decode_with(bytes, pin, threads),
+            decode_with(bytes.to_vec(), pin, threads),
             decode_reference(bytes, pin),
         ) {
             (Ok(a), Ok(b)) => same_corpus(&a, &b),

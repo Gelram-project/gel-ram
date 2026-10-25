@@ -19,6 +19,10 @@ pub mod collection;
 #[allow(dead_code)]
 mod collection_eager_reference;
 pub mod context;
+/// The catalog loader before bundles handed their buffer over to the corpus,
+/// unchanged. Tests compare the current loaders with it.
+#[cfg(test)]
+mod corpus_load_reference;
 pub mod document;
 mod load_digests;
 pub use builder::{CorpusBuilder, EncodedCorpus};
@@ -275,6 +279,14 @@ fn distinct_ranges(checks: &mut Vec<QuoteCheck>) -> bool {
     });
     consistent
 }
+/// Whether `start..end` lies inside `text` with both ends on UTF-8 character
+/// boundaries: for a `text` that is valid UTF-8, exactly whether
+/// `str::get(start..end)` is `Some`. A boundary is the end of the text or a
+/// byte that does not continue a character, as in `str::is_char_boundary`.
+fn passage_in(text: &[u8], start: usize, end: usize) -> bool {
+    let boundary = |at: usize| at == text.len() || text.get(at).is_some_and(|&b| b & 0xc0 != 0x80);
+    start <= end && end <= text.len() && boundary(start) && boundary(end)
+}
 /// Whether every passage digest equals the stated one. `threads` None picks
 /// the count from the total passage length; the answer is the same for every
 /// count. Workers claim blocks in row order and stop after any mismatch; the
@@ -391,6 +403,47 @@ impl Corpus {
         }
         let raw = std::str::from_utf8(catalog).map_err(|_| Error::Format)?;
         let text = std::str::from_utf8(text).map_err(|_| Error::Format)?;
+        let rows = Self::check_rows(raw, text.as_bytes(), threads)?;
+        Ok(Self::assemble(catalog_pin, text_pin, text.to_owned(), rows))
+    }
+    /// [`Corpus::load_verified`] of `bytes[catalog]` and of the text
+    /// `bytes[catalog.end..]`, for a caller that hands over the buffer holding
+    /// both, such as a whole bundle file: the text stays in that buffer, moved
+    /// to its front, instead of being copied, so the peak memory of a load is
+    /// the buffer alone. The result, errors included, is the same.
+    /// `catalog.start <= catalog.end <= bytes.len()`.
+    pub(crate) fn load_verified_owned(
+        mut bytes: Vec<u8>,
+        catalog: std::ops::Range<usize>,
+        catalog_pin: Hash,
+        text_pin: Hash,
+    ) -> Result<Self, Error> {
+        let text_start = catalog.end;
+        if catalog.len() > MAX_CATALOG || bytes.len() - text_start > MAX_TEXT {
+            return Err(Error::Limit);
+        }
+        let raw = std::str::from_utf8(&bytes[catalog]).map_err(|_| Error::Format)?;
+        // The text is checked as UTF-8 once, when it becomes the `String`
+        // below, so here after the rows rather than before them. Both checks
+        // give Format, and the rows are checked on bytes: whenever the text is
+        // not UTF-8, any error of the rows is replaced by Format, the error
+        // `load_verified` reports first for such a text.
+        let rows = match Self::check_rows(raw, &bytes[text_start..], None) {
+            Ok(rows) => rows,
+            Err(e) if std::str::from_utf8(&bytes[text_start..]).is_ok() => return Err(e),
+            Err(_) => return Err(Error::Format),
+        };
+        bytes.drain(..text_start);
+        // Shrinking returns the catalog's share of the buffer, so the corpus
+        // holds as much memory as one with a copied text.
+        bytes.shrink_to_fit();
+        let text = String::from_utf8(bytes).map_err(|_| Error::Format)?;
+        Ok(Self::assemble(catalog_pin, text_pin, text, rows))
+    }
+    /// The checks of a load after the size and UTF-8 checks, on the catalog
+    /// `raw` and the text as bytes, with their errors in the load's order. For
+    /// a text that is valid UTF-8 the answer is that of the load.
+    fn check_rows(raw: &str, text: &[u8], threads: Option<usize>) -> Result<Rows, Error> {
         if !raw.starts_with("GELCORPUS082\n") || !raw.ends_with('\n') || raw.contains('\r') {
             return Err(Error::Format);
         }
@@ -401,28 +454,31 @@ impl Corpus {
         // once; whether all recorded digests match does not depend on that.
         let mut checks = Vec::new();
         let parsed = Self::parse_rows(raw, text, &mut checks);
-        if !distinct_ranges(&mut checks) || !quotes_match(text.as_bytes(), &checks, threads) {
+        if !distinct_ranges(&mut checks) || !quotes_match(text, &checks, threads) {
             return Err(Error::Integrity);
         }
         let (records, titles) = parsed?;
         if records.is_empty() {
             return Err(Error::Format);
         }
+        Ok((records, titles))
+    }
+    fn assemble(catalog_pin: Hash, text_pin: Hash, text: String, (records, titles): Rows) -> Self {
         let mut binding = b"GELCORPUS082\0".to_vec();
         binding.extend_from_slice(&catalog_pin);
         binding.extend_from_slice(&text_pin);
-        Ok(Self {
+        Self {
             root: digest(&binding),
             text_hash: text_pin,
-            text: text.to_owned(),
+            text,
             records,
             titles,
-        })
+        }
     }
     /// The catalog rows after the header, up to the first error other than a
     /// passage digest mismatch; `checks` receives `(start, end, digest)` of
     /// every passage whose digest the row order reaches before that error.
-    fn parse_rows(raw: &str, text: &str, checks: &mut Vec<QuoteCheck>) -> Result<Rows, Error> {
+    fn parse_rows(raw: &str, text: &[u8], checks: &mut Vec<QuoteCheck>) -> Result<Rows, Error> {
         let mut records = BTreeMap::new();
         let mut titles: BTreeMap<String, Vec<u64>> = BTreeMap::new();
         let mut nodes = BTreeMap::new();
@@ -451,7 +507,9 @@ impl Corpus {
             }
             let end = start.checked_add(len).ok_or(Error::Limit)?;
             // The passage must lie on character boundaries inside the text.
-            text.get(start..end).ok_or(Error::Format)?;
+            if !passage_in(text, start, end) {
+                return Err(Error::Format);
+            }
             if f[5].len() != 64 {
                 return Err(Error::Format);
             }
@@ -799,5 +857,174 @@ mod distinct_range_tests {
             &row(&text, 5, 0, 8, None),
         );
         assert_eq!(load(&early, &text).err(), Some(Error::Duplicate));
+    }
+}
+
+#[cfg(test)]
+mod owned_load_tests {
+    use super::corpus_load_reference::load_unhashed_reference;
+    use super::*;
+    /// SplitMix64: a fixed sequence for every seed.
+    struct Rng(u64);
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 = self.0.wrapping_add(0x9e37_79b9_7f4a_7c15);
+            let mut z = self.0;
+            z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
+            z ^ (z >> 31)
+        }
+        fn below(&mut self, n: usize) -> usize {
+            (self.next() % n as u64) as usize
+        }
+    }
+    const PIECES: [&str; 8] = ["a", "ł", "€", "🦀", "\r\n", " ", "Zażółć", "\n"];
+    fn mixed(rng: &mut Rng, pieces: usize) -> String {
+        (0..pieces)
+            .map(|_| PIECES[rng.below(PIECES.len())])
+            .collect()
+    }
+    fn random_corpus(rng: &mut Rng) -> EncodedCorpus {
+        let mut b = CorpusBuilder::new();
+        for node in 0..1 + rng.below(4) as u64 {
+            for role in 0..1 + rng.below(5) as u64 {
+                let pieces = 1 + rng.below(40);
+                let quote = mixed(rng, pieces);
+                let title = ["Notes", "notes ", "Łódź", "Other"][rng.below(4)];
+                let _ = b.push(
+                    Address { node, role },
+                    node,
+                    title,
+                    &format!("Part {role}"),
+                    &quote,
+                );
+            }
+        }
+        b.finish().unwrap()
+    }
+    /// The earlier loader, the borrowed reader and the reader that takes the
+    /// buffer over, on one catalog and text with pins equal to their digests:
+    /// all three must give the same `Debug` form, errors included. Returns
+    /// the result of the last one.
+    fn same(catalog: &[u8], text: &[u8]) -> Result<(), Error> {
+        let (catalog_pin, text_pin) = (digest(catalog), digest(text));
+        let old = load_unhashed_reference(catalog, text, catalog_pin, text_pin, None);
+        let old = format!("{old:?}");
+        let borrowed = Corpus::load_verified(catalog, text, catalog_pin, text_pin);
+        assert_eq!(format!("{borrowed:?}"), old, "borrowed reader");
+        // A header before the catalog that is not UTF-8, as in a bundle.
+        let mut buffer = vec![0xff_u8; 24];
+        buffer.extend_from_slice(catalog);
+        buffer.extend_from_slice(text);
+        let range = 24..24 + catalog.len();
+        let owned = Corpus::load_verified_owned(buffer, range, catalog_pin, text_pin);
+        assert_eq!(format!("{owned:?}"), old, "owned reader");
+        owned.map(|_| ())
+    }
+    /// `passage_in` on bytes is `str::get` on the same valid UTF-8.
+    #[test]
+    fn passage_in_equals_str_get_on_valid_utf8() {
+        let mut rng = Rng(0x0b5e_55ed_2026_1025);
+        let mut texts = vec![String::new(), "a".into(), "ł🦀a€\r\nż".into()];
+        for _ in 0..20 {
+            let pieces = rng.below(30);
+            texts.push(mixed(&mut rng, pieces));
+        }
+        for text in &texts {
+            for start in 0..text.len() + 3 {
+                for end in 0..text.len() + 3 {
+                    assert_eq!(
+                        passage_in(text.as_bytes(), start, end),
+                        text.get(start..end).is_some(),
+                        "{text:?} {start}..{end}"
+                    );
+                }
+            }
+        }
+    }
+    /// Seeded corpora, every byte of the text changed (often into broken
+    /// UTF-8), changed catalog bytes, and changed catalogs over a broken
+    /// text: the three readers agree on every input.
+    #[test]
+    fn owned_and_borrowed_readers_equal_the_earlier_loader_on_seeded_changes() {
+        let mut seen = std::collections::BTreeMap::new();
+        let mut tally = |r: Result<(), Error>| *seen.entry(format!("{r:?}")).or_insert(0usize) += 1;
+        for seed in 0..48u64 {
+            let mut rng = Rng(seed);
+            let e = random_corpus(&mut rng);
+            let (catalog, text) = (e.catalog_bytes().to_vec(), e.text_bytes().to_vec());
+            assert_eq!(same(&catalog, &text), Ok(()));
+            for n in 0..text.len() {
+                let mut t = text.clone();
+                t[n] ^= [1u8, 0x40, 0x80, 0xff][n % 4];
+                tally(same(&catalog, &t));
+            }
+            let mut broken = text.clone();
+            broken.push(0xff);
+            for n in 0..catalog.len() {
+                let mut c = catalog.clone();
+                c[n] ^= [1u8, 0x20, 0x80, 0x0f][n % 4];
+                tally(same(&c, &text));
+                tally(same(&c, &broken));
+            }
+            tally(same(&catalog, &broken));
+            tally(same(&catalog, &[]));
+            tally(same(&[], &text));
+        }
+        // Limit is reached by the explicit cases of the next test.
+        for kind in ["Ok(())", "Err(Format)", "Err(Integrity)", "Err(Duplicate)"] {
+            assert!(seen.get(kind).is_some_and(|&n| n > 0), "{kind}: {seen:?}");
+        }
+    }
+    fn row(node: u64, role: u64, start: usize, len: usize, hash: &Hash) -> String {
+        format!(
+            "{node}\t{role}\t0\t{start}\t{len}\t{}\t{}\t{}\n",
+            hex(hash),
+            hex(b"Notes"),
+            hex(format!("Part {role}").as_bytes())
+        )
+    }
+    /// Over a valid text every catalog below fails with its own row error;
+    /// over the same text with a byte that breaks UTF-8, inside a passage or
+    /// after every passage, all three readers report Format.
+    #[test]
+    fn a_text_that_is_not_utf8_reports_format_before_every_row_error() {
+        let text = "Zażółć gęślą jaźń 🦀 notes".as_bytes().to_vec();
+        let good = digest(&text[0..6]);
+        let head = "GELCORPUS082\n".to_string();
+        let ok = head.clone() + &row(1, 1, 0, 6, &good);
+        let many: String = (0..=MAX_RECORDS as u64)
+            .map(|role| row(1, role, 0, 6, &good))
+            .collect();
+        let cases = [
+            (ok.clone() + &row(1, 2, 0, 0, &good), Error::Limit),
+            (
+                ok.clone() + &row(1, 2, 0, MAX_PASSAGE + 1, &good),
+                Error::Limit,
+            ),
+            (ok.clone() + &row(1, 1, 0, 6, &good), Error::Duplicate),
+            (ok.clone() + &row(1, 2, 0, 6, &[7; 32]), Error::Integrity),
+            (ok.clone() + &row(1, 2, 1, 6, &good), Error::Format),
+            (ok.clone() + &row(1, 2, text.len(), 1, &good), Error::Format),
+            (ok.clone() + "1\t2\n", Error::Format),
+            (head.clone(), Error::Format),
+            (head + &many, Error::Limit),
+        ];
+        let mut inside = text.clone();
+        inside[2] = 0x80;
+        let mut after = text.clone();
+        after.push(0xc3);
+        for (catalog, error) in &cases {
+            assert_eq!(
+                same(catalog.as_bytes(), &text),
+                Err(*error),
+                "{catalog:.80}"
+            );
+            for broken in [&inside, &after] {
+                assert_eq!(same(catalog.as_bytes(), broken), Err(Error::Format));
+            }
+        }
+        assert_eq!(same(ok.as_bytes(), &text), Ok(()));
+        assert_eq!(same(ok.as_bytes(), &after), Err(Error::Format));
     }
 }
