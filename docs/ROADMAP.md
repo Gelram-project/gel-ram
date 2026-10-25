@@ -78,7 +78,7 @@ many paths are faster with the same output bits.
 | The collection-review fixture cut to the scope and limits of a withdrawn bundle; embedded tool metadata removed from one image | bb3da1b (PR #86) | `cargo run -p gel-source --example collection_review` | [fixture provenance](../crates/gel-source/fixtures/collection-review/PROVENANCE.md) | All 24 cases give the same result |
 | Second speed package with the same output bits: file reads reserve from the file length, the ASCII check runs in the line-end pass, `--literal` reads in bounded memory, gel-bench checks in one pass, store reads overlap with digest and decode, repeated passage ranges hashed once | 90bd091 (PR #87) | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md) | Measured with an A/A control on a loaded machine; the ratios are directions, not figures to quote |
 | NFC tables from UCD 16.0.0, the Unicode version of the Rust 1.85.0 standard library, so the search path follows one Unicode version | 3cf1be5 (PR #88) | `cargo run -p xtask -- ucd-tables` | [document readout](DOCUMENT-READOUT.md#unicode-normalization) | Matching can differ from v0.6.1 only on characters assigned in Unicode 17.0 |
-| Third package with the same outputs: a bundle is loaded without a second copy of its text, the store reader digests each block on the calling thread again and decodes it beside the digest on a second thread, and the gel-bench check example pins every output key | this change | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md) | Measured on a quiet machine with an A/A control: the slower v1 store check after PR #87 is back to its earlier speed; peak memory of a 64 MiB bundle load measured lower |
+| Third package with the same outputs: a bundle is loaded without a second copy of its text, the store reader digests each block on the calling thread again and decodes it beside the digest on a second thread, and the gel-bench check example pins every output key | this change | `cargo run -p xtask -- speed-ab ...` | [quiet-machine records](speed-results/2026-10-25-quiet-machine/README.md) | Measured on a quiet machine with an A/A control: the slower v1 store check after PR #87 is back to its earlier speed; peak memory of a 64 MiB bundle load measured lower |
 
 The PR #74 row describes the tables as merged then. Since then the NFC tables
 are generated with the same command from UCD 16.0.0, the Unicode version of the
@@ -123,6 +123,34 @@ v0.6.1 hashed with the sha2 crate, which uses the processor's SHA instructions.
 The workspace now has no third-party package and no `unsafe`, so SHA-256 is a
 portable implementation; the cases in bold are slower than v0.6.1 for that
 reason, and the slowest ones are those that hash the whole input.
+
+### Measured on a quiet machine
+
+`xtask speed-ab` on 2026-10-25 with no other measurement running: package 2
+with A and A2 at `bb3da1b` (before PR #87) and B at `90bd091` (after it);
+package 3 with A and A2 at `bb3da1b` and B at this change, and for the bundle
+load at `3cf1be5`. 3 rounds of 9 runs with the order rotated, medians, not
+pinned to cores. The manifests, summaries and every run's output are in
+[speed-results/2026-10-25-quiet-machine](speed-results/2026-10-25-quiet-machine/README.md);
+every example printed the same output digest in A, A2 and B.
+
+| Area (example) | Speed-up | A/A |
+|---|---|---|
+| Package 2: `--literal` (`speed_literal`) | 1.28 to 9.47; refused input 0.99 | 0.99 to 1.02 |
+| Package 2: repeated passage ranges (`speed_quote_ranges`) | repeats 8.8 to 24.0; distinct ranges 0.97 to 1.00 | 0.99 to 1.05 |
+| Package 2: file reads (`speed_read_regular`) | reads 1.03 to 1.85; bundle load, digest and refused input 0.98 to 1.00 | 0.89 to 1.24 |
+| Package 2: ASCII check (`speed_line_ascii`) | 1.02 to 1.61 | 0.97 to 1.03 |
+| Package 2: gel-bench checks (`speed_bench_checks`) | 1.23 to 1.60; smallest input 0.99 | 0.97 to 1.03 |
+| Package 2: store open and verify (`speed_store_overlap`) | open 1.11 to 1.16; verify from 16 MiB 1.16 to 1.62; **v1 verify 0.64**; verify of 1 and 8 MiB 0.93 and 0.97 | 0.99 to 1.01 |
+| Package 3: store open and verify (`speed_store_overlap`) | open 1.13 to 1.18; verify from 16 MiB 1.20 to 1.65; v1 verify 1.08; verify of 1 and 8 MiB 0.99 and 1.00 | 0.99 to 1.01 |
+| Package 3: bundle load (`speed_bundle_memory`) | 1.06; peak resident memory 134 072 KiB to 68 612 KiB (median of three runs) | 0.99 |
+
+After PR #87 the store check digested each block on a new thread. A v1 file has
+one sequential digest, so its check ran at the speed of the core that thread
+was given: this machine has 8 logical CPUs at up to 5.16 GHz and 16 at up to
+3.29 GHz, and 3.29 / 5.16 = 0.64. In package 3 the calling thread digests again,
+the read of the next block runs on a thread, and on a load the decode runs on a
+second one.
 
 ## v0.6.1
 

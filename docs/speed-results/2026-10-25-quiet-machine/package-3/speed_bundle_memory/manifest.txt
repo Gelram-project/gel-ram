@@ -1,0 +1,17 @@
+FORMAT=GEL_SPEED_AB_1
+mode=ab
+package=gel-source example=speed_bundle_memory rounds=3
+example_args=["3"]
+with_bins=[]
+before_run=["a hook that waits until other measurements on the machine have finished (not published)"]
+source_sha256=2683fb00e12e3fd36c36e8d102246d77854d47b5859dfc64fab708282c772fc1  crates/gel-source/examples/speed_bundle_memory.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a root=A revision=3cf1be53b75c0eabb35ce46fcb9ca9a7acc5076b working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 root=A2 revision=3cf1be53b75c0eabb35ce46fcb9ca9a7acc5076b working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b root=B revision=local-integration-tree (equal to this change in crates/gel-source/src, crates/gel-source/examples/speed_bundle_memory.rs, tools/ and Cargo.lock) working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a A/crates/gel-source/examples/speed_bundle_memory.rs
+placed tree=a2 A2/crates/gel-source/examples/speed_bundle_memory.rs
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+restored=yes

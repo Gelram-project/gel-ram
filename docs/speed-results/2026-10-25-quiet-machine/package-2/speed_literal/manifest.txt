@@ -1,0 +1,17 @@
+FORMAT=GEL_SPEED_AB_1
+mode=ab
+package=gel-live-lab example=speed_literal rounds=3
+example_args=["9"]
+with_bins=[]
+before_run=["a hook that waits until other measurements on the machine have finished (not published)"]
+source_sha256=325d098fdaee5890702da397f9a7a41cfae5ee00e286319059b8e5662bc8c7c8  crates/gel-live-lab/examples/speed_literal.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a root=A revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 root=A2 revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b root=B revision=90bd09191df53f5222f4ba62ca62ba33b4eee8af working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a A/crates/gel-live-lab/examples/speed_literal.rs
+placed tree=a2 A2/crates/gel-live-lab/examples/speed_literal.rs
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+restored=yes

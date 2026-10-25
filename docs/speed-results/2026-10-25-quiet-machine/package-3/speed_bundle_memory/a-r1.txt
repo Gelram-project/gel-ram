@@ -1,0 +1,5 @@
+SPEED_SETUP example=speed_bundle_memory runs=3 text_bytes=67108864 passages=2048 catalog_bytes=248251 bundle_bytes=67357139 available_parallelism=24
+SPEED name=bundle_load_64mib run=0 ns=213013683
+SPEED name=bundle_load_64mib run=1 ns=168409872
+SPEED name=bundle_load_64mib run=2 ns=204801765
+SPEED_CHECK sha256=8980123fae8adf8c27d16d67f86b32c0a31afedfb197371af2626eca0b5859eb

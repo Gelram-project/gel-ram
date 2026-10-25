@@ -1,0 +1,10 @@
+SPEED_AB case=literal_16mib a_ns=32945047 a2_ns=33213081 b_ns=3479566 aa=1.008 gain=9.468 runs=27
+SPEED_AB case=literal_1mib a_ns=2850021 a2_ns=2821958 b_ns=1139444 aa=0.990 gain=2.501 runs=27
+SPEED_AB case=literal_64kib a_ns=5013281 a2_ns=4972375 b_ns=3455230 aa=0.992 gain=1.451 runs=27
+SPEED_AB case=literal_64mib a_ns=60473564 a2_ns=61389607 b_ns=7435318 aa=1.015 gain=8.133 runs=27
+SPEED_AB case=literal_refused a_ns=619535 a2_ns=623282 b_ns=625738 aa=1.006 gain=0.990 runs=27
+SPEED_AB case=literal_small a_ns=2763769 a2_ns=2769390 b_ns=2163030 aa=1.002 gain=1.278 runs=27
+SPEED_AB_CHECK tree=a sha256=e887704f19db33f3ec897ea472402f38511b41dd15d6354501b4c3f52a5c27df
+SPEED_AB_CHECK tree=a2 sha256=e887704f19db33f3ec897ea472402f38511b41dd15d6354501b4c3f52a5c27df
+SPEED_AB_CHECK tree=b sha256=e887704f19db33f3ec897ea472402f38511b41dd15d6354501b4c3f52a5c27df
+SPEED_AB_VERDICT=SAME_OUTPUT
