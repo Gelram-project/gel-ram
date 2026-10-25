@@ -904,8 +904,9 @@ mod owned_load_tests {
     }
     /// The earlier loader, the borrowed reader and the reader that takes the
     /// buffer over, on one catalog and text with pins equal to their digests:
-    /// all three must give the same `Debug` form, errors included. Returns
-    /// the result of the last one.
+    /// all three must give the same `Debug` form, errors included, and a
+    /// corpus from the last one holds no spare capacity. Returns the result
+    /// of the last one.
     fn same(catalog: &[u8], text: &[u8]) -> Result<(), Error> {
         let (catalog_pin, text_pin) = (digest(catalog), digest(text));
         let old = load_unhashed_reference(catalog, text, catalog_pin, text_pin, None);
@@ -919,6 +920,11 @@ mod owned_load_tests {
         let range = 24..24 + catalog.len();
         let owned = Corpus::load_verified_owned(buffer, range, catalog_pin, text_pin);
         assert_eq!(format!("{owned:?}"), old, "owned reader");
+        // The corpus keeps no share of the buffer beyond its text, as one
+        // with a copied text.
+        if let Ok(corpus) = &owned {
+            assert_eq!(corpus.text.capacity(), corpus.text.len(), "owned capacity");
+        }
         owned.map(|_| ())
     }
     /// `passage_in` on bytes is `str::get` on the same valid UTF-8.
