@@ -366,6 +366,19 @@ null_top1_score=565
         );
         assert_eq!(super::check_bytes("case", ""), b"case\n");
         assert_eq!(super::check_bytes("", "observed_cpu_end=1"), b"\n");
+        // A timing key is dropped only when it is the whole key, not a prefix.
+        assert_eq!(
+            super::check_bytes(
+                "c",
+                "elapsed_ns_extra=1\nxelapsed_ns=2\nelapsed_ns =3\nelapsed_ns=4\n",
+            ),
+            b"c\nelapsed_ns_extra=1\nxelapsed_ns=2\nelapsed_ns =3\n"
+        );
+        // Leading and trailing white space is kept as printed.
+        assert_eq!(
+            super::check_bytes("c", " a=1 \n\tb=2\t\n"),
+            b"c\n a=1 \n\tb=2\t\n"
+        );
         let mut expected = b"gel_bench_8192_t1\n".to_vec();
         expected.extend_from_slice(STABLE_OUTPUT.as_bytes());
         assert_eq!(
@@ -455,6 +468,8 @@ null_top1_score=565
             "no_equals_line\nelapsed_ns\n",
             "key=\n=value\n==\n",
             "elapsed_ns_extra=1\nxelapsed_ns=2\nelapsed_ns =3\n",
+            "elapsed_ns_extra=1\nxelapsed_ns=2\nelapsed_ns =3\nelapsed_ns=4\n",
+            " a=1 \n\tb=2\t\n",
             "orbs_per_sec=1=2\nquery_p99_is_max\n",
             "bad \u{fffd} byte=1\n",
         ];
