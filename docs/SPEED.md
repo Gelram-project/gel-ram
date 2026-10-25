@@ -160,6 +160,7 @@ also a control for changes outside its own crate.
 | `crates/gel-reader/examples/speed_top1_many_paired.rs` | gel-reader | `queries16_<n>_t1_ref`, `_many`, `queries16_<n>_t<T>_ref`, `_many` over two banks | the `_ref` sides | yes |
 | `crates/gel-source/examples/speed_read_regular.rs` | gel-source | `read_regular` of 64 MiB, 16 MiB, 1 MiB and 4 KiB files, `bundle_load_64mib`, `refused_64mib_plus1`, `digest_64mib` | `refused_64mib_plus1`, `digest_64mib` | yes |
 | `crates/gel-source/examples/speed_bundle_memory.rs` | gel-source | `bundle_load_64mib` after a setup that needs less memory than one load, so the peak resident memory of the process (`/usr/bin/time -v`) is that of the load | none inside; the A/A' comparison | yes |
+| `crates/gel-source/examples/speed_collection_memory.rs` | gel-source | `collection_load_64mib` of 64 documents of 1 MiB after a setup that needs less memory than one load, so the peak resident memory of the process (`/usr/bin/time -v`) is that of the load | none inside; the A/A' comparison | yes |
 
 Identity programs:
 
