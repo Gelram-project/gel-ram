@@ -359,14 +359,16 @@ fn decode_block(block: &[u8], orbs: &mut Vec<Orb1024>) -> Result<(), GelError> {
 }
 
 /// Feeds `block` to `check` and decodes it into `orbs` (when given) while
-/// `work` runs, then returns what `work` returned. The digest and the
-/// decoding are the processor work and stay on the calling thread; with
-/// `threads`, `work` (the read of the next block) runs on a scoped thread.
-/// A thread started for the processor work can land on a slower core of a
-/// processor with cores of different speeds, which made the sequential v1
-/// checksum slower than on the calling thread. When the thread cannot start,
-/// or without `threads`, `work` runs on the calling thread first, then the
-/// digest and the decoding, the order of a loop without threads. The digest
+/// `work` runs, then returns what `work` returned. The digest stays on the
+/// calling thread; with `threads`, `work` (the read of the next block) runs
+/// on a scoped thread and, when there is something to decode, the decoding
+/// on a second one. A thread started for the digest can land on a slower
+/// core of a processor with cores of different speeds, which made the
+/// sequential v1 checksum slower than on the calling thread; decoding copies
+/// bytes into words and depends little on the core. When a thread cannot
+/// start, or without `threads`, its task runs on the calling thread: `work`
+/// first, then the digest and the decoding, the order of a loop without
+/// threads. The digest
 /// and decoding of `block` are complete when this returns, and a decoding
 /// error takes precedence over the value of `work`, as in a loop that
 /// finishes block k before it reads block k+1. A panic of `work` on its
@@ -378,6 +380,8 @@ fn absorb_while<T: Send>(
     threads: bool,
     work: impl FnOnce() -> T + Send,
 ) -> Result<T, GelError> {
+    let has_sink = orbs.is_some();
+    let sink = std::sync::Mutex::new(orbs);
     let slot = std::sync::Mutex::new(Some(work));
     let take = || {
         slot.lock()
@@ -396,10 +400,33 @@ fn absorb_while<T: Send>(
             Some(_) => None,
             None => take().map(|work| work()),
         };
+        // Decoding copies bytes into words and depends little on the speed
+        // of the core it lands on, so with threads it runs beside the digest.
+        let sink = &sink;
+        let take_sink = || {
+            sink.lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .take()
+        };
+        let decode = if threads && handle.is_some() && has_sink {
+            std::thread::Builder::new()
+                .spawn_scoped(scope, move || {
+                    take_sink().map(|orbs| decode_block(block, orbs))
+                })
+                .ok()
+        } else {
+            None
+        };
         check.update(block);
-        let decoded = match orbs {
-            Some(sink) => decode_block(block, sink),
-            None => Ok(()),
+        let decoded = match decode {
+            Some(decode) => match decode.join() {
+                Ok(result) => result.unwrap_or(Ok(())),
+                Err(panic) => std::panic::resume_unwind(panic),
+            },
+            None => match take_sink() {
+                Some(orbs) => decode_block(block, orbs),
+                None => Ok(()),
+            },
         };
         let value = match handle {
             Some(handle) => match handle.join() {
