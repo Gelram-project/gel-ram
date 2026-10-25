@@ -291,7 +291,7 @@ const READ_BLOCK_RECORDS: usize = 65_536;
 /// `read_exact` reports, exactly as a read of one record at a time would;
 /// the records read before it cannot change the outcome because decoding
 /// 128 bytes cannot fail.
-fn stream_payload<R: Read>(
+fn stream_payload<R: Read + Send>(
     reader: &mut R,
     count: usize,
     check: &mut PayloadCheck,
@@ -302,7 +302,7 @@ fn stream_payload<R: Read>(
 
 /// [`stream_payload`]; `threads == false` runs every step on the calling
 /// thread, in the same order (the path taken when a thread cannot start).
-fn stream_payload_with<R: Read>(
+fn stream_payload_with<R: Read + Send>(
     reader: &mut R,
     count: usize,
     check: &mut PayloadCheck,
@@ -358,55 +358,60 @@ fn decode_block(block: &[u8], orbs: &mut Vec<Orb1024>) -> Result<(), GelError> {
     Ok(())
 }
 
-/// Feeds `block` to `check` and decodes it into `orbs` (when given) while the
-/// calling thread runs `work`, then returns what `work` returned. With
-/// `threads`, the digest and the decoding each run on a scoped thread; a
-/// task whose thread cannot start, or every task without `threads`, runs on
-/// the calling thread after `work`. The digest and decoding of `block` are
-/// complete when this returns, and a decoding error takes precedence over
-/// the value of `work`, as in a loop that finishes block k before it reads
-/// block k+1. A panic of a task is resumed on the calling thread.
-fn absorb_while<T>(
+/// Feeds `block` to `check` and decodes it into `orbs` (when given) while
+/// `work` runs, then returns what `work` returned. The digest and the
+/// decoding are the processor work and stay on the calling thread; with
+/// `threads`, `work` (the read of the next block) runs on a scoped thread.
+/// A thread started for the processor work can land on a slower core of a
+/// processor with cores of different speeds, which made the sequential v1
+/// checksum slower than on the calling thread. When the thread cannot start,
+/// or without `threads`, `work` runs on the calling thread first, then the
+/// digest and the decoding, the order of a loop without threads. The digest
+/// and decoding of `block` are complete when this returns, and a decoding
+/// error takes precedence over the value of `work`, as in a loop that
+/// finishes block k before it reads block k+1. A panic of `work` on its
+/// thread is resumed on the calling thread.
+fn absorb_while<T: Send>(
     block: &[u8],
     check: &mut PayloadCheck,
-    mut orbs: Option<&mut Vec<Orb1024>>,
+    orbs: Option<&mut Vec<Orb1024>>,
     threads: bool,
-    work: impl FnOnce() -> T,
+    work: impl FnOnce() -> T + Send,
 ) -> Result<T, GelError> {
-    let (digested, decoded, value) = std::thread::scope(|scope| {
-        let digest = if threads {
+    let slot = std::sync::Mutex::new(Some(work));
+    let take = || {
+        slot.lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .take()
+    };
+    let (decoded, value) = std::thread::scope(|scope| {
+        let handle = if threads {
             std::thread::Builder::new()
-                .spawn_scoped(scope, || check.update(block))
+                .spawn_scoped(scope, || take().map(|work| work()))
                 .ok()
         } else {
             None
         };
-        let decode = match orbs.as_deref_mut() {
-            Some(sink) if threads => std::thread::Builder::new()
-                .spawn_scoped(scope, move || decode_block(block, sink))
-                .ok(),
-            _ => None,
+        let early = match handle {
+            Some(_) => None,
+            None => take().map(|work| work()),
         };
-        let value = work();
-        let digested = digest.map(|handle| handle.join());
-        let decoded = decode.map(|handle| handle.join());
-        (digested, decoded, value)
+        check.update(block);
+        let decoded = match orbs {
+            Some(sink) => decode_block(block, sink),
+            None => Ok(()),
+        };
+        let value = match handle {
+            Some(handle) => match handle.join() {
+                Ok(value) => value,
+                Err(panic) => std::panic::resume_unwind(panic),
+            },
+            None => early,
+        };
+        (decoded, value)
     });
-    match digested {
-        Some(Ok(())) => {}
-        Some(Err(panic)) => std::panic::resume_unwind(panic),
-        None => check.update(block),
-    }
-    match decoded {
-        Some(Ok(result)) => result?,
-        Some(Err(panic)) => std::panic::resume_unwind(panic),
-        None => {
-            if let Some(sink) = orbs {
-                decode_block(block, sink)?;
-            }
-        }
-    }
-    Ok(value)
+    decoded?;
+    Ok(value.expect("the work runs exactly once"))
 }
 
 /// Writes the records in blocks of [`IO_BLOCK_RECORDS`], one `write_all` per
