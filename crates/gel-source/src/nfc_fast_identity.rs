@@ -3,7 +3,7 @@
 //! reused buffers, the verified prefix copied as it is) against
 //! `nfc_reference`, the earlier implementation, unchanged. Every scalar value
 //! is compared for each property and for the NFC of one character; pairs,
-//! the Unicode NormalizationTest, the seeded sets of the pinned tests and
+//! the Unicode NormalizationTest, sets seeded as in the pinned tests and
 //! seeded strings with a prefix that passes the quick check are compared for
 //! the whole normalization. Last, `line_end::find_ascii` is compared with the
 //! earlier line end search and ASCII check of `document::scan`.
@@ -60,7 +60,9 @@ fn splitmix(mut state: u64) -> impl FnMut() -> u64 {
 
 /// The pool of the pinned tests of `nfc.rs`: every code point with a
 /// combining class or a canonical decomposition, the Hangul jamo and three
-/// syllables, and a to z.
+/// syllables, and a to z. Unlike the pinned tests, which keep to the code
+/// points assigned in Unicode 15.1.0, it takes every code point of the
+/// current tables, so the code points Unicode 16.0.0 added are compared too.
 fn pool() -> Vec<char> {
     let mut pool = std::collections::BTreeSet::new();
     for &(first, last, _) in CANONICAL_COMBINING_CLASS {
@@ -233,9 +235,9 @@ pub(crate) fn run(scale: Scale) -> Vec<Tally> {
     }
     tallies.extend([one, one_quick]);
 
-    let mut unicode = Tally::new("nfc_normalization_test_15_1");
-    let mut unicode_quick = Tally::new("quick_check_normalization_test_15_1");
-    let text = include_str!("../tests/data/NormalizationTest-15.1.0.txt");
+    let mut unicode = Tally::new("nfc_normalization_test_16_0");
+    let mut unicode_quick = Tally::new("quick_check_normalization_test_16_0");
+    let text = include_str!("../tests/data/NormalizationTest-16.0.0.txt");
     for line in text.lines() {
         let data = line.split('#').next().unwrap_or("").trim();
         if data.is_empty() || data.starts_with('@') {
@@ -253,8 +255,8 @@ pub(crate) fn run(scale: Scale) -> Vec<Tally> {
     }
     tallies.extend([unicode, unicode_quick]);
 
-    // The 100,000 strings of the pinned random test, each also after the
-    // previous one and a line break.
+    // 100,000 strings seeded as in the pinned random test, from the pool
+    // above, each also after the previous one and a line break.
     let mut random = Tally::new("nfc_random_pool_100000");
     let mut random_quick = Tally::new("quick_check_random_pool_100000");
     let mut next = splitmix(20_261_017);
@@ -282,7 +284,8 @@ pub(crate) fn run(scale: Scale) -> Vec<Tally> {
     }
     tallies.extend([random, random_quick]);
 
-    // The 10,005 strings of the pinned adversarial test.
+    // 10,005 strings made as in the pinned adversarial test, from the pool
+    // and marks of the current tables.
     let marks = marks();
     let mut adversarial = Tally::new("nfc_adversarial_10005");
     let mut adversarial_quick = Tally::new("quick_check_adversarial_10005");

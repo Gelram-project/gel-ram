@@ -75,39 +75,57 @@ The caller still owns authorization, persistence and secret management.
 
 NFC is implemented in gel-source itself (`crates/gel-source/src/nfc.rs`,
 UAX #15: canonical decomposition, canonical ordering, canonical composition),
-with tables generated from the Unicode Character Database 15.1.0 by
+with tables generated from the Unicode Character Database 16.0.0 by
 `cargo run -p xtask -- ucd-tables`. The two UCD files it reads are kept
-unmodified in `crates/gel-source/tests/data/ucd-15.1.0`, and a test regenerates
-the tables from them and requires the same bytes.
+unmodified in `crates/gel-source/tests/data/ucd-16.0.0`, and a test regenerates
+the tables from them and requires the same bytes. Until this change the tables
+followed Unicode 15.1.0; those files stay in
+`crates/gel-source/tests/data/ucd-15.1.0`, with NormalizationTest 15.1.0, for
+the checks below.
 
-**Versions.** Normalization follows Unicode 15.1.0; lowercasing is the Rust
-standard library's `to_lowercase`, which follows Unicode 16.0.0 on the Rust
-1.85 toolchain the releases are built with. Search normalizes the query and
-each line when it runs and stores nothing normalized, so a later table version
-changes only which lines match, never stored data.
+**Versions.** Normalization follows Unicode 16.0.0. Lowercasing
+(`char::to_lowercase`) and the split into words (`char::is_alphanumeric`) come
+from the Rust standard library, which follows Unicode 16.0.0 on the Rust 1.85.0
+toolchain the releases are built with, so the whole search path now follows one
+Unicode version. Search normalizes the query and each line when it runs and
+stores nothing normalized, so a later table version changes only which lines
+match, never stored data.
 
 **Checks.**
 
-- All 19,074 data lines of NormalizationTest 15.1.0 pass, and every scalar
-  value it does not list is unchanged.
+- All 19,965 data lines (19,952 distinct) of NormalizationTest 16.0.0 pass,
+  and every scalar value it does not list is unchanged.
+- All 19,074 data lines (19,069 distinct) of NormalizationTest 15.1.0 still
+  pass, and each of them is a line of NormalizationTest 16.0.0, unchanged:
+  the 16.0.0 tables give every result the 15.1.0 tables gave on that file.
+- For every code point assigned in Unicode 15.1.0, the 16.0.0 tables give the
+  same combining class, canonical decomposition, Full_Composition_Exclusion
+  and NFC_Quick_Check as the 15.1.0 tables, and every 15.1.0 primary composite
+  is kept. What 16.0.0 adds (12 combining marks, 20 canonical decompositions
+  and the 20 primary composites they form, 21 NFC_Quick_Check Maybe code
+  points, no new exclusion) concerns only code points assigned later.
 - NFC of every scalar value, and of 100,000 seeded strings built from the
-  characters that take part in normalization, is byte-identical to the output
-  of unicode-normalization 0.1.25 (the crate used up to v0.6.1, recorded before
-  it left the tree) and of ICU4X icu_normalizer 2.3.0.
+  characters assigned in Unicode 15.1.0 that take part in normalization, is
+  byte-identical to the output of unicode-normalization 0.1.25 (the crate used
+  up to v0.6.1, recorded before it left the tree) and of ICU4X icu_normalizer
+  2.3.0. These pins are the ones recorded with the 15.1.0 tables, unchanged.
 - NFC of 10,005 adversarial strings (long runs of combining marks, Hangul, and
-  strings two thirds of whose characters are combining marks) is byte-identical
-  to ICU4X icu_normalizer 2.3.0. This is the only check that catches an
+  strings two thirds of whose characters are combining marks assigned in
+  Unicode 15.1.0) is byte-identical to ICU4X icu_normalizer 2.3.0, the pin
+  recorded with the 15.1.0 tables. This is the only check that catches an
   unstable sort of combining marks.
 - NFC is idempotent on every string above, and a line break splits it:
   NFC(a + "\n" + b) = NFC(a) + "\n" + NFC(b), so normalizing line by line is
   the same as normalizing the text.
 
 **Difference from v0.6.1.** unicode-normalization 0.1.25 followed Unicode 17.0.
-On NormalizationTest 17.0.0 this implementation differs on 162 of 20,034 lines,
-and each of them contains a character assigned after Unicode 15.1; it agrees on
-every line made only of characters assigned in 15.1, as the Unicode stability
-policy requires. Matching therefore differs from v0.6.1 only on text containing
-characters assigned in Unicode 16.0 or 17.0.
+On NormalizationTest 17.0.0 this implementation with the 15.1.0 tables differed
+on 162 of 20,034 lines, each of them containing a character assigned after
+Unicode 15.1. With the 16.0.0 tables it differs on 68 lines, each of them
+containing a character assigned after Unicode 16.0, and agrees on every line
+made only of characters assigned in 16.0, as the Unicode stability policy
+requires. Matching therefore differs from v0.6.1 only on text containing
+characters assigned in Unicode 17.0.
 
 **Cost.** Text that passes the NFC_Quick_Check rule (most text, all Polish text
 among it) is returned without normalization. Otherwise each character's

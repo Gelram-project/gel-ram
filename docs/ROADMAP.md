@@ -76,7 +76,14 @@ many paths are faster with the same output bits.
 | CI reliability: control kills of the history crash series drawn from inside the control run; 40 minutes for portable-build | e1f2c9c (PR #83) | `cargo run -p xtask -- history-crash-series 5 20261010 5` | [reproduce](REPRODUCE.md) | Neither failure was in the code under test |
 | Published commitments: private data set 1, then private data sets 2 to 5 and sealed sample 1 | 29875ec (PR #84), d0f1a62 (PR #85) | `cargo run -p xtask -- commitment-check MANIFEST DIR` | [commitments](COMMITMENTS.md) | The manifests and files stay private until shown |
 | The collection-review fixture cut to the scope and limits of a withdrawn bundle; embedded tool metadata removed from one image | bb3da1b (PR #86) | `cargo run -p gel-source --example collection_review` | [fixture provenance](../crates/gel-source/fixtures/collection-review/PROVENANCE.md) | All 24 cases give the same result |
-| Second speed package with the same output bits: file reads reserve from the file length, the ASCII check runs in the line-end pass, `--literal` reads in bounded memory, gel-bench checks in one pass, store reads overlap with digest and decode, repeated passage ranges hashed once | this change | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md) | Measured with an A/A control on a loaded machine; the ratios are directions, not figures to quote |
+| Second speed package with the same output bits: file reads reserve from the file length, the ASCII check runs in the line-end pass, `--literal` reads in bounded memory, gel-bench checks in one pass, store reads overlap with digest and decode, repeated passage ranges hashed once | 90bd091 (PR #87) | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md) | Measured with an A/A control on a loaded machine; the ratios are directions, not figures to quote |
+
+The PR #74 row describes the tables as merged then. Since then the NFC tables
+are generated with the same command from UCD 16.0.0, the Unicode version of the
+Rust 1.85.0 standard library, which lowercases and splits words, so the search
+path follows one Unicode version; the 15.1.0 files stay for tests that every
+15.1.0 result and property is kept ([document readout](DOCUMENT-READOUT.md#unicode-normalization)).
+Matching can now differ from v0.6.1 only on characters assigned in Unicode 17.0.
 
 ### Measured against v0.6.1
 

@@ -4,7 +4,7 @@
 //! against an exact copy of the earlier binary-search implementation
 //! (`src/nfc_reference.rs`). Every scalar value is compared for each property
 //! and for the NFC of one character; composition pairs, the Unicode
-//! NormalizationTest 15.1, the seeded sets of the pinned unit tests, seeded
+//! NormalizationTest 16.0, sets seeded as in the pinned unit tests, seeded
 //! strings with a prefix that passes the quick check, and long lines are
 //! compared for the whole normalization. The line end search of document
 //! search with its ASCII check, eight bytes at a time in one pass

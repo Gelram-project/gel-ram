@@ -437,7 +437,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
         unicode.join("LICENSE-UNICODE.txt"),
     )
     .map_err(|e| format!("{UNICODE_LICENSE}: {e}"))?;
-    info.push_str("compiled_in=Unicode Character Database 15.1.0 normalization tables, license in licenses/unicode-data\n");
+    info.push_str("compiled_in=Unicode Character Database 16.0.0 normalization tables, license in licenses/unicode-data\n");
     info.push_str("not_shipped=the target's system C runtime, linked dynamically\n");
     for file in PROJECT_FILES {
         let base = Path::new(file).file_name().ok_or("project file name")?;
@@ -544,7 +544,7 @@ mod tests {
         assert!(text.starts_with(b"UNICODE LICENSE V3\n"));
         assert_eq!(
             gel_source::hex(&gel_source::digest(&text)),
-            "f7db81051789b729fea528a63ec4c938fdcb93d9d61d97dc8cc2e9df6d47f2a1"
+            "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443"
         );
     }
 
