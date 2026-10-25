@@ -82,6 +82,9 @@ cargo run --locked --offline --release -p <crate> --example <stem> -- [RUNS] ...
 
 `speed_bench_physics` starts the release binaries as child processes; build
 them first with `cargo build --release -p gel-bench -p gel-physics --bins --examples`.
+`speed_bench_checks` does the same for `gel-bench` alone
+(`cargo build --release -p gel-bench --bins --examples`; in `xtask speed-ab`,
+`--with-bins gel-bench`).
 Pin every timing run to one L3 domain as described in `docs/PERFORMANCE.md`.
 
 ## Comparing two trees: A/B with an A/A control
@@ -122,6 +125,7 @@ also a control for changes outside its own crate.
 | `crates/gel-core/examples/speed_crc_large.rs` | gel-core | 6 cases over 256 MiB, 4 MiB and 3 MiB | `blocks1mib_256mib`, `records128_256mib`, `oneshot_3mib` | yes |
 | `crates/gel-core/examples/speed_crc_threads_paired.rs` | gel-core | `crc_256mib_ref`, `_t2`, `_t4`, `_t8`, `_auto` | the `_ref` side | no |
 | `crates/gel-live-lab/examples/speed_witness.rs` | gel-live-lab | `witness_scores` | none inside; the A/A' comparison | yes |
+| `crates/gel-live-lab/examples/speed_literal.rs` | gel-live-lab | 6 `literal::read` cases, 1 B to 64 MiB, one refused | none inside; the A/A' comparison | yes |
 | `crates/gel-phase-quad/examples/speed_q8_read.rs` | gel-phase-quad | 4 single-query scan and read cases | the whole example for multi-query and mask changes | yes |
 | `crates/gel-phase-quad/examples/speed_q8_queries.rs` | gel-phase-quad | `queries16_t1`, `queries16_t<T>` | the whole example (single-query scan only) | yes |
 | `crates/gel-phase-quad/examples/speed_q8_queries_paired.rs` | gel-phase-quad | `queries16_t<W>_ref`, `queries16_t<W>_many` | the `_ref` sides | no |
@@ -133,14 +137,17 @@ also a control for changes outside its own crate.
 | `crates/gel-source/examples/speed_source_load.rs` | gel-source | 7 add, load and backup cases | `collection_load` | yes |
 | `crates/gel-source/examples/speed_sha256.rs` | gel-source | `large`, `small` | none inside; the A/A' comparison | yes |
 | `crates/gel-source/examples/speed_search.rs` | gel-source | 3 document cases, `collection_64x1mib` | none inside; the A/A' comparison | yes |
+| `crates/gel-source/examples/speed_line_ascii.rs` | gel-source | 6 document cases dominated by the line end search and ASCII check, 512 KiB and 16 MiB | `polish_16mib`, `over_limit_16mib` | yes |
 | `crates/gel-store/examples/speed_store_io.rs` | gel-store | `write_`, `verify_`, `open_<size>mib` | none inside; the A/A' comparison | yes |
 | `crates/gel-structural/examples/speed_structural_encode.rs` | gel-structural | 6 residual and prototype cases | `apply_near`, `popcount_near` | yes |
 | `crates/gel-history/examples/speed_history.rs` | gel-history | 10 history and sparse residual cases | `to_bytes_walk_k3_100k`; nearly `from_bytes_unrelated_20k` | yes |
 | `crates/gel-bench/examples/speed_bench_physics.rs` | gel-bench | whole `gel-bench` and `gel-physics` runs | nearly `gel_bench_8192_t1` (process start dominates) | yes, after `--bins` |
-| `crates/gel-bench/examples/speed_bench_setup_paired.rs` | gel-bench | 3 setup cases, `<base>_ref` and `<base>_new` | the `_ref` sides | no |
+| `crates/gel-bench/examples/speed_bench_checks.rs` | gel-bench | whole `gel-bench` runs over 1,310,720 orbs (`_t1`, `_t4`), 131,072 and 8,192 orbs; the check covers every non-timing output line | nearly `gel_bench_8192_t1` (process start dominates) | yes, after `--bins` |
+| `crates/gel-bench/examples/speed_bench_setup_paired.rs` | gel-bench | 4 setup cases, `<base>_ref` and `<base>_new` | the `_ref` sides | no |
 | `crates/gel-source/examples/speed_nfc_fast.rs` | gel-source | 8 line cases (200 searches each) and 6 document cases of phrase search over normalization inputs | `ascii_line`, `polish_nfc_line`, `doc_ascii`, `doc_polish_nfc` | yes |
 | `crates/gel-source/examples/speed_corpus_load.rs` | gel-source | 5 catalog load cases, 256 KiB to 64 MiB, one refused | `small_load_256kib`, `reject_first_64mib` | yes |
 | `crates/gel-source/examples/speed_corpus_load_paired.rs` | gel-source | `load_64mib_ref`, `load_64mib_t<T>`, `load_r50k_16mib_ref`, `load_r50k_16mib_t<T>` | the `_ref` sides | no |
+| `crates/gel-source/examples/speed_quote_ranges.rs` | gel-source | 3 catalog load cases whose rows repeat passage ranges, one refused, and 3 with distinct ranges | `distinct_encoded_64mib`, `distinct_r50k_16mib` | yes |
 | `crates/gel-source/examples/speed_load_overlap.rs` | gel-source | 8 bundle, corpus, snapshot and backup load cases, two refused | `bundle_load_512kib`, `collection_load_512kib`, `encoded_load_64mib`, `backup_inspect_64mib` | yes |
 | `crates/gel-source/examples/speed_backup_restore.rs` | gel-source | 6 backup create, inspect and restore cases | `backup_create_64mib`, `backup_inspect_64mib`, `backup_restore_withdrawn_64mib`, `backup_restore_target_exists_64mib` | yes |
 | `crates/gel-source/examples/speed_lowercase.rs` | gel-source | 5 scripts of 16 documents of 512 KiB, `_t1` and `_t<T>` | `ascii_16x512kib_t1`, `ascii_16x512kib_t<T>` | yes |
@@ -148,8 +155,10 @@ also a control for changes outside its own crate.
 | `crates/gel-source/examples/speed_catalog_parse.rs` | gel-source | 6 catalog writer, reader and lookup cases over 50,000 records | `quote_k50`, `find_title_k5` | yes |
 | `crates/gel-source/examples/speed_tree_gates.rs` | gel-source | 5 whole-tree `xtask` gates as child processes, optionally `recorder_lint` | `ci_policy` | yes, after building `xtask` |
 | `crates/gel-store/examples/speed_store_crc.rs` | gel-store | 8 build, verify, open and CRC cases, 1 MiB to 256 MiB | `build_1mib`, `verify_1mib`, `open_1mib` | yes |
+| `crates/gel-store/examples/speed_store_overlap.rs` | gel-store | 12 verify, open and CRC cases, 1 MiB to 256 MiB, one refused, three with a partial last read block | `verify_1mib`, `verify_8mib`, `open_8mib`, `crc_256mib` (the small cases control the code path, not the allocator state left by earlier cases in the same process) | yes |
 | `crates/gel-reader/examples/speed_top1_many.rs` | gel-reader | `single16_<n>_t1`, `many16_<n>_t1`, `single16_<n>_t<T>`, `many16_<n>_t<T>` over two banks | the `single16_*` cases | yes |
 | `crates/gel-reader/examples/speed_top1_many_paired.rs` | gel-reader | `queries16_<n>_t1_ref`, `_many`, `queries16_<n>_t<T>_ref`, `_many` over two banks | the `_ref` sides | yes |
+| `crates/gel-source/examples/speed_read_regular.rs` | gel-source | `read_regular` of 64 MiB, 16 MiB, 1 MiB and 4 KiB files, `bundle_load_64mib`, `refused_64mib_plus1`, `digest_64mib` | `refused_64mib_plus1`, `digest_64mib` | yes |
 
 Identity programs:
 
@@ -162,7 +171,7 @@ Identity programs:
 | `crates/gel-reader/examples/identity_views.rs` | gel-reader | word-level affine views with the earlier per-bit code |
 | `crates/gel-structural/examples/identity_structural_encode.rs` | gel-structural | popcount-first residual and prototype paths with the earlier code |
 | `crates/gel-history/examples/identity_history_rebuild.rs` | gel-history | streaming sparse residuals and rolled history rebuild with the earlier code |
-| `crates/gel-bench/examples/identity_bench_setup.rs` | gel-bench | threaded bank fill, Top-K reference and chain order with the earlier serial code |
+| `crates/gel-bench/examples/identity_bench_setup.rs` | gel-bench | threaded bank fill, threaded bank CRC, Top-K reference and chain order with the earlier serial code |
 | `crates/gel-source/examples/identity_nfc_fast.rs` | gel-source | table-based normalization properties and reused buffers with the earlier binary-search code, on every scalar value and seeded strings |
 | `crates/gel-source/examples/identity_corpus_load.rs` | gel-source | catalog loading on several threads with the earlier one-thread loader, results and first errors |
 | `crates/gel-source/examples/identity_load_overlap.rs` | gel-source | bundle and snapshot loading with the whole-file digest overlapped with the part digests, which stop early under a wrong pin, with the earlier one-thread code |

@@ -4,10 +4,13 @@ mod setup;
 #[cfg(test)]
 mod setup_reference;
 
-use gel_core::{Crc64Ecma, ORB_BYTES};
+use gel_core::ORB_BYTES;
 use gel_kernel::{backend, KernelBackend};
 use gel_orb::Orb1024;
-use gel_reader::{top1, top1_threads_report, top_k_progressive, Top1Execution, Top1Fallback};
+use gel_reader::{
+    top1_many, top1_many_threads, top1_threads_report, top_k_progressive, Top1Execution,
+    Top1Fallback,
+};
 use setup::{orb, reference_top_k};
 use std::hint::black_box;
 use std::time::Instant;
@@ -118,6 +121,73 @@ fn same_hit(a: (usize, u16, &Orb1024), b: (usize, u16, &Orb1024)) -> bool {
     a.0 == b.0 && a.1 == b.1 && std::ptr::eq(a.2, b.2)
 }
 
+type Hit<'a> = (usize, u16, &'a Orb1024);
+
+/// Bit flips of the quality probes, in output order.
+const QUALITY_FLIPS: [usize; 7] = [1, 8, 32, 64, 128, 256, 384];
+
+/// `orb` with its first `flips` probe positions inverted.
+fn flipped(orb: &Orb1024, flips: usize) -> Orb1024 {
+    let mut words = *orb.words();
+    for bit in 0..flips {
+        // Odd multiplier creates unique positions modulo 1024.
+        let position = (405 * bit + 137) & 1023;
+        words[position / 64] ^= 1u64 << (position % 64);
+    }
+    Orb1024::from_words(words)
+}
+
+/// Results of the untimed Top-1 checks.
+#[derive(Debug)]
+struct Checks<'a> {
+    /// Single-thread Top-1 of the null query.
+    null_hit: Hit<'a>,
+    /// Single-thread Top-1 of `bank[warmup_index]`, when one was requested.
+    single_warmup: Option<Hit<'a>>,
+    /// Top-1 of each quality probe, in `QUALITY_FLIPS` order.
+    flips: Vec<Hit<'a>>,
+}
+
+/// The untimed Top-1 checks after the timed loop. The single-thread
+/// references (the null query and, when requested, the warm-up query) share
+/// one `top1_many` pass; the quality probes share one `top1_many_threads`
+/// pass on `workers` threads. Both are identical to one `top1` per query,
+/// including the returned bank reference, and every thread is joined before
+/// they return. A score of 1024 means all 1024 bits match, so it occurs
+/// exactly when the null query equals a bank orb.
+fn untimed_checks<'a>(
+    bank: &'a [Orb1024],
+    null: &Orb1024,
+    warmup_index: Option<usize>,
+    quality_index: usize,
+    workers: usize,
+) -> Result<Checks<'a>, String> {
+    let mut references = vec![*null];
+    references.extend(warmup_index.map(|index| bank[index]));
+    let reference_hits = top1_many(bank, &references);
+    let null_hit = reference_hits[0].ok_or("empty bank")?;
+    if null_hit.1 == 1024 {
+        return Err("null query unexpectedly exists in generated bank".into());
+    }
+    let single_warmup = match warmup_index {
+        Some(_) => Some(reference_hits[1].ok_or("empty bank")?),
+        None => None,
+    };
+    let probes: Vec<Orb1024> = QUALITY_FLIPS
+        .iter()
+        .map(|&flips| flipped(&bank[quality_index], flips))
+        .collect();
+    let flips = top1_many_threads(bank, &probes, workers)
+        .into_iter()
+        .map(|hit| hit.ok_or_else(|| "empty bank".to_owned()))
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Checks {
+        null_hit,
+        single_warmup,
+        flips,
+    })
+}
+
 fn run() -> Result<(), String> {
     let cpu_start = observed_cpu();
     let count = positive_arg(1, 1_310_720, "ORB_COUNT")?;
@@ -147,11 +217,8 @@ fn run() -> Result<(), String> {
         GENERATOR_SEED,
         setup::workers_for(count, setup::BANK_ORBS_PER_WORKER),
     );
-    let mut bank_crc = Crc64Ecma::new();
-    for orb in &bank {
-        bank_crc.update(&orb.to_le_bytes());
-    }
-    let bank_crc64 = bank_crc.finish();
+    // Joins its worker threads before the warm-up scan below.
+    let bank_crc64 = setup::bank_crc64(&bank);
 
     let warmup_index = count / 2;
     let mut executions = Vec::new();
@@ -193,16 +260,20 @@ fn run() -> Result<(), String> {
     require_top_k(&progressive, &reference_top_k(&bank, &bank[query_index], 8))?;
 
     let null = orb(0, GENERATOR_SEED ^ 0xA5A5_5A5A_D3C1_B7E9);
-    if bank.contains(&null) {
-        return Err("null query unexpectedly exists in generated bank".into());
-    }
-    let null_hit = top1(&bank, &null).ok_or("empty bank")?;
+    let quality_index = count / 2;
+    let checks = untimed_checks(
+        &bank,
+        &null,
+        (threads > 1).then_some(warmup_index),
+        quality_index,
+        setup::workers_for(count, setup::BANK_ORBS_PER_WORKER),
+    )?;
+    let null_hit = checks.null_hit;
 
     // With THREADS > 1 the timed `warmup` came from `top1_threads`; check it
-    // against `top1` on the same query, and check `top1_threads` against the
-    // single-thread null hit, so both directions are covered.
-    let thread_scan_exact = if threads > 1 {
-        let single_warmup = top1(&bank, &bank[warmup_index]).ok_or("empty bank")?;
+    // against single-thread Top-1 on the same query, and check `top1_threads`
+    // against the single-thread null hit, so both directions are covered.
+    let thread_scan_exact = if let Some(single_warmup) = checks.single_warmup {
         let (threaded_null, execution) = top1_threads_report(&bank, &null, threads);
         executions.push(execution);
         let threaded_null = threaded_null.ok_or("empty bank")?;
@@ -325,16 +396,7 @@ fn run() -> Result<(), String> {
         progressive_stats.full_128b_scores
     );
 
-    let quality_index = count / 2;
-    for flips in [1usize, 8, 32, 64, 128, 256, 384] {
-        let mut words = *bank[quality_index].words();
-        for bit in 0..flips {
-            // Odd multiplier creates unique positions modulo 1024.
-            let position = (405 * bit + 137) & 1023;
-            words[position / 64] ^= 1u64 << (position % 64);
-        }
-        let query = Orb1024::from_words(words);
-        let hit = top1(&bank, &query).ok_or("empty bank")?;
+    for (flips, hit) in QUALITY_FLIPS.iter().zip(&checks.flips) {
         println!(
             "quality_flips_{flips}=target:{quality_index},hit:{},score:{},survived:{}",
             hit.0,
@@ -416,6 +478,113 @@ mod tests {
         let big = setup_reference::new_bank(3000, SEED, 4);
         let mid = setup_reference::compare_top_k_bank(&big, &[0, 1000, 2999], &[1, 8], &[1, 3]);
         assert!(mid.all_equal(), "{mid:?}");
+    }
+
+    /// The earlier untimed checks, one full pass each: `contains`, `top1`
+    /// of the null query, `top1` of the warm-up query and `top1` per probe.
+    fn old_untimed_checks<'a>(
+        bank: &'a [Orb1024],
+        null: &Orb1024,
+        warmup_index: Option<usize>,
+        quality_index: usize,
+    ) -> Result<Checks<'a>, String> {
+        use gel_reader::top1;
+        if bank.contains(null) {
+            return Err("null query unexpectedly exists in generated bank".into());
+        }
+        let null_hit = top1(bank, null).ok_or("empty bank")?;
+        let single_warmup = match warmup_index {
+            Some(index) => Some(top1(bank, &bank[index]).ok_or("empty bank")?),
+            None => None,
+        };
+        let mut flips_hits = Vec::new();
+        for flips in [1usize, 8, 32, 64, 128, 256, 384] {
+            let mut words = *bank[quality_index].words();
+            for bit in 0..flips {
+                let position = (405 * bit + 137) & 1023;
+                words[position / 64] ^= 1u64 << (position % 64);
+            }
+            let query = Orb1024::from_words(words);
+            flips_hits.push(top1(bank, &query).ok_or("empty bank")?);
+        }
+        Ok(Checks {
+            null_hit,
+            single_warmup,
+            flips: flips_hits,
+        })
+    }
+
+    fn same_checks(a: &Result<Checks<'_>, String>, b: &Result<Checks<'_>, String>) -> bool {
+        match (a, b) {
+            (Ok(a), Ok(b)) => {
+                same_hit(a.null_hit, b.null_hit)
+                    && match (a.single_warmup, b.single_warmup) {
+                        (Some(x), Some(y)) => same_hit(x, y),
+                        (None, None) => true,
+                        _ => false,
+                    }
+                    && a.flips.len() == b.flips.len()
+                    && a.flips.iter().zip(&b.flips).all(|(x, y)| same_hit(*x, *y))
+            }
+            (Err(a), Err(b)) => a == b,
+            _ => false,
+        }
+    }
+
+    #[test]
+    fn untimed_checks_match_the_earlier_one_pass_per_query_checks() {
+        const SEED: u64 = 0x4745_4C00_4245_4E43;
+        let null = orb(0, SEED ^ 0xA5A5_5A5A_D3C1_B7E9);
+        let mut banks: Vec<Vec<Orb1024>> = [1, 2, 3, 127, 128, 129, 257, 1000, 4097]
+            .iter()
+            .map(|&len| setup_reference::new_bank(len, SEED, 3))
+            .collect();
+        // Banks with many equal orbs and scores, so the lowest-index rule
+        // decides; the flipped probes then tie across blocks.
+        for (len, pool) in [(300, 3), (513, 5), (1000, 1)] {
+            banks.push(setup_reference::tie_bank(len, pool, 0x51ab ^ len as u64));
+        }
+        // The null query present once, and present at the end.
+        let mut with_null = setup_reference::new_bank(700, SEED, 2);
+        with_null[333] = null;
+        banks.push(with_null);
+        let mut null_last = setup_reference::new_bank(129, SEED, 1);
+        null_last[128] = null;
+        banks.push(null_last);
+        let mut cases = 0;
+        let mut errors = 0;
+        for bank in &banks {
+            let len = bank.len();
+            for warmup in [None, Some(len / 2), Some(len - 1)] {
+                for quality in [0, len / 2, len - 1] {
+                    let old = old_untimed_checks(bank, &null, warmup, quality);
+                    errors += usize::from(old.is_err());
+                    for workers in [1, 2, 3, 8, len / 2 + 1, len + 5] {
+                        let new = untimed_checks(bank, &null, warmup, quality, workers);
+                        assert!(
+                            same_checks(&old, &new),
+                            "len {len} warmup {warmup:?} quality {quality} workers {workers}: {old:?} vs {new:?}"
+                        );
+                        cases += 1;
+                    }
+                }
+            }
+        }
+        assert!(cases > 0);
+        assert_eq!(errors, 2 * 9, "both null-holding banks refuse every case");
+    }
+
+    #[test]
+    fn bank_crc_matches_the_earlier_per_orb_loop() {
+        const SEED: u64 = 0x4745_4C00_4245_4E43;
+        let crc = setup_reference::compare_bank_crc(
+            &[0, 1, 2, 3, 7, 8, 1000, 4097, 16385],
+            &[0, 1, 2, 3, 5, 9, 24, 16386],
+            SEED,
+        );
+        assert!(crc.all_equal(), "{crc:?}");
+        let other_seed = setup_reference::compare_bank_crc(&[0, 5, 9999], &[0, 1, 4, 7], 91);
+        assert!(other_seed.all_equal(), "{other_seed:?}");
     }
 
     #[test]

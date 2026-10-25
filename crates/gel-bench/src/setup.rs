@@ -2,7 +2,7 @@
 //! reference. Every result is a pure function of slot indices, so it is the
 //! same for any worker count; the threads only shorten the run.
 
-use gel_core::{splitmix64, ORB_WORDS};
+use gel_core::{crc64_ecma_combine, splitmix64, Crc64Ecma, ORB_BYTES, ORB_WORDS};
 use gel_orb::Orb1024;
 
 /// Orbs per worker below which bank generation stays on one thread.
@@ -75,6 +75,38 @@ pub fn fill_bank(bank: &mut [Orb1024], seed: u64, workers: usize) {
             *slot = orb(start + offset, seed);
         }
     });
+}
+
+/// CRC-64/ECMA of the little-endian bytes of every orb in slot order: the
+/// value one `Crc64Ecma::update` per orb gives. The bank is split into at
+/// most `workers` contiguous parts; each part is hashed orb by orb from a
+/// zero register (on scoped threads through `fill_chunks`), and the part
+/// CRCs are joined left to right with `crc64_ecma_combine`. With init 0 and
+/// xorout 0 that join is exact, so the value is the same for every worker
+/// count.
+pub fn bank_crc64_with(bank: &[Orb1024], workers: usize) -> u64 {
+    let workers = workers.clamp(1, bank.len().max(1));
+    let part_len = bank.len().div_ceil(workers).max(1);
+    let parts: Vec<&[Orb1024]> = bank.chunks(part_len).collect();
+    let mut crcs = vec![0u64; parts.len()];
+    let jobs = parts.len();
+    fill_chunks(&mut crcs, jobs, |start, slots| {
+        for (offset, slot) in slots.iter_mut().enumerate() {
+            let mut crc = Crc64Ecma::new();
+            for orb in parts[start + offset] {
+                crc.update(&orb.to_le_bytes());
+            }
+            *slot = crc.finish();
+        }
+    });
+    parts.iter().zip(crcs).fold(0, |joined, (part, crc)| {
+        crc64_ecma_combine(joined, crc, (part.len() * ORB_BYTES) as u64)
+    })
+}
+
+/// `bank_crc64_with` on as many workers as the bank size warrants.
+pub fn bank_crc64(bank: &[Orb1024]) -> u64 {
+    bank_crc64_with(bank, workers_for(bank.len(), BANK_ORBS_PER_WORKER))
 }
 
 /// Matching bits counted one bit at a time, without the popcount kernel.

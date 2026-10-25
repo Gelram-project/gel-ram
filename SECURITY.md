@@ -28,7 +28,7 @@ Fixes, when made, land only on current public `main` (version line 0.6.1) and re
 
 - The `.gel` parser in `gel-store`. `.gel` files are untrusted input.
 - Command-line arguments: `gel-cli` takes a fixed command word and a file path; `gel-bench` and `gel-physics` take unsigned integers.
-- `gel-cli verify` streams the payload through a fixed buffer of at most 8 MiB and holds no payload in memory.
+- `gel-cli verify` streams the payload through one fixed buffer of at most 16 MiB (two 8 MiB halves) and holds no payload in memory.
 - The `gel-cli` selftest creates a private directory in the OS temporary directory, writes its store there through a sibling temporary file renamed into place, and removes the directory afterwards (best effort).
 - `write_atomic` writes a sibling `<name>.tmp-<pid>-<n>` file created with O_EXCL semantics and renames it into place. On Unix a new store is mode `0600`; replacement preserves the existing mode. `write_if_newer` assumes a single writer and is not a compare-and-swap.
 - `gel-source` readers for GELSRC01 source bundles, GELSET01 collection snapshots and source catalogs, reached through `gel-live-lab` and its `gel-evidence` binary. Files and pins supplied by another party are untrusted; the pin must come from the caller's own trusted record.

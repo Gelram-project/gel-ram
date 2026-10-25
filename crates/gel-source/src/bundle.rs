@@ -42,10 +42,16 @@ pub fn read_regular(path: &Path, limit: usize) -> Result<Vec<u8>, BundleError> {
         return Err(Error::Limit.into());
     }
     let file = File::open(path)?;
-    if !file.metadata()?.is_file() {
+    let opened = file.metadata()?;
+    if !opened.is_file() {
         return Err(BundleError::NotRegular);
     }
+    // `Take` has no size-aware `read_to_end`, so without this the buffer grows
+    // from a small probe by doubling. The length is only a hint: a file that
+    // changed or reports 0 (procfs) is still read to `limit + 1` as before,
+    // and a failed reservation leaves that growth path unchanged.
     let mut bytes = Vec::new();
+    let _ = bytes.try_reserve_exact((opened.len().min(limit as u64) as usize).saturating_add(1));
     file.take((limit as u64).saturating_add(1))
         .read_to_end(&mut bytes)?;
     if bytes.len() > limit {
@@ -579,5 +585,150 @@ mod tests {
         let mut b = encode(&sample());
         b[16..24].copy_from_slice(&u64::MAX.to_le_bytes());
         same_as_reference(&b, digest(&b), 4);
+    }
+
+    /// `read_regular` before the buffer was reserved from the file length,
+    /// kept verbatim apart from its name.
+    fn read_regular_reference(path: &Path, limit: usize) -> Result<Vec<u8>, BundleError> {
+        let metadata = fs::symlink_metadata(path)?;
+        if !metadata.is_file() {
+            return Err(BundleError::NotRegular);
+        }
+        if metadata.len() > limit as u64 {
+            return Err(Error::Limit.into());
+        }
+        let file = File::open(path)?;
+        if !file.metadata()?.is_file() {
+            return Err(BundleError::NotRegular);
+        }
+        let mut bytes = Vec::new();
+        file.take((limit as u64).saturating_add(1))
+            .read_to_end(&mut bytes)?;
+        if bytes.len() > limit {
+            return Err(Error::Limit.into());
+        }
+        Ok(bytes)
+    }
+
+    /// The same bytes or the same error as the earlier code; on a regular
+    /// file within the limit the buffer was reserved exactly once.
+    fn same_read(path: &Path, limit: usize) {
+        let new = read_regular(path, limit);
+        let old = read_regular_reference(path, limit);
+        match (&new, &old) {
+            (Ok(a), Ok(b)) => assert_eq!(a, b, "{path:?} limit {limit}"),
+            (Err(a), Err(b)) => assert_eq!(format!("{a:?}"), format!("{b:?}")),
+            _ => panic!("{path:?} limit {limit}: new {new:?} but earlier {old:?}"),
+        }
+    }
+
+    struct ReadScratch(std::path::PathBuf);
+    impl Drop for ReadScratch {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+    fn read_scratch() -> ReadScratch {
+        static READ_NEXT: AtomicU64 = AtomicU64::new(0);
+        loop {
+            let path = std::env::temp_dir().join(format!(
+                "gel-source-read-{}-{}",
+                std::process::id(),
+                READ_NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            match fs::create_dir(&path) {
+                Ok(()) => return ReadScratch(path),
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(e) => panic!("scratch: {e}"),
+            }
+        }
+    }
+
+    #[test]
+    fn read_regular_matches_the_earlier_code_on_sizes_limits_and_non_files() {
+        let root = read_scratch();
+        let mut m = Mix(16);
+        for len in [
+            0usize,
+            1,
+            31,
+            32,
+            33,
+            63,
+            64,
+            65,
+            8191,
+            8192,
+            8193,
+            16_384,
+            (1 << 20) + 7,
+        ] {
+            let bytes: Vec<u8> = (0..len).map(|_| m.next() as u8).collect();
+            let path = root.0.join(format!("f{len}"));
+            fs::write(&path, &bytes).unwrap();
+            for limit in [
+                0,
+                len.saturating_sub(1),
+                len,
+                len + 1,
+                len + 32,
+                2 * len + 1,
+                MAX_TEXT,
+                usize::MAX,
+            ] {
+                same_read(&path, limit);
+                if limit >= len {
+                    let read = read_regular(&path, limit).unwrap();
+                    assert_eq!(read, bytes);
+                    // A band, not an exact value: at least the hint plus one
+                    // spare byte (the documented `try_reserve_exact` bound, so
+                    // the final 0-byte read needs no growth), and at most half
+                    // again plus a little, which no growth by doubling meets.
+                    // Exact equality would depend on how std sizes buffers
+                    // inside `read_to_end`.
+                    let hint = len.min(limit);
+                    assert!(
+                        read.capacity() > hint,
+                        "len {len} limit {limit} capacity {}",
+                        read.capacity()
+                    );
+                    assert!(
+                        read.capacity() <= hint + 1 + hint / 2 + 64,
+                        "upper len {len} limit {limit} capacity {}",
+                        read.capacity()
+                    );
+                }
+            }
+        }
+        same_read(&root.0, 10);
+        same_read(&root.0.join("missing"), 10);
+        #[cfg(unix)]
+        {
+            let link = root.0.join("link");
+            std::os::unix::fs::symlink(root.0.join("f33"), &link).unwrap();
+            same_read(&link, 100);
+            let dangling = root.0.join("dangling");
+            std::os::unix::fs::symlink(root.0.join("missing"), &dangling).unwrap();
+            same_read(&dangling, 100);
+        }
+    }
+
+    /// procfs files report length 0 in their metadata but have content: the
+    /// length is only a hint and the read still runs to `limit + 1`.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn read_regular_reads_past_a_zero_length_hint() {
+        let path = Path::new("/proc/self/cmdline");
+        assert_eq!(fs::symlink_metadata(path).unwrap().len(), 0);
+        let whole = read_regular(path, MAX_TEXT).unwrap();
+        assert!(whole.len() > 3, "{}", whole.len());
+        assert_eq!(whole, read_regular_reference(path, MAX_TEXT).unwrap());
+        for limit in [0, 1, 3, whole.len() - 1, whole.len(), whole.len() + 1] {
+            same_read(path, limit);
+        }
+        assert!(matches!(
+            read_regular(path, whole.len() - 1),
+            Err(BundleError::Data(Error::Limit))
+        ));
     }
 }

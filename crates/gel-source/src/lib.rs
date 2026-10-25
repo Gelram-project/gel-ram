@@ -226,9 +226,9 @@ fn label(s: &str) -> Result<String, Error> {
 type QuoteCheck = (usize, usize, Hash);
 /// Records by address and node numbers by normalized title.
 type Rows = (BTreeMap<Address, Record>, BTreeMap<String, Vec<u64>>);
-/// Catalogs whose passages total at least this many bytes have the passage
-/// digests in [`Corpus::load`] computed on scoped threads; smaller ones stay
-/// on the calling thread.
+/// Catalogs whose distinct passage ranges total at least this many bytes have
+/// the passage digests in [`Corpus::load`] computed on scoped threads; smaller
+/// ones stay on the calling thread. A range stated by several rows counts once.
 pub const QUOTE_PARALLEL_MIN_BYTES: usize = 1 << 20;
 /// Bytes of passages per thread below which the automatic path adds no thread.
 const QUOTE_BYTES_PER_THREAD: usize = 256 << 10;
@@ -246,6 +246,34 @@ fn quote_auto_threads(total: usize) -> usize {
     available
         .min(QUOTE_MAX_THREADS)
         .min(total / QUOTE_BYTES_PER_THREAD)
+}
+/// Keeps each byte range of `checks` once, so that its digest is computed
+/// once. Returns false when two rows state different digests for the same
+/// range: no digest equals both, so the answer of [`quotes_match`] over the
+/// original list is false as well. Otherwise every digest of the original
+/// list matches iff every digest of the shortened list does. Checks in
+/// strictly increasing `(start, end)` order, as the builder writes them, hold
+/// no repeat and stay as they are; any other order is sorted.
+fn distinct_ranges(checks: &mut Vec<QuoteCheck>) -> bool {
+    if checks
+        .windows(2)
+        .all(|w| (w[0].0, w[0].1) < (w[1].0, w[1].1))
+    {
+        return true;
+    }
+    checks.sort_unstable();
+    let mut consistent = true;
+    // Sorted by (start, end, digest): the rows of one range are adjacent.
+    checks.dedup_by(|later, kept| {
+        if (later.0, later.1) != (kept.0, kept.1) {
+            return false;
+        }
+        if later.2 != kept.2 {
+            consistent = false;
+        }
+        true
+    });
+    consistent
 }
 /// Whether every passage digest equals the stated one. `threads` None picks
 /// the count from the total passage length; the answer is the same for every
@@ -301,7 +329,8 @@ impl Corpus {
     /// Both pins must come from the caller's trusted local manifest, not the remote payload.
     /// Catalog: GELCORPUS082\n then node,role,entry,start,len,sha256,titleHex,sectionHex (TSV).
     ///
-    /// Passages totalling [`QUOTE_PARALLEL_MIN_BYTES`] or more have their
+    /// Each distinct passage range is hashed once, however many rows state it.
+    /// Distinct ranges totalling [`QUOTE_PARALLEL_MIN_BYTES`] or more have their
     /// digests computed on scoped threads; the result, including which error
     /// is reported when the inputs hold several, is the same as on one thread.
     pub fn load(
@@ -368,10 +397,11 @@ impl Corpus {
         // Rows are parsed in order; each passage digest is recorded at the
         // point where it is due and compared afterwards. Every recorded digest
         // precedes the first other error in row order, so any mismatch is the
-        // error that comes first.
+        // error that comes first. A range stated by several rows is hashed
+        // once; whether all recorded digests match does not depend on that.
         let mut checks = Vec::new();
         let parsed = Self::parse_rows(raw, text, &mut checks);
-        if !quotes_match(text.as_bytes(), &checks, threads) {
+        if !distinct_ranges(&mut checks) || !quotes_match(text.as_bytes(), &checks, threads) {
             return Err(Error::Integrity);
         }
         let (records, titles) = parsed?;
@@ -592,5 +622,182 @@ mod field_tests {
                 assert_eq!(unhex_into(&s, &mut v).map(|_| v), unhex_reference(&s));
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod distinct_range_tests {
+    use super::*;
+    /// The earlier answer: every recorded digest, one by one, in row order.
+    fn all_match_reference(text: &[u8], checks: &[QuoteCheck]) -> bool {
+        checks.iter().all(|&(s, e, h)| digest(&text[s..e]) == h)
+    }
+    /// The current answer for `threads`, as `load_unhashed` computes it.
+    fn all_match(text: &[u8], checks: &[QuoteCheck], threads: Option<usize>) -> bool {
+        let mut checks = checks.to_vec();
+        distinct_ranges(&mut checks) && quotes_match(text, &checks, threads)
+    }
+    /// SplitMix64: a fixed sequence for every seed.
+    struct Rng(u64);
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 = self.0.wrapping_add(0x9e37_79b9_7f4a_7c15);
+            let mut z = self.0;
+            z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
+            z ^ (z >> 31)
+        }
+        fn below(&mut self, n: usize) -> usize {
+            (self.next() % n as u64) as usize
+        }
+    }
+    fn text(rng: &mut Rng, len: usize) -> Vec<u8> {
+        (0..len).map(|_| b'a' + rng.below(4) as u8).collect()
+    }
+    #[test]
+    fn distinct_ranges_answer_equals_the_row_by_row_answer() {
+        let mut rng = Rng(0x5eed_d15c_2026_1024);
+        let text = text(&mut rng, 4096);
+        let mut seen = [0usize; 2];
+        // Inputs whose every digest is true while two different ranges share
+        // their start, or share their end: a rule that compared only one end
+        // of a range would merge two different passages there.
+        let mut shared = [0usize; 2];
+        for input in 0..3000 {
+            // Few ranges, so most of them repeat; some lists stay increasing.
+            // A new range may take the start or the end of an earlier one.
+            let mut ranges: Vec<(usize, usize)> = Vec::new();
+            for _ in 0..1 + rng.below(6) {
+                let range = match (ranges.len(), rng.below(3)) {
+                    (0, _) | (_, 0) => {
+                        let s = rng.below(text.len());
+                        (s, s + 1 + rng.below((text.len() - s).min(64)))
+                    }
+                    (n, 1) => {
+                        let s = ranges[rng.below(n)].0;
+                        (s, s + 1 + rng.below((text.len() - s).min(64)))
+                    }
+                    (n, _) => {
+                        let e = ranges[rng.below(n)].1;
+                        (e - 1 - rng.below(e.min(64)), e)
+                    }
+                };
+                ranges.push(range);
+            }
+            let n = rng.below(80);
+            let mut checks: Vec<QuoteCheck> = (0..n)
+                .map(|_| {
+                    let (s, e) = ranges[rng.below(ranges.len())];
+                    (s, e, digest(&text[s..e]))
+                })
+                .collect();
+            if input % 5 == 0 {
+                checks.sort_unstable_by_key(|&(s, e, _)| (s, e));
+                checks.dedup_by_key(|&mut (s, e, _)| (s, e));
+            }
+            // A wrong digest in no row, one row, or several rows.
+            for _ in 0..rng.below(3) {
+                if !checks.is_empty() {
+                    let k = rng.below(checks.len());
+                    checks[k].2[rng.below(32)] ^= 1 << rng.below(8);
+                }
+            }
+            let old = all_match_reference(&text, &checks);
+            seen[usize::from(old)] += 1;
+            for threads in [None, Some(0), Some(1), Some(2), Some(3), Some(8)] {
+                assert_eq!(all_match(&text, &checks, threads), old, "{checks:?}");
+            }
+            let mut stated: Vec<(usize, usize)> = checks.iter().map(|&(s, e, _)| (s, e)).collect();
+            stated.sort_unstable();
+            stated.dedup();
+            for (side, count) in shared.iter_mut().enumerate() {
+                let key = |r: &(usize, usize)| if side == 0 { r.0 } else { r.1 };
+                let pair = stated
+                    .iter()
+                    .enumerate()
+                    .any(|(i, a)| stated[i + 1..].iter().any(|b| key(a) == key(b)));
+                *count += usize::from(old && pair);
+            }
+        }
+        assert!(seen[0] > 100 && seen[1] > 100, "{seen:?}");
+        assert!(shared[0] > 100 && shared[1] > 100, "{shared:?}");
+    }
+    #[test]
+    fn conflicting_digests_of_one_range_fail_without_hashing() {
+        let text = b"abcdefgh";
+        let good = digest(&text[2..6]);
+        let mut bad = good;
+        bad[31] ^= 1;
+        let mut checks = vec![(2, 6, good), (0, 1, digest(&text[0..1])), (2, 6, bad)];
+        assert!(!all_match_reference(text, &checks));
+        assert!(!distinct_ranges(&mut checks));
+        // Increasing lists are left untouched.
+        let mut increasing = vec![(0, 1, good), (0, 2, good), (1, 2, good)];
+        let before = increasing.clone();
+        assert!(distinct_ranges(&mut increasing));
+        assert_eq!(increasing, before);
+        // A repeat with one digest collapses to one entry.
+        let mut repeated = vec![(2, 6, good), (0, 1, bad), (2, 6, good)];
+        assert!(distinct_ranges(&mut repeated));
+        assert_eq!(repeated, vec![(0, 1, bad), (2, 6, good)]);
+    }
+    /// One catalog row; `hash` None states the true digest of the range.
+    fn row(text: &[u8], role: u64, start: usize, len: usize, hash: Option<Hash>) -> String {
+        let h = hash.unwrap_or_else(|| digest(&text[start..start + len]));
+        format!(
+            "0\t{role}\t0\t{start}\t{len}\t{}\t{}\t{}\n",
+            hex(&h),
+            hex(b"Same"),
+            hex(format!("S{role}").as_bytes())
+        )
+    }
+    fn load(catalog: &str, text: &[u8]) -> Result<Corpus, Error> {
+        let c = catalog.as_bytes();
+        Corpus::load(c, text, digest(c), digest(text))
+    }
+    #[test]
+    fn repeated_ranges_keep_the_error_order() {
+        let text = b"repeated ranges of one text".to_vec();
+        // Sorts after the true digest, so keeping the smallest digest of a
+        // range would not hide it.
+        let wrong = [0xff; 32];
+        assert_ne!(wrong, digest(&text[0..8]));
+        let head = "GELCORPUS082\n";
+        // The same range in every row, all digests true: loads.
+        let mut ok = String::from(head);
+        for role in 0..40 {
+            ok += &row(&text, role, 0, 8, None);
+        }
+        assert_eq!(load(&ok, &text).map(|c| c.records().count()), Ok(40));
+        // One copy of the range states a wrong digest: Integrity.
+        let mut conflict = String::from(head);
+        for role in 0..40 {
+            let h = (role == 33).then_some(wrong);
+            conflict += &row(&text, role, 0, 8, h);
+        }
+        assert_eq!(load(&conflict, &text).err(), Some(Error::Integrity));
+        // The wrong copy after a Format error is never reached: Format.
+        let mut late = String::from(head);
+        for role in 0..40 {
+            if role == 20 {
+                late += "0\t020\tbad\n";
+            }
+            let h = (role == 33).then_some(wrong);
+            late += &row(&text, role, 0, 8, h);
+        }
+        assert_eq!(load(&late, &text).err(), Some(Error::Format));
+        // The wrong copy before a duplicate address: Integrity, as before.
+        let mut early = String::from(head);
+        for role in 0..40 {
+            let h = (role == 5).then_some(wrong);
+            early += &row(&text, role, 0, 8, h);
+        }
+        early += &row(&text, 7, 0, 8, None);
+        assert_eq!(load(&early, &text).err(), Some(Error::Integrity));
+        early = early.replace(
+            &row(&text, 5, 0, 8, Some(wrong)),
+            &row(&text, 5, 0, 8, None),
+        );
+        assert_eq!(load(&early, &text).err(), Some(Error::Duplicate));
     }
 }

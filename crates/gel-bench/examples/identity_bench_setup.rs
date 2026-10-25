@@ -1,5 +1,6 @@
 //! Identity check for the setup work of `gel-bench` and `gel-physics`: the
-//! threaded bank fill, the selection-based Top-K reference and the chain
+//! threaded bank fill, the threaded bank CRC, the selection-based Top-K
+//! reference and the chain
 //! order built once per size, each against an exact copy of the earlier
 //! serial code, on seeded inputs including empty, tail and full sizes.
 //!
@@ -58,6 +59,16 @@ pub fn run(_scale: Scale) -> Vec<Tally> {
     push(
         "bank_generate_other_seed",
         setup_reference::compare_bank(&[0, 5, 9999, 65_536], &[0, 3, 7], 91),
+    );
+    push(
+        "bank_crc_threaded",
+        setup_reference::compare_bank_crc(
+            &[
+                0, 1, 2, 3, 7, 8, 63, 64, 1000, 4097, 16383, 16384, 16385, 32769, 100_003,
+            ],
+            &[0, 1, 2, 3, 4, 5, 7, 8, 9, 24, 100_004],
+            GENERATOR_SEED,
+        ),
     );
     push(
         "bank_crc_pin",

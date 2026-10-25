@@ -1,5 +1,6 @@
-//! Exact copies of the earlier serial bank generation and full-sort Top-K
-//! reference, and the comparisons that check `setup` against them. Used by
+//! Exact copies of the earlier serial bank generation, bank CRC and
+//! full-sort Top-K reference, and the comparisons that check `setup`
+//! against them. Used by
 //! the unit tests and by `examples/identity_bench_setup.rs`.
 
 use crate::setup;
@@ -103,12 +104,35 @@ pub fn compare_bank(counts: &[usize], workers: &[usize], seed: u64) -> Tally {
     tally
 }
 
-/// The published bank CRC pins, built through the new path.
+/// The published bank CRC pins, built through the new path: the new bank
+/// with the earlier CRC loop and with `setup::bank_crc64`.
 pub fn compare_crc_pins(seed: u64, counts_and_pins: &[(usize, u64)]) -> Tally {
     let mut tally = Tally::default();
     for &(count, pin) in counts_and_pins {
         let w = setup::workers_for(count, setup::BANK_ORBS_PER_WORKER);
-        tally.record(bank_crc64(&new_bank(count, seed, w)) == pin);
+        let bank = new_bank(count, seed, w);
+        tally.record(bank_crc64(&bank) == pin);
+        tally.record(setup::bank_crc64(&bank) == pin);
+    }
+    tally
+}
+
+/// `setup::bank_crc64_with` against the earlier per-orb loop for each bank
+/// length and worker count (0 stands for `setup::bank_crc64`, as `run` calls
+/// it), including counts above the length.
+pub fn compare_bank_crc(lens: &[usize], workers: &[usize], seed: u64) -> Tally {
+    let mut tally = Tally::default();
+    for &len in lens {
+        let bank = old_bank(len, seed);
+        let old = bank_crc64(&bank);
+        for &w in workers {
+            let new = if w == 0 {
+                setup::bank_crc64(&bank)
+            } else {
+                setup::bank_crc64_with(&bank, w)
+            };
+            tally.record(new == old);
+        }
     }
     tally
 }
