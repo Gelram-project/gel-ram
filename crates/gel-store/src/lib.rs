@@ -255,7 +255,7 @@ impl RamStore {
 ///
 /// Runs exactly the header, limit and file-length checks of
 /// [`RamStore::open_verified_with_limits`], then streams the payload through
-/// one fixed buffer of at most 8 MiB to check the payload digest. No payload
+/// one fixed buffer of at most 16 MiB (two 8 MiB halves) to check the payload digest. No payload
 /// is retained: memory use is constant regardless of file size. The report keeps
 /// the actual on-disk source format separate from the protected v2 header a
 /// loaded store would carry.
@@ -274,38 +274,139 @@ const IO_BLOCK_RECORDS: usize = 8192;
 
 /// Records per payload read: 65,536 records, 8 MiB. A block of at least
 /// [`CRC64_PARALLEL_MIN_BYTES`] is hashed by [`Crc64Ecma::update`] on
-/// several threads; the CRC value does not depend on the block size.
+/// several threads; the CRC value does not depend on the block size. Payloads
+/// longer than one block overlap the read of a block with the digest of the
+/// previous one (see [`stream_payload`]).
 const READ_BLOCK_RECORDS: usize = 65_536;
 
 /// Reads `count` records in blocks of [`READ_BLOCK_RECORDS`], feeds every
-/// block to the digests and, when `orbs` is given, appends the decoded
-/// records. The one buffer holds at most 8 MiB.
+/// block to the digests in order and, when `orbs` is given, appends the
+/// decoded records. One 16 MiB buffer is used as two halves of 8 MiB: while
+/// the calling thread reads block k+1 into one half, scoped threads digest
+/// (and decode) block k from the other. A payload of one block or less is
+/// read with one buffer of at most 8 MiB and no extra thread.
 ///
 /// The digests are streaming, so the result does not depend on the block
-/// size. A failed read returns the error `read_exact` reports, exactly as a
-/// read of one record at a time would; the records read before it cannot
-/// change the outcome because decoding 128 bytes cannot fail.
+/// size or on which thread fed a block. A failed read returns the error
+/// `read_exact` reports, exactly as a read of one record at a time would;
+/// the records read before it cannot change the outcome because decoding
+/// 128 bytes cannot fail.
 fn stream_payload<R: Read>(
     reader: &mut R,
     count: usize,
     check: &mut PayloadCheck,
-    mut orbs: Option<&mut Vec<Orb1024>>,
+    orbs: Option<&mut Vec<Orb1024>>,
 ) -> Result<(), GelError> {
-    let mut buffer = vec![0u8; count.min(READ_BLOCK_RECORDS) * ORB_BYTES];
-    let mut remaining = count;
-    while remaining > 0 {
-        let records = remaining.min(READ_BLOCK_RECORDS);
-        let block = &mut buffer[..records * ORB_BYTES];
-        reader.read_exact(block)?;
-        check.update(block);
-        if let Some(orbs) = orbs.as_deref_mut() {
-            for record in block.chunks_exact(ORB_BYTES) {
-                orbs.push(Orb1024::from_le_bytes(record)?);
-            }
+    stream_payload_with(reader, count, check, orbs, true)
+}
+
+/// [`stream_payload`]; `threads == false` runs every step on the calling
+/// thread, in the same order (the path taken when a thread cannot start).
+fn stream_payload_with<R: Read>(
+    reader: &mut R,
+    count: usize,
+    check: &mut PayloadCheck,
+    mut orbs: Option<&mut Vec<Orb1024>>,
+    threads: bool,
+) -> Result<(), GelError> {
+    if count == 0 {
+        return Ok(());
+    }
+    if count <= READ_BLOCK_RECORDS {
+        let mut block = vec![0u8; count * ORB_BYTES];
+        reader.read_exact(&mut block)?;
+        check.update(&block);
+        if let Some(orbs) = orbs {
+            decode_block(&block, orbs)?;
         }
-        remaining -= records;
+        return Ok(());
+    }
+    let block_bytes = READ_BLOCK_RECORDS * ORB_BYTES;
+    // One allocation for both halves: two separate 8 MiB allocations freed
+    // together can push the heap past the allocator's trim threshold, so
+    // that the next buffer, even a small file's, touches fresh pages again.
+    let mut buffer = vec![0u8; 2 * block_bytes];
+    let (mut current, mut next) = buffer.split_at_mut(block_bytes);
+    reader.read_exact(current)?;
+    let mut records = READ_BLOCK_RECORDS;
+    let mut remaining = count - records;
+    while remaining > 0 {
+        let following = remaining.min(READ_BLOCK_RECORDS);
+        let target = &mut next[..following * ORB_BYTES];
+        let read = absorb_while(
+            &current[..records * ORB_BYTES],
+            check,
+            orbs.as_deref_mut(),
+            threads,
+            || reader.read_exact(target),
+        )?;
+        read?;
+        std::mem::swap(&mut current, &mut next);
+        records = following;
+        remaining -= following;
+    }
+    // Nothing is left to read: only a load has a second task to overlap.
+    let threads = threads && orbs.is_some();
+    absorb_while(&current[..records * ORB_BYTES], check, orbs, threads, || ())
+}
+
+/// Appends the records of `block` (a whole number of records) to `orbs`.
+fn decode_block(block: &[u8], orbs: &mut Vec<Orb1024>) -> Result<(), GelError> {
+    for record in block.chunks_exact(ORB_BYTES) {
+        orbs.push(Orb1024::from_le_bytes(record)?);
     }
     Ok(())
+}
+
+/// Feeds `block` to `check` and decodes it into `orbs` (when given) while the
+/// calling thread runs `work`, then returns what `work` returned. With
+/// `threads`, the digest and the decoding each run on a scoped thread; a
+/// task whose thread cannot start, or every task without `threads`, runs on
+/// the calling thread after `work`. The digest and decoding of `block` are
+/// complete when this returns, and a decoding error takes precedence over
+/// the value of `work`, as in a loop that finishes block k before it reads
+/// block k+1. A panic of a task is resumed on the calling thread.
+fn absorb_while<T>(
+    block: &[u8],
+    check: &mut PayloadCheck,
+    mut orbs: Option<&mut Vec<Orb1024>>,
+    threads: bool,
+    work: impl FnOnce() -> T,
+) -> Result<T, GelError> {
+    let (digested, decoded, value) = std::thread::scope(|scope| {
+        let digest = if threads {
+            std::thread::Builder::new()
+                .spawn_scoped(scope, || check.update(block))
+                .ok()
+        } else {
+            None
+        };
+        let decode = match orbs.as_deref_mut() {
+            Some(sink) if threads => std::thread::Builder::new()
+                .spawn_scoped(scope, move || decode_block(block, sink))
+                .ok(),
+            _ => None,
+        };
+        let value = work();
+        let digested = digest.map(|handle| handle.join());
+        let decoded = decode.map(|handle| handle.join());
+        (digested, decoded, value)
+    });
+    match digested {
+        Some(Ok(())) => {}
+        Some(Err(panic)) => std::panic::resume_unwind(panic),
+        None => check.update(block),
+    }
+    match decoded {
+        Some(Ok(result)) => result?,
+        Some(Err(panic)) => std::panic::resume_unwind(panic),
+        None => {
+            if let Some(sink) = orbs {
+                decode_block(block, sink)?;
+            }
+        }
+    }
+    Ok(value)
 }
 
 /// Writes the records in blocks of [`IO_BLOCK_RECORDS`], one `write_all` per
@@ -1773,6 +1874,307 @@ mod tests {
                 assert!(actual.2 == records);
             }
         }
+    }
+
+    // ---- overlapped reads against the previous block reader ------------------
+
+    /// The block reader before reads overlapped digests: one buffer of at
+    /// most 8 MiB; each block is read, digested and decoded before the next
+    /// read.
+    fn previous_stream_payload<R: Read>(
+        reader: &mut R,
+        count: usize,
+        check: &mut PayloadCheck,
+        mut orbs: Option<&mut Vec<Orb1024>>,
+    ) -> Result<(), GelError> {
+        let mut buffer = vec![0u8; count.min(READ_BLOCK_RECORDS) * ORB_BYTES];
+        let mut remaining = count;
+        while remaining > 0 {
+            let records = remaining.min(READ_BLOCK_RECORDS);
+            let block = &mut buffer[..records * ORB_BYTES];
+            reader.read_exact(block)?;
+            check.update(block);
+            if let Some(orbs) = orbs.as_deref_mut() {
+                for record in block.chunks_exact(ORB_BYTES) {
+                    orbs.push(Orb1024::from_le_bytes(record)?);
+                }
+            }
+            remaining -= records;
+        }
+        Ok(())
+    }
+
+    /// The readers compared: the current one with and without threads, the
+    /// previous block reader and the record-at-a-time reader.
+    const READERS: [&str; 4] = ["current", "current_one_thread", "previous", "record"];
+
+    /// One scripted read: the expected records and payload, the stream served
+    /// up to `end` and then `fault`, the header format and whether to load.
+    struct Script<'a> {
+        records: &'a [Orb1024],
+        payload: &'a [u8],
+        stream: &'a [u8],
+        end: usize,
+        fault: Option<std::io::ErrorKind>,
+        legacy: bool,
+        load: bool,
+        seed: u64,
+    }
+
+    /// Runs reader `which` over the scripted stream and returns its outcome
+    /// as in [`both_reads`].
+    fn scripted_read(which: usize, script: &Script<'_>) -> (String, String, Vec<Orb1024>) {
+        let mut reader = ScriptedReader {
+            data: script.stream,
+            pos: 0,
+            end: script.end,
+            fault: script.fault,
+            rng: script.seed ^ which as u64,
+        };
+        let mut check = payload_check(script.records, script.legacy, script.payload);
+        let mut orbs = Vec::new();
+        let sink = if script.load { Some(&mut orbs) } else { None };
+        let count = script.records.len();
+        let result = match READERS[which] {
+            "current" => stream_payload(&mut reader, count, &mut check, sink),
+            "current_one_thread" => {
+                stream_payload_with(&mut reader, count, &mut check, sink, false)
+            }
+            "previous" => previous_stream_payload(&mut reader, count, &mut check, sink),
+            _ => reference_stream_payload(&mut reader, count, &mut check, sink),
+        };
+        match result {
+            Ok(()) => ("Ok(())".to_string(), format!("{:?}", check.finish()), orbs),
+            Err(error) => (format!("Err({error:?})"), String::new(), Vec::new()),
+        }
+    }
+
+    /// Record counts around the read-block edges, where reads overlap.
+    fn read_block_counts() -> Vec<usize> {
+        let r = READ_BLOCK_RECORDS;
+        vec![r - 1, r, r + 1, 2 * r - 1, 2 * r, 2 * r + 1, 3 * r + 7]
+    }
+
+    #[test]
+    fn overlapped_reads_match_previous_and_record_reads_across_read_blocks() {
+        let r = READ_BLOCK_RECORDS;
+        let block = r * ORB_BYTES;
+        let kinds = [None, Some(std::io::ErrorKind::Other)];
+        let mut cases = 0usize;
+        for (index, count) in read_block_counts().into_iter().enumerate() {
+            // Debug builds (unoptimized digests) take three of the counts
+            // and every other trial of each.
+            if cfg!(debug_assertions) && ![1, 2, 5].contains(&index) {
+                continue;
+            }
+            let records = seeded_orbs(count, 15_000 + index as u64);
+            let payload: Vec<u8> = records.iter().flat_map(|orb| orb.to_le_bytes()).collect();
+            let len = payload.len();
+            let mut corrupt_last = payload.clone();
+            corrupt_last[len - 1] ^= 0x10;
+            let mut corrupt_first = payload.clone();
+            corrupt_first[ORB_BYTES + 3] ^= 0x01;
+            // (stream, end): whole streams, ends inside the first block, on
+            // and around the first block edge, inside the last block.
+            let mut trials: Vec<(&[u8], usize)> = vec![
+                (&payload, len),
+                (&corrupt_last, len),
+                (&corrupt_first, len),
+                (&payload, len - 1),
+                (&payload, len - ORB_BYTES),
+                (&payload, block / 2),
+            ];
+            for end in [block - 1, block, block + 1] {
+                if end < len {
+                    trials.push((&payload, end));
+                }
+            }
+            let seed = splitmix64(0x0b5e_0000 + index as u64);
+            trials.push((&payload, (seed % len as u64) as usize));
+            for (trial, &(stream, end)) in trials.iter().enumerate() {
+                if cfg!(debug_assertions) && (trial + index) % 2 != 0 {
+                    continue;
+                }
+                let modes: Vec<_> = kinds
+                    .iter()
+                    .flat_map(|&fault| {
+                        [(false, false), (false, true), (true, false), (true, true)]
+                            .map(|(legacy, load)| (fault, legacy, load))
+                    })
+                    .collect();
+                // Release builds run every mode; debug builds rotate through
+                // them, one per trial.
+                let pick = (index * 11 + trial) % modes.len();
+                for (mode, &(fault, legacy, load)) in modes.iter().enumerate() {
+                    if cfg!(debug_assertions) && mode != pick {
+                        continue;
+                    }
+                    let script = Script {
+                        records: &records,
+                        payload: &payload,
+                        stream,
+                        end,
+                        fault,
+                        legacy,
+                        load,
+                        seed: splitmix64(
+                            ((index as u64) << 16) | ((trial as u64) << 8) | mode as u64,
+                        ),
+                    };
+                    let outcomes: Vec<_> = (0..READERS.len())
+                        .map(|which| scripted_read(which, &script))
+                        .collect();
+                    for (which, outcome) in outcomes.iter().enumerate().skip(1) {
+                        assert!(
+                            *outcome == outcomes[0],
+                            "{} differs: {count} records, trial {trial}, end {end}, \
+                             fault {fault:?}, legacy {legacy}, load {load}",
+                            READERS[which]
+                        );
+                    }
+                    let outcome = &outcomes[0];
+                    if end == len && std::ptr::eq(stream, payload.as_slice()) {
+                        assert_eq!(outcome.0, "Ok(())");
+                        assert!(outcome.1.starts_with("Ok("));
+                        if load {
+                            assert!(outcome.2 == records);
+                        }
+                    } else if end == len {
+                        assert_eq!(outcome.0, "Ok(())");
+                        assert_eq!(outcome.1, "Err(CorruptStore)");
+                    } else {
+                        assert!(outcome.0.starts_with("Err(Io("), "{}", outcome.0);
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        // Edge ends below the length: none for r-1 records, one for r, three
+        // for the five longer counts; plus 6 fixed trials and 1 seeded each.
+        // Debug: 4 of the 8 trials for r records, 5 of 10 for r+1 and 2r+1.
+        let expected = if cfg!(debug_assertions) {
+            4 + 5 + 5
+        } else {
+            (7 + 8 + 5 * 10) * 8
+        };
+        assert_eq!(cases, expected);
+    }
+
+    #[test]
+    fn ragged_last_block_matches_the_previous_reader() {
+        let r = READ_BLOCK_RECORDS;
+        let block = r * ORB_BYTES;
+        let modes = [(false, false), (false, true), (true, false), (true, true)];
+        let mut cases = 0usize;
+        // A last block of one record after two whole blocks, and of seven
+        // records after eight.
+        for (index, (count, tail)) in [(2 * r + 1, 1usize), (8 * r + 7, 7)]
+            .into_iter()
+            .enumerate()
+        {
+            let records = seeded_orbs(count, 19_000 + index as u64);
+            let payload: Vec<u8> = records.iter().flat_map(|orb| orb.to_le_bytes()).collect();
+            let len = payload.len();
+            assert_eq!(len % block, tail * ORB_BYTES);
+            let mut corrupt_last = payload.clone();
+            corrupt_last[len - 1] ^= 0x04;
+            let last_block = len - tail * ORB_BYTES;
+            // (stream, end, fault): whole streams, a fault on the edge of
+            // the last block and an early end inside it.
+            let trials: [(&[u8], usize, Option<std::io::ErrorKind>); 4] = [
+                (&payload, len, None),
+                (&corrupt_last, len, None),
+                (&payload, last_block, Some(std::io::ErrorKind::Other)),
+                (&payload, len - 1, None),
+            ];
+            for (trial, &(stream, end, fault)) in trials.iter().enumerate() {
+                // Debug builds (unoptimized digests) take every other trial
+                // of the longer count, one mode per trial, a different one
+                // for each trial.
+                if cfg!(debug_assertions) && index == 1 && trial % 2 != 0 {
+                    continue;
+                }
+                for (mode, &(legacy, load)) in modes.iter().enumerate() {
+                    if cfg!(debug_assertions) && mode != (trial + index) % modes.len() {
+                        continue;
+                    }
+                    let script = Script {
+                        records: &records,
+                        payload: &payload,
+                        stream,
+                        end,
+                        fault,
+                        legacy,
+                        load,
+                        seed: splitmix64(0x7a11_0000 + ((index as u64) << 8) + trial as u64),
+                    };
+                    let outcomes: Vec<_> = (0..READERS.len())
+                        .map(|which| scripted_read(which, &script))
+                        .collect();
+                    for (which, outcome) in outcomes.iter().enumerate().skip(1) {
+                        assert!(
+                            *outcome == outcomes[0],
+                            "{} differs: {count} records, trial {trial}, legacy {legacy}, \
+                             load {load}",
+                            READERS[which]
+                        );
+                    }
+                    let outcome = &outcomes[0];
+                    match trial {
+                        0 => {
+                            assert_eq!(outcome.0, "Ok(())");
+                            assert!(outcome.1.starts_with("Ok("), "{}", outcome.1);
+                            assert!(!load || outcome.2 == records);
+                        }
+                        1 => {
+                            assert_eq!(outcome.0, "Ok(())");
+                            assert_eq!(outcome.1, "Err(CorruptStore)");
+                        }
+                        _ => assert!(outcome.0.starts_with("Err(Io("), "{}", outcome.0),
+                    }
+                    cases += 1;
+                }
+            }
+        }
+        let expected = if cfg!(debug_assertions) {
+            4 + 2
+        } else {
+            2 * 4 * 4
+        };
+        assert_eq!(cases, expected);
+    }
+
+    #[test]
+    fn overlapped_open_and_verify_match_the_previous_reader_on_files() {
+        let path = path("overlapped-read-files");
+        let r = READ_BLOCK_RECORDS;
+        for (index, count) in [r, r + 1, 2 * r + 3].into_iter().enumerate() {
+            let records = seeded_orbs(count, 17_000 + index as u64);
+            let generation = 60 + index as u64;
+            let v2 = v2_file_bytes(&records, generation);
+            let v1 = legacy_v1_file_bytes(&records, generation);
+            for (format, original) in [v2, v1].into_iter().enumerate() {
+                let mut flipped = original.clone();
+                let at = original.len() - 1 - (index * 977) % ORB_BYTES;
+                flipped[at] ^= 0x80;
+                for (variant, bytes) in [original, flipped].iter().enumerate() {
+                    fs::write(&path, bytes).unwrap();
+                    let expected = reference_open_and_verify(&path);
+                    let actual = current_open_and_verify(&path);
+                    assert!(
+                        actual == expected,
+                        "{count} records, format {format}, variant {variant}"
+                    );
+                    if variant == 0 {
+                        assert!(actual.2 == records);
+                    } else {
+                        assert_eq!(actual.0, "CorruptStore");
+                        assert_eq!(actual.1, "Err(CorruptStore)");
+                    }
+                }
+            }
+        }
+        let _ = fs::remove_file(path);
     }
 
     #[test]

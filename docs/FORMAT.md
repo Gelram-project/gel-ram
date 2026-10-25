@@ -42,8 +42,8 @@ Since v0.2.1, `RamStore::open_verified` allows at most 256 MiB of payload
 and record budgets are checked before payload allocation.
 
 `write_if_newer` validates the existing v2 header, exact file length and full
-payload CRC before accepting its generation. Verification streams through a
-fixed buffer of at most 8 MiB: O(1) extra memory, but O(file size) additional read/checksum
+payload CRC before accepting its generation. Verification streams through
+one fixed buffer of at most 16 MiB (two 8 MiB halves): O(1) extra memory, but O(file size) additional read/checksum
 work before a write. This deliberate cost is not a throughput improvement.
 The single-writer contract still applies; this is not a multi-process CAS and
 does not protect against concurrent mutation by another writer.

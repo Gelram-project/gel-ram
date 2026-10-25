@@ -1,14 +1,15 @@
 //! Wall-time harness for the setup work alone, earlier serial code
 //! (`<case>_ref`) against the current code (`<case>_new`) in one binary: bank
-//! generation, the Top-8 reference and the pointer-chase chain for five
-//! rounds. It needs the `setup` and `chain` modules, so it runs only on trees
+//! generation, the bank CRC, the Top-8 reference and the pointer-chase chain
+//! for five rounds. It needs the `setup` and `chain` modules, so it runs only on trees
 //! that have them. Prints per-run wall time in nanoseconds and a SHA-256 over
 //! every produced output; differing outputs end the run with
 //! `SPEED_FAIL reason=outputs_differ`.
 //!
 //! Usage: cargo run --release -p gel-bench --example speed_bench_setup_paired -- [RUNS]
 //! (RUNS 1..=999, default 9). Inputs: 1,310,720 orbs (160 MiB bank, the
-//! gel-bench default), Top-8 for the query at index 1,310,720 / 3, and a
+//! gel-bench default), its CRC-64/ECMA, Top-8 for the query at index
+//! 1,310,720 / 3, and a
 //! 256 MiB chain (the largest gel-physics size) built for 5 rounds. Output
 //! grammar: `docs/SPEED.md`.
 
@@ -91,6 +92,8 @@ fn main() {
             setup_reference::bank_crc64(&setup_reference::new_bank(ORBS, GENERATOR_SEED, workers));
         crc.to_be_bytes().to_vec()
     };
+    let crc_old = || setup_reference::bank_crc64(&bank).to_be_bytes().to_vec();
+    let crc_new = || setup::bank_crc64(&bank).to_be_bytes().to_vec();
     let top_old = || entries(&setup_reference::old_reference_top_k(&bank, &query, 8));
     let top_new = || entries(&setup::reference_top_k(&bank, &query, 8));
     let chain_old = || {
@@ -104,8 +107,9 @@ fn main() {
             .flat_map(|_| fold(&chain::build_next(&order)).to_be_bytes())
             .collect::<Vec<u8>>()
     };
-    let cases: [(&str, Case<'_>, Case<'_>); 3] = [
+    let cases: [(&str, Case<'_>, Case<'_>); 4] = [
         ("bank_generate_1310720", &bank_old, &bank_new),
+        ("bank_crc_1310720", &crc_old, &crc_new),
         ("reference_top8_1310720", &top_old, &top_new),
         ("chain_256mib_5rep", &chain_old, &chain_new),
     ];

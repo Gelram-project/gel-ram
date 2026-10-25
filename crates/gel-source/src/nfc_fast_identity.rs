@@ -5,8 +5,8 @@
 //! is compared for each property and for the NFC of one character; pairs,
 //! the Unicode NormalizationTest, sets seeded as in the pinned tests and
 //! seeded strings with a prefix that passes the quick check are compared for
-//! the whole normalization. Last, `line_end::find` is compared with the
-//! earlier line end search of `document::scan`.
+//! the whole normalization. Last, `line_end::find_ascii` is compared with the
+//! earlier line end search and ASCII check of `document::scan`.
 use crate::nfc as fast;
 use crate::nfc_reference as reference;
 use crate::nfc_tables::{
@@ -409,19 +409,26 @@ fn line_end_reference(bytes: &[u8], start: usize, end: usize) -> usize {
         .map_or(end, |p| start + p)
 }
 
-/// Compares `line_end::find` with the reference for every `start..end` of
-/// `bytes` with `start <= starts`.
+/// The two steps of `document::scan` before `line_end::find_ascii`: the line
+/// end, then `is_ascii` of the line.
+fn line_reference(bytes: &[u8], start: usize, end: usize) -> (usize, bool) {
+    let line_end = line_end_reference(bytes, start, end);
+    (line_end, bytes[start..line_end].is_ascii())
+}
+
+/// Compares `line_end::find_ascii` with the reference for every `start..end`
+/// of `bytes` with `start <= starts`.
 fn compare_line_ends(bytes: &[u8], starts: usize, tally: &mut Tally) {
     for start in 0..=bytes.len().min(starts) {
         for end in start..=bytes.len() {
             tally.check(
-                crate::line_end::find(bytes, start, end) == line_end_reference(bytes, start, end),
+                crate::line_end::find_ascii(bytes, start, end) == line_reference(bytes, start, end),
             );
         }
     }
 }
 
-/// `line_end::find` against the earlier search: short buffers with one or two
+/// `line_end::find_ascii` against the earlier search: short buffers with one or two
 /// marked bytes at every position (word boundaries and remainders), seeded
 /// buffers up to past the line limit, and texts made of the long lines above
 /// with '\n' and "\r\n", walked line by line as `scan` walks them.
@@ -489,8 +496,8 @@ fn line_end_cases(full: bool, lines: &[String]) -> Vec<Tally> {
             let b = (next() % (len as u64 + 1)) as usize;
             let (start, end) = (a.min(b), a.max(b));
             seeded.check(
-                crate::line_end::find(&buffer, start, end)
-                    == line_end_reference(&buffer, start, end),
+                crate::line_end::find_ascii(&buffer, start, end)
+                    == line_reference(&buffer, start, end),
             );
         }
     }
@@ -505,11 +512,11 @@ fn line_end_cases(full: bool, lines: &[String]) -> Vec<Tally> {
         let bytes = text.as_bytes();
         let mut start = 0;
         while start < bytes.len() {
-            let got = crate::line_end::find(bytes, start, bytes.len());
-            let want = line_end_reference(bytes, start, bytes.len());
+            let got = crate::line_end::find_ascii(bytes, start, bytes.len());
+            let want = line_reference(bytes, start, bytes.len());
             texts.check(got == want);
-            start = if want < bytes.len() {
-                want + 1
+            start = if want.0 < bytes.len() {
+                want.0 + 1
             } else {
                 bytes.len()
             };

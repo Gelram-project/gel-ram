@@ -7,9 +7,10 @@
 //! NormalizationTest 16.0, sets seeded as in the pinned unit tests, seeded
 //! strings with a prefix that passes the quick check, and long lines are
 //! compared for the whole normalization. The line end search of document
-//! search, eight bytes at a time (`src/line_end.rs`), is compared with the
-//! earlier byte-by-byte search on short buffers with marked bytes at every
-//! position, seeded buffers and texts made of the long lines.
+//! search with its ASCII check, eight bytes at a time in one pass
+//! (`src/line_end.rs`), is compared with the earlier byte-by-byte search
+//! followed by `is_ascii` of the line on short buffers with marked bytes at
+//! every position, seeded buffers and texts made of the long lines.
 //!
 //! Usage: `cargo run --release -p gel-source --example identity_nfc_fast`.
 //! Prints `IDENTITY name=<case> cases=<n> equal=<n>` per case and one final
