@@ -170,7 +170,7 @@ c8b9fbd496bdbed26157f9d76dc1184802bd3539784eab45b8a15b47f22aa6b2  crates/gel-sou
 44d833cbb6fbe952aa22888e9f092d8201af81d0f05dd3845f54738164d9fca9  crates/gel-source/src/bin/gel-source.rs
 27c340a7fdd175ac53088b5e2d8a8749853ae7d2a0fb89f9ccb484dc5a8f0a0d  crates/gel-source/src/builder.rs
 8f74bf1af1f993234b1118fa313defbce07afca75fb66be4c4715fe2f7ba696c  crates/gel-source/src/bundle.rs
-7807a2bddaaed2ea7279661c83b4738078440363441e1071dc5eb1557ccad2ec  crates/gel-source/src/collection.rs
+001f4075ef671a49f7db7172695f857f3dfb1d35052750748ed40c18db2d0897  crates/gel-source/src/collection.rs
 4b61190e53c23f7db02804194266dd68e0b3ee5c4d16020cf99149c6b7c40718  crates/gel-source/src/collection_eager_reference.rs
 e6b5d3aff57e088aedc703b3f7feb7996abd4ea4275f753f76009cbe2112d35d  crates/gel-source/src/context.rs
 54f0efcff6ca34d1d1ed801fbe48f0c4c091eba6eb5c2884d09e61e00f76f595  crates/gel-source/src/corpus_load_reference.rs
@@ -208,7 +208,7 @@ f6a4fbb8699c1f4ab35c500e67952dd8f3b39b3b216298297b32387f5da79d94  crates/gel-sou
 d4f9a18802995274b436d81d5c8b28ea84b92ffc4673f3986e7c0dd0a1f6f772  crates/gel-store/examples/speed_store_crc.rs
 c141e749b01959aeb138a21634766766dbad0cc9be20d034d46f86027e71fff0  crates/gel-store/examples/speed_store_io.rs
 205e2a7273efa8b763c0249f2ae6895dd024fd3d5686ae4bae2cf212d3d3b7f0  crates/gel-store/examples/speed_store_overlap.rs
-30376be52954c85a19bc8f5d60ccb24ce6709d51c06e5f9b7f9725a902abeea1  crates/gel-store/src/lib.rs
+e182ddcff43959989fa9e92fc3c9ffb4849d1988b590267a736d57247916de1d  crates/gel-store/src/lib.rs
 0a602af49be1b0d99898c9d6fe8d6c08a88f216e683f220bfbc384c95f1c80ee  crates/gel-store/tests/identity_store_crc.rs
 c5c4dbfa90cdfec0a115096decebdb9856233b43165c8f9cf969edf9e88012d3  crates/gel-structural/Cargo.toml
 9f52106f46df7797bf7076f2209442906714182f40f8c61ac53c1d92182150b1  crates/gel-structural/examples/identity_structural_encode.rs
@@ -277,7 +277,7 @@ a19879f2e37a7e94267042de6035640c1ab0515fd8b2bfcec629b98b9e9556a1  docs/REAL-SOUR
 45105385a305fe5fc0994e72a56b7eea1ac5f81f7b1210e0a9c0139e81777ac9  docs/RECORDER-SAFETY.md
 a66fcad0b539cbdc4e0894fa336782cef28720fda8caccc5844d95a54f99c03d  docs/REPRODUCE-ISOLATED.md
 4779799a77a4fe28687d8e335a50061ff62a530b07d04a87d290c1a5364c14fe  docs/REPRODUCE.md
-04971e1e01f883fe0b0d67b05443c93dfd68ea2d30c6144fe7a53dcd22afcb8e  docs/ROADMAP.md
+82bd7098cab6d109909600c5da87b267f4995b12afba1ef63df2c8d063311131  docs/ROADMAP.md
 dd1397035e520d0342a6a3c978eb54de1d488a93ef4aaef09723a681c943f1e4  docs/SILICON-2026-09-03.md
 b60845e6495e559d8bf40db0356e7da507814432e915964295e7c36a84330246  docs/SILICON-2026-09-04.md
 cf2b05c10db2014eb9e0d9d11f13e83a618fa2aec5a742b2380949785f92f6d9  docs/SOURCE-BUILDER.md
@@ -947,7 +947,7 @@ c45256159eb4692e0e9b43f1623f2cdfa3ccbca15f4541f4d854ec680e86f4ec  docs/speed-res
 6f9c95f6c62169a78936103c8e672151bc393e641ca7da2a0a30faa29339458e  docs/speed-results/2026-10-20-against-v0.6.1/speed_witness/b-r3.txt
 5f0f48cb39b02c086f06bc36a7980205ab456a395c1d7829980df209de8656a5  docs/speed-results/2026-10-20-against-v0.6.1/speed_witness/manifest.txt
 2ae85ad0df2ef0ca1644645b5e9e0a18f3269b1d3f469acc072c3fa61c78adb3  docs/speed-results/2026-10-20-against-v0.6.1/speed_witness/summary.txt
-95714b039cba9ef8b73f3bc8fee9d34e9ec0d7a7ba0459c8bbf59f52f105864f  docs/speed-results/2026-10-25-quiet-machine/README.md
+20c1ec125eeafe08890ef8e93d9d886d373268c5a2b045e25739061ab2d46445  docs/speed-results/2026-10-25-quiet-machine/README.md
 866b1bd2225b1071e74385be02e648aa97eea35ca189b437ef248a8668b44b89  docs/speed-results/2026-10-25-quiet-machine/package-2/speed_bench_checks/a-r1.txt
 9aa7a9ecdb78c23ad2d0476e69b93fae7a871dc3c75c4b7ec3dc3156cca16c12  docs/speed-results/2026-10-25-quiet-machine/package-2/speed_bench_checks/a-r2.txt
 1c700c050872355ab5af7b71cdf00a9f650d43ca57ca6bc4d54d022a410212c6  docs/speed-results/2026-10-25-quiet-machine/package-2/speed_bench_checks/a-r3.txt
@@ -1023,7 +1023,7 @@ f2c4b3fa5328e1e1834af0662f8defa1083b44786b61a610ef01ec108616d685  docs/speed-res
 cf9d32835056a39bd766c2331b7bc5936d582bbe734237c0b881c7e68be8639d  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/b-r1.txt
 4e06db43fbde50a1abfb2285edbdc66a15a48810307194c73b5129f1e2a5acb9  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/b-r2.txt
 2280012579d43db10f2497258c02b7925a78a6761fcd920cc7b9e084b24fd969  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/b-r3.txt
-1033cf3193cb8124e85b63c887c52120d067ff7a7ed8012348c51b86adf7cd06  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/manifest.txt
+2aae2fdd38d3de1b7438708b29ab54a7c5ee1a279e9f85adab54e4a892b6f7cb  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/manifest.txt
 d05292abca16aac47c7b40c8f766f246d5c5ebc1651604699e2c6d51e6bcc9e9  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_bundle_memory/summary.txt
 1d98d342f8b7b1cec055ecbd7724bc4e5c5f531d0c3638bbe6b0a3637604002f  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/a-r1.txt
 aaafdb57ae548b3ebef8693cce7402f54a22d56d0f4689adb7afbdee2497f243  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/a-r2.txt
@@ -1034,7 +1034,7 @@ aaafdb57ae548b3ebef8693cce7402f54a22d56d0f4689adb7afbdee2497f243  docs/speed-res
 91087464ce0903e849c51aa54411e8cdec56cc34e9728dfe30b1703f25d75644  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/b-r1.txt
 f3af8912f8b05a6aefb0a1252cfa26048a0793dacb5448e900c9cf12d74e7bc3  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/b-r2.txt
 2a781970fec1df5b10fe58bdbe8a85f8565c8d5909514dfb7a04838496876d5c  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/b-r3.txt
-7865c9d96cd1c5851156261a79ee0318206385f7c94159fd1f3d7bf1fdd5ee2e  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/manifest.txt
+46e8e06c5ae3caab67b2ea9464120849e54c6d593d16936c0f7a8cb5164954dd  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/manifest.txt
 0cd8a349876e65571d2d42fad51e8bf80178faea78a8bc4fe592411f40161c16  docs/speed-results/2026-10-25-quiet-machine/package-3/speed_store_overlap/summary.txt
 28a8c775edbd22b1264c143df37296e74c1c5460a79b1d337a654c57b9f39695  media/EVIDENCE-LAB-GUIDE.md
 a7b4e85d5db1274c61a49d8814908321130dad6c3eec9324de0500071d9c9835  media/GEL-EVIDENCE-LAB-EN.mp4

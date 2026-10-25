@@ -16,8 +16,8 @@ The records behind the table "Measured on a quiet machine" in
 | Item | Value |
 |---|---|
 | package-2 | A and A2: two clean checkouts of `bb3da1b` (before PR #87); B: a clean checkout of `90bd091` (`main` after PR #87) |
-| package-3, `speed_store_overlap` | A and A2: two clean checkouts of `bb3da1b`; B: a local tree equal to this change in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/` |
-| package-3, `speed_bundle_memory` | A and A2: two clean checkouts of `3cf1be5` (`main` before this change); B: a local tree equal to this change in `crates/gel-source/src`, the example, `tools/` and `Cargo.lock` |
+| package-3, `speed_store_overlap` | A and A2: two clean checkouts of `bb3da1b`; B: a local tree equal to this change in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/`, except the later collection change in `crates/gel-source/src/collection.rs` and a later doc comment in `crates/gel-store/src/lib.rs` |
+| package-3, `speed_bundle_memory` | A and A2: two clean checkouts of `3cf1be5` (`main` before this change); B: a local tree equal to this change in `crates/gel-source/src` except the later collection change in `collection.rs`, in the example, `tools/` and `Cargo.lock` |
 | Tool | `xtask speed-ab`, 3 rounds, order rotated each round |
 | Runs per round | 9 (`speed_bundle_memory`: 3) |
 | Toolchain | `rustc 1.85.0 (4d91de4e4 2025-02-17)`, release profile of each tree |

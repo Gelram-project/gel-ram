@@ -282,8 +282,9 @@ const READ_BLOCK_RECORDS: usize = 65_536;
 /// Reads `count` records in blocks of [`READ_BLOCK_RECORDS`], feeds every
 /// block to the digests in order and, when `orbs` is given, appends the
 /// decoded records. One 16 MiB buffer is used as two halves of 8 MiB: while
-/// the calling thread reads block k+1 into one half, scoped threads digest
-/// (and decode) block k from the other. A payload of one block or less is
+/// a scoped thread reads block k+1 into one half, the calling thread digests
+/// block k from the other and, on a load, a second scoped thread decodes it.
+/// A payload of one block or less is
 /// read with one buffer of at most 8 MiB and no extra thread.
 ///
 /// The digests are streaming, so the result does not depend on the block

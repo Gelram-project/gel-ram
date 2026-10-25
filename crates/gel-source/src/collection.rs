@@ -363,9 +363,11 @@ impl Collection {
     /// are checked, the document texts are moved to the front of that buffer
     /// in file order instead of being copied, and the documents share it, so
     /// the peak memory of a load is the buffer alone. The result, errors
-    /// included, is the same. A loaded document that is later replaced or
-    /// removed keeps its bytes in the shared buffer until no document of that
-    /// buffer is left.
+    /// included, is the same. The buffer lives as long as any document of it,
+    /// in this collection, in a clone or as a cloned [`Document`]: a loaded
+    /// document that is later replaced or removed keeps its bytes in the
+    /// buffer until then, so a changed collection can hold up to the loaded
+    /// texts plus its current ones.
     fn from_vec_with(
         mut bytes: Vec<u8>,
         trusted_pin: Hash,
@@ -1091,7 +1093,7 @@ mod lazy_root_tests {
                 load_same(&bytes, [0; 32], threads);
             }
             for n in 0..=bytes.len() {
-                let threads = 2 + n % 7;
+                let threads = n % 9;
                 load_same(&bytes[..n], pin, threads);
                 load_same(&bytes[..n], digest(&bytes[..n]), threads);
             }
@@ -1099,7 +1101,7 @@ mod lazy_root_tests {
             for n in 0..changed.len() {
                 for flip in [1u8, 0x80, 0xff] {
                     changed[n] ^= flip;
-                    let threads = 2 + (n + flip as usize) % 7;
+                    let threads = (n + flip as usize) % 9;
                     load_same(&changed, pin, threads);
                     load_same(&changed, digest(&changed), threads);
                     changed[n] ^= flip;

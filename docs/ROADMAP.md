@@ -129,8 +129,8 @@ reason, and the slowest ones are those that hash the whole input.
 `xtask speed-ab` on 2026-10-25 with no other measurement running: package 2
 with A and A2 at `bb3da1b` (before PR #87) and B at `90bd091` (after it);
 package 3 with A and A2 at `bb3da1b` and B at this change, and for the bundle
-load at `3cf1be5`. 3 rounds of 9 runs with the order rotated, medians, not
-pinned to cores. The manifests, summaries and every run's output are in
+load at `3cf1be5`. 3 rounds of 9 runs (the bundle load: 3) with the order
+rotated, medians, not pinned to cores. The manifests, summaries and every run's output are in
 [speed-results/2026-10-25-quiet-machine](speed-results/2026-10-25-quiet-machine/README.md);
 every example printed the same output digest in A, A2 and B.
 
@@ -142,7 +142,7 @@ every example printed the same output digest in A, A2 and B.
 | Package 2: ASCII check (`speed_line_ascii`) | 1.02 to 1.61 | 0.97 to 1.03 |
 | Package 2: gel-bench checks (`speed_bench_checks`) | 1.23 to 1.60; smallest input 0.99 | 0.97 to 1.03 |
 | Package 2: store open and verify (`speed_store_overlap`) | open 1.11 to 1.16; verify from 16 MiB 1.16 to 1.62; **v1 verify 0.64**; verify of 1 and 8 MiB 0.93 and 0.97 | 0.99 to 1.01 |
-| Package 3: store open and verify (`speed_store_overlap`) | open 1.13 to 1.18; verify from 16 MiB 1.20 to 1.65; v1 verify 1.08; verify of 1 and 8 MiB 0.99 and 1.00 | 0.99 to 1.01 |
+| Package 3: store open and verify (`speed_store_overlap`) | open 1.13 to 1.18; verify from 16 MiB 1.20 to 1.65; v1 verify 1.08; verify of 1 and 8 MiB 1.00 and 0.99 | 0.99 to 1.01 |
 | Package 3: bundle load (`speed_bundle_memory`) | 1.06; peak resident memory 134 072 KiB to 68 612 KiB (median of three runs) | 0.99 |
 
 After PR #87 the store check digested each block on a new thread. A v1 file has
