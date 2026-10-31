@@ -1,0 +1,5 @@
+SPEED_SETUP example=speed_collection_memory runs=3 documents=64 document_bytes=1048576 snapshot_bytes=67110679 available_parallelism=24
+SPEED name=collection_load_64mib run=0 ns=126005858
+SPEED name=collection_load_64mib run=1 ns=128279401
+SPEED name=collection_load_64mib run=2 ns=124411061
+SPEED_CHECK sha256=d038692d6ef50489910ee04f1d3c0492928c6aeade2c4d5b14facb22ef40ea9d

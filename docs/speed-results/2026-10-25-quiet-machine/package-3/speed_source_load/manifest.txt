@@ -1,0 +1,15 @@
+FORMAT=GEL_SPEED_AB_1
+mode=ab
+package=gel-source example=speed_source_load rounds=3
+example_args=["9"]
+with_bins=[]
+before_run=["a hook that waits until other measurements on the machine have finished (not published)"]
+source_sha256=95a70b3c41633276410ff4847f244dc6ad5d7de4e492a10f4c986ff10584003b  crates/gel-source/examples/speed_source_load.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a root=A revision=37d509d092ad8e615d7c586c6ac30bddd0b7d968 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 root=A2 revision=37d509d092ad8e615d7c586c6ac30bddd0b7d968 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b root=B revision=local-integration-tree (equal to this change in Cargo.toml, Cargo.lock, tools/ and crates/) working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+restored=yes
