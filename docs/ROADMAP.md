@@ -5,10 +5,10 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- Tagged `v0.6.1` is the current release and `v0.6.0` the previous one; tagged
-  releases, including `v0.5.3`, are listed on the Releases page. The tags
+- Tagged `v0.7.0` is the current release and `v0.6.1` the previous one; tagged
+  releases, including `v0.6.0` and `v0.5.3`, are listed on the Releases page. The tags
   `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0` remain without a release
-  page. Changes merged after `v0.6.1` are listed under [after v0.6.1](#after-v061).
+  page. Changes merged after `v0.7.0` are listed under [after v0.7.0](#after-v070).
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -53,14 +53,20 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## After v0.6.1
+## After v0.7.0
 
-Merged after v0.6.1 and not yet released. gel-source computes SHA-256 and Unicode
-NFC itself, so `Cargo.lock` lists no third-party package; answer-bench stops
-counting the right record as an error; the goal is stated in one file; one
-command produces the reproduction witness; the release package can be built
-twice and compared; a digest can fix a directory that is not published; and
-many paths are faster with the same output bits.
+Nothing has been merged after v0.7.0 yet.
+
+## v0.7.0
+
+Everything merged after v0.6.1 (PR #72 to PR #89). gel-source computes SHA-256
+and Unicode NFC itself, so `Cargo.lock` lists no third-party package, and NFC
+follows Unicode 16.0.0, the Unicode version of the Rust 1.85.0 standard library;
+answer-bench stops counting the right record as an error; the goal is stated in
+one file; one command produces the reproduction witness; the release package can
+be built twice and compared; a digest can fix a directory that is not published;
+many paths are faster with the same output bits; and a bundle or collection load
+needs about half the peak memory.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
@@ -78,7 +84,7 @@ many paths are faster with the same output bits.
 | The collection-review fixture cut to the scope and limits of a withdrawn bundle; embedded tool metadata removed from one image | bb3da1b (PR #86) | `cargo run -p gel-source --example collection_review` | [fixture provenance](../crates/gel-source/fixtures/collection-review/PROVENANCE.md) | All 24 cases give the same result |
 | Second speed package with the same output bits: file reads reserve from the file length, the ASCII check runs in the line-end pass, `--literal` reads in bounded memory, gel-bench checks in one pass, store reads overlap with digest and decode, repeated passage ranges hashed once | 90bd091 (PR #87) | `cargo run -p xtask -- speed-ab ...` | [timing examples](SPEED.md) | Measured with an A/A control on a loaded machine; the ratios are directions, not figures to quote |
 | NFC tables from UCD 16.0.0, the Unicode version of the Rust 1.85.0 standard library, so the search path follows one Unicode version | 3cf1be5 (PR #88) | `cargo run -p xtask -- ucd-tables` | [document readout](DOCUMENT-READOUT.md#unicode-normalization) | Matching can differ from v0.6.1 only on characters assigned in Unicode 17.0 |
-| Third package with the same outputs: a bundle is loaded without a second copy of its text, a collection snapshot is loaded with its document texts in one shared buffer instead of copied, the store reader digests each block on the calling thread again and decodes it beside the digest on a second thread, and the gel-bench check example pins every output key | this change | `cargo run -p xtask -- speed-ab ...` | [quiet-machine records](speed-results/2026-10-25-quiet-machine/README.md) | Measured on a quiet machine with an A/A control: the slower v1 store check after PR #87 is back to its earlier speed; peak memory of a 64 MiB bundle load and of a 64 MiB collection load about halved; a loaded document that is replaced or removed keeps its bytes in the shared buffer while any document of that load lives |
+| Third package with the same outputs: a bundle is loaded without a second copy of its text, a collection snapshot is loaded with its document texts in one shared buffer instead of copied, the store reader digests each block on the calling thread again and decodes it beside the digest on a second thread, and the gel-bench check example pins every output key | 331f494 (PR #89) | `cargo run -p xtask -- speed-ab ...` | [quiet-machine records](speed-results/2026-10-25-quiet-machine/README.md) | Measured on a quiet machine with an A/A control: the slower v1 store check after PR #87 is back to its earlier speed; peak memory of a 64 MiB bundle load and of a 64 MiB collection load about halved; a loaded document that is replaced or removed keeps its bytes in the shared buffer while any document of that load lives |
 
 The PR #74 row describes the tables as merged then. Since then the NFC tables
 are generated with the same command from UCD 16.0.0, the Unicode version of the
@@ -128,8 +134,8 @@ reason, and the slowest ones are those that hash the whole input.
 
 `xtask speed-ab` on 2026-10-25 with no other measurement running: package 2
 with A and A2 at `bb3da1b` (before PR #87) and B at `90bd091` (after it);
-package 3 with A and A2 at `bb3da1b` and B at this change, for the bundle
-load at `3cf1be5`, and for the collection load at `37d509d` (this change
+package 3 with A and A2 at `bb3da1b` and B at PR #89, for the bundle
+load at `3cf1be5`, and for the collection load at `37d509d` (PR #89
 before the collection change). 3 rounds of 9 runs (the bundle and the 64 MiB
 collection load: 3) with the order rotated, medians, not pinned to cores. The manifests, summaries and every run's output are in
 [speed-results/2026-10-25-quiet-machine](speed-results/2026-10-25-quiet-machine/README.md);
@@ -145,7 +151,7 @@ every example printed the same output digest in A, A2 and B.
 | Package 2: store open and verify (`speed_store_overlap`) | open 1.11 to 1.16; verify from 16 MiB 1.16 to 1.62; **v1 verify 0.64**; verify of 1 and 8 MiB 0.93 and 0.97 | 0.99 to 1.01 |
 | Package 3: store open and verify (`speed_store_overlap`) | open 1.13 to 1.18; verify from 16 MiB 1.20 to 1.65; v1 verify 1.08; verify of 1 and 8 MiB 1.00 and 0.99 | 0.99 to 1.01 |
 | Package 3: bundle load (`speed_bundle_memory`) | 1.06; peak resident memory 134 072 KiB to 68 612 KiB (median of three runs) | 0.99 |
-| Package 3: collection load (`speed_collection_memory`, `speed_source_load`) | 64 MiB load 0.99; 32 MiB load 1.09; the other source cases, which do not run `Collection::load`, 0.99 to 1.18, a spread this change does not explain; peak resident memory of the 64 MiB load 133 160 KiB to 68 640 KiB (median of three runs) | 0.96 to 1.04 |
+| Package 3: collection load (`speed_collection_memory`, `speed_source_load`) | 64 MiB load 0.99; 32 MiB load 1.09; the other source cases, which do not run `Collection::load`, 0.99 to 1.18, a spread the collection change does not explain; peak resident memory of the 64 MiB load 133 160 KiB to 68 640 KiB (median of three runs) | 0.96 to 1.04 |
 
 After PR #87 the store check digested each block on a new thread. A v1 file has
 one sequential digest, so its check ran at the speed of the core that thread
