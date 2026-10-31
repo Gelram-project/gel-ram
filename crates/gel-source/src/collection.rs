@@ -1,7 +1,12 @@
 //! Bounded independent documents, exact citations and pinned plaintext snapshots.
 //! No semantic ranking, encryption, background import or inferred truth.
 use crate::{digest, document, read_regular, Hash};
-use std::{collections::BTreeMap, ops::Range, path::Path, sync::OnceLock};
+use std::{
+    collections::BTreeMap,
+    ops::Range,
+    path::Path,
+    sync::{Arc, OnceLock},
+};
 
 pub const MAX_DOCUMENTS: usize = 1024;
 pub const MAX_TOTAL_TEXT: usize = 64 << 20;
@@ -14,8 +19,35 @@ const MAX_BUNDLE: usize = MAX_TOTAL_TEXT + MAX_DOCUMENTS * (20 + MAX_TITLE) + 32
 pub struct Document {
     id: u64,
     title: String,
-    text: String,
+    text: Text,
     hash: Hash,
+}
+/// The text of one document: its own, or a range of the buffer that the
+/// documents of one loaded snapshot share.
+#[derive(Clone)]
+enum Text {
+    Owned(String),
+    Shared(Arc<String>, Range<usize>),
+}
+impl std::ops::Deref for Text {
+    type Target = str;
+    fn deref(&self) -> &str {
+        match self {
+            Text::Owned(text) => text,
+            Text::Shared(buffer, range) => &buffer[range.clone()],
+        }
+    }
+}
+impl From<&str> for Text {
+    fn from(text: &str) -> Self {
+        Text::Owned(text.into())
+    }
+}
+/// The same as the `Debug` of the text as a `String`.
+impl std::fmt::Debug for Text {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Debug::fmt(&**self, f)
+    }
 }
 impl Document {
     pub fn id(&self) -> u64 {
@@ -225,7 +257,7 @@ impl Collection {
     ) -> Result<Search, String> {
         // Validate even an empty collection. Never concatenate document boundaries.
         let query = document::Query::parse(phrase)?;
-        let texts: Vec<&str> = self.documents.values().map(|d| d.text.as_str()).collect();
+        let texts: Vec<&str> = self.documents.values().map(|d| &*d.text).collect();
         if texts.iter().any(|t| t.len() > document::MAX_TEXT) {
             return Err("DOCUMENT_SEARCH_LIMIT".into());
         }
@@ -309,45 +341,114 @@ impl Collection {
     /// the pin does not match. The pin is then checked before
     /// any structure error is reported and before any document is copied.
     fn from_bytes_with(bytes: &[u8], trusted_pin: Hash, threads: usize) -> Result<Self, String> {
+        let (shape, found) = Self::checked(bytes, trusted_pin, threads)?;
+        let documents = found
+            .into_iter()
+            .map(|d| {
+                (
+                    d.id,
+                    Document {
+                        id: d.id,
+                        title: d.title.into(),
+                        text: d.text.into(),
+                        hash: d.hash,
+                    },
+                )
+            })
+            .collect();
+        Ok(Self::assemble(shape, documents, trusted_pin))
+    }
+    /// [`Collection::from_bytes`] of a buffer the caller hands over, such as a
+    /// whole snapshot file: once the length, the pin and the whole structure
+    /// are checked, the document texts are moved to the front of that buffer
+    /// in file order instead of being copied, and the documents share it, so
+    /// the peak memory of a load is the buffer alone. The result, errors
+    /// included, is the same. The buffer lives as long as any document of it,
+    /// in this collection, in a clone or as a cloned [`Document`]: a loaded
+    /// document that is later replaced or removed keeps its bytes in the
+    /// buffer until then, so a changed collection can hold up to the loaded
+    /// texts plus its current ones.
+    fn from_vec_with(
+        mut bytes: Vec<u8>,
+        trusted_pin: Hash,
+        threads: usize,
+    ) -> Result<Self, String> {
+        let (shape, found) = Self::checked(&bytes, trusted_pin, threads)?;
+        // Titles are copied; each text gets its place in the shared buffer.
+        let mut end = 0;
+        let placed: Vec<_> = found
+            .into_iter()
+            .map(|d| {
+                let target = end..end + d.text.len();
+                end = target.end;
+                (d.id, String::from(d.title), d.start, target, d.hash)
+            })
+            .collect();
+        // In file order every text moves towards the front, past texts only.
+        for (_, _, start, target, _) in &placed {
+            bytes.copy_within(*start..*start + target.len(), target.start);
+        }
+        bytes.truncate(end);
+        bytes.shrink_to_fit();
+        let buffer = Arc::new(String::from_utf8(bytes).map_err(|_| "COLLECTION_UTF8")?);
+        let documents = placed
+            .into_iter()
+            .map(|(id, title, _, target, hash)| {
+                (
+                    id,
+                    Document {
+                        id,
+                        title,
+                        text: Text::Shared(Arc::clone(&buffer), target),
+                        hash,
+                    },
+                )
+            })
+            .collect();
+        Ok(Self::assemble(shape, documents, trusted_pin))
+    }
+    /// The length, pin and structure checks of a load on at most `threads`
+    /// threads, with the errors of [`Collection::from_bytes`] in its order,
+    /// and every accepted document, in file order, with its text digest.
+    fn checked(
+        bytes: &[u8],
+        trusted_pin: Hash,
+        threads: usize,
+    ) -> Result<(Shape, Vec<Found<'_>>), String> {
         if bytes.len() > MAX_BUNDLE {
             return Err("COLLECTION_BUNDLE_LIMIT".into());
         }
         if threads > 1 {
-            return Self::from_bytes_threaded(bytes, trusted_pin, threads);
+            return Self::checked_threaded(bytes, trusted_pin, threads);
         }
         if digest(bytes) != trusted_pin {
             return Err("COLLECTION_INTEGRITY".into());
         }
-        let mut documents = BTreeMap::new();
-        let shape = parse(bytes, |id, title, text| {
-            documents.insert(
+        let mut found = Vec::new();
+        let shape = parse(bytes, |id, title, start, text| {
+            found.push(Found {
                 id,
-                Document {
-                    id,
-                    title: title.into(),
-                    text: text.into(),
-                    hash: digest(text.as_bytes()),
-                },
-            );
+                title,
+                start,
+                text,
+                hash: digest(text.as_bytes()),
+            })
         })?;
-        Ok(Self {
-            documents,
-            revision: shape.revision,
-            next_id: shape.next_id,
-            total_text: shape.total_text,
-            root: OnceLock::from(trusted_pin),
-        })
+        Ok((shape, found))
     }
-    fn from_bytes_threaded(
+    fn checked_threaded(
         bytes: &[u8],
         trusted_pin: Hash,
         threads: usize,
-    ) -> Result<Self, String> {
+    ) -> Result<(Shape, Vec<Found<'_>>), String> {
         let parsed = crate::load_digests::pinned(bytes, trusted_pin, threads, |left, stop| {
             // At most MAX_DOCUMENTS borrowed entries, never a copy of the bytes.
-            let mut found: Vec<(u64, &str, &str)> = Vec::new();
-            parse(bytes, |id, title, text| found.push((id, title, text))).map(|shape| {
-                let texts: Vec<&[u8]> = found.iter().map(|d| d.2.as_bytes()).collect();
+            let mut found: Vec<(u64, &str, usize, &str)> = Vec::new();
+            parse(bytes, |id, title, start, text| {
+                found.push((id, title, start, text))
+            })
+            .map(|shape| {
+                let texts: Vec<&[u8]> = found.iter().map(|d| d.3.as_bytes()).collect();
                 let hashes = crate::load_digests::digest_parts(&texts, left, stop);
                 (shape, found, hashes)
             })
@@ -356,28 +457,27 @@ impl Collection {
             return Err("COLLECTION_INTEGRITY".into());
         };
         let (shape, found, hashes) = parsed?;
-        let documents = found
+        let found = found
             .into_iter()
             .zip(hashes)
-            .map(|((id, title, text), hash)| {
-                (
-                    id,
-                    Document {
-                        id,
-                        title: title.into(),
-                        text: text.into(),
-                        hash,
-                    },
-                )
+            .map(|((id, title, start, text), hash)| Found {
+                id,
+                title,
+                start,
+                text,
+                hash,
             })
             .collect();
-        Ok(Self {
+        Ok((shape, found))
+    }
+    fn assemble(shape: Shape, documents: BTreeMap<u64, Document>, trusted_pin: Hash) -> Self {
+        Self {
             documents,
             revision: shape.revision,
             next_id: shape.next_id,
             total_text: shape.total_text,
             root: OnceLock::from(trusted_pin),
-        })
+        }
     }
     /// The document count and revision of a snapshot whose bytes the caller has
     /// already matched to its trusted pin. Accepts and refuses exactly what
@@ -388,7 +488,7 @@ impl Collection {
             return Err("COLLECTION_BUNDLE_LIMIT".into());
         }
         let mut documents = 0;
-        let shape = parse(bytes, |_, _, _| documents += 1)?;
+        let shape = parse(bytes, |_, _, _, _| documents += 1)?;
         Ok((documents, shape.revision))
     }
     /// Same owner-controlled-directory and durability limits as write_bundle_new.
@@ -401,7 +501,8 @@ impl Collection {
     }
     pub fn load(path: &Path, trusted_pin: Hash) -> Result<Self, String> {
         let b = read_regular(path, MAX_BUNDLE).map_err(|e| format!("COLLECTION_READ: {e:?}"))?;
-        Self::from_bytes(&b, trusted_pin)
+        let threads = crate::load_digests::threads_for(b.len());
+        Self::from_vec_with(b, trusted_pin, threads)
     }
 }
 /// Header fields and total text length of one parsed GELSET01 serialization.
@@ -410,11 +511,21 @@ struct Shape {
     next_id: u64,
     total_text: usize,
 }
+/// One accepted document of a checked serialization: its id, title, the
+/// offset of its text in the serialization, the text and its digest.
+struct Found<'a> {
+    id: u64,
+    title: &'a str,
+    start: usize,
+    text: &'a str,
+    hash: Hash,
+}
 /// Checks the whole GELSET01 structure after the length and pin checks and
-/// hands each accepted document, in file order, to `each`.
+/// hands each accepted document, in file order, to `each`: its id, title,
+/// the offset of its text in `bytes` and the text.
 fn parse<'a>(
     bytes: &'a [u8],
-    mut each: impl FnMut(u64, &'a str, &'a str),
+    mut each: impl FnMut(u64, &'a str, usize, &'a str),
 ) -> Result<Shape, String> {
     let mut r = Cursor { bytes, offset: 0 };
     if r.take(8)? != MAGIC {
@@ -442,9 +553,10 @@ fn parse<'a>(
             return Err("COLLECTION_RECORD".into());
         }
         let title = std::str::from_utf8(r.take(title_len)?).map_err(|_| "COLLECTION_UTF8")?;
+        let start = r.offset;
         let text = std::str::from_utf8(r.take(text_len)?).map_err(|_| "COLLECTION_UTF8")?;
         Collection::admit(title, text)?;
-        each(id, title, text);
+        each(id, title, start, text);
         total_text += text_len;
         previous = id;
     }
@@ -657,8 +769,31 @@ mod lazy_root_tests {
             .map(|d| (d.id(), d.title(), d.text(), d.hash()))
             .collect();
         assert_eq!(a, b);
+        let a: Vec<_> = lazy.documents().map(|d| format!("{d:?}")).collect();
+        let b: Vec<_> = old.documents().map(|d| format!("{d:?}")).collect();
+        assert_eq!(a, b);
         assert_eq!(lazy.root(), old.root());
         assert_eq!(lazy.root(), digest(&bytes));
+    }
+
+    /// Every document of a load from an owned buffer shares one buffer that
+    /// holds exactly the texts, in file order.
+    fn shares_one_buffer(c: &Collection) {
+        let mut buffer: Option<&Arc<String>> = None;
+        let mut end = 0;
+        for d in c.documents.values() {
+            let Text::Shared(shared, range) = &d.text else {
+                panic!("document {} holds its own text", d.id);
+            };
+            assert!(buffer.is_none_or(|b| Arc::ptr_eq(b, shared)));
+            buffer = Some(shared);
+            assert_eq!(range.start, end);
+            end = range.end;
+        }
+        if let Some(buffer) = buffer {
+            assert_eq!(buffer.len(), end);
+            assert_eq!(buffer.len(), c.text_bytes());
+        }
     }
 
     fn same_hit(a: &Hit, b: &eager::Hit) {
@@ -736,7 +871,14 @@ mod lazy_root_tests {
                         } else {
                             digest(&b)
                         };
-                        lazy = Collection::from_bytes(&b, pin).unwrap();
+                        lazy = if m.below(2) == 0 {
+                            Collection::from_bytes(&b, pin).unwrap()
+                        } else {
+                            let threads = m.below(4) as usize;
+                            let c = Collection::from_vec_with(b, pin, threads).unwrap();
+                            shares_one_buffer(&c);
+                            c
+                        };
                         old = eager::Collection::from_bytes(&old.to_bytes(), old.root()).unwrap();
                     }
                     _ => {
@@ -905,18 +1047,29 @@ mod lazy_root_tests {
         assert_eq!(Collection::verified_shape(&[]), shape_by_reference(&[]));
     }
 
+    /// The load from a borrowed and from an owned buffer against the reference.
     fn load_same(bytes: &[u8], pin: Hash, threads: usize) {
-        match (
-            Collection::from_bytes_with(bytes, pin, threads),
-            eager::Collection::from_bytes(bytes, pin),
-        ) {
-            (Ok(a), Ok(b)) => same(&a, &b),
-            (Err(a), Err(b)) => assert_eq!(a, b, "threads={threads}"),
-            (a, b) => panic!(
-                "threads={threads}: {:?} but reference {:?}",
-                a.err(),
-                b.err()
-            ),
+        let reference = eager::Collection::from_bytes(bytes, pin);
+        for owned in [false, true] {
+            let loaded = if owned {
+                Collection::from_vec_with(bytes.to_vec(), pin, threads)
+            } else {
+                Collection::from_bytes_with(bytes, pin, threads)
+            };
+            match (loaded, &reference) {
+                (Ok(a), Ok(b)) => {
+                    same(&a, b);
+                    if owned {
+                        shares_one_buffer(&a);
+                    }
+                }
+                (Err(a), Err(b)) => assert_eq!(&a, b, "threads={threads} owned={owned}"),
+                (a, b) => panic!(
+                    "threads={threads} owned={owned}: {:?} but reference {:?}",
+                    a.err(),
+                    b.as_ref().err()
+                ),
+            }
         }
     }
 
@@ -940,7 +1093,7 @@ mod lazy_root_tests {
                 load_same(&bytes, [0; 32], threads);
             }
             for n in 0..=bytes.len() {
-                let threads = 2 + n % 7;
+                let threads = n % 9;
                 load_same(&bytes[..n], pin, threads);
                 load_same(&bytes[..n], digest(&bytes[..n]), threads);
             }
@@ -948,7 +1101,7 @@ mod lazy_root_tests {
             for n in 0..changed.len() {
                 for flip in [1u8, 0x80, 0xff] {
                     changed[n] ^= flip;
-                    let threads = 2 + (n + flip as usize) % 7;
+                    let threads = (n + flip as usize) % 9;
                     load_same(&changed, pin, threads);
                     load_same(&changed, digest(&changed), threads);
                     changed[n] ^= flip;

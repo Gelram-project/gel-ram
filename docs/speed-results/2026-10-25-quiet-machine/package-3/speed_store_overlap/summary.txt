@@ -1,0 +1,16 @@
+SPEED_AB case=crc_256mib a_ns=28775372 a2_ns=28659574 b_ns=28798024 aa=0.996 gain=0.999 runs=27
+SPEED_AB case=open_256mib a_ns=94201638 a2_ns=95033242 b_ns=79837767 aa=1.009 gain=1.180 runs=27
+SPEED_AB case=open_64mib_tail7 a_ns=23891020 a2_ns=23930444 b_ns=21123338 aa=1.002 gain=1.131 runs=27
+SPEED_AB case=open_8mib a_ns=3024616 a2_ns=3027702 b_ns=2678615 aa=1.001 gain=1.129 runs=27
+SPEED_AB case=verify_16mib_tail1 a_ns=3279244 a2_ns=3273012 b_ns=2729811 aa=0.998 gain=1.201 runs=27
+SPEED_AB case=verify_1mib a_ns=459273 a2_ns=456618 b_ns=461106 aa=0.994 gain=0.996 runs=27
+SPEED_AB case=verify_256mib a_ns=54035575 a2_ns=53906112 b_ns=35574443 aa=0.998 gain=1.519 runs=27
+SPEED_AB case=verify_64mib a_ns=14449973 a2_ns=14475751 b_ns=8784644 aa=1.002 gain=1.645 runs=27
+SPEED_AB case=verify_64mib_tail7 a_ns=13727665 a2_ns=13655259 b_ns=10297167 aa=0.995 gain=1.333 runs=27
+SPEED_AB case=verify_8mib a_ns=1535857 a2_ns=1537280 b_ns=1545816 aa=1.001 gain=0.994 runs=27
+SPEED_AB case=verify_corrupt_256mib a_ns=53162022 a2_ns=52826863 b_ns=33147220 aa=0.994 gain=1.604 runs=27
+SPEED_AB case=verify_v1_64mib a_ns=66539750 a2_ns=65675666 b_ns=61584555 aa=0.987 gain=1.080 runs=27
+SPEED_AB_CHECK tree=a sha256=9425ba18a99d6273e1d8deda109983cca089943fa111931a41b38fb555d5464b
+SPEED_AB_CHECK tree=a2 sha256=9425ba18a99d6273e1d8deda109983cca089943fa111931a41b38fb555d5464b
+SPEED_AB_CHECK tree=b sha256=9425ba18a99d6273e1d8deda109983cca089943fa111931a41b38fb555d5464b
+SPEED_AB_VERDICT=SAME_OUTPUT

@@ -1,0 +1,11 @@
+SPEED_AB case=bundle_load_64mib a_ns=180534501 a2_ns=187365672 b_ns=183381124 aa=1.038 gain=0.984 runs=27
+SPEED_AB case=digest_64mib a_ns=105104483 a2_ns=105043989 b_ns=104895659 aa=0.999 gain=1.002 runs=27
+SPEED_AB case=read_16mib a_ns=4239375 a2_ns=5234998 b_ns=2297362 aa=1.235 gain=1.845 runs=27
+SPEED_AB case=read_1mib a_ns=166884 a2_ns=173827 b_ns=140645 aa=1.042 gain=1.187 runs=27
+SPEED_AB case=read_4kib a_ns=11572 a2_ns=10300 b_ns=8176 aa=0.890 gain=1.415 runs=27
+SPEED_AB case=read_64mib a_ns=14308497 a2_ns=15133109 b_ns=13904437 aa=1.058 gain=1.029 runs=27
+SPEED_AB case=refused_64mib_plus1 a_ns=7805 a2_ns=7554 b_ns=7854 aa=0.968 gain=0.994 runs=27
+SPEED_AB_CHECK tree=a sha256=d3abbee3be910679df4d56142ab5cc5e798cdd34416d4859dd96f6b5c7e946df
+SPEED_AB_CHECK tree=a2 sha256=d3abbee3be910679df4d56142ab5cc5e798cdd34416d4859dd96f6b5c7e946df
+SPEED_AB_CHECK tree=b sha256=d3abbee3be910679df4d56142ab5cc5e798cdd34416d4859dd96f6b5c7e946df
+SPEED_AB_VERDICT=SAME_OUTPUT
