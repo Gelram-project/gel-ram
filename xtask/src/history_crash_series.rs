@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Kill series for the public record history. A writer process appends 240
 //! states to one record and saves the whole history after each with
 //! `RecordHistory::write_atomic`, so one file is replaced while it grows; the

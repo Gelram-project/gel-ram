@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Fail-closed policy for the repository's deliberately restricted YAML profile.
 //! This is not a general YAML parser: aliases, tags, quoted keys, flow-style
 //! jobs/permissions, multiline keys and duplicate mappings require review.

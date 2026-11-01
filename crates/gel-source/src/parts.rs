@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Ordered exact passages, not generated summaries or semantic retrieval.
 use crate::{Address, Corpus, Error, Passage, MAX_RECORDS, MAX_TEXT};
 use std::collections::BTreeMap;

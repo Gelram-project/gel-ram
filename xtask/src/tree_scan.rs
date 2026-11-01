@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! One inventory of the source tree for the gates that read every file:
 //! rust-only, license metadata, project contact, docs-refs and disclosure.
 //!

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the NFC of gel-source: properties read from one
 //! two-level table, primary composites from a hash table, buffers reused
 //! across lines and the prefix that passed the quick check copied as it is,

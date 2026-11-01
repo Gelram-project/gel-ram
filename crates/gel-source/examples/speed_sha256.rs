@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing probe for `gel_source::digest` (SHA-256). Cases:
 //! `large`: one digest of MAX_TEXT (64 MiB) of deterministic bytes;
 //! `small`: 65,536 digests of messages of 0..=127 bytes (every padding case).

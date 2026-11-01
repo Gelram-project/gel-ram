@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeatable timing of `Corpus::load` and `EncodedCorpus::load` on catalogs
 //! whose rows repeat passage ranges, next to catalogs whose ranges are all
 //! distinct. Only API present before the loader hashed each distinct range

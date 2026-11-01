@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing of `top1_many` and `top1_many_threads` for 16 queries on two
 //! deterministic banks (32,768 ORBs = 4 MiB and 1,310,720 ORBs = 160 MiB),
 //! with 16 single `top1` and `top1_threads` calls as cases whose code this

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness that compares, in one binary, the one-thread CRC-64/ECMA
 //! path (`update_with_threads(.., 1)`, case `crc_256mib_ref`) with 2, 4 and 8
 //! threads (`crc_256mib_t2`, `_t4`, `_t8`) and with the automatic path of

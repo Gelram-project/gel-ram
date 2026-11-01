@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Deterministic synthetic source workload. Not a semantic or Q8 benchmark.
 use gel_source::{collection::Collection, hex};
 use std::{

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Exact copies of the earlier serial bank generation, bank CRC and
 //! full-sort Top-K reference, and the comparisons that check `setup`
 //! against them. Used by

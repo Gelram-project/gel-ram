@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 
 //! Repeatable timing of `top_k` on deterministic 524,288-ORB banks (64 MiB).

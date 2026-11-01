@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Synthetic comparison, not a text encoder, accuracy test or optimal-single baseline.
 #![forbid(unsafe_code)]
 use gel_phase_quad::{effective_workers, grid, Policy, Reader, Record, SharedScore};

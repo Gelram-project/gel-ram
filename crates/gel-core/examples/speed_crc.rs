@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness for CRC-64/ECMA. Prints per-run wall time in
 //! nanoseconds and a SHA-256 over every CRC value produced, so two builds
 //! can be compared for both speed and output.

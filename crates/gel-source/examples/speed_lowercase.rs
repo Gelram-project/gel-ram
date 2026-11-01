@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Phrase search over documents whose lines are not ASCII, for paired timing
 //! of two source trees. Uses only `document::search`, so the same file builds
 //! on an earlier tree. Deterministic synthetic text, built outside the timer.

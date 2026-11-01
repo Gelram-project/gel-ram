@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Offline exact readout of a pinned, MIT-licensed Rust Book excerpt.
 //! This is not semantic search, an encoder, or a language model.
 use gel_source::{hex, Corpus, Error, Hash, LeadPartsError};

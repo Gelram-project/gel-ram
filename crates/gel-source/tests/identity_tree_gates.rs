@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Runs the comparison of `examples/identity_tree_gates.rs` under `cargo test`,
 //! at the small scale: generated trees only, no clippy-driver.
 #![forbid(unsafe_code)]

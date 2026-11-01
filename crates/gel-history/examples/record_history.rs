@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Stored bytes of the record history on synthetic walks of 3,000 states.
 //!
 //! Each walk changes exactly k bits per step, chosen by splitmix64; the last

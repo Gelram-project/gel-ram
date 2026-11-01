@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Public source-catalog writer. No private encoder, quantization or semantic claims.
 use crate::{
     decimal_len, digest, push_decimal, push_hex, Address, Corpus, Error, Hash, MAX_CATALOG,

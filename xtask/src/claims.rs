@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! One registry for scoped claims, executable counterexamples and explicit gaps.
 use gel_source::{collection::Collection, context, digest};
 use std::{collections::BTreeSet, fs, path::Path};

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Wall time of the whole-tree `xtask` gates, each run as one child process:
 //! `rust-only`, `licensing`, `docs-refs`, `disclosure`, the `ci-policy` gate
 //! as a control (its code reads four workflow files and does not walk the

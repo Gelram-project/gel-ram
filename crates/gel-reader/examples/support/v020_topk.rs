@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 // Frozen Top-K selection/progressive code from public commit 04a4d21.
 // Only imports have been adapted. Kept for same-binary, same-kernel comparison.
 use gel_kernel::progressive_xnor_bound;

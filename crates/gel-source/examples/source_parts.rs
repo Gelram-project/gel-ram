@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Author-created PL/EN fixtures. No private files, network or model required.
 use gel_source::{digest, hex, Corpus, Error, LeadPartsError};
 fn main() {

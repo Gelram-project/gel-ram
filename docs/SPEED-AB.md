@@ -50,8 +50,13 @@ an error, not a skipped line.
   that leaves the tree, is not a plain string literal, is conditional
   (`cfg_attr`) or is missing in B is an error.
 - These files are placed into A and A2 for the run and removed afterwards, so
-  all three trees build exactly the same example source. A destination that
-  already holds the same bytes is left untouched. One that holds different
+  all three trees build the same example code. A destination that
+  already holds the same bytes is left untouched; bytes that differ only by
+  the exact two-line source header at the top of either file (`xtask/src/source_headers.rs`)
+  count as the same, so a tree from before the headers is not refused, while a
+  header that differs in any byte is compared as it is. Such a kept file
+  differs from B's only by those two comment lines, so its line numbers (for
+  example in `line!()` and panic locations) are shifted by two. One that holds different
   bytes is refused before anything is written to either tree: the trees would
   otherwise build different code. The only exception is an included file under
   `tools/` when `--replace-helpers` is given: its bytes in A and A2 are kept in

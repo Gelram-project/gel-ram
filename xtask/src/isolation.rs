@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Network-isolation evidence for local reproduction runs.
 //!
 //! Cargo's `--offline` and `--locked` flags do not stop a spawned process from

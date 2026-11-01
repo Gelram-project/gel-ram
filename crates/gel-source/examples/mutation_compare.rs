@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Paired whole-mutation benchmark, historical Vec root versus current stream root.
 //! The pinned historical modules are compiled unchanged; their tests are repetitions.
 pub use gel_source::{

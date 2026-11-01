@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Wall-time harness for whole `gel-bench` and `gel-physics` runs. It starts
 //! the release binaries as child processes, prints the wall time of each run
 //! in nanoseconds, and a SHA-256 over the run-independent output lines (the

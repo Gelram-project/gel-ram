@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Phrase search where the per-line work is mostly finding the line end and
 //! checking that the line is ASCII, for paired timing of two source trees.
 //! Deterministic synthetic text, built outside the timer.

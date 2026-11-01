@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Narrow, fail-closed check for this workspace's chosen Cargo spelling.
 //! Not a general TOML parser or a legal-rights validator.
 use std::{fs, path::Path};

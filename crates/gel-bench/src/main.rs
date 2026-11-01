@@ -1,10 +1,12 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 
 mod setup;
 #[cfg(test)]
 mod setup_reference;
 
-use gel_core::ORB_BYTES;
+use gel_core::{tool_identity, tool_license, ORB_BYTES};
 use gel_kernel::{backend, KernelBackend};
 use gel_orb::Orb1024;
 use gel_reader::{
@@ -411,6 +413,16 @@ fn run() -> Result<(), String> {
 }
 
 fn main() -> Result<(), String> {
+    // `--version` or `--license` as the only argument, before ORB_COUNT is read.
+    let only: Vec<_> = std::env::args_os().skip(1).collect();
+    if only == ["--version"] {
+        println!("{}", tool_identity("gel-bench", env!("CARGO_PKG_VERSION")));
+        return Ok(());
+    }
+    if only == ["--license"] {
+        print!("{}", tool_license("gel-bench", env!("CARGO_PKG_VERSION")));
+        return Ok(());
+    }
     run()
 }
 

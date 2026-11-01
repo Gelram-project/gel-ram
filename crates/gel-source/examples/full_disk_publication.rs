@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Physically full filesystem: snapshot publication must fail closed on ENOSPC.
 //! Run ONLY on a small dedicated, empty tmpfs (for example 1 MiB). The directory
 //! must itself be a tmpfs mount point with an explicit size of at most 64 MiB

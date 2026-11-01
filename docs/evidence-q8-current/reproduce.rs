@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 // Compile with rustc --edition=2021. No external dependencies.
 // Args: example-binary directory, NEW output directory, optional caller-owned Q8DEMO01 bank.
 use std::{fs, io::Write, path::Path, process::Command};

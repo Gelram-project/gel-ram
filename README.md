@@ -390,6 +390,7 @@ cargo run --locked --offline --release -p gel-phase-quad --example quad_playgrou
 | [Evidence Lab](docs/EVIDENCE-LAB.md) | [Publication fault tests](docs/PUBLICATION-FAULT-TESTS.md) | [Publication status](CANDIDATE-STATUS.md) |
 | [Batch interface](docs/EVIDENCE-BATCH.md) | [Source bundle verification](docs/SOURCE-BUNDLE.md) | [Media index](media/INDEX.md) |
 | [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.7.0.md) |
+| [License decision guide](docs/LICENSE-DECISION.md) | [License pins](docs/LICENSE-PINS.md) | [Licensing guide](LICENSING.md) |
 | [Q8 contract](docs/Q8-QUAD.md) · [Reader16](docs/READER16.md) | [Claim registry](docs/CLAIMS.md) · [Crash series](docs/CRASH-SERIES.md) | [External checks](docs/EXTERNAL-CHECKS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) |
 
 Earlier README versions and the notes of earlier releases are no longer kept in

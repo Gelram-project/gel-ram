@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Finite, explicit mutation matrix for the public file formats GELSRC01,
 //! GELSET01 and Q8DEMO01 (docs/MUTATION-MATRIX.md).
 //!

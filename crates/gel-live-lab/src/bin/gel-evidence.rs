@@ -1,5 +1,8 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Offline multi-document source laboratory. No shell, LLM or background import.
 #![forbid(unsafe_code)]
+use gel_core::{tool_identity, tool_license, LICENSE_ID};
 use gel_live_lab::{parse_pin, safe};
 use gel_source::{
     collection::{Collection, Hit},
@@ -502,6 +505,7 @@ fn batch(s: &mut Session, input: &mut impl BufRead, out: &mut impl Write) -> Res
         Object::record("session")
             .text("tool", "gel-evidence")
             .text("version", env!("CARGO_PKG_VERSION"))
+            .text("license", LICENSE_ID)
             .finish(),
     )?;
     let mut counts = [0u64; 5];
@@ -580,6 +584,21 @@ fn batch(s: &mut Session, input: &mut impl BufRead, out: &mut impl Write) -> Res
 
 fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    // `--version` or `--license` as the only argument, before any other mode.
+    if args == ["--version"] {
+        println!(
+            "{}",
+            tool_identity("gel-evidence", env!("CARGO_PKG_VERSION"))
+        );
+        return Ok(());
+    }
+    if args == ["--license"] {
+        print!(
+            "{}",
+            tool_license("gel-evidence", env!("CARGO_PKG_VERSION"))
+        );
+        return Ok(());
+    }
     if args == ["--help"] {
         println!("gel-evidence [--demo | --batch]\nRust/offline multi-document phrase reader. Plaintext, not an encrypted vault.\nUse owner-controlled directories. Type help. Input is never a shell command.");
         return Ok(());

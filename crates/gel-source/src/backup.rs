@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Verified backup directories for GELSET01 collection snapshots.
 //!
 //! A backup is a new directory holding a byte-identical copy of one snapshot

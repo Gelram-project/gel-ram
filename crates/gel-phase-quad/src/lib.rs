@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! One canonical Q8 record, four reversible views, one shared similarity.
 //! Scores apply only to matching poles of this Grid256 geometry.
 #![forbid(unsafe_code)]

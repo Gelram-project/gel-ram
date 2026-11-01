@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the setup work of `gel-bench` and `gel-physics`: the
 //! threaded bank fill, the threaded bank CRC, the selection-based Top-K
 //! reference and the chain

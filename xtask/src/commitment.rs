@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! A digest that commits to the exact contents of a directory without
 //! publishing them. The manifest stays with its owner and only its SHA-256 is
 //! published; anyone later given the manifest and the files can check that

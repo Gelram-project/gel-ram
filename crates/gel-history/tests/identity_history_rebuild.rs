@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The identity comparison of examples/identity_history_rebuild.rs at a
 //! smaller scale: the streaming sparse decoder and the rolled history rebuild
 //! against exact copies of the code they replace, results and errors equal.

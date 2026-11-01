@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #[test]
 fn unapproved_candidate_can_be_tested_but_remains_unapproved() {
     assert!(!super::publication_status(

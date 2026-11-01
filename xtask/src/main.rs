@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 mod answer_bench;
 mod audit_io;
@@ -11,6 +13,7 @@ mod history_crash_series;
 mod history_mutation_matrix;
 mod isolation;
 mod license_metadata;
+mod license_self;
 mod measured_sources;
 mod mutation_campaign;
 mod mutation_matrix;
@@ -25,6 +28,7 @@ mod reproduce;
 mod reproduction;
 mod roadmap;
 mod source_bundle;
+mod source_headers;
 mod speed_ab;
 mod speed_convention;
 mod tree_scan;
@@ -294,7 +298,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|source-headers|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 
 // Exact active-license text pin; not evidence of legal approval or authorship.
@@ -618,6 +622,16 @@ fn docs_refs() -> Result<(), String> {
     emit(tree_scan::docs_refs(root, &walk(root)?))
 }
 
+/// `source-headers`: the gate; `source-headers --write`: insert missing headers.
+fn source_headers(args: &[String]) -> Result<(), String> {
+    let root = workspace_root()?;
+    match args {
+        [] => emit(source_headers::check(root, &walk(root)?)),
+        [flag] if flag == "--write" => emit(source_headers::write(root, &walk(root)?)),
+        _ => Err("usage: cargo run -p xtask -- source-headers [--write]".into()),
+    }
+}
+
 fn cla_acknowledged(body: &str) -> bool {
     // Match the workflow's grep -Fqx contract: one complete checkbox line.
     body.split('\n').any(|line| {
@@ -811,11 +825,17 @@ fn verify() -> Result<(), String> {
     ci_policy()?;
     emit(tree_scan::docs_refs(root, &tree))?;
     disclosure::check(root, &tree.paths)?;
+    let headers = source_headers::check(root, &tree);
+    let header_files = source_headers::passed_files(&headers);
+    emit(headers)?;
+    let header_files =
+        header_files.ok_or("source headers: the gate printed no PASS line with a file count")?;
     speed_convention::check(root)?;
     run("cargo", FMT_CHECK_ARGS)?;
     run("cargo", CLIPPY_ARGS)?;
     recorder_lint::check(workspace_root()?)?;
     run("cargo", &verify_release_build_args())?;
+    license_self::check(workspace_root()?, header_files)?;
     run_docs()?;
     measured_sources::verify(workspace_root()?)?;
     claims::check(workspace_root()?)?;
@@ -942,6 +962,7 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("runtime-examples") => runtime_examples(),
         Some("source-audit") => source_bundle::audit(&args[1..]),
         Some("source-bundle") => source_bundle::bundle(&args[1..]),
+        Some("source-headers") => source_headers(&args[1..]),
         Some("ucd-tables") => ucd_tables::run(&args[1..]),
         Some("commitment") => commitment::create(&args[1..]),
         Some("commitment-check") => commitment::check(&args[1..]),

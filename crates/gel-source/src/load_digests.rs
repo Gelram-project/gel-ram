@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The SHA-256 digests a load needs, computed on scoped threads: the digest of
 //! the whole file on the calling thread while one scoped thread checks the
 //! structure and hashes the parts, with further scoped threads for the parts.

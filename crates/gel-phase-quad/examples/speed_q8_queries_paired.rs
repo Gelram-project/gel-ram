@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Same-binary timing of 16 single-query `Reader::scan_into` calls
 //! (`queries16_t<W>_ref`) against one `Reader::scan_many_into` call for the
 //! same 16 queries (`queries16_t<W>_many`), on the deterministic

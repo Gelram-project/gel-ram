@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check: the streaming sparse decoder of `Residual::apply` and
 //! `Residual::popcount`, and the rolled rebuild in `RecordHistory::from_bytes`,
 //! `exact_history`, `reconstruct` and `append`, against an exact copy of the

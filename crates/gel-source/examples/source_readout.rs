@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Synthetic, public E2E: title -> pinned passage -> source -> rejected modification.
 #![forbid(unsafe_code)]
 use gel_source::{digest, hex, Address, Corpus, Error};

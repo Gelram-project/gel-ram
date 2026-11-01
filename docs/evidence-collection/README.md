@@ -68,6 +68,11 @@ to this file, and its collection.rs entry to the unchanged
 publisher's measured source is likewise preserved as
 [bundle.measured.rs.txt](bundle.measured.rs.txt); its manifest entry is checked
 against that snapshot after adding the testable I/O boundary.
+The measured bytes of the three examples in the manifest are preserved the same
+way, as [collection_campaign.measured.rs.txt](collection_campaign.measured.rs.txt),
+[collection_recheck.measured.rs.txt](collection_recheck.measured.rs.txt) and
+[quantization_matrix.measured.rs.txt](quantization_matrix.measured.rs.txt), so
+that the current files can begin with the two-line source header.
 The current
 collection implementation uses streaming root hashing rather than allocating
 its complete serialization for each mutation. Historical measurements still

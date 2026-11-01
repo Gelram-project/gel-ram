@@ -55,7 +55,17 @@ The following capabilities are present on public `main`:
 
 ## After v0.7.0
 
-Nothing has been merged after v0.7.0 yet.
+Merged after v0.7.0 and not yet released. Every program says what it is and
+under which license; every GEL RAM-owned `.rs` file carries a two-line source
+header naming the license and the Required Notice, which a gate checks; and
+`gel-license` reads a distribution tree, and a user's own answers about one
+use, against the license.
+
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| Every program prints one identity line for `--version`, and for `--license` the license name, the Required Notice, the NOTICE summary and a line saying that third-party material in the program keeps its own license; the gel-evidence batch session record names the license | this change | `cargo run -p gel-cli -- --version` | [binaries](BINARIES.md#version-and-license-of-each-program), [batch interface](EVIDENCE-BATCH.md) | The printed lines name the license; the LICENSE file, not this output, holds the terms |
+| Every GEL RAM-owned `.rs` file begins with a two-line source header, the license name and the Required Notice, checked in `verify`; the generated Unicode tables are exempt; `speed-ab` sets an exact header aside when it compares a carried example with an older tree; the measured bytes of three examples are kept beside their manifest and the current examples must equal the header and those bytes | this change | `cargo run -p xtask -- source-headers` | [gates](GATES.md), [contributing](../CONTRIBUTING.md), [A/B tool](SPEED-AB.md), [evidence collection](evidence-collection/README.md) | v0.7.0 and earlier releases carry no header; source hashes in earlier speed manifests describe their measured revision, not the files with headers |
+| `gel-license check DIR` reports whether a tree has the exact LICENSE, the Required Notice and intact source headers; `gel-license use ANSWERS_FILE` maps the user's own yes, no or unsure answers to the LICENSE sentences its rules cite; `verify` runs `check` on this repository; the decision guide lists worked cases | this change | `cargo run -p gel-live-lab --bin gel-license -- check .` | [license decision guide](LICENSE-DECISION.md) | Not legal advice and not a certification (`LEGAL_CERTIFICATION=NO`, LEGAL_APPROVED=NO); the answers are the user's own and are not checked; `check` reads only the license, notice, header and crate-name items listed; several worked cases say "ask the Licensor" |
 
 ## v0.7.0
 

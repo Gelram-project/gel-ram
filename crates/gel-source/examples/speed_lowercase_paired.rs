@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The lowercasing of document lines alone, the earlier per-character loop
 //! (`<script>_ref`) and `lowercase_into` from `src/lowercase.rs`
 //! (`<script>_fast`), timed one after the other in the same binary on the

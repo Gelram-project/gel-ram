@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the catalog loader: `Corpus::load`,
 //! `Corpus::load_with_threads` (0, 1, 2, 3, 8 and 64 threads) and
 //! `EncodedCorpus::load` against `reference`, an exact copy of the earlier

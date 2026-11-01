@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for `Reader::scan_many_into`: every row must have the same
 //! bits as `Reader::scan_into` for that query alone, and every score the same
 //! bits as `Reader::read` for that pair. Seeded queries (random densities,

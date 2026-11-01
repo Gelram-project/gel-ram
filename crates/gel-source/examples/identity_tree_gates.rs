@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the whole-tree gates of `xtask` (rust-only, license
 //! metadata, project contact, docs-refs, disclosure) and for recorder-lint:
 //! one walk that keeps the metadata of every entry, per-file work on scoped

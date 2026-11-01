@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeatable wall-time of `backup::create`, `backup::inspect` and
 //! `backup::restore` on fixed-seed collection snapshots. Only public API that
 //! older trees also have is used, so the same file builds and runs on them.

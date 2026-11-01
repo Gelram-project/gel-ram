@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness for CRC-64/ECMA on large in-memory buffers. Uses only
 //! `crc64_ecma`, `Crc64Ecma` and `splitmix64`, so the same file builds on
 //! trees before and after the multi-thread path. Prints per-run wall time in

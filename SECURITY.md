@@ -21,8 +21,8 @@ Fixes, when made, land only on current public `main` (version line 0.7.0) and re
 
 | Version | Security fixes |
 |---|---|
-| current `main` (0.6 line) | best effort, in a later release |
-| earlier tags (v0.5.3 and older) | none |
+| current `main` (0.7 line) | best effort, in a later release |
+| tagged releases and other tags (v0.6.1 and older) | none; they are not patched in place |
 
 ## Attack surface
 
@@ -73,7 +73,7 @@ the predecessor's full v2 integrity; its single-writer assumption still applies.
 - Source passages are untrusted content even after hash verification. Consumers
   must escape them for their output context; never execute them or treat embedded
   instructions as authorization.
-- No network code in the library crates or in `gel-evidence`, `gel-backup` and `gel-live-lab`. Only `xtask isolation-check` opens TCP connections, and only after the process's own network view shows loopback alone and no route: it then connects to the documentation addresses 203.0.113.1 and 2001:db8::1, which must fail as unreachable, so on a networked host it sends nothing. Preparing the toolchain and dependencies (rustup, `cargo fetch`) uses the network before verification; verification itself runs with `--offline --locked` and can run inside a network namespace ([isolated reproduction](docs/REPRODUCE-ISOLATED.md)).
+- No network code in the library crates or in `gel-evidence`, `gel-backup`, `gel-license` and `gel-live-lab`. Only `xtask isolation-check` opens TCP connections, and only after the process's own network view shows loopback alone and no route: it then connects to the documentation addresses 203.0.113.1 and 2001:db8::1, which must fail as unreachable, so on a networked host it sends nothing. Preparing the toolchain and dependencies (rustup, `cargo fetch`) uses the network before verification; verification itself runs with `--offline --locked` and can run inside a network namespace ([isolated reproduction](docs/REPRODUCE-ISOLATED.md)).
 - Bounded open API: `open_verified_with_limits` rejects a file above the caller's file-size budget before reading the header, and a record count above the record budget before allocation.
 - CRC64-ECMA on the v2 header and on the payload.
 - Exact length checks before allocation: the declared record count must match the file length exactly before the record buffer is reserved; the reservation is fallible and returns an error instead of aborting.
