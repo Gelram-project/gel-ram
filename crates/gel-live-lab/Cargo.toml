@@ -8,6 +8,7 @@ license-file.workspace = true
 publish = false
 
 [dependencies]
+gel-core = { path = "../gel-core" }
 gel-source = { path = "../gel-source" }
 gel-phase-quad = { path = "../gel-phase-quad" }
 

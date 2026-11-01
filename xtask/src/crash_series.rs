@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Crash series for the public collection tool. `gel-evidence` adds documents
 //! one at a time and saves a new snapshot after each, so the collection grows
 //! while it is written; the process is killed (SIGKILL on Unix) at a random

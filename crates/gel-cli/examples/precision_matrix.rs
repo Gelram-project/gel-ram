@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 //! Public precision reference: F32, IEEE binary16 and affine min/max Q1–Q16.
 //! Not the private GEL codec. Private formats are not implemented and

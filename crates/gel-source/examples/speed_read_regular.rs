@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeatable timing of `read_regular`, the bounded whole-file read used by
 //! every bundle, snapshot, backup and document import path.
 //!

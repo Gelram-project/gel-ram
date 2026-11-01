@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness for several Q8 queries against one bank, using only API
 //! that also exists on older trees: 16 calls of `Reader::scan_into`, one per
 //! query, over a deterministic bank of 32,768 records (37,748,736 bytes of

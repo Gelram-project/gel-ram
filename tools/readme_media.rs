@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Record real public CLI runs and render edited, explicitly labelled GIF replays.
 //! Build with Rust 1.85.0. FFmpeg and system fonts are rendering tools, not vendored.
 #![forbid(unsafe_code)]

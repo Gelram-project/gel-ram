@@ -1,5 +1,8 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Offline interactive evidence laboratory, not an answer generator or semantic encoder.
 #![forbid(unsafe_code)]
+pub mod license_check;
 pub mod literal;
 pub mod witness;
 use gel_phase_quad::{grid::DIM, Policy, Reader, Record};

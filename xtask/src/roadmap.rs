@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Recounts the review work list in docs/ROADMAP.md: the items must be A01 to
 //! A24 in order, each in a known state, and the one summary line must state the
 //! counts of the table beneath it.

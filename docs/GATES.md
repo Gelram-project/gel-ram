@@ -41,6 +41,15 @@ A release candidate is green only when all applicable gates pass on the same sou
     [isolated reproduction](REPRODUCE-ISOLATED.md)), and the
     per-platform CI evidence report
     (`xtask ci-evidence`) on Linux, Windows and macOS.
+24. source-header gate (`xtask source-headers`, in `verify`): every GEL RAM-owned
+    `.rs` file begins with the exact two-line source header, the license name and
+    the Required Notice, with no byte order mark and LF line endings
+    (`SOURCE_HEADERS_GATE=PASS files=<n>`).
+25. license self-check: the release `gel-license check` of this workspace must
+    print `LICENSE_FILE=EXACT`, `REQUIRED_NOTICE=KEPT`, source headers that are
+    all intact (none altered) and `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`
+    ([license decision guide](LICENSE-DECISION.md)). This reads the project's
+    own listed items, not legal validity.
 
 Performance results are evidence, not correctness substitutes.
 

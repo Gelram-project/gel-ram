@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Runs the comparison of `examples/identity_store_crc.rs` under `cargo test`
 //! on a short subset of record counts and file variants.
 #![forbid(unsafe_code)]

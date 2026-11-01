@@ -39,8 +39,14 @@ keep the order shown below.
 The first record is the session:
 
 ```json
-{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.7.0"}
+{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.7.0","license":"GEL-RAM-NCRL-1.0"}
 ```
+
+| Field | Value |
+|---|---|
+| tool | the program name, gel-evidence |
+| version | the package version of the program |
+| license | the identifier of the license of the GEL RAM-owned material of the program, GEL-RAM-NCRL-1.0; the root LICENSE holds the terms; third-party material in the program keeps its own license (THIRD-PARTY-NOTICES.md) |
 
 Each command gives one result record, with `seq` (1-based, counting non-blank
 command lines), `command` (the first word of the line) and `status`, followed by

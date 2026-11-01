@@ -1,6 +1,8 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 
-use gel_core::{splitmix64, Generation, ORB_WORDS};
+use gel_core::{splitmix64, tool_identity, tool_license, Generation, ORB_WORDS};
 use gel_orb::Orb1024;
 use gel_reader::{apply_view, invert_view, reader16, top1, top_k, top_k_progressive, ViewSpec};
 use gel_store::{verify_file, OpenLimits, RamStore};
@@ -116,6 +118,16 @@ fn selftest() -> CliResult<()> {
 }
 
 fn main() -> CliResult<()> {
+    // `--version` or `--license` as the only argument, before any command.
+    let only: Vec<_> = std::env::args_os().skip(1).collect();
+    if only == ["--version"] {
+        println!("{}", tool_identity("gel-cli", env!("CARGO_PKG_VERSION")));
+        return Ok(());
+    }
+    if only == ["--license"] {
+        print!("{}", tool_license("gel-cli", env!("CARGO_PKG_VERSION")));
+        return Ok(());
+    }
     let mut args = std::env::args_os().skip(1);
     let command = args.next();
     let command = match &command {

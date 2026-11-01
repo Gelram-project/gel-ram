@@ -4,6 +4,8 @@ This repository distribution uses **GEL RAM Noncommercial Reciprocal License 1.0
 
 GEL RAM NCRL 1.0 is source-available and noncommercial. It is not represented as an OSI-approved open-source license.
 
+To read a distribution tree for the license, the Required Notice and the GEL RAM source headers, or to see which LICENSE sentences the program's fixed rules cite for your own answers about one use, see the [license decision guide](docs/LICENSE-DECISION.md) and its `gel-license` program. Neither amends or adds to the license (LICENSE section 17), and neither is legal advice.
+
 ## 1. Core rule
 
 1. If You do not monetize GEL RAM, You may use it, study it, modify it, keep private changes private, and share it for noncommercial purposes.
@@ -65,6 +67,8 @@ Exact prices, revenue-share percentages, update rights, termination effects and 
 An independently developed component does not become a GEL RAM Modification merely because it communicates through an API, protocol, file format, or process boundary.
 
 Copied or adapted GEL RAM code does not become independent merely because it is moved into a wrapper, plugin, generated file, encoded payload, or separate process.
+
+Each GEL RAM-owned `.rs` file begins with a two-line source header. The header carries the license name and the Required Notice and should stay with the file.
 
 ## 8. Third-party material
 

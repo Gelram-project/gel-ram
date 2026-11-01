@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Transparent reference experiment, not the private GEL encoder.
 //! Q1/Q2/Q4/Q8: affine min/max per 32 samples, packed LSB first, 8 metadata bytes.
 //! Finite input only. No claim that quantization removes only noise.

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Contract of `gel-evidence --batch` (schema gel-evidence/1): JSON Lines on
 //! stdout only, diagnostics on stderr, HIT/UNKNOWN/INCOMPLETE/ERROR kept apart
 //! in the records and in the exit code, and a stop at the first ERROR.
@@ -92,7 +94,13 @@ fn hits_and_unknown_are_data_with_exact_quotes_and_exit_zero() {
     );
     assert_eq!(run.code, 0, "{}", run.stderr);
     assert!(run.stderr.is_empty(), "{}", run.stderr);
-    assert!(run.stdout[0].contains("\"record\":\"session\""));
+    assert_eq!(
+        run.stdout[0],
+        format!(
+            "{{\"schema\":\"gel-evidence/1\",\"record\":\"session\",\"tool\":\"gel-evidence\",\"version\":\"{}\",\"license\":\"GEL-RAM-NCRL-1.0\"}}",
+            env!("CARGO_PKG_VERSION")
+        )
+    );
     let find = &run.stdout[3];
     assert!(find.contains("\"status\":\"HIT\""), "{find}");
     // The quote is the whole matching line. Quote characters, backslash and tab

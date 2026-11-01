@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Scripted typing, unmodified live subprocess output; not a benchmark harness.
 //! Run in a NEW directory containing memory.txt and unicode.txt.
 //! Display, log, lock, thread, parse and snapshot failures end in

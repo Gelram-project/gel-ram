@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeatable timing of the source-catalog reader and writer.
 //!
 //! Usage: `speed_catalog_parse [RUNS]` (RUNS in 1..=999, default 9). Every

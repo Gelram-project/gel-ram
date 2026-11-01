@@ -5,5 +5,9 @@ edition.workspace = true
 rust-version.workspace = true
 license-file.workspace = true
 publish = false
+
+[dependencies]
+gel-core = { path = "../gel-core" }
+
 [lints]
 workspace = true

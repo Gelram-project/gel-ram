@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Compares the popcount-first `Residual::from_exact_xor`,
 //! `EncodedOrb::encode_against` and `encode_best_prototype` with verbatim
 //! copies of the earlier encoder on seeded and edge-case inputs.

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Bounded phrase extraction from an independently pinned source, not semantic AI.
 use gel_source::{digest, document, hex, Corpus, Hash};
 use std::time::Instant;
@@ -128,6 +130,8 @@ mod tests {
         assert_eq!(r.matching_lines, 1);
         assert_eq!(
             &text[r.passages[0].clone()],
+            // A line quoted from the MIT-licensed Rust Book excerpt
+            // (THIRD-PARTY-NOTICES.md section 6), not GEL RAM-owned text.
             "Some languages have garbage collection that regularly looks for no-longer-used"
         );
     }

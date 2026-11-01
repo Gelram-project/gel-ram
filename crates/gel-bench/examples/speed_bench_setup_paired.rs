@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Wall-time harness for the setup work alone, earlier serial code
 //! (`<case>_ref`) against the current code (`<case>_new`) in one binary: bank
 //! generation, the bank CRC, the Top-8 reference and the pointer-chase chain

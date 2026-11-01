@@ -1,4 +1,7 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Local exact-source CLI. No model, network client, private banks or semantic claims.
+use gel_core::{tool_identity, tool_license};
 use gel_source::{hex, import_text, load_bundle, read_regular, write_bundle_new, Hash, MAX_TEXT};
 use std::{path::Path, time::Instant};
 
@@ -49,6 +52,14 @@ fn run(args: &[String]) -> Result<(), String> {
             println!(
                 "Timing excludes terminal output. Exact title lookup, not AI generation or ORB/s."
             );
+            Ok(())
+        }
+        [arg] if arg == "--version" => {
+            println!("{}", tool_identity("gel-source", env!("CARGO_PKG_VERSION")));
+            Ok(())
+        }
+        [arg] if arg == "--license" => {
+            print!("{}", tool_license("gel-source", env!("CARGO_PKG_VERSION")));
             Ok(())
         }
         [arg] if arg == "--help" => {

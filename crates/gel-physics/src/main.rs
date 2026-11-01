@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 
 //! F0 memory-physics harness. It reports nanoseconds and bytes/s only; cycles
@@ -22,7 +24,7 @@ mod chain;
 #[cfg(test)]
 mod chain_reference;
 
-use gel_core::splitmix64;
+use gel_core::{splitmix64, tool_identity, tool_license};
 use std::collections::BTreeSet;
 use std::fs;
 use std::hint::black_box;
@@ -39,6 +41,19 @@ const DEFAULT_SIZES: &[usize] = &[
 ];
 
 fn main() -> Result<(), String> {
+    // `--version` or `--license` as the only argument, before REPEATS is read.
+    let only: Vec<_> = std::env::args_os().skip(1).collect();
+    if only == ["--version"] {
+        println!(
+            "{}",
+            tool_identity("gel-physics", env!("CARGO_PKG_VERSION"))
+        );
+        return Ok(());
+    }
+    if only == ["--license"] {
+        print!("{}", tool_license("gel-physics", env!("CARGO_PKG_VERSION")));
+        return Ok(());
+    }
     let cpu_start = observed_cpu();
     let repeats = arg_usize(1, 5, "REPEATS")?;
     if repeats < 3 {

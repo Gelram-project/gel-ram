@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The earlier NFC implementation, unchanged except for the visibility of its
 //! functions: every property was found by a binary search in the tables, and
 //! each normalized string was built in fresh vectors. The identity check

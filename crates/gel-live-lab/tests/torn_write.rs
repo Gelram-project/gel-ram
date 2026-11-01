@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! A save of one Q8 record, the file `gel-live-lab --literal FILE --save
 //! NEW_PATH` writes, stopped at known points. A child process (this test binary
 //! run again) publishes the record through `gel_source::write_file_new_with`

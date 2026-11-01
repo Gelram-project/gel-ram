@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Work outside the timed region: bank generation and the independent Top-K
 //! reference. Every result is a pure function of slot indices, so it is the
 //! same for any worker count; the threads only shorten the run.

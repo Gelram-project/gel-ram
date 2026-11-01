@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Same-binary pairs for 16 queries on two deterministic banks (32,768 ORBs =
 //! 4 MiB and 1,310,720 ORBs = 160 MiB): 16 single `top1` calls (`_ref`)
 //! against one `top1_many` call (`_many`), and 16 `top1_threads` calls against

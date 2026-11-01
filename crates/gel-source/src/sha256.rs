@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! SHA-256 as specified in FIPS 180-4, written for this crate in safe Rust.
 //!
 //! It produces the standard SHA-256 digest, so every pin made earlier with

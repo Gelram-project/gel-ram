@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The goal is stated once, in docs/GOAL.md, in a fixed shape that the project
 //! website reads; the README and start-here pages repeat its sentence word for word.
 const GOAL: &str = include_str!("../../docs/GOAL.md");

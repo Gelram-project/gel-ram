@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness for the mask paths of the Q8 record: fixture decode and
 //! encode, `Record::new`, `Reader::prepare` and `Reader::view`, over a
 //! deterministic bank of 8192 records (the largest Q8DEMO01 fixture: a

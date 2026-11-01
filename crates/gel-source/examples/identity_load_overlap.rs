@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity program for loading a bundle and a collection snapshot with the
 //! full-file digest overlapped with the part digests on scoped threads, which
 //! stop early under a wrong pin.

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Latency of `document::search` on lines that exercise Unicode normalization:
 //! the worst and best order of 2047 combining marks in one 4095-byte line,
 //! Polish text, decomposed and composed Hangul. Prints p50/p95/p99 per line

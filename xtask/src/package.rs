@@ -1,6 +1,8 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Binary packages of the Evidence Lab tools, built in CI (docs/BINARIES.md).
 //!
-//! Builds gel-evidence, gel-backup and gel-live-lab for the host target with
+//! Builds gel-evidence, gel-backup, gel-license and gel-live-lab for the host target with
 //! build paths remapped and assembles one package directory. The package is
 //! refused unless every third-party crate in the target's normal dependency
 //! graph is in the reviewed inventory and each of its license files matches the
@@ -16,7 +18,7 @@ use std::{
     process::{Command, Output, Stdio},
 };
 
-const BINARIES: &[&str] = &["gel-evidence", "gel-backup", "gel-live-lab"];
+const BINARIES: &[&str] = &["gel-evidence", "gel-backup", "gel-license", "gel-live-lab"];
 const INVENTORY: &str = "docs/DEPENDENCY-INVENTORY.md";
 /// Project terms shipped at the package root under their base names.
 const PROJECT_FILES: &[&str] = &[
@@ -206,6 +208,64 @@ fn expect(name: &str, out: &Output, code: i32, needle: &str) -> Result<(), Strin
     Ok(())
 }
 
+/// Like [`expect`], but each needle must be one whole line of stdout.
+fn expect_lines(name: &str, out: &Output, code: i32, lines: &[&str]) -> Result<(), String> {
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let missing = lines.iter().find(|l| !stdout.lines().any(|s| s == **l));
+    if out.status.code() != Some(code) || missing.is_some() {
+        return Err(format!(
+            "smoke {name}: exit {:?}, expected {code} and line {missing:?}; stdout: {}",
+            out.status.code(),
+            stdout.trim()
+        ));
+    }
+    Ok(())
+}
+
+/// `gel-license` on the package itself: its identity, the package's own
+/// license files, and one answers file.
+fn smoke_license(pkg: &Path, work: &Path, license: &Path, log: &mut String) -> Result<(), String> {
+    let out = run_with(license, &["--version"], "")?;
+    let identity =
+        gel_core::tool_identity("gel-license", &workspace_version(super::workspace_root()?)?);
+    expect_lines("license-version", &out, 0, &[&identity])?;
+    let out = run_with(license, &["check", &pkg.to_string_lossy()], "")?;
+    expect_lines(
+        "license-check-package",
+        &out,
+        0,
+        &[
+            "LICENSE_FILE=EXACT",
+            "REQUIRED_NOTICE=KEPT",
+            "DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT",
+            "CONTACT=gelram.licensing@gmail.com",
+            "LEGAL_CERTIFICATION=NO",
+        ],
+    )?;
+    let out = run_with(license, &["use", "--template"], "")?;
+    expect_lines(
+        "license-template",
+        &out,
+        0,
+        &["money=", "evaluation_only=", "noncommercial_purpose="],
+    )?;
+    let answers = work.join("answers.txt");
+    fs::write(
+        &answers,
+        "money=no\ncustomer_production=no\nhosted=no\npaid_work=no\ncost_reduction=no\nevaluation_only=yes\nnoncommercial_purpose=yes\n",
+    )
+    .map_err(|e| e.to_string())?;
+    let out = run_with(license, &["use", &answers.to_string_lossy()], "")?;
+    expect_lines(
+        "license-use",
+        &out,
+        0,
+        &["USE_VERDICT=EVALUATION", "LEGAL_CERTIFICATION=NO"],
+    )?;
+    let _ = writeln!(log, "smoke=license-version-check-template-use PASS");
+    Ok(())
+}
+
 /// Runs the packaged binaries, not the build outputs, in a scratch directory.
 fn smoke(pkg: &Path, work: &Path, log: &mut String) -> Result<(), String> {
     let bin = |name: &str| pkg.join(format!("{name}{}", std::env::consts::EXE_SUFFIX));
@@ -278,7 +338,7 @@ fn smoke(pkg: &Path, work: &Path, log: &mut String) -> Result<(), String> {
         return Err("smoke backup-wrong-pin: a refused restore wrote a file".into());
     }
     pass("backup-create-inspect-restore-refuse");
-    Ok(())
+    smoke_license(pkg, work, &bin("gel-license"), log)
 }
 
 pub fn run(args: &[String]) -> Result<(), String> {

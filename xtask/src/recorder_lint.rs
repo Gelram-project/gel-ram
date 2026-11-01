@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Standalone recorder tool: clippy restriction lints forced from the command
 //! line. `cargo clippy --workspace` never sees tools/record_evidence.rs, so
 //! this gate runs clippy-driver on it directly. `-F` (forbid) cannot be relaxed

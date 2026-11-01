@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Generate a script-free README presentation. Existing recordings are never rewritten.
 #![forbid(unsafe_code)]
 use std::{fs, io::Write, path::Path, process::Command};

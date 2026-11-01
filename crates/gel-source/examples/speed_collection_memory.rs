@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeatable timing of `Collection::load` of one 64 MiB snapshot, with a setup
 //! that needs less memory than one load, so that the peak resident memory of
 //! the whole process is the peak of a load. Run it under `/usr/bin/time -v` and

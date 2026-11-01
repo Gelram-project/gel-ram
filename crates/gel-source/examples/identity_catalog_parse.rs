@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the catalog reader (`Corpus::load`, `EncodedCorpus::load`),
 //! the catalog writer (`CorpusBuilder::push`/`finish`) and `hex`, against
 //! exact copies of the earlier code, on seeded and exhaustive inputs including

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! `ucd-tables UCD_DIR NEW_FILE`: writes the canonical-normalization tables of
 //! gel-source (`crates/gel-source/src/nfc_tables.rs`) from two files of the
 //! Unicode Character Database: UnicodeData.txt (canonical combining classes and

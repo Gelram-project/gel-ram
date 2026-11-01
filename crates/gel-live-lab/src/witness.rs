@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Silicon witness: does this machine compute the same score bits?
 //!
 //! Every public Q8 score is a sum of 256 cosine values weighted by a histogram

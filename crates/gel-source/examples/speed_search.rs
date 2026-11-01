@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Repeated phrase search over the largest admitted inputs, for paired timing
 //! of two source trees. Deterministic synthetic text, built outside the timer.
 //!

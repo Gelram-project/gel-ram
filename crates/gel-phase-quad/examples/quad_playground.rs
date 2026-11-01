@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Local interactive numeric experiment; no private data, network, or LLM.
 #![forbid(unsafe_code)]
 #[allow(dead_code)]

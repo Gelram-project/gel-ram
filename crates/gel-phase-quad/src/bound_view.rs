@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Checked in-memory views. This is compatibility checking, NOT authentication.
 //! No serialization or bank migration is introduced. Low-level Grid APIs remain available.
 use crate::{grid::DIM, Reader, Record, View};

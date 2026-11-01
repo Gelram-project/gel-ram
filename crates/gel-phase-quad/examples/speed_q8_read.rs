@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing harness for the Q8 scoring path: `Reader::read` and single-worker
 //! `Reader::scan_into` over a deterministic synthetic bank of 8192 records
 //! (9,437,184 bytes of records, the largest Q8DEMO01 fixture size).

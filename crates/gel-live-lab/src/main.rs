@@ -1,4 +1,7 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
+use gel_core::{tool_identity, tool_license};
 use gel_live_lab::{literal, parse_pin, Lab};
 use gel_source::digest;
 use std::ffi::OsString;
@@ -65,6 +68,21 @@ fn literal_run(args: &[OsString]) -> Result<(), String> {
 }
 fn run() -> Result<(), String> {
     let raw: Vec<OsString> = std::env::args_os().skip(1).collect();
+    // `--version` or `--license` as the only argument, before any other mode.
+    if raw == ["--version"] {
+        println!(
+            "{}",
+            tool_identity("gel-live-lab", env!("CARGO_PKG_VERSION"))
+        );
+        return Ok(());
+    }
+    if raw == ["--license"] {
+        print!(
+            "{}",
+            tool_license("gel-live-lab", env!("CARGO_PKG_VERSION"))
+        );
+        return Ok(());
+    }
     if matches!(
         raw.first().and_then(|a| a.to_str()),
         Some("--literal" | "--reopen")

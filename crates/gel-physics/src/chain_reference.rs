@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Exact copy of the earlier inline chain builder of `pointer_chase`, and
 //! the comparison that checks `chain` against it. Used by the unit tests and
 //! by `gel-bench/examples/identity_bench_setup.rs`.

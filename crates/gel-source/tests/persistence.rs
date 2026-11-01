@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 use gel_source::{
     digest, import_text, load_bundle, read_regular, write_bundle_new, write_file_new, Address,
     BundleError, Error, MAX_TEXT,

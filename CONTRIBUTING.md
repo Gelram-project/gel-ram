@@ -25,10 +25,11 @@ External contributors must:
 2. review [CLA-PRIVACY.md](CLA-PRIVACY.md);
 3. complete GEL RAM Contributor License Agreement 2.0 privately and receive written acceptance from the Project Licensor;
 4. ensure employer, client, university, sponsor, or other rights-holder permission is in place when applicable;
-5. identify all third-party material and its license or permission;
+5. identify all third-party material and its license or permission; a third-party `.rs` file must be added, with its reason, to the exemption list `EXEMPT` in `xtask/src/source_headers.rs` before `source-headers --write` is run, so that it does not receive a GEL RAM header;
 6. disclose material AI-assisted or automated code generation as required by CLA 2.0;
 7. remove credentials, secrets, personal data, private datasets, and confidential information (the [public disclosure gate](docs/PUBLIC-DISCLOSURE-GATE.md), `cargo run --locked --offline -p xtask -- disclosure`, catches private paths, network addresses, credential-like strings and unlisted e-mail addresses; `xtask verify` runs it);
-8. after changing tracked files, regenerate `SOURCE-SHA256SUMS.txt` the way the [CI manifest check](.github/workflows/ci.yml) builds it, then run `cargo run --locked --offline -p xtask -- verify`.
+8. begin every new `.rs` file intended for merge with the exact two-line source header, the license name and the Required Notice, defined once in `crates/gel-core/src/lib.rs` as `gel_core::SOURCE_HEADER` (`cargo run --locked --offline -p xtask -- source-headers --write` inserts it where it is missing and refuses a different or altered header; `xtask verify` checks it); the gate checks only lines 1 and 2, so a contributor may add their own copyright line directly after the two header lines;
+9. after changing tracked files, regenerate `SOURCE-SHA256SUMS.txt` the way the [CI manifest check](.github/workflows/ci.yml) builds it, then run `cargo run --locked --offline -p xtask -- verify`.
 
 Only after those steps should a pull request intended for merge be opened.
 

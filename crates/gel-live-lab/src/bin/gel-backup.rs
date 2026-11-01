@@ -1,7 +1,10 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Backup, restore, withdraw and delete for GELSET01 collection snapshots.
 //! Arguments are separate words, so paths may contain spaces. stdout carries
 //! one result line; stderr carries usage and diagnostics.
 #![forbid(unsafe_code)]
+use gel_core::{tool_identity, tool_license};
 use gel_live_lab::{parse_pin, safe};
 use gel_source::backup::{self, CreateError, DeleteError, RestoreError, State};
 use std::{io::Write, path::Path, process::ExitCode};
@@ -34,6 +37,13 @@ fn state_line(state: &State) -> String {
 fn run(args: &[String]) -> Result<Outcome, String> {
     let words: Vec<&str> = args.iter().map(String::as_str).collect();
     Ok(match words.as_slice() {
+        ["--version"] => Outcome(tool_identity("gel-backup", env!("CARGO_PKG_VERSION")), 0),
+        ["--license"] => {
+            let mut text = tool_license("gel-backup", env!("CARGO_PKG_VERSION"));
+            // main writes the final newline back.
+            text.pop();
+            Outcome(text, 0)
+        }
         ["create", pin, snapshot, dir] => {
             match backup::create(Path::new(snapshot), parse_pin(pin)?, Path::new(dir)) {
                 Ok(state) => Outcome(format!("BACKUP=CREATED {}", state_line(&state)), 0),

@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Property-to-test map (docs/PROPERTY-TESTS.md, roadmap A07).
 //!
 //! `verify` checks that the map is well formed. The CI evidence collector

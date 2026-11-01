@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Wall-time harness for whole `gel-bench` runs, aimed at the untimed work
 //! around the program's own timers (bank CRC, null and warm-up references,
 //! quality probes). It starts the release binary as a child process, prints

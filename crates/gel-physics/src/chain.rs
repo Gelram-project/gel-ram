@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The pointer-chase chain. `chain_order` is the seeded Fisher-Yates
 //! permutation; it depends only on the working-set size, so it is built once
 //! per size. `build_next` turns it into the successor table that a timed

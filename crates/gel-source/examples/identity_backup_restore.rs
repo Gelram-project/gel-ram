@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for `backup::restore`, which now publishes the snapshot
 //! bytes that `inspect` already read and verified, against the earlier
 //! restore, which read, hashed and parsed the snapshot a second time.

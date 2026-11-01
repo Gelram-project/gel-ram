@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Timing example for the witness score grid: `QUERIES` x `BODIES` = 1,048,576
 //! Q8 reads through the public `witness::scores`, repeated RUNS times
 //! (argument, 1..=999, default 9). Prints one `SPEED` line per run and the

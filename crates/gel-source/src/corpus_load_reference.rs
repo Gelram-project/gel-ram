@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The catalog loader before the bundle reader handed its buffer over: the
 //! text was checked as `&str` and copied into the corpus. The bodies are
 //! unchanged apart from their names (`Self` became `Corpus`). Tests compare

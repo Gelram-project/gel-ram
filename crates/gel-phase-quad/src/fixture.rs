@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Q8DEMO01, the public numeric fixture file: an 8-byte magic, a little-endian
 //! u32 record count (1..=8192), then exactly that many 1152-byte records. Each
 //! record is 1024 phase bytes followed by a 128-byte active mask (bit j%8 of

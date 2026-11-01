@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! The earlier `backup::restore` path, which verified the snapshot during
 //! `inspect` and then read, hashed and parsed it a second time before
 //! publishing it. The function bodies are kept verbatim so the current

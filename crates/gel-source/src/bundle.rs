@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Bounded source import and no-replace publication in an owner-controlled directory.
 //! This is plaintext persistence, not an encrypted private memory vault.
 use crate::{

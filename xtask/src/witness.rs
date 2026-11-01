@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! `witness NEW_DIR [FILE]`: one command that runs the short checks of
 //! docs/REPRODUCE.md and prints one block to paste into a report.
 //!

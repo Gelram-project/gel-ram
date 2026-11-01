@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! GELHIS01 record-history files in the format mutation matrix
 //! (docs/MUTATION-MATRIX.md). A history file carries two CRC64 fields of its
 //! own, so a mutant whose CRC64 no longer fits would only test the checksum.

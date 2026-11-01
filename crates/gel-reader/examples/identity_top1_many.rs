@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the blocked `top1_many` (and `top1_many_threads`, which
 //! runs it per chunk) against an exact copy of the earlier per-ORB loop (every
 //! ORB scored against all queries before the next ORB) and against

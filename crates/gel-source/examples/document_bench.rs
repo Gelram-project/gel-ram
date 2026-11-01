@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Small deterministic text-kernel probe, not encrypted storage or an AI benchmark.
 use gel_source::{digest, hex};
 use std::{hint::black_box, time::Instant};

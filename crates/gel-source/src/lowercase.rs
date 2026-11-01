@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Lowercasing of a document line for search: each character as
 //! `char::to_lowercase` gives it, with both sigma forms written as 'σ'.
 //!

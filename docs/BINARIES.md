@@ -1,7 +1,7 @@
 # Binary packages of the Evidence Lab tools
 
-Ready-to-run packages of `gel-evidence`, `gel-backup` and `gel-live-lab` let
-someone try the Evidence Lab without installing Rust. They are built only by
+Ready-to-run packages of `gel-evidence`, `gel-backup`, `gel-license` and
+`gel-live-lab` let someone try the Evidence Lab without installing Rust. They are built only by
 the [binaries workflow](../.github/workflows/binaries.yml) on GitHub-hosted
 runners, from a public revision, never on a developer machine.
 
@@ -17,11 +17,23 @@ nothing. A package is archived, given a signed build-provenance attestation and
 uploaded as a workflow artifact only when the owner starts the workflow by hand.
 Attaching the archives to a release is a separate owner decision.
 
+## Version and license of each program
+
+Every program of the workspace (`gel-cli`, `gel-bench`, `gel-physics`,
+`gel-live-lab`, `gel-evidence`, `gel-backup`, `gel-source` and `gel-license`) given
+`--version` as its only argument prints one line
+`GEL_TOOL=NAME VERSION=VERSION LICENSE=GEL-RAM-NCRL-1.0` and exits 0. Given
+`--license` it prints that line, the license name, the `Required Notice:` line
+of NOTICE, a one-line NOTICE summary of where commercial terms are asked, and
+the line `Third-party material in this program, including the Unicode data
+compiled into it, remains under its own license: see THIRD-PARTY-NOTICES.md.`;
+the root LICENSE, not this output, holds the terms.
+
 ## What a package contains
 
 | Path | Content |
 |---|---|
-| `gel-evidence`, `gel-backup`, `gel-live-lab` (`.exe` on Windows) | the three programs, release profile, symbols stripped |
+| `gel-evidence`, `gel-backup`, `gel-license`, `gel-live-lab` (`.exe` on Windows) | the four programs, release profile, symbols stripped; `gel-license` is described in the [license decision guide](LICENSE-DECISION.md) |
 | BUILD-INFO.txt | revision and working-tree state, target, rustc and cargo versions, runner image, each third-party crate, each binary's size and SHA-256, the results of the checks below |
 | SHA256SUMS.txt | SHA-256 of every other file in the package |
 | `LICENSE`, `NOTICE`, LICENSE-MODE.txt (from `docs/LICENSE-MODE.txt`), `LICENSING.md`, `COMMERCIAL-LICENSE.md` | the project's terms, unchanged; the packages are under the same license as the source |
@@ -45,8 +57,11 @@ check. It is refused when:
   directory or a user-directory prefix (build paths are remapped at compile time);
 - a smoke run of the packaged binaries on that platform fails: help and both
   demos, a batch session (add, three finds with HIT, HIT and UNKNOWN, save,
-  exit), a backup create, inspect and restore with a byte-identical result, and
-  a restore with a wrong pin that is refused without writing a file.
+  exit), a backup create, inspect and restore with a byte-identical result,
+  a restore with a wrong pin that is refused without writing a file, and
+  `gel-license --version`, `gel-license check` of the package itself
+  (`LICENSE_FILE=EXACT`, `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`), the
+  answers template and one answers file.
 
 `release_eligible=yes` in BUILD-INFO.txt requires a build in GitHub Actions from
 a clean working tree; the workflow fails otherwise.
@@ -72,7 +87,7 @@ cargo run --locked --offline -p xtask -- rebuild-check NEW_DIR_OUTSIDE_CHECKOUT
 
 `rebuild-check` copies the committed tree (`git archive HEAD`) into two
 directories whose paths differ in name and length, builds the package in each
-with `package-binaries`, and compares the three binaries byte for byte. It
+with `package-binaries`, and compares the four binaries byte for byte. It
 prints the SHA-256 of each binary of both builds and `REBUILD=IDENTICAL` or
 `REBUILD=DIFFERENT`; a difference is an error unless `--report-only` is given.
 When two builds differ it also prints, for each binary, how many bytes differ,

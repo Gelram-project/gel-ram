@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Unicode Normalization Form C (UAX #15), written for this crate.
 //!
 //! A string that passes the NFC_Quick_Check rule is returned as it is.

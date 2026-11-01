@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! gel-backup: separate-word arguments (paths with spaces), one result line on
 //! stdout, and exit codes 0 (done), 3 (not restorable), 2 (refused/failed).
 use gel_source::{collection::Collection, hex, Hash};

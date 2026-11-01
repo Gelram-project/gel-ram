@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 #![forbid(unsafe_code)]
 
 //! GEL RAM core contracts. No external dependencies.
@@ -12,6 +14,96 @@ pub const GEL_MAGIC_V1: [u8; 8] = *b"GELORB01";
 pub const GEL_MAGIC_V2: [u8; 8] = *b"GELORB02";
 pub const GEL_MAGIC: [u8; 8] = GEL_MAGIC_V2;
 pub const CRC64_ECMA_POLY: u64 = 0x42F0_E1EB_A9EA_3693;
+
+// The license name and the Required Notice are written once, here; the
+// constants below and the source header are all built from these two.
+macro_rules! license_name {
+    () => {
+        "GEL RAM Noncommercial Reciprocal License 1.0"
+    };
+}
+macro_rules! required_notice {
+    () => {
+        "Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)"
+    };
+}
+macro_rules! source_header_line_1 {
+    () => {
+        concat!(
+            "// GEL RAM — ",
+            license_name!(),
+            "; see LICENSE and NOTICE."
+        )
+    };
+}
+macro_rules! source_header_line_2 {
+    () => {
+        concat!("// ", required_notice!())
+    };
+}
+
+/// Identifier of the license of GEL RAM-owned material in this workspace.
+pub const LICENSE_ID: &str = "GEL-RAM-NCRL-1.0";
+/// The full license name, the first line of the root LICENSE file.
+pub const LICENSE_NAME: &str = license_name!();
+/// The `Required Notice:` line of the root LICENSE and NOTICE files; LICENSE
+/// section 8 names the `Required Notice:` lines among what each recipient
+/// receives.
+pub const REQUIRED_NOTICE: &str = required_notice!();
+/// Line 1 of the source header of every GEL RAM-owned `.rs` file:
+/// `// GEL RAM — ` + [`LICENSE_NAME`] + `; see LICENSE and NOTICE.`
+pub const SOURCE_HEADER_LINE_1: &str = source_header_line_1!();
+/// Line 2 of the source header: `// ` + [`REQUIRED_NOTICE`].
+pub const SOURCE_HEADER_LINE_2: &str = source_header_line_2!();
+/// Both source header lines, each ended by a line feed: the first bytes of
+/// every GEL RAM-owned `.rs` file. The header carries the license name and the
+/// Required Notice and should stay with the file.
+pub const SOURCE_HEADER: &str =
+    concat!(source_header_line_1!(), "\n", source_header_line_2!(), "\n");
+/// The UTF-8 byte order mark. A source file that starts with it is refused by
+/// the source-header gate and counted as altered by `gel-license check`.
+pub const UTF8_BOM: &[u8] = b"\xEF\xBB\xBF";
+/// Fourth line of `--license`, built only from NOTICE wording; it adds no term.
+const LICENSE_SUMMARY: &str = "Noncommercial use, modification, sharing and Evaluation are permitted on the terms of the LICENSE file. Monetized Use requires a separate written Commercial Agreement: gelram.licensing@gmail.com";
+/// Last line of `--license`: third-party material compiled into a program keeps
+/// its own license (LICENSE section 2, "Third-Party Material").
+const THIRD_PARTY_LINE: &str = "Third-party material in this program, including the Unicode data compiled into it, remains under its own license: see THIRD-PARTY-NOTICES.md.";
+
+/// Whether one line starts like a source header line: a plain `//` comment
+/// (not a `//!` or `///` doc comment) whose text, after spaces and tabs, opens
+/// with `GEL RAM` or `Required Notice`. A CR before the line's end is ignored.
+/// The source-header gate of `xtask` and `gel-license check` both use this rule.
+pub fn source_header_like(line: &[u8]) -> bool {
+    let line = line.strip_suffix(b"\r").unwrap_or(line);
+    let Some(rest) = line.strip_prefix(b"//") else {
+        return false;
+    };
+    let start = rest
+        .iter()
+        .position(|b| *b != b' ' && *b != b'\t')
+        .unwrap_or(rest.len());
+    let rest = &rest[start..];
+    rest.starts_with(b"GEL RAM") || rest.starts_with(b"Required Notice")
+}
+
+/// The one line a GEL RAM tool prints for `--version`, without a newline:
+/// `GEL_TOOL=<tool> VERSION=<version> LICENSE=GEL-RAM-NCRL-1.0`.
+/// Binaries pass their own name and `env!("CARGO_PKG_VERSION")`.
+pub fn tool_identity(tool: &str, version: &str) -> String {
+    format!("GEL_TOOL={tool} VERSION={version} LICENSE={LICENSE_ID}")
+}
+
+/// The five lines a GEL RAM tool prints for `--license`, each ending in `\n`:
+/// the [`tool_identity`] line, [`LICENSE_NAME`], [`REQUIRED_NOTICE`], the
+/// NOTICE summary of what is permitted and where commercial terms are asked,
+/// and a line saying that third-party material in the program keeps its own
+/// license. The LICENSE file, not this text, holds the terms.
+pub fn tool_license(tool: &str, version: &str) -> String {
+    format!(
+        "{}\n{LICENSE_NAME}\n{REQUIRED_NOTICE}\n{LICENSE_SUMMARY}\n{THIRD_PARTY_LINE}\n",
+        tool_identity(tool, version)
+    )
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct OrbId(pub u64);

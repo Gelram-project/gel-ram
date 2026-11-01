@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! A/A2/B timing comparison of one example between source trees (docs/SPEED-AB.md).
 //!
 //! A is the baseline, A2 a second copy of the baseline (the A/A control) and B
@@ -414,12 +416,27 @@ impl Carried {
     }
 }
 
+/// `bytes` without the two-line source header of `xtask source-headers` at its
+/// very top, when both lines are exact; otherwise `bytes` as they are.
+fn without_source_header(bytes: &[u8]) -> &[u8] {
+    bytes
+        .strip_prefix(crate::source_headers::HEADER.as_bytes())
+        .unwrap_or(bytes)
+}
+
+/// Whether a destination already holds the carried source: the same bytes once
+/// an exact source header at the top of either side is set aside, so a tree
+/// from before the headers holds the same example source as one after them.
+fn same_source(existing: &[u8], carried: &[u8]) -> bool {
+    without_source_header(existing) == without_source_header(carried)
+}
+
 /// What placing one carried file into a tree does.
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Step {
     /// The destination is missing: create it, remove it afterwards.
     Create,
-    /// The destination holds exactly these bytes: leave it alone.
+    /// The destination holds the same source (see `same_source`): leave it alone.
     Keep,
     /// A helper under `tools/` holds other bytes: replace it, and write these
     /// original bytes back afterwards.
@@ -448,7 +465,7 @@ impl Placed {
             )),
             Ok(_) => {
                 let existing = fs::read(dest).map_err(|e| format!("{}: {e}", dest.display()))?;
-                if existing == file.bytes {
+                if same_source(&existing, &file.bytes) {
                     Ok(Step::Keep)
                 } else if file.replaceable(replace_helpers) {
                     Ok(Step::Replace(existing))
@@ -1552,6 +1569,58 @@ mod tests {
         assert!(!dest.join("crates/p/examples/support").exists());
 
         fs::remove_dir_all(&src).unwrap();
+        fs::remove_dir_all(&dest).unwrap();
+    }
+
+    #[test]
+    fn an_exact_source_header_alone_does_not_make_a_different_source() {
+        use crate::source_headers::{HEADER, HEADER_LINE_1};
+        let body = "fn main() {\n    println!(\"SPEED_CHECK x=1\");\n}\n";
+        let headed = format!("{HEADER}{body}");
+        let changed = format!("{HEADER}{}", body.replacen("x=1", "x=2", 1));
+        let altered_line_2 =
+            format!("{HEADER_LINE_1}\n// Required Notice: Copyright (C) 2027 RR\n{body}");
+        let altered_line_1 = HEADER.replacen("License 1.0", "License 2.0", 1) + body;
+        // The header on one side only: the same source, either way round.
+        assert!(same_source(body.as_bytes(), headed.as_bytes()));
+        assert!(same_source(headed.as_bytes(), body.as_bytes()));
+        assert!(same_source(headed.as_bytes(), headed.as_bytes()));
+        // The header and one changed code byte: different.
+        assert!(!same_source(body.as_bytes(), changed.as_bytes()));
+        assert!(!same_source(headed.as_bytes(), changed.as_bytes()));
+        // An altered header line is not set aside: different from the
+        // headerless and from the headed source.
+        for altered in [&altered_line_1, &altered_line_2] {
+            assert!(!same_source(altered.as_bytes(), body.as_bytes()));
+            assert!(!same_source(body.as_bytes(), altered.as_bytes()));
+            assert!(!same_source(altered.as_bytes(), headed.as_bytes()));
+            assert!(!same_source(headed.as_bytes(), altered.as_bytes()));
+        }
+
+        // Through placement: a pre-header destination is kept as it is, a
+        // changed byte is refused before anything is written.
+        let dest = scratch("header");
+        let rel = PathBuf::from("crates/p/examples/x.rs");
+        fs::create_dir_all(dest.join("crates/p/examples")).unwrap();
+        fs::write(dest.join(&rel), body).unwrap();
+        let carried = |bytes: &str| Carried {
+            rel: rel.clone(),
+            bytes: bytes.as_bytes().to_vec(),
+            origin: Origin::Example,
+        };
+        assert_eq!(
+            Placed::precheck(&dest.join(&rel), &carried(&headed), false),
+            Ok(Step::Keep)
+        );
+        for other in [&changed, &altered_line_1, &altered_line_2] {
+            let err = Placed::precheck(&dest.join(&rel), &carried(other), true).unwrap_err();
+            assert!(err.contains("different content"), "{err}");
+        }
+        let mut placed = Placed::default();
+        placed.place_all(&dest, &[carried(&headed)], false).unwrap();
+        assert!(placed.files.is_empty() && placed.replaced.is_empty());
+        placed.restore().unwrap();
+        assert_eq!(fs::read_to_string(dest.join(&rel)).unwrap(), body);
         fs::remove_dir_all(&dest).unwrap();
     }
 

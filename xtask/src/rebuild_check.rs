@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! `rebuild-check NEW_DIR [--report-only]`: builds the release package twice,
 //! from two copies of the committed tree at different paths, and compares the
 //! binaries byte for byte.
@@ -16,7 +18,7 @@ use std::{
     process::Command,
 };
 
-const BINARIES: &[&str] = &["gel-evidence", "gel-backup", "gel-live-lab"];
+const BINARIES: &[&str] = &["gel-evidence", "gel-backup", "gel-license", "gel-live-lab"];
 
 fn run_in(dir: &Path, program: &str, args: &[&str]) -> Result<(), String> {
     let out = Command::new(program)
@@ -252,7 +254,7 @@ mod tests {
             fs::write(b.join(&file), b"same bytes").unwrap();
         }
         let rows = compare(&a, &b).unwrap();
-        assert_eq!(rows.len(), 3);
+        assert_eq!(rows.len(), 4);
         assert!(rows.iter().all(|(_, x, y)| x == y));
         // One changed byte is a difference.
         let last = format!("gel-live-lab{}", std::env::consts::EXE_SUFFIX);

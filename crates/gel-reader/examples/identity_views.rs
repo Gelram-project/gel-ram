@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Identity check for the word-level `AffinePermutation` and `AffineMasked`
 //! paths of `apply_view` and `invert_view` against an exact copy of the
 //! earlier per-bit algorithm (one mask word derivation and one branchy bit

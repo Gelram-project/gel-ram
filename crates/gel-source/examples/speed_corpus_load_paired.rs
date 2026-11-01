@@ -1,3 +1,5 @@
+// GEL RAM — GEL RAM Noncommercial Reciprocal License 1.0; see LICENSE and NOTICE.
+// Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! Same-binary timing of `Corpus::load_with_threads`: one thread (the
 //! reference side, `_ref`) against THREADS threads (`_t<THREADS>`), on the
 //! inputs of `speed_corpus_load`. Needs `Corpus::load_with_threads`.
