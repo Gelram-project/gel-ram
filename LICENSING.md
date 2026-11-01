@@ -76,7 +76,7 @@ GEL RAM NCRL 1.0 applies only to material for which the Project Licensor has aut
 
 The redistributed excerpt of *The Rust Programming Language* remains MIT-licensed and is accompanied by its upstream license in `crates/gel-source/fixtures/rust-book/LICENSE.txt`. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and [real-source provenance](docs/REAL-SOURCE-DEMO.md).
 
-Wikipedia passages quoted in the measurement sets, the side-by-side records and media, and the README example card remain under CC BY-SA 4.0 and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 7.
+Wikipedia passages quoted in the measurement sets remain under CC BY-SA 4.0 and are not licensed under GEL RAM NCRL 1.0. The same holds for the earlier side-by-side records, media and README example card that quoted them, which are no longer in this tree; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 7.
 
 The Unicode normalization tables in `crates/gel-source/src/nfc_tables.rs` are a modified form of Unicode Character Database 16.0.0 data files, and `crates/gel-source/tests/data/NormalizationTest-16.0.0.txt`, `crates/gel-source/tests/data/NormalizationTest-15.1.0.txt` and the files in `crates/gel-source/tests/data/ucd-16.0.0` and `crates/gel-source/tests/data/ucd-15.1.0` are unmodified Unicode data files. All remain under the Unicode License v3, with its full text in `crates/gel-source/LICENSE-UNICODE.txt`, and are not licensed under GEL RAM NCRL 1.0; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), section 2a.
 
@@ -94,7 +94,7 @@ Personal information collected for CLA administration is covered by [CLA-PRIVACY
 
 Historical tags retain the license under which they were originally distributed. This license does not revoke rights already validly granted for those historical releases.
 
-Earlier staged proposal documents are not part of this tree and were never an additional current license. The license texts in force are identified by their SHA-256 in [docs/LICENSE-PINS.md](docs/LICENSE-PINS.md); nothing overrides the root [LICENSE](LICENSE), this file, or [docs/LICENSE-MODE.txt](docs/LICENSE-MODE.txt).
+Earlier staged proposal documents are not part of this tree and were never an additional current license. The license texts in force are identified by their SHA-256 in [docs/LICENSE-PINS.md](docs/LICENSE-PINS.md). The root [LICENSE](LICENSE) is the complete public license grant (its section 17); this file and [docs/LICENSE-MODE.txt](docs/LICENSE-MODE.txt) describe it and do not add to or change it.
 
 ## 11. No AGPL alternative
 
