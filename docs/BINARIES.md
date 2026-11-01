@@ -60,7 +60,8 @@ check. It is refused when:
   exit), a backup create, inspect and restore with a byte-identical result,
   a restore with a wrong pin that is refused without writing a file, and
   `gel-license --version`, `gel-license check` of the package itself
-  (`LICENSE_FILE=EXACT`, `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`), the
+  (`LICENSE_FILE=EXACT`, `THIRD_PARTY_NOTICES=NOT_NEEDED`, since the check does
+  not read binaries, `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`), the
   answers template and one answers file.
 
 `release_eligible=yes` in BUILD-INFO.txt requires a build in GitHub Actions from

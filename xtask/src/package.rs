@@ -237,6 +237,10 @@ fn smoke_license(pkg: &Path, work: &Path, license: &Path, log: &mut String) -> R
         &[
             "LICENSE_FILE=EXACT",
             "REQUIRED_NOTICE=KEPT",
+            // The package ships THIRD-PARTY-NOTICES.md and LICENSE-UNICODE.txt
+            // but no Cargo.toml and no nfc_tables.rs, and binaries are not
+            // read: the check finds no sign that the notices are needed.
+            "THIRD_PARTY_NOTICES=NOT_NEEDED",
             "DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT",
             "CONTACT=gelram.licensing@gmail.com",
             "LEGAL_CERTIFICATION=NO",

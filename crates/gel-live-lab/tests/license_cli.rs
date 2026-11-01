@@ -10,6 +10,7 @@ use std::{
 
 const LICENSE: &[u8] = include_bytes!("../../../LICENSE");
 const NOTICE: &[u8] = include_bytes!("../../../NOTICE");
+const THIRD_PARTY: &[u8] = include_bytes!("../../../THIRD-PARTY-NOTICES.md");
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const NOTE: &str =
     "NOTE=answers are your own; this program reads the license, it does not interpret your facts";
@@ -117,13 +118,51 @@ fn check_of_an_exact_distribution_has_the_listed_items() {
     t.put("NOTICE", NOTICE);
     t.put(
         "my crate/Cargo.toml",
-        b"[dependencies]\ngel-source.workspace = true\n",
+        b"[dependencies]\ngel-core.workspace = true\n",
     );
     assert_eq!(
         tool(&["check", t.dir()]),
         (
             0,
-            format!("LICENSE_FILE=EXACT\nREQUIRED_NOTICE=KEPT\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=gel-source\nSCAN_FILES=3 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT\n{CHECK_TAIL}"),
+            format!("LICENSE_FILE=EXACT\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=NOT_NEEDED\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=gel-core\nSCAN_FILES=3 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT\n{CHECK_TAIL}"),
+            String::new()
+        )
+    );
+}
+
+#[test]
+fn check_of_gel_source_needs_the_third_party_notices() {
+    let t = Scratch::new();
+    t.put("LICENSE", LICENSE);
+    t.put("NOTICE", NOTICE);
+    t.put(
+        "my crate/Cargo.toml",
+        b"[dependencies]\ngel-source.workspace = true\n",
+    );
+    t.put(
+        "crates/gel-source/src/nfc_tables.rs",
+        b"// Generated from the Unicode Character Database 16.0.0.\n",
+    );
+    let head = "LICENSE_FILE=EXACT\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=";
+    let headers = "GEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=gel-source";
+    assert_eq!(
+        tool(&["check", t.dir()]),
+        (
+            3,
+            format!("{head}MISSING\n{headers}\nSCAN_FILES=4 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_MISSING\n{CHECK_TAIL}"),
+            String::new()
+        )
+    );
+    t.put("THIRD-PARTY-NOTICES.md", THIRD_PARTY);
+    t.put(
+        "crates/gel-source/LICENSE-UNICODE.txt",
+        b"UNICODE LICENSE V3\n",
+    );
+    assert_eq!(
+        tool(&["check", t.dir()]),
+        (
+            0,
+            format!("{head}KEPT\n{headers}\nSCAN_FILES=6 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT\n{CHECK_TAIL}"),
             String::new()
         )
     );
@@ -144,7 +183,7 @@ fn check_of_a_changed_license_misses_items_and_of_an_unrelated_tree_finds_none()
         tool(&["check", t.dir()]),
         (
             3,
-            format!("LICENSE_FILE=CHANGED\nREQUIRED_NOTICE=KEPT\nGEL_HEADER_FILES=1 HEADER_INTACT=0 HEADER_ALTERED=1\nGEL_CRATES=none\nSCAN_FILES=2 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_MISSING\n{CHECK_TAIL}"),
+            format!("LICENSE_FILE=CHANGED\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=NOT_NEEDED\nGEL_HEADER_FILES=1 HEADER_INTACT=0 HEADER_ALTERED=1\nGEL_CRATES=none\nSCAN_FILES=2 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_MISSING\n{CHECK_TAIL}"),
             String::new()
         )
     );
@@ -155,7 +194,7 @@ fn check_of_a_changed_license_misses_items_and_of_an_unrelated_tree_finds_none()
         tool(&["check", other.dir()]),
         (
             4,
-            format!("LICENSE_FILE=MISSING\nREQUIRED_NOTICE=MISSING\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=none\nSCAN_FILES=2 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=NO_GEL_NOTICES_FOUND\n{CHECK_TAIL}"),
+            format!("LICENSE_FILE=MISSING\nREQUIRED_NOTICE=MISSING\nTHIRD_PARTY_NOTICES=NOT_NEEDED\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=none\nSCAN_FILES=2 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=NO_GEL_NOTICES_FOUND\n{CHECK_TAIL}"),
             String::new()
         )
     );

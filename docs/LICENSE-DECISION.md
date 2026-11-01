@@ -39,12 +39,14 @@ license, all copyright notices and all plain-text lines beginning with
 `Required Notice:` supplied by the Licensor; section 3 lets You share the
 Software or a Modification for Noncommercial Purposes provided You preserve the
 license and the notices required by section 8. `check DIR` reads, mechanically,
-only some of those items: the LICENSE file, the `Required Notice:` line and the
-GEL RAM source headers, and it lists the GEL RAM crate names it finds:
+only some of those items: the LICENSE file, the `Required Notice:` line, the
+notices of this workspace's third-party Unicode material and the GEL RAM source
+headers, and it lists the GEL RAM crate names it finds:
 
 ```text
 LICENSE_FILE=EXACT
 REQUIRED_NOTICE=KEPT
+THIRD_PARTY_NOTICES=KEPT
 GEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0
 GEL_CRATES=gel-core,gel-source
 SCAN_FILES=12 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0
@@ -59,9 +61,10 @@ LEGAL_CERTIFICATION=NO
 | `LICENSE_FILE` | the regular file `DIR/LICENSE`: `EXACT` when byte-equal to this project's LICENSE (the program carries its SHA-256, listed in [license pins](LICENSE-PINS.md)), `CHANGED` when it differs in any byte, `MISSING` when there is none. In a tree with no GEL RAM notice, `CHANGED` usually just means another project's license. |
 | `LICENSE_DETAIL` | printed only as `LICENSE_DETAIL=line_endings`, after `LICENSE_FILE=CHANGED`, when the only difference is CR LF line endings (for example after a Windows checkout); such a copy is still `CHANGED` |
 | `REQUIRED_NOTICE` | `KEPT` when `DIR/LICENSE` or `DIR/NOTICE` holds the line `Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)` as a whole line |
+| `THIRD_PARTY_NOTICES` | needed when the tree holds this workspace's third-party material, that is, a Cargo.toml declares a package or dependency named `gel-source` (the crate with the tables derived from Unicode data and the MIT-licensed Rust Book fixture) or a regular file is named nfc_tables.rs; otherwise `NOT_NEEDED`. When needed: `KEPT` when the regular file THIRD-PARTY-NOTICES.md at the top of `DIR` holds the line `## 2a. Unicode data (Unicode License v3)` as a whole line and a regular file named LICENSE-UNICODE.txt is anywhere in the tree, otherwise `MISSING`. Binaries are not read, so a binary package without a Cargo.toml or nfc_tables.rs is `NOT_NEEDED`. |
 | `GEL_HEADER_FILES`, `HEADER_INTACT`, `HEADER_ALTERED` | `.rs` files one of whose first two lines, after an optional byte order mark, looks like a header line: a plain `//` comment whose text opens with `GEL RAM` or `Required Notice` (the rule of the source-header gate). Intact when the file starts with exactly the two header lines below, each ended by LF; a byte order mark or CR LF line endings make the header altered. |
 | `GEL_CRATES` | the package and dependency names of this workspace's crates (`gel-bench`, `gel-cli`, `gel-core`, `gel-history`, `gel-kernel`, `gel-live-lab`, `gel-orb`, `gel-phase-quad`, `gel-physics`, `gel-reader`, `gel-source`, `gel-store`, `gel-structural`) declared in any Cargo.toml, read as text, including dotted keys such as `gel-core.workspace = true`, or `none`. Another crate whose name starts with `gel-` is not listed. |
-| `SCAN_FILES`, `SKIPPED_SYMLINKS`, `SKIPPED_OVERSIZE` | regular files seen, symbolic links not followed, and Cargo.toml, LICENSE or NOTICE files larger than the read limit |
+| `SCAN_FILES`, `SKIPPED_SYMLINKS`, `SKIPPED_OVERSIZE` | regular files seen, symbolic links not followed, and Cargo.toml, LICENSE, NOTICE or THIRD-PARTY-NOTICES.md files larger than the read limit |
 | `NOTE`, `CONTACT` | always the same two lines |
 
 The source header of a GEL RAM-owned `.rs` file is:
@@ -78,8 +81,8 @@ The verdict, in this order:
 
 | Found | `DISTRIBUTION_NOTICES` |
 |---|---|
-| none of: an exact LICENSE, a kept Required Notice, a header file, a crate of this workspace, a top-level LICENSE or NOTICE naming GEL RAM | `NO_GEL_NOTICES_FOUND` |
-| `LICENSE_FILE=EXACT`, `REQUIRED_NOTICE=KEPT` and `HEADER_ALTERED=0` | `LISTED_ITEMS_PRESENT` |
+| none of: an exact LICENSE, a kept Required Notice, a header file, a crate of this workspace, a top-level LICENSE or NOTICE naming GEL RAM (a file named nfc_tables.rs, THIRD-PARTY-NOTICES.md or LICENSE-UNICODE.txt alone is not one of these) | `NO_GEL_NOTICES_FOUND` |
+| `LICENSE_FILE=EXACT`, `REQUIRED_NOTICE=KEPT`, `THIRD_PARTY_NOTICES=KEPT` or `NOT_NEEDED`, and `HEADER_ALTERED=0` | `LISTED_ITEMS_PRESENT` |
 | anything else | `LISTED_ITEMS_MISSING` |
 
 `LISTED_ITEMS_MISSING` names listed items that were not found, or a GEL RAM
@@ -90,20 +93,25 @@ third-party notice, was kept.
 
 Bounds: symbolic links are not followed and `.git` and `target` directories are
 skipped; at most 200,000 directory entries are read (a larger tree is refused,
-check a smaller directory); at most 1 MiB of a Cargo.toml, LICENSE or NOTICE
-is read, and only the first 4 KiB of a `.rs` file. A path that is not a
-regular file is not opened.
+check a smaller directory); at most 1 MiB of a Cargo.toml, LICENSE, NOTICE or
+THIRD-PARTY-NOTICES.md is read, and only the first 4 KiB of a `.rs` file; a
+file named LICENSE-UNICODE.txt is counted by name and type and is not opened.
+A path that is not a regular file is not opened.
 
 Scope:
 
-- `check` reads only the license, notice, header and crate-name items listed
-  above; a file without a header is counted as a file without one;
-- it does not read other copyright notices, third-party license texts (for
-  example `crates/gel-source/LICENSE-UNICODE.txt`), media notices, whether a
-  file is GEL RAM-owned or Third-Party Material (LICENSE section 2), or the
-  purpose of a distribution;
-- LICENSE and NOTICE are read at the top of `DIR` only: for a vendored copy
-  inside another project, check the vendored directory too;
+- `check` reads only the license, notice, third-party notice, header and
+  crate-name items listed above; a file without a header is counted as a file
+  without one;
+- it does not read other copyright notices, the text of third-party licenses
+  (it only looks for a regular file named LICENSE-UNICODE.txt, such as
+  `crates/gel-source/LICENSE-UNICODE.txt`), the other sections of
+  THIRD-PARTY-NOTICES.md (for example the Rust Book license that accompanies
+  the fixture), binaries, media notices, whether a file is GEL RAM-owned or
+  Third-Party Material (LICENSE section 2), or the purpose of a distribution;
+- LICENSE, NOTICE and THIRD-PARTY-NOTICES.md are read at the top of `DIR`
+  only: for a vendored copy inside another project, check the vendored
+  directory too;
 - it does not say whether the license calls for these items in a given tree,
   for example one that only declares a dependency on a crate of this workspace.
 
@@ -201,7 +209,7 @@ Use are answered `no`; an `unsure` answer prints `ASK_THE_LICENSOR`.
 | The same project without donations or other money | five `no`, `evaluation_only=no`, `noncommercial_purpose=yes` | `NONCOMMERCIAL` | section 3 (sharing a Modification, preserving the license and notices); section 8 |
 | An unrelated personal gift to a person who also uses GEL RAM | for that gift: five `no`, `evaluation_only=no`, `noncommercial_purpose=yes` | `NONCOMMERCIAL` | section 2 ("An unrelated personal gift that is not connected to GEL RAM use is outside this definition") |
 | A nonprofit's own production service that charges nothing | **ask the Licensor**: section 2 lists "SaaS or hosted services" and "customer-facing production systems" as Monetized Use, Evaluation does not include "production operation", and section 5 applies the same rule to a nonprofit; the text does not settle an unpaid production service | depends on the `hosted`, `customer_production` and `money` answers | sections 2, 5 |
-| Sharing an unmodified copy | `check` the copy | `check`: `LISTED_ITEMS_PRESENT` when the exact license and the Required Notice line are found and no header is altered. Section 8 also names "all copyright notices", and THIRD-PARTY-NOTICES.md section 3 the third-party notices, which `check` does not read; `LISTED_ITEMS_PRESENT` is not a finding that section 8 is met | section 8 |
+| Sharing an unmodified copy | `check` the copy | `check`: `LISTED_ITEMS_PRESENT` when the exact license and the Required Notice line are found, the Unicode notices are kept or not needed and no header is altered. Section 8 also names "all copyright notices", and THIRD-PARTY-NOTICES.md section 3 the third-party notices, of which `check` reads only the Unicode line and looks only for LICENSE-UNICODE.txt; `LISTED_ITEMS_PRESENT` is not a finding that section 8 is met | section 8 |
 | Sharing a Modification | `check` the tree | `check` lists what it found | sections 3, 8 ("You must not represent the Modification as granting commercial rights that You do not have") |
 
 A Commercial Agreement is a separate written agreement signed by the Licensor
@@ -213,6 +221,6 @@ A Commercial Agreement is a separate written agreement signed by the Licensor
 The rules of both commands are in one place,
 `crates/gel-live-lab/src/license_check.rs`; the program only prints them.
 `xtask verify` runs `gel-license check` on this repository and requires
-`LICENSE_FILE=EXACT`, `REQUIRED_NOTICE=KEPT` and
+`LICENSE_FILE=EXACT`, `REQUIRED_NOTICE=KEPT`, `THIRD_PARTY_NOTICES=KEPT` and
 `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`, no altered header, and as many
 intact headers as the source-header gate counts.

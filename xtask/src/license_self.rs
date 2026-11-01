@@ -84,6 +84,9 @@ fn judge(
     };
     need("LICENSE_FILE", "EXACT")?;
     need("REQUIRED_NOTICE", "KEPT")?;
+    // This workspace holds gel-source and its Unicode tables, so the
+    // third-party notices are needed here and must be kept, not NOT_NEEDED.
+    need("THIRD_PARTY_NOTICES", "KEPT")?;
     need("DISTRIBUTION_NOTICES", "LISTED_ITEMS_PRESENT")?;
     need("CONTACT", "gelram.licensing@gmail.com")?;
     need("LEGAL_CERTIFICATION", "NO")?;
@@ -126,7 +129,7 @@ mod tests {
 
     fn report(license: &str, headers: &str, crates: &str, distribution: &str) -> String {
         format!(
-            "LICENSE_FILE={license}\nREQUIRED_NOTICE=KEPT\nGEL_HEADER_FILES={headers}\nGEL_CRATES={crates}\nSCAN_FILES=9 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES={distribution}\nNOTE=this reads only the items listed above\nCONTACT=gelram.licensing@gmail.com\nLEGAL_CERTIFICATION=NO\n"
+            "LICENSE_FILE={license}\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=KEPT\nGEL_HEADER_FILES={headers}\nGEL_CRATES={crates}\nSCAN_FILES=9 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES={distribution}\nNOTE=this reads only the items listed above\nCONTACT=gelram.licensing@gmail.com\nLEGAL_CERTIFICATION=NO\n"
         )
     }
     const NO_HEADERS: &str = "0 HEADER_INTACT=0 HEADER_ALTERED=0";
@@ -178,6 +181,11 @@ mod tests {
             // The value names of before this release are not accepted.
             report("EXACT", NO_HEADERS, "gel-core", "COMPLETE"),
             good.replace("REQUIRED_NOTICE=KEPT", "REQUIRED_NOTICE=MISSING"),
+            // The workspace needs its third-party notices: neither missing
+            // nor "not needed" passes, and the line must be printed.
+            good.replace("THIRD_PARTY_NOTICES=KEPT", "THIRD_PARTY_NOTICES=MISSING"),
+            good.replace("THIRD_PARTY_NOTICES=KEPT", "THIRD_PARTY_NOTICES=NOT_NEEDED"),
+            good.replace("THIRD_PARTY_NOTICES=KEPT\n", ""),
             good.replace("LEGAL_CERTIFICATION=NO\n", ""),
             good.replace("CONTACT=gelram.licensing@gmail.com\n", ""),
             good.clone() + "LICENSE_FILE=EXACT\n",

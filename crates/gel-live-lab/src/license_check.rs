@@ -6,7 +6,7 @@
 //! Every rule of `gel-license` is in this module: the program only reads its
 //! arguments and prints what these functions return. The tree check is
 //! mechanical, offline and read-only, and reads only the license, notice,
-//! header and crate-name items it lists; the use check reads the user's answers
+//! third-party notice, header and crate-name items it lists; the use check reads the user's answers
 //! and does not interpret facts. Neither is legal advice or a certification:
 //! every report carries `LEGAL_CERTIFICATION=NO`, and the LICENSE text
 //! controls (LICENSE section 17).
@@ -49,6 +49,18 @@ pub const GEL_CRATE_NAMES: [&str; 13] = [
     "gel-structural",
 ];
 
+/// The crate of this workspace that carries third-party material: the tables
+/// derived from Unicode data and the MIT-licensed Rust Book fixture.
+pub const THIRD_PARTY_CRATE: &str = "gel-source";
+/// Name of the file of the tables derived from Unicode data.
+pub const UNICODE_TABLES_FILE: &str = "nfc_tables.rs";
+/// The top-level file of third-party notices.
+pub const THIRD_PARTY_NOTICES_FILE: &str = "THIRD-PARTY-NOTICES.md";
+/// The line of [`THIRD_PARTY_NOTICES_FILE`] that names the Unicode License v3.
+pub const UNICODE_NOTICE_LINE: &str = "## 2a. Unicode data (Unicode License v3)";
+/// Name of the file of the Unicode License v3 text, anywhere in the tree.
+pub const UNICODE_LICENSE_FILE: &str = "LICENSE-UNICODE.txt";
+
 /// The root LICENSE of this workspace, pinned into the program at build time.
 pub const LICENSE_TEXT: &[u8] = include_bytes!("../../../LICENSE");
 /// SHA-256 of [`LICENSE_TEXT`], as listed in docs/LICENSE-PINS.md.
@@ -56,7 +68,8 @@ pub const LICENSE_SHA256: &str = "c0b560ffc53ad735c4a6236356ff0cd47d92cf671181e7
 
 /// Most directory entries (files, directories, links) one check reads; a larger tree is refused.
 pub const MAX_ENTRIES: usize = 200_000;
-/// Most bytes read from one Cargo.toml, top-level LICENSE or NOTICE; a larger file is skipped and counted.
+/// Most bytes read from one Cargo.toml, top-level LICENSE, NOTICE or
+/// THIRD-PARTY-NOTICES.md; a larger file is skipped and counted.
 pub const MAX_READ: u64 = 1 << 20;
 /// Bytes read from the start of a `.rs` file: only its first two lines are inspected.
 pub const HEADER_READ: u64 = 4096;
@@ -90,12 +103,38 @@ pub enum Notice {
     Missing,
 }
 
+/// `THIRD_PARTY_NOTICES=`: the notices of this workspace's third-party
+/// material, needed when the tree declares [`THIRD_PARTY_CRATE`] in a
+/// Cargo.toml or holds a file named [`UNICODE_TABLES_FILE`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ThirdParty {
+    /// Needed, and the top-level THIRD-PARTY-NOTICES.md holds
+    /// [`UNICODE_NOTICE_LINE`] and a regular file named LICENSE-UNICODE.txt is
+    /// in the tree.
+    Kept,
+    /// Needed, and one of those was not found.
+    Missing,
+    /// Neither signal of this workspace's third-party material was found.
+    NotNeeded,
+}
+
+impl ThirdParty {
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Kept => "KEPT",
+            Self::Missing => "MISSING",
+            Self::NotNeeded => "NOT_NEEDED",
+        }
+    }
+}
+
 /// `DISTRIBUTION_NOTICES=`: the overall finding of a tree check, about the
 /// listed items only.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Distribution {
     /// A GEL RAM notice was found, the LICENSE is exact, the Required Notice
-    /// is kept and no GEL header is altered.
+    /// is kept, the third-party notices are kept or not needed and no GEL
+    /// header is altered.
     ListedItemsPresent,
     /// A GEL RAM notice was found and one of those was not.
     ListedItemsMissing,
@@ -173,6 +212,13 @@ pub struct TreeReport {
     pub crates: BTreeSet<String>,
     /// A top-level LICENSE or NOTICE that was read contains the text `GEL RAM`.
     pub names_gel_ram: bool,
+    /// A regular file named [`UNICODE_TABLES_FILE`] was seen.
+    pub unicode_tables: bool,
+    /// The top-level THIRD-PARTY-NOTICES.md, read within the bound, holds
+    /// [`UNICODE_NOTICE_LINE`] as a whole line.
+    pub unicode_notice: bool,
+    /// A regular file named [`UNICODE_LICENSE_FILE`] was seen.
+    pub unicode_license: bool,
     /// Regular files seen.
     pub files: usize,
     /// Symbolic links seen and not followed.
@@ -186,7 +232,19 @@ impl TreeReport {
         self.header_files - self.header_intact
     }
 
-    /// The rule of `DISTRIBUTION_NOTICES`.
+    /// The rule of `THIRD_PARTY_NOTICES`.
+    pub fn third_party_notices(&self) -> ThirdParty {
+        if !self.crates.contains(THIRD_PARTY_CRATE) && !self.unicode_tables {
+            ThirdParty::NotNeeded
+        } else if self.unicode_notice && self.unicode_license {
+            ThirdParty::Kept
+        } else {
+            ThirdParty::Missing
+        }
+    }
+
+    /// The rule of `DISTRIBUTION_NOTICES`. The third-party items alone are
+    /// not a sign of GEL RAM material.
     pub fn distribution(&self) -> Distribution {
         let gel_notice = self.license_file == LicenseFile::Exact
             || self.required_notice == Notice::Kept
@@ -197,6 +255,7 @@ impl TreeReport {
             Distribution::NoGelNoticesFound
         } else if self.license_file == LicenseFile::Exact
             && self.required_notice == Notice::Kept
+            && self.third_party_notices() != ThirdParty::Missing
             && self.header_altered() == 0
         {
             Distribution::ListedItemsPresent
@@ -218,9 +277,10 @@ impl TreeReport {
             ""
         };
         format!(
-            "LICENSE_FILE={}\n{detail}REQUIRED_NOTICE={}\nGEL_HEADER_FILES={} HEADER_INTACT={} HEADER_ALTERED={}\nGEL_CRATES={crates}\nSCAN_FILES={} SKIPPED_SYMLINKS={} SKIPPED_OVERSIZE={}\nDISTRIBUTION_NOTICES={}\n{CHECK_NOTE}\nCONTACT={CONTACT}\nLEGAL_CERTIFICATION=NO\n",
+            "LICENSE_FILE={}\n{detail}REQUIRED_NOTICE={}\nTHIRD_PARTY_NOTICES={}\nGEL_HEADER_FILES={} HEADER_INTACT={} HEADER_ALTERED={}\nGEL_CRATES={crates}\nSCAN_FILES={} SKIPPED_SYMLINKS={} SKIPPED_OVERSIZE={}\nDISTRIBUTION_NOTICES={}\n{CHECK_NOTE}\nCONTACT={CONTACT}\nLEGAL_CERTIFICATION=NO\n",
             self.license_file.name(),
             self.required_notice.name(),
+            self.third_party_notices().name(),
             self.header_files,
             self.header_intact,
             self.header_altered(),
@@ -505,7 +565,20 @@ fn inspect_file(
         if bytes.windows(GEL_NAME.len()).any(|w| w == GEL_NAME) {
             report.names_gel_ram = true;
         }
+    } else if top && name == THIRD_PARTY_NOTICES_FILE {
+        let (bytes, over) = read_bounded(path, limits.max_read)?;
+        if over {
+            report.oversize_skipped += 1;
+        } else if has_line(&bytes, UNICODE_NOTICE_LINE) {
+            report.unicode_notice = true;
+        }
+    } else if name == UNICODE_LICENSE_FILE {
+        // Counted by name and type only; the file is not opened.
+        report.unicode_license = true;
     } else if name.ends_with(".rs") {
+        if name == UNICODE_TABLES_FILE {
+            report.unicode_tables = true;
+        }
         let (start, _) = read_bounded(path, HEADER_READ)?;
         if let Some(intact) = header_state(&start) {
             report.header_files += 1;
@@ -842,6 +915,7 @@ mod tests {
 
     const LICENSE_STR: &str = include_str!("../../../LICENSE");
     const NOTICE_TEXT: &[u8] = include_bytes!("../../../NOTICE");
+    const THIRD_PARTY_TEXT: &[u8] = include_bytes!("../../../THIRD-PARTY-NOTICES.md");
     const PINS: &str = include_str!("../../../docs/LICENSE-PINS.md");
     const WORKSPACE_TOML: &str = include_str!("../../../Cargo.toml");
 
@@ -935,6 +1009,24 @@ mod tests {
     }
 
     #[test]
+    fn the_third_party_items_are_those_of_this_workspace() {
+        assert!(has_line(THIRD_PARTY_TEXT, UNICODE_NOTICE_LINE));
+        assert!(UNICODE_NOTICE_LINE.contains("Unicode License v3"));
+        assert!(GEL_CRATE_NAMES.contains(&THIRD_PARTY_CRATE));
+        let crate_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../gel-source");
+        let toml = fs::read_to_string(crate_dir.join("Cargo.toml")).unwrap();
+        assert!(cargo_gel_names(&toml).contains(THIRD_PARTY_CRATE));
+        assert!(crate_dir.join(UNICODE_LICENSE_FILE).is_file());
+        assert!(crate_dir.join("src").join(UNICODE_TABLES_FILE).is_file());
+        let text = String::from_utf8_lossy(THIRD_PARTY_TEXT);
+        assert!(text.contains(&format!("crates/gel-source/{UNICODE_LICENSE_FILE}")));
+        assert!(text.contains(&format!("crates/gel-source/src/{UNICODE_TABLES_FILE}")));
+        // The guide names the same line.
+        let guide = include_str!("../../../docs/LICENSE-DECISION.md");
+        assert!(guide.contains(&format!("`{UNICODE_NOTICE_LINE}`")));
+    }
+
+    #[test]
     fn the_pinned_license_hash_is_the_listed_one() {
         assert_eq!(gel_source::hex(&digest(LICENSE_TEXT)), LICENSE_SHA256);
         let row = PINS
@@ -1012,6 +1104,7 @@ mod tests {
 
     #[test]
     fn row_each_sign_alone_marks_a_gel_notice() {
+        // The third-party items are not signs (row_the_unicode_tables_alone_are_not_a_gel_notice).
         let signs: [fn(&mut TreeReport); 5] = [
             |r| r.license_file = LicenseFile::Exact,
             |r| r.required_notice = Notice::Kept,
@@ -1033,6 +1126,70 @@ mod tests {
                 "sign {i}"
             );
         }
+    }
+
+    /// A report with an exact LICENSE and a kept Required Notice.
+    fn exact() -> TreeReport {
+        report(LicenseFile::Exact, Notice::Kept, 0, 0)
+    }
+
+    #[test]
+    fn row_third_party_notices_are_not_needed_without_either_signal() {
+        let mut r = exact();
+        r.crates.insert("gel-core".into());
+        r.unicode_notice = true;
+        r.unicode_license = true;
+        assert_eq!(r.third_party_notices(), ThirdParty::NotNeeded);
+        assert_eq!(r.distribution(), Distribution::ListedItemsPresent);
+        r.unicode_notice = false;
+        r.unicode_license = false;
+        assert_eq!(r.third_party_notices(), ThirdParty::NotNeeded);
+        assert_eq!(r.distribution(), Distribution::ListedItemsPresent);
+    }
+
+    #[test]
+    fn row_third_party_notices_need_both_items_for_either_signal() {
+        let signals: [fn(&mut TreeReport); 2] = [
+            |r| {
+                r.crates.insert(THIRD_PARTY_CRATE.into());
+            },
+            |r| r.unicode_tables = true,
+        ];
+        for (i, signal) in signals.iter().enumerate() {
+            for (notice, license, want) in [
+                (true, true, ThirdParty::Kept),
+                (true, false, ThirdParty::Missing),
+                (false, true, ThirdParty::Missing),
+                (false, false, ThirdParty::Missing),
+            ] {
+                let mut r = exact();
+                signal(&mut r);
+                r.unicode_notice = notice;
+                r.unicode_license = license;
+                let case = format!("signal {i} notice {notice} license {license}");
+                assert_eq!(r.third_party_notices(), want, "{case}");
+                let distribution = if want == ThirdParty::Kept {
+                    Distribution::ListedItemsPresent
+                } else {
+                    Distribution::ListedItemsMissing
+                };
+                assert_eq!(r.distribution(), distribution, "{case}");
+            }
+        }
+    }
+
+    #[test]
+    fn row_the_unicode_tables_alone_are_not_a_gel_notice() {
+        let mut r = TreeReport {
+            unicode_tables: true,
+            ..TreeReport::default()
+        };
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
+        r.unicode_notice = true;
+        r.unicode_license = true;
+        assert_eq!(r.third_party_notices(), ThirdParty::Kept);
+        assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
     }
 
     #[test]
@@ -1206,7 +1363,7 @@ members = [
         assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
         assert_eq!(
             r.lines(),
-            format!("LICENSE_FILE=CHANGED\nREQUIRED_NOTICE=MISSING\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=none\nSCAN_FILES=4 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=NO_GEL_NOTICES_FOUND\n{}", tail())
+            format!("LICENSE_FILE=CHANGED\nREQUIRED_NOTICE=MISSING\nTHIRD_PARTY_NOTICES=NOT_NEEDED\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=none\nSCAN_FILES=4 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=NO_GEL_NOTICES_FOUND\n{}", tail())
         );
         let empty = Scratch::new();
         assert_eq!(empty.check().license_file, LicenseFile::Missing);
@@ -1396,6 +1553,176 @@ members = [
         assert_eq!(r.required_notice, Notice::Missing);
         assert_eq!(r.header_files, 0);
         assert!(r.crates.is_empty());
+        assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
+    }
+
+    // --- third-party notices ----------------------------------------------
+
+    const TABLES: &[u8] =
+        b"// Generated from the Unicode Character Database 16.0.0.\npub static T: [u8; 0] = [];\n";
+    const SOURCE_TOML: &[u8] = b"[package]\nname = \"gel-source\"\n";
+
+    /// The reviewer's tree t2: LICENSE, NOTICE and the gel-source crate with
+    /// its Unicode tables, without THIRD-PARTY-NOTICES.md or LICENSE-UNICODE.txt.
+    fn tree_t2() -> Scratch {
+        let t = Scratch::new();
+        t.put("LICENSE", LICENSE_TEXT);
+        t.put("NOTICE", NOTICE_TEXT);
+        t.put("crates/gel-source/Cargo.toml", SOURCE_TOML);
+        t.put("crates/gel-source/src/nfc_tables.rs", TABLES);
+        t
+    }
+
+    #[test]
+    fn unicode_tables_without_third_party_notices_miss_listed_items() {
+        let t = tree_t2();
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::ListedItemsMissing);
+        assert_eq!(
+            r.lines(),
+            format!("LICENSE_FILE=EXACT\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=MISSING\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=gel-source\nSCAN_FILES=4 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_MISSING\n{}", tail())
+        );
+        // Each signal alone makes the notices needed.
+        for (rel, bytes) in [
+            ("crates/gel-source/src/nfc_tables.rs", TABLES),
+            (
+                "crates/x/Cargo.toml",
+                b"[dependencies]\ngel-source.workspace = true\n",
+            ),
+        ] {
+            let one = Scratch::new();
+            one.put("LICENSE", LICENSE_TEXT);
+            one.put(rel, bytes);
+            let r = one.check();
+            assert_eq!(r.third_party_notices(), ThirdParty::Missing, "{rel}");
+            assert_eq!(r.distribution(), Distribution::ListedItemsMissing, "{rel}");
+        }
+    }
+
+    #[test]
+    fn third_party_notices_and_the_unicode_license_are_kept() {
+        let t = tree_t2();
+        t.put("THIRD-PARTY-NOTICES.md", THIRD_PARTY_TEXT);
+        t.put(
+            "crates/gel-source/LICENSE-UNICODE.txt",
+            b"UNICODE LICENSE V3\n",
+        );
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Kept);
+        assert_eq!(r.distribution(), Distribution::ListedItemsPresent);
+        assert_eq!(
+            r.lines(),
+            format!("LICENSE_FILE=EXACT\nREQUIRED_NOTICE=KEPT\nTHIRD_PARTY_NOTICES=KEPT\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=gel-source\nSCAN_FILES=6 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT\n{}", tail())
+        );
+        // Without LICENSE-UNICODE.txt the notices file alone is not enough.
+        fs::remove_file(t.0.join("crates/gel-source/LICENSE-UNICODE.txt")).unwrap();
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::ListedItemsMissing);
+        // Nor the license text alone.
+        t.put("LICENSE-UNICODE.txt", b"UNICODE LICENSE V3\n");
+        fs::remove_file(t.0.join("THIRD-PARTY-NOTICES.md")).unwrap();
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::ListedItemsMissing);
+    }
+
+    #[test]
+    fn third_party_notices_without_the_unicode_line_are_missing() {
+        let without: Vec<u8> = text_lines(THIRD_PARTY_TEXT)
+            .filter(|l| *l != UNICODE_NOTICE_LINE.as_bytes())
+            .collect::<Vec<_>>()
+            .join(&b'\n');
+        assert_ne!(without, THIRD_PARTY_TEXT);
+        let t = tree_t2();
+        t.put("LICENSE-UNICODE.txt", b"UNICODE LICENSE V3\n");
+        t.put("THIRD-PARTY-NOTICES.md", &without);
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::ListedItemsMissing);
+        // The line must be whole; a CR before the LF is allowed.
+        let longer = format!("# Notices\n{UNICODE_NOTICE_LINE} and more\n");
+        t.put("THIRD-PARTY-NOTICES.md", longer.as_bytes());
+        assert_eq!(t.check().third_party_notices(), ThirdParty::Missing);
+        let crlf = format!("# Notices\r\n{UNICODE_NOTICE_LINE}\r\n");
+        t.put("THIRD-PARTY-NOTICES.md", crlf.as_bytes());
+        assert_eq!(t.check().third_party_notices(), ThirdParty::Kept);
+        // Below the top level the notices file does not count.
+        fs::remove_file(t.0.join("THIRD-PARTY-NOTICES.md")).unwrap();
+        t.put("docs/THIRD-PARTY-NOTICES.md", THIRD_PARTY_TEXT);
+        assert_eq!(t.check().third_party_notices(), ThirdParty::Missing);
+        // A notices file over the read cap is skipped, counted and not kept.
+        t.put("THIRD-PARTY-NOTICES.md", THIRD_PARTY_TEXT);
+        let small = Limits {
+            max_entries: MAX_ENTRIES,
+            max_read: 100,
+        };
+        let r = check_dir_with(&t.0, small).unwrap();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        // NOTICE and the top-level THIRD-PARTY-NOTICES.md; the copy under docs is not read.
+        assert_eq!(r.oversize_skipped, 2);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_unicode_license_link_or_directory_is_not_counted() {
+        use std::os::unix::fs::symlink;
+        let outside = Scratch::new();
+        outside.put("LICENSE-UNICODE.txt", b"UNICODE LICENSE V3\n");
+        outside.put("THIRD-PARTY-NOTICES.md", THIRD_PARTY_TEXT);
+        let t = tree_t2();
+        t.put("THIRD-PARTY-NOTICES.md", THIRD_PARTY_TEXT);
+        symlink(
+            outside.0.join("LICENSE-UNICODE.txt"),
+            t.0.join("crates/gel-source/LICENSE-UNICODE.txt"),
+        )
+        .unwrap();
+        fs::create_dir(t.0.join("LICENSE-UNICODE.txt")).unwrap();
+        let r = t.check();
+        assert_eq!(r.symlinks_skipped, 1);
+        assert!(!r.unicode_license);
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
+        assert_eq!(r.distribution(), Distribution::ListedItemsMissing);
+        // A linked THIRD-PARTY-NOTICES.md or nfc_tables.rs is not read either.
+        let linked = Scratch::new();
+        linked.put("LICENSE", LICENSE_TEXT);
+        linked.put("LICENSE-UNICODE.txt", b"UNICODE LICENSE V3\n");
+        symlink(
+            outside.0.join("THIRD-PARTY-NOTICES.md"),
+            linked.0.join("THIRD-PARTY-NOTICES.md"),
+        )
+        .unwrap();
+        symlink(
+            t.0.join("crates/gel-source/src/nfc_tables.rs"),
+            linked.0.join("nfc_tables.rs"),
+        )
+        .unwrap();
+        let r = linked.check();
+        assert!(!r.unicode_notice && !r.unicode_tables);
+        assert_eq!(r.third_party_notices(), ThirdParty::NotNeeded);
+    }
+
+    #[test]
+    fn an_unrelated_tree_does_not_need_the_third_party_notices() {
+        let t = Scratch::new();
+        t.put("LICENSE", b"MIT License\n");
+        t.put("THIRD-PARTY-NOTICES.md", b"# Notices\n");
+        t.put("LICENSE-UNICODE.txt", b"UNICODE LICENSE V3\n");
+        t.put("Cargo.toml", b"[package]\nname = \"gel-sourcery\"\n\n[dependencies]\nunicode-normalization = \"0.1\"\n");
+        t.put("src/tables.rs", TABLES);
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::NotNeeded);
+        assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
+        assert_eq!(
+            r.lines(),
+            format!("LICENSE_FILE=CHANGED\nREQUIRED_NOTICE=MISSING\nTHIRD_PARTY_NOTICES=NOT_NEEDED\nGEL_HEADER_FILES=0 HEADER_INTACT=0 HEADER_ALTERED=0\nGEL_CRATES=none\nSCAN_FILES=5 SKIPPED_SYMLINKS=0 SKIPPED_OVERSIZE=0\nDISTRIBUTION_NOTICES=NO_GEL_NOTICES_FOUND\n{}", tail())
+        );
+        // A file named nfc_tables.rs alone makes the notices needed, but is
+        // not a GEL RAM notice: the verdict stays NO_GEL_NOTICES_FOUND.
+        t.put("src/nfc_tables.rs", TABLES);
+        let r = t.check();
+        assert_eq!(r.third_party_notices(), ThirdParty::Missing);
         assert_eq!(r.distribution(), Distribution::NoGelNoticesFound);
     }
 
