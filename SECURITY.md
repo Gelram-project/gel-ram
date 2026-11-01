@@ -21,8 +21,8 @@ Fixes, when made, land only on current public `main` (version line 0.7.0) and re
 
 | Version | Security fixes |
 |---|---|
-| current `main` (0.6 line) | best effort, in a later release |
-| earlier tags (v0.5.3 and older) | none |
+| current `main` (0.7 line) | best effort, in a later release |
+| tagged releases and other tags (v0.6.1 and older) | none; they are not patched in place |
 
 ## Attack surface
 

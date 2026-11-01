@@ -14,14 +14,16 @@
 //! `gel-license check` uses too.
 //!
 //! The writer inserts the header in front of the existing first line where it
-//! is missing (no blank line is added), and writes all or nothing. It first
-//! refuses every file whose first two lines are a different, partial or
-//! altered header, and then writes nothing. Otherwise it writes and syncs a
-//! temporary file beside every file to change; if any of them cannot be
-//! written, it removes them all and no file has changed. Only then are the
-//! temporary files renamed over the originals; should a rename fail, the error
-//! says how many files were already renamed, and the remaining temporary files
-//! are removed. A second run changes nothing.
+//! is missing (no blank line is added). It first refuses every file whose
+//! first two lines are a different, partial or altered header, and then
+//! writes nothing. Otherwise it writes and syncs a temporary file beside every
+//! file to change; if any of them cannot be written, it removes them all and
+//! no file has changed. Only then are the temporary files renamed over the
+//! originals, one by one: each rename replaces one whole file, but the renames
+//! together are not one atomic operation. Should a rename fail, the files
+//! renamed before it already carry the header, the error says how many, the
+//! remaining temporary files are removed, and every other file is unchanged;
+//! running the writer again completes the rest. A second run changes nothing.
 use std::{
     fs,
     io::Write as _,
@@ -253,6 +255,17 @@ pub fn write(root: &Path, tree: &Tree) -> Report {
 }
 
 fn write_with(root: &Path, tree: &Tree, exempt: &[(&str, &str)]) -> Report {
+    write_with_rename(root, tree, exempt, &mut |from, to| fs::rename(from, to))
+}
+
+/// [`write_with`] with the rename of phase 2 passed in, so a test can make the
+/// k-th rename fail.
+fn write_with_rename(
+    root: &Path,
+    tree: &Tree,
+    exempt: &[(&str, &str)],
+    rename: &mut dyn FnMut(&Path, &Path) -> std::io::Result<()>,
+) -> Report {
     let (files, stale) = sources(root, tree, exempt);
     let mut refused: Vec<String> = stale;
     let mut missing = Vec::new();
@@ -310,9 +323,10 @@ fn write_with(root: &Path, tree: &Tree, exempt: &[(&str, &str)]) -> Report {
             }
         }
     }
-    // Phase 2: rename them all over the originals.
+    // Phase 2: rename them one by one over the originals. Each rename replaces
+    // one whole file; the renames together are not one atomic operation.
     for (done, (temporary, source)) in prepared.iter().enumerate() {
-        if let Err(e) = fs::rename(temporary, source.path) {
+        if let Err(e) = rename(temporary, source.path) {
             let removed = remove_all(&prepared[done..]);
             return failure(
                 vec![format!(
@@ -743,6 +757,75 @@ mod tests {
             report.stdout[0],
             "SOURCE_HEADERS_WRITE=DONE written=3 already=2"
         );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn a_failed_kth_rename_reports_the_written_files_and_a_rerun_completes() {
+        let root = good_tree("kth-rename");
+        let bodies = [
+            ("a/one.rs", "fn one() {}\n"),
+            ("a/two.rs", "fn two() {}\n"),
+            ("a/three.rs", "fn three() {}\n"),
+        ];
+        for (rel, body) in bodies {
+            put(&root, rel, body);
+        }
+        let before = names_below(&root);
+        // The second rename fails, in sorted order: a/one.rs, a/three.rs, a/two.rs.
+        let mut calls = 0;
+        let report = write_with_rename(
+            &root,
+            &tree_scan::walk(&root).unwrap(),
+            &[],
+            &mut |from, to| {
+                calls += 1;
+                if calls == 2 {
+                    Err(std::io::Error::other("injected"))
+                } else {
+                    fs::rename(from, to)
+                }
+            },
+        );
+        let error = report.result.unwrap_err();
+        assert!(error.starts_with("a/three.rs: injected"), "{error}");
+        assert!(
+            error.ends_with("; 1 of 3 file(s) already written"),
+            "{error}"
+        );
+        assert_eq!(
+            report.stderr,
+            ["SOURCE_HEADERS_WRITE=FAILED written=1 of 3 temporary_removed=2"]
+        );
+        // The first file carries the header, the others are unchanged, and no
+        // temporary file is left.
+        assert_eq!(
+            fs::read_to_string(root.join("a/one.rs")).unwrap(),
+            headed("fn one() {}\n")
+        );
+        assert_eq!(
+            fs::read_to_string(root.join("a/two.rs")).unwrap(),
+            "fn two() {}\n"
+        );
+        assert_eq!(
+            fs::read_to_string(root.join("a/three.rs")).unwrap(),
+            "fn three() {}\n"
+        );
+        assert_eq!(names_below(&root), before);
+        // A second run completes the other two.
+        let report = writer(&root, &[]);
+        assert_eq!(report.result, Ok(()));
+        assert_eq!(
+            report.stdout[0],
+            "SOURCE_HEADERS_WRITE=DONE written=2 already=3"
+        );
+        for (rel, body) in bodies {
+            assert_eq!(
+                fs::read_to_string(root.join(rel)).unwrap(),
+                headed(body),
+                "{rel}"
+            );
+        }
         fs::remove_dir_all(root).unwrap();
     }
 
