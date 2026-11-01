@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "gel-bench"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-kernel",
@@ -14,7 +14,7 @@ dependencies = [
 
 [[package]]
 name = "gel-cli"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -25,11 +25,11 @@ dependencies = [
 
 [[package]]
 name = "gel-core"
-version = "0.6.1"
+version = "0.7.0"
 
 [[package]]
 name = "gel-history"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -38,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "gel-kernel"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -46,7 +46,7 @@ dependencies = [
 
 [[package]]
 name = "gel-live-lab"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-phase-quad",
  "gel-source",
@@ -54,25 +54,25 @@ dependencies = [
 
 [[package]]
 name = "gel-orb"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
 ]
 
 [[package]]
 name = "gel-phase-quad"
-version = "0.6.1"
+version = "0.7.0"
 
 [[package]]
 name = "gel-physics"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
 ]
 
 [[package]]
 name = "gel-reader"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-kernel",
@@ -81,11 +81,11 @@ dependencies = [
 
 [[package]]
 name = "gel-source"
-version = "0.6.1"
+version = "0.7.0"
 
 [[package]]
 name = "gel-store"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -93,7 +93,7 @@ dependencies = [
 
 [[package]]
 name = "gel-structural"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-orb",
@@ -101,7 +101,7 @@ dependencies = [
 
 [[package]]
 name = "xtask"
-version = "0.6.1"
+version = "0.7.0"
 dependencies = [
  "gel-core",
  "gel-history",

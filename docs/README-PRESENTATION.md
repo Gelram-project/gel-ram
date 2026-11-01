@@ -37,10 +37,10 @@ until the card is rebuilt.
 
 ## Preservation and source
 
-The presentation belongs to the v0.6.1 source. Earlier README versions are
+The presentation belongs to the v0.7.0 source. Earlier README versions are
 no longer kept in the tree; they remain in the git history. The README keeps its
 hand-maintained part below the generated region, including the quick-start
-checkout of the v0.6.1 tag.
+checkout of the v0.7.0 tag.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.

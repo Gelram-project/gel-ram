@@ -266,9 +266,9 @@ No generated terminal mockup or illustrative timing is used as execution evidenc
 
 ## Quick start
 
-> **Version 0.6.1.** The instructions below use the `v0.6.1` tag. Record the exact
+> **Version 0.7.0.** The instructions below use the `v0.7.0` tag. Record the exact
 > commit you test.
-> [Release notes](RELEASE-NOTES-v0.6.1.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
+> [Release notes](RELEASE-NOTES-v0.7.0.md) · [Publication status](CANDIDATE-STATUS.md) · [Tagged releases](https://github.com/Gelram-project/gel-ram/releases)
 
 Use a new checkout. Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs)
 first. Cloning, toolchain installation and dependency fetching need a network;
@@ -278,7 +278,7 @@ including in Windows PowerShell.
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout v0.6.1
+git checkout v0.7.0
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
@@ -389,7 +389,7 @@ cargo run --locked --offline --release -p gel-phase-quad --example quad_playgrou
 | [Project map](docs/START-HERE.md) | [Verified results and scope](docs/VERIFIED-RESULTS.md) | [Public roadmap](docs/ROADMAP.md) |
 | [Evidence Lab](docs/EVIDENCE-LAB.md) | [Publication fault tests](docs/PUBLICATION-FAULT-TESTS.md) | [Publication status](CANDIDATE-STATUS.md) |
 | [Batch interface](docs/EVIDENCE-BATCH.md) | [Source bundle verification](docs/SOURCE-BUNDLE.md) | [Media index](media/INDEX.md) |
-| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.6.1.md) |
+| [Backup / restore](docs/BACKUP.md) | [Dependency inventory](docs/DEPENDENCY-INVENTORY.md) | [Release notes](RELEASE-NOTES-v0.7.0.md) |
 | [Q8 contract](docs/Q8-QUAD.md) · [Reader16](docs/READER16.md) | [Claim registry](docs/CLAIMS.md) · [Crash series](docs/CRASH-SERIES.md) | [External checks](docs/EXTERNAL-CHECKS.md) · [Measured progress](docs/MEASURED-PROGRESS.md) |
 
 Earlier README versions and the notes of earlier releases are no longer kept in

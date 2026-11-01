@@ -16,9 +16,9 @@ The records behind the table "Measured on a quiet machine" in
 | Item | Value |
 |---|---|
 | package-2 | A and A2: two clean checkouts of `bb3da1b` (before PR #87); B: a clean checkout of `90bd091` (`main` after PR #87) |
-| package-3, `speed_store_overlap` | A and A2: two clean checkouts of `bb3da1b`; B: a local tree equal to this change in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/`, except the later collection change in `crates/gel-source/src/collection.rs` and a later doc comment in `crates/gel-store/src/lib.rs` |
-| package-3, `speed_bundle_memory` | A and A2: two clean checkouts of `3cf1be5` (`main` before this change); B: a local tree equal to this change in `crates/gel-source/src` except the later collection change in `crates/gel-source/src/collection.rs`, in the example, `tools/` and `Cargo.lock` |
-| package-3, `speed_collection_memory` and `speed_source_load` | A and A2: two clean checkouts of `37d509d` (this change before the collection change); B: a local tree equal to this change in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/` |
+| package-3, `speed_store_overlap` | A and A2: two clean checkouts of `bb3da1b`; B: a local tree equal to PR #89 in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/`, except the later collection change in `crates/gel-source/src/collection.rs` and a later doc comment in `crates/gel-store/src/lib.rs` |
+| package-3, `speed_bundle_memory` | A and A2: two clean checkouts of `3cf1be5` (`main` before PR #89); B: a local tree equal to PR #89 in `crates/gel-source/src` except the later collection change in `crates/gel-source/src/collection.rs`, in the example, `tools/` and `Cargo.lock` |
+| package-3, `speed_collection_memory` and `speed_source_load` | A and A2: two clean checkouts of `37d509d` (PR #89 before the collection change); B: a local tree equal to PR #89 in `Cargo.toml`, `Cargo.lock`, `tools/` and `crates/` |
 | Tool | `xtask speed-ab`, 3 rounds, order rotated each round |
 | Runs per round | 9 (`speed_bundle_memory` and `speed_collection_memory`: 3) |
 | Toolchain | `rustc 1.85.0 (4d91de4e4 2025-02-17)`, release profile of each tree |
@@ -37,7 +37,7 @@ Every example printed the same output digest in A, A2 and B
 | Tree | Run 1 | Run 2 | Run 3 | Output digest |
 |---|---|---|---|---|
 | `3cf1be5` | 134 168 KiB | 133 980 KiB | 134 072 KiB | `38222401…c2c0` in every run |
-| this change | 68 676 KiB | 68 244 KiB | 68 612 KiB | `38222401…c2c0` in every run |
+| PR #89 | 68 676 KiB | 68 244 KiB | 68 612 KiB | `38222401…c2c0` in every run |
 
 ## Peak memory of a collection load
 
@@ -49,7 +49,7 @@ under `/usr/bin/time -v`, alternating the trees, on 2026-10-31 (a first series o
 | Tree | Run 1 | Run 2 | Run 3 | Output digest |
 |---|---|---|---|---|
 | `37d509d` | 133 080 KiB | 133 160 KiB | 133 176 KiB | `6777ef0b…7ac6` in every run |
-| this change | 68 700 KiB | 68 364 KiB | 68 640 KiB | `6777ef0b…7ac6` in every run |
+| PR #89 | 68 700 KiB | 68 364 KiB | 68 640 KiB | `6777ef0b…7ac6` in every run |
 
 ## Repeating it
 
