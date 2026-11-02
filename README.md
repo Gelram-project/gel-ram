@@ -91,31 +91,32 @@ Both images are drawn from the committed mutation report and the property map wh
 
 ## New in 0.7, and on main
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/speed-dark.svg"><img alt="Timing set 2026-10-20-against-v0.6.1: v0.6.1 against main at 876247f, the first v0.7 speed package. 133 timed cases in 23 of 24 timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1. 103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it. 22 of 23 timed programs printed the same output digest in all three trees. speed_top1_many has only a manifest: its API does not exist in v0.6.1, so the example does not build there. speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in, and the two trees differ. Machine: AMD Ryzen AI 9 HX 370, 24 hardware threads, 94 GiB RAM, Linux 6.17; load average 2.7 at the start, 12.6 to 19.4 at the end, from other work on the machine; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim." src="media/presentation/speed-light.svg" width="1200"></picture>
+
 - **No third-party packages:** every one of the 14 packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
 - **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([release notes](RELEASE-NOTES-v0.7.0.md)).
-
-<details><summary><strong>Every timed case against v0.6.1, as an animated chart</strong> (tall; opens here)</summary>
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/speed-dark.svg"><img alt="Timing set 2026-10-20-against-v0.6.1: v0.6.1 against main at 876247f, the first v0.7 speed package. 133 timed cases in 23 timing examples, each drawn as the v0.6.1 median time divided by the new one on a log scale centred at 1, over the band of its A/A noise. 103 are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it. 22 of 23 timed examples printed the same output digest in all three trees. speed_top1_many has only a manifest: its API does not exist in v0.6.1, so the example does not build there. speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in, and the two trees differ. Machine: AMD Ryzen AI 9 HX 370, 24 hardware threads, 94 GiB RAM, Linux 6.17; load average 2.7 at the start, 12.6 to 19.4 at the end, from other work on the machine; not pinned to cores. Ratios of different cases are not comparable with each other; the output digests, not the timings, are the claim." src="media/presentation/speed-light.svg" width="1200"></picture>
-
-</details>
-
-- **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file except the generated Unicode tables begins with a two-line license header; `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
+- **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
 
 ## Using GEL RAM
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/license-dark.svg"><img alt="GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE. Noncommercial use (section 3): 'a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.' 'You may keep Noncommercial Modifications private without a time limit.' Evaluation, by anyone (sections 4 and 2): 'Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.' 'in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.' Money needs an agreement (section 5): 'No Monetized Use is licensed by these public terms.' 'Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor.' Every copy (section 8): 'each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.' Commercial Agreements: gelram.licensing@gmail.com. A summary adds no rights; LICENSE controls (section 17)." src="media/presentation/license-light.svg" width="1200"></picture>
+
 GEL RAM uses the GEL RAM Noncommercial Reciprocal License 1.0: source-available,
-not an OSI-approved open-source license. You may use, study, change and share it
-for noncommercial purposes, keeping the LICENSE, the copyright notices and every
-`Required Notice:` line with each copy; private noncommercial changes may stay
-private. Anyone, including a company, may evaluate it outside production, solely
-to assess it, with no fixed time limit. Any use that directly or indirectly
-earns, enables, supports or is meant to produce money or other material financial
-benefit, for you or anyone else, needs a Commercial Agreement signed by the
-Licensor before it begins: `gelram.licensing@gmail.com`. `gel-license use ANSWERS_FILE`
-shows which LICENSE sentences apply to your answers about one use; it is not
-legal advice. Code contributions for merge need the signed [CLA 2.0](CLA.md).
+not an OSI-approved open-source license. You may reproduce, run, study, modify
+and share it for Noncommercial Purposes, keeping the LICENSE, all copyright
+notices and every `Required Notice:` line with each copy; private noncommercial
+changes may stay private. Anyone, including a company, may evaluate it in a
+non-production environment solely to assess, learn about, validate, or decide
+whether to obtain commercial rights, with no fixed time limit. Monetized Use is
+use that "directly or indirectly receives, earns, enables, supports, protects, or
+is intended to produce money or other material financial benefit for You or
+another person", including donations, tips, crowdfunding or sponsorships received
+because of a GEL RAM-based activity; it needs a written Commercial Agreement
+signed by the Licensor and by you before it begins: `gelram.licensing@gmail.com`.
+`gel-license use ANSWERS_FILE` shows which LICENSE sentences apply to your
+answers about one use; it is not legal advice. Code contributions for merge need
+a [CLA 2.0](CLA.md) accepted by both sides.
 This README adds no rights; the [LICENSE](LICENSE) controls
 ([licensing guide](LICENSING.md) · [license decision guide](docs/LICENSE-DECISION.md) · [commercial terms](COMMERCIAL-LICENSE.md) · [license pins](docs/LICENSE-PINS.md)).
 

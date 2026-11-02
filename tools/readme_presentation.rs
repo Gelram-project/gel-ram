@@ -149,7 +149,7 @@ cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --d
 <section id="reproduce"><p class="eyebrow">Check the declared scope</p><h2>Reproduce the checks.</h2><pre><code>cargo run --locked --offline -p xtask -- verify
 cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new</code></pre><p>Use a new output directory outside the checkout. Read failed, skipped and unmeasured steps. Cargo offline mode is not system-wide network isolation.</p><ul class="doclinks"><li><a href="__DOC__/docs/REPRODUCE.md">Reproduction instructions</a></li><li><a href="__DOC__/docs/CI-EVIDENCE.md">Per-revision CI evidence</a></li><li><a href="__DOC__/docs/CLAIMS.md">Executable claim registry</a></li></ul></section>
 <section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/LIVE-LAB.md">Your bytes in one record</a></li><li><a href="__DOC__/docs/Q8-QUAD.md">Q8 record contract</a></li><li><a href="__DOC__/docs/CLAIMS.md">Claim registry</a></li><li><a href="__DOC__/docs/COMMITMENTS.md">Published commitments</a></li><li><a href="__DOC__/docs/LICENSE-DECISION.md">License decision guide</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the files of this checkout. Viewing this local page loads only adjacent files, with no scripts, trackers or remote fonts.</p></section></div>
-<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It describes this checkout; tagged releases are listed on the repository's Releases page. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
+<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It describes this checkout; tagged releases are listed on the repository's Releases page. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL RAM-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
 </main>
 <footer><p><strong>GEL RAM</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
 </div></body></html>
@@ -247,31 +247,32 @@ Both images are drawn from the committed mutation report and the property map wh
 
 ## New in 0.7, and on main
 
+__SPEED__
+
 - **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
 - **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([release notes](RELEASE-NOTES-v0.7.0.md)).
-
-<details><summary><strong>Every timed case against v0.6.1, as an animated chart</strong> (tall; opens here)</summary>
-
-__SPEED__
-
-</details>
-
-- **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file except the generated Unicode tables begins with a two-line license header; `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
+- **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
 
 ## Using GEL RAM
 
+__LICENSE__
+
 GEL RAM uses the GEL RAM Noncommercial Reciprocal License 1.0: source-available,
-not an OSI-approved open-source license. You may use, study, change and share it
-for noncommercial purposes, keeping the LICENSE, the copyright notices and every
-`Required Notice:` line with each copy; private noncommercial changes may stay
-private. Anyone, including a company, may evaluate it outside production, solely
-to assess it, with no fixed time limit. Any use that directly or indirectly
-earns, enables, supports or is meant to produce money or other material financial
-benefit, for you or anyone else, needs a Commercial Agreement signed by the
-Licensor before it begins: `gelram.licensing@gmail.com`. `gel-license use ANSWERS_FILE`
-shows which LICENSE sentences apply to your answers about one use; it is not
-legal advice. Code contributions for merge need the signed [CLA 2.0](CLA.md).
+not an OSI-approved open-source license. You may reproduce, run, study, modify
+and share it for Noncommercial Purposes, keeping the LICENSE, all copyright
+notices and every `Required Notice:` line with each copy; private noncommercial
+changes may stay private. Anyone, including a company, may evaluate it in a
+non-production environment solely to assess, learn about, validate, or decide
+whether to obtain commercial rights, with no fixed time limit. Monetized Use is
+use that "directly or indirectly receives, earns, enables, supports, protects, or
+is intended to produce money or other material financial benefit for You or
+another person", including donations, tips, crowdfunding or sponsorships received
+because of a GEL RAM-based activity; it needs a written Commercial Agreement
+signed by the Licensor and by you before it begins: `gelram.licensing@gmail.com`.
+`gel-license use ANSWERS_FILE` shows which LICENSE sentences apply to your
+answers about one use; it is not legal advice. Code contributions for merge need
+a [CLA 2.0](CLA.md) accepted by both sides.
 This README adds no rights; the [LICENSE](LICENSE) controls
 ([licensing guide](LICENSING.md) · [license decision guide](docs/LICENSE-DECISION.md) · [commercial terms](COMMERCIAL-LICENSE.md) · [license pins](docs/LICENSE-PINS.md)).
 
@@ -1772,6 +1773,172 @@ fn hero(dark: bool, animated: bool) -> String {
         &b,
     )
 }
+/// The license card quotes LICENSE word for word and adds no words of its own to
+/// the quotes; it is not drawn when a quoted sentence is no longer in the file.
+const LICENSE_FILE: &str = "LICENSE";
+/// One column per subject: the LICENSE sections quoted, heading, quoted sentences.
+const LICENSE_COLUMNS: [(&str, &str, [&str; 2]); 3] = [
+    (
+        "section 3",
+        "Noncommercial use",
+        [
+            "a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.",
+            "You may keep Noncommercial Modifications private without a time limit.",
+        ],
+    ),
+    (
+        "sections 4 and 2",
+        "Evaluation, by anyone",
+        [
+            "Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.",
+            "in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.",
+        ],
+    ),
+    (
+        "section 5",
+        "Money needs an agreement",
+        [
+            "No Monetized Use is licensed by these public terms.",
+            "Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor.",
+        ],
+    ),
+];
+/// What section 8 asks every copy to carry.
+const LICENSE_NOTICE_QUOTE: &str = "each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.";
+/// Every quoted sentence, checked against LICENSE with its line breaks folded.
+fn license_quotes(license: &str) -> Result<Vec<&'static str>> {
+    let text = license.split_whitespace().collect::<Vec<_>>().join(" ");
+    let quotes: Vec<&'static str> = LICENSE_COLUMNS
+        .iter()
+        .flat_map(|(_, _, q)| q.iter().copied())
+        .chain([LICENSE_NOTICE_QUOTE])
+        .collect();
+    for q in &quotes {
+        if !text.contains(q) {
+            return Err(format!("LICENSE no longer says: {q}").into());
+        }
+    }
+    Ok(quotes)
+}
+/// Words in lines of at most `max` characters.
+fn wrap(text: &str, max: usize) -> Vec<String> {
+    let mut lines: Vec<String> = Vec::new();
+    for word in text.split_whitespace() {
+        match lines.last_mut() {
+            Some(line) if line.len() + 1 + word.len() <= max => {
+                line.push(' ');
+                line.push_str(word);
+            }
+            _ => lines.push(word.to_string()),
+        }
+    }
+    lines
+}
+/// What the license card says, as its description and as the README alternative text.
+fn license_text() -> String {
+    let mut s = String::from(
+        "GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE.",
+    );
+    for (section, heading, quotes) in LICENSE_COLUMNS {
+        // Single quotes: the text is also an HTML attribute value.
+        s.push_str(&format!(
+            " {heading} ({section}): '{}' '{}'",
+            quotes[0], quotes[1]
+        ));
+    }
+    s.push_str(&format!(" Every copy (section 8): '{LICENSE_NOTICE_QUOTE}' Commercial Agreements: gelram.licensing@gmail.com. A summary adds no rights; LICENSE controls (section 17)."));
+    s
+}
+/// Three columns quoted from LICENSE: what is free, what anyone may evaluate,
+/// and what needs a signed agreement; then what every copy must carry.
+fn license_card(dark: bool) -> Result<String> {
+    license_quotes(&fs::read_to_string(LICENSE_FILE)?)?;
+    let t = theme(dark);
+    let mut b = String::from(
+        r#"<text class="kick" x="40" y="44">LICENSE AT A GLANCE</text><text x="40" y="78" font-size="24" class="b">GEL RAM Noncommercial Reciprocal License 1.0</text><text x="40" y="102" font-size="14" class="mut">Source-available, not an OSI-approved open-source license. Each quoted line below is from LICENSE.</text>"#,
+    );
+    let colours = [t.green, t.blue, t.amber];
+    for (i, (section, heading, quotes)) in LICENSE_COLUMNS.iter().enumerate() {
+        let x = 40.0 + 380.0 * i as f64;
+        let c = colours[i];
+        // A check for what is granted; a signature line for what needs an agreement.
+        let icon = if i < 2 {
+            format!(
+                r#"<circle cx="{}" cy="146" r="15" fill="{}"/><path d="M{} 146l5 5 10-10" stroke="{}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>"#,
+                x + 34.0,
+                c[1],
+                x + 26.0,
+                t.bg[0]
+            )
+        } else {
+            format!(
+                r#"<rect x="{}" y="131" width="24" height="30" rx="3" fill="{}"/><path d="M{} 141h12M{} 147h12M{} 155c3-4 5 2 8-2" stroke="{}" stroke-width="2" fill="none" stroke-linecap="round"/>"#,
+                x + 22.0,
+                c[1],
+                x + 28.0,
+                x + 28.0,
+                x + 28.0,
+                t.bg[0]
+            )
+        };
+        let mut text = String::new();
+        let mut y = 200.0;
+        for q in quotes {
+            let lines = wrap(q, 44);
+            for (k, line) in lines.iter().enumerate() {
+                let open = if k == 0 { "\"" } else { "" };
+                let close = if k + 1 == lines.len() { "\"" } else { "" };
+                text.push_str(&format!(
+                    r#"<text x="{}" y="{y}" font-size="13">{open}{line}{close}</text>"#,
+                    x + 28.0
+                ));
+                y += 18.0;
+            }
+            y += 10.0;
+        }
+        b.push_str(&format!(
+            r#"<g class="col" style="animation-delay:{:.2}s"><rect x="{x}" y="120" width="360" height="252" rx="16" fill="{}" fill-opacity=".10" stroke="{}" stroke-width="2"/><rect x="{}" y="190" width="3" height="{:.0}" rx="1.5" fill="{}"/>{icon}<text x="{}" y="152" font-size="18" class="b">{heading}</text><text class="mono" x="{}" y="172" font-size="12">LICENSE {section}</text>{text}</g>"#,
+            0.2 + 0.3 * i as f64,
+            c[1],
+            c[1],
+            x + 16.0,
+            y - 200.0,
+            c[1],
+            x + 62.0,
+            x + 62.0
+        ));
+    }
+    let mut notice = String::new();
+    let lines = wrap(LICENSE_NOTICE_QUOTE, 120);
+    for (k, line) in lines.iter().enumerate() {
+        let open = if k == 0 { "\"" } else { "" };
+        let close = if k + 1 == lines.len() { "\"" } else { "" };
+        notice.push_str(&format!(
+            r#"<text x="40" y="{}" font-size="13">{open}{line}{close}</text>"#,
+            412 + 18 * k
+        ));
+    }
+    b.push_str(&format!(
+        r#"<g class="col" style="animation-delay:1.2s"><text class="kick" x="40" y="394">EVERY COPY · SECTION 8</text>{notice}<text x="40" y="462" font-size="14" class="b" style="fill:{}">Commercial Agreements: gelram.licensing@gmail.com</text><text x="1160" y="462" font-size="13" class="mut" text-anchor="end">A summary adds no rights; LICENSE controls (section 17).</text></g>"#,
+        t.accent
+    ));
+    let style = format!(".col{{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}}@keyframes rise{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.col{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
+    Ok(card(
+        (1200, 484),
+        t,
+        ("License at a glance", &license_text()),
+        &style,
+        &b,
+    ))
+}
+fn license_picture() -> String {
+    themed(
+        "media/presentation/license-light.svg",
+        "media/presentation/license-dark.svg",
+        &license_text(),
+        1200,
+    )
+}
 /// The recorded crash series the crash card is drawn from.
 const CRASH_FILE: &str = "docs/evidence-crash/crash-series-linux.txt";
 /// The columns of one trial row, in the order the series writes them.
@@ -2334,7 +2501,8 @@ fn ratio(v: f64) -> String {
         format!("{v:.2}")
     }
 }
-/// What the speed card says, as its description and as the README alternative text.
+/// What the speed card says, as its description and as the README alternative
+/// text. Like the card it names timing programs, never a case.
 fn speed_text(s: &SpeedSet) -> String {
     let [faster, slower, within] = s.sides();
     let (timed, same) = s.verdicts();
@@ -2352,31 +2520,62 @@ fn speed_text(s: &SpeedSet) -> String {
         .filter_map(|e| e.note.as_deref())
         .collect();
     let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
-    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} timing examples, each drawn as the v0.6.1 median time divided by the new one on a log scale centred at 1, over the band of its A/A noise. {faster} are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed examples printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different cases are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), notes.join(" "), s.machine, s.load)
+    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} of {} timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in {SPEED_DIR}. {faster} cases are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed programs printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), s.examples.len(), notes.join(" "), s.machine, s.load)
 }
-const SPEED_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}.bar{animation:grow .9s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box}.gr{transform-origin:left}.gl{transform-origin:right}.fd{animation:fade .6s ease-out both}@keyframes grow{from{transform:scaleX(0)}to{transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.bar,.fd{animation:none}}";
-/// Every timed case of the set as one bar on a log scale centred at 1: to the
-/// right where the new tree is faster, to the left where it is slower, over the
-/// grey band of its A/A noise. Examples in name order fill two columns, each
-/// marked with its output verdict; nothing is aggregated or left out.
+/// One row of the speed card: what the cases of one timing program add up to.
+/// The card names no case; the per-case results stay in the timing set.
+struct SpeedRow {
+    min: f64,
+    median: f64,
+    max: f64,
+    /// The widest A/A band of its cases: the lowest low end to the highest high end.
+    band: (f64, f64),
+    /// Its cases faster beyond their own A/A band, slower beyond it, inside it.
+    sides: [usize; 3],
+}
+impl SpeedRow {
+    /// The row of one example, or `None` when it has no timed case. The median
+    /// of an even number of gains is the mean of the middle two.
+    fn of(e: &SpeedExample) -> Option<SpeedRow> {
+        let cases = e.cases();
+        let mut gains: Vec<f64> = cases.iter().map(|c| c.gain).collect();
+        gains.sort_by(f64::total_cmp);
+        let (min, max) = (*gains.first()?, *gains.last()?);
+        let mid = gains.len() / 2;
+        let median = if gains.len() % 2 == 1 {
+            gains[mid]
+        } else {
+            (gains[mid - 1] + gains[mid]) / 2.0
+        };
+        let band = cases
+            .iter()
+            .map(SpeedCase::noise)
+            .fold((f64::INFINITY, 0.0_f64), |(a, b), (lo, hi)| {
+                (a.min(lo), b.max(hi))
+            });
+        let count = |side| cases.iter().filter(|c| c.side() == side).count();
+        Some(SpeedRow {
+            min,
+            median,
+            max,
+            band,
+            sides: [
+                count(Side::Faster),
+                count(Side::Slower),
+                count(Side::Within),
+            ],
+        })
+    }
+}
+/// `ONE` is the x of ratio 1: every span grows out of that axis.
+const SPEED_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}.sp{animation:grow .9s cubic-bezier(.2,.8,.2,1) both;transform-box:view-box;transform-origin:ONEpx 0}.fd{animation:fade .6s ease-out both}@keyframes grow{from{transform:scaleX(0)}to{transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.sp,.fd{animation:none}}";
+/// One row per timing program in name order, on a log scale centred at 1: the
+/// span from its lowest to its highest gain, red below 1 and blue above, its
+/// median, the widest A/A band of its cases behind them, how many cases fall
+/// beyond or inside their own band, and its output verdict. No case is named.
 fn speed_card(dark: bool, s: &SpeedSet) -> String {
     let t = theme(dark);
-    let (row, head, top) = (14.0, 20.0, 232.0);
-    let colour = |side| match side {
-        Side::Faster => t.blue[1],
-        Side::Slower => t.red[1],
-        Side::Within => t.muted,
-    };
-    let tall = |e: &SpeedExample| head + row * e.cases().len().max(1) as f64;
-    // Two columns in name order, split where the taller column is shortest.
-    let total: f64 = s.examples.iter().map(tall).sum();
-    let (mut split, mut left) = ((0, f64::INFINITY), 0.0_f64);
-    for k in 0..=s.examples.len() {
-        if left.max(total - left) < split.1 {
-            split = (k, left.max(total - left));
-        }
-        left += s.examples.get(k).map_or(0.0, tall);
-    }
+    let (row, top) = (15.0, 234.0);
     // A log2 axis in whole octaves, wide enough for every ratio and every band.
     let (mut lo, mut hi) = (0.5_f64, 2.0_f64);
     for c in s.cases() {
@@ -2385,15 +2584,18 @@ fn speed_card(dark: bool, s: &SpeedSet) -> String {
         hi = hi.max(b).max(c.gain);
     }
     let (lo, hi) = (lo.log2().floor() as i32, hi.log2().ceil() as i32);
+    let (p0, p1) = (424.0, 890.0);
+    let x = |v: f64| p0 + (v.log2() - f64::from(lo)) / f64::from(hi - lo) * (p1 - p0);
+    let one = x(1.0);
     let [faster, slower, within] = s.sides();
     let (timed, same) = s.verdicts();
-    let span = |runs: &mut dyn Iterator<Item = u32>| {
-        let (a, b) = runs.fold((u32::MAX, 0), |(a, b), r| (a.min(r), b.max(r)));
-        if a == b {
-            a.to_string()
-        } else {
-            format!("{a} to {b}")
-        }
+    let (least, most) = s
+        .cases()
+        .fold((u32::MAX, 0), |(a, b), c| (a.min(c.runs), b.max(c.runs)));
+    let runs = if least == most {
+        least.to_string()
+    } else {
+        format!("{least} to {most}")
     };
     let check = |x: f64, y: f64| {
         format!(
@@ -2403,155 +2605,165 @@ fn speed_card(dark: bool, s: &SpeedSet) -> String {
     };
     let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
     let mut b = format!(
-        r#"<text class="kick" x="40" y="46">SPEED · v0.6.1 AGAINST main AT {SPEED_B} · SET {set}</text><text x="40" y="82" font-size="24" class="b">{} timed cases in {timed} timing examples: v0.6.1 time divided by the new time</text><text class="mono" x="40" y="108" font-size="12.5">A, A2: two checkouts of v0.6.1 · B: main at {SPEED_B}, the first v0.7 speed package · medians of {} runs per case</text><text class="mono" x="40" y="128" font-size="12.5">Machine: {} · not pinned to cores</text><text class="mono" x="40" y="148" font-size="12.5">Load: {}</text>"#,
+        r#"<text class="kick" x="40" y="42">SPEED · v0.6.1 AGAINST main AT {SPEED_B} · SET {set}</text><text x="40" y="72" font-size="22" class="b">{} timed cases in {timed} of {} timing programs: v0.6.1 time divided by the new time</text><text x="40" y="95" font-size="13.5">One row per timing program: the range of its cases from min to max, and their median · cases grouped by timing program; per-case results are in docs/speed-results</text><text class="mono" x="40" y="116" font-size="12">A, A2: two checkouts of v0.6.1 · B: main at {SPEED_B}, the first v0.7 speed package · medians of {runs} runs per case</text><text class="mono" x="40" y="133" font-size="12">Machine: {} · not pinned to cores</text><text class="mono" x="40" y="150" font-size="12">Load: {}</text>"#,
         s.cases().count(),
-        span(&mut s.cases().map(|c| c.runs)),
+        s.examples.len(),
         s.machine,
         s.load
     );
+    // The totals, then what each mark means.
     b.push_str(&format!(
-        r#"<rect x="40" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="72" y="181" font-size="13">faster beyond its A/A band: {faster}</text><rect x="300" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="332" y="181" font-size="13">slower beyond it: {slower}</text><rect x="476" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="508" y="181" font-size="13">inside it: {within}</text><rect x="604" y="171" width="30" height="10" rx="2" fill="{}" opacity=".3"/><path d="M604 171v10M634 171v10" stroke="{}" stroke-opacity=".5" stroke-width="1.2"/><text x="642" y="181" font-size="13">A/A noise band</text>{}<text x="788" y="181" font-size="13">same output digest in A, A2 and B: {same} of {timed}</text>"#,
+        r#"<text x="40" y="177" font-size="13" class="b">{} cases:</text><rect x="122" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="152" y="177" font-size="13">faster beyond its A/A band: {faster}</text><rect x="374" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="404" y="177" font-size="13">slower beyond it: {slower}</text><rect x="548" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="578" y="177" font-size="13">inside it: {within}</text>{}<text x="704" y="177" font-size="13">same output digest in A, A2 and B: {same} of {timed}</text>"#,
+        s.cases().count(),
         t.blue[1],
         t.red[1],
         t.muted,
-        t.muted,
-        t.ink,
-        check(770.0, 176.0)
+        check(686.0, 172.0)
     ));
-    let mut notes: Vec<&str> = Vec::new();
-    let mut bottom = top;
-    for (col, examples) in [&s.examples[..split.0], &s.examples[split.0..]]
-        .into_iter()
-        .enumerate()
-    {
-        let x0 = 32.0 + 584.0 * col as f64;
-        let (p0, p1) = (x0 + 218.0, x0 + 462.0);
-        let x = |v: f64| p0 + (v.log2() - f64::from(lo)) / f64::from(hi - lo) * (p1 - p0);
-        let end = top + examples.iter().map(tall).sum::<f64>();
-        bottom = bottom.max(end);
+    b.push_str(&format!(
+        r#"<rect x="40" y="191" width="20" height="6" rx="1.5" fill="{}"/><rect x="60" y="191" width="20" height="6" rx="1.5" fill="{}"/><path d="M60 187v14" stroke="{}" stroke-width="1.4"/><text x="88" y="198" font-size="12.5">range of its cases, min to max: red below 1, blue above 1</text><circle cx="436" cy="194" r="3.6" fill="{}" stroke="{}" stroke-width="1.2"/><text x="446" y="198" font-size="12.5">median of its cases</text><rect x="578" y="189" width="30" height="10" rx="2" fill="{}" fill-opacity=".2"/><text x="616" y="198" font-size="12.5">widest A/A band of its cases: the noise to read it against</text>"#,
+        t.red[1],
+        t.blue[1],
+        t.ink,
+        t.ink,
+        t.bg[0],
+        t.muted
+    ));
+    let bottom = top + row * s.examples.len() as f64;
+    b.push_str(&format!(
+        r#"<g class="mut b" font-size="11"><text x="{:.1}" y="214" text-anchor="end">slower</text><text x="{:.1}" y="214">faster</text><text x="40" y="228">timing program</text><text x="262" y="228" text-anchor="end">cases</text><text x="306" y="228" text-anchor="end">faster</text><text x="350" y="228" text-anchor="end">slower</text><text x="394" y="228" text-anchor="end">inside</text><text x="944" y="228" text-anchor="end">min</text><text x="1000" y="228" text-anchor="end">median</text><text x="1054" y="228" text-anchor="end">max</text><text x="1070" y="228">output</text></g>"#,
+        one - 6.0,
+        one + 6.0
+    ));
+    for k in lo..=hi {
+        let v = 2f64.powi(k);
+        let (stroke, width) = if k == 0 { (t.ink, 1.4) } else { (t.line, 1.0) };
         b.push_str(&format!(
-            r#"<g class="mut b" font-size="11"><text x="{:.0}" y="208">case</text><text x="{:.1}" y="208" text-anchor="end">slower</text><text x="{:.1}" y="208">faster</text><text x="{:.0}" y="208" text-anchor="end">gain</text><text x="{:.0}" y="208" text-anchor="end">A/A</text></g>"#,
-            x0 + 16.0,
-            x(1.0) - 6.0,
-            x(1.0) + 6.0,
-            x0 + 510.0,
-            x0 + 552.0
+            r#"<path d="M{gx:.1} {:.0}V{bottom:.0}" stroke="{stroke}" stroke-width="{width}"/><text class="mono" x="{gx:.1}" y="228" text-anchor="middle" font-size="10">{v}</text>"#,
+            top - 2.0,
+            gx = x(v)
         ));
-        for k in lo..=hi {
-            let v = 2f64.powi(k);
-            let (stroke, width) = if k == 0 { (t.ink, 1.4) } else { (t.line, 1.0) };
-            b.push_str(&format!(
-                r#"<path d="M{gx:.1} 228V{end:.0}" stroke="{stroke}" stroke-width="{width}"/><text class="mono" x="{gx:.1}" y="222" text-anchor="middle" font-size="10">{v}</text>"#,
-                gx = x(v)
-            ));
-        }
-        // Rows of one column appear one after another, both columns at once.
-        let (mut y, mut k) = (top, 0.0);
-        for e in examples {
-            let note = e.note.as_deref().map_or(String::new(), |n| {
-                notes.push(n);
-                format!(" · note {}", notes.len())
-            });
-            let (icon, right) = match &e.timed {
-                Some((cases, true)) => (
-                    check(x0, y + 11.0),
-                    format!("{} runs per case", span(&mut cases.iter().map(|c| c.runs))),
-                ),
-                Some((cases, false)) => (
-                    format!(
-                        r##"<circle cx="{:.1}" cy="{:.1}" r="6" fill="{}"/><text x="{:.1}" y="{:.1}" text-anchor="middle" font-size="10" class="b" style="fill:#1b1f24">!</text>"##,
-                        x0 + 5.0,
-                        y + 10.0,
-                        t.amber[1],
-                        x0 + 5.0,
-                        y + 13.6
-                    ),
-                    format!(
-                        "{} runs per case · output digests differ{note}",
-                        span(&mut cases.iter().map(|c| c.runs))
-                    ),
-                ),
-                None => (
-                    format!(
-                        r#"<circle cx="{:.1}" cy="{:.1}" r="5.5" fill="none" stroke="{m}" stroke-width="1.6"/><path d="M{:.1} {:.1}h6" stroke="{m}" stroke-width="1.6"/>"#,
-                        x0 + 5.0,
-                        y + 10.0,
-                        x0 + 2.0,
-                        y + 10.0,
-                        m = t.muted
-                    ),
-                    format!("not built in v0.6.1{note}"),
-                ),
-            };
-            b.push_str(&format!(
-                r#"<g class="fd" style="animation-delay:{:.2}s"><path d="M{x0:.0} {:.0}H{:.0}" stroke="{}"/>{icon}<text x="{:.0}" y="{:.0}" font-size="12.5" class="b">{}</text><text x="{:.0}" y="{:.0}" font-size="10.5" class="mut" text-anchor="end">{right}</text></g>"#,
-                0.1 + 0.014 * k,
-                y + 1.0,
-                x0 + 552.0,
-                t.line,
-                x0 + 16.0,
-                y + 15.0,
-                e.name,
-                x0 + 552.0,
-                y + 15.0
-            ));
-            y += head;
-            if e.timed.is_none() {
-                b.push_str(&format!(
-                    r#"<text class="fd mut" style="animation-delay:{:.2}s" x="{:.0}" y="{:.1}" font-size="10.5" font-style="italic">no timing: the example does not build in v0.6.1</text>"#,
-                    0.1 + 0.014 * k,
-                    x0 + 16.0,
-                    y + row / 2.0 + 3.8
-                ));
-                (y, k) = (y + row, k + 1.0);
-            }
-            for c in e.cases() {
-                // The A/A band with a cap at each end, the bar from 1 over it,
-                // then the case name and its two ratios as printed.
-                let (cy, fade, grow) = (y + row / 2.0, 0.1 + 0.014 * k, 0.35 + 0.014 * k);
-                let ((n0, n1), one, to) = (c.noise(), x(1.0), x(c.gain));
-                let (dir, from) = if c.gain >= 1.0 {
-                    ("gr", one)
-                } else {
-                    ("gl", to)
-                };
-                let (band0, band1, band_y) = (x(n0), x(n1), cy - 5.0);
-                let (ink, muted, fill) = (t.ink, t.muted, colour(c.side()));
-                let (name, gain, aa) = (&c.name, ratio(c.gain), ratio(c.aa));
-                let (tx, ty, gx, ax) = (x0 + 16.0, cy + 3.8, x0 + 510.0, x0 + 552.0);
-                b.push_str(&format!(
-                    r#"<g class="fd" style="animation-delay:{fade:.2}s"><rect x="{band0:.1}" y="{band_y:.1}" width="{:.1}" height="10" rx="2" fill="{muted}" opacity=".3"/><text x="{tx:.0}" y="{ty:.1}" font-size="11">{name}</text><text x="{gx:.0}" y="{ty:.1}" font-size="11" class="b" text-anchor="end">{gain}</text><text x="{ax:.0}" y="{ty:.1}" font-size="11" class="mut" text-anchor="end">{aa}</text></g><rect class="bar {dir}" style="animation-delay:{grow:.2}s" x="{from:.1}" y="{:.1}" width="{:.1}" height="6" rx="1.5" fill="{fill}"/><path class="fd" style="animation-delay:{fade:.2}s" d="M{band0:.1} {band_y:.1}v10M{band1:.1} {band_y:.1}v10" stroke="{ink}" stroke-opacity=".5" stroke-width="1.2"/>"#,
-                    band1 - band0,
-                    cy - 3.0,
-                    (to - one).abs(),
-                ));
-                (y, k) = (y + row, k + 1.0);
-            }
-        }
     }
-    let mut y = bottom + 30.0;
-    for (i, note) in notes.iter().enumerate() {
+    let mut notes: Vec<&str> = Vec::new();
+    for (k, e) in s.examples.iter().enumerate() {
+        // Rows appear one after another; a span grows out of 1, then its median shows.
+        let (y0, kf) = (top + row * k as f64, k as f64);
+        let (cy, ty) = (y0 + row / 2.0, y0 + row / 2.0 + 4.0);
+        let (fade, grow, mark) = (0.1 + 0.04 * kf, 0.3 + 0.04 * kf, 1.0 + 0.04 * kf);
+        if k % 2 == 0 {
+            b.push_str(&format!(
+                r#"<rect x="32" y="{y0:.1}" width="1136" height="{row:.0}" fill="{}" fill-opacity=".35"/>"#,
+                t.line
+            ));
+        }
+        let note = e.note.as_deref().map(|n| {
+            notes.push(n);
+            notes.len()
+        });
+        let label = |text: String| {
+            format!(r#"<text x="1086" y="{ty:.1}" font-size="11" class="mut">{text}</text>"#)
+        };
+        let output = match (&e.timed, note) {
+            (Some((_, true)), _) => check(1072.0, cy),
+            (Some((_, false)), n) => format!(
+                r##"<circle cx="1077" cy="{cy:.1}" r="5.5" fill="{}"/><text x="1077" y="{:.1}" text-anchor="middle" font-size="9.5" class="b" style="fill:#1b1f24">!</text>{}"##,
+                t.amber[1],
+                cy + 3.4,
+                label(n.map_or("differs".to_string(), |n| format!("differs · note {n}")))
+            ),
+            (None, n) => format!(
+                r#"<circle cx="1077" cy="{cy:.1}" r="5" fill="none" stroke="{m}" stroke-width="1.5"/><path d="M1074.3 {cy:.1}h5.4" stroke="{m}" stroke-width="1.5"/>{}"#,
+                label(n.map_or(String::new(), |n| format!("note {n}"))),
+                m = t.muted
+            ),
+        };
+        let name = format!(
+            r#"<text class="pn b" x="40" y="{ty:.1}" font-size="12">{}</text>"#,
+            e.name
+        );
+        let Some(r) = SpeedRow::of(e) else {
+            b.push_str(&format!(
+                r#"<g class="fd" style="animation-delay:{fade:.2}s">{name}<text x="{:.1}" y="{ty:.1}" font-size="11" class="mut" font-style="italic">not built in v0.6.1: no timing</text>{output}</g>"#,
+                one + 8.0
+            ));
+            continue;
+        };
+        let cell = |cx: f64, n: usize, colour: &str| {
+            if n == 0 {
+                format!(
+                    r#"<text x="{cx:.0}" y="{ty:.1}" font-size="11.5" class="mut" text-anchor="end">0</text>"#
+                )
+            } else {
+                format!(
+                    r#"<text x="{cx:.0}" y="{ty:.1}" font-size="11.5" class="b" text-anchor="end" style="fill:{colour}">{n}</text>"#
+                )
+            }
+        };
+        let [f, sl, w] = r.sides;
         b.push_str(&format!(
-            r#"<text x="40" y="{y:.0}" font-size="12.5"><tspan class="b">Note {}</tspan> · {note}</text>"#,
+            r#"<g class="fd" style="animation-delay:{fade:.2}s">{name}<text x="262" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text>{}{}{}<text x="944" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text><text x="1000" y="{ty:.1}" font-size="11.5" class="b" text-anchor="end">{}</text><text x="1054" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text>{output}</g><rect class="fd" style="animation-delay:{fade:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="10" rx="2" fill="{}" fill-opacity=".2"/>"#,
+            f + sl + w,
+            cell(306.0, f, t.blue[1]),
+            cell(350.0, sl, t.red[1]),
+            cell(394.0, w, t.ink),
+            ratio(r.min),
+            ratio(r.median),
+            ratio(r.max),
+            x(r.band.0),
+            cy - 5.0,
+            x(r.band.1) - x(r.band.0),
+            t.muted
+        ));
+        // The span, cut at 1: the part below in red, the part above in blue. A
+        // program of one case has no span, only its median mark.
+        for (class, from, to, fill) in [
+            ("lo", r.min, r.max.min(1.0), t.red[1]),
+            ("hi", r.min.max(1.0), r.max, t.blue[1]),
+        ] {
+            if from < to {
+                b.push_str(&format!(
+                    r#"<rect class="sp {class}" style="animation-delay:{grow:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="6" rx="1.5" fill="{fill}"/>"#,
+                    x(from),
+                    cy - 3.0,
+                    x(to) - x(from)
+                ));
+            }
+        }
+        b.push_str(&format!(
+            r#"<circle class="fd" style="animation-delay:{mark:.2}s" cx="{:.1}" cy="{cy:.1}" r="3.6" fill="{}" stroke="{}" stroke-width="1.2"/>"#,
+            x(r.median),
+            t.ink,
+            t.bg[0]
+        ));
+    }
+    let mut y = bottom + 4.0;
+    for (i, note) in notes.iter().enumerate() {
+        y += 16.0;
+        b.push_str(&format!(
+            r#"<text x="40" y="{y:.0}" font-size="12"><tspan class="b">Note {}</tspan> · {note}</text>"#,
             i + 1
         ));
-        y += 20.0;
     }
+    y += 6.0;
     for line in [
-        "The machine was loaded and the runs were not pinned to cores, so each grey band, one A/A ratio of two copies of v0.6.1, is the noise to read its",
-        "bar against: a single sample of that noise, not a confidence interval. A case counts as faster or slower only beyond its band. Bars of different",
-        "cases are not comparable with each other: each times its own work. The output digests, not the timings, are the claim.",
+        "The machine was loaded and the runs were not pinned to cores, so each grey band, the A/A ratios of two copies of v0.6.1, is the noise to read a span against: samples of that noise, not a confidence interval.",
+        "A case counts as faster or slower only beyond its own band. Ratios of different programs are not comparable with each other: each program times its own work. The output digests, not the timings, are the claim.",
     ] {
-        y += 18.0;
+        y += 16.0;
         b.push_str(&format!(
-            r#"<text x="40" y="{y:.0}" font-size="12.5" class="mut">{line}</text>"#
+            r#"<text x="40" y="{y:.0}" font-size="12" class="mut">{line}</text>"#
         ));
     }
     card(
-        (1200, (y + 26.0) as u32),
+        (1200, (y + 18.0) as u32),
         t,
-        ("Speed against v0.6.1, every timed case", &speed_text(s)),
-        &SPEED_STYLE.replace("MUTED", t.muted),
+        (
+            "Speed against v0.6.1, one row per timing program",
+            &speed_text(s),
+        ),
+        &SPEED_STYLE
+            .replace("MUTED", t.muted)
+            .replace("ONE", &format!("{one:.1}")),
         &b,
     )
 }
@@ -2601,6 +2813,10 @@ fn assets() -> Result<Vec<(String, String)>> {
         out.push((
             format!("media/presentation/speed-{theme}.svg"),
             speed_card(dark, &speed),
+        ));
+        out.push((
+            format!("media/presentation/license-{theme}.svg"),
+            license_card(dark)?,
         ));
     }
     for dark in [false, true] {
@@ -2667,6 +2883,9 @@ fn native_intro() -> String {
     let speed = SpeedSet::read()
         .map(|s| speed_picture(&s))
         .unwrap_or_else(|e| format!("__SPEED__ {e}"));
+    let license = license_card(false)
+        .map(|_| license_picture())
+        .unwrap_or_else(|e| format!("__LICENSE__ {e}"));
     NATIVE
         .replace("__RECORD__", &record)
         .replace("__COMMITMENTS__", &commitments)
@@ -2677,6 +2896,7 @@ fn native_intro() -> String {
         .replace("__LOGO__", &readme_logo())
         .replace("__CRASH__", &crash)
         .replace("__SPEED__", &speed)
+        .replace("__LICENSE__", &license)
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
@@ -2946,7 +3166,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 22 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 24 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -2970,6 +3190,7 @@ mod tests {
                 "__LOGO__",
                 "__CRASH__",
                 "__SPEED__",
+                "__LICENSE__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
@@ -3358,6 +3579,70 @@ mod tests {
         }
     }
     #[test]
+    fn license_card_quotes_the_license_word_for_word() {
+        let license = fs::read_to_string(LICENSE_FILE).unwrap();
+        let folded = license.split_whitespace().collect::<Vec<_>>().join(" ");
+        let quotes = license_quotes(&license).unwrap();
+        assert_eq!(quotes.len(), 7);
+        for dark in [false, true] {
+            let s = license_card(dark).unwrap();
+            // Every quote is in LICENSE and drawn whole, line by line.
+            for q in &quotes {
+                assert!(folded.contains(q), "{q}");
+                for line in wrap(q, if *q == LICENSE_NOTICE_QUOTE { 120 } else { 44 }) {
+                    assert!(s.contains(&line), "{line}");
+                }
+            }
+            for want in [
+                "GEL RAM Noncommercial Reciprocal License 1.0",
+                "not an OSI-approved open-source license",
+                "gelram.licensing@gmail.com",
+                "A summary adds no rights; LICENSE controls (section 17).",
+                "@media (prefers-reduced-motion:reduce){.col{animation:none}}",
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—".contains(ch)));
+        }
+        // The alternative text is an attribute value: no double quote may end it early.
+        assert!(!license_text().contains('"'));
+        // The README paragraph quotes the two definitions word for word.
+        let readme = native_intro()
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ");
+        for quoted in [
+            "directly or indirectly receives, earns, enables, supports, protects, or is intended to produce money or other material financial benefit for You or another person",
+            "solely to assess, learn about, validate, or decide whether to obtain commercial rights",
+        ] {
+            assert!(folded.contains(quoted) && readme.contains(quoted), "{quoted}");
+        }
+        assert!(native_intro().contains(&license_picture()));
+    }
+    #[test]
+    fn a_license_that_no_longer_says_a_quoted_sentence_is_refused() {
+        let license = fs::read_to_string(LICENSE_FILE).unwrap();
+        for (from, to) in [
+            ("non-production environment", "production environment"),
+            ("No Monetized Use is licensed", "Monetized Use is licensed"),
+            ("without a time limit", "for one year"),
+            ("`Required Notice:`", "`Notice:`"),
+        ] {
+            assert!(license.contains(from), "{from}");
+            assert!(
+                license_quotes(&license.replacen(from, to, 1)).is_err(),
+                "{from}"
+            );
+        }
+        // Line breaks inside a sentence do not matter.
+        let rewrapped = license.replace(
+            "Licensor grants You a worldwide,",
+            "Licensor grants You a\nworldwide,",
+        );
+        assert!(license_quotes(&rewrapped).is_ok());
+    }
+    #[test]
     fn crash_card_follows_the_recorded_series() {
         let c = CrashSeries::read().unwrap();
         let text = fs::read_to_string(CRASH_FILE).unwrap();
@@ -3483,55 +3768,194 @@ mod tests {
         assert_eq!((dirs, summaries, lines), (24, 23, 133));
         assert_eq!(s.sides(), [103, 18, 12]);
         assert_eq!(same, 22);
+        // The rows add up to the set: every case is counted in exactly one row.
+        let rows: Vec<SpeedRow> = s.examples.iter().filter_map(SpeedRow::of).collect();
+        let mut sides = [0; 3];
+        for r in &rows {
+            for (sum, n) in sides.iter_mut().zip(r.sides) {
+                *sum += n;
+            }
+        }
+        assert_eq!((rows.len(), sides), (timed, s.sides()));
         let text = speed_text(&s);
         for want in [
-            "133 timed cases in 23 timing examples",
-            "103 are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it",
-            "22 of 23 timed examples",
+            "133 timed cases in 23 of 24 timing programs",
+            "103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it",
+            "22 of 23 timed programs",
+            "Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1.",
             "speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in",
             "speed_top1_many has only a manifest",
             "not pinned to cores",
+            "Ratios of different programs are not comparable",
         ] {
             assert!(text.contains(want), "{want}");
         }
         assert!(speed_picture(&s).contains(&format!(r#"alt="{text}""#)));
         for dark in [false, true] {
-            let c = speed_card(dark, &s);
-            // One bar per timed case: nothing aggregated, nothing dropped.
-            assert_eq!(c.matches(r#"<rect class="bar "#).count(), cases);
-            for e in &s.examples {
-                assert!(c.contains(&format!(">{}<", e.name)), "{}", e.name);
-                for case in e.cases() {
-                    assert!(c.contains(&format!(">{}<", case.name)), "{}", case.name);
-                }
-            }
-            // The SHA-256 slowdown is drawn to the left, in red.
-            assert!(c.contains(">0.28<") && c.contains(">0.39<"));
-            assert!(c.contains(&format!(r#"fill="{}"/>"#, theme(dark).red[1])));
-            assert!(c.contains(r#"<rect class="bar gl""#));
+            let (c, t) = (speed_card(dark, &s), theme(dark));
+            // Short enough to stand in the README without a collapsed block.
+            let height = c.split(" height=\"").nth(1).unwrap().split('"').next();
+            assert!(height.unwrap().parse::<u32>().unwrap() <= 700);
+            // SHA-256 alone is slower in every case: a red span only, left of 1.
+            let sha = speed_row(&c, "speed_sha256");
+            assert_eq!(speed_spans(sha).len(), 1);
+            assert_eq!(speed_spans(sha)[0].0, "lo");
             for want in [
+                ">0.28<".to_string(),
+                ">0.33<".to_string(),
+                ">0.39<".to_string(),
+                format!(r#"style="fill:{}">2<"#, t.red[1]),
+                format!(r#"fill="{}"/>"#, t.red[1]),
+            ] {
+                assert!(sha.contains(&want), "{want}");
+            }
+            // The overlap loads are slower in five cases: their span reaches left of 1 in red.
+            let overlap = speed_row(&c, "speed_load_overlap");
+            let kinds: Vec<&str> = speed_spans(overlap).iter().map(|s| s.0).collect();
+            assert_eq!(kinds, ["lo", "hi"]);
+            assert!(overlap.contains(&format!(r#"style="fill:{}">5<"#, t.red[1])));
+            // The two exceptions keep their footnotes, numbered in name order.
+            let top1 = speed_row(&c, "speed_top1_many");
+            assert!(top1.contains(">not built in v0.6.1: no timing<") && top1.contains(">note 1<"));
+            assert!(!top1.contains(r#"class="sp "#));
+            let gates = speed_row(&c, "speed_tree_gates");
+            assert!(gates.contains(">differs · note 2<") && gates.contains(t.amber[1]));
+            // One check per program with the same output, and one in the legend.
+            assert_eq!(c.matches("l3.5 3.5 6.5-7.5").count(), same + 1);
+            for want in [
+                ">133 cases:<",
                 ">faster beyond its A/A band: 103<",
                 ">slower beyond it: 18<",
                 ">inside it: 12<",
                 ">same output digest in A, A2 and B: 22 of 23<",
-                // Notes are numbered in name order.
-                "not built in v0.6.1 · note 1",
-                "output digests differ · note 2",
+                "cases grouped by timing program; per-case results are in docs/speed-results",
+                "medians of 9 to 27 runs per case",
                 "AMD Ryzen AI 9 HX 370",
+                "not pinned to cores",
                 "not a confidence interval",
-                "not comparable with each other",
+                "Ratios of different programs are not comparable with each other",
                 "The output digests, not the timings, are the claim.",
             ] {
                 assert!(c.contains(want), "{want}");
             }
-            assert!(c.contains("@media (prefers-reduced-motion:reduce){.bar,.fd{animation:none}}"));
+            assert!(c.contains("@media (prefers-reduced-motion:reduce){.sp,.fd{animation:none}}"));
+            // Spans grow out of the axis at 1, one row after another, and stop.
+            let tick = r#"" y="228" text-anchor="middle" font-size="10">1<"#;
+            let one = c.split(tick).next().unwrap().rsplit("x=\"").next().unwrap();
+            assert!(
+                c.contains(&format!("transform-origin:{one}px 0}}")),
+                "{one}"
+            );
+            assert_eq!(c.matches(" both").count(), 2);
+            assert!(!c.contains("infinite"));
             // Only the keyframes hide or shrink anything, so with the animation
             // removed every element is in its final, visible state.
             let style = c.split("<style>").nth(1).unwrap();
             let css = style.split("@keyframes").next().unwrap();
             assert!(!css.contains("opacity") && !css.contains("transform:"));
+            // The fade ends at opacity 1 and holds it, so an animated element must
+            // not carry its own opacity: the moving card would end darker than the still one.
+            for tag in c.split('<') {
+                if tag.contains(r#"class="fd"#) || tag.contains(r#"class="sp "#) {
+                    assert!(!tag.contains(" opacity="), "{tag}");
+                }
+            }
             assert!(!c.contains("__") && !c.contains("<script") && !c.contains("href"));
             assert!(c.chars().all(|ch| ch.is_ascii() || ch == '·' || ch == '—'));
+        }
+    }
+    /// The part of a speed card from a program's name up to the next program's.
+    fn speed_row<'a>(c: &'a str, name: &str) -> &'a str {
+        c.split(r#"<text class="pn b""#)
+            .find(|r| {
+                r.split_once('>')
+                    .is_some_and(|(_, t)| t.starts_with(&format!("{name}<")))
+            })
+            .unwrap()
+    }
+    /// The spans of one row: below 1 (`lo`) or above it (`hi`), with x and width.
+    fn speed_spans(row: &str) -> Vec<(&str, f64, f64)> {
+        let attr = |r: &str, key: &str| -> f64 {
+            let v = r.split(&format!(" {key}=\"")).nth(1).unwrap();
+            v.split('"').next().unwrap().parse().unwrap()
+        };
+        row.split(r#"<rect class="sp "#)
+            .skip(1)
+            .map(|r| (r.split('"').next().unwrap(), attr(r, "x"), attr(r, "width")))
+            .collect()
+    }
+    /// The x of the median mark of one row.
+    fn speed_median(row: &str) -> f64 {
+        let r = row.split(r#"<circle class="fd""#).nth(1).unwrap();
+        let v = r.split(" cx=\"").nth(1).unwrap();
+        v.split('"').next().unwrap().parse().unwrap()
+    }
+    #[test]
+    fn speed_card_names_no_case() {
+        let s = SpeedSet::read().unwrap();
+        // Every case= value, read from the summaries here, not through the parser.
+        let mut names = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let path = entry.unwrap().path();
+            if let Ok(text) = fs::read_to_string(path.join("summary.txt")) {
+                for line in text.lines() {
+                    if let Some(rest) = line.strip_prefix("SPEED_AB case=") {
+                        names.push(rest.split(' ').next().unwrap().to_string());
+                    }
+                }
+            }
+        }
+        assert_eq!(names.len(), 133);
+        let programs: Vec<&str> = s.examples.iter().map(|e| e.name.as_str()).collect();
+        // Words of a text: runs of lower-case letters, digits and underscores.
+        let words = |text: &str| -> Vec<String> {
+            text.split(|ch: char| !(ch.is_ascii_lowercase() || ch.is_ascii_digit() || ch == '_'))
+                .filter(|w| !w.is_empty())
+                .map(str::to_string)
+                .collect()
+        };
+        let alt = speed_text(&s);
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            let mut drawn = words(&alt);
+            for node in c.split('>').filter_map(|p| p.split_once('<')) {
+                drawn.extend(words(node.0));
+            }
+            for name in &names {
+                // A program may share a name with a case; it is drawn as the program.
+                if programs.contains(&name.as_str()) {
+                    continue;
+                }
+                // A whole text node: catches every name, even a common word such as "large".
+                assert!(!c.contains(&format!(">{name}<")), "{name}");
+                // Inside longer text, only a name with an underscore or a digit, which
+                // no ordinary word has, so "small" in a sentence is not a case.
+                if name.contains('_') || name.bytes().any(|b| b.is_ascii_digit()) {
+                    assert!(!drawn.contains(name), "{name}");
+                }
+            }
+        }
+    }
+    #[test]
+    fn speed_card_has_one_row_per_program() {
+        let s = SpeedSet::read().unwrap();
+        let mut dirs = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let entry = entry.unwrap();
+            if entry.path().is_dir() {
+                dirs.push(entry.file_name().to_string_lossy().into_owned());
+            }
+        }
+        dirs.sort();
+        assert_eq!(dirs.len(), 24);
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            let drawn: Vec<&str> = c
+                .split(r#"<text class="pn b""#)
+                .skip(1)
+                .map(|r| r.split_once('>').unwrap().1.split('<').next().unwrap())
+                .collect();
+            assert_eq!(drawn, dirs);
         }
     }
     #[test]
@@ -3624,57 +4048,113 @@ mod tests {
             gain,
             runs: 9,
         };
+        let timed = |name: &str, cases: Vec<SpeedCase>| SpeedExample {
+            name: name.to_string(),
+            timed: Some((cases, true)),
+            note: None,
+        };
         let s = SpeedSet {
             machine: "one machine".to_string(),
             load: "load average 1".to_string(),
-            examples: vec![SpeedExample {
-                name: "speed_one".to_string(),
-                timed: Some((
+            examples: vec![
+                timed(
+                    "speed_one",
                     vec![
                         case("quarter", 1.0, 0.25),
                         case("four", 1.0, 4.0),
                         case("same", 1.25, 1.1),
                     ],
-                    true,
-                )),
-                note: None,
-            }],
+                ),
+                SpeedExample {
+                    name: "speed_new".to_string(),
+                    timed: None,
+                    note: Some("speed_new has only a manifest.".to_string()),
+                },
+                timed(
+                    "speed_slow",
+                    vec![case("half_a", 1.0, 0.5), case("quarter_a", 1.0, 0.25)],
+                ),
+                timed(
+                    "speed_two",
+                    vec![case("double", 1.0, 2.0), case("eight", 1.0, 8.0)],
+                ),
+            ],
         };
-        assert_eq!(s.sides(), [1, 1, 1]);
+        assert_eq!(s.sides(), [3, 3, 1]);
+        let near = |a: f64, b: f64| (a - b).abs() < 0.16;
         for dark in [false, true] {
-            let c = speed_card(dark, &s);
-            assert_eq!(c.matches(r#"<rect class="bar "#).count(), 3);
+            let (c, t) = (speed_card(dark, &s), theme(dark));
+            assert_eq!(c.matches(r#"<text class="pn b""#).count(), 4);
+            for name in [
+                "quarter",
+                "four",
+                "same",
+                "half_a",
+                "quarter_a",
+                "double",
+                "eight",
+            ] {
+                assert!(!c.contains(&format!(">{name}<")), "{name}");
+            }
             for want in [
-                ">quarter<",
-                ">four<",
-                ">same<",
-                ">0.25<",
-                ">4.00<",
-                ">1.10<",
+                ">7 cases:<",
+                ">faster beyond its A/A band: 3<",
+                ">slower beyond it: 3<",
+                ">inside it: 1<",
+                ">same output digest in A, A2 and B: 3 of 3<",
+                "medians of 9 runs per case",
+                ">Note 1<",
+                "speed_new has only a manifest.",
             ] {
                 assert!(c.contains(want), "{want}");
             }
-            assert!(c.contains(">faster beyond its A/A band: 1<") && c.contains(">inside it: 1<"));
-            assert!(c.contains(">9 runs per case<") && c.contains(">1.25<"));
-            assert!(!c.contains(">0.28<") && !c.contains("AMD") && !c.contains("note 1"));
-            // On a log scale a quarter and four are equally long, on either side of 1.
-            let bars: Vec<(&str, &str)> = c
-                .split(r#"<rect class="bar "#)
-                .skip(1)
-                .map(|r| {
-                    let width = r.split(" width=\"").nth(1).unwrap();
-                    (
-                        r.split('"').next().unwrap(),
-                        width.split('"').next().unwrap(),
-                    )
-                })
-                .collect();
-            assert_eq!((bars[0].0, bars[1].0), ("gl", "gr"));
-            assert_eq!(bars[0].1, bars[1].1);
-            let colours = [theme(dark).red[1], theme(dark).blue[1], theme(dark).muted];
-            for (bar, colour) in c.split(r#"<rect class="bar "#).skip(1).zip(colours) {
-                assert!(bar.contains(&format!(r#"fill="{colour}"/>"#)));
+            assert!(!c.contains(">0.28<") && !c.contains("AMD") && !c.contains("note 2"));
+            // The row of three cases: one faster, one slower, one inside its band;
+            // lowest, median and highest gain as printed.
+            let row = speed_row(&c, "speed_one");
+            for want in [
+                format!(r#"style="fill:{}">1<"#, t.blue[1]),
+                format!(r#"style="fill:{}">1<"#, t.red[1]),
+                format!(r#"style="fill:{}">1<"#, t.ink),
+                ">3<".to_string(),
+                ">0.25<".to_string(),
+                ">1.10<".to_string(),
+                ">4.00<".to_string(),
+            ] {
+                assert!(row.contains(&want), "{want}");
             }
+            // On a log scale a quarter and four are equally far from 1: the red
+            // part and the blue part of the span are equally long and meet at 1.
+            let one = speed_spans(row);
+            assert_eq!((one[0].0, one[1].0), ("lo", "hi"));
+            assert!(near(one[0].2, one[1].2) && near(one[0].1 + one[0].2, one[1].1));
+            assert!(row.contains(r#"class="sp lo""#) && row.contains(t.red[1]));
+            let (axis, octave) = (one[1].1, one[1].2 / 2.0);
+            let at = |v: f64| axis + v.log2() * octave;
+            assert!(near(speed_median(row), at(1.1)));
+            // Slower in every case: a red span only, from a quarter to a half.
+            let slow = speed_spans(speed_row(&c, "speed_slow"));
+            assert_eq!(slow.len(), 1);
+            assert_eq!(slow[0].0, "lo");
+            assert!(near(slow[0].1, at(0.25)) && near(slow[0].2, octave));
+            assert!(near(speed_median(speed_row(&c, "speed_slow")), at(0.375)));
+            // Faster in every case: a blue span from 2 to 8, its median the mean of the two.
+            let two = speed_row(&c, "speed_two");
+            let span = speed_spans(two);
+            assert_eq!(span.len(), 1);
+            assert_eq!(span[0].0, "hi");
+            assert!(near(span[0].1, at(2.0)) && near(span[0].2, 2.0 * octave));
+            assert!(two.contains(">5.00<") && near(speed_median(two), at(5.0)));
+            for (kind, colour) in [("lo", t.red[1]), ("hi", t.blue[1])] {
+                for r in c.split(&format!(r#"<rect class="sp {kind}""#)).skip(1) {
+                    let tag = r.split('>').next().unwrap();
+                    assert!(tag.contains(&format!(r#"fill="{colour}"/"#)), "{tag}");
+                }
+            }
+            // A program without timing draws no span, only its footnote.
+            let new = speed_row(&c, "speed_new");
+            assert!(new.contains(">not built in v0.6.1: no timing<") && new.contains(">note 1<"));
+            assert!(!new.contains(r#"class="sp "#) && !new.contains("<circle class=\"fd\""));
         }
     }
 }

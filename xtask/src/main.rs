@@ -143,7 +143,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "51e0ffa77c30efbd085c976ce87bda387cda6d581f3e0beb2113430096630418",
+        "014ae3d9b042fcb79b04f69c2355cc998757c538fc20c1c197ee77b4791e199b",
     ),
     (
         "media/presentation/header-light.svg",
@@ -179,11 +179,19 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/speed-light.svg",
-        "39a1341b15592f951f4622b151a728a963f382d36fa1ad49792acac95e3d8232",
+        "33617e210eee2b077052527ab7d11ba786856a86b7bce29469d92df49915582f",
     ),
     (
         "media/presentation/speed-dark.svg",
-        "5f3a4750a424f426ea1fce5cd45c7d849f26e75b57b1605daccf949699fa9a04",
+        "69ae8d91a9881b27b08bcc6bb9a2a64d8f866be43749f07e14017c2b194a87b2",
+    ),
+    (
+        "media/presentation/license-light.svg",
+        "5dc7211d988bc6db1122b25715786f68f71bde30af17c254015112866de7cb06",
+    ),
+    (
+        "media/presentation/license-dark.svg",
+        "b7c516e01a7bae9d99ea68be6587f55da8492039925564cddf96213eda48dbf6",
     ),
     (
         "media/presentation/flow-light.svg",
