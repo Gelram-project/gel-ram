@@ -3,15 +3,16 @@
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), a card of one stored Q8 record drawn from the 48
-recorded comparison runs in docs/evidence-q8-current, an
-animated 3D scene of the citation check, a strip of checked facts, colour-coded
-workflow badges, six real GIF previews and two 3D graphics of the public checks.
-The adjacent
-README-MULTIMEDIA.html is a script-free local document with the full responsive
-panel layout, theme-aware backgrounds, a still-image control and links to the
-public documentation. Open it from the checkout in a browser. GitHub's file
-viewer does not host it as a web page; no Pages deployment or new public service
-is configured.
+recorded comparison runs in docs/evidence-q8-current, colour-coded workflow
+badges and six real GIF previews. Two of its numbers are counted from files when
+the README is built: the published commitments in docs/COMMITMENTS.md and the
+packages in Cargo.lock, which the builder refuses to count when one comes from
+outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+document with the full responsive panel layout, theme-aware backgrounds, a
+still-image control, an animated 3D scene of the citation check, a strip of
+checked facts, two 3D graphics of the public checks and links to the files of
+the checkout. Open it from the checkout in a browser; GitHub's file viewer shows
+it as source, not as a web page.
 
 The animated scene illustrates the flow the six recordings show: an exact
 quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
@@ -37,10 +38,10 @@ until the card is rebuilt.
 
 ## Preservation and source
 
-The presentation belongs to the v0.7.0 source. Earlier README versions are
-no longer kept in the tree; they remain in the git history. The README keeps its
-hand-maintained part below the generated region, including the quick-start
-checkout of the v0.7.0 tag.
+The presentation describes the checkout it is in; tagged releases are listed on
+the repository's Releases page. Earlier README versions are no longer kept in
+the tree; they remain in the git history. The whole README is generated; no part of it is maintained
+by hand.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
@@ -57,8 +58,8 @@ stop GIF decoding. Images have alt text, transcript links and full-size alternat
 On narrow screens the HTML card grid becomes one column. GitHub controls the
 surrounding Markdown page's appearance; only its image assets can carry this design.
 
-The original [static gallery](../media/gifs/STATIC.md) remains available. Opening
-external documentation links needs a network; opening the local presentation does not.
+The original [static gallery](../media/gifs/STATIC.md) remains available. The
+local presentation and its documentation links open without a network.
 
 ## Regeneration and checks
 

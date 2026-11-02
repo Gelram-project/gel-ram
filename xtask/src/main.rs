@@ -143,7 +143,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "e620b83313b5bda0f45cc1bb2881e11b25cfda4212fe59403e28f93cc54a2ac9",
+        "014ae3d9b042fcb79b04f69c2355cc998757c538fc20c1c197ee77b4791e199b",
     ),
     (
         "media/presentation/header-light.svg",
@@ -163,11 +163,35 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/record-light.svg",
-        "e58907c27302a6808e3277ae099b12c353fb85b2586374684920b33c71704ea0",
+        "65d50ddecf4cb4115713e8086975954aed1c69259d677b07d654b750b7e1a92f",
     ),
     (
         "media/presentation/record-dark.svg",
-        "45cefe87675ed8537af6c8a71d1729efdcca76ccb60e46818df19741172e9837",
+        "81ec117030fe27eb2b9c2b0d0fe9a62509beffd1566779732f09962e056cc709",
+    ),
+    (
+        "media/presentation/crash-light.svg",
+        "743f09d458407c6c6da9d9f22b862981337c36fae03ad3cacf710ba0e5a89cbc",
+    ),
+    (
+        "media/presentation/crash-dark.svg",
+        "ec6c66ec2df71ff2f43d305c6cd584a819881119c41f1c01ab1fcb7e57f68c73",
+    ),
+    (
+        "media/presentation/speed-light.svg",
+        "33617e210eee2b077052527ab7d11ba786856a86b7bce29469d92df49915582f",
+    ),
+    (
+        "media/presentation/speed-dark.svg",
+        "69ae8d91a9881b27b08bcc6bb9a2a64d8f866be43749f07e14017c2b194a87b2",
+    ),
+    (
+        "media/presentation/license-light.svg",
+        "5dc7211d988bc6db1122b25715786f68f71bde30af17c254015112866de7cb06",
+    ),
+    (
+        "media/presentation/license-dark.svg",
+        "b7c516e01a7bae9d99ea68be6587f55da8492039925564cddf96213eda48dbf6",
     ),
     (
         "media/presentation/flow-light.svg",

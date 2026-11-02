@@ -126,32 +126,32 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <div class="page">
 <header><div class="brand-row"><div><div class="brand">
 __BRAND_LOGO__
-<div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
-<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">Local CLI</span><span class="chip">Source-linked media</span></div></div></div>
+<div class="brand-name">GEL RAM<small>Public tools</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
+<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">No third-party packages</span><span class="chip">Offline</span></div></div></div>
 <nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
 <div class="view-tools"><label for="still-mode">Show still images</label><a href="__DOC__/media/gifs/MANIFEST.txt">Media provenance</a><span>12-second edited replays, not wall time</span></div>
 <main id="content">
 <section class="hero" aria-labelledby="hero-heading">
 <figure><a class="media-link" href="media/gifs/01-evidence-light.gif" aria-label="Open the exact quotes and restart animation at full size">__HERO__</a><figcaption>Real public CLI output, edited into three readable cards.<br><a href="media/gifs/01-evidence.txt">Full transcript and source revision</a> · <a href="media/gifs/01-evidence-dark.gif">Dark full-size version</a></figcaption></figure>
-<div><p class="eyebrow">Inspect the source. Keep the evidence.</p><h1 id="hero-heading">Find the passage.<br>Check the source.</h1><p class="hero-lead">Load your text, retrieve exact quotations and check that a saved collection reopens with the expected bytes.</p><ul class="checks"><li>Source text, identifiers and byte ranges</li><li>SHA-256 pins retained independently</li><li>Explicit refusal after source replacement</li><li>Public Rust tools, offline on your CPU</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">Source correspondence is not source truth. This is phrase retrieval, not unrestricted question answering.</p></div>
+<div><p class="eyebrow">Check it yourself</p><h1 id="hero-heading">Exact bytes,<br>or a refusal.</h1><p class="hero-lead">GEL RAM prints knowledge into memory as fixed Q8 records and reads them back exactly. The printing step is private; the public tools in this checkout let you check exact read-back, the refusal of changed bytes and crash safety on your own files and on synthetic records.</p><ul class="checks"><li>One record, four views, read back bit for bit</li><li>A changed byte refused under the SHA-256 you kept</li><li>Nothing confirmed lost when the process is killed</li><li>No third-party packages; runs offline on your CPU</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">The text AI is a goal, not a result. A process kill is not a power cut. A matching hash does not show that a source is true.</p></div>
 </section>
 <section class="section flow" aria-label="How a citation is checked">__FLOW__<div class="facts">__FACTS__</div></section>
 <section class="section" id="workflows" aria-labelledby="workflow-heading"><div class="section-heading"><p class="eyebrow">Six workflows. Their original evidence.</p><h2 id="workflow-heading">See it in action</h2><p>These are edited replays of recorded public command output, not product screenshots or new benchmark runs. Open each image at full size to read the terminal text.</p></div><div class="grid">__CARDS__</div>
 <div class="trust"><div><strong>Inspectable</strong><p>Transcripts and retained hashes accompany the previews.</p></div><div><strong>Explicit failures</strong><p>Inspect refusal and incomplete states, not only success.</p></div><div><strong>Local operation</strong><p>The CLI uses your local documents. No automatic upload.</p></div><div><strong>Reproducible scope</strong><p>Commands, sources and limitations remain linked.</p></div></div></section>
 <section class="section" id="checks" aria-labelledby="checks-heading"><div class="section-heading"><p class="eyebrow">Drawn from this checkout</p><h2 id="checks-heading">What the public checks cover</h2><p>The property map, the CI exclusion list and the committed mutation report are read when the images are built; the read-only presentation check fails if they drift.</p></div>__WALL__<div class="facts">__BARS__</div></section>
-<div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; the demo uses locked offline dependencies.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
+<div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; after that every command runs offline.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout __RELEASE__
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
-cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo</code></pre><p>Expected marker: <code>GEL_EVIDENCE_DEMO=PASS</code>. This is a result to check, not a pre-approved outcome.</p></section>
+cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo</code></pre><p>Expected markers: <code>GEL_LIVE_LAB_LITERAL=PASS</code> and <code>GEL_EVIDENCE_DEMO=PASS</code>. These are results to check, not pre-approved outcomes.</p></section>
 <section id="reproduce"><p class="eyebrow">Check the declared scope</p><h2>Reproduce the checks.</h2><pre><code>cargo run --locked --offline -p xtask -- verify
 cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new</code></pre><p>Use a new output directory outside the checkout. Read failed, skipped and unmeasured steps. Cargo offline mode is not system-wide network isolation.</p><ul class="doclinks"><li><a href="__DOC__/docs/REPRODUCE.md">Reproduction instructions</a></li><li><a href="__DOC__/docs/CI-EVIDENCE.md">Per-revision CI evidence</a></li><li><a href="__DOC__/docs/CLAIMS.md">Executable claim registry</a></li></ul></section>
-<section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">Technical README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/EVIDENCE-BATCH.md">Batch mode and exit codes</a></li><li><a href="__DOC__/docs/BACKUP.md">Backup and restore</a></li><li><a href="__DOC__/docs/MUTATION-MATRIX.md">Format mutation matrix</a></li><li><a href="__DOC__/docs/BENCHMARK-GREP.md">Comparison with grep</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the pinned source on GitHub. Viewing this local page loads only adjacent assets, with no scripts, trackers or remote fonts.</p></section></div>
-<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It belongs to the <code>__RELEASE__</code> source. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
+<section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/LIVE-LAB.md">Your bytes in one record</a></li><li><a href="__DOC__/docs/Q8-QUAD.md">Q8 record contract</a></li><li><a href="__DOC__/docs/CLAIMS.md">Claim registry</a></li><li><a href="__DOC__/docs/COMMITMENTS.md">Published commitments</a></li><li><a href="__DOC__/docs/LICENSE-DECISION.md">License decision guide</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the files of this checkout. Viewing this local page loads only adjacent files, with no scripts, trackers or remote fonts.</p></section></div>
+<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It describes this checkout; tagged releases are listed on the repository's Releases page. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL RAM-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
 </main>
-<footer><p><strong>GEL RAM · Evidence Lab</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
+<footer><p><strong>GEL RAM</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
 </div></body></html>
 "####;
 const NATIVE: &str = r####"# GEL RAM
@@ -171,66 +171,17 @@ conversation in Polish and English: it answers in sentences of its own, not
 pasted excerpts, from what it holds, shows the source it relied on, and says it
 does not know when it holds nothing on the question.
 
-The step that prints text into records is private, so the Q8 records in this
-checkout hold synthetic values or literal bytes, and its tools do not
-answer natural-language questions; its document tools return exact quotations,
-not sentences of their own.
-This repository does not establish hardware-level memory computation
-([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
-not a result ([the goal and its four commitments](docs/GOAL.md)).
+| Status | What it covers |
+|:---|:---|
+| **You can check it here** | One record read back exactly through four views; a changed byte refused; a killed process losing nothing it confirmed. One command each, [below](#check-it-yourself). |
+| **Private** | The step that prints text into records, and the private build that answers from them; both exist only on the author's machine. [__COMMITMENTS__ published commitments](docs/COMMITMENTS.md) fix the exact contents of private source trees, data sets and a sealed sample as of their dates; which holds what is not published. |
+| **Not established** | The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md)). |
 
-## One record, four exact views
+## Check it yourself
 
-__RECORD__
-
-A record is stored once: 1,024 one-byte values and a 128-byte activity mask,
-1,152 bytes. The reader exposes four equivalent views of it and, for each view,
-returns the score a separate read of a materialized copy gives, bit for bit on
-the same build and platform. Four packed copies would take 4,608 bytes. Four
-views are not four independent memories, four votes or a 4× speedup, and 1,152
-bytes is the record, not process memory. On the author's private ranking check,
-a different task, Single still outperforms Quad in this run: top-1 379 against
-371 of 400. [How each part is checked](#the-memory-core)
-
-## Exact bytes, or a refusal
-
-__HERO__
-
-The public collection tool builds a collection from your own files; it does not
-print Q8 records, but it follows the same rule. Each quotation comes back byte
-for byte with its byte range; replace a document and its earlier citation is
-refused; change one byte of a saved snapshot and loading it with the pin you
-kept fails. A matching pin proves these are the bytes you kept, not that the
-source is true; a hash is not a signature.
-Replays of real public-tool runs: [this one, as text](media/gifs/__HERO_ID__.txt) · [old citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [all six](#see-it-in-action)
-
-## A killed process loses nothing it confirmed
-
-In the recorded crash series the public collection tool was killed at random
-moments in 200 trials while its collection grew: 0 of 2,683 acknowledged
-snapshots were lost, none was partial, and every trial resumed to the
-uninterrupted result ([crash series](docs/CRASH-SERIES.md)). Injected write
-failures, permission denial and a full disk leave the previous snapshot intact
-([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). A separate private series
-checked 235,712 confirmed records after kills; none was lost. A process kill is
-not a power cut: power-loss durability is not established.
-
-## UNKNOWN when the bank does not hold the answer
-
-Of 599 frozen questions written to have no answer in the bank (399 about real
-topics outside it, checked by title, and 200 about invented subjects; the set
-page lists two that the bank does answer), a private development build said
-UNKNOWN to 573 and answered 25; its one other answer is a passage that holds the
-answer. Silence costs answers too: it said UNKNOWN to 557 of the 982
-questions that have one. The build and its bank are private;
-`xtask answer-bench check` re-scores every recorded answer.
-[Question set v7 and its limits](docs/answer-or-abstain-v7/README.md)
-
-## Run it now
-
-Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs). Cloning, the
-toolchain and the fetch need a network; after that Cargo runs offline. No model
-and no private data are involved. Run each line separately:
+With [Git](https://git-scm.com/) and [rustup](https://rustup.rs) installed, run each line separately.
+Only `git clone` and `rustup` need a network; no model and no private data are involved.
+No independent run on a second machine has been reported yet: [post yours in issue #20](https://github.com/Gelram-project/gel-ram/issues/20).
 
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
@@ -241,159 +192,150 @@ cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
 cargo run --locked --offline -p xtask -- mutation-matrix
 cargo run --locked --offline -p xtask -- crash-series 20
-cargo run --locked --offline --release -p gel-physics -- 5
+cargo run --locked --offline -p xtask -- verify
 ```
 
-| Run | Line to check | What it shows | Its limit |
+| Command | Line to look for | What it shows | Its limit |
 |:---|:---|:---|:---|
-| Your bytes, one record | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED`, `GEL_LIVE_LAB_LITERAL=PASS` | The first 1,024 bytes of a regular file you name in place of README.md (1 byte to 64 MiB), in one record; its four views restored bit for bit; a changed byte rejected under the pin ([how](docs/LIVE-LAB.md#your-own-bytes-in-one-record)) | Literal bytes, not GEL knowledge printing; no meaning and no search |
-| One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
-| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three file formats in the matrix is refused under the original pin | A finite matrix, not every possible corruption |
-| Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
-| F0 memory physics | `GEL_PHYSICS_F0_V3`, then ns per step and GiB/s from 48 KiB to 256 MiB and random 32/64/128-byte fetches in a 64 MiB working set | What your own memory costs, measured instead of assumed | Nanoseconds and GiB/s only, no cycles; compare rows only within one machine and one output tag |
+| `--literal` | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED` | The first 1,024 bytes of any file you name, placed in one record; all four views give them back bit for bit, and a copy with one changed byte is refused | Your bytes as they are, not knowledge printing: no meaning and no search |
+| `quad_compare` | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records; each view's score equals the score of a separate reference copy, bit for bit | Meaning is not measured; one plain copy can still be read faster than the shared record |
+| `mutation-matrix` | `MUTATION_MATRIX=PASS mutants=179` | Each changed copy in the matrix, over the three public file formats, is refused under the original SHA-256 | A finite set of changes, not every possible one |
+| `crash-series 20` | `CRASH_SERIES=PASS` with `acknowledged_lost=0` | Evidence Lab is killed 20 times at random while it writes; nothing it confirmed is lost | Recorded on Linux; `verify` runs it on Unix hosts only; a process kill, not a power cut |
+| `verify` | `GEL_VERIFY_ALL=PASS` | The workspace tests and public gates, with short forms of the runs above | Crash series on Unix hosts only; the private build is not in this checkout |
 
-`cargo run --locked --offline -p xtask -- verify` runs the full public check,
-including a smaller `quad_compare` run and, on Unix hosts, a five-trial crash
-series; it ends with `GEL_VERIFY_ALL=PASS`.
+## One record, four exact views
 
-[The memory core](#the-memory-core) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [External checks](docs/EXTERNAL-CHECKS.md) · [Quick start](#quick-start) · [Documentation](#documentation) · [License](#about-and-licensing)
+__RECORD__
 
-## The memory core
+A record is stored once, in 1,152 bytes. A view reads the same values in another
+fixed arrangement; each of the four views scores exactly as a separate, fully
+written-out copy would, bit for bit, and four such copies would take 4,608 bytes.
+Four views are not four independent memories, four votes or a speedup.
+[Contract](docs/Q8-QUAD.md) · [the recorded runs](docs/evidence-q8-current/README.md)
 
-The public core holds fixed records, reads them exactly and measures the memory
-they live in. Each row names a test (`cargo test --locked --offline -p CRATE`)
-or a command.
-
-| Part | What it does | Check it |
-|:---|:---|:---|
-| ORB128 record (`gel-orb`) | One fixed 1,024-bit record of 128 bytes, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
-| Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single header bit flip, payload byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
-| Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
-| Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
-| Record history (`gel-history`) | Every state appended to the history of one 128-byte record is stored as a literal copy or as the XOR residual from the state before it, never more than two residuals from a literal, and is rebuilt bit for bit, also from the reopened file; the decoder accepts only the bytes the encoder writes | `long_history_is_exact_and_residual_depth_never_exceeds_two` · `a_depth_byte_that_lies_is_refused` · [contract](docs/RECORD-HISTORY.md) |
-| Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
-| Your bytes in one Q8 record (`gel-live-lab --literal`, over `gel-phase-quad`) | The first 1,024 bytes of one file as the values of one record, active where a byte was placed; each of the four views is restored to it with 0 different bits; its 1,164-byte file is rejected under the pin after any 1-byte change. Literal bytes, not GEL knowledge printing | `every_byte_value_restores_through_every_view` · `a_changed_byte_anywhere_is_rejected` · [live lab](docs/LIVE-LAB.md#your-own-bytes-in-one-record) |
-| F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
-
-Tests hold five equalities:
-
-```text
-reference result      == optimized result      (gel-kernel: kernel_matches_reference)
-full Top-K            == progressive Top-K     (gel-reader)
-original record bytes == rebuilt record bytes  (gel-structural)
-written store         == reopened store        (gel-store: persistence_roundtrip_and_payload_corruption_rejection)
-appended state        == rebuilt state         (gel-history: long_history_is_exact_and_residual_depth_never_exceeds_two)
-```
-
-`cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,
-the store, Reader16 and the structural rebuild in one run and prints
-`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not print text into
-records as GEL does: `--literal` only places bytes, and the printing step and its
-bank are private.
-
-## See it in action
-
-**Actual public-tool runs, presented as six edited log replays.**
-Each animation lasts 12 seconds; pacing is editorial, not execution time.
-[Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
+## Exact bytes, or a refusal
 
 __FLOW__
 
-### Six workflows, one evidence trail
+Evidence Lab (`gel-evidence`), the public collection tool, works on your own
+UTF-8 files: each quotation comes back byte for byte with its byte range, a
+replaced document's old citation is refused, and a saved snapshot with one
+changed byte fails to load under the SHA-256 you kept. A matching hash shows
+these are your bytes, not that the source is true or private: snapshots and
+backups hold plain text ([backup contract](docs/BACKUP.md)). It is phrase lookup,
+not question answering. Its demo,
+`cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`,
+ends with `GEL_EVIDENCE_DEMO=PASS`. [Evidence Lab guide](docs/EVIDENCE-LAB.md) · [a changed byte refused, as text](media/gifs/__HERO_ID__.txt)
 
-Open a preview at full size to read the terminal text. All six existing scenarios
-are visible here rather than hidden in collapsed sections. Their original
-transcripts and source revisions remain unchanged.
+## A killed process loses nothing it confirmed
 
-__GRID__
+__CRASH__
 
-The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
-its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
-[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
-New presentation is not a new execution, benchmark or human acceptance.
+In the recorded series Evidence Lab was killed at random moments in 200 trials:
+0 of 2,683 acknowledged snapshots were lost, none was partial, and every trial
+resumed to the uninterrupted result ([crash series](docs/CRASH-SERIES.md)).
+Write failures, denied permissions and a full disk leave the previous snapshot
+intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)).
 
-**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
-Open that file from this checkout in a browser for the responsive blue-panel layout,
-light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this repository does not enable Pages.
-[Presentation guide](docs/README-PRESENTATION.md).
-
-## What the public checks cover
-
-__FACTS__
-
-__WALL__
-
-Each cell is one documented property on one CI platform. On every platform the
-[CI evidence collector](docs/CI-EVIDENCE.md) withholds COMPLETE unless each test
-named in the [property map](docs/PROPERTY-TESTS.md) ran and passed exactly once;
-declared Unix-only tests are exempt on Windows. The image shows this rule, not
-the outcome of one run: read that in the run's CI report.
+## The public checks, drawn from their files
 
 __BARS__
 
-Every mutant of the [format mutation matrix](docs/MUTATION-MATRIX.md) is read
-twice: with the original pin, which must refuse any changed byte, and with a
-recomputed pin, which lets the structural rules decide. The bars count the
-committed report; `xtask verify` regenerates it and fails on any difference.
-Both images are drawn from these files when the presentation is built, and the
-read-only presentation check fails if they drift.
+__WALL__
 
-## What you can check without the private code
+Both images are drawn from the committed mutation report and the property map when the README is built; the presentation check fails if either file changes without a rebuild. The map shows the rule CI enforces, not the outcome of one run ([CI evidence](docs/CI-EVIDENCE.md)).
 
-GEL's own answers come from a private implementation and its bank, so they
-cannot be re-run from this checkout. Everything around them can:
+## New in 0.7, and on main
 
-| What | How | You need |
+__SPEED__
+
+- **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
+- **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
+- **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([release notes](RELEASE-NOTES-v0.7.0.md)).
+- **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
+
+## Using GEL RAM
+
+__LICENSE__
+
+GEL RAM uses the GEL RAM Noncommercial Reciprocal License 1.0: source-available,
+not an OSI-approved open-source license. You may reproduce, run, study, modify
+and share it for Noncommercial Purposes, keeping the LICENSE, all copyright
+notices and every `Required Notice:` line with each copy; private noncommercial
+changes may stay private. Anyone, including a company, may evaluate it in a
+non-production environment solely to assess, learn about, validate, or decide
+whether to obtain commercial rights, with no fixed time limit. Monetized Use is
+use that "directly or indirectly receives, earns, enables, supports, protects, or
+is intended to produce money or other material financial benefit for You or
+another person", including donations, tips, crowdfunding or sponsorships received
+because of a GEL RAM-based activity; it needs a written Commercial Agreement
+signed by the Licensor and by you before it begins: `gelram.licensing@gmail.com`.
+`gel-license use ANSWERS_FILE` shows which LICENSE sentences apply to your
+answers about one use; it is not legal advice. Code contributions for merge need
+a [CLA 2.0](CLA.md) accepted by both sides.
+This README adds no rights; the [LICENSE](LICENSE) controls
+([licensing guide](LICENSING.md) · [license decision guide](docs/LICENSE-DECISION.md) · [commercial terms](COMMERCIAL-LICENSE.md) · [license pins](docs/LICENSE-PINS.md)).
+
+## Private work, fixed in time
+
+A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of every file in a private directory; the files can be handed over later and checked with `xtask commitment-check`.
+It shows the files existed and did not change, not that they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.
+
+## See it in action
+
+Six edited 12-second replays of recorded public-tool runs; the pacing is not execution time.
+[Static view](media/gifs/STATIC.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
+
+__GRID__
+## The memory core
+
+| Part | What it does | Check it |
 |:---|:---|:---|
-| The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
-| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on a Unix host |
-| The scoring of every recorded answer | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
-| That a private result was not changed after publication | where a result lists an evidence identity, it is the SHA-256 of its private artifacts; the ranking, resident-read and integrity-gate rows have none ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
+| Bit record (`gel-orb`) | One fixed 128-byte record of 1,024 bits, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
+| Store (`gel-store`) | `.gel` v2 files carry a CRC64 over the header and over the payload; in the tests every single header bit flip, every payload byte flip and every truncation is rejected, and so is an older or equal save counter | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
+| Reader (`gel-reader`) | One comparison of two records returns 16 judgments at once, not 16 independent measurements; a search that stops early returns exactly the same top-K matches as a full scan | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
+| Rebuild (`gel-structural`) | With its stored parent record, the XOR of the differing bits gives back the exact record; a missing parent or an invalid depth is refused, a wrong parent is not detected | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
+| History (`gel-history`) | Each state of one record is stored as a copy or as the XOR difference from the state before, at most two differences from a copy, and is rebuilt bit for bit | `long_history_is_exact_and_residual_depth_never_exceeds_two` · [contract](docs/RECORD-HISTORY.md) |
+| Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views, each score equal to the reference bit for bit | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) |
+| Memory cost (`gel-physics`) | Pointer-chase latency and read bandwidth of your own RAM from 48 KiB to 256 MiB; nanoseconds and GiB/s only, compared within one machine | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
 
-An independent run of the public tools on a second machine is still missing
-([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
+`cargo test --locked --offline -p CRATE` runs the tests named here; `cargo run --locked --offline --release -p gel-cli -- selftest` checks the first four parts in one run (`GEL_SELFTEST_V2=PASS`).
 
-## External checks
+## Documentation
 
-Frozen question sets v1 to v7 check private development builds from the
-outside; each set page names the build it measured. Every question, expected
-answer and recorded answer is published, and `xtask answer-bench check`
-re-scores them on every verify run. GEL's main numbers on each set, the
-reference search engines and what has nothing to compare with are on one page:
-[external checks](docs/EXTERNAL-CHECKS.md).
+| Start and use | Inspect and reproduce | Project |
+|:---|:---|:---|
+| [Project map](docs/START-HERE.md) | [Claim registry](docs/CLAIMS.md) | [Roadmap](docs/ROADMAP.md) |
+| [Evidence Lab](docs/EVIDENCE-LAB.md) · [batch mode](docs/EVIDENCE-BATCH.md) | [Reproduction guide](docs/REPRODUCE.md) | [Release notes v0.7.0](RELEASE-NOTES-v0.7.0.md) |
+| [Backup and restore](docs/BACKUP.md) | [Per-platform CI evidence](docs/CI-EVIDENCE.md) | [Publication status](CANDIDATE-STATUS.md) |
+| [Your bytes in one record](docs/LIVE-LAB.md) | [Mutation matrix](docs/MUTATION-MATRIX.md) · [crash series](docs/CRASH-SERIES.md) | [Measured progress](docs/MEASURED-PROGRESS.md) |
+| [License decision guide](docs/LICENSE-DECISION.md) | [External checks](docs/EXTERNAL-CHECKS.md) | [All media and their scope](media/INDEX.md) |
 
-## Private measurements
+The [full-page edition](README-MULTIMEDIA.html) opens from your checkout in a browser; GitHub shows HTML files as source ([presentation guide](docs/README-PRESENTATION.md)).
 
-Author-run diagnostics of the separate private implementation (ranking within a
-known slot, resident read times, the answer verdict and the kill series of its
-store) cannot be re-run from this checkout. They are listed with their scope in
-[measured progress](docs/MEASURED-PROGRESS.md), with the SHA-256 of their
-private artifacts where one is given (the ranking, resident-read and
-integrity-gate rows have none), and the [claim registry](docs/CLAIMS.md) lists
-them as `MEASURED_LOCAL`.
+## About
 
-## The public collection tool
+__LOGO__
 
-Build a collection from your own UTF-8 files, quote it exactly and reopen it
-with the pin you kept. It is phrase lookup, not question answering; start with
-the [quick start](#quick-start).
-
+GEL RAM is an independent hobby and research project by **RR — GEL RAM Project**, developed with AI assistance; this repository is not the complete private research system.
+Third-party material keeps its own terms: the Rust Book fixture (MIT), the Unicode data files and the tables derived from them (Unicode License v3) and the quoted Wikipedia passages (CC BY-SA 4.0) ([third-party notices](THIRD-PARTY-NOTICES.md)).
+[Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [CLA privacy](CLA-PRIVACY.md) · [Media rights](media/RIGHTS.md)
 "####;
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), a card of one stored Q8 record drawn from the 48
-recorded comparison runs in docs/evidence-q8-current, an
-animated 3D scene of the citation check, a strip of checked facts, colour-coded
-workflow badges, six real GIF previews and two 3D graphics of the public checks.
-The adjacent
-README-MULTIMEDIA.html is a script-free local document with the full responsive
-panel layout, theme-aware backgrounds, a still-image control and links to the
-public documentation. Open it from the checkout in a browser. GitHub's file
-viewer does not host it as a web page; no Pages deployment or new public service
-is configured.
+recorded comparison runs in docs/evidence-q8-current, colour-coded workflow
+badges and six real GIF previews. Two of its numbers are counted from files when
+the README is built: the published commitments in docs/COMMITMENTS.md and the
+packages in Cargo.lock, which the builder refuses to count when one comes from
+outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+document with the full responsive panel layout, theme-aware backgrounds, a
+still-image control, an animated 3D scene of the citation check, a strip of
+checked facts, two 3D graphics of the public checks and links to the files of
+the checkout. Open it from the checkout in a browser; GitHub's file viewer shows
+it as source, not as a web page.
 
 The animated scene illustrates the flow the six recordings show: an exact
 quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
@@ -419,10 +361,10 @@ until the card is rebuilt.
 
 ## Preservation and source
 
-The presentation belongs to the __RELEASE__ source. Earlier README versions are
-no longer kept in the tree; they remain in the git history. The README keeps its
-hand-maintained part below the generated region, including the quick-start
-checkout of the __RELEASE__ tag.
+The presentation describes the checkout it is in; tagged releases are listed on
+the repository's Releases page. Earlier README versions are no longer kept in
+the tree; they remain in the git history. The whole README is generated; no part of it is maintained
+by hand.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
@@ -439,8 +381,8 @@ stop GIF decoding. Images have alt text, transcript links and full-size alternat
 On narrow screens the HTML card grid becomes one column. GitHub controls the
 surrounding Markdown page's appearance; only its image assets can carry this design.
 
-The original [static gallery](../media/gifs/STATIC.md) remains available. Opening
-external documentation links needs a network; opening the local presentation does not.
+The original [static gallery](../media/gifs/STATIC.md) remains available. The
+local presentation and its documentation links open without a network.
 
 ## Regeneration and checks
 
@@ -1294,6 +1236,18 @@ fn logo_picture() -> String {
         img("logo-still")
     )
 }
+/// The logo for the README: animated, or still when reduced motion is requested,
+/// in the same way as the banner.
+fn readme_logo() -> String {
+    let path = |name: &str, theme: &str| format!("media/presentation/{name}-{theme}.svg");
+    format!(
+        r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="{}"><source media="(prefers-reduced-motion: reduce)" srcset="{}"><source media="(prefers-color-scheme: dark)" srcset="{}"><img alt="GEL RAM logo: a glass cube of record cells around an accent core." src="{}" width="120"></picture>"#,
+        path("logo-still", "dark"),
+        path("logo-still", "light"),
+        path("logo", "dark"),
+        path("logo", "light")
+    )
+}
 fn bars_picture() -> String {
     themed(
         "media/presentation/bars-light.svg",
@@ -1411,21 +1365,39 @@ fn grouped(n: usize) -> String {
 fn record_text(r: &Q8Runs) -> String {
     format!("One stored Q8 record: {} one-byte values and a {RECORD_MASK}-byte activity mask, {} bytes, read through four equivalent views without four copies. Four packed copies would take {} bytes; the reference layout used for checking takes {} bytes. {} of {} recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories.", grouped(RECORD_VALUES), grouped(r.record), grouped(r.packed), grouped(r.frames), r.ok, r.n)
 }
-/// One stored record drawn to scale as values and mask, the four views it is read
-/// through, the sizes it is compared with, and the verdict of every recorded run.
+/// Length of one loop of the record card's animation, in seconds.
+const RECORD_LOOP: u32 = 12;
+/// One looping CSS animation of the record card. Every element is timed by its
+/// keyframe percentages alone, never by a delay, so all share one clock.
+fn record_motion(name: &str, timing: &str, frames: &str) -> String {
+    format!(".{name}{{animation:{name} {RECORD_LOOP}s {timing} infinite}}@keyframes {name}{{{frames}}}\n")
+}
+/// One stored record drawn to scale as values and mask; four views read that same
+/// bar in turn and each lands on the score of a separate written-out copy; the
+/// sizes it is compared with grow to scale; the verdict of every recorded run
+/// follows. One loop of RECORD_LOOP seconds; with reduced motion, or without CSS
+/// animation, the complete final picture stands still.
 fn record_card(dark: bool, r: &Q8Runs) -> String {
     let t = theme(dark);
+    let record = grouped(r.record);
+    let mut css = RESULT_STYLE.replace("MUTED", t.muted);
+    css.push_str(".a{transform-box:fill-box;transform-origin:center}.grow{transform-origin:left center}.scan,.arrow{opacity:0}\n");
+    // 1. The stored record appears: one bar, values then mask, to scale.
+    css += &record_motion(
+        "r0",
+        "ease-out",
+        "0%{opacity:0}5%,97%{opacity:1}100%{opacity:0}",
+    );
+    css += &record_motion("g0", "ease-out", "0%{opacity:0;transform:scaleX(0)}1%{opacity:1}7%,97%{opacity:1;transform:none}100%{opacity:0;transform:none}");
     let mut b = format!(
-        r#"<text class="kick" x="40" y="48">ONE STORED Q8 RECORD</text><text x="40" y="118" font-size="52" class="b" style="fill:{}">{} B</text><text x="40" y="150" font-size="16" class="mut">{} one-byte values + {RECORD_MASK}-byte activity mask</text>"#,
+        r#"<text class="kick" x="40" y="48">ONE STORED Q8 RECORD</text><g class="a r0"><text x="40" y="112" font-size="52" class="b" style="fill:{}">{record} B</text><text x="40" y="144" font-size="16" class="mut">{} one-byte values + {RECORD_MASK}-byte activity mask</text></g>"#,
         t.accent,
-        grouped(r.record),
         grouped(RECORD_VALUES)
     );
-    // The record as one bar: values, then the mask, to scale.
-    let (x0, y0, w, h) = (40.0, 178.0, 400.0, 56.0);
+    let (x0, y0, w, h) = (40.0, 196.0, 700.0, 52.0);
     let split = w * RECORD_VALUES as f64 / r.record as f64;
     b.push_str(&format!(
-        r#"<defs><clipPath id="rec"><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8"/></clipPath></defs><g clip-path="url(#rec)"><rect x="{x0}" y="{y0}" width="{split:.1}" height="{h}" fill="{}"/><rect x="{:.1}" y="{y0}" width="{:.1}" height="{h}" fill="{}"/>"#,
+        r#"<defs><clipPath id="rec"><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8"/></clipPath></defs><g class="a grow g0"><g clip-path="url(#rec)"><rect x="{x0}" y="{y0}" width="{split:.1}" height="{h}" fill="{}"/><rect x="{:.1}" y="{y0}" width="{:.1}" height="{h}" fill="{}"/>"#,
         t.blue[0],
         x0 + split,
         w - split,
@@ -1439,43 +1411,202 @@ fn record_card(dark: bool, r: &Q8Runs) -> String {
         ));
     }
     b.push_str(&format!(
-        r#"</g><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8" fill="none" stroke="{}" stroke-width="2"/><text class="mono" x="{x0}" y="254" font-size="12">{} B values</text><text class="mono" x="{}" y="254" font-size="12" text-anchor="end">{RECORD_MASK} B mask</text>"#,
+        r#"</g><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8" fill="none" stroke="{}" stroke-width="2"/></g><g class="a r0"><text class="mono" x="{x0}" y="268" font-size="12">{} B values</text><text class="mono" x="{}" y="268" font-size="12" text-anchor="middle">stored once; every view reads it in place</text><text class="mono" x="{}" y="268" font-size="12" text-anchor="end">{RECORD_MASK} B mask</text></g><text x="{x0}" y="294" font-size="13" class="mut">Each view reads the same bytes in another fixed arrangement.</text>"#,
         t.ink,
         grouped(RECORD_VALUES),
+        x0 + w / 2.0,
         x0 + w
     ));
-    // Four views of the same stored bytes, each joined to the record.
-    for i in 0..4 {
-        let y = 64.0 + 50.0 * f64::from(i);
-        let cy = y + 19.0;
-        b.push_str(&format!(
-            r#"<path d="M{} {}C510 {} 500 {cy} 560 {cy}" stroke="{c}" stroke-width="2" fill="none"/><rect x="560" y="{y}" width="180" height="38" rx="10" fill="{}" stroke="{c}" stroke-width="2"/><text x="650" y="{}" font-size="16" class="b" text-anchor="middle">view {}</text>"#,
+    // 2. and 3. Four views read the same bar in turn; each lands on the score
+    // of a separate written-out copy. Every sweep is drawn alike: the picture
+    // does not say how a view arranges the bytes.
+    let (head, mut scans, mut arrows) = (44.0, String::new(), String::new());
+    b.push_str(r#"<text class="kick" x="790" y="48">EACH VIEW, BIT FOR BIT</text><text class="mono" x="790" y="74" font-size="12">score vs a separate written-out copy</text>"#);
+    for i in 0..4u32 {
+        let (s, e) = (9 + 11 * i, 17 + 11 * i);
+        css += &record_motion(&format!("s{i}"), "linear", &format!("0%,{}%{{opacity:0;transform:translateX(0px)}}{s}%{{opacity:1;transform:translateX(0px)}}{e}%{{opacity:1;transform:translateX({}px)}}{}%,100%{{opacity:0;transform:translateX({}px)}}", s - 1, w - head, e + 1, w - head));
+        css += &record_motion(
+            &format!("w{i}"),
+            "ease-in-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{}%,{}%{{opacity:1}}{}%,100%{{opacity:0}}",
+                s - 2,
+                s - 1,
+                e + 1,
+                e + 3
+            ),
+        );
+        css += &record_motion(
+            &format!("v{i}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:.35}}{s}%,{e}%{{opacity:.7}}{}%,97%{{opacity:1}}100%{{opacity:.35}}",
+                s - 1,
+                e + 1
+            ),
+        );
+        css += &record_motion(&format!("c{i}"), "ease-out", &format!("0%,{e}%{{opacity:0;transform:scale(.6)}}{}%{{opacity:1;transform:scale(1.15)}}{}%,97%{{opacity:1;transform:none}}100%{{opacity:0;transform:none}}", e + 2, e + 4));
+        css += &record_motion(
+            &format!("l{i}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{e}%,{}%{{opacity:1}}{}%,100%{{opacity:0}}",
+                e - 1,
+                e + 2,
+                e + 4
+            ),
+        );
+        // A reading window slides over the bar; its leading edge is marked.
+        scans.push_str(&format!(
+            r#"<g class="a scan s{i}"><rect x="{x0}" y="{}" width="{head}" height="{}" rx="5" fill="{}" fill-opacity=".55" stroke="{c}" stroke-width="2"/><rect x="{}" y="{}" width="4" height="{}" fill="{c}"/></g>"#,
+            y0 - 6.0,
+            h + 12.0,
+            t.paper[0],
+            x0 + head - 4.0,
+            y0 - 6.0,
+            h + 12.0,
+            c = t.blue[2]
+        ));
+        let (tip, tail) = (x0 + w, x0);
+        arrows.push_str(&format!(
+            r#"<g class="a arrow w{i}"><text x="{tail}" y="176" font-size="13" class="b" style="fill:{a}">view {} reads the same {record} B</text><path d="M{tail} 186H{}" stroke="{a}" stroke-width="2"/><polygon points="{tip},186 {},181 {},191" fill="{a}"/></g>"#,
+            i + 1,
+            tip - 10.0,
+            tip - 10.0,
+            tip - 10.0,
+            a = t.accent
+        ));
+        let y = 96.0 + 46.0 * f64::from(i);
+        // The view's score goes to its row.
+        arrows.push_str(&format!(
+            r#"<path class="a arrow l{i}" d="M{} {} C766 {} 764 {} 790 {}" stroke="{}" stroke-width="2" fill="none"/>"#,
             x0 + w,
             y0 + h / 2.0,
             y0 + h / 2.0,
-            t.bg[0],
+            y + 19.0,
+            y + 19.0,
+            t.accent
+        ));
+        b.push_str(&format!(
+            r#"<g class="a v{i}"><rect x="790" y="{y}" width="370" height="38" rx="10" fill="{bg}" stroke="{a}" stroke-width="2"/><text x="806" y="{}" font-size="16" class="b">view {}</text></g><g class="a c{i}"><rect x="880" y="{}" width="78" height="24" rx="6" fill="{bg}" stroke="{a}"/><text x="919" y="{}" font-size="13" text-anchor="middle">score</text><text x="975" y="{}" font-size="20" class="b" text-anchor="middle">=</text><rect x="992" y="{}" width="118" height="24" rx="6" fill="{bg}" stroke="{}" stroke-dasharray="4 3"/><text x="1051" y="{}" font-size="13" text-anchor="middle">copy's score</text><circle cx="1137" cy="{}" r="11" fill="{}"/><path d="M1131 {}l4 4 8-8" stroke="{bg}" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>"#,
             y + 25.0,
             i + 1,
-            c = t.accent
+            y + 7.0,
+            y + 24.0,
+            y + 26.0,
+            y + 7.0,
+            t.muted,
+            y + 24.0,
+            y + 19.0,
+            t.good,
+            y + 19.0,
+            bg = t.bg[0],
+            a = t.accent
         ));
     }
+    // Before and after the sweeps, and in the still picture, one line says the same.
+    css += &record_motion(
+        "id",
+        "ease-out",
+        "0%,53%{opacity:0}56%,97%{opacity:1}100%{opacity:0}",
+    );
     b.push_str(&format!(
-        r#"<text class="kick" x="780" y="96">FOR COMPARISON</text><text x="780" y="132" font-size="17" class="b">four packed copies: {} B</text><text x="780" y="154" font-size="13" class="mut">not stored; the record is kept once</text><text x="780" y="196" font-size="16" class="b">reference layout used for checking: {} B</text><text x="780" y="218" font-size="13" class="mut">four materialized views, built to check each score</text>"#,
-        grouped(r.packed),
-        grouped(r.frames)
+        r#"{scans}{arrows}<text class="a b id" x="{x0}" y="180" font-size="13" style="fill:{}">all four views read this one bar, without four copies</text>"#,
+        t.accent
     ));
+    // 4. The sizes it is compared with, to one scale: record, packed copies, layout.
+    let longest = r.record.max(r.packed).max(r.frames) as f64;
+    let (bx, reach) = (350.0, 700.0);
+    b.push_str(r#"<text class="kick" x="40" y="334">SIZE, TO SCALE</text>"#);
+    let rows = [
+        (
+            "one stored record",
+            "what all four views read",
+            r.record,
+            1,
+            true,
+        ),
+        (
+            "four packed copies",
+            "not stored; the record is kept once",
+            r.packed,
+            4,
+            true,
+        ),
+        (
+            "reference layout used for checking",
+            "four materialized views",
+            r.frames,
+            4,
+            false,
+        ),
+    ];
+    for (k, (label, note, bytes, parts, values)) in rows.into_iter().enumerate() {
+        let y = 346.0 + 44.0 * k as f64;
+        let width = reach * bytes as f64 / longest;
+        let part = width / f64::from(parts);
+        let a = 54 + 5 * k;
+        css += &record_motion(&format!("z{k}"), "ease-out", &format!("0%,{a}%{{opacity:1;transform:scaleX(0)}}{}%,97%{{opacity:1;transform:none}}100%{{opacity:0;transform:none}}", a + 8));
+        css += &record_motion(
+            &format!("n{k}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{}%,97%{{opacity:1}}100%{{opacity:0}}",
+                a + 6,
+                a + 9
+            ),
+        );
+        let mut fill = String::new();
+        for p in 0..parts {
+            let px = bx + part * f64::from(p);
+            if values {
+                let v = part * RECORD_VALUES as f64 / r.record as f64;
+                fill.push_str(&format!(
+                    r#"<rect x="{px:.1}" y="{y}" width="{v:.1}" height="26" fill="{}" stroke="{bg}"/><rect x="{:.1}" y="{y}" width="{:.1}" height="26" fill="{}" stroke="{bg}"/>"#,
+                    t.blue[0],
+                    px + v,
+                    part - v,
+                    t.amber[0],
+                    bg = t.bg[0]
+                ));
+            } else {
+                fill.push_str(&format!(
+                    r#"<rect x="{px:.1}" y="{y}" width="{part:.1}" height="26" fill="{}" stroke="{}"/>"#,
+                    t.paper[2], t.bg[0]
+                ));
+            }
+        }
+        let (look, dash) = if k == 1 {
+            (".5", r#" stroke-dasharray="5 4""#)
+        } else {
+            ("1", "")
+        };
+        b.push_str(&format!(
+            r#"<text x="40" y="{}" font-size="15" class="b">{label}</text><text x="40" y="{}" font-size="12" class="mut">{note}</text><g class="a grow z{k}"><g opacity="{look}">{fill}</g><rect class="size" x="{bx}" y="{y}" width="{width:.1}" height="26" rx="3" fill="none" stroke="{}" stroke-width="1.5"{dash}/></g><text class="a b n{k}" x="{:.1}" y="{}" font-size="16">{} B</text>"#,
+            y + 14.0,
+            y + 30.0,
+            t.ink,
+            bx + width + 12.0,
+            y + 19.0,
+            grouped(bytes)
+        ));
+    }
+    // 5. The verdict of every recorded run; the limits stay in view throughout.
+    css += &record_motion("vd", "ease-out", "0%,75%{opacity:0;transform:scale(.97)}79%,97%{opacity:1;transform:none}100%{opacity:0;transform:none}");
+    css.push_str("@media (prefers-reduced-motion:reduce){.a{animation:none}}");
     b.push_str(&format!(
-        r#"<rect x="40" y="272" width="1120" height="34" rx="17" fill="{}" stroke="{}"/><text class="mono" x="60" y="294" font-size="14"><tspan class="b" style="fill:{}">{} of {} recorded runs:</tspan> Q8_QUAD_EXACT=PASS · SEMANTIC_ACCURACY=NOT_MEASURED</text><text x="40" y="338" font-size="13" class="mut">Record payload only; process memory is additional. Four views are not four independent memories.</text>"#,
+        r#"<g class="a vd"><rect x="40" y="488" width="1120" height="34" rx="17" fill="{}" stroke="{}"/><text class="mono" x="60" y="510" font-size="14"><tspan class="b" style="fill:{}">{} of {} recorded runs:</tspan> Q8_QUAD_EXACT=PASS · SEMANTIC_ACCURACY=NOT_MEASURED</text></g><text x="40" y="550" font-size="13" class="mut">Record payload only; process memory is additional. Four views are not four independent memories.</text>"#,
         t.bg[0],
         t.line,
         t.good,
         r.ok,
         r.n
     ));
-    result_card(
-        dark,
-        360,
+    card(
+        (1200, 576),
+        t,
         ("One stored Q8 record, four exact views", &record_text(r)),
+        &css,
         &b,
     )
 }
@@ -1642,6 +1773,1008 @@ fn hero(dark: bool, animated: bool) -> String {
         &b,
     )
 }
+/// The license card quotes LICENSE word for word and adds no words of its own to
+/// the quotes; it is not drawn when a quoted sentence is no longer in the file.
+const LICENSE_FILE: &str = "LICENSE";
+/// One column per subject: the LICENSE sections quoted, heading, quoted sentences.
+const LICENSE_COLUMNS: [(&str, &str, [&str; 2]); 3] = [
+    (
+        "section 3",
+        "Noncommercial use",
+        [
+            "a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.",
+            "You may keep Noncommercial Modifications private without a time limit.",
+        ],
+    ),
+    (
+        "sections 4 and 2",
+        "Evaluation, by anyone",
+        [
+            "Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.",
+            "in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.",
+        ],
+    ),
+    (
+        "section 5",
+        "Money needs an agreement",
+        [
+            "No Monetized Use is licensed by these public terms.",
+            "Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor.",
+        ],
+    ),
+];
+/// What section 8 asks every copy to carry.
+const LICENSE_NOTICE_QUOTE: &str = "each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.";
+/// Every quoted sentence, checked against LICENSE with its line breaks folded.
+fn license_quotes(license: &str) -> Result<Vec<&'static str>> {
+    let text = license.split_whitespace().collect::<Vec<_>>().join(" ");
+    let quotes: Vec<&'static str> = LICENSE_COLUMNS
+        .iter()
+        .flat_map(|(_, _, q)| q.iter().copied())
+        .chain([LICENSE_NOTICE_QUOTE])
+        .collect();
+    for q in &quotes {
+        if !text.contains(q) {
+            return Err(format!("LICENSE no longer says: {q}").into());
+        }
+    }
+    Ok(quotes)
+}
+/// Words in lines of at most `max` characters.
+fn wrap(text: &str, max: usize) -> Vec<String> {
+    let mut lines: Vec<String> = Vec::new();
+    for word in text.split_whitespace() {
+        match lines.last_mut() {
+            Some(line) if line.len() + 1 + word.len() <= max => {
+                line.push(' ');
+                line.push_str(word);
+            }
+            _ => lines.push(word.to_string()),
+        }
+    }
+    lines
+}
+/// What the license card says, as its description and as the README alternative text.
+fn license_text() -> String {
+    let mut s = String::from(
+        "GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE.",
+    );
+    for (section, heading, quotes) in LICENSE_COLUMNS {
+        // Single quotes: the text is also an HTML attribute value.
+        s.push_str(&format!(
+            " {heading} ({section}): '{}' '{}'",
+            quotes[0], quotes[1]
+        ));
+    }
+    s.push_str(&format!(" Every copy (section 8): '{LICENSE_NOTICE_QUOTE}' Commercial Agreements: gelram.licensing@gmail.com. A summary adds no rights; LICENSE controls (section 17)."));
+    s
+}
+/// Three columns quoted from LICENSE: what is free, what anyone may evaluate,
+/// and what needs a signed agreement; then what every copy must carry.
+fn license_card(dark: bool) -> Result<String> {
+    license_quotes(&fs::read_to_string(LICENSE_FILE)?)?;
+    let t = theme(dark);
+    let mut b = String::from(
+        r#"<text class="kick" x="40" y="44">LICENSE AT A GLANCE</text><text x="40" y="78" font-size="24" class="b">GEL RAM Noncommercial Reciprocal License 1.0</text><text x="40" y="102" font-size="14" class="mut">Source-available, not an OSI-approved open-source license. Each quoted line below is from LICENSE.</text>"#,
+    );
+    let colours = [t.green, t.blue, t.amber];
+    for (i, (section, heading, quotes)) in LICENSE_COLUMNS.iter().enumerate() {
+        let x = 40.0 + 380.0 * i as f64;
+        let c = colours[i];
+        // A check for what is granted; a signature line for what needs an agreement.
+        let icon = if i < 2 {
+            format!(
+                r#"<circle cx="{}" cy="146" r="15" fill="{}"/><path d="M{} 146l5 5 10-10" stroke="{}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>"#,
+                x + 34.0,
+                c[1],
+                x + 26.0,
+                t.bg[0]
+            )
+        } else {
+            format!(
+                r#"<rect x="{}" y="131" width="24" height="30" rx="3" fill="{}"/><path d="M{} 141h12M{} 147h12M{} 155c3-4 5 2 8-2" stroke="{}" stroke-width="2" fill="none" stroke-linecap="round"/>"#,
+                x + 22.0,
+                c[1],
+                x + 28.0,
+                x + 28.0,
+                x + 28.0,
+                t.bg[0]
+            )
+        };
+        let mut text = String::new();
+        let mut y = 200.0;
+        for q in quotes {
+            let lines = wrap(q, 44);
+            for (k, line) in lines.iter().enumerate() {
+                let open = if k == 0 { "\"" } else { "" };
+                let close = if k + 1 == lines.len() { "\"" } else { "" };
+                text.push_str(&format!(
+                    r#"<text x="{}" y="{y}" font-size="13">{open}{line}{close}</text>"#,
+                    x + 28.0
+                ));
+                y += 18.0;
+            }
+            y += 10.0;
+        }
+        b.push_str(&format!(
+            r#"<g class="col" style="animation-delay:{:.2}s"><rect x="{x}" y="120" width="360" height="252" rx="16" fill="{}" fill-opacity=".10" stroke="{}" stroke-width="2"/><rect x="{}" y="190" width="3" height="{:.0}" rx="1.5" fill="{}"/>{icon}<text x="{}" y="152" font-size="18" class="b">{heading}</text><text class="mono" x="{}" y="172" font-size="12">LICENSE {section}</text>{text}</g>"#,
+            0.2 + 0.3 * i as f64,
+            c[1],
+            c[1],
+            x + 16.0,
+            y - 200.0,
+            c[1],
+            x + 62.0,
+            x + 62.0
+        ));
+    }
+    let mut notice = String::new();
+    let lines = wrap(LICENSE_NOTICE_QUOTE, 120);
+    for (k, line) in lines.iter().enumerate() {
+        let open = if k == 0 { "\"" } else { "" };
+        let close = if k + 1 == lines.len() { "\"" } else { "" };
+        notice.push_str(&format!(
+            r#"<text x="40" y="{}" font-size="13">{open}{line}{close}</text>"#,
+            412 + 18 * k
+        ));
+    }
+    b.push_str(&format!(
+        r#"<g class="col" style="animation-delay:1.2s"><text class="kick" x="40" y="394">EVERY COPY · SECTION 8</text>{notice}<text x="40" y="462" font-size="14" class="b" style="fill:{}">Commercial Agreements: gelram.licensing@gmail.com</text><text x="1160" y="462" font-size="13" class="mut" text-anchor="end">A summary adds no rights; LICENSE controls (section 17).</text></g>"#,
+        t.accent
+    ));
+    let style = format!(".col{{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}}@keyframes rise{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.col{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
+    Ok(card(
+        (1200, 484),
+        t,
+        ("License at a glance", &license_text()),
+        &style,
+        &b,
+    ))
+}
+fn license_picture() -> String {
+    themed(
+        "media/presentation/license-light.svg",
+        "media/presentation/license-dark.svg",
+        &license_text(),
+        1200,
+    )
+}
+/// The recorded crash series the crash card is drawn from.
+const CRASH_FILE: &str = "docs/evidence-crash/crash-series-linux.txt";
+/// The columns of one trial row, in the order the series writes them.
+const CRASH_COLUMNS: &str = "# trial\tkill_ms\tacknowledged\tacknowledged_lost\tunacknowledged_complete\tpartial\ttemporaries\tresumed\treopen_us";
+/// One trial of the crash series: when the writer was killed and what it had
+/// been told was saved by then.
+struct CrashTrial {
+    kill_ms: u32,
+    acknowledged: usize,
+    /// A temporary file or a complete unacknowledged snapshot was left.
+    mid_publication: bool,
+}
+/// What one recorded crash series states, checked against its own rows.
+struct CrashSeries {
+    /// The day of the run and its file system; the host and CPU are not shown.
+    date: String,
+    file_system: String,
+    /// Snapshots one uninterrupted run saves, and the window the kill is drawn from.
+    documents: usize,
+    window_ms: u32,
+    trials: Vec<CrashTrial>,
+    acknowledged: usize,
+    lost: usize,
+    partial: usize,
+    resumed: usize,
+    mid_publication: usize,
+}
+impl CrashSeries {
+    fn read() -> Result<CrashSeries> {
+        CrashSeries::from_text(&fs::read_to_string(CRASH_FILE)?)
+    }
+    /// Refuses to give numbers unless every row parses, the trials are numbered
+    /// 1..=n, and the one PASS line states exactly what the rows add up to.
+    fn from_text(text: &str) -> Result<CrashSeries> {
+        let (mut host, mut setup, mut columns, mut summary) = (None, None, false, Vec::new());
+        let mut rows: Vec<[&str; 9]> = Vec::new();
+        for line in text.lines() {
+            if let Some(h) = line.strip_prefix("# host: ") {
+                host = host.or(Some(h));
+            } else if let Some(s) = line.strip_prefix("# gel-evidence crash series: ") {
+                setup = Some(s);
+            } else if line == CRASH_COLUMNS {
+                columns = true;
+            } else if line.starts_with("CRASH_SERIES=") {
+                summary.push(line);
+            } else if line.trim().is_empty() || line.starts_with(' ') || line.starts_with('#') {
+                // Indented lines are the build output of `cargo run`.
+            } else {
+                let f: Vec<&str> = line.split('\t').collect();
+                rows.push(
+                    f.try_into()
+                        .map_err(|_| format!("unexpected crash series row: {line}"))?,
+                );
+            }
+        }
+        if !columns {
+            return Err("unexpected crash series columns".into());
+        }
+        // The first header line: kernel · CPU · file system · rustc · revision · time.
+        let host: Vec<&str> = host.ok_or("no host line")?.split(" · ").collect();
+        let (date, file_system) = match host[..] {
+            [kernel, _, fs, _, _, time] if kernel.starts_with("Linux ") => {
+                (time.get(..10).unwrap_or(""), fs)
+            }
+            _ => return Err("unexpected crash series host line".into()),
+        };
+        let b = date.as_bytes();
+        if b.len() != 10
+            || !b.iter().enumerate().all(|(i, c)| match i {
+                4 | 7 => *c == b'-',
+                _ => c.is_ascii_digit(),
+            })
+            || file_system.is_empty()
+            || !file_system.bytes().all(|c| c.is_ascii_alphanumeric())
+        {
+            return Err("unexpected date or file system in the host line".into());
+        }
+        let setup = setup.ok_or("no crash series setup line")?;
+        let between = |from: &str, to: &str| -> Result<usize> {
+            let rest = setup.split_once(from).ok_or("unexpected setup line")?.1;
+            let found = rest.split_once(to).ok_or("unexpected setup line")?.0;
+            Ok(found.parse()?)
+        };
+        let documents = between("", " documents")?;
+        let window_ms = u32::try_from(between("kill after 1..=", " ms")?)?;
+        let mut trials = Vec::new();
+        let (mut acknowledged, mut lost, mut partial, mut resumed) = (0, 0, 0, 0);
+        for (i, f) in rows.iter().enumerate() {
+            let n = |k: usize| -> Result<usize> { Ok(f[k].parse::<usize>()?) };
+            let kill_ms = f[1].parse::<u32>()?;
+            if n(0)? != i + 1 || kill_ms > window_ms || n(2)? > documents {
+                return Err(format!("unexpected crash series trial {}", f[0]).into());
+            }
+            if f[8] != "-" {
+                f[8].parse::<u64>()?;
+            }
+            acknowledged += n(2)?;
+            lost += n(3)?;
+            partial += n(5)?;
+            resumed += match f[7] {
+                "true" => 1,
+                "false" => 0,
+                _ => return Err(format!("unexpected resumed value: {}", f[7]).into()),
+            };
+            trials.push(CrashTrial {
+                kill_ms,
+                acknowledged: n(2)?,
+                mid_publication: n(4)? + n(6)? > 0,
+            });
+        }
+        let mid_publication = trials.iter().filter(|t| t.mid_publication).count();
+        let [line] = summary[..] else {
+            return Err("expected exactly one CRASH_SERIES line".into());
+        };
+        let words: Vec<&str> = line.split(' ').collect();
+        let value = |key: &str| -> Result<usize> {
+            let found = words
+                .iter()
+                .find_map(|w| w.strip_prefix(key)?.strip_prefix('='))
+                .ok_or(format!("the summary has no {key}"))?;
+            Ok(found.parse::<usize>()?)
+        };
+        if words.first() != Some(&"CRASH_SERIES=PASS") {
+            return Err("the crash series did not pass".into());
+        }
+        let stated = [
+            value("trials")?,
+            value("acknowledged")?,
+            value("acknowledged_lost")?,
+            value("partial")?,
+            value("resumed")?,
+            value("killed_mid_publication")?,
+        ];
+        let counted = [
+            trials.len(),
+            acknowledged,
+            lost,
+            partial,
+            resumed,
+            mid_publication,
+        ];
+        if stated != counted {
+            return Err(
+                format!("the summary {stated:?} disagrees with the rows {counted:?}").into(),
+            );
+        }
+        // Every point is drawn as a survived trial, so a PASS must mean exactly that.
+        if trials.is_empty() || lost != 0 || partial != 0 || resumed != trials.len() {
+            return Err("a PASS line over a trial that lost, tore or did not resume".into());
+        }
+        Ok(CrashSeries {
+            date: date.to_string(),
+            file_system: file_system.to_string(),
+            documents,
+            window_ms,
+            trials,
+            acknowledged,
+            lost,
+            partial,
+            resumed,
+            mid_publication,
+        })
+    }
+}
+/// What the crash card says, as its description and as the README alternative text.
+fn crash_text(c: &CrashSeries) -> String {
+    format!("One recorded crash series on the author's Linux machine ({}, {}): in each of {} trials a collection growing to {} snapshots was killed with SIGKILL at a random moment within {} ms. {} snapshots were acknowledged before the kills; {} were lost and {} were partial, and {} of {} trials resumed to the uninterrupted result. {} kills came in the middle of a publication. A process kill, not a power cut: power-loss durability is not established.", c.file_system, c.date, c.trials.len(), c.documents, c.window_ms, grouped(c.acknowledged), c.lost, c.partial, c.resumed, c.trials.len(), c.mid_publication)
+}
+/// Every trial of the recorded crash series as one point: when the writer was
+/// killed and how many snapshots it had acknowledged by then. The points appear
+/// in the order of the series, then the totals the summary line states.
+fn crash_card(dark: bool, c: &CrashSeries) -> String {
+    let t = theme(dark);
+    let n = c.trials.len();
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="44">CRASH SERIES · KILLED WHILE SAVING</text><text x="40" y="80" font-size="25" class="b">{n} kills while saving. {} acknowledged snapshots lost.</text>"#,
+        c.lost
+    );
+    // The plot: kill time across, acknowledged snapshots up.
+    let (x0, x1, y0, y1) = (100.0, 740.0, 324.0, 120.0);
+    let px = |ms: u32| x0 + (x1 - x0) * f64::from(ms) / f64::from(c.window_ms);
+    let py = |k: usize| y0 - (y0 - y1) * k as f64 / c.documents as f64;
+    let step = (c.documents / 4).max(1);
+    for k in (0..=c.documents).step_by(step) {
+        let y = py(k);
+        b.push_str(&format!(
+            r#"<path d="M{x0} {y:.1}H{x1}" stroke="{}" stroke-width="1"/><text class="mono" x="{}" y="{:.1}" text-anchor="end" font-size="12">{k}</text>"#,
+            t.line,
+            x0 - 10.0,
+            y + 4.0
+        ));
+    }
+    for ms in (0..=c.window_ms).step_by(50) {
+        b.push_str(&format!(
+            r#"<text class="mono" x="{:.1}" y="344" text-anchor="middle" font-size="12">{ms}</text>"#,
+            px(ms)
+        ));
+    }
+    b.push_str(&format!(
+        r#"<path d="M{x0} {y0}H{x1}M{x0} {y0}V{y1}" stroke="{ink}" stroke-width="1.5" fill="none"/><path d="M{x0} {top:.1}H{x1}" stroke="{ink}" stroke-width="1.5" stroke-dasharray="5 5" fill="none"/><text x="{:.1}" y="{:.1}" font-size="13" class="mut">all {} snapshots saved</text><text x="{x1}" y="366" font-size="13" class="mut" text-anchor="end">kill time, ms after the writer started (window {} ms)</text><text x="0" y="0" font-size="13" class="mut" text-anchor="middle" transform="translate(48 {:.1}) rotate(-90)">snapshots acknowledged</text>"#,
+        x0 + 8.0,
+        py(c.documents) - 8.0,
+        c.documents,
+        c.window_ms,
+        (y0 + y1) / 2.0,
+        ink = t.ink,
+        top = py(c.documents)
+    ));
+    // Legend in the empty lower right: a late kill always finds many saves.
+    b.push_str(&format!(
+        r#"<circle cx="492" cy="254" r="5" fill="{g}"/><text x="506" y="259" font-size="13">killed mid-publication ({})</text><circle cx="492" cy="278" r="4.2" fill="none" stroke="{g}" stroke-width="1.8"/><text x="506" y="283" font-size="13">killed between saves ({})</text><text x="486" y="307" font-size="13" class="mut">every trial: no acknowledged snapshot lost</text>"#,
+        c.mid_publication,
+        n - c.mid_publication,
+        g = t.good
+    ));
+    // The parser refuses a PASS line over a lost, partial or unresumed trial, so
+    // every point is drawn as survived; filled when the kill hit a publication.
+    for (i, trial) in c.trials.iter().enumerate() {
+        let paint = if trial.mid_publication {
+            format!(r#"r="5" fill="{}""#, t.good)
+        } else {
+            format!(
+                r#"r="4.2" fill="none" stroke="{}" stroke-width="1.8""#,
+                t.good
+            )
+        };
+        b.push_str(&format!(
+            r#"<circle class="pt" style="animation-delay:{:.2}s" cx="{:.1}" cy="{:.1}" {paint}/>"#,
+            0.2 + 2.4 * i as f64 / n as f64,
+            px(trial.kill_ms),
+            py(trial.acknowledged)
+        ));
+    }
+    // The totals, in two columns of three tiles.
+    let tiles = [
+        (n.to_string(), t.accent, "trials, each", "killed once"),
+        (
+            grouped(c.acknowledged),
+            t.accent,
+            "snapshots acknowledged",
+            "before the kills",
+        ),
+        (c.lost.to_string(), t.good, "acknowledged", "snapshots lost"),
+        (
+            c.partial.to_string(),
+            t.good,
+            "partial snapshots",
+            "found after a kill",
+        ),
+        (
+            c.resumed.to_string(),
+            t.accent,
+            "resumed to the",
+            "uninterrupted result",
+        ),
+        (
+            c.mid_publication.to_string(),
+            t.accent,
+            "killed in the middle",
+            "of a publication",
+        ),
+    ];
+    for (k, (num, colour, l1, l2)) in tiles.iter().enumerate() {
+        let (x, y) = (
+            790.0 + 190.0 * (k % 2) as f64,
+            104.0 + 90.0 * (k / 2) as f64,
+        );
+        b.push_str(&format!(
+            r#"<g class="cnt" style="animation-delay:{:.2}s"><rect x="{x}" y="{y}" width="176" height="80" rx="12" fill="{}" fill-opacity=".07" stroke="{}"/><text x="{}" y="{}" font-size="28" class="b" style="fill:{colour}">{num}</text><text x="{}" y="{}" font-size="13">{l1}</text><text x="{}" y="{}" font-size="13">{l2}</text></g>"#,
+            2.8 + 0.15 * k as f64,
+            t.accent,
+            t.line,
+            x + 16.0,
+            y + 34.0,
+            x + 16.0,
+            y + 54.0,
+            x + 16.0,
+            y + 70.0
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text x="40" y="404" font-size="13" class="mut">One recorded run on the author's Linux machine ({}, {}) · a process kill (SIGKILL), not a power cut: power-loss durability is not established</text>"#,
+        c.file_system, c.date
+    ));
+    let t_style = format!(".pt{{animation:pop .45s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}}.cnt{{animation:fade .8s ease-out both}}@keyframes pop{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}@keyframes fade{{from{{opacity:0}}to{{opacity:1}}}}@media (prefers-reduced-motion:reduce){{.pt,.cnt{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
+    card(
+        (1200, 424),
+        t,
+        ("Crash series: killed while saving", &crash_text(c)),
+        &t_style,
+        &b,
+    )
+}
+fn crash_picture(c: &CrashSeries) -> String {
+    themed(
+        "media/presentation/crash-light.svg",
+        "media/presentation/crash-dark.svg",
+        &crash_text(c),
+        1200,
+    )
+}
+/// The timing set the speed card is drawn from, the one the release notes cite
+/// against v0.6.1: A and A2 are two checkouts of v0.6.1, B the new tree.
+const SPEED_DIR: &str = "docs/speed-results/2026-10-20-against-v0.6.1";
+/// The revision of `main` the set's B tree equals, as its README states it.
+const SPEED_B: &str = "876247f";
+/// One timed case: the two ratios as its summary prints them, checked against
+/// the medians of A, A2 and B when it is read.
+struct SpeedCase {
+    name: String,
+    /// A2/A: the noise of two copies of the same tree.
+    aa: f64,
+    /// A/B: above 1 the new tree is faster.
+    gain: f64,
+    runs: u32,
+}
+/// Where a case falls against its own A/A band.
+#[derive(Clone, Copy, PartialEq)]
+enum Side {
+    Faster,
+    Slower,
+    Within,
+}
+impl SpeedCase {
+    /// Parses the fields after `SPEED_AB `, in their fixed order, and refuses a
+    /// ratio that does not round from the medians to its printed digits.
+    fn parse(fields: &str) -> Result<SpeedCase> {
+        const KEYS: [&str; 7] = ["case", "a_ns", "a2_ns", "b_ns", "aa", "gain", "runs"];
+        let words: Vec<&str> = fields.split(' ').collect();
+        let v: Vec<&str> = words
+            .iter()
+            .zip(KEYS)
+            .filter_map(|(w, k)| w.strip_prefix(k)?.strip_prefix('='))
+            .collect();
+        if words.len() != KEYS.len() || v.len() != KEYS.len() {
+            return Err("unexpected SPEED_AB fields".into());
+        }
+        if !plain_name(v[0]) {
+            return Err("unexpected case name".into());
+        }
+        let count = |s: &str| -> Result<u64> {
+            match s.parse::<u64>() {
+                Ok(n) if n > 0 && s.bytes().all(|b| b.is_ascii_digit()) => Ok(n),
+                _ => Err(format!("unexpected count {s}").into()),
+            }
+        };
+        let (a, a2, b) = (count(v[1])?, count(v[2])?, count(v[3])?);
+        Ok(SpeedCase {
+            name: v[0].to_string(),
+            aa: printed_ratio(v[4], a2, a)?,
+            gain: printed_ratio(v[5], a, b)?,
+            runs: u32::try_from(count(v[6])?)?,
+        })
+    }
+    /// The A/A band: from the smaller of A2/A and A/A2 to the larger.
+    fn noise(&self) -> (f64, f64) {
+        let (x, y) = (self.aa, 1.0 / self.aa);
+        (x.min(y), x.max(y))
+    }
+    fn side(&self) -> Side {
+        let (lo, hi) = self.noise();
+        if self.gain > hi {
+            Side::Faster
+        } else if self.gain < lo {
+            Side::Slower
+        } else {
+            Side::Within
+        }
+    }
+}
+/// Example and case names: lower-case ASCII, digits and single underscores.
+fn plain_name(name: &str) -> bool {
+    let ok = |b: u8| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_';
+    !name.is_empty() && name.bytes().all(ok) && !name.contains("__")
+}
+/// A ratio as a summary prints it, refused unless `num / den` rounds to it:
+/// within half a unit of its last printed digit.
+fn printed_ratio(text: &str, num: u64, den: u64) -> Result<f64> {
+    let digits = text.split_once('.').map_or(0, |(_, d)| d.len());
+    let value: f64 = text.parse()?;
+    let half = 0.5 * 10f64.powi(-(digits as i32));
+    let exact = num as f64 / den as f64;
+    if digits == 0
+        || !text.bytes().all(|b| b.is_ascii_digit() || b == b'.')
+        || (exact - value).abs() > half * (1.0 + 1e-9)
+    {
+        return Err(format!("{text} does not round from {num}/{den}").into());
+    }
+    Ok(value)
+}
+/// The cases of one summary.txt and whether its three digests agree. Refuses an
+/// unknown line, a repeated case, digests that are not exactly A, A2 and B, and
+/// a missing, repeated or contradicting verdict.
+fn speed_summary(text: &str) -> Result<(Vec<SpeedCase>, bool)> {
+    let (mut cases, mut checks, mut verdicts) = (Vec::<SpeedCase>::new(), Vec::new(), Vec::new());
+    for line in text.lines() {
+        if let Some(fields) = line.strip_prefix("SPEED_AB ") {
+            let case = SpeedCase::parse(fields).map_err(|e| format!("{e}: {line}"))?;
+            if cases.iter().any(|c| c.name == case.name) {
+                return Err(format!("repeated case: {line}").into());
+            }
+            cases.push(case);
+        } else if let Some(check) = line.strip_prefix("SPEED_AB_CHECK tree=") {
+            checks.push(check);
+        } else if let Some(verdict) = line.strip_prefix("SPEED_AB_VERDICT=") {
+            verdicts.push(verdict);
+        } else {
+            return Err(format!("unexpected summary line: {line}").into());
+        }
+    }
+    let hex = |s: &&str| s.len() == 64 && s.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'));
+    let mut digests = Vec::new();
+    for (check, tree) in checks.iter().zip(["a", "a2", "b"]) {
+        let digest = check
+            .strip_prefix(tree)
+            .and_then(|r| r.strip_prefix(" sha256="))
+            .filter(hex)
+            .ok_or(format!("unexpected digest line: tree={check}"))?;
+        digests.push(digest);
+    }
+    if cases.is_empty() || checks.len() != 3 || digests.len() != 3 {
+        return Err("a summary needs its cases and the digests of A, A2 and B".into());
+    }
+    let same = digests.iter().all(|d| *d == digests[0]);
+    match verdicts.as_slice() {
+        ["SAME_OUTPUT"] if same => Ok((cases, true)),
+        ["DIFFERENT_OUTPUT"] if !same => Ok((cases, false)),
+        _ => Err(format!("verdict {verdicts:?} does not match the digests").into()),
+    }
+}
+/// One timing example of the set: its cases and whether A, A2 and B printed the
+/// same output digest, or `None` when it has only a manifest. `note` is the
+/// README's sentence that explains a differing digest or a missing summary.
+struct SpeedExample {
+    name: String,
+    timed: Option<(Vec<SpeedCase>, bool)>,
+    note: Option<String>,
+}
+impl SpeedExample {
+    fn cases(&self) -> &[SpeedCase] {
+        self.timed.as_ref().map_or(&[][..], |t| &t.0[..])
+    }
+}
+/// The timing set the speed card draws: the machine and its load as the set's
+/// README states them, and every example directory in name order.
+struct SpeedSet {
+    machine: String,
+    load: String,
+    examples: Vec<SpeedExample>,
+}
+impl SpeedSet {
+    fn read() -> Result<SpeedSet> {
+        let readme = fs::read_to_string(format!("{SPEED_DIR}/README.md"))?;
+        let mut names = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR)? {
+            let entry = entry?;
+            if entry.file_type()?.is_dir() {
+                names.push(entry.file_name().to_string_lossy().into_owned());
+            }
+        }
+        names.sort();
+        let mut examples = Vec::new();
+        for name in names {
+            let dir = format!("{SPEED_DIR}/{name}");
+            if !Path::new(&format!("{dir}/manifest.txt")).is_file() {
+                return Err(format!("{dir} has no manifest").into());
+            }
+            let summary = format!("{dir}/summary.txt");
+            let text = if Path::new(&summary).try_exists()? {
+                Some(fs::read_to_string(summary)?)
+            } else {
+                None
+            };
+            examples.push((name, text));
+        }
+        SpeedSet::from_texts(&readme, &examples)
+    }
+    /// Refuses to give a set unless every summary adds up, the README states the
+    /// machine, its load, no pinning and the B revision, and one README sentence
+    /// explains each example without a summary or with differing digests.
+    fn from_texts(readme: &str, examples: &[(String, Option<String>)]) -> Result<SpeedSet> {
+        let plain = |s: &str| s.is_ascii() && !s.contains(['<', '>', '&', '"', '`']);
+        let row = |key: &str| -> Result<String> {
+            readme
+                .lines()
+                .find_map(|l| {
+                    l.strip_prefix("| ")?
+                        .strip_prefix(key)?
+                        .strip_prefix(" | ")?
+                        .strip_suffix(" |")
+                })
+                .filter(|v| plain(*v))
+                .map(str::to_string)
+                .ok_or_else(|| format!("the set README has no plain {key} row").into())
+        };
+        let (machine, load, pinning) = (row("Machine")?, row("Load")?, row("Pinning")?);
+        if !pinning.starts_with("none") || !readme.contains(&format!("`main` at `{SPEED_B}`")) {
+            return Err("the set README no longer matches the card's wording".into());
+        }
+        let flat = readme.split_whitespace().collect::<Vec<_>>().join(" ");
+        let mut out = Vec::new();
+        for (name, summary) in examples {
+            if !plain_name(name) {
+                return Err(format!("unexpected example name {name}").into());
+            }
+            let timed = match summary {
+                Some(text) => Some(speed_summary(text).map_err(|e| format!("{name}: {e}"))?),
+                None => None,
+            };
+            let note = if matches!(timed, Some((_, true))) {
+                None
+            } else {
+                let start = flat
+                    .find(&format!("`{name}` "))
+                    .ok_or(format!("the set README does not explain {name}"))?;
+                let len = flat[start..]
+                    .find(". ")
+                    .map_or(flat.len() - start, |e| e + 1);
+                let sentence = flat[start..start + len].replace('`', "");
+                if !plain(&sentence) || !sentence.ends_with('.') {
+                    return Err(format!("unexpected note on {name}").into());
+                }
+                Some(sentence)
+            };
+            out.push(SpeedExample {
+                name: name.clone(),
+                timed,
+                note,
+            });
+        }
+        if out.iter().all(|e| e.timed.is_none()) {
+            return Err("no timed example in the set".into());
+        }
+        Ok(SpeedSet {
+            machine,
+            load,
+            examples: out,
+        })
+    }
+    fn cases(&self) -> impl Iterator<Item = &SpeedCase> {
+        self.examples.iter().flat_map(|e| e.cases())
+    }
+    /// Cases faster beyond their A/A band, slower beyond it, and inside it.
+    fn sides(&self) -> [usize; 3] {
+        let n = |side| self.cases().filter(|c| c.side() == side).count();
+        [n(Side::Faster), n(Side::Slower), n(Side::Within)]
+    }
+    /// Timed examples, and those that printed the same digest in all three trees.
+    fn verdicts(&self) -> (usize, usize) {
+        let timed = self.examples.iter().filter(|e| e.timed.is_some());
+        let same = timed.clone().filter(|e| matches!(e.timed, Some((_, true))));
+        (timed.count(), same.count())
+    }
+}
+/// A ratio as the card prints it: one decimal from 10 up, two below.
+fn ratio(v: f64) -> String {
+    if v >= 10.0 {
+        format!("{v:.1}")
+    } else {
+        format!("{v:.2}")
+    }
+}
+/// What the speed card says, as its description and as the README alternative
+/// text. Like the card it names timing programs, never a case.
+fn speed_text(s: &SpeedSet) -> String {
+    let [faster, slower, within] = s.sides();
+    let (timed, same) = s.verdicts();
+    let sha = s
+        .examples
+        .iter()
+        .find(|e| e.name == "speed_sha256")
+        .map_or(String::new(), |e| {
+            let gains: Vec<String> = e.cases().iter().map(|c| ratio(c.gain)).collect();
+            format!(" (SHA-256 alone at {})", gains.join(" and "))
+        });
+    let notes: Vec<&str> = s
+        .examples
+        .iter()
+        .filter_map(|e| e.note.as_deref())
+        .collect();
+    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
+    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} of {} timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in {SPEED_DIR}. {faster} cases are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed programs printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), s.examples.len(), notes.join(" "), s.machine, s.load)
+}
+/// One row of the speed card: what the cases of one timing program add up to.
+/// The card names no case; the per-case results stay in the timing set.
+struct SpeedRow {
+    min: f64,
+    median: f64,
+    max: f64,
+    /// The widest A/A band of its cases: the lowest low end to the highest high end.
+    band: (f64, f64),
+    /// Its cases faster beyond their own A/A band, slower beyond it, inside it.
+    sides: [usize; 3],
+}
+impl SpeedRow {
+    /// The row of one example, or `None` when it has no timed case. The median
+    /// of an even number of gains is the mean of the middle two.
+    fn of(e: &SpeedExample) -> Option<SpeedRow> {
+        let cases = e.cases();
+        let mut gains: Vec<f64> = cases.iter().map(|c| c.gain).collect();
+        gains.sort_by(f64::total_cmp);
+        let (min, max) = (*gains.first()?, *gains.last()?);
+        let mid = gains.len() / 2;
+        let median = if gains.len() % 2 == 1 {
+            gains[mid]
+        } else {
+            (gains[mid - 1] + gains[mid]) / 2.0
+        };
+        let band = cases
+            .iter()
+            .map(SpeedCase::noise)
+            .fold((f64::INFINITY, 0.0_f64), |(a, b), (lo, hi)| {
+                (a.min(lo), b.max(hi))
+            });
+        let count = |side| cases.iter().filter(|c| c.side() == side).count();
+        Some(SpeedRow {
+            min,
+            median,
+            max,
+            band,
+            sides: [
+                count(Side::Faster),
+                count(Side::Slower),
+                count(Side::Within),
+            ],
+        })
+    }
+}
+/// `ONE` is the x of ratio 1: every span grows out of that axis.
+const SPEED_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}.sp{animation:grow .9s cubic-bezier(.2,.8,.2,1) both;transform-box:view-box;transform-origin:ONEpx 0}.fd{animation:fade .6s ease-out both}@keyframes grow{from{transform:scaleX(0)}to{transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.sp,.fd{animation:none}}";
+/// One row per timing program in name order, on a log scale centred at 1: the
+/// span from its lowest to its highest gain, red below 1 and blue above, its
+/// median, the widest A/A band of its cases behind them, how many cases fall
+/// beyond or inside their own band, and its output verdict. No case is named.
+fn speed_card(dark: bool, s: &SpeedSet) -> String {
+    let t = theme(dark);
+    let (row, top) = (15.0, 234.0);
+    // A log2 axis in whole octaves, wide enough for every ratio and every band.
+    let (mut lo, mut hi) = (0.5_f64, 2.0_f64);
+    for c in s.cases() {
+        let (a, b) = c.noise();
+        lo = lo.min(a).min(c.gain);
+        hi = hi.max(b).max(c.gain);
+    }
+    let (lo, hi) = (lo.log2().floor() as i32, hi.log2().ceil() as i32);
+    let (p0, p1) = (424.0, 890.0);
+    let x = |v: f64| p0 + (v.log2() - f64::from(lo)) / f64::from(hi - lo) * (p1 - p0);
+    let one = x(1.0);
+    let [faster, slower, within] = s.sides();
+    let (timed, same) = s.verdicts();
+    let (least, most) = s
+        .cases()
+        .fold((u32::MAX, 0), |(a, b), c| (a.min(c.runs), b.max(c.runs)));
+    let runs = if least == most {
+        least.to_string()
+    } else {
+        format!("{least} to {most}")
+    };
+    let check = |x: f64, y: f64| {
+        format!(
+            r#"<path d="M{x:.1} {y:.1}l3.5 3.5 6.5-7.5" fill="none" stroke="{}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>"#,
+            t.good
+        )
+    };
+    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="42">SPEED · v0.6.1 AGAINST main AT {SPEED_B} · SET {set}</text><text x="40" y="72" font-size="22" class="b">{} timed cases in {timed} of {} timing programs: v0.6.1 time divided by the new time</text><text x="40" y="95" font-size="13.5">One row per timing program: the range of its cases from min to max, and their median · cases grouped by timing program; per-case results are in docs/speed-results</text><text class="mono" x="40" y="116" font-size="12">A, A2: two checkouts of v0.6.1 · B: main at {SPEED_B}, the first v0.7 speed package · medians of {runs} runs per case</text><text class="mono" x="40" y="133" font-size="12">Machine: {} · not pinned to cores</text><text class="mono" x="40" y="150" font-size="12">Load: {}</text>"#,
+        s.cases().count(),
+        s.examples.len(),
+        s.machine,
+        s.load
+    );
+    // The totals, then what each mark means.
+    b.push_str(&format!(
+        r#"<text x="40" y="177" font-size="13" class="b">{} cases:</text><rect x="122" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="152" y="177" font-size="13">faster beyond its A/A band: {faster}</text><rect x="374" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="404" y="177" font-size="13">slower beyond it: {slower}</text><rect x="548" y="169" width="22" height="6" rx="1.5" fill="{}"/><text x="578" y="177" font-size="13">inside it: {within}</text>{}<text x="704" y="177" font-size="13">same output digest in A, A2 and B: {same} of {timed}</text>"#,
+        s.cases().count(),
+        t.blue[1],
+        t.red[1],
+        t.muted,
+        check(686.0, 172.0)
+    ));
+    b.push_str(&format!(
+        r#"<rect x="40" y="191" width="20" height="6" rx="1.5" fill="{}"/><rect x="60" y="191" width="20" height="6" rx="1.5" fill="{}"/><path d="M60 187v14" stroke="{}" stroke-width="1.4"/><text x="88" y="198" font-size="12.5">range of its cases, min to max: red below 1, blue above 1</text><circle cx="436" cy="194" r="3.6" fill="{}" stroke="{}" stroke-width="1.2"/><text x="446" y="198" font-size="12.5">median of its cases</text><rect x="578" y="189" width="30" height="10" rx="2" fill="{}" fill-opacity=".2"/><text x="616" y="198" font-size="12.5">widest A/A band of its cases: the noise to read it against</text>"#,
+        t.red[1],
+        t.blue[1],
+        t.ink,
+        t.ink,
+        t.bg[0],
+        t.muted
+    ));
+    let bottom = top + row * s.examples.len() as f64;
+    b.push_str(&format!(
+        r#"<g class="mut b" font-size="11"><text x="{:.1}" y="214" text-anchor="end">slower</text><text x="{:.1}" y="214">faster</text><text x="40" y="228">timing program</text><text x="262" y="228" text-anchor="end">cases</text><text x="306" y="228" text-anchor="end">faster</text><text x="350" y="228" text-anchor="end">slower</text><text x="394" y="228" text-anchor="end">inside</text><text x="944" y="228" text-anchor="end">min</text><text x="1000" y="228" text-anchor="end">median</text><text x="1054" y="228" text-anchor="end">max</text><text x="1070" y="228">output</text></g>"#,
+        one - 6.0,
+        one + 6.0
+    ));
+    for k in lo..=hi {
+        let v = 2f64.powi(k);
+        let (stroke, width) = if k == 0 { (t.ink, 1.4) } else { (t.line, 1.0) };
+        b.push_str(&format!(
+            r#"<path d="M{gx:.1} {:.0}V{bottom:.0}" stroke="{stroke}" stroke-width="{width}"/><text class="mono" x="{gx:.1}" y="228" text-anchor="middle" font-size="10">{v}</text>"#,
+            top - 2.0,
+            gx = x(v)
+        ));
+    }
+    let mut notes: Vec<&str> = Vec::new();
+    for (k, e) in s.examples.iter().enumerate() {
+        // Rows appear one after another; a span grows out of 1, then its median shows.
+        let (y0, kf) = (top + row * k as f64, k as f64);
+        let (cy, ty) = (y0 + row / 2.0, y0 + row / 2.0 + 4.0);
+        let (fade, grow, mark) = (0.1 + 0.04 * kf, 0.3 + 0.04 * kf, 1.0 + 0.04 * kf);
+        if k % 2 == 0 {
+            b.push_str(&format!(
+                r#"<rect x="32" y="{y0:.1}" width="1136" height="{row:.0}" fill="{}" fill-opacity=".35"/>"#,
+                t.line
+            ));
+        }
+        let note = e.note.as_deref().map(|n| {
+            notes.push(n);
+            notes.len()
+        });
+        let label = |text: String| {
+            format!(r#"<text x="1086" y="{ty:.1}" font-size="11" class="mut">{text}</text>"#)
+        };
+        let output = match (&e.timed, note) {
+            (Some((_, true)), _) => check(1072.0, cy),
+            (Some((_, false)), n) => format!(
+                r##"<circle cx="1077" cy="{cy:.1}" r="5.5" fill="{}"/><text x="1077" y="{:.1}" text-anchor="middle" font-size="9.5" class="b" style="fill:#1b1f24">!</text>{}"##,
+                t.amber[1],
+                cy + 3.4,
+                label(n.map_or("differs".to_string(), |n| format!("differs · note {n}")))
+            ),
+            (None, n) => format!(
+                r#"<circle cx="1077" cy="{cy:.1}" r="5" fill="none" stroke="{m}" stroke-width="1.5"/><path d="M1074.3 {cy:.1}h5.4" stroke="{m}" stroke-width="1.5"/>{}"#,
+                label(n.map_or(String::new(), |n| format!("note {n}"))),
+                m = t.muted
+            ),
+        };
+        let name = format!(
+            r#"<text class="pn b" x="40" y="{ty:.1}" font-size="12">{}</text>"#,
+            e.name
+        );
+        let Some(r) = SpeedRow::of(e) else {
+            b.push_str(&format!(
+                r#"<g class="fd" style="animation-delay:{fade:.2}s">{name}<text x="{:.1}" y="{ty:.1}" font-size="11" class="mut" font-style="italic">not built in v0.6.1: no timing</text>{output}</g>"#,
+                one + 8.0
+            ));
+            continue;
+        };
+        let cell = |cx: f64, n: usize, colour: &str| {
+            if n == 0 {
+                format!(
+                    r#"<text x="{cx:.0}" y="{ty:.1}" font-size="11.5" class="mut" text-anchor="end">0</text>"#
+                )
+            } else {
+                format!(
+                    r#"<text x="{cx:.0}" y="{ty:.1}" font-size="11.5" class="b" text-anchor="end" style="fill:{colour}">{n}</text>"#
+                )
+            }
+        };
+        let [f, sl, w] = r.sides;
+        b.push_str(&format!(
+            r#"<g class="fd" style="animation-delay:{fade:.2}s">{name}<text x="262" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text>{}{}{}<text x="944" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text><text x="1000" y="{ty:.1}" font-size="11.5" class="b" text-anchor="end">{}</text><text x="1054" y="{ty:.1}" font-size="11.5" text-anchor="end">{}</text>{output}</g><rect class="fd" style="animation-delay:{fade:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="10" rx="2" fill="{}" fill-opacity=".2"/>"#,
+            f + sl + w,
+            cell(306.0, f, t.blue[1]),
+            cell(350.0, sl, t.red[1]),
+            cell(394.0, w, t.ink),
+            ratio(r.min),
+            ratio(r.median),
+            ratio(r.max),
+            x(r.band.0),
+            cy - 5.0,
+            x(r.band.1) - x(r.band.0),
+            t.muted
+        ));
+        // The span, cut at 1: the part below in red, the part above in blue. A
+        // program of one case has no span, only its median mark.
+        for (class, from, to, fill) in [
+            ("lo", r.min, r.max.min(1.0), t.red[1]),
+            ("hi", r.min.max(1.0), r.max, t.blue[1]),
+        ] {
+            if from < to {
+                b.push_str(&format!(
+                    r#"<rect class="sp {class}" style="animation-delay:{grow:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="6" rx="1.5" fill="{fill}"/>"#,
+                    x(from),
+                    cy - 3.0,
+                    x(to) - x(from)
+                ));
+            }
+        }
+        b.push_str(&format!(
+            r#"<circle class="fd" style="animation-delay:{mark:.2}s" cx="{:.1}" cy="{cy:.1}" r="3.6" fill="{}" stroke="{}" stroke-width="1.2"/>"#,
+            x(r.median),
+            t.ink,
+            t.bg[0]
+        ));
+    }
+    let mut y = bottom + 4.0;
+    for (i, note) in notes.iter().enumerate() {
+        y += 16.0;
+        b.push_str(&format!(
+            r#"<text x="40" y="{y:.0}" font-size="12"><tspan class="b">Note {}</tspan> · {note}</text>"#,
+            i + 1
+        ));
+    }
+    y += 6.0;
+    for line in [
+        "The machine was loaded and the runs were not pinned to cores, so each grey band, the A/A ratios of two copies of v0.6.1, is the noise to read a span against: samples of that noise, not a confidence interval.",
+        "A case counts as faster or slower only beyond its own band. Ratios of different programs are not comparable with each other: each program times its own work. The output digests, not the timings, are the claim.",
+    ] {
+        y += 16.0;
+        b.push_str(&format!(
+            r#"<text x="40" y="{y:.0}" font-size="12" class="mut">{line}</text>"#
+        ));
+    }
+    card(
+        (1200, (y + 18.0) as u32),
+        t,
+        (
+            "Speed against v0.6.1, one row per timing program",
+            &speed_text(s),
+        ),
+        &SPEED_STYLE
+            .replace("MUTED", t.muted)
+            .replace("ONE", &format!("{one:.1}")),
+        &b,
+    )
+}
+fn speed_picture(s: &SpeedSet) -> String {
+    themed(
+        "media/presentation/speed-light.svg",
+        "media/presentation/speed-dark.svg",
+        &speed_text(s),
+        1200,
+    )
+}
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
     let evidence = Evidence::read()?;
@@ -1665,11 +2798,25 @@ fn assets() -> Result<Vec<(String, String)>> {
         ),
     ];
     let runs = Q8Runs::read()?;
+    let crash = CrashSeries::read()?;
+    let speed = SpeedSet::read()?;
     for dark in [false, true] {
         let theme = if dark { "dark" } else { "light" };
         out.push((
             format!("media/presentation/record-{theme}.svg"),
             record_card(dark, &runs),
+        ));
+        out.push((
+            format!("media/presentation/crash-{theme}.svg"),
+            crash_card(dark, &crash),
+        ));
+        out.push((
+            format!("media/presentation/speed-{theme}.svg"),
+            speed_card(dark, &speed),
+        ));
+        out.push((
+            format!("media/presentation/license-{theme}.svg"),
+            license_card(dark)?,
         ));
     }
     for dark in [false, true] {
@@ -1704,10 +2851,8 @@ fn page() -> String {
         .replace("__FACTS__", &facts_picture())
         .replace("__WALL__", &wall_picture())
         .replace("__BARS__", &bars_picture())
-        .replace(
-            "__DOC__",
-            &format!("https://github.com/Gelram-project/gel-ram/blob/{RELEASE}"),
-        )
+        // The page is opened from a checkout, so its links name that checkout's files.
+        .replace("__DOC__", ".")
         .replace("__RELEASE__", RELEASE)
 }
 fn native_intro() -> String {
@@ -1726,15 +2871,60 @@ fn native_intro() -> String {
     let record = Q8Runs::read()
         .map(|r| record_picture(&r))
         .unwrap_or_else(|e| format!("__RECORD__ {e}"));
+    let commitments = commitments()
+        .map(|n| n.to_string())
+        .unwrap_or_else(|e| format!("__COMMITMENTS__ {e}"));
+    let packages = packages()
+        .map(|n| n.to_string())
+        .unwrap_or_else(|e| format!("__PACKAGES__ {e}"));
+    let crash = CrashSeries::read()
+        .map(|c| crash_picture(&c))
+        .unwrap_or_else(|e| format!("__CRASH__ {e}"));
+    let speed = SpeedSet::read()
+        .map(|s| speed_picture(&s))
+        .unwrap_or_else(|e| format!("__SPEED__ {e}"));
+    let license = license_card(false)
+        .map(|_| license_picture())
+        .unwrap_or_else(|e| format!("__LICENSE__ {e}"));
     NATIVE
         .replace("__RECORD__", &record)
+        .replace("__COMMITMENTS__", &commitments)
+        .replace("__PACKAGES__", &packages)
         .replace("__FLOW__", &flow_picture())
-        .replace("__FACTS__", &facts_picture())
-        .replace("__WALL__", &wall_picture())
         .replace("__BARS__", &bars_picture())
+        .replace("__WALL__", &wall_picture())
+        .replace("__LOGO__", &readme_logo())
+        .replace("__CRASH__", &crash)
+        .replace("__SPEED__", &speed)
+        .replace("__LICENSE__", &license)
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
+}
+/// The dated rows of the published-commitments table, as the README counts them.
+fn commitments() -> Result<usize> {
+    let text = fs::read_to_string("docs/COMMITMENTS.md")?;
+    let table = text
+        .split_once("## Published commitments\n")
+        .ok_or("no published-commitments table")?
+        .1;
+    let rows = table
+        .lines()
+        .take_while(|l| l.is_empty() || l.starts_with('|'))
+        .filter(|l| l.starts_with("| 20"))
+        .count();
+    if rows == 0 {
+        return Err("no published commitment".into());
+    }
+    Ok(rows)
+}
+/// The packages in Cargo.lock; refused when one comes from outside this checkout.
+fn packages() -> Result<usize> {
+    let lock = fs::read_to_string("Cargo.lock")?;
+    if lock.lines().any(|l| l.starts_with("source = ")) {
+        return Err("Cargo.lock lists a package from outside this checkout".into());
+    }
+    Ok(lock.lines().filter(|l| *l == "[[package]]").count())
 }
 fn rewrite_readme(before: &str) -> Result<String> {
     let marker = "### What you can inspect\n";
@@ -1976,7 +3166,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 18 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 24 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -1995,10 +3185,66 @@ mod tests {
                 "__GRID__",
                 "__RESULTS__",
                 "__RECORD__",
+                "__COMMITMENTS__",
+                "__PACKAGES__",
+                "__LOGO__",
+                "__CRASH__",
+                "__SPEED__",
+                "__LICENSE__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
         }
+    }
+    #[test]
+    fn readme_counts_are_read_from_their_files() {
+        let s = native_intro();
+        // Counted another way: every table row in the file whose first cell is a date.
+        let dated = fs::read_to_string("docs/COMMITMENTS.md")
+            .unwrap()
+            .lines()
+            .filter(|l| {
+                let b = l.as_bytes();
+                b.len() > 14
+                    && l.starts_with("| ")
+                    && b[2..6].iter().all(u8::is_ascii_digit)
+                    && b[6] == b'-'
+                    && b[9] == b'-'
+                    && l[12..].starts_with(" |")
+            })
+            .count();
+        assert_eq!(commitments().unwrap(), dated);
+        assert!(s.contains(&format!(
+            "[{dated} published commitments](docs/COMMITMENTS.md)"
+        )));
+        let packages = packages().unwrap();
+        assert!(s.contains(&format!(
+            "every one of the {packages} packages in `Cargo.lock`"
+        )));
+        let lock = fs::read_to_string("Cargo.lock").unwrap();
+        assert_eq!(
+            packages,
+            lock.matches("\n[[package]]\n").count(),
+            "every package entry is counted"
+        );
+    }
+    #[test]
+    fn readme_is_short_and_names_no_question_set() {
+        let s = native_intro();
+        // Each image is one line; the text itself stays near 160 lines.
+        assert!(s.lines().count() <= 200, "{} lines", s.lines().count());
+        let lower = s.to_lowercase();
+        for named in [
+            "answer-or-abstain",
+            "question set",
+            "frozen question",
+            "unknown to",
+        ] {
+            assert!(!lower.contains(named), "{named}");
+        }
+        // One place to start: a single clone, no tag the visitor cannot check out.
+        assert_eq!(s.matches("git clone ").count(), 1);
+        assert!(!s.contains("git checkout"));
     }
     #[test]
     fn facts_are_read_from_the_repository() {
@@ -2260,6 +3506,655 @@ mod tests {
                 let tag = img.split('>').next().unwrap_or("");
                 assert!(!tag.contains(" height="), "fixed image height: {tag}");
             }
+        }
+    }
+    #[test]
+    fn record_card_moves_and_draws_sizes_to_scale() {
+        let recorded = Q8Runs::read().unwrap();
+        let other = Q8Runs {
+            n: 3,
+            ok: 2,
+            record: 2000,
+            packed: 8000,
+            frames: 9000,
+        };
+        for r in [&recorded, &other] {
+            for dark in [false, true] {
+                let c = record_card(dark, r);
+                // The loop: the bar grows, four views sweep it and land, the sizes
+                // grow and the verdict fades in, all on one clock.
+                for name in [
+                    "g0", "s0", "s1", "s2", "s3", "c0", "c1", "c2", "c3", "z0", "z1", "z2", "vd",
+                ] {
+                    assert!(
+                        c.contains(&format!(".{name}{{animation:{name} {RECORD_LOOP}s "))
+                            && c.contains(&format!("@keyframes {name}{{")),
+                        "{name}"
+                    );
+                    // ... and an element carries it.
+                    assert!(c.contains(&format!(" {name}\">")), "{name}");
+                }
+                assert!(!c.contains("animation-delay"));
+                // Reduced motion stops every moving element on the final picture.
+                assert!(c.contains("@media (prefers-reduced-motion:reduce){.a{animation:none}}"));
+                // The compared sizes are drawn to one scale.
+                let widths: Vec<f64> = c
+                    .split("<rect class=\"size\" ")
+                    .skip(1)
+                    .map(|s| {
+                        s.split("width=\"")
+                            .nth(1)
+                            .unwrap()
+                            .split('"')
+                            .next()
+                            .unwrap()
+                            .parse()
+                            .unwrap()
+                    })
+                    .collect();
+                assert_eq!(widths.len(), 3);
+                let longest = r.record.max(r.packed).max(r.frames) as f64;
+                let reach = widths.iter().copied().fold(0.0, f64::max);
+                assert!((reach - 700.0).abs() < 0.05, "{reach}");
+                for (drawn, bytes) in widths.iter().zip([r.record, r.packed, r.frames]) {
+                    let want = reach * bytes as f64 / longest;
+                    assert!((drawn - want).abs() < 0.06, "{drawn} vs {want}");
+                }
+            }
+        }
+    }
+    #[test]
+    fn the_first_page_does_not_say_how_a_view_arranges_bytes() {
+        let r = Q8Runs::read().unwrap();
+        // Gradient stops carry an `offset` attribute, so the phrase is matched whole.
+        for text in [
+            native_intro(),
+            record_card(false, &r),
+            record_card(true, &r),
+        ] {
+            let lower = text.to_lowercase();
+            for word in ["reversal", "additive offset", "modulo", "seed"] {
+                assert!(!lower.contains(word), "{word}");
+            }
+        }
+    }
+    #[test]
+    fn license_card_quotes_the_license_word_for_word() {
+        let license = fs::read_to_string(LICENSE_FILE).unwrap();
+        let folded = license.split_whitespace().collect::<Vec<_>>().join(" ");
+        let quotes = license_quotes(&license).unwrap();
+        assert_eq!(quotes.len(), 7);
+        for dark in [false, true] {
+            let s = license_card(dark).unwrap();
+            // Every quote is in LICENSE and drawn whole, line by line.
+            for q in &quotes {
+                assert!(folded.contains(q), "{q}");
+                for line in wrap(q, if *q == LICENSE_NOTICE_QUOTE { 120 } else { 44 }) {
+                    assert!(s.contains(&line), "{line}");
+                }
+            }
+            for want in [
+                "GEL RAM Noncommercial Reciprocal License 1.0",
+                "not an OSI-approved open-source license",
+                "gelram.licensing@gmail.com",
+                "A summary adds no rights; LICENSE controls (section 17).",
+                "@media (prefers-reduced-motion:reduce){.col{animation:none}}",
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—".contains(ch)));
+        }
+        // The alternative text is an attribute value: no double quote may end it early.
+        assert!(!license_text().contains('"'));
+        // The README paragraph quotes the two definitions word for word.
+        let readme = native_intro()
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ");
+        for quoted in [
+            "directly or indirectly receives, earns, enables, supports, protects, or is intended to produce money or other material financial benefit for You or another person",
+            "solely to assess, learn about, validate, or decide whether to obtain commercial rights",
+        ] {
+            assert!(folded.contains(quoted) && readme.contains(quoted), "{quoted}");
+        }
+        assert!(native_intro().contains(&license_picture()));
+    }
+    #[test]
+    fn a_license_that_no_longer_says_a_quoted_sentence_is_refused() {
+        let license = fs::read_to_string(LICENSE_FILE).unwrap();
+        for (from, to) in [
+            ("non-production environment", "production environment"),
+            ("No Monetized Use is licensed", "Monetized Use is licensed"),
+            ("without a time limit", "for one year"),
+            ("`Required Notice:`", "`Notice:`"),
+        ] {
+            assert!(license.contains(from), "{from}");
+            assert!(
+                license_quotes(&license.replacen(from, to, 1)).is_err(),
+                "{from}"
+            );
+        }
+        // Line breaks inside a sentence do not matter.
+        let rewrapped = license.replace(
+            "Licensor grants You a worldwide,",
+            "Licensor grants You a\nworldwide,",
+        );
+        assert!(license_quotes(&rewrapped).is_ok());
+    }
+    #[test]
+    fn crash_card_follows_the_recorded_series() {
+        let c = CrashSeries::read().unwrap();
+        let text = fs::read_to_string(CRASH_FILE).unwrap();
+        let summary = text.lines().last().unwrap();
+        assert_eq!(
+            summary,
+            format!(
+                "CRASH_SERIES=PASS trials={} acknowledged={} acknowledged_lost={} partial={} resumed={} killed_mid_publication={}",
+                c.trials.len(),
+                c.acknowledged,
+                c.lost,
+                c.partial,
+                c.resumed,
+                c.mid_publication
+            )
+        );
+        assert_eq!((c.documents, c.window_ms), (24, 344));
+        assert_eq!(
+            (c.file_system.as_str(), c.date.as_str()),
+            ("ext4", "2026-09-29")
+        );
+        for dark in [false, true] {
+            let s = crash_card(dark, &c);
+            for want in [
+                format!(">{}<", c.trials.len()),
+                format!(">{}<", grouped(c.acknowledged)),
+                format!(">{}<", c.mid_publication),
+                format!(
+                    "{} kills while saving. 0 acknowledged snapshots lost.",
+                    c.trials.len()
+                ),
+                "not a power cut".to_string(),
+                "the author's Linux machine".to_string(),
+                "SIGKILL".to_string(),
+            ] {
+                assert!(s.contains(&want), "{want}");
+            }
+            // The host name and the CPU of the recording machine are not shown.
+            for hidden in ["Ryzen", "Radeon", "oem", "x86_64", "ebe5360"] {
+                assert!(!s.contains(hidden), "{hidden}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.contains("<title id=\"t\">") && s.contains("<desc id=\"d\">"));
+            assert!(s.contains("@media (prefers-reduced-motion:reduce){.pt,.cnt{animation:none}}"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—".contains(ch)));
+        }
+        assert!(crash_picture(&c).contains(&crash_text(&c)));
+        assert!(crash_text(&c).contains("2,683 snapshots were acknowledged"));
+    }
+    #[test]
+    fn crash_card_draws_every_trial() {
+        let c = CrashSeries::read().unwrap();
+        let s = crash_card(false, &c);
+        assert_eq!(s.matches("<circle class=\"pt\"").count(), c.trials.len());
+        let filled = format!("r=\"5\" fill=\"{}\"/>", LIGHT.good);
+        assert_eq!(
+            s.matches(&filled).count(),
+            c.mid_publication + 1,
+            "points and the legend"
+        );
+        // A series of its own is drawn from its own rows, not from the recorded one.
+        let mini = "# host: Linux k · cpu · btrfs · rustc · rev · 2027-01-02T00:00:00Z\n# gel-evidence crash series: 4 documents of about 64 KiB, a new snapshot after each; kill after 1..=100 ms (uninterrupted run + 20%), seed 1\n".to_string()
+            + CRASH_COLUMNS
+            + "\n1\t0\t0\t0\t0\t0\t1\ttrue\t-\n2\t100\t4\t0\t0\t0\t0\ttrue\t9\n3\t50\t2\t0\t1\t0\t0\ttrue\t5\nCRASH_SERIES=PASS trials=3 acknowledged=6 acknowledged_lost=0 partial=0 resumed=3 killed_mid_publication=2\n";
+        let m = CrashSeries::from_text(&mini).unwrap();
+        let s = crash_card(true, &m);
+        assert_eq!(s.matches("<circle class=\"pt\"").count(), 3);
+        // Kill at 0 ms with nothing saved, at the window end with all saved, and halfway.
+        for (cx, cy) in [("100.0", "324.0"), ("740.0", "120.0"), ("420.0", "222.0")] {
+            assert!(s.contains(&format!("cx=\"{cx}\" cy=\"{cy}\"")), "{cx} {cy}");
+        }
+        assert!(s.contains("(btrfs, 2027-01-02)") && s.contains(">all 4 snapshots saved<"));
+        assert!(!s.contains("2,683") && !s.contains(">200<"));
+    }
+    #[test]
+    fn crash_series_disagreeing_with_its_rows_is_refused() {
+        let text = fs::read_to_string(CRASH_FILE).unwrap();
+        assert!(CrashSeries::from_text(&text).is_ok());
+        let row = "\n10\t311\t24\t0\t0\t0\t0\ttrue\t4439\n";
+        assert!(text.contains(row));
+        let summary = text.lines().last().unwrap();
+        for bad in [
+            text.replace(row, "\n10\t311\t24\t1\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t1\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\t0\tfalse\t4439\n"),
+            text.replace(row, "\n10\t311\t23\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\t1\ttrue\t4439\n"),
+            text.replace(row, "\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\tmany\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t999\t24\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace("CRASH_SERIES=PASS", "CRASH_SERIES=FAIL"),
+            text.replace(summary, ""),
+            format!("{text}{summary}\n"),
+            text.replace("killed_mid_publication=153", ""),
+            text.replace(CRASH_COLUMNS, "# trial\tkill_ms"),
+            text.replace("# host: Linux ", "# host: "),
+        ] {
+            assert!(CrashSeries::from_text(&bad).is_err());
+        }
+    }
+    #[test]
+    fn speed_card_follows_the_timing_records() {
+        let s = SpeedSet::read().unwrap();
+        // Counted another way: example directories, summaries and their case lines.
+        let (mut dirs, mut summaries, mut lines) = (0, 0, 0);
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                dirs += 1;
+                if let Ok(text) = fs::read_to_string(path.join("summary.txt")) {
+                    summaries += 1;
+                    lines += text
+                        .lines()
+                        .filter(|l| l.starts_with("SPEED_AB case="))
+                        .count();
+                }
+            }
+        }
+        let cases = s.cases().count();
+        let (timed, same) = s.verdicts();
+        assert_eq!((s.examples.len(), timed, cases), (dirs, summaries, lines));
+        assert_eq!((dirs, summaries, lines), (24, 23, 133));
+        assert_eq!(s.sides(), [103, 18, 12]);
+        assert_eq!(same, 22);
+        // The rows add up to the set: every case is counted in exactly one row.
+        let rows: Vec<SpeedRow> = s.examples.iter().filter_map(SpeedRow::of).collect();
+        let mut sides = [0; 3];
+        for r in &rows {
+            for (sum, n) in sides.iter_mut().zip(r.sides) {
+                *sum += n;
+            }
+        }
+        assert_eq!((rows.len(), sides), (timed, s.sides()));
+        let text = speed_text(&s);
+        for want in [
+            "133 timed cases in 23 of 24 timing programs",
+            "103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it",
+            "22 of 23 timed programs",
+            "Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1.",
+            "speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in",
+            "speed_top1_many has only a manifest",
+            "not pinned to cores",
+            "Ratios of different programs are not comparable",
+        ] {
+            assert!(text.contains(want), "{want}");
+        }
+        assert!(speed_picture(&s).contains(&format!(r#"alt="{text}""#)));
+        for dark in [false, true] {
+            let (c, t) = (speed_card(dark, &s), theme(dark));
+            // Short enough to stand in the README without a collapsed block.
+            let height = c.split(" height=\"").nth(1).unwrap().split('"').next();
+            assert!(height.unwrap().parse::<u32>().unwrap() <= 700);
+            // SHA-256 alone is slower in every case: a red span only, left of 1.
+            let sha = speed_row(&c, "speed_sha256");
+            assert_eq!(speed_spans(sha).len(), 1);
+            assert_eq!(speed_spans(sha)[0].0, "lo");
+            for want in [
+                ">0.28<".to_string(),
+                ">0.33<".to_string(),
+                ">0.39<".to_string(),
+                format!(r#"style="fill:{}">2<"#, t.red[1]),
+                format!(r#"fill="{}"/>"#, t.red[1]),
+            ] {
+                assert!(sha.contains(&want), "{want}");
+            }
+            // The overlap loads are slower in five cases: their span reaches left of 1 in red.
+            let overlap = speed_row(&c, "speed_load_overlap");
+            let kinds: Vec<&str> = speed_spans(overlap).iter().map(|s| s.0).collect();
+            assert_eq!(kinds, ["lo", "hi"]);
+            assert!(overlap.contains(&format!(r#"style="fill:{}">5<"#, t.red[1])));
+            // The two exceptions keep their footnotes, numbered in name order.
+            let top1 = speed_row(&c, "speed_top1_many");
+            assert!(top1.contains(">not built in v0.6.1: no timing<") && top1.contains(">note 1<"));
+            assert!(!top1.contains(r#"class="sp "#));
+            let gates = speed_row(&c, "speed_tree_gates");
+            assert!(gates.contains(">differs · note 2<") && gates.contains(t.amber[1]));
+            // One check per program with the same output, and one in the legend.
+            assert_eq!(c.matches("l3.5 3.5 6.5-7.5").count(), same + 1);
+            for want in [
+                ">133 cases:<",
+                ">faster beyond its A/A band: 103<",
+                ">slower beyond it: 18<",
+                ">inside it: 12<",
+                ">same output digest in A, A2 and B: 22 of 23<",
+                "cases grouped by timing program; per-case results are in docs/speed-results",
+                "medians of 9 to 27 runs per case",
+                "AMD Ryzen AI 9 HX 370",
+                "not pinned to cores",
+                "not a confidence interval",
+                "Ratios of different programs are not comparable with each other",
+                "The output digests, not the timings, are the claim.",
+            ] {
+                assert!(c.contains(want), "{want}");
+            }
+            assert!(c.contains("@media (prefers-reduced-motion:reduce){.sp,.fd{animation:none}}"));
+            // Spans grow out of the axis at 1, one row after another, and stop.
+            let tick = r#"" y="228" text-anchor="middle" font-size="10">1<"#;
+            let one = c.split(tick).next().unwrap().rsplit("x=\"").next().unwrap();
+            assert!(
+                c.contains(&format!("transform-origin:{one}px 0}}")),
+                "{one}"
+            );
+            assert_eq!(c.matches(" both").count(), 2);
+            assert!(!c.contains("infinite"));
+            // Only the keyframes hide or shrink anything, so with the animation
+            // removed every element is in its final, visible state.
+            let style = c.split("<style>").nth(1).unwrap();
+            let css = style.split("@keyframes").next().unwrap();
+            assert!(!css.contains("opacity") && !css.contains("transform:"));
+            // The fade ends at opacity 1 and holds it, so an animated element must
+            // not carry its own opacity: the moving card would end darker than the still one.
+            for tag in c.split('<') {
+                if tag.contains(r#"class="fd"#) || tag.contains(r#"class="sp "#) {
+                    assert!(!tag.contains(" opacity="), "{tag}");
+                }
+            }
+            assert!(!c.contains("__") && !c.contains("<script") && !c.contains("href"));
+            assert!(c.chars().all(|ch| ch.is_ascii() || ch == '·' || ch == '—'));
+        }
+    }
+    /// The part of a speed card from a program's name up to the next program's.
+    fn speed_row<'a>(c: &'a str, name: &str) -> &'a str {
+        c.split(r#"<text class="pn b""#)
+            .find(|r| {
+                r.split_once('>')
+                    .is_some_and(|(_, t)| t.starts_with(&format!("{name}<")))
+            })
+            .unwrap()
+    }
+    /// The spans of one row: below 1 (`lo`) or above it (`hi`), with x and width.
+    fn speed_spans(row: &str) -> Vec<(&str, f64, f64)> {
+        let attr = |r: &str, key: &str| -> f64 {
+            let v = r.split(&format!(" {key}=\"")).nth(1).unwrap();
+            v.split('"').next().unwrap().parse().unwrap()
+        };
+        row.split(r#"<rect class="sp "#)
+            .skip(1)
+            .map(|r| (r.split('"').next().unwrap(), attr(r, "x"), attr(r, "width")))
+            .collect()
+    }
+    /// The x of the median mark of one row.
+    fn speed_median(row: &str) -> f64 {
+        let r = row.split(r#"<circle class="fd""#).nth(1).unwrap();
+        let v = r.split(" cx=\"").nth(1).unwrap();
+        v.split('"').next().unwrap().parse().unwrap()
+    }
+    #[test]
+    fn speed_card_names_no_case() {
+        let s = SpeedSet::read().unwrap();
+        // Every case= value, read from the summaries here, not through the parser.
+        let mut names = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let path = entry.unwrap().path();
+            if let Ok(text) = fs::read_to_string(path.join("summary.txt")) {
+                for line in text.lines() {
+                    if let Some(rest) = line.strip_prefix("SPEED_AB case=") {
+                        names.push(rest.split(' ').next().unwrap().to_string());
+                    }
+                }
+            }
+        }
+        assert_eq!(names.len(), 133);
+        let programs: Vec<&str> = s.examples.iter().map(|e| e.name.as_str()).collect();
+        // Words of a text: runs of lower-case letters, digits and underscores.
+        let words = |text: &str| -> Vec<String> {
+            text.split(|ch: char| !(ch.is_ascii_lowercase() || ch.is_ascii_digit() || ch == '_'))
+                .filter(|w| !w.is_empty())
+                .map(str::to_string)
+                .collect()
+        };
+        let alt = speed_text(&s);
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            let mut drawn = words(&alt);
+            for node in c.split('>').filter_map(|p| p.split_once('<')) {
+                drawn.extend(words(node.0));
+            }
+            for name in &names {
+                // A program may share a name with a case; it is drawn as the program.
+                if programs.contains(&name.as_str()) {
+                    continue;
+                }
+                // A whole text node: catches every name, even a common word such as "large".
+                assert!(!c.contains(&format!(">{name}<")), "{name}");
+                // Inside longer text, only a name with an underscore or a digit, which
+                // no ordinary word has, so "small" in a sentence is not a case.
+                if name.contains('_') || name.bytes().any(|b| b.is_ascii_digit()) {
+                    assert!(!drawn.contains(name), "{name}");
+                }
+            }
+        }
+    }
+    #[test]
+    fn speed_card_has_one_row_per_program() {
+        let s = SpeedSet::read().unwrap();
+        let mut dirs = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let entry = entry.unwrap();
+            if entry.path().is_dir() {
+                dirs.push(entry.file_name().to_string_lossy().into_owned());
+            }
+        }
+        dirs.sort();
+        assert_eq!(dirs.len(), 24);
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            let drawn: Vec<&str> = c
+                .split(r#"<text class="pn b""#)
+                .skip(1)
+                .map(|r| r.split_once('>').unwrap().1.split('<').next().unwrap())
+                .collect();
+            assert_eq!(drawn, dirs);
+        }
+    }
+    #[test]
+    fn speed_summaries_that_do_not_add_up_are_refused() {
+        let readme = format!("| Machine | one machine |\n| Load | load average 1 |\n| Pinning | none: not pinned |\nB is `main` at `{SPEED_B}`. `speed_new` has only a manifest: it does not build there. `speed_tree` prints `DIFFERENT_OUTPUT` because it counts its own tree.\n");
+        let line = "SPEED_AB case=large a_ns=38298255 a2_ns=37391469 b_ns=138871537 aa=0.976 gain=0.276 runs=27";
+        let digest = |c: char| c.to_string().repeat(64);
+        let summary = |lines: &str, b: char, verdict: &str| {
+            format!(
+                "{lines}\nSPEED_AB_CHECK tree=a sha256={}\nSPEED_AB_CHECK tree=a2 sha256={}\nSPEED_AB_CHECK tree=b sha256={}\nSPEED_AB_VERDICT={verdict}\n",
+                digest('a'),
+                digest('a'),
+                digest(b)
+            )
+        };
+        let one = |name: &str, text: Option<String>| {
+            SpeedSet::from_texts(&readme, &[(name.to_string(), text)])
+        };
+        let good = summary(line, 'a', "SAME_OUTPUT");
+        let s = one("speed_sha256", Some(good.clone())).unwrap();
+        let case = &s.examples[0].cases()[0];
+        assert_eq!((case.gain, case.aa, case.runs), (0.276, 0.976, 27));
+        assert!(s.examples[0].note.is_none());
+        // A differing digest and a missing summary are kept, with the README's sentence.
+        let differs = summary(line, 'b', "DIFFERENT_OUTPUT");
+        let s = one("speed_tree", Some(differs.clone())).unwrap();
+        assert_eq!(
+            s.examples[0].note.as_deref(),
+            Some("speed_tree prints DIFFERENT_OUTPUT because it counts its own tree.")
+        );
+        let s = SpeedSet::from_texts(
+            &readme,
+            &[
+                ("speed_new".to_string(), None),
+                ("speed_sha256".to_string(), Some(good.clone())),
+            ],
+        )
+        .unwrap();
+        assert!(s.examples[0].timed.is_none() && s.examples[0].note.is_some());
+        assert_eq!(s.cases().count(), 1);
+        let last_digest = format!("SPEED_AB_CHECK tree=b sha256={}\n", digest('a'));
+        for bad in [
+            good.replace("gain=0.276", "gain=0.286"),
+            good.replace("aa=0.976", "aa=0.967"),
+            good.replace("gain=0.276", "gain=0.27"),
+            good.replace("gain=0.276", "gain=0"),
+            good.replace("b_ns=138871537", "b_ns=128871537"),
+            good.replace("a_ns=38298255", "a_ns=0"),
+            good.replace(" runs=27", ""),
+            good.replace("runs=27", "runs=27 extra=1"),
+            good.replace("case=large", "case=Large"),
+            good.replace("SPEED_AB_VERDICT=SAME_OUTPUT\n", ""),
+            good.replace("SAME_OUTPUT", "DIFFERENT_OUTPUT"),
+            good.replace("tree=a2", "tree=b"),
+            good.replace(&last_digest, ""),
+            format!("{line}\n{good}"),
+            format!("{good}SPEED_AB_VERDICT=SAME_OUTPUT\n"),
+            format!("an unexpected line\n{good}"),
+            summary(line, 'b', "SAME_OUTPUT"),
+            summary(line, 'g', "DIFFERENT_OUTPUT"),
+        ] {
+            assert!(one("speed_sha256", Some(bad.clone())).is_err(), "{bad}");
+        }
+        // The medians give 0.2758: a print to two digits must read 0.28.
+        let shorter = good.replace("gain=0.276", "gain=0.28");
+        assert!(one("speed_sha256", Some(shorter)).is_ok());
+        // Unexplained differences or gaps, and a README that no longer states the setup.
+        assert!(one("speed_sha256", Some(differs)).is_err());
+        assert!(one("speed_new", None).is_err());
+        let gap = [
+            ("speed_sha256".to_string(), Some(good.clone())),
+            ("speed_gone".to_string(), None),
+        ];
+        assert!(SpeedSet::from_texts(&readme, &gap).is_err());
+        for changed in [
+            readme.replace("| Machine |", "| Host |"),
+            readme.replace("none:", "cores 0 to 7:"),
+            readme.replace(SPEED_B, "0000000"),
+            readme.replace("one machine", "one <b>machine</b>"),
+        ] {
+            let set = [("speed_sha256".to_string(), Some(good.clone()))];
+            assert!(SpeedSet::from_texts(&changed, &set).is_err(), "{changed}");
+        }
+    }
+    #[test]
+    fn speed_card_draws_the_numbers_it_is_given() {
+        let case = |name: &str, aa: f64, gain: f64| SpeedCase {
+            name: name.to_string(),
+            aa,
+            gain,
+            runs: 9,
+        };
+        let timed = |name: &str, cases: Vec<SpeedCase>| SpeedExample {
+            name: name.to_string(),
+            timed: Some((cases, true)),
+            note: None,
+        };
+        let s = SpeedSet {
+            machine: "one machine".to_string(),
+            load: "load average 1".to_string(),
+            examples: vec![
+                timed(
+                    "speed_one",
+                    vec![
+                        case("quarter", 1.0, 0.25),
+                        case("four", 1.0, 4.0),
+                        case("same", 1.25, 1.1),
+                    ],
+                ),
+                SpeedExample {
+                    name: "speed_new".to_string(),
+                    timed: None,
+                    note: Some("speed_new has only a manifest.".to_string()),
+                },
+                timed(
+                    "speed_slow",
+                    vec![case("half_a", 1.0, 0.5), case("quarter_a", 1.0, 0.25)],
+                ),
+                timed(
+                    "speed_two",
+                    vec![case("double", 1.0, 2.0), case("eight", 1.0, 8.0)],
+                ),
+            ],
+        };
+        assert_eq!(s.sides(), [3, 3, 1]);
+        let near = |a: f64, b: f64| (a - b).abs() < 0.16;
+        for dark in [false, true] {
+            let (c, t) = (speed_card(dark, &s), theme(dark));
+            assert_eq!(c.matches(r#"<text class="pn b""#).count(), 4);
+            for name in [
+                "quarter",
+                "four",
+                "same",
+                "half_a",
+                "quarter_a",
+                "double",
+                "eight",
+            ] {
+                assert!(!c.contains(&format!(">{name}<")), "{name}");
+            }
+            for want in [
+                ">7 cases:<",
+                ">faster beyond its A/A band: 3<",
+                ">slower beyond it: 3<",
+                ">inside it: 1<",
+                ">same output digest in A, A2 and B: 3 of 3<",
+                "medians of 9 runs per case",
+                ">Note 1<",
+                "speed_new has only a manifest.",
+            ] {
+                assert!(c.contains(want), "{want}");
+            }
+            assert!(!c.contains(">0.28<") && !c.contains("AMD") && !c.contains("note 2"));
+            // The row of three cases: one faster, one slower, one inside its band;
+            // lowest, median and highest gain as printed.
+            let row = speed_row(&c, "speed_one");
+            for want in [
+                format!(r#"style="fill:{}">1<"#, t.blue[1]),
+                format!(r#"style="fill:{}">1<"#, t.red[1]),
+                format!(r#"style="fill:{}">1<"#, t.ink),
+                ">3<".to_string(),
+                ">0.25<".to_string(),
+                ">1.10<".to_string(),
+                ">4.00<".to_string(),
+            ] {
+                assert!(row.contains(&want), "{want}");
+            }
+            // On a log scale a quarter and four are equally far from 1: the red
+            // part and the blue part of the span are equally long and meet at 1.
+            let one = speed_spans(row);
+            assert_eq!((one[0].0, one[1].0), ("lo", "hi"));
+            assert!(near(one[0].2, one[1].2) && near(one[0].1 + one[0].2, one[1].1));
+            assert!(row.contains(r#"class="sp lo""#) && row.contains(t.red[1]));
+            let (axis, octave) = (one[1].1, one[1].2 / 2.0);
+            let at = |v: f64| axis + v.log2() * octave;
+            assert!(near(speed_median(row), at(1.1)));
+            // Slower in every case: a red span only, from a quarter to a half.
+            let slow = speed_spans(speed_row(&c, "speed_slow"));
+            assert_eq!(slow.len(), 1);
+            assert_eq!(slow[0].0, "lo");
+            assert!(near(slow[0].1, at(0.25)) && near(slow[0].2, octave));
+            assert!(near(speed_median(speed_row(&c, "speed_slow")), at(0.375)));
+            // Faster in every case: a blue span from 2 to 8, its median the mean of the two.
+            let two = speed_row(&c, "speed_two");
+            let span = speed_spans(two);
+            assert_eq!(span.len(), 1);
+            assert_eq!(span[0].0, "hi");
+            assert!(near(span[0].1, at(2.0)) && near(span[0].2, 2.0 * octave));
+            assert!(two.contains(">5.00<") && near(speed_median(two), at(5.0)));
+            for (kind, colour) in [("lo", t.red[1]), ("hi", t.blue[1])] {
+                for r in c.split(&format!(r#"<rect class="sp {kind}""#)).skip(1) {
+                    let tag = r.split('>').next().unwrap();
+                    assert!(tag.contains(&format!(r#"fill="{colour}"/"#)), "{tag}");
+                }
+            }
+            // A program without timing draws no span, only its footnote.
+            let new = speed_row(&c, "speed_new");
+            assert!(new.contains(">not built in v0.6.1: no timing<") && new.contains(">note 1<"));
+            assert!(!new.contains(r#"class="sp "#) && !new.contains("<circle class=\"fd\""));
         }
     }
 }
