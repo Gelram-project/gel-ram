@@ -213,7 +213,7 @@ Use are answered `no`; an `unsure` answer prints `ASK_THE_LICENSOR`.
 | Sharing a Modification | `check` the tree | `check` lists what it found | sections 3, 8 ("You must not represent the Modification as granting commercial rights that You do not have") |
 
 A Commercial Agreement is a separate written agreement signed by the Licensor
-(LICENSE section 2); the commercial options are described in
+and the person or entity receiving commercial rights (LICENSE section 2); the commercial options are described in
 [COMMERCIAL-LICENSE.md](../COMMERCIAL-LICENSE.md), which is itself not a grant.
 
 ## Where the rules are
