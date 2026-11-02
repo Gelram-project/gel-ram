@@ -40,7 +40,7 @@ Copyright (c) 1991-2024 Unicode, Inc. Unicode Normalization Form C in
   followed before, are unmodified Unicode data files, used only by tests that
   check that the 16.0.0 tables keep every 15.1.0 result and property.
 
-Both are used under the Unicode License v3, whose full text is
+All of these are used under the Unicode License v3, whose full text is
 [crates/gel-source/LICENSE-UNICODE.txt](crates/gel-source/LICENSE-UNICODE.txt)
 and accompanies every release package. They are not GEL RAM-owned material and
 are not licensed under GEL RAM NCRL 1.0.

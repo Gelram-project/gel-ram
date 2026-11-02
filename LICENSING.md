@@ -8,9 +8,9 @@ To read a distribution tree for the license, the Required Notice and the GEL RAM
 
 ## 1. Core rule
 
-1. If You do not monetize GEL RAM, You may use it, study it, modify it, keep private changes private, and share it for noncommercial purposes.
-2. Anyone, including a company, may test, benchmark, prototype, integrate, and modify GEL RAM for Evaluation without a fixed time limit, provided the work remains non-production and does not operate or materially improve a monetized product or service.
-3. If any individual, freelancer, sole trader, company, nonprofit, or other organization wants to earn money or obtain material financial benefit from GEL RAM or a GEL RAM-derived Modification, commercial rights must be obtained before that Monetized Use begins.
+1. If You do not monetize GEL RAM, You may reproduce, run, study, modify, keep private changes private, and share it for Noncommercial Purposes.
+2. Anyone, including a company, may test, benchmark, prototype, integrate, and modify GEL RAM for Evaluation without a fixed time limit, provided the work remains in a non-production environment, serves solely to assess, learn about, validate, or decide whether to obtain commercial rights, and does not operate or materially improve a monetized product or service.
+3. If any individual, freelancer, sole trader, company, nonprofit, or other organization uses GEL RAM or a GEL RAM-derived Modification in a way that directly or indirectly receives, earns, enables, supports, protects, or is intended to produce money or other material financial benefit for itself or another person, commercial rights must be obtained before that Monetized Use begins.
 4. Creating Your own GEL RAM-derived modifications does not avoid the commercial requirement.
 5. Commercial terms may use a reciprocal model, where payment and agreed improvements are shared, or a closed model, where specifically authorized modifications may remain private in exchange for separately negotiated compensation.
 
@@ -22,15 +22,15 @@ Private noncommercial modifications may remain private without a time limit. The
 
 Recipients of shared GEL RAM remain subject to the public license and do not receive commercial rights.
 
-The same noncommercial rule applies to project-owned demonstration films and screenshots identified in [media/RIGHTS.md](media/RIGHTS.md): they may be viewed, copied, and shared noncommercially under the root license. Monetized reuse requires a Commercial Agreement.
+The same noncommercial rule applies to project-owned demonstration films and screenshots identified in [media/RIGHTS.md](media/RIGHTS.md): they may be viewed, copied, shared and adapted noncommercially under the root license. Monetized reuse requires a Commercial Agreement.
 
 ## 3. Free Evaluation for everyone
 
 Evaluation is available to any person or organization, including for-profit companies, without a fixed 30-day clock.
 
-Evaluation may include source review, benchmarking, tests, prototypes, integration experiments, compatibility work, and temporary modifications in a non-production environment.
+Evaluation may include source review, benchmarking, tests, prototypes, integration experiments, compatibility work, and temporary modifications in a non-production environment, solely to assess, learn about, validate, or decide whether to obtain commercial rights.
 
-Evaluation does not permit customer-facing production deployment, paid or subscription services, advertising-supported production operation, billable client delivery, production training or tuning, deliverables for a paying customer, revenue-generating infrastructure, or production use that materially improves or reduces the operating cost of a monetized service.
+Evaluation does not permit customer-facing deployment, production operation, paid service delivery, sale, subscription use, advertising-supported operation, billable work, training or tuning a production system, deliverables for a paying customer, revenue-generating infrastructure, or use that operates or materially improves a revenue-generating service or product.
 
 A company may therefore test freely, but it must obtain commercial rights before the test becomes production or Monetized Use.
 
