@@ -38,9 +38,9 @@ until the card is rebuilt.
 
 ## Preservation and source
 
-The presentation describes the checkout it is in; the latest release is
-v0.7.0. Earlier README versions are no longer kept in the tree; they remain
-in the git history. The whole README is generated; no part of it is maintained
+The presentation describes the checkout it is in; tagged releases are listed on
+the repository's Releases page. Earlier README versions are no longer kept in
+the tree; they remain in the git history. The whole README is generated; no part of it is maintained
 by hand.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and

@@ -54,9 +54,8 @@ package is ready.
 - no-replace source-bundle persistence and fresh-process reopen;
 - Q8 inverse/exactness checks;
 - independent byte/numeric/ranking audit;
-- re-scoring of the recorded answers (`xtask answer-bench`): of GEL and three
-  language models on the first two sets, of GEL and two search engines on the
-  later ones ([external checks](EXTERNAL-CHECKS.md));
+- re-scoring of the recorded answers (`xtask answer-bench`,
+  [external checks](EXTERNAL-CHECKS.md));
 - Linux/macOS/Windows public-core checks.
 
 ## What would help the project most
