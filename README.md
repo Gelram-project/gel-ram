@@ -59,6 +59,8 @@ Four views are not four independent memories, four votes or a speedup.
 
 ## Exact bytes, or a refusal
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
+
 Evidence Lab (`gel-evidence`), the public collection tool, works on your own
 UTF-8 files: each quotation comes back byte for byte with its byte range, a
 replaced document's old citation is refused, and a saved snapshot with one
@@ -71,17 +73,34 @@ ends with `GEL_EVIDENCE_DEMO=PASS`. [Evidence Lab guide](docs/EVIDENCE-LAB.md) Â
 
 ## A killed process loses nothing it confirmed
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/crash-dark.svg"><img alt="One recorded crash series on the author's Linux machine (ext4, 2026-09-29): in each of 200 trials a collection growing to 24 snapshots was killed with SIGKILL at a random moment within 344 ms. 2,683 snapshots were acknowledged before the kills; 0 were lost and 0 were partial, and 200 of 200 trials resumed to the uninterrupted result. 153 kills came in the middle of a publication. A process kill, not a power cut: power-loss durability is not established." src="media/presentation/crash-light.svg" width="1200"></picture>
+
 In the recorded series Evidence Lab was killed at random moments in 200 trials:
 0 of 2,683 acknowledged snapshots were lost, none was partial, and every trial
 resumed to the uninterrupted result ([crash series](docs/CRASH-SERIES.md)).
 Write failures, denied permissions and a full disk leave the previous snapshot
 intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)).
 
+## The public checks, drawn from their files
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/bars-dark.svg"><img alt="Format mutation matrix: rejected and accepted rows per public format in the committed report, and how many rows matched their expected verdict." src="media/presentation/bars-light.svg" width="1200"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/wall-dark.svg"><img alt="Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows." src="media/presentation/wall-light.svg" width="1200"></picture>
+
+Both images are drawn from the committed mutation report and the property map when the README is built; the presentation check fails if either file changes without a rebuild. The map shows the rule CI enforces, not the outcome of one run ([CI evidence](docs/CI-EVIDENCE.md)).
+
 ## New in 0.7, and on main
 
 - **No third-party packages:** every one of the 14 packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
 - **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([release notes](RELEASE-NOTES-v0.7.0.md)).
+
+<details><summary><strong>Every timed case against v0.6.1, as an animated chart</strong> (tall; opens here)</summary>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/speed-dark.svg"><img alt="Timing set 2026-10-20-against-v0.6.1: v0.6.1 against main at 876247f, the first v0.7 speed package. 133 timed cases in 23 timing examples, each drawn as the v0.6.1 median time divided by the new one on a log scale centred at 1, over the band of its A/A noise. 103 are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it. 22 of 23 timed examples printed the same output digest in all three trees. speed_top1_many has only a manifest: its API does not exist in v0.6.1, so the example does not build there. speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in, and the two trees differ. Machine: AMD Ryzen AI 9 HX 370, 24 hardware threads, 94 GiB RAM, Linux 6.17; load average 2.7 at the start, 12.6 to 19.4 at the end, from other work on the machine; not pinned to cores. Ratios of different cases are not comparable with each other; the output digests, not the timings, are the claim." src="media/presentation/speed-light.svg" width="1200"></picture>
+
+</details>
+
 - **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file except the generated Unicode tables begins with a two-line license header; `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
 
 ## Using GEL RAM
@@ -152,6 +171,8 @@ Six edited 12-second replays of recorded public-tool runs; the pacing is not exe
 The [full-page edition](README-MULTIMEDIA.html) opens from your checkout in a browser; GitHub shows HTML files as source ([presentation guide](docs/README-PRESENTATION.md)).
 
 ## About
+
+<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/presentation/logo-still-dark.svg"><source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/logo-still-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/logo-dark.svg"><img alt="GEL RAM logo: a glass cube of record cells around an accent core." src="media/presentation/logo-light.svg" width="120"></picture>
 
 GEL RAM is an independent hobby and research project by **RR â€” GEL RAM Project**, developed with AI assistance; this repository is not the complete private research system.
 Third-party material keeps its own terms: the Rust Book fixture (MIT), the Unicode data files and the tables derived from them (Unicode License v3) and the quoted Wikipedia passages (CC BY-SA 4.0) ([third-party notices](THIRD-PARTY-NOTICES.md)).

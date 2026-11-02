@@ -215,6 +215,8 @@ Four views are not four independent memories, four votes or a speedup.
 
 ## Exact bytes, or a refusal
 
+__FLOW__
+
 Evidence Lab (`gel-evidence`), the public collection tool, works on your own
 UTF-8 files: each quotation comes back byte for byte with its byte range, a
 replaced document's old citation is refused, and a saved snapshot with one
@@ -227,17 +229,34 @@ ends with `GEL_EVIDENCE_DEMO=PASS`. [Evidence Lab guide](docs/EVIDENCE-LAB.md) �
 
 ## A killed process loses nothing it confirmed
 
+__CRASH__
+
 In the recorded series Evidence Lab was killed at random moments in 200 trials:
 0 of 2,683 acknowledged snapshots were lost, none was partial, and every trial
 resumed to the uninterrupted result ([crash series](docs/CRASH-SERIES.md)).
 Write failures, denied permissions and a full disk leave the previous snapshot
 intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)).
 
+## The public checks, drawn from their files
+
+__BARS__
+
+__WALL__
+
+Both images are drawn from the committed mutation report and the property map when the README is built; the presentation check fails if either file changes without a rebuild. The map shows the rule CI enforces, not the outcome of one run ([CI evidence](docs/CI-EVIDENCE.md)).
+
 ## New in 0.7, and on main
 
 - **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
 - **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([release notes](RELEASE-NOTES-v0.7.0.md)).
+
+<details><summary><strong>Every timed case against v0.6.1, as an animated chart</strong> (tall; opens here)</summary>
+
+__SPEED__
+
+</details>
+
 - **On `main` since v0.7.0, not yet released:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file except the generated Unicode tables begins with a two-line license header; `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept.
 
 ## Using GEL RAM
@@ -294,6 +313,8 @@ __GRID__
 The [full-page edition](README-MULTIMEDIA.html) opens from your checkout in a browser; GitHub shows HTML files as source ([presentation guide](docs/README-PRESENTATION.md)).
 
 ## About
+
+__LOGO__
 
 GEL RAM is an independent hobby and research project by **RR — GEL RAM Project**, developed with AI assistance; this repository is not the complete private research system.
 Third-party material keeps its own terms: the Rust Book fixture (MIT), the Unicode data files and the tables derived from them (Unicode License v3) and the quoted Wikipedia passages (CC BY-SA 4.0) ([third-party notices](THIRD-PARTY-NOTICES.md)).
@@ -1214,6 +1235,18 @@ fn logo_picture() -> String {
         img("logo-still")
     )
 }
+/// The logo for the README: animated, or still when reduced motion is requested,
+/// in the same way as the banner.
+fn readme_logo() -> String {
+    let path = |name: &str, theme: &str| format!("media/presentation/{name}-{theme}.svg");
+    format!(
+        r#"<picture><source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="{}"><source media="(prefers-reduced-motion: reduce)" srcset="{}"><source media="(prefers-color-scheme: dark)" srcset="{}"><img alt="GEL RAM logo: a glass cube of record cells around an accent core." src="{}" width="120"></picture>"#,
+        path("logo-still", "dark"),
+        path("logo-still", "light"),
+        path("logo", "dark"),
+        path("logo", "light")
+    )
+}
 fn bars_picture() -> String {
     themed(
         "media/presentation/bars-light.svg",
@@ -1331,21 +1364,39 @@ fn grouped(n: usize) -> String {
 fn record_text(r: &Q8Runs) -> String {
     format!("One stored Q8 record: {} one-byte values and a {RECORD_MASK}-byte activity mask, {} bytes, read through four equivalent views without four copies. Four packed copies would take {} bytes; the reference layout used for checking takes {} bytes. {} of {} recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories.", grouped(RECORD_VALUES), grouped(r.record), grouped(r.packed), grouped(r.frames), r.ok, r.n)
 }
-/// One stored record drawn to scale as values and mask, the four views it is read
-/// through, the sizes it is compared with, and the verdict of every recorded run.
+/// Length of one loop of the record card's animation, in seconds.
+const RECORD_LOOP: u32 = 12;
+/// One looping CSS animation of the record card. Every element is timed by its
+/// keyframe percentages alone, never by a delay, so all share one clock.
+fn record_motion(name: &str, timing: &str, frames: &str) -> String {
+    format!(".{name}{{animation:{name} {RECORD_LOOP}s {timing} infinite}}@keyframes {name}{{{frames}}}\n")
+}
+/// One stored record drawn to scale as values and mask; four views read that same
+/// bar in turn and each lands on the score of a separate written-out copy; the
+/// sizes it is compared with grow to scale; the verdict of every recorded run
+/// follows. One loop of RECORD_LOOP seconds; with reduced motion, or without CSS
+/// animation, the complete final picture stands still.
 fn record_card(dark: bool, r: &Q8Runs) -> String {
     let t = theme(dark);
+    let record = grouped(r.record);
+    let mut css = RESULT_STYLE.replace("MUTED", t.muted);
+    css.push_str(".a{transform-box:fill-box;transform-origin:center}.grow{transform-origin:left center}.scan,.arrow{opacity:0}\n");
+    // 1. The stored record appears: one bar, values then mask, to scale.
+    css += &record_motion(
+        "r0",
+        "ease-out",
+        "0%{opacity:0}5%,97%{opacity:1}100%{opacity:0}",
+    );
+    css += &record_motion("g0", "ease-out", "0%{opacity:0;transform:scaleX(0)}1%{opacity:1}7%,97%{opacity:1;transform:none}100%{opacity:0;transform:none}");
     let mut b = format!(
-        r#"<text class="kick" x="40" y="48">ONE STORED Q8 RECORD</text><text x="40" y="118" font-size="52" class="b" style="fill:{}">{} B</text><text x="40" y="150" font-size="16" class="mut">{} one-byte values + {RECORD_MASK}-byte activity mask</text>"#,
+        r#"<text class="kick" x="40" y="48">ONE STORED Q8 RECORD</text><g class="a r0"><text x="40" y="112" font-size="52" class="b" style="fill:{}">{record} B</text><text x="40" y="144" font-size="16" class="mut">{} one-byte values + {RECORD_MASK}-byte activity mask</text></g>"#,
         t.accent,
-        grouped(r.record),
         grouped(RECORD_VALUES)
     );
-    // The record as one bar: values, then the mask, to scale.
-    let (x0, y0, w, h) = (40.0, 178.0, 400.0, 56.0);
+    let (x0, y0, w, h) = (40.0, 196.0, 700.0, 52.0);
     let split = w * RECORD_VALUES as f64 / r.record as f64;
     b.push_str(&format!(
-        r#"<defs><clipPath id="rec"><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8"/></clipPath></defs><g clip-path="url(#rec)"><rect x="{x0}" y="{y0}" width="{split:.1}" height="{h}" fill="{}"/><rect x="{:.1}" y="{y0}" width="{:.1}" height="{h}" fill="{}"/>"#,
+        r#"<defs><clipPath id="rec"><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8"/></clipPath></defs><g class="a grow g0"><g clip-path="url(#rec)"><rect x="{x0}" y="{y0}" width="{split:.1}" height="{h}" fill="{}"/><rect x="{:.1}" y="{y0}" width="{:.1}" height="{h}" fill="{}"/>"#,
         t.blue[0],
         x0 + split,
         w - split,
@@ -1359,43 +1410,202 @@ fn record_card(dark: bool, r: &Q8Runs) -> String {
         ));
     }
     b.push_str(&format!(
-        r#"</g><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8" fill="none" stroke="{}" stroke-width="2"/><text class="mono" x="{x0}" y="254" font-size="12">{} B values</text><text class="mono" x="{}" y="254" font-size="12" text-anchor="end">{RECORD_MASK} B mask</text>"#,
+        r#"</g><rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="8" fill="none" stroke="{}" stroke-width="2"/></g><g class="a r0"><text class="mono" x="{x0}" y="268" font-size="12">{} B values</text><text class="mono" x="{}" y="268" font-size="12" text-anchor="middle">stored once; every view reads it in place</text><text class="mono" x="{}" y="268" font-size="12" text-anchor="end">{RECORD_MASK} B mask</text></g><text x="{x0}" y="294" font-size="13" class="mut">Each view reads the same bytes in another fixed arrangement.</text>"#,
         t.ink,
         grouped(RECORD_VALUES),
+        x0 + w / 2.0,
         x0 + w
     ));
-    // Four views of the same stored bytes, each joined to the record.
-    for i in 0..4 {
-        let y = 64.0 + 50.0 * f64::from(i);
-        let cy = y + 19.0;
-        b.push_str(&format!(
-            r#"<path d="M{} {}C510 {} 500 {cy} 560 {cy}" stroke="{c}" stroke-width="2" fill="none"/><rect x="560" y="{y}" width="180" height="38" rx="10" fill="{}" stroke="{c}" stroke-width="2"/><text x="650" y="{}" font-size="16" class="b" text-anchor="middle">view {}</text>"#,
+    // 2. and 3. Four views read the same bar in turn; each lands on the score
+    // of a separate written-out copy. Every sweep is drawn alike: the picture
+    // does not say how a view arranges the bytes.
+    let (head, mut scans, mut arrows) = (44.0, String::new(), String::new());
+    b.push_str(r#"<text class="kick" x="790" y="48">EACH VIEW, BIT FOR BIT</text><text class="mono" x="790" y="74" font-size="12">score vs a separate written-out copy</text>"#);
+    for i in 0..4u32 {
+        let (s, e) = (9 + 11 * i, 17 + 11 * i);
+        css += &record_motion(&format!("s{i}"), "linear", &format!("0%,{}%{{opacity:0;transform:translateX(0px)}}{s}%{{opacity:1;transform:translateX(0px)}}{e}%{{opacity:1;transform:translateX({}px)}}{}%,100%{{opacity:0;transform:translateX({}px)}}", s - 1, w - head, e + 1, w - head));
+        css += &record_motion(
+            &format!("w{i}"),
+            "ease-in-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{}%,{}%{{opacity:1}}{}%,100%{{opacity:0}}",
+                s - 2,
+                s - 1,
+                e + 1,
+                e + 3
+            ),
+        );
+        css += &record_motion(
+            &format!("v{i}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:.35}}{s}%,{e}%{{opacity:.7}}{}%,97%{{opacity:1}}100%{{opacity:.35}}",
+                s - 1,
+                e + 1
+            ),
+        );
+        css += &record_motion(&format!("c{i}"), "ease-out", &format!("0%,{e}%{{opacity:0;transform:scale(.6)}}{}%{{opacity:1;transform:scale(1.15)}}{}%,97%{{opacity:1;transform:none}}100%{{opacity:0;transform:none}}", e + 2, e + 4));
+        css += &record_motion(
+            &format!("l{i}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{e}%,{}%{{opacity:1}}{}%,100%{{opacity:0}}",
+                e - 1,
+                e + 2,
+                e + 4
+            ),
+        );
+        // A reading window slides over the bar; its leading edge is marked.
+        scans.push_str(&format!(
+            r#"<g class="a scan s{i}"><rect x="{x0}" y="{}" width="{head}" height="{}" rx="5" fill="{}" fill-opacity=".55" stroke="{c}" stroke-width="2"/><rect x="{}" y="{}" width="4" height="{}" fill="{c}"/></g>"#,
+            y0 - 6.0,
+            h + 12.0,
+            t.paper[0],
+            x0 + head - 4.0,
+            y0 - 6.0,
+            h + 12.0,
+            c = t.blue[2]
+        ));
+        let (tip, tail) = (x0 + w, x0);
+        arrows.push_str(&format!(
+            r#"<g class="a arrow w{i}"><text x="{tail}" y="176" font-size="13" class="b" style="fill:{a}">view {} reads the same {record} B</text><path d="M{tail} 186H{}" stroke="{a}" stroke-width="2"/><polygon points="{tip},186 {},181 {},191" fill="{a}"/></g>"#,
+            i + 1,
+            tip - 10.0,
+            tip - 10.0,
+            tip - 10.0,
+            a = t.accent
+        ));
+        let y = 96.0 + 46.0 * f64::from(i);
+        // The view's score goes to its row.
+        arrows.push_str(&format!(
+            r#"<path class="a arrow l{i}" d="M{} {} C766 {} 764 {} 790 {}" stroke="{}" stroke-width="2" fill="none"/>"#,
             x0 + w,
             y0 + h / 2.0,
             y0 + h / 2.0,
-            t.bg[0],
+            y + 19.0,
+            y + 19.0,
+            t.accent
+        ));
+        b.push_str(&format!(
+            r#"<g class="a v{i}"><rect x="790" y="{y}" width="370" height="38" rx="10" fill="{bg}" stroke="{a}" stroke-width="2"/><text x="806" y="{}" font-size="16" class="b">view {}</text></g><g class="a c{i}"><rect x="880" y="{}" width="78" height="24" rx="6" fill="{bg}" stroke="{a}"/><text x="919" y="{}" font-size="13" text-anchor="middle">score</text><text x="975" y="{}" font-size="20" class="b" text-anchor="middle">=</text><rect x="992" y="{}" width="118" height="24" rx="6" fill="{bg}" stroke="{}" stroke-dasharray="4 3"/><text x="1051" y="{}" font-size="13" text-anchor="middle">copy's score</text><circle cx="1137" cy="{}" r="11" fill="{}"/><path d="M1131 {}l4 4 8-8" stroke="{bg}" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>"#,
             y + 25.0,
             i + 1,
-            c = t.accent
+            y + 7.0,
+            y + 24.0,
+            y + 26.0,
+            y + 7.0,
+            t.muted,
+            y + 24.0,
+            y + 19.0,
+            t.good,
+            y + 19.0,
+            bg = t.bg[0],
+            a = t.accent
         ));
     }
+    // Before and after the sweeps, and in the still picture, one line says the same.
+    css += &record_motion(
+        "id",
+        "ease-out",
+        "0%,53%{opacity:0}56%,97%{opacity:1}100%{opacity:0}",
+    );
     b.push_str(&format!(
-        r#"<text class="kick" x="780" y="96">FOR COMPARISON</text><text x="780" y="132" font-size="17" class="b">four packed copies: {} B</text><text x="780" y="154" font-size="13" class="mut">not stored; the record is kept once</text><text x="780" y="196" font-size="16" class="b">reference layout used for checking: {} B</text><text x="780" y="218" font-size="13" class="mut">four materialized views, built to check each score</text>"#,
-        grouped(r.packed),
-        grouped(r.frames)
+        r#"{scans}{arrows}<text class="a b id" x="{x0}" y="180" font-size="13" style="fill:{}">all four views read this one bar, without four copies</text>"#,
+        t.accent
     ));
+    // 4. The sizes it is compared with, to one scale: record, packed copies, layout.
+    let longest = r.record.max(r.packed).max(r.frames) as f64;
+    let (bx, reach) = (350.0, 700.0);
+    b.push_str(r#"<text class="kick" x="40" y="334">SIZE, TO SCALE</text>"#);
+    let rows = [
+        (
+            "one stored record",
+            "what all four views read",
+            r.record,
+            1,
+            true,
+        ),
+        (
+            "four packed copies",
+            "not stored; the record is kept once",
+            r.packed,
+            4,
+            true,
+        ),
+        (
+            "reference layout used for checking",
+            "four materialized views",
+            r.frames,
+            4,
+            false,
+        ),
+    ];
+    for (k, (label, note, bytes, parts, values)) in rows.into_iter().enumerate() {
+        let y = 346.0 + 44.0 * k as f64;
+        let width = reach * bytes as f64 / longest;
+        let part = width / f64::from(parts);
+        let a = 54 + 5 * k;
+        css += &record_motion(&format!("z{k}"), "ease-out", &format!("0%,{a}%{{opacity:1;transform:scaleX(0)}}{}%,97%{{opacity:1;transform:none}}100%{{opacity:0;transform:none}}", a + 8));
+        css += &record_motion(
+            &format!("n{k}"),
+            "ease-out",
+            &format!(
+                "0%,{}%{{opacity:0}}{}%,97%{{opacity:1}}100%{{opacity:0}}",
+                a + 6,
+                a + 9
+            ),
+        );
+        let mut fill = String::new();
+        for p in 0..parts {
+            let px = bx + part * f64::from(p);
+            if values {
+                let v = part * RECORD_VALUES as f64 / r.record as f64;
+                fill.push_str(&format!(
+                    r#"<rect x="{px:.1}" y="{y}" width="{v:.1}" height="26" fill="{}" stroke="{bg}"/><rect x="{:.1}" y="{y}" width="{:.1}" height="26" fill="{}" stroke="{bg}"/>"#,
+                    t.blue[0],
+                    px + v,
+                    part - v,
+                    t.amber[0],
+                    bg = t.bg[0]
+                ));
+            } else {
+                fill.push_str(&format!(
+                    r#"<rect x="{px:.1}" y="{y}" width="{part:.1}" height="26" fill="{}" stroke="{}"/>"#,
+                    t.paper[2], t.bg[0]
+                ));
+            }
+        }
+        let (look, dash) = if k == 1 {
+            (".5", r#" stroke-dasharray="5 4""#)
+        } else {
+            ("1", "")
+        };
+        b.push_str(&format!(
+            r#"<text x="40" y="{}" font-size="15" class="b">{label}</text><text x="40" y="{}" font-size="12" class="mut">{note}</text><g class="a grow z{k}"><g opacity="{look}">{fill}</g><rect class="size" x="{bx}" y="{y}" width="{width:.1}" height="26" rx="3" fill="none" stroke="{}" stroke-width="1.5"{dash}/></g><text class="a b n{k}" x="{:.1}" y="{}" font-size="16">{} B</text>"#,
+            y + 14.0,
+            y + 30.0,
+            t.ink,
+            bx + width + 12.0,
+            y + 19.0,
+            grouped(bytes)
+        ));
+    }
+    // 5. The verdict of every recorded run; the limits stay in view throughout.
+    css += &record_motion("vd", "ease-out", "0%,75%{opacity:0;transform:scale(.97)}79%,97%{opacity:1;transform:none}100%{opacity:0;transform:none}");
+    css.push_str("@media (prefers-reduced-motion:reduce){.a{animation:none}}");
     b.push_str(&format!(
-        r#"<rect x="40" y="272" width="1120" height="34" rx="17" fill="{}" stroke="{}"/><text class="mono" x="60" y="294" font-size="14"><tspan class="b" style="fill:{}">{} of {} recorded runs:</tspan> Q8_QUAD_EXACT=PASS · SEMANTIC_ACCURACY=NOT_MEASURED</text><text x="40" y="338" font-size="13" class="mut">Record payload only; process memory is additional. Four views are not four independent memories.</text>"#,
+        r#"<g class="a vd"><rect x="40" y="488" width="1120" height="34" rx="17" fill="{}" stroke="{}"/><text class="mono" x="60" y="510" font-size="14"><tspan class="b" style="fill:{}">{} of {} recorded runs:</tspan> Q8_QUAD_EXACT=PASS · SEMANTIC_ACCURACY=NOT_MEASURED</text></g><text x="40" y="550" font-size="13" class="mut">Record payload only; process memory is additional. Four views are not four independent memories.</text>"#,
         t.bg[0],
         t.line,
         t.good,
         r.ok,
         r.n
     ));
-    result_card(
-        dark,
-        360,
+    card(
+        (1200, 576),
+        t,
         ("One stored Q8 record, four exact views", &record_text(r)),
+        &css,
         &b,
     )
 }
@@ -1562,6 +1772,797 @@ fn hero(dark: bool, animated: bool) -> String {
         &b,
     )
 }
+/// The recorded crash series the crash card is drawn from.
+const CRASH_FILE: &str = "docs/evidence-crash/crash-series-linux.txt";
+/// The columns of one trial row, in the order the series writes them.
+const CRASH_COLUMNS: &str = "# trial\tkill_ms\tacknowledged\tacknowledged_lost\tunacknowledged_complete\tpartial\ttemporaries\tresumed\treopen_us";
+/// One trial of the crash series: when the writer was killed and what it had
+/// been told was saved by then.
+struct CrashTrial {
+    kill_ms: u32,
+    acknowledged: usize,
+    /// A temporary file or a complete unacknowledged snapshot was left.
+    mid_publication: bool,
+}
+/// What one recorded crash series states, checked against its own rows.
+struct CrashSeries {
+    /// The day of the run and its file system; the host and CPU are not shown.
+    date: String,
+    file_system: String,
+    /// Snapshots one uninterrupted run saves, and the window the kill is drawn from.
+    documents: usize,
+    window_ms: u32,
+    trials: Vec<CrashTrial>,
+    acknowledged: usize,
+    lost: usize,
+    partial: usize,
+    resumed: usize,
+    mid_publication: usize,
+}
+impl CrashSeries {
+    fn read() -> Result<CrashSeries> {
+        CrashSeries::from_text(&fs::read_to_string(CRASH_FILE)?)
+    }
+    /// Refuses to give numbers unless every row parses, the trials are numbered
+    /// 1..=n, and the one PASS line states exactly what the rows add up to.
+    fn from_text(text: &str) -> Result<CrashSeries> {
+        let (mut host, mut setup, mut columns, mut summary) = (None, None, false, Vec::new());
+        let mut rows: Vec<[&str; 9]> = Vec::new();
+        for line in text.lines() {
+            if let Some(h) = line.strip_prefix("# host: ") {
+                host = host.or(Some(h));
+            } else if let Some(s) = line.strip_prefix("# gel-evidence crash series: ") {
+                setup = Some(s);
+            } else if line == CRASH_COLUMNS {
+                columns = true;
+            } else if line.starts_with("CRASH_SERIES=") {
+                summary.push(line);
+            } else if line.trim().is_empty() || line.starts_with(' ') || line.starts_with('#') {
+                // Indented lines are the build output of `cargo run`.
+            } else {
+                let f: Vec<&str> = line.split('\t').collect();
+                rows.push(
+                    f.try_into()
+                        .map_err(|_| format!("unexpected crash series row: {line}"))?,
+                );
+            }
+        }
+        if !columns {
+            return Err("unexpected crash series columns".into());
+        }
+        // The first header line: kernel · CPU · file system · rustc · revision · time.
+        let host: Vec<&str> = host.ok_or("no host line")?.split(" · ").collect();
+        let (date, file_system) = match host[..] {
+            [kernel, _, fs, _, _, time] if kernel.starts_with("Linux ") => {
+                (time.get(..10).unwrap_or(""), fs)
+            }
+            _ => return Err("unexpected crash series host line".into()),
+        };
+        let b = date.as_bytes();
+        if b.len() != 10
+            || !b.iter().enumerate().all(|(i, c)| match i {
+                4 | 7 => *c == b'-',
+                _ => c.is_ascii_digit(),
+            })
+            || file_system.is_empty()
+            || !file_system.bytes().all(|c| c.is_ascii_alphanumeric())
+        {
+            return Err("unexpected date or file system in the host line".into());
+        }
+        let setup = setup.ok_or("no crash series setup line")?;
+        let between = |from: &str, to: &str| -> Result<usize> {
+            let rest = setup.split_once(from).ok_or("unexpected setup line")?.1;
+            let found = rest.split_once(to).ok_or("unexpected setup line")?.0;
+            Ok(found.parse()?)
+        };
+        let documents = between("", " documents")?;
+        let window_ms = u32::try_from(between("kill after 1..=", " ms")?)?;
+        let mut trials = Vec::new();
+        let (mut acknowledged, mut lost, mut partial, mut resumed) = (0, 0, 0, 0);
+        for (i, f) in rows.iter().enumerate() {
+            let n = |k: usize| -> Result<usize> { Ok(f[k].parse::<usize>()?) };
+            let kill_ms = f[1].parse::<u32>()?;
+            if n(0)? != i + 1 || kill_ms > window_ms || n(2)? > documents {
+                return Err(format!("unexpected crash series trial {}", f[0]).into());
+            }
+            if f[8] != "-" {
+                f[8].parse::<u64>()?;
+            }
+            acknowledged += n(2)?;
+            lost += n(3)?;
+            partial += n(5)?;
+            resumed += match f[7] {
+                "true" => 1,
+                "false" => 0,
+                _ => return Err(format!("unexpected resumed value: {}", f[7]).into()),
+            };
+            trials.push(CrashTrial {
+                kill_ms,
+                acknowledged: n(2)?,
+                mid_publication: n(4)? + n(6)? > 0,
+            });
+        }
+        let mid_publication = trials.iter().filter(|t| t.mid_publication).count();
+        let [line] = summary[..] else {
+            return Err("expected exactly one CRASH_SERIES line".into());
+        };
+        let words: Vec<&str> = line.split(' ').collect();
+        let value = |key: &str| -> Result<usize> {
+            let found = words
+                .iter()
+                .find_map(|w| w.strip_prefix(key)?.strip_prefix('='))
+                .ok_or(format!("the summary has no {key}"))?;
+            Ok(found.parse::<usize>()?)
+        };
+        if words.first() != Some(&"CRASH_SERIES=PASS") {
+            return Err("the crash series did not pass".into());
+        }
+        let stated = [
+            value("trials")?,
+            value("acknowledged")?,
+            value("acknowledged_lost")?,
+            value("partial")?,
+            value("resumed")?,
+            value("killed_mid_publication")?,
+        ];
+        let counted = [
+            trials.len(),
+            acknowledged,
+            lost,
+            partial,
+            resumed,
+            mid_publication,
+        ];
+        if stated != counted {
+            return Err(
+                format!("the summary {stated:?} disagrees with the rows {counted:?}").into(),
+            );
+        }
+        // Every point is drawn as a survived trial, so a PASS must mean exactly that.
+        if trials.is_empty() || lost != 0 || partial != 0 || resumed != trials.len() {
+            return Err("a PASS line over a trial that lost, tore or did not resume".into());
+        }
+        Ok(CrashSeries {
+            date: date.to_string(),
+            file_system: file_system.to_string(),
+            documents,
+            window_ms,
+            trials,
+            acknowledged,
+            lost,
+            partial,
+            resumed,
+            mid_publication,
+        })
+    }
+}
+/// What the crash card says, as its description and as the README alternative text.
+fn crash_text(c: &CrashSeries) -> String {
+    format!("One recorded crash series on the author's Linux machine ({}, {}): in each of {} trials a collection growing to {} snapshots was killed with SIGKILL at a random moment within {} ms. {} snapshots were acknowledged before the kills; {} were lost and {} were partial, and {} of {} trials resumed to the uninterrupted result. {} kills came in the middle of a publication. A process kill, not a power cut: power-loss durability is not established.", c.file_system, c.date, c.trials.len(), c.documents, c.window_ms, grouped(c.acknowledged), c.lost, c.partial, c.resumed, c.trials.len(), c.mid_publication)
+}
+/// Every trial of the recorded crash series as one point: when the writer was
+/// killed and how many snapshots it had acknowledged by then. The points appear
+/// in the order of the series, then the totals the summary line states.
+fn crash_card(dark: bool, c: &CrashSeries) -> String {
+    let t = theme(dark);
+    let n = c.trials.len();
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="44">CRASH SERIES · KILLED WHILE SAVING</text><text x="40" y="80" font-size="25" class="b">{n} kills while saving. {} acknowledged snapshots lost.</text>"#,
+        c.lost
+    );
+    // The plot: kill time across, acknowledged snapshots up.
+    let (x0, x1, y0, y1) = (100.0, 740.0, 324.0, 120.0);
+    let px = |ms: u32| x0 + (x1 - x0) * f64::from(ms) / f64::from(c.window_ms);
+    let py = |k: usize| y0 - (y0 - y1) * k as f64 / c.documents as f64;
+    let step = (c.documents / 4).max(1);
+    for k in (0..=c.documents).step_by(step) {
+        let y = py(k);
+        b.push_str(&format!(
+            r#"<path d="M{x0} {y:.1}H{x1}" stroke="{}" stroke-width="1"/><text class="mono" x="{}" y="{:.1}" text-anchor="end" font-size="12">{k}</text>"#,
+            t.line,
+            x0 - 10.0,
+            y + 4.0
+        ));
+    }
+    for ms in (0..=c.window_ms).step_by(50) {
+        b.push_str(&format!(
+            r#"<text class="mono" x="{:.1}" y="344" text-anchor="middle" font-size="12">{ms}</text>"#,
+            px(ms)
+        ));
+    }
+    b.push_str(&format!(
+        r#"<path d="M{x0} {y0}H{x1}M{x0} {y0}V{y1}" stroke="{ink}" stroke-width="1.5" fill="none"/><path d="M{x0} {top:.1}H{x1}" stroke="{ink}" stroke-width="1.5" stroke-dasharray="5 5" fill="none"/><text x="{:.1}" y="{:.1}" font-size="13" class="mut">all {} snapshots saved</text><text x="{x1}" y="366" font-size="13" class="mut" text-anchor="end">kill time, ms after the writer started (window {} ms)</text><text x="0" y="0" font-size="13" class="mut" text-anchor="middle" transform="translate(48 {:.1}) rotate(-90)">snapshots acknowledged</text>"#,
+        x0 + 8.0,
+        py(c.documents) - 8.0,
+        c.documents,
+        c.window_ms,
+        (y0 + y1) / 2.0,
+        ink = t.ink,
+        top = py(c.documents)
+    ));
+    // Legend in the empty lower right: a late kill always finds many saves.
+    b.push_str(&format!(
+        r#"<circle cx="492" cy="254" r="5" fill="{g}"/><text x="506" y="259" font-size="13">killed mid-publication ({})</text><circle cx="492" cy="278" r="4.2" fill="none" stroke="{g}" stroke-width="1.8"/><text x="506" y="283" font-size="13">killed between saves ({})</text><text x="486" y="307" font-size="13" class="mut">every trial: no acknowledged snapshot lost</text>"#,
+        c.mid_publication,
+        n - c.mid_publication,
+        g = t.good
+    ));
+    // The parser refuses a PASS line over a lost, partial or unresumed trial, so
+    // every point is drawn as survived; filled when the kill hit a publication.
+    for (i, trial) in c.trials.iter().enumerate() {
+        let paint = if trial.mid_publication {
+            format!(r#"r="5" fill="{}""#, t.good)
+        } else {
+            format!(
+                r#"r="4.2" fill="none" stroke="{}" stroke-width="1.8""#,
+                t.good
+            )
+        };
+        b.push_str(&format!(
+            r#"<circle class="pt" style="animation-delay:{:.2}s" cx="{:.1}" cy="{:.1}" {paint}/>"#,
+            0.2 + 2.4 * i as f64 / n as f64,
+            px(trial.kill_ms),
+            py(trial.acknowledged)
+        ));
+    }
+    // The totals, in two columns of three tiles.
+    let tiles = [
+        (n.to_string(), t.accent, "trials, each", "killed once"),
+        (
+            grouped(c.acknowledged),
+            t.accent,
+            "snapshots acknowledged",
+            "before the kills",
+        ),
+        (c.lost.to_string(), t.good, "acknowledged", "snapshots lost"),
+        (
+            c.partial.to_string(),
+            t.good,
+            "partial snapshots",
+            "found after a kill",
+        ),
+        (
+            c.resumed.to_string(),
+            t.accent,
+            "resumed to the",
+            "uninterrupted result",
+        ),
+        (
+            c.mid_publication.to_string(),
+            t.accent,
+            "killed in the middle",
+            "of a publication",
+        ),
+    ];
+    for (k, (num, colour, l1, l2)) in tiles.iter().enumerate() {
+        let (x, y) = (
+            790.0 + 190.0 * (k % 2) as f64,
+            104.0 + 90.0 * (k / 2) as f64,
+        );
+        b.push_str(&format!(
+            r#"<g class="cnt" style="animation-delay:{:.2}s"><rect x="{x}" y="{y}" width="176" height="80" rx="12" fill="{}" fill-opacity=".07" stroke="{}"/><text x="{}" y="{}" font-size="28" class="b" style="fill:{colour}">{num}</text><text x="{}" y="{}" font-size="13">{l1}</text><text x="{}" y="{}" font-size="13">{l2}</text></g>"#,
+            2.8 + 0.15 * k as f64,
+            t.accent,
+            t.line,
+            x + 16.0,
+            y + 34.0,
+            x + 16.0,
+            y + 54.0,
+            x + 16.0,
+            y + 70.0
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text x="40" y="404" font-size="13" class="mut">One recorded run on the author's Linux machine ({}, {}) · a process kill (SIGKILL), not a power cut: power-loss durability is not established</text>"#,
+        c.file_system, c.date
+    ));
+    let t_style = format!(".pt{{animation:pop .45s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}}.cnt{{animation:fade .8s ease-out both}}@keyframes pop{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}@keyframes fade{{from{{opacity:0}}to{{opacity:1}}}}@media (prefers-reduced-motion:reduce){{.pt,.cnt{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
+    card(
+        (1200, 424),
+        t,
+        ("Crash series: killed while saving", &crash_text(c)),
+        &t_style,
+        &b,
+    )
+}
+fn crash_picture(c: &CrashSeries) -> String {
+    themed(
+        "media/presentation/crash-light.svg",
+        "media/presentation/crash-dark.svg",
+        &crash_text(c),
+        1200,
+    )
+}
+/// The timing set the speed card is drawn from, the one the release notes cite
+/// against v0.6.1: A and A2 are two checkouts of v0.6.1, B the new tree.
+const SPEED_DIR: &str = "docs/speed-results/2026-10-20-against-v0.6.1";
+/// The revision of `main` the set's B tree equals, as its README states it.
+const SPEED_B: &str = "876247f";
+/// One timed case: the two ratios as its summary prints them, checked against
+/// the medians of A, A2 and B when it is read.
+struct SpeedCase {
+    name: String,
+    /// A2/A: the noise of two copies of the same tree.
+    aa: f64,
+    /// A/B: above 1 the new tree is faster.
+    gain: f64,
+    runs: u32,
+}
+/// Where a case falls against its own A/A band.
+#[derive(Clone, Copy, PartialEq)]
+enum Side {
+    Faster,
+    Slower,
+    Within,
+}
+impl SpeedCase {
+    /// Parses the fields after `SPEED_AB `, in their fixed order, and refuses a
+    /// ratio that does not round from the medians to its printed digits.
+    fn parse(fields: &str) -> Result<SpeedCase> {
+        const KEYS: [&str; 7] = ["case", "a_ns", "a2_ns", "b_ns", "aa", "gain", "runs"];
+        let words: Vec<&str> = fields.split(' ').collect();
+        let v: Vec<&str> = words
+            .iter()
+            .zip(KEYS)
+            .filter_map(|(w, k)| w.strip_prefix(k)?.strip_prefix('='))
+            .collect();
+        if words.len() != KEYS.len() || v.len() != KEYS.len() {
+            return Err("unexpected SPEED_AB fields".into());
+        }
+        if !plain_name(v[0]) {
+            return Err("unexpected case name".into());
+        }
+        let count = |s: &str| -> Result<u64> {
+            match s.parse::<u64>() {
+                Ok(n) if n > 0 && s.bytes().all(|b| b.is_ascii_digit()) => Ok(n),
+                _ => Err(format!("unexpected count {s}").into()),
+            }
+        };
+        let (a, a2, b) = (count(v[1])?, count(v[2])?, count(v[3])?);
+        Ok(SpeedCase {
+            name: v[0].to_string(),
+            aa: printed_ratio(v[4], a2, a)?,
+            gain: printed_ratio(v[5], a, b)?,
+            runs: u32::try_from(count(v[6])?)?,
+        })
+    }
+    /// The A/A band: from the smaller of A2/A and A/A2 to the larger.
+    fn noise(&self) -> (f64, f64) {
+        let (x, y) = (self.aa, 1.0 / self.aa);
+        (x.min(y), x.max(y))
+    }
+    fn side(&self) -> Side {
+        let (lo, hi) = self.noise();
+        if self.gain > hi {
+            Side::Faster
+        } else if self.gain < lo {
+            Side::Slower
+        } else {
+            Side::Within
+        }
+    }
+}
+/// Example and case names: lower-case ASCII, digits and single underscores.
+fn plain_name(name: &str) -> bool {
+    let ok = |b: u8| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_';
+    !name.is_empty() && name.bytes().all(ok) && !name.contains("__")
+}
+/// A ratio as a summary prints it, refused unless `num / den` rounds to it:
+/// within half a unit of its last printed digit.
+fn printed_ratio(text: &str, num: u64, den: u64) -> Result<f64> {
+    let digits = text.split_once('.').map_or(0, |(_, d)| d.len());
+    let value: f64 = text.parse()?;
+    let half = 0.5 * 10f64.powi(-(digits as i32));
+    let exact = num as f64 / den as f64;
+    if digits == 0
+        || !text.bytes().all(|b| b.is_ascii_digit() || b == b'.')
+        || (exact - value).abs() > half * (1.0 + 1e-9)
+    {
+        return Err(format!("{text} does not round from {num}/{den}").into());
+    }
+    Ok(value)
+}
+/// The cases of one summary.txt and whether its three digests agree. Refuses an
+/// unknown line, a repeated case, digests that are not exactly A, A2 and B, and
+/// a missing, repeated or contradicting verdict.
+fn speed_summary(text: &str) -> Result<(Vec<SpeedCase>, bool)> {
+    let (mut cases, mut checks, mut verdicts) = (Vec::<SpeedCase>::new(), Vec::new(), Vec::new());
+    for line in text.lines() {
+        if let Some(fields) = line.strip_prefix("SPEED_AB ") {
+            let case = SpeedCase::parse(fields).map_err(|e| format!("{e}: {line}"))?;
+            if cases.iter().any(|c| c.name == case.name) {
+                return Err(format!("repeated case: {line}").into());
+            }
+            cases.push(case);
+        } else if let Some(check) = line.strip_prefix("SPEED_AB_CHECK tree=") {
+            checks.push(check);
+        } else if let Some(verdict) = line.strip_prefix("SPEED_AB_VERDICT=") {
+            verdicts.push(verdict);
+        } else {
+            return Err(format!("unexpected summary line: {line}").into());
+        }
+    }
+    let hex = |s: &&str| s.len() == 64 && s.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'));
+    let mut digests = Vec::new();
+    for (check, tree) in checks.iter().zip(["a", "a2", "b"]) {
+        let digest = check
+            .strip_prefix(tree)
+            .and_then(|r| r.strip_prefix(" sha256="))
+            .filter(hex)
+            .ok_or(format!("unexpected digest line: tree={check}"))?;
+        digests.push(digest);
+    }
+    if cases.is_empty() || checks.len() != 3 || digests.len() != 3 {
+        return Err("a summary needs its cases and the digests of A, A2 and B".into());
+    }
+    let same = digests.iter().all(|d| *d == digests[0]);
+    match verdicts.as_slice() {
+        ["SAME_OUTPUT"] if same => Ok((cases, true)),
+        ["DIFFERENT_OUTPUT"] if !same => Ok((cases, false)),
+        _ => Err(format!("verdict {verdicts:?} does not match the digests").into()),
+    }
+}
+/// One timing example of the set: its cases and whether A, A2 and B printed the
+/// same output digest, or `None` when it has only a manifest. `note` is the
+/// README's sentence that explains a differing digest or a missing summary.
+struct SpeedExample {
+    name: String,
+    timed: Option<(Vec<SpeedCase>, bool)>,
+    note: Option<String>,
+}
+impl SpeedExample {
+    fn cases(&self) -> &[SpeedCase] {
+        self.timed.as_ref().map_or(&[][..], |t| &t.0[..])
+    }
+}
+/// The timing set the speed card draws: the machine and its load as the set's
+/// README states them, and every example directory in name order.
+struct SpeedSet {
+    machine: String,
+    load: String,
+    examples: Vec<SpeedExample>,
+}
+impl SpeedSet {
+    fn read() -> Result<SpeedSet> {
+        let readme = fs::read_to_string(format!("{SPEED_DIR}/README.md"))?;
+        let mut names = Vec::new();
+        for entry in fs::read_dir(SPEED_DIR)? {
+            let entry = entry?;
+            if entry.file_type()?.is_dir() {
+                names.push(entry.file_name().to_string_lossy().into_owned());
+            }
+        }
+        names.sort();
+        let mut examples = Vec::new();
+        for name in names {
+            let dir = format!("{SPEED_DIR}/{name}");
+            if !Path::new(&format!("{dir}/manifest.txt")).is_file() {
+                return Err(format!("{dir} has no manifest").into());
+            }
+            let summary = format!("{dir}/summary.txt");
+            let text = if Path::new(&summary).try_exists()? {
+                Some(fs::read_to_string(summary)?)
+            } else {
+                None
+            };
+            examples.push((name, text));
+        }
+        SpeedSet::from_texts(&readme, &examples)
+    }
+    /// Refuses to give a set unless every summary adds up, the README states the
+    /// machine, its load, no pinning and the B revision, and one README sentence
+    /// explains each example without a summary or with differing digests.
+    fn from_texts(readme: &str, examples: &[(String, Option<String>)]) -> Result<SpeedSet> {
+        let plain = |s: &str| s.is_ascii() && !s.contains(['<', '>', '&', '"', '`']);
+        let row = |key: &str| -> Result<String> {
+            readme
+                .lines()
+                .find_map(|l| {
+                    l.strip_prefix("| ")?
+                        .strip_prefix(key)?
+                        .strip_prefix(" | ")?
+                        .strip_suffix(" |")
+                })
+                .filter(|v| plain(*v))
+                .map(str::to_string)
+                .ok_or_else(|| format!("the set README has no plain {key} row").into())
+        };
+        let (machine, load, pinning) = (row("Machine")?, row("Load")?, row("Pinning")?);
+        if !pinning.starts_with("none") || !readme.contains(&format!("`main` at `{SPEED_B}`")) {
+            return Err("the set README no longer matches the card's wording".into());
+        }
+        let flat = readme.split_whitespace().collect::<Vec<_>>().join(" ");
+        let mut out = Vec::new();
+        for (name, summary) in examples {
+            if !plain_name(name) {
+                return Err(format!("unexpected example name {name}").into());
+            }
+            let timed = match summary {
+                Some(text) => Some(speed_summary(text).map_err(|e| format!("{name}: {e}"))?),
+                None => None,
+            };
+            let note = if matches!(timed, Some((_, true))) {
+                None
+            } else {
+                let start = flat
+                    .find(&format!("`{name}` "))
+                    .ok_or(format!("the set README does not explain {name}"))?;
+                let len = flat[start..]
+                    .find(". ")
+                    .map_or(flat.len() - start, |e| e + 1);
+                let sentence = flat[start..start + len].replace('`', "");
+                if !plain(&sentence) || !sentence.ends_with('.') {
+                    return Err(format!("unexpected note on {name}").into());
+                }
+                Some(sentence)
+            };
+            out.push(SpeedExample {
+                name: name.clone(),
+                timed,
+                note,
+            });
+        }
+        if out.iter().all(|e| e.timed.is_none()) {
+            return Err("no timed example in the set".into());
+        }
+        Ok(SpeedSet {
+            machine,
+            load,
+            examples: out,
+        })
+    }
+    fn cases(&self) -> impl Iterator<Item = &SpeedCase> {
+        self.examples.iter().flat_map(|e| e.cases())
+    }
+    /// Cases faster beyond their A/A band, slower beyond it, and inside it.
+    fn sides(&self) -> [usize; 3] {
+        let n = |side| self.cases().filter(|c| c.side() == side).count();
+        [n(Side::Faster), n(Side::Slower), n(Side::Within)]
+    }
+    /// Timed examples, and those that printed the same digest in all three trees.
+    fn verdicts(&self) -> (usize, usize) {
+        let timed = self.examples.iter().filter(|e| e.timed.is_some());
+        let same = timed.clone().filter(|e| matches!(e.timed, Some((_, true))));
+        (timed.count(), same.count())
+    }
+}
+/// A ratio as the card prints it: one decimal from 10 up, two below.
+fn ratio(v: f64) -> String {
+    if v >= 10.0 {
+        format!("{v:.1}")
+    } else {
+        format!("{v:.2}")
+    }
+}
+/// What the speed card says, as its description and as the README alternative text.
+fn speed_text(s: &SpeedSet) -> String {
+    let [faster, slower, within] = s.sides();
+    let (timed, same) = s.verdicts();
+    let sha = s
+        .examples
+        .iter()
+        .find(|e| e.name == "speed_sha256")
+        .map_or(String::new(), |e| {
+            let gains: Vec<String> = e.cases().iter().map(|c| ratio(c.gain)).collect();
+            format!(" (SHA-256 alone at {})", gains.join(" and "))
+        });
+    let notes: Vec<&str> = s
+        .examples
+        .iter()
+        .filter_map(|e| e.note.as_deref())
+        .collect();
+    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
+    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} timing examples, each drawn as the v0.6.1 median time divided by the new one on a log scale centred at 1, over the band of its A/A noise. {faster} are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed examples printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different cases are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), notes.join(" "), s.machine, s.load)
+}
+const SPEED_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}.bar{animation:grow .9s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box}.gr{transform-origin:left}.gl{transform-origin:right}.fd{animation:fade .6s ease-out both}@keyframes grow{from{transform:scaleX(0)}to{transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.bar,.fd{animation:none}}";
+/// Every timed case of the set as one bar on a log scale centred at 1: to the
+/// right where the new tree is faster, to the left where it is slower, over the
+/// grey band of its A/A noise. Examples in name order fill two columns, each
+/// marked with its output verdict; nothing is aggregated or left out.
+fn speed_card(dark: bool, s: &SpeedSet) -> String {
+    let t = theme(dark);
+    let (row, head, top) = (14.0, 20.0, 232.0);
+    let colour = |side| match side {
+        Side::Faster => t.blue[1],
+        Side::Slower => t.red[1],
+        Side::Within => t.muted,
+    };
+    let tall = |e: &SpeedExample| head + row * e.cases().len().max(1) as f64;
+    // Two columns in name order, split where the taller column is shortest.
+    let total: f64 = s.examples.iter().map(tall).sum();
+    let (mut split, mut left) = ((0, f64::INFINITY), 0.0_f64);
+    for k in 0..=s.examples.len() {
+        if left.max(total - left) < split.1 {
+            split = (k, left.max(total - left));
+        }
+        left += s.examples.get(k).map_or(0.0, tall);
+    }
+    // A log2 axis in whole octaves, wide enough for every ratio and every band.
+    let (mut lo, mut hi) = (0.5_f64, 2.0_f64);
+    for c in s.cases() {
+        let (a, b) = c.noise();
+        lo = lo.min(a).min(c.gain);
+        hi = hi.max(b).max(c.gain);
+    }
+    let (lo, hi) = (lo.log2().floor() as i32, hi.log2().ceil() as i32);
+    let [faster, slower, within] = s.sides();
+    let (timed, same) = s.verdicts();
+    let span = |runs: &mut dyn Iterator<Item = u32>| {
+        let (a, b) = runs.fold((u32::MAX, 0), |(a, b), r| (a.min(r), b.max(r)));
+        if a == b {
+            a.to_string()
+        } else {
+            format!("{a} to {b}")
+        }
+    };
+    let check = |x: f64, y: f64| {
+        format!(
+            r#"<path d="M{x:.1} {y:.1}l3.5 3.5 6.5-7.5" fill="none" stroke="{}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>"#,
+            t.good
+        )
+    };
+    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="46">SPEED · v0.6.1 AGAINST main AT {SPEED_B} · SET {set}</text><text x="40" y="82" font-size="24" class="b">{} timed cases in {timed} timing examples: v0.6.1 time divided by the new time</text><text class="mono" x="40" y="108" font-size="12.5">A, A2: two checkouts of v0.6.1 · B: main at {SPEED_B}, the first v0.7 speed package · medians of {} runs per case</text><text class="mono" x="40" y="128" font-size="12.5">Machine: {} · not pinned to cores</text><text class="mono" x="40" y="148" font-size="12.5">Load: {}</text>"#,
+        s.cases().count(),
+        span(&mut s.cases().map(|c| c.runs)),
+        s.machine,
+        s.load
+    );
+    b.push_str(&format!(
+        r#"<rect x="40" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="72" y="181" font-size="13">faster beyond its A/A band: {faster}</text><rect x="300" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="332" y="181" font-size="13">slower beyond it: {slower}</text><rect x="476" y="173" width="24" height="6" rx="1.5" fill="{}"/><text x="508" y="181" font-size="13">inside it: {within}</text><rect x="604" y="171" width="30" height="10" rx="2" fill="{}" opacity=".3"/><path d="M604 171v10M634 171v10" stroke="{}" stroke-opacity=".5" stroke-width="1.2"/><text x="642" y="181" font-size="13">A/A noise band</text>{}<text x="788" y="181" font-size="13">same output digest in A, A2 and B: {same} of {timed}</text>"#,
+        t.blue[1],
+        t.red[1],
+        t.muted,
+        t.muted,
+        t.ink,
+        check(770.0, 176.0)
+    ));
+    let mut notes: Vec<&str> = Vec::new();
+    let mut bottom = top;
+    for (col, examples) in [&s.examples[..split.0], &s.examples[split.0..]]
+        .into_iter()
+        .enumerate()
+    {
+        let x0 = 32.0 + 584.0 * col as f64;
+        let (p0, p1) = (x0 + 218.0, x0 + 462.0);
+        let x = |v: f64| p0 + (v.log2() - f64::from(lo)) / f64::from(hi - lo) * (p1 - p0);
+        let end = top + examples.iter().map(tall).sum::<f64>();
+        bottom = bottom.max(end);
+        b.push_str(&format!(
+            r#"<g class="mut b" font-size="11"><text x="{:.0}" y="208">case</text><text x="{:.1}" y="208" text-anchor="end">slower</text><text x="{:.1}" y="208">faster</text><text x="{:.0}" y="208" text-anchor="end">gain</text><text x="{:.0}" y="208" text-anchor="end">A/A</text></g>"#,
+            x0 + 16.0,
+            x(1.0) - 6.0,
+            x(1.0) + 6.0,
+            x0 + 510.0,
+            x0 + 552.0
+        ));
+        for k in lo..=hi {
+            let v = 2f64.powi(k);
+            let (stroke, width) = if k == 0 { (t.ink, 1.4) } else { (t.line, 1.0) };
+            b.push_str(&format!(
+                r#"<path d="M{gx:.1} 228V{end:.0}" stroke="{stroke}" stroke-width="{width}"/><text class="mono" x="{gx:.1}" y="222" text-anchor="middle" font-size="10">{v}</text>"#,
+                gx = x(v)
+            ));
+        }
+        // Rows of one column appear one after another, both columns at once.
+        let (mut y, mut k) = (top, 0.0);
+        for e in examples {
+            let note = e.note.as_deref().map_or(String::new(), |n| {
+                notes.push(n);
+                format!(" · note {}", notes.len())
+            });
+            let (icon, right) = match &e.timed {
+                Some((cases, true)) => (
+                    check(x0, y + 11.0),
+                    format!("{} runs per case", span(&mut cases.iter().map(|c| c.runs))),
+                ),
+                Some((cases, false)) => (
+                    format!(
+                        r##"<circle cx="{:.1}" cy="{:.1}" r="6" fill="{}"/><text x="{:.1}" y="{:.1}" text-anchor="middle" font-size="10" class="b" style="fill:#1b1f24">!</text>"##,
+                        x0 + 5.0,
+                        y + 10.0,
+                        t.amber[1],
+                        x0 + 5.0,
+                        y + 13.6
+                    ),
+                    format!(
+                        "{} runs per case · output digests differ{note}",
+                        span(&mut cases.iter().map(|c| c.runs))
+                    ),
+                ),
+                None => (
+                    format!(
+                        r#"<circle cx="{:.1}" cy="{:.1}" r="5.5" fill="none" stroke="{m}" stroke-width="1.6"/><path d="M{:.1} {:.1}h6" stroke="{m}" stroke-width="1.6"/>"#,
+                        x0 + 5.0,
+                        y + 10.0,
+                        x0 + 2.0,
+                        y + 10.0,
+                        m = t.muted
+                    ),
+                    format!("not built in v0.6.1{note}"),
+                ),
+            };
+            b.push_str(&format!(
+                r#"<g class="fd" style="animation-delay:{:.2}s"><path d="M{x0:.0} {:.0}H{:.0}" stroke="{}"/>{icon}<text x="{:.0}" y="{:.0}" font-size="12.5" class="b">{}</text><text x="{:.0}" y="{:.0}" font-size="10.5" class="mut" text-anchor="end">{right}</text></g>"#,
+                0.1 + 0.014 * k,
+                y + 1.0,
+                x0 + 552.0,
+                t.line,
+                x0 + 16.0,
+                y + 15.0,
+                e.name,
+                x0 + 552.0,
+                y + 15.0
+            ));
+            y += head;
+            if e.timed.is_none() {
+                b.push_str(&format!(
+                    r#"<text class="fd mut" style="animation-delay:{:.2}s" x="{:.0}" y="{:.1}" font-size="10.5" font-style="italic">no timing: the example does not build in v0.6.1</text>"#,
+                    0.1 + 0.014 * k,
+                    x0 + 16.0,
+                    y + row / 2.0 + 3.8
+                ));
+                (y, k) = (y + row, k + 1.0);
+            }
+            for c in e.cases() {
+                // The A/A band with a cap at each end, the bar from 1 over it,
+                // then the case name and its two ratios as printed.
+                let (cy, fade, grow) = (y + row / 2.0, 0.1 + 0.014 * k, 0.35 + 0.014 * k);
+                let ((n0, n1), one, to) = (c.noise(), x(1.0), x(c.gain));
+                let (dir, from) = if c.gain >= 1.0 {
+                    ("gr", one)
+                } else {
+                    ("gl", to)
+                };
+                let (band0, band1, band_y) = (x(n0), x(n1), cy - 5.0);
+                let (ink, muted, fill) = (t.ink, t.muted, colour(c.side()));
+                let (name, gain, aa) = (&c.name, ratio(c.gain), ratio(c.aa));
+                let (tx, ty, gx, ax) = (x0 + 16.0, cy + 3.8, x0 + 510.0, x0 + 552.0);
+                b.push_str(&format!(
+                    r#"<g class="fd" style="animation-delay:{fade:.2}s"><rect x="{band0:.1}" y="{band_y:.1}" width="{:.1}" height="10" rx="2" fill="{muted}" opacity=".3"/><text x="{tx:.0}" y="{ty:.1}" font-size="11">{name}</text><text x="{gx:.0}" y="{ty:.1}" font-size="11" class="b" text-anchor="end">{gain}</text><text x="{ax:.0}" y="{ty:.1}" font-size="11" class="mut" text-anchor="end">{aa}</text></g><rect class="bar {dir}" style="animation-delay:{grow:.2}s" x="{from:.1}" y="{:.1}" width="{:.1}" height="6" rx="1.5" fill="{fill}"/><path class="fd" style="animation-delay:{fade:.2}s" d="M{band0:.1} {band_y:.1}v10M{band1:.1} {band_y:.1}v10" stroke="{ink}" stroke-opacity=".5" stroke-width="1.2"/>"#,
+                    band1 - band0,
+                    cy - 3.0,
+                    (to - one).abs(),
+                ));
+                (y, k) = (y + row, k + 1.0);
+            }
+        }
+    }
+    let mut y = bottom + 30.0;
+    for (i, note) in notes.iter().enumerate() {
+        b.push_str(&format!(
+            r#"<text x="40" y="{y:.0}" font-size="12.5"><tspan class="b">Note {}</tspan> · {note}</text>"#,
+            i + 1
+        ));
+        y += 20.0;
+    }
+    for line in [
+        "The machine was loaded and the runs were not pinned to cores, so each grey band, one A/A ratio of two copies of v0.6.1, is the noise to read its",
+        "bar against: a single sample of that noise, not a confidence interval. A case counts as faster or slower only beyond its band. Bars of different",
+        "cases are not comparable with each other: each times its own work. The output digests, not the timings, are the claim.",
+    ] {
+        y += 18.0;
+        b.push_str(&format!(
+            r#"<text x="40" y="{y:.0}" font-size="12.5" class="mut">{line}</text>"#
+        ));
+    }
+    card(
+        (1200, (y + 26.0) as u32),
+        t,
+        ("Speed against v0.6.1, every timed case", &speed_text(s)),
+        &SPEED_STYLE.replace("MUTED", t.muted),
+        &b,
+    )
+}
+fn speed_picture(s: &SpeedSet) -> String {
+    themed(
+        "media/presentation/speed-light.svg",
+        "media/presentation/speed-dark.svg",
+        &speed_text(s),
+        1200,
+    )
+}
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
     let evidence = Evidence::read()?;
@@ -1585,11 +2586,21 @@ fn assets() -> Result<Vec<(String, String)>> {
         ),
     ];
     let runs = Q8Runs::read()?;
+    let crash = CrashSeries::read()?;
+    let speed = SpeedSet::read()?;
     for dark in [false, true] {
         let theme = if dark { "dark" } else { "light" };
         out.push((
             format!("media/presentation/record-{theme}.svg"),
             record_card(dark, &runs),
+        ));
+        out.push((
+            format!("media/presentation/crash-{theme}.svg"),
+            crash_card(dark, &crash),
+        ));
+        out.push((
+            format!("media/presentation/speed-{theme}.svg"),
+            speed_card(dark, &speed),
         ));
     }
     for dark in [false, true] {
@@ -1650,10 +2661,22 @@ fn native_intro() -> String {
     let packages = packages()
         .map(|n| n.to_string())
         .unwrap_or_else(|e| format!("__PACKAGES__ {e}"));
+    let crash = CrashSeries::read()
+        .map(|c| crash_picture(&c))
+        .unwrap_or_else(|e| format!("__CRASH__ {e}"));
+    let speed = SpeedSet::read()
+        .map(|s| speed_picture(&s))
+        .unwrap_or_else(|e| format!("__SPEED__ {e}"));
     NATIVE
         .replace("__RECORD__", &record)
         .replace("__COMMITMENTS__", &commitments)
         .replace("__PACKAGES__", &packages)
+        .replace("__FLOW__", &flow_picture())
+        .replace("__BARS__", &bars_picture())
+        .replace("__WALL__", &wall_picture())
+        .replace("__LOGO__", &readme_logo())
+        .replace("__CRASH__", &crash)
+        .replace("__SPEED__", &speed)
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
@@ -1923,7 +2946,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 18 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 22 + 2 * CHIPS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -1944,6 +2967,9 @@ mod tests {
                 "__RECORD__",
                 "__COMMITMENTS__",
                 "__PACKAGES__",
+                "__LOGO__",
+                "__CRASH__",
+                "__SPEED__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
@@ -1984,7 +3010,8 @@ mod tests {
     #[test]
     fn readme_is_short_and_names_no_question_set() {
         let s = native_intro();
-        assert!(s.lines().count() <= 160, "{} lines", s.lines().count());
+        // Each image is one line; the text itself stays near 160 lines.
+        assert!(s.lines().count() <= 200, "{} lines", s.lines().count());
         let lower = s.to_lowercase();
         for named in [
             "answer-or-abstain",
@@ -2257,6 +3284,396 @@ mod tests {
             for img in text.split("<img ").skip(1) {
                 let tag = img.split('>').next().unwrap_or("");
                 assert!(!tag.contains(" height="), "fixed image height: {tag}");
+            }
+        }
+    }
+    #[test]
+    fn record_card_moves_and_draws_sizes_to_scale() {
+        let recorded = Q8Runs::read().unwrap();
+        let other = Q8Runs {
+            n: 3,
+            ok: 2,
+            record: 2000,
+            packed: 8000,
+            frames: 9000,
+        };
+        for r in [&recorded, &other] {
+            for dark in [false, true] {
+                let c = record_card(dark, r);
+                // The loop: the bar grows, four views sweep it and land, the sizes
+                // grow and the verdict fades in, all on one clock.
+                for name in [
+                    "g0", "s0", "s1", "s2", "s3", "c0", "c1", "c2", "c3", "z0", "z1", "z2", "vd",
+                ] {
+                    assert!(
+                        c.contains(&format!(".{name}{{animation:{name} {RECORD_LOOP}s "))
+                            && c.contains(&format!("@keyframes {name}{{")),
+                        "{name}"
+                    );
+                    // ... and an element carries it.
+                    assert!(c.contains(&format!(" {name}\">")), "{name}");
+                }
+                assert!(!c.contains("animation-delay"));
+                // Reduced motion stops every moving element on the final picture.
+                assert!(c.contains("@media (prefers-reduced-motion:reduce){.a{animation:none}}"));
+                // The compared sizes are drawn to one scale.
+                let widths: Vec<f64> = c
+                    .split("<rect class=\"size\" ")
+                    .skip(1)
+                    .map(|s| {
+                        s.split("width=\"")
+                            .nth(1)
+                            .unwrap()
+                            .split('"')
+                            .next()
+                            .unwrap()
+                            .parse()
+                            .unwrap()
+                    })
+                    .collect();
+                assert_eq!(widths.len(), 3);
+                let longest = r.record.max(r.packed).max(r.frames) as f64;
+                let reach = widths.iter().copied().fold(0.0, f64::max);
+                assert!((reach - 700.0).abs() < 0.05, "{reach}");
+                for (drawn, bytes) in widths.iter().zip([r.record, r.packed, r.frames]) {
+                    let want = reach * bytes as f64 / longest;
+                    assert!((drawn - want).abs() < 0.06, "{drawn} vs {want}");
+                }
+            }
+        }
+    }
+    #[test]
+    fn the_first_page_does_not_say_how_a_view_arranges_bytes() {
+        let r = Q8Runs::read().unwrap();
+        // Gradient stops carry an `offset` attribute, so the phrase is matched whole.
+        for text in [
+            native_intro(),
+            record_card(false, &r),
+            record_card(true, &r),
+        ] {
+            let lower = text.to_lowercase();
+            for word in ["reversal", "additive offset", "modulo", "seed"] {
+                assert!(!lower.contains(word), "{word}");
+            }
+        }
+    }
+    #[test]
+    fn crash_card_follows_the_recorded_series() {
+        let c = CrashSeries::read().unwrap();
+        let text = fs::read_to_string(CRASH_FILE).unwrap();
+        let summary = text.lines().last().unwrap();
+        assert_eq!(
+            summary,
+            format!(
+                "CRASH_SERIES=PASS trials={} acknowledged={} acknowledged_lost={} partial={} resumed={} killed_mid_publication={}",
+                c.trials.len(),
+                c.acknowledged,
+                c.lost,
+                c.partial,
+                c.resumed,
+                c.mid_publication
+            )
+        );
+        assert_eq!((c.documents, c.window_ms), (24, 344));
+        assert_eq!(
+            (c.file_system.as_str(), c.date.as_str()),
+            ("ext4", "2026-09-29")
+        );
+        for dark in [false, true] {
+            let s = crash_card(dark, &c);
+            for want in [
+                format!(">{}<", c.trials.len()),
+                format!(">{}<", grouped(c.acknowledged)),
+                format!(">{}<", c.mid_publication),
+                format!(
+                    "{} kills while saving. 0 acknowledged snapshots lost.",
+                    c.trials.len()
+                ),
+                "not a power cut".to_string(),
+                "the author's Linux machine".to_string(),
+                "SIGKILL".to_string(),
+            ] {
+                assert!(s.contains(&want), "{want}");
+            }
+            // The host name and the CPU of the recording machine are not shown.
+            for hidden in ["Ryzen", "Radeon", "oem", "x86_64", "ebe5360"] {
+                assert!(!s.contains(hidden), "{hidden}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.contains("<title id=\"t\">") && s.contains("<desc id=\"d\">"));
+            assert!(s.contains("@media (prefers-reduced-motion:reduce){.pt,.cnt{animation:none}}"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—".contains(ch)));
+        }
+        assert!(crash_picture(&c).contains(&crash_text(&c)));
+        assert!(crash_text(&c).contains("2,683 snapshots were acknowledged"));
+    }
+    #[test]
+    fn crash_card_draws_every_trial() {
+        let c = CrashSeries::read().unwrap();
+        let s = crash_card(false, &c);
+        assert_eq!(s.matches("<circle class=\"pt\"").count(), c.trials.len());
+        let filled = format!("r=\"5\" fill=\"{}\"/>", LIGHT.good);
+        assert_eq!(
+            s.matches(&filled).count(),
+            c.mid_publication + 1,
+            "points and the legend"
+        );
+        // A series of its own is drawn from its own rows, not from the recorded one.
+        let mini = "# host: Linux k · cpu · btrfs · rustc · rev · 2027-01-02T00:00:00Z\n# gel-evidence crash series: 4 documents of about 64 KiB, a new snapshot after each; kill after 1..=100 ms (uninterrupted run + 20%), seed 1\n".to_string()
+            + CRASH_COLUMNS
+            + "\n1\t0\t0\t0\t0\t0\t1\ttrue\t-\n2\t100\t4\t0\t0\t0\t0\ttrue\t9\n3\t50\t2\t0\t1\t0\t0\ttrue\t5\nCRASH_SERIES=PASS trials=3 acknowledged=6 acknowledged_lost=0 partial=0 resumed=3 killed_mid_publication=2\n";
+        let m = CrashSeries::from_text(&mini).unwrap();
+        let s = crash_card(true, &m);
+        assert_eq!(s.matches("<circle class=\"pt\"").count(), 3);
+        // Kill at 0 ms with nothing saved, at the window end with all saved, and halfway.
+        for (cx, cy) in [("100.0", "324.0"), ("740.0", "120.0"), ("420.0", "222.0")] {
+            assert!(s.contains(&format!("cx=\"{cx}\" cy=\"{cy}\"")), "{cx} {cy}");
+        }
+        assert!(s.contains("(btrfs, 2027-01-02)") && s.contains(">all 4 snapshots saved<"));
+        assert!(!s.contains("2,683") && !s.contains(">200<"));
+    }
+    #[test]
+    fn crash_series_disagreeing_with_its_rows_is_refused() {
+        let text = fs::read_to_string(CRASH_FILE).unwrap();
+        assert!(CrashSeries::from_text(&text).is_ok());
+        let row = "\n10\t311\t24\t0\t0\t0\t0\ttrue\t4439\n";
+        assert!(text.contains(row));
+        let summary = text.lines().last().unwrap();
+        for bad in [
+            text.replace(row, "\n10\t311\t24\t1\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t1\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\t0\tfalse\t4439\n"),
+            text.replace(row, "\n10\t311\t23\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\t1\ttrue\t4439\n"),
+            text.replace(row, "\n"),
+            text.replace(row, "\n10\t311\t24\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t311\tmany\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace(row, "\n10\t999\t24\t0\t0\t0\t0\ttrue\t4439\n"),
+            text.replace("CRASH_SERIES=PASS", "CRASH_SERIES=FAIL"),
+            text.replace(summary, ""),
+            format!("{text}{summary}\n"),
+            text.replace("killed_mid_publication=153", ""),
+            text.replace(CRASH_COLUMNS, "# trial\tkill_ms"),
+            text.replace("# host: Linux ", "# host: "),
+        ] {
+            assert!(CrashSeries::from_text(&bad).is_err());
+        }
+    }
+    #[test]
+    fn speed_card_follows_the_timing_records() {
+        let s = SpeedSet::read().unwrap();
+        // Counted another way: example directories, summaries and their case lines.
+        let (mut dirs, mut summaries, mut lines) = (0, 0, 0);
+        for entry in fs::read_dir(SPEED_DIR).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                dirs += 1;
+                if let Ok(text) = fs::read_to_string(path.join("summary.txt")) {
+                    summaries += 1;
+                    lines += text
+                        .lines()
+                        .filter(|l| l.starts_with("SPEED_AB case="))
+                        .count();
+                }
+            }
+        }
+        let cases = s.cases().count();
+        let (timed, same) = s.verdicts();
+        assert_eq!((s.examples.len(), timed, cases), (dirs, summaries, lines));
+        assert_eq!((dirs, summaries, lines), (24, 23, 133));
+        assert_eq!(s.sides(), [103, 18, 12]);
+        assert_eq!(same, 22);
+        let text = speed_text(&s);
+        for want in [
+            "133 timed cases in 23 timing examples",
+            "103 are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it",
+            "22 of 23 timed examples",
+            "speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in",
+            "speed_top1_many has only a manifest",
+            "not pinned to cores",
+        ] {
+            assert!(text.contains(want), "{want}");
+        }
+        assert!(speed_picture(&s).contains(&format!(r#"alt="{text}""#)));
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            // One bar per timed case: nothing aggregated, nothing dropped.
+            assert_eq!(c.matches(r#"<rect class="bar "#).count(), cases);
+            for e in &s.examples {
+                assert!(c.contains(&format!(">{}<", e.name)), "{}", e.name);
+                for case in e.cases() {
+                    assert!(c.contains(&format!(">{}<", case.name)), "{}", case.name);
+                }
+            }
+            // The SHA-256 slowdown is drawn to the left, in red.
+            assert!(c.contains(">0.28<") && c.contains(">0.39<"));
+            assert!(c.contains(&format!(r#"fill="{}"/>"#, theme(dark).red[1])));
+            assert!(c.contains(r#"<rect class="bar gl""#));
+            for want in [
+                ">faster beyond its A/A band: 103<",
+                ">slower beyond it: 18<",
+                ">inside it: 12<",
+                ">same output digest in A, A2 and B: 22 of 23<",
+                // Notes are numbered in name order.
+                "not built in v0.6.1 · note 1",
+                "output digests differ · note 2",
+                "AMD Ryzen AI 9 HX 370",
+                "not a confidence interval",
+                "not comparable with each other",
+                "The output digests, not the timings, are the claim.",
+            ] {
+                assert!(c.contains(want), "{want}");
+            }
+            assert!(c.contains("@media (prefers-reduced-motion:reduce){.bar,.fd{animation:none}}"));
+            // Only the keyframes hide or shrink anything, so with the animation
+            // removed every element is in its final, visible state.
+            let style = c.split("<style>").nth(1).unwrap();
+            let css = style.split("@keyframes").next().unwrap();
+            assert!(!css.contains("opacity") && !css.contains("transform:"));
+            assert!(!c.contains("__") && !c.contains("<script") && !c.contains("href"));
+            assert!(c.chars().all(|ch| ch.is_ascii() || ch == '·' || ch == '—'));
+        }
+    }
+    #[test]
+    fn speed_summaries_that_do_not_add_up_are_refused() {
+        let readme = format!("| Machine | one machine |\n| Load | load average 1 |\n| Pinning | none: not pinned |\nB is `main` at `{SPEED_B}`. `speed_new` has only a manifest: it does not build there. `speed_tree` prints `DIFFERENT_OUTPUT` because it counts its own tree.\n");
+        let line = "SPEED_AB case=large a_ns=38298255 a2_ns=37391469 b_ns=138871537 aa=0.976 gain=0.276 runs=27";
+        let digest = |c: char| c.to_string().repeat(64);
+        let summary = |lines: &str, b: char, verdict: &str| {
+            format!(
+                "{lines}\nSPEED_AB_CHECK tree=a sha256={}\nSPEED_AB_CHECK tree=a2 sha256={}\nSPEED_AB_CHECK tree=b sha256={}\nSPEED_AB_VERDICT={verdict}\n",
+                digest('a'),
+                digest('a'),
+                digest(b)
+            )
+        };
+        let one = |name: &str, text: Option<String>| {
+            SpeedSet::from_texts(&readme, &[(name.to_string(), text)])
+        };
+        let good = summary(line, 'a', "SAME_OUTPUT");
+        let s = one("speed_sha256", Some(good.clone())).unwrap();
+        let case = &s.examples[0].cases()[0];
+        assert_eq!((case.gain, case.aa, case.runs), (0.276, 0.976, 27));
+        assert!(s.examples[0].note.is_none());
+        // A differing digest and a missing summary are kept, with the README's sentence.
+        let differs = summary(line, 'b', "DIFFERENT_OUTPUT");
+        let s = one("speed_tree", Some(differs.clone())).unwrap();
+        assert_eq!(
+            s.examples[0].note.as_deref(),
+            Some("speed_tree prints DIFFERENT_OUTPUT because it counts its own tree.")
+        );
+        let s = SpeedSet::from_texts(
+            &readme,
+            &[
+                ("speed_new".to_string(), None),
+                ("speed_sha256".to_string(), Some(good.clone())),
+            ],
+        )
+        .unwrap();
+        assert!(s.examples[0].timed.is_none() && s.examples[0].note.is_some());
+        assert_eq!(s.cases().count(), 1);
+        let last_digest = format!("SPEED_AB_CHECK tree=b sha256={}\n", digest('a'));
+        for bad in [
+            good.replace("gain=0.276", "gain=0.286"),
+            good.replace("aa=0.976", "aa=0.967"),
+            good.replace("gain=0.276", "gain=0.27"),
+            good.replace("gain=0.276", "gain=0"),
+            good.replace("b_ns=138871537", "b_ns=128871537"),
+            good.replace("a_ns=38298255", "a_ns=0"),
+            good.replace(" runs=27", ""),
+            good.replace("runs=27", "runs=27 extra=1"),
+            good.replace("case=large", "case=Large"),
+            good.replace("SPEED_AB_VERDICT=SAME_OUTPUT\n", ""),
+            good.replace("SAME_OUTPUT", "DIFFERENT_OUTPUT"),
+            good.replace("tree=a2", "tree=b"),
+            good.replace(&last_digest, ""),
+            format!("{line}\n{good}"),
+            format!("{good}SPEED_AB_VERDICT=SAME_OUTPUT\n"),
+            format!("an unexpected line\n{good}"),
+            summary(line, 'b', "SAME_OUTPUT"),
+            summary(line, 'g', "DIFFERENT_OUTPUT"),
+        ] {
+            assert!(one("speed_sha256", Some(bad.clone())).is_err(), "{bad}");
+        }
+        // The medians give 0.2758: a print to two digits must read 0.28.
+        let shorter = good.replace("gain=0.276", "gain=0.28");
+        assert!(one("speed_sha256", Some(shorter)).is_ok());
+        // Unexplained differences or gaps, and a README that no longer states the setup.
+        assert!(one("speed_sha256", Some(differs)).is_err());
+        assert!(one("speed_new", None).is_err());
+        let gap = [
+            ("speed_sha256".to_string(), Some(good.clone())),
+            ("speed_gone".to_string(), None),
+        ];
+        assert!(SpeedSet::from_texts(&readme, &gap).is_err());
+        for changed in [
+            readme.replace("| Machine |", "| Host |"),
+            readme.replace("none:", "cores 0 to 7:"),
+            readme.replace(SPEED_B, "0000000"),
+            readme.replace("one machine", "one <b>machine</b>"),
+        ] {
+            let set = [("speed_sha256".to_string(), Some(good.clone()))];
+            assert!(SpeedSet::from_texts(&changed, &set).is_err(), "{changed}");
+        }
+    }
+    #[test]
+    fn speed_card_draws_the_numbers_it_is_given() {
+        let case = |name: &str, aa: f64, gain: f64| SpeedCase {
+            name: name.to_string(),
+            aa,
+            gain,
+            runs: 9,
+        };
+        let s = SpeedSet {
+            machine: "one machine".to_string(),
+            load: "load average 1".to_string(),
+            examples: vec![SpeedExample {
+                name: "speed_one".to_string(),
+                timed: Some((
+                    vec![
+                        case("quarter", 1.0, 0.25),
+                        case("four", 1.0, 4.0),
+                        case("same", 1.25, 1.1),
+                    ],
+                    true,
+                )),
+                note: None,
+            }],
+        };
+        assert_eq!(s.sides(), [1, 1, 1]);
+        for dark in [false, true] {
+            let c = speed_card(dark, &s);
+            assert_eq!(c.matches(r#"<rect class="bar "#).count(), 3);
+            for want in [
+                ">quarter<",
+                ">four<",
+                ">same<",
+                ">0.25<",
+                ">4.00<",
+                ">1.10<",
+            ] {
+                assert!(c.contains(want), "{want}");
+            }
+            assert!(c.contains(">faster beyond its A/A band: 1<") && c.contains(">inside it: 1<"));
+            assert!(c.contains(">9 runs per case<") && c.contains(">1.25<"));
+            assert!(!c.contains(">0.28<") && !c.contains("AMD") && !c.contains("note 1"));
+            // On a log scale a quarter and four are equally long, on either side of 1.
+            let bars: Vec<(&str, &str)> = c
+                .split(r#"<rect class="bar "#)
+                .skip(1)
+                .map(|r| {
+                    let width = r.split(" width=\"").nth(1).unwrap();
+                    (
+                        r.split('"').next().unwrap(),
+                        width.split('"').next().unwrap(),
+                    )
+                })
+                .collect();
+            assert_eq!((bars[0].0, bars[1].0), ("gl", "gr"));
+            assert_eq!(bars[0].1, bars[1].1);
+            let colours = [theme(dark).red[1], theme(dark).blue[1], theme(dark).muted];
+            for (bar, colour) in c.split(r#"<rect class="bar "#).skip(1).zip(colours) {
+                assert!(bar.contains(&format!(r#"fill="{colour}"/>"#)));
             }
         }
     }

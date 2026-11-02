@@ -163,11 +163,27 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/record-light.svg",
-        "e58907c27302a6808e3277ae099b12c353fb85b2586374684920b33c71704ea0",
+        "65d50ddecf4cb4115713e8086975954aed1c69259d677b07d654b750b7e1a92f",
     ),
     (
         "media/presentation/record-dark.svg",
-        "45cefe87675ed8537af6c8a71d1729efdcca76ccb60e46818df19741172e9837",
+        "81ec117030fe27eb2b9c2b0d0fe9a62509beffd1566779732f09962e056cc709",
+    ),
+    (
+        "media/presentation/crash-light.svg",
+        "743f09d458407c6c6da9d9f22b862981337c36fae03ad3cacf710ba0e5a89cbc",
+    ),
+    (
+        "media/presentation/crash-dark.svg",
+        "ec6c66ec2df71ff2f43d305c6cd584a819881119c41f1c01ab1fcb7e57f68c73",
+    ),
+    (
+        "media/presentation/speed-light.svg",
+        "39a1341b15592f951f4622b151a728a963f382d36fa1ad49792acac95e3d8232",
+    ),
+    (
+        "media/presentation/speed-dark.svg",
+        "5f3a4750a424f426ea1fce5cd45c7d849f26e75b57b1605daccf949699fa9a04",
     ),
     (
         "media/presentation/flow-light.svg",
