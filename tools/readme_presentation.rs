@@ -126,32 +126,32 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <div class="page">
 <header><div class="brand-row"><div><div class="brand">
 __BRAND_LOGO__
-<div class="brand-name">GEL RAM<small>Evidence Lab</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
-<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">Local CLI</span><span class="chip">Source-linked media</span></div></div></div>
+<div class="brand-name">GEL RAM<small>Public tools</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
+<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">No third-party packages</span><span class="chip">Offline</span></div></div></div>
 <nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
 <div class="view-tools"><label for="still-mode">Show still images</label><a href="__DOC__/media/gifs/MANIFEST.txt">Media provenance</a><span>12-second edited replays, not wall time</span></div>
 <main id="content">
 <section class="hero" aria-labelledby="hero-heading">
 <figure><a class="media-link" href="media/gifs/01-evidence-light.gif" aria-label="Open the exact quotes and restart animation at full size">__HERO__</a><figcaption>Real public CLI output, edited into three readable cards.<br><a href="media/gifs/01-evidence.txt">Full transcript and source revision</a> · <a href="media/gifs/01-evidence-dark.gif">Dark full-size version</a></figcaption></figure>
-<div><p class="eyebrow">Inspect the source. Keep the evidence.</p><h1 id="hero-heading">Find the passage.<br>Check the source.</h1><p class="hero-lead">Load your text, retrieve exact quotations and check that a saved collection reopens with the expected bytes.</p><ul class="checks"><li>Source text, identifiers and byte ranges</li><li>SHA-256 pins retained independently</li><li>Explicit refusal after source replacement</li><li>Public Rust tools, offline on your CPU</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">Source correspondence is not source truth. This is phrase retrieval, not unrestricted question answering.</p></div>
+<div><p class="eyebrow">Check it yourself</p><h1 id="hero-heading">Exact bytes,<br>or a refusal.</h1><p class="hero-lead">GEL RAM prints knowledge into memory as fixed Q8 records and reads them back exactly. The printing step is private; the public tools in this checkout let you check the rest on your own files.</p><ul class="checks"><li>One record, four views, read back bit for bit</li><li>A changed byte refused under the SHA-256 you kept</li><li>Nothing confirmed lost when the process is killed</li><li>No third-party packages; runs offline on your CPU</li></ul><div class="buttons"><a class="button" href="#quick-start">Run it yourself →</a><a class="button secondary" href="#workflows">Explore six workflows</a></div><p class="boundary">The text AI is a goal, not a result. A process kill is not a power cut. A matching hash does not show that a source is true.</p></div>
 </section>
 <section class="section flow" aria-label="How a citation is checked">__FLOW__<div class="facts">__FACTS__</div></section>
 <section class="section" id="workflows" aria-labelledby="workflow-heading"><div class="section-heading"><p class="eyebrow">Six workflows. Their original evidence.</p><h2 id="workflow-heading">See it in action</h2><p>These are edited replays of recorded public command output, not product screenshots or new benchmark runs. Open each image at full size to read the terminal text.</p></div><div class="grid">__CARDS__</div>
 <div class="trust"><div><strong>Inspectable</strong><p>Transcripts and retained hashes accompany the previews.</p></div><div><strong>Explicit failures</strong><p>Inspect refusal and incomplete states, not only success.</p></div><div><strong>Local operation</strong><p>The CLI uses your local documents. No automatic upload.</p></div><div><strong>Reproducible scope</strong><p>Commands, sources and limitations remain linked.</p></div></div></section>
 <section class="section" id="checks" aria-labelledby="checks-heading"><div class="section-heading"><p class="eyebrow">Drawn from this checkout</p><h2 id="checks-heading">What the public checks cover</h2><p>The property map, the CI exclusion list and the committed mutation report are read when the images are built; the read-only presentation check fails if they drift.</p></div>__WALL__<div class="facts">__BARS__</div></section>
-<div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; the demo uses locked offline dependencies.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
+<div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; after that every command runs offline.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-git checkout __RELEASE__
 git rev-parse HEAD
 rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
-cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo</code></pre><p>Expected marker: <code>GEL_EVIDENCE_DEMO=PASS</code>. This is a result to check, not a pre-approved outcome.</p></section>
+cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
+cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo</code></pre><p>Expected markers: <code>GEL_LIVE_LAB_LITERAL=PASS</code> and <code>GEL_EVIDENCE_DEMO=PASS</code>. These are results to check, not pre-approved outcomes.</p></section>
 <section id="reproduce"><p class="eyebrow">Check the declared scope</p><h2>Reproduce the checks.</h2><pre><code>cargo run --locked --offline -p xtask -- verify
 cargo run --locked --offline -p xtask -- reproduce ../gel-repro-new</code></pre><p>Use a new output directory outside the checkout. Read failed, skipped and unmeasured steps. Cargo offline mode is not system-wide network isolation.</p><ul class="doclinks"><li><a href="__DOC__/docs/REPRODUCE.md">Reproduction instructions</a></li><li><a href="__DOC__/docs/CI-EVIDENCE.md">Per-revision CI evidence</a></li><li><a href="__DOC__/docs/CLAIMS.md">Executable claim registry</a></li></ul></section>
-<section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">Technical README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/EVIDENCE-BATCH.md">Batch mode and exit codes</a></li><li><a href="__DOC__/docs/BACKUP.md">Backup and restore</a></li><li><a href="__DOC__/docs/MUTATION-MATRIX.md">Format mutation matrix</a></li><li><a href="__DOC__/docs/BENCHMARK-GREP.md">Comparison with grep</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the pinned source on GitHub. Viewing this local page loads only adjacent assets, with no scripts, trackers or remote fonts.</p></section></div>
-<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It belongs to the <code>__RELEASE__</code> source. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
+<section id="documentation"><p class="eyebrow">Go beyond the preview</p><h2>Documentation.</h2><ul class="doclinks"><li><a href="__DOC__/README.md">README</a></li><li><a href="__DOC__/docs/EVIDENCE-LAB.md">Evidence Lab guide</a></li><li><a href="__DOC__/docs/LIVE-LAB.md">Your bytes in one record</a></li><li><a href="__DOC__/docs/Q8-QUAD.md">Q8 record contract</a></li><li><a href="__DOC__/docs/CLAIMS.md">Claim registry</a></li><li><a href="__DOC__/docs/COMMITMENTS.md">Published commitments</a></li><li><a href="__DOC__/docs/LICENSE-DECISION.md">License decision guide</a></li><li><a href="__DOC__/docs/ROADMAP.md">Public roadmap</a></li><li><a href="__DOC__/media/INDEX.md">Films and their scope</a></li></ul><p>Documentation links open the files of this checkout. Viewing this local page loads only adjacent files, with no scripts, trackers or remote fonts.</p></section></div>
+<section class="scope section" id="scope"><h2>What this page does and does not establish</h2><p>This is a documentation presentation, not the application interface. It describes this checkout; the latest release is <code>__RELEASE__</code>. The older GIFs retain the source revision declared in their <a href="media/gifs/MANIFEST.txt">original manifest</a>. Presentation changes do not retime them, certify a release or close outstanding human review.</p><p>Snapshots and backups are plaintext. A hash is not encryption, a signature or proof that a source is true. Different search tasks and matching semantics are not interchangeable benchmarks.</p><p>GEL-owned material remains under <a href="__DOC__/LICENSE">GEL RAM Noncommercial Reciprocal License 1.0</a>. Read the <a href="__DOC__/LICENSING.md">licensing guide</a>, <a href="__DOC__/THIRD-PARTY-NOTICES.md">third-party notices</a> and <a href="__DOC__/media/RIGHTS.md">media rights</a>. This page grants no additional rights.</p></section>
 </main>
-<footer><p><strong>GEL RAM · Evidence Lab</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
+<footer><p><strong>GEL RAM</strong><br>RR — GEL RAM Project · Public documentation</p><p><a href="__DOC__/LICENSE">License</a> · <a href="__DOC__/SECURITY.md">Security</a> · <a href="__DOC__/CLA-PRIVACY.md">CLA privacy</a> · <a href="__DOC__/CONTRIBUTING.md">Contributing</a><br>Existing evidence preserved. New presentation only.</p></footer>
 </div></body></html>
 "####;
 const NATIVE: &str = r####"# GEL RAM
@@ -171,66 +171,16 @@ conversation in Polish and English: it answers in sentences of its own, not
 pasted excerpts, from what it holds, shows the source it relied on, and says it
 does not know when it holds nothing on the question.
 
-The step that prints text into records is private, so the Q8 records in this
-checkout hold synthetic values or literal bytes, and its tools do not
-answer natural-language questions; its document tools return exact quotations,
-not sentences of their own.
-This repository does not establish hardware-level memory computation
-([claim registry](docs/CLAIMS.md): `NOT_ESTABLISHED`); the text AI is a goal,
-not a result ([the goal and its four commitments](docs/GOAL.md)).
+| Status | What it covers |
+|:---|:---|
+| **You can check it here** | One record read back exactly through four views; a changed byte refused; a killed process losing nothing it confirmed; a build with no third-party packages. One command each, [below](#check-it-yourself). |
+| **Private** | The step that prints text into records, the bank the private build answers from, and its answers. They run only on the author's machine; their sources and data are fixed in time by [__COMMITMENTS__ published commitments](docs/COMMITMENTS.md). |
+| **Not established** | The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and survival of a power cut are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md)). |
 
-## One record, four exact views
+## Check it yourself
 
-__RECORD__
-
-A record is stored once: 1,024 one-byte values and a 128-byte activity mask,
-1,152 bytes. The reader exposes four equivalent views of it and, for each view,
-returns the score a separate read of a materialized copy gives, bit for bit on
-the same build and platform. Four packed copies would take 4,608 bytes. Four
-views are not four independent memories, four votes or a 4× speedup, and 1,152
-bytes is the record, not process memory. On the author's private ranking check,
-a different task, Single still outperforms Quad in this run: top-1 379 against
-371 of 400. [How each part is checked](#the-memory-core)
-
-## Exact bytes, or a refusal
-
-__HERO__
-
-The public collection tool builds a collection from your own files; it does not
-print Q8 records, but it follows the same rule. Each quotation comes back byte
-for byte with its byte range; replace a document and its earlier citation is
-refused; change one byte of a saved snapshot and loading it with the pin you
-kept fails. A matching pin proves these are the bytes you kept, not that the
-source is true; a hash is not a signature.
-Replays of real public-tool runs: [this one, as text](media/gifs/__HERO_ID__.txt) · [old citation refused](media/gifs/02-stale-light.gif) · [verified restart](media/gifs/01-evidence-light.gif) · [all six](#see-it-in-action)
-
-## A killed process loses nothing it confirmed
-
-In the recorded crash series the public collection tool was killed at random
-moments in 200 trials while its collection grew: 0 of 2,683 acknowledged
-snapshots were lost, none was partial, and every trial resumed to the
-uninterrupted result ([crash series](docs/CRASH-SERIES.md)). Injected write
-failures, permission denial and a full disk leave the previous snapshot intact
-([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). A separate private series
-checked 235,712 confirmed records after kills; none was lost. A process kill is
-not a power cut: power-loss durability is not established.
-
-## UNKNOWN when the bank does not hold the answer
-
-Of 599 frozen questions written to have no answer in the bank (399 about real
-topics outside it, checked by title, and 200 about invented subjects; the set
-page lists two that the bank does answer), a private development build said
-UNKNOWN to 573 and answered 25; its one other answer is a passage that holds the
-answer. Silence costs answers too: it said UNKNOWN to 557 of the 982
-questions that have one. The build and its bank are private;
-`xtask answer-bench check` re-scores every recorded answer.
-[Question set v7 and its limits](docs/answer-or-abstain-v7/README.md)
-
-## Run it now
-
-Install [Git](https://git-scm.com/) and [rustup](https://rustup.rs). Cloning, the
-toolchain and the fetch need a network; after that Cargo runs offline. No model
-and no private data are involved. Run each line separately:
+With [Git](https://git-scm.com/) and [rustup](https://rustup.rs) installed, run each line separately.
+Only the first four need a network; no model and no private data are involved.
 
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
@@ -241,159 +191,131 @@ cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
 cargo run --locked --offline -p xtask -- mutation-matrix
 cargo run --locked --offline -p xtask -- crash-series 20
-cargo run --locked --offline --release -p gel-physics -- 5
+cargo run --locked --offline -p xtask -- verify
 ```
 
-| Run | Line to check | What it shows | Its limit |
+| Command | Line to look for | What it shows | Its limit |
 |:---|:---|:---|:---|
-| Your bytes, one record | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED`, `GEL_LIVE_LAB_LITERAL=PASS` | The first 1,024 bytes of a regular file you name in place of README.md (1 byte to 64 MiB), in one record; its four views restored bit for bit; a changed byte rejected under the pin ([how](docs/LIVE-LAB.md#your-own-bytes-in-one-record)) | Literal bytes, not GEL knowledge printing; no meaning and no search |
-| One record, four views | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records of 1,152 bytes; each view's score equals a separate reference copy bit for bit | Meaning is not measured; a single reference view can still be read faster than the shared read |
-| Changed bytes | `MUTATION_MATRIX=PASS mutants=179 …` | Every mutant of the three file formats in the matrix is refused under the original pin | A finite matrix, not every possible corruption |
-| Kill while writing | `CRASH_SERIES=PASS trials=20 … acknowledged_lost=0 partial=0 resumed=20 …` | No acknowledged snapshot lost; every trial resumes to the same bytes | Unix hosts; the recorded run is Linux; a process kill, not a power cut |
-| F0 memory physics | `GEL_PHYSICS_F0_V3`, then ns per step and GiB/s from 48 KiB to 256 MiB and random 32/64/128-byte fetches in a 64 MiB working set | What your own memory costs, measured instead of assumed | Nanoseconds and GiB/s only, no cycles; compare rows only within one machine and one output tag |
+| `--literal` | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED` | The first 1,024 bytes of any file you name, placed in one record; all four views give them back bit for bit, and a copy with one changed byte is refused | Your bytes as they are, not knowledge printing: no meaning and no search |
+| `quad_compare` | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` | 512 synthetic records; each view's score equals the score of a separate reference copy, bit for bit | Meaning is not measured |
+| `mutation-matrix` | `MUTATION_MATRIX=PASS mutants=179` | Every changed copy of the three public file formats is refused under the original SHA-256 | A finite set of changes, not every possible one |
+| `crash-series 20` | `CRASH_SERIES=PASS` with `acknowledged_lost=0` | The collection tool is killed 20 times at random while it writes; nothing it confirmed is lost | Unix hosts; a process kill, not a power cut |
+| `verify` | `GEL_VERIFY_ALL=PASS` | All public tests and gates, with short forms of the runs above | The public tools only; the private build is not in this checkout |
 
-`cargo run --locked --offline -p xtask -- verify` runs the full public check,
-including a smaller `quad_compare` run and, on Unix hosts, a five-trial crash
-series; it ends with `GEL_VERIFY_ALL=PASS`.
+## One record, four exact views
 
-[The memory core](#the-memory-core) · [Six workflows](#see-it-in-action) · [Checks](#what-the-public-checks-cover) · [External checks](docs/EXTERNAL-CHECKS.md) · [Quick start](#quick-start) · [Documentation](#documentation) · [License](#about-and-licensing)
+__RECORD__
 
-## The memory core
+A record is stored once, in 1,152 bytes; each of its four equivalent views
+scores exactly as a separate, fully written-out copy would, bit for bit, and four
+such copies would take 4,608 bytes. Four views are not four independent
+memories, four votes or a speedup, and 1,152 bytes is the record, not process
+memory. [Contract](docs/Q8-QUAD.md) · [the recorded runs](docs/evidence-q8-current/README.md)
 
-The public core holds fixed records, reads them exactly and measures the memory
-they live in. Each row names a test (`cargo test --locked --offline -p CRATE`)
-or a command.
+## Exact bytes, or a refusal
 
-| Part | What it does | Check it |
-|:---|:---|:---|
-| ORB128 record (`gel-orb`) | One fixed 1,024-bit record of 128 bytes, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
-| Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single header bit flip, payload byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` · `generation_rollback_and_equal_generation_are_rejected` |
-| Reader16 (`gel-reader`) | One fused comparison of two records returns 16 judgments; they are not 16 independent measurements. Progressive Top-K equals the full 128-byte Top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
-| Exact structural rebuild (`gel-structural`) | A related record XOR the differing bits gives the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
-| Record history (`gel-history`) | Every state appended to the history of one 128-byte record is stored as a literal copy or as the XOR residual from the state before it, never more than two residuals from a literal, and is rebuilt bit for bit, also from the reopened file; the decoder accepts only the bytes the encoder writes | `long_history_is_exact_and_residual_depth_never_exceeds_two` · `a_depth_byte_that_lies_is_refused` · [contract](docs/RECORD-HISTORY.md) |
-| Four views of one Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views; each score equals the reference bit for bit; four packed copies would take 4,608 bytes and the materialized reference 8,192 | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) · [the 48 runs behind the card](docs/evidence-q8-current/README.md) · [the historical V1 runs, slower cases included](docs/Q8-QUAD-RESULTS.md) |
-| Your bytes in one Q8 record (`gel-live-lab --literal`, over `gel-phase-quad`) | The first 1,024 bytes of one file as the values of one record, active where a byte was placed; each of the four views is restored to it with 0 different bits; its 1,164-byte file is rejected under the pin after any 1-byte change. Literal bytes, not GEL knowledge printing | `every_byte_value_restores_through_every_view` · `a_changed_byte_anywhere_is_rejected` · [live lab](docs/LIVE-LAB.md#your-own-bytes-in-one-record) |
-| F0 memory physics (`gel-physics`) | Dependent pointer-chase latency and sequential read bandwidth from 48 KiB to 256 MiB, random 32/64/128-byte record fetches in a 64 MiB working set; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
+__HERO__
 
-Tests hold five equalities:
+The public collection tool, Evidence Lab, works on your own UTF-8 files: each
+quotation comes back byte for byte with its byte range, a replaced document's
+old citation is refused, and a saved snapshot with one changed byte fails to
+load under the SHA-256 you kept. A matching hash shows these are your bytes, not
+that the source is true; it is phrase lookup, not question answering. Its demo,
+`cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`,
+ends with `GEL_EVIDENCE_DEMO=PASS`. [Evidence Lab guide](docs/EVIDENCE-LAB.md) · [this replay as text](media/gifs/__HERO_ID__.txt)
 
-```text
-reference result      == optimized result      (gel-kernel: kernel_matches_reference)
-full Top-K            == progressive Top-K     (gel-reader)
-original record bytes == rebuilt record bytes  (gel-structural)
-written store         == reopened store        (gel-store: persistence_roundtrip_and_payload_corruption_rejection)
-appended state        == rebuilt state         (gel-history: long_history_is_exact_and_residual_depth_never_exceeds_two)
-```
+## A killed process loses nothing it confirmed
 
-`cargo run --locked --offline --release -p gel-cli -- selftest` checks the record,
-the store, Reader16 and the structural rebuild in one run and prints
-`GEL_SELFTEST_V2=PASS` on its first line. This checkout does not print text into
-records as GEL does: `--literal` only places bytes, and the printing step and its
-bank are private.
+In the recorded series the collection tool was killed at random moments in 200
+trials: 0 of 2,683 acknowledged snapshots were lost, none was partial, and every
+trial resumed to the uninterrupted result ([crash series](docs/CRASH-SERIES.md)).
+Write failures, denied permissions and a full disk leave the previous snapshot
+intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)). A kill is not a power cut.
+
+## New in 0.7
+
+- **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout; SHA-256 and Unicode normalization are written here, and hashing is slower for it than in v0.6.1.
+- **One Unicode version:** normalization follows Unicode 16.0.0, as the pinned Rust 1.85.0 standard library does, and passes every line of the Unicode normalization test file.
+- **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest ([release notes](RELEASE-NOTES-v0.7.0.md)).
+- **On `main` since v0.7.0, not yet released:** every public program answers `--version` and `--license`, every project Rust source file begins with a two-line license header, and `gel-license check DIR` reports whether a copy kept the license, the Required Notice, those headers and the third-party notices.
+
+## Using GEL RAM
+
+You may use, study, change and share GEL RAM for noncommercial purposes, and
+anyone, including a company, may evaluate it outside production with no time
+limit. Any use that earns money or brings material financial benefit needs a
+separate signed Commercial Agreement first: `gelram.licensing@gmail.com`.
+`gel-license use ANSWERS_FILE` shows which LICENSE sentences apply to your
+answers about one use; it is not legal advice. Code contributions for merge need
+the signed [CLA 2.0](CLA.md). This README adds no rights; the [LICENSE](LICENSE)
+controls ([licensing guide](LICENSING.md) · [license decision guide](docs/LICENSE-DECISION.md) · [commercial terms](COMMERCIAL-LICENSE.md)).
+
+## Private work, fixed in time
+
+The private parts cannot be re-run here. Each private directory is fixed by a
+[commitment](docs/COMMITMENTS.md): the SHA-256 of a manifest of every file,
+published now; the files can be handed over later and checked with
+`xtask commitment-check`. It shows the files existed and did not change, not that
+they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md);
+nobody else has re-run them, and no second machine has yet run the public tools ([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
 
 ## See it in action
 
-**Actual public-tool runs, presented as six edited log replays.**
-Each animation lasts 12 seconds; pacing is editorial, not execution time.
-[Static view](media/gifs/STATIC.md) · [Full gallery](media/gifs/README.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
-
-__FLOW__
-
-### Six workflows, one evidence trail
-
-Open a preview at full size to read the terminal text. All six existing scenarios
-are visible here rather than hidden in collapsed sections. Their original
-transcripts and source revisions remain unchanged.
+Six edited 12-second replays of recorded public-tool runs; the pacing is not execution time.
+[Static view](media/gifs/STATIC.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
 
 __GRID__
+## The memory core
 
-The earlier [70-second Evidence Lab film](media/GEL-EVIDENCE-LAB-EN.mp4),
-its [original process logs](media/EVIDENCE-LAB-GUIDE.md) and
-[open human review](docs/MEDIA-DECODE-REVIEW.md) remain separate historical material.
-New presentation is not a new execution, benchmark or human acceptance.
-
-**Full-page edition:** [README-MULTIMEDIA.html](README-MULTIMEDIA.html).
-Open that file from this checkout in a browser for the responsive blue-panel layout,
-light/dark backgrounds and a still-image control. GitHub displays HTML files as
-source, not as a hosted page; this repository does not enable Pages.
-[Presentation guide](docs/README-PRESENTATION.md).
-
-## What the public checks cover
-
-__FACTS__
-
-__WALL__
-
-Each cell is one documented property on one CI platform. On every platform the
-[CI evidence collector](docs/CI-EVIDENCE.md) withholds COMPLETE unless each test
-named in the [property map](docs/PROPERTY-TESTS.md) ran and passed exactly once;
-declared Unix-only tests are exempt on Windows. The image shows this rule, not
-the outcome of one run: read that in the run's CI report.
-
-__BARS__
-
-Every mutant of the [format mutation matrix](docs/MUTATION-MATRIX.md) is read
-twice: with the original pin, which must refuse any changed byte, and with a
-recomputed pin, which lets the structural rules decide. The bars count the
-committed report; `xtask verify` regenerates it and fails on any difference.
-Both images are drawn from these files when the presentation is built, and the
-read-only presentation check fails if they drift.
-
-## What you can check without the private code
-
-GEL's own answers come from a private implementation and its bank, so they
-cannot be re-run from this checkout. Everything around them can:
-
-| What | How | You need |
+| Part | What it does | Check it |
 |:---|:---|:---|
-| The public tools do what these pages say | `cargo run --locked --offline -p xtask -- verify` ends with `GEL_VERIFY_ALL=PASS` | this checkout, Rust 1.85.0 |
-| No acknowledged snapshot is lost when the process is killed | `cargo run --locked --offline -p xtask -- crash-series` ends with `CRASH_SERIES=PASS` | this checkout on a Unix host |
-| The scoring of every recorded answer | `cargo run --locked --offline -p xtask -- answer-bench check` re-scores them under two rules and compares the published tables | this checkout |
-| That a private result was not changed after publication | where a result lists an evidence identity, it is the SHA-256 of its private artifacts; the ranking, resident-read and integrity-gate rows have none ([measured progress](docs/MEASURED-PROGRESS.md)); this shows tampering, it does not verify the result | nothing |
+| Record (`gel-orb`) | One fixed 128-byte record of 1,024 bits, 64-byte aligned; its bytes round-trip exactly | `exact_byte_roundtrip` · [format](docs/FORMAT.md) |
+| Store (`gel-store`) | `.gel` files with a CRC64 over the header and over the payload; every single bit flip, byte flip and truncation is rejected, and so is an older generation | `every_payload_byte_flip_is_rejected` |
+| Reader (`gel-reader`) | One comparison of two records returns 16 judgments, not 16 independent measurements; the progressive top-K equals the full top-K exactly | `progressive_top_k_is_exactly_equal_to_full_top_k` · [Reader16](docs/READER16.md) |
+| Rebuild (`gel-structural`) | A related record XOR the differing bits gives back the exact record, or the rebuild fails | `exact_xor_roundtrip_is_bit_identical` · [contract](docs/STRUCTURAL-CODEC.md) |
+| History (`gel-history`) | Each state of one record is stored as a copy or as the XOR difference from the state before, at most two differences from a copy, and is rebuilt bit for bit | `long_history_is_exact_and_residual_depth_never_exceeds_two` · [contract](docs/RECORD-HISTORY.md) |
+| Q8 record (`gel-phase-quad`) | One 1,152-byte record read through four equivalent views, each score equal to the reference bit for bit | `storage_is_1152_bytes_and_every_bit_survives` · [contract](docs/Q8-QUAD.md) |
+| Memory cost (`gel-physics`) | Pointer-chase latency and read bandwidth of your own RAM from 48 KiB to 256 MiB; nanoseconds and GiB/s only | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
 
-An independent run of the public tools on a second machine is still missing
-([issue #20](https://github.com/Gelram-project/gel-ram/issues/20)).
+`cargo test --locked --offline -p CRATE` runs the tests named here;
+`cargo run --locked --offline --release -p gel-cli -- selftest` checks the first four parts in one run (`GEL_SELFTEST_V2=PASS`).
 
-## External checks
+## Documentation
 
-Frozen question sets v1 to v7 check private development builds from the
-outside; each set page names the build it measured. Every question, expected
-answer and recorded answer is published, and `xtask answer-bench check`
-re-scores them on every verify run. GEL's main numbers on each set, the
-reference search engines and what has nothing to compare with are on one page:
-[external checks](docs/EXTERNAL-CHECKS.md).
+| Start and use | Inspect and reproduce | Project |
+|:---|:---|:---|
+| [Project map](docs/START-HERE.md) | [Claim registry](docs/CLAIMS.md) | [Roadmap](docs/ROADMAP.md) |
+| [Evidence Lab](docs/EVIDENCE-LAB.md) · [batch mode](docs/EVIDENCE-BATCH.md) | [Reproduction guide](docs/REPRODUCE.md) | [Release notes v0.7.0](RELEASE-NOTES-v0.7.0.md) |
+| [Backup and restore](docs/BACKUP.md) | [Per-platform CI evidence](docs/CI-EVIDENCE.md) | [Publication status](CANDIDATE-STATUS.md) |
+| [Your bytes in one record](docs/LIVE-LAB.md) | [Mutation matrix](docs/MUTATION-MATRIX.md) · [crash series](docs/CRASH-SERIES.md) | [Measured progress](docs/MEASURED-PROGRESS.md) |
+| [License decision guide](docs/LICENSE-DECISION.md) | [External checks](docs/EXTERNAL-CHECKS.md) | [All media and their scope](media/INDEX.md) |
 
-## Private measurements
+The [full-page edition](README-MULTIMEDIA.html) opens from your checkout in a browser; GitHub shows HTML files as source ([presentation guide](docs/README-PRESENTATION.md)).
 
-Author-run diagnostics of the separate private implementation (ranking within a
-known slot, resident read times, the answer verdict and the kill series of its
-store) cannot be re-run from this checkout. They are listed with their scope in
-[measured progress](docs/MEASURED-PROGRESS.md), with the SHA-256 of their
-private artifacts where one is given (the ranking, resident-read and
-integrity-gate rows have none), and the [claim registry](docs/CLAIMS.md) lists
-them as `MEASURED_LOCAL`.
+## About
 
-## The public collection tool
-
-Build a collection from your own UTF-8 files, quote it exactly and reopen it
-with the pin you kept. It is phrase lookup, not question answering; start with
-the [quick start](#quick-start).
-
+GEL RAM is an independent hobby and research project by **RR — GEL RAM
+Project**, developed with AI assistance; this repository is not the complete
+private research system. Third-party material keeps its own terms: the Rust Book
+fixture (MIT), the Unicode data files and the quoted Wikipedia passages
+(CC BY-SA 4.0) ([third-party notices](THIRD-PARTY-NOTICES.md)).
+[Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [CLA privacy](CLA-PRIVACY.md) · [Media rights](media/RIGHTS.md)
 "####;
 const GUIDE: &str = r####"# Multimedia README presentation
 
 This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), a card of one stored Q8 record drawn from the 48
-recorded comparison runs in docs/evidence-q8-current, an
-animated 3D scene of the citation check, a strip of checked facts, colour-coded
-workflow badges, six real GIF previews and two 3D graphics of the public checks.
-The adjacent
-README-MULTIMEDIA.html is a script-free local document with the full responsive
-panel layout, theme-aware backgrounds, a still-image control and links to the
-public documentation. Open it from the checkout in a browser. GitHub's file
-viewer does not host it as a web page; no Pages deployment or new public service
-is configured.
+recorded comparison runs in docs/evidence-q8-current, colour-coded workflow
+badges and six real GIF previews. Two of its numbers are counted from files when
+the README is built: the published commitments in docs/COMMITMENTS.md and the
+packages in Cargo.lock, which the builder refuses to count when one comes from
+outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+document with the full responsive panel layout, theme-aware backgrounds, a
+still-image control, an animated 3D scene of the citation check, a strip of
+checked facts, two 3D graphics of the public checks and links to the files of
+the checkout. Open it from the checkout in a browser; GitHub's file viewer shows
+it as source, not as a web page.
 
 The animated scene illustrates the flow the six recordings show: an exact
 quote with its byte range, a snapshot pinned by the SHA-256 the user keeps, a
@@ -419,10 +341,10 @@ until the card is rebuilt.
 
 ## Preservation and source
 
-The presentation belongs to the __RELEASE__ source. Earlier README versions are
-no longer kept in the tree; they remain in the git history. The README keeps its
-hand-maintained part below the generated region, including the quick-start
-checkout of the __RELEASE__ tag.
+The presentation describes the checkout it is in; the latest release is
+__RELEASE__. Earlier README versions are no longer kept in the tree; they remain
+in the git history. The whole README is generated; no part of it is maintained
+by hand.
 
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
@@ -439,8 +361,8 @@ stop GIF decoding. Images have alt text, transcript links and full-size alternat
 On narrow screens the HTML card grid becomes one column. GitHub controls the
 surrounding Markdown page's appearance; only its image assets can carry this design.
 
-The original [static gallery](../media/gifs/STATIC.md) remains available. Opening
-external documentation links needs a network; opening the local presentation does not.
+The original [static gallery](../media/gifs/STATIC.md) remains available. The
+local presentation and its documentation links open without a network.
 
 ## Regeneration and checks
 
@@ -1704,10 +1626,8 @@ fn page() -> String {
         .replace("__FACTS__", &facts_picture())
         .replace("__WALL__", &wall_picture())
         .replace("__BARS__", &bars_picture())
-        .replace(
-            "__DOC__",
-            &format!("https://github.com/Gelram-project/gel-ram/blob/{RELEASE}"),
-        )
+        // The page is opened from a checkout, so its links name that checkout's files.
+        .replace("__DOC__", ".")
         .replace("__RELEASE__", RELEASE)
 }
 fn native_intro() -> String {
@@ -1726,15 +1646,44 @@ fn native_intro() -> String {
     let record = Q8Runs::read()
         .map(|r| record_picture(&r))
         .unwrap_or_else(|e| format!("__RECORD__ {e}"));
+    let commitments = commitments()
+        .map(|n| n.to_string())
+        .unwrap_or_else(|e| format!("__COMMITMENTS__ {e}"));
+    let packages = packages()
+        .map(|n| n.to_string())
+        .unwrap_or_else(|e| format!("__PACKAGES__ {e}"));
     NATIVE
         .replace("__RECORD__", &record)
-        .replace("__FLOW__", &flow_picture())
-        .replace("__FACTS__", &facts_picture())
-        .replace("__WALL__", &wall_picture())
-        .replace("__BARS__", &bars_picture())
+        .replace("__COMMITMENTS__", &commitments)
+        .replace("__PACKAGES__", &packages)
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
+}
+/// The dated rows of the published-commitments table, as the README counts them.
+fn commitments() -> Result<usize> {
+    let text = fs::read_to_string("docs/COMMITMENTS.md")?;
+    let table = text
+        .split_once("## Published commitments\n")
+        .ok_or("no published-commitments table")?
+        .1;
+    let rows = table
+        .lines()
+        .take_while(|l| l.is_empty() || l.starts_with('|'))
+        .filter(|l| l.starts_with("| 20"))
+        .count();
+    if rows == 0 {
+        return Err("no published commitment".into());
+    }
+    Ok(rows)
+}
+/// The packages in Cargo.lock; refused when one comes from outside this checkout.
+fn packages() -> Result<usize> {
+    let lock = fs::read_to_string("Cargo.lock")?;
+    if lock.lines().any(|l| l.starts_with("source = ")) {
+        return Err("Cargo.lock lists a package from outside this checkout".into());
+    }
+    Ok(lock.lines().filter(|l| *l == "[[package]]").count())
 }
 fn rewrite_readme(before: &str) -> Result<String> {
     let marker = "### What you can inspect\n";
@@ -1995,10 +1944,61 @@ mod tests {
                 "__GRID__",
                 "__RESULTS__",
                 "__RECORD__",
+                "__COMMITMENTS__",
+                "__PACKAGES__",
             ] {
                 assert!(!s.contains(bad), "{bad}");
             }
         }
+    }
+    #[test]
+    fn readme_counts_are_read_from_their_files() {
+        let s = native_intro();
+        // Counted another way: every table row in the file whose first cell is a date.
+        let dated = fs::read_to_string("docs/COMMITMENTS.md")
+            .unwrap()
+            .lines()
+            .filter(|l| {
+                let b = l.as_bytes();
+                b.len() > 14
+                    && l.starts_with("| ")
+                    && b[2..6].iter().all(u8::is_ascii_digit)
+                    && b[6] == b'-'
+                    && b[9] == b'-'
+                    && l[12..].starts_with(" |")
+            })
+            .count();
+        assert_eq!(commitments().unwrap(), dated);
+        assert!(s.contains(&format!(
+            "[{dated} published commitments](docs/COMMITMENTS.md)"
+        )));
+        let packages = packages().unwrap();
+        assert!(s.contains(&format!(
+            "every one of the {packages} packages in `Cargo.lock`"
+        )));
+        let lock = fs::read_to_string("Cargo.lock").unwrap();
+        assert_eq!(
+            packages,
+            lock.matches("\n[[package]]\n").count(),
+            "every package entry is counted"
+        );
+    }
+    #[test]
+    fn readme_is_short_and_names_no_question_set() {
+        let s = native_intro();
+        assert!(s.lines().count() <= 160, "{} lines", s.lines().count());
+        let lower = s.to_lowercase();
+        for named in [
+            "answer-or-abstain",
+            "question set",
+            "frozen question",
+            "unknown to",
+        ] {
+            assert!(!lower.contains(named), "{named}");
+        }
+        // One place to start: a single clone, no tag the visitor cannot check out.
+        assert_eq!(s.matches("git clone ").count(), 1);
+        assert!(!s.contains("git checkout"));
     }
     #[test]
     fn facts_are_read_from_the_repository() {

@@ -19,14 +19,14 @@ snapshots, frozen answer-or-abstain question sets in Polish and English, and
 recorded 1M/10M synthetic Ocean measurements (historical). The complete private
 research system is larger and is intentionally not described here.
 
-Fastest try, after the setup in [TRY-IT](TRY-IT.md):
+Fastest try, after the setup in the README's [Check it yourself](../README.md#check-it-yourself):
 `cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`
 (expected last marker: `GEL_EVIDENCE_DEMO=PASS`).
 
 ## Six useful entry points
 
 1. **See what exists:** [README](../README.md)
-2. **Run it yourself:** [TRY-IT](TRY-IT.md)
+2. **Run it yourself:** [Check it yourself](../README.md#check-it-yourself)
 3. **Check the evidence:** [VERIFIED RESULTS](VERIFIED-RESULTS.md)
 4. **See the author-run question results:** [Measured progress](MEASURED-PROGRESS.md),
    [external checks](EXTERNAL-CHECKS.md)
@@ -54,8 +54,9 @@ package is ready.
 - no-replace source-bundle persistence and fresh-process reopen;
 - Q8 inverse/exactness checks;
 - independent byte/numeric/ranking audit;
-- re-scoring of the recorded answers of GEL and three language models
-  (`xtask answer-bench`, [set and method](answer-or-abstain/README.md));
+- re-scoring of the recorded answers (`xtask answer-bench`): of GEL and three
+  language models on the first two sets, of GEL and two search engines on the
+  later ones ([external checks](EXTERNAL-CHECKS.md));
 - Linux/macOS/Windows public-core checks.
 
 ## What would help the project most
