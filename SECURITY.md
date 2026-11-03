@@ -22,7 +22,7 @@ Fixes, when made, land only on current public `main` (version line 0.8.0) and re
 | Version | Security fixes |
 |---|---|
 | current `main` (version line 0.8.0) | best effort, in a later release |
-| tagged releases and other tags (v0.8.0 and older) | none; they are not patched in place |
+| tagged releases and other tags (the v0.8.0 tag, once published, and older) | none; they are not patched in place |
 
 ## Attack surface
 

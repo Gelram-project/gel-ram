@@ -5,13 +5,17 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- Tagged `v0.8.0` is the current release and `v0.7.0` the previous one; tagged
-  releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on the Releases page. The tags
-  `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0` remain without a release
-  page. Changes merged after `v0.8.0` are listed under [after v0.8.0](#after-v080).
+- `v0.8.0` is the current version line; its tag and release page are made by
+  the owner's publication from the merge commit of its version cutover, and the
+  Releases page shows whether that has happened. `v0.7.0` is the release before
+  it; tagged releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on
+  the Releases page. The tags `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0`
+  remain without a release page. Changes merged after `v0.8.0` are listed under
+  [after v0.8.0](#after-v080).
 - The workspace version is 0.8.0 ([Cargo.toml](../Cargo.toml)). A
-  [test](../xtask/tests/version_line.rs) ties every file that names the current
-  release to it, the first line of this section and the "After" heading included.
+  [test](../xtask/tests/version_line.rs) ties a fixed list of files that name
+  the current version to it, the first line of this section and the "After"
+  heading among them; a mention outside that list is not checked.
 - The sections [v0.8.0](#v080) back to [v0.5.0](#v050) list each merged change
   with its commit, the command that checks it and its remaining acceptance.
   Earlier release points are recorded in the [publication status](../CANDIDATE-STATUS.md).
@@ -69,7 +73,9 @@ Programs:
   ([same bits](LIVE-LAB.md#same-bits-on-your-machine)).
 - `gel-license`: `check DIR` and `use ANSWERS_FILE`; not legal advice
   ([decision guide](LICENSE-DECISION.md), [tests](../crates/gel-live-lab/tests/license_cli.rs)).
-- Every program answers `--version` and `--license`
+- The eight tool programs (`gel-cli`, `gel-bench`, `gel-physics`,
+  `gel-live-lab`, `gel-evidence`, `gel-backup`, `gel-source` and `gel-license`)
+  answer `--version` and `--license`; the `xtask` runner does not
   ([binaries](BINARIES.md#version-and-license-of-each-program)).
 
 Records:
@@ -172,7 +178,7 @@ the [review work list](#how-to-read-the-review-work-list).
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | The v0.8.0 section names the commit of PR #97 | 319b4e8 (PR #98) | none | [v0.8.0](#v080) | None |
-| The version boundary, the delivered capabilities and the open review items describe v0.8.0: each capability links what shows it in this tree, historical evidence is listed apart, and each open item is re-checked against the tree; the status file records v0.8.0 as published, and the supported-versions table of the security policy names the 0.8.0 line instead of 0.7; tests require the first line of the version boundary, the heading of this section and both cells of that table to name the workspace version, every relative link and anchor of this file and of the status file to resolve, and the historical test count of the status file to equal its platform record | this change | `cargo test -p xtask --test version_line --test doc_links` | [version boundary](#version-boundary), [open review items](#open-review-items), [status](../CANDIDATE-STATUS.md) | An independent reading of this page against the tree; the link test covers these two files only |
+| The version boundary, the delivered capabilities and the open review items describe v0.8.0: each capability links what shows it in this tree, historical evidence is listed apart, and each open item is re-checked against the tree; the version boundary and the security policy word the current version so that it holds at a version cutover, before the owner publishes its tag, and after; the status file records v0.8.0 as published, and the supported-versions table of the security policy names the 0.8.0 line instead of 0.7; tests require the first line of the version boundary, the heading of this section, both cells of that table and the checkout line of the quick-check guide to name the workspace version, every relative link and anchor of this file and of the status file to resolve, and the historical test count of the status file to equal its platform record | this change | `cargo test -p xtask --test version_line --test doc_links` | [version boundary](#version-boundary), [open review items](#open-review-items), [status](../CANDIDATE-STATUS.md) | An independent reading of this page against the tree; the link test covers these two files only |
 
 ## v0.8.0
 

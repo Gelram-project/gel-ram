@@ -18,11 +18,11 @@ const MENTIONS: &[(&str, &str)] = &[
     ("SECURITY.md", "| current `main` (version line {v}) |"),
     (
         "SECURITY.md",
-        "| tagged releases and other tags (v{v} and older) |",
+        "| tagged releases and other tags (the v{v} tag, once published, and older) |",
     ),
     (
         "docs/ROADMAP.md",
-        "## Version boundary\n- Tagged `v{v}` is the current release",
+        "## Version boundary\n- `v{v}` is the current version line; its tag and release page",
     ),
     ("docs/ROADMAP.md", "\n## After v{v}\n"),
     (".github/ISSUE_TEMPLATE/bug.yml", "placeholder: v{v} or"),
@@ -32,6 +32,10 @@ const MENTIONS: &[(&str, &str)] = &[
     (
         "docs/CANDIDATE-QUICKCHECK.md",
         "# Verify Evidence Lab ({v}) yourself",
+    ),
+    (
+        "docs/CANDIDATE-QUICKCHECK.md",
+        "Run these commands from a {v} checkout (current main or the v{v} tag)",
     ),
     (
         "tools/readme_presentation.rs",
