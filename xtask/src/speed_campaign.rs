@@ -125,6 +125,25 @@ pub(crate) struct Checked {
     pub(crate) validity: String,
 }
 
+/// The revision of a `tree=` line, which must name a full commit id and a
+/// clean working tree, in that order after the label.
+fn tree_state(line: &str) -> Result<String, String> {
+    let words: Vec<&str> = line.split(' ').collect();
+    let revision = words
+        .get(1)
+        .and_then(|w| value(w, "revision"))
+        .filter(|r| {
+            r.len() == 40
+                && r.bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        })
+        .ok_or("no full commit id in revision=")?;
+    if words.get(2) != Some(&"working_tree=clean") {
+        return Err("the working tree was not clean".into());
+    }
+    Ok(revision.to_string())
+}
+
 /// Checks the manifest text alone and returns (rounds, warm-up rounds,
 /// whether replaced helpers are kept, timing validity).
 fn check_manifest(text: &str) -> Result<(usize, usize, bool, String), String> {
@@ -135,15 +154,18 @@ fn check_manifest(text: &str) -> Result<(usize, usize, bool, String), String> {
             speed_ab::FORMAT
         ));
     }
-    for line in &lines {
+    // Refusals name the line number and, for a known key, the key; never the
+    // refused value, which could itself be a path on the host.
+    for (index, line) in lines.iter().enumerate() {
+        let number = index + 1;
         if !KEYS.contains(&key(line)) {
-            return Err(format!("manifest line with an unknown key: {line:?}"));
+            return Err(format!("manifest line {number} has an unknown key"));
         }
-        if let Some(word) = line
-            .split(|c: char| c.is_whitespace() || "=\"[],".contains(c))
-            .find(|w| speed_ab::names_a_path(w))
-        {
-            return Err(format!("manifest names a path on the host: {word:?}"));
+        if speed_ab::has_a_path(line) {
+            return Err(format!(
+                "manifest line {number} ({}) names a path on the host",
+                key(line)
+            ));
         }
     }
     let one = |k: &str| -> Result<&str, String> {
@@ -204,17 +226,24 @@ fn check_manifest(text: &str) -> Result<(usize, usize, bool, String), String> {
         .and_then(number)
         .filter(|w| *w <= speed_ab::MAX_WARMUP)
         .ok_or("warmup_rounds is not a number in range")?;
+    let mut revisions = Vec::new();
     for tree in Tree::ALL {
         let label = tree.label();
         let trees: Vec<&&str> = lines
             .iter()
             .filter(|l| key(l) == "tree" && l.starts_with(&format!("tree={label} ")))
             .collect();
-        if trees.len() != 1 || !trees[0].contains(" revision=") {
-            return Err(format!(
-                "manifest needs one tree={label} line with its revision"
-            ));
-        }
+        let [line] = trees.as_slice() else {
+            return Err(format!("manifest needs one tree={label} line"));
+        };
+        revisions.push(tree_state(line).map_err(|e| format!("tree={label}: {e}"))?);
+    }
+    // The A/A control is a second tree of the same source: equal revisions.
+    if revisions[0] != revisions[1] {
+        return Err("tree=a2 is not at the revision of tree=a: no A/A control".into());
+    }
+    for tree in Tree::ALL {
+        let label = tree.label();
         let hashes: Vec<&&str> = lines
             .iter()
             .filter(|l| l.starts_with(&format!("binary_sha256 tree={label} ")))
@@ -625,6 +654,20 @@ fn entry_args(entry: &Entry, runs: Option<usize>, work: &Path) -> Vec<String> {
     args
 }
 
+/// The last word of `CAMPAIGN.txt`: INCOMPLETE when an example missed its
+/// planned result; PARTIAL when the run is not the planned campaign (a
+/// subset of its examples, another RUNS, or marked invalid for timing);
+/// COMPLETE only for the whole plan as planned.
+fn end_word(all_met: bool, subset: bool, runs_override: bool, invalid: bool) -> &'static str {
+    if !all_met {
+        "INCOMPLETE"
+    } else if subset || runs_override || invalid {
+        "PARTIAL"
+    } else {
+        "COMPLETE"
+    }
+}
+
 /// `xtask speed-campaign`.
 pub fn campaign_cmd(args: &[String]) -> Result<(), String> {
     let o = campaign_options(args).map_err(|e| format!("{CAMPAIGN_USAGE}\nspeed-campaign: {e}"))?;
@@ -760,13 +803,12 @@ pub fn campaign_cmd(args: &[String]) -> Result<(), String> {
         }
         write_log(&log)?;
     }
-    let end = if !all_met {
-        "INCOMPLETE"
-    } else if selected.len() < plan.entries.len() {
-        "PARTIAL"
-    } else {
-        "COMPLETE"
-    };
+    let end = end_word(
+        all_met,
+        selected.len() < plan.entries.len(),
+        o.runs.is_some(),
+        o.invalid_for_timing,
+    );
     let _ = writeln!(log, "SPEED_CAMPAIGN={end}");
     write_log(&log)?;
     print!("{log}");
@@ -820,9 +862,9 @@ mod tests {
             "host_kernel=6.0.0",
             "host_load_start=0.10 0.20 0.30",
             SOURCE,
-            "tree=a revision=aaaa working_tree=clean rustc=rustc 1.85.0",
-            "tree=a2 revision=aaaa working_tree=clean rustc=rustc 1.85.0",
-            "tree=b revision=bbbb working_tree=clean rustc=rustc 1.85.0",
+            "tree=a revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0",
+            "tree=a2 revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0",
+            "tree=b revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=clean rustc=rustc 1.85.0",
             "placed tree=a crates/x/examples/speed_x.rs",
             "placed tree=a2 crates/x/examples/speed_x.rs",
         ] {
@@ -958,10 +1000,75 @@ mod tests {
         fs::remove_dir_all(dir).unwrap();
     }
 
+    /// The A/A control holds only when A and A2 are clean trees of one commit,
+    /// and B is clean too.
+    #[test]
+    fn the_aa_trees_share_one_clean_revision() {
+        const A2: &str =
+            "tree=a2 revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean";
+        const A: &str =
+            "tree=a revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean";
+        const B: &str =
+            "tree=b revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=clean";
+        let cases = [
+            (
+                A2,
+                "tree=a2 revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=clean",
+                "no A/A control",
+            ),
+            (
+                A,
+                "tree=a revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=dirty",
+                "tree=a: the working tree was not clean",
+            ),
+            (
+                B,
+                "tree=b revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=dirty",
+                "tree=b: the working tree was not clean",
+            ),
+            (
+                B,
+                "tree=b revision=NOT_A_GIT_CHECKOUT",
+                "tree=b: no full commit id",
+            ),
+            (
+                A2,
+                "tree=a2 working_tree=clean revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d",
+                "tree=a2: no full commit id",
+            ),
+        ];
+        for (from, to, reason) in cases {
+            let dir = record("trees", 3, 1);
+            edit_manifest(&dir, |t| {
+                assert!(t.contains(from));
+                t.replace(from, to)
+            });
+            let e = check_dir(&dir).unwrap_err();
+            assert!(e.contains(reason), "{to}: {e}");
+            fs::remove_dir_all(dir).unwrap();
+        }
+    }
+
     #[test]
     fn rotation_warmup_summary_paths_and_extra_files_are_checked() {
         type Mutant = fn(&Path);
-        let mutants: [(&str, Mutant); 9] = [
+        let mutants: [(&str, Mutant); 11] = [
+            ("argument with a home path after =", |d| {
+                edit_manifest(d, |t| {
+                    t.replace(
+                        "input_args=[\"1\"]",
+                        "input_args=[\"--dir=/home\u{2f}jdoe/x\"]",
+                    )
+                })
+            }),
+            ("argument climbing into a home", |d| {
+                edit_manifest(d, |t| {
+                    t.replace(
+                        "input_args=[\"1\"]",
+                        "input_args=[\"../../home\u{2f}jdoe/x\"]",
+                    )
+                })
+            }),
             ("quoted path argument", |d| {
                 edit_manifest(d, |t| {
                     t.replace("input_args=[\"1\"]", "input_args=[\"1\", \"/x\"]")
@@ -1005,7 +1112,9 @@ mod tests {
         for (name, mutate) in mutants {
             let dir = record("mutant", 3, 1);
             mutate(&dir);
-            assert!(check_dir(&dir).is_err(), "mutant {name:?} was accepted");
+            let e = check_dir(&dir).expect_err(name);
+            // A refusal names the line, never the refused value.
+            assert!(!e.contains("jdoe") && !e.contains("/x"), "{name}: {e}");
             fs::remove_dir_all(dir).unwrap();
         }
         let dir = record("rounds", 2, 1);
@@ -1066,6 +1175,8 @@ mod tests {
     fn committed_plans_match_their_recorded_sets() {
         let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
         let mut plans = 0;
+        // Recorded set -> examples its plans run or skip, each exactly once.
+        let mut covered: std::collections::BTreeMap<String, Vec<String>> = Default::default();
         for entry in fs::read_dir(root.join("docs/speed-campaign")).unwrap() {
             let path = entry.unwrap().path();
             if path.extension().and_then(|x| x.to_str()) != Some("txt") {
@@ -1075,6 +1186,12 @@ mod tests {
             let plan = parse_plan(&fs::read_to_string(&path).unwrap()).unwrap();
             let recorded = root.join(&plan.reruns);
             assert!(recorded.is_dir(), "{}", plan.reruns);
+            covered.entry(plan.reruns.clone()).or_default().extend(
+                plan.entries
+                    .iter()
+                    .map(|e| e.example.clone())
+                    .chain(plan.skips.iter().map(|(e, _)| e.clone())),
+            );
             for (example, _) in &plan.skips {
                 assert!(
                     recorded.join(example).join("manifest.txt").is_file(),
@@ -1099,6 +1216,37 @@ mod tests {
             }
         }
         assert_eq!(plans, 4);
+        assert_eq!(covered.len(), 3);
+        for (set, mut examples) in covered {
+            let mut recorded: Vec<String> = fs::read_dir(root.join(&set))
+                .unwrap()
+                .map(|e| e.unwrap().path())
+                .filter(|p| p.join("manifest.txt").is_file())
+                .map(|p| p.file_name().unwrap().to_string_lossy().into_owned())
+                .collect();
+            recorded.sort();
+            examples.sort();
+            assert_eq!(
+                examples, recorded,
+                "the plans of {set} do not cover it once each"
+            );
+        }
+    }
+
+    /// COMPLETE only for the whole plan, as planned, with every result met.
+    #[test]
+    fn only_the_planned_campaign_ends_complete() {
+        assert_eq!(end_word(true, false, false, false), "COMPLETE");
+        for (subset, runs, invalid) in [
+            (true, false, true),
+            (false, true, true),
+            (false, false, true),
+            (true, true, true),
+        ] {
+            assert_eq!(end_word(true, subset, runs, invalid), "PARTIAL");
+            assert_eq!(end_word(false, subset, runs, invalid), "INCOMPLETE");
+        }
+        assert_eq!(end_word(false, false, false, false), "INCOMPLETE");
     }
 
     #[test]

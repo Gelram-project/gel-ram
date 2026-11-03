@@ -1090,22 +1090,40 @@ pub(crate) fn run_file(warm: bool, tree: Tree, round: usize) -> String {
     )
 }
 
-/// True for a word that names a place on the host: an absolute path, a home
-/// path or a Windows drive or share path.
-pub(crate) fn names_a_path(word: &str) -> bool {
-    word.starts_with('/')
-        || word.starts_with('~')
-        || word.starts_with("\\\\")
-        || word.contains(":\\")
-        || Path::new(word).is_absolute()
+/// The pieces of a manifest line or an argument that are judged as possible
+/// paths: split at white space, `=`, `,`, quotes and brackets. The writer
+/// and `speed-ab-check` use this one splitter, so the writer labels exactly
+/// what the check would refuse (`--dir=/x`, `a,/x`, `["/x"]`).
+pub(crate) fn pieces(text: &str) -> impl Iterator<Item = &str> {
+    text.split(|c: char| c.is_whitespace() || "=,\"[]".contains(c))
+        .filter(|p| !p.is_empty())
 }
 
-/// Example arguments as the manifest records them: a path on the host is
-/// written as a label.
+/// True for a piece that names a place on the host: an absolute path, a
+/// home path (`~`, or a component `home` or `Users`), a path that climbs
+/// with `..`, or a Windows drive or share path.
+pub(crate) fn names_a_path(piece: &str) -> bool {
+    piece.starts_with('/')
+        || piece.starts_with('~')
+        || piece.starts_with("\\\\")
+        || piece.contains(":\\")
+        || Path::new(piece).is_absolute()
+        || piece
+            .split(['/', '\\'])
+            .any(|c| c == ".." || c == "home" || c == "Users")
+}
+
+/// True when any piece of `text` names a place on the host.
+pub(crate) fn has_a_path(text: &str) -> bool {
+    pieces(text).any(names_a_path)
+}
+
+/// Example arguments as the manifest records them: an argument with a path
+/// on the host in any piece is written as a label.
 fn labelled_args(args: &[String]) -> Vec<String> {
     args.iter()
         .map(|a| {
-            if names_a_path(a) {
+            if has_a_path(a) {
                 PATH_LABEL.to_string()
             } else {
                 a.clone()
@@ -1121,7 +1139,7 @@ fn profile_lines() -> String {
     let flags: Vec<&str> = flags
         .split_whitespace()
         .map(|w| {
-            if names_a_path(w) || w.contains('/') {
+            if has_a_path(w) || w.contains('/') {
                 PATH_LABEL
             } else {
                 w
@@ -1162,7 +1180,7 @@ fn host_lines() -> String {
     });
     let kernel = read("/proc/sys/kernel/osrelease").map(|k| k.trim().to_string());
     let value = |v: Option<String>| {
-        v.filter(|s| !s.is_empty() && !s.split_whitespace().any(names_a_path))
+        v.filter(|s| !s.is_empty() && !has_a_path(s))
             .unwrap_or_else(|| "NOT_MEASURED".into())
     };
     format!(
@@ -1719,15 +1737,29 @@ mod tests {
 
     #[test]
     fn host_metadata_and_arguments_name_no_path_host_or_user() {
-        assert_eq!(
-            labelled_args(&words("9 /scratch/work ~/w rel")),
-            words(&format!("9 {PATH_LABEL} {PATH_LABEL} rel"))
+        let host_paths =
+            "/scratch/work ~/w --dir=/home\u{2f}jdoe/x ../../home\u{2f}jdoe/x a,/x ../up x/Users\u{2f}y work/home";
+        let kept = "9 rel --x=3 a,b crates/gel-core/examples/speed_crc.rs";
+        let labelled = labelled_args(&words(&format!("{host_paths} {kept}")));
+        let n = words(host_paths).len();
+        assert!(
+            labelled[..n].iter().all(|a| a == PATH_LABEL),
+            "{labelled:?}"
         );
+        assert_eq!(labelled[n..], words(kept)[..]);
+        // The writer's output never carries what the check refuses.
+        assert!(!has_a_path(&format!("input_args={labelled:?}")));
+        for arg in words(host_paths) {
+            assert!(
+                has_a_path(&format!("input_args={:?}", [arg.as_str()])),
+                "{arg}"
+            );
+        }
         let host = format!("{}{}{}", host_lines(), load_line("start"), profile_lines());
         let keys = ["host_", "profile=", "rustflags=", "cargo_env="];
         for line in host.lines() {
             assert!(keys.iter().any(|k| line.starts_with(k)), "{line}");
-            assert!(!line.split_whitespace().any(names_a_path), "{line}");
+            assert!(!has_a_path(line), "{line}");
         }
         // The host name and the user name are never read, so they cannot
         // appear unless another field happens to contain the same word.

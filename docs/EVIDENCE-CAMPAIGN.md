@@ -62,14 +62,18 @@ the record itself and not only in a page about it:
 | host metadata | operating system, architecture, logical CPUs, CPU model, memory, kernel, load average at the start and the end |
 
 Host metadata never contains the host name, the user name, serial numbers or
-paths; tree roots, the waiting hook and absolute arguments are written as
-labels. Every raw run output is kept beside the manifest and the summary.
+paths; tree roots and the waiting hook are written as labels, and so is
+every argument with a piece (split at `=` and `,`) that is absolute, starts
+with `~`, has a `home` or `Users` component or climbs with `..`. Every raw
+run output is kept beside the manifest and the summary.
 
 `xtask speed-ab` writes such a record (`GEL_SPEED_AB_2`, [A/B tool](SPEED-AB.md)),
 and `xtask speed-ab-check DIR` accepts it only when every field is present,
 the record has an A/A control, the rotation is complete, no raw run file is
 missing or extra and the summary recomputes byte for byte from the raw runs.
-A candidate-only run has no A/A control and is refused. Records written before
+A and A2 must name the same full commit and every tree a clean working tree.
+A candidate-only run has no A/A control and is refused. A refusal names the
+manifest line and key, never the refused value. Records written before
 this protocol (`GEL_SPEED_AB_1`) are historical and are refused, not
 re-labelled. The check concerns the record; it cannot show that a host clock
 was honest or that a machine was quiet.

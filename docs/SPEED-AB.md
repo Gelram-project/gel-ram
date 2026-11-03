@@ -143,8 +143,10 @@ replaced-a/... replaced-a2/...   with --replace-helpers only: the original bytes
                                  replaced helper, at its path in the tree
 ```
 
-The manifest names no tree root, hook program or absolute argument: they are
-written as `tree=a`, `before_run=given args=N` and `ABSOLUTE_PATH`. Records in
+The manifest names no tree root, hook program or path argument: they are
+written as `tree=a`, `before_run=given args=N` and `ABSOLUTE_PATH`, the last
+for any argument with a path piece as `speed-ab-check` judges it
+([protocol](EVIDENCE-CAMPAIGN.md#the-comparison-protocol)). Records in
 docs/speed-results were written as `GEL_SPEED_AB_1`, with roots and the hook
 replaced by hand; they are historical.
 
