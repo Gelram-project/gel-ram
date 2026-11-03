@@ -1,0 +1,19 @@
+# Re-run of the bundle and collection loads of
+# docs/speed-results/2026-10-25-quiet-machine/package-3 under the comparison
+# protocol (docs/EVIDENCE-CAMPAIGN.md). A and A2: two clean checkouts of
+# 3cf1be5 (main before PR #89). B: a clean checkout of 331f494 (PR #89 on main).
+# The recorded B trees were local trees, and the recorded A of the collection
+# load was 37d509d, a commit of the PR branch that is not on main: this re-run
+# compares the whole of PR #89, not the collection change alone. The peak
+# memory tables were read with an external timer, outside speed-ab, and are
+# not part of this plan. Plus one warm-up round.
+PLAN=GEL_SPEED_CAMPAIGN_1
+name=rerun-2026-10-25-package-3-loads
+reruns=docs/speed-results/2026-10-25-quiet-machine/package-3
+baseline=3cf1be53b75c0eabb35ce46fcb9ca9a7acc5076b
+candidate=331f4948ca4889ce230c29129f70955a2dc8b304
+rounds=3
+warmup=1
+example gel-source speed_bundle_memory args=3
+example gel-source speed_collection_memory args=3,WORK_DIR
+example gel-source speed_source_load args=9

@@ -1,0 +1,14 @@
+# Re-run of speed_store_overlap of docs/speed-results/2026-10-25-quiet-machine/package-3
+# under the comparison protocol (docs/EVIDENCE-CAMPAIGN.md). A and A2: two
+# clean checkouts of bb3da1b, as recorded. B: a clean checkout of 331f494 (PR
+# #89 on main); the recorded B was a local tree equal to PR #89 in Cargo.toml,
+# Cargo.lock, tools/ and crates/ except two later changes, so this is the
+# nearest public revision, not the recorded tree. Plus one warm-up round.
+PLAN=GEL_SPEED_CAMPAIGN_1
+name=rerun-2026-10-25-package-3-store
+reruns=docs/speed-results/2026-10-25-quiet-machine/package-3
+baseline=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9
+candidate=331f4948ca4889ce230c29129f70955a2dc8b304
+rounds=3
+warmup=1
+example gel-store speed_store_overlap args=9,WORK_DIR

@@ -11,6 +11,11 @@
 //! ratios and whether the three trees printed the same `SPEED_CHECK` values.
 //! The tool states numbers and output identity only; it never states which
 //! build is faster.
+//!
+//! The manifest (`GEL_SPEED_AB_2`) states the comparison protocol: input,
+//! profile, clock boundary, warm-up, order, the A/A control and host
+//! metadata, with tree roots, hooks and absolute arguments written as
+//! labels, never as paths. `speed_campaign` checks such a record.
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 use std::fs;
@@ -18,21 +23,35 @@ use std::io::Write as _;
 use std::path::{Component, Path, PathBuf};
 use std::process::{Command, Stdio};
 
-const USAGE: &str = "usage: cargo run -p xtask -- speed-ab --a DIR --a2 DIR --b DIR --package PKG --example NAME --target-root DIR --out NEW_DIR [--rounds R] [--with-bins PKG]... [--replace-helpers] [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]\n   or: cargo run -p xtask -- speed-ab --candidate-only --b DIR --package PKG --example NAME --target-root DIR --out NEW_DIR [--rounds R] [--with-bins PKG]... [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]";
+const USAGE: &str = "usage: cargo run -p xtask -- speed-ab --a DIR --a2 DIR --b DIR --package PKG --example NAME --target-root DIR --out NEW_DIR [--rounds R] [--warmup W] [--invalid-for-timing] [--with-bins PKG]... [--replace-helpers] [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]\n   or: cargo run -p xtask -- speed-ab --candidate-only --b DIR --package PKG --example NAME --target-root DIR --out NEW_DIR [--rounds R] [--warmup W] [--invalid-for-timing] [--with-bins PKG]... [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]";
 /// The only directory whose files `--replace-helpers` may replace in A and A2.
 const HELPER_DIR: &str = "tools";
 const DEFAULT_ROUNDS: usize = 3;
 const MAX_ROUNDS: usize = 999;
+pub(crate) const MAX_WARMUP: usize = 99;
+/// First line of every manifest this tool writes.
+pub(crate) const FORMAT: &str = "FORMAT=GEL_SPEED_AB_2";
+/// Name of the comparison protocol the manifest states (docs/EVIDENCE-CAMPAIGN.md).
+pub(crate) const PROTOCOL: &str = "protocol=GEL_COMPARISON_PROTOCOL_1";
+/// What lies inside the timed interval of every `SPEED` sample.
+pub(crate) const CLOCK_BOUNDARY: &str = "clock_boundary=SPEED ns of the example's own timed region (Instant::elapsed); build, process start, input generation outside that region and output writing are outside";
+pub(crate) const ORDER: &str = "order=rotated: round r runs b,a,a2 when r mod 3 = 1, a2,b,a when 2, a,a2,b when 0; warm-up rounds use the same rotation";
+pub(crate) const AA_CONTROL: &str =
+    "aa_control=a2: a second tree of the baseline source, built and run like a";
+/// Label written for an absolute example argument (for example a scratch directory).
+pub(crate) const PATH_LABEL: &str = "ABSOLUTE_PATH";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-enum Tree {
+pub(crate) enum Tree {
     A,
     A2,
     B,
 }
 
 impl Tree {
-    fn label(self) -> &'static str {
+    pub(crate) const ALL: [Tree; 3] = [Tree::A, Tree::A2, Tree::B];
+
+    pub(crate) fn label(self) -> &'static str {
         match self {
             Tree::A => "a",
             Tree::A2 => "a2",
@@ -42,7 +61,7 @@ impl Tree {
 }
 
 /// Run order of round `round` (1-based): 1 -> B,A,A2; 2 -> A2,B,A; 0 -> A,A2,B (mod 3).
-fn order(round: usize) -> [Tree; 3] {
+pub(crate) fn order(round: usize) -> [Tree; 3] {
     match round % 3 {
         1 => [Tree::B, Tree::A, Tree::A2],
         2 => [Tree::A2, Tree::B, Tree::A],
@@ -60,11 +79,13 @@ struct Options {
     target_root: PathBuf,
     out: PathBuf,
     rounds: usize,
+    warmup: usize,
     with_bins: Vec<String>,
     before_run: Vec<String>,
     example_args: Vec<String>,
     candidate_only: bool,
     replace_helpers: bool,
+    invalid_for_timing: bool,
 }
 
 /// Package and example names become path components and cargo arguments.
@@ -90,12 +111,14 @@ fn options(args: &[String]) -> Result<Options, String> {
     let mut target_root = None;
     let mut out = None;
     let mut rounds = None;
+    let mut warmup = None;
     let mut with_bins = Vec::new();
     let mut before_program = None;
     let mut before_args = Vec::new();
     let mut example_args = Vec::new();
     let mut candidate_only = false;
     let mut replace_helpers = false;
+    let mut invalid_for_timing = false;
     let mut i = 0;
     while i < args.len() {
         let flag = args[i].as_str();
@@ -106,6 +129,13 @@ fn options(args: &[String]) -> Result<Options, String> {
         }
         if flag == "--candidate-only" {
             candidate_only = true;
+            continue;
+        }
+        if flag == "--invalid-for-timing" {
+            if invalid_for_timing {
+                return Err("--invalid-for-timing given twice".into());
+            }
+            invalid_for_timing = true;
             continue;
         }
         if flag == "--replace-helpers" {
@@ -129,6 +159,7 @@ fn options(args: &[String]) -> Result<Options, String> {
             "--target-root" => &mut target_root,
             "--out" => &mut out,
             "--rounds" => &mut rounds,
+            "--warmup" => &mut warmup,
             "--before-run" => &mut before_program,
             "--with-bins" => {
                 with_bins.push(plain_name("--with-bins package", &value)?);
@@ -149,6 +180,13 @@ fn options(args: &[String]) -> Result<Options, String> {
         Some(raw) => match raw.parse::<usize>() {
             Ok(n) if (1..=MAX_ROUNDS).contains(&n) => n,
             _ => return Err(format!("--rounds must be 1..={MAX_ROUNDS}")),
+        },
+    };
+    let warmup = match warmup {
+        None => 0,
+        Some(raw) => match raw.parse::<usize>() {
+            Ok(n) if n <= MAX_WARMUP && raw.bytes().all(|b| b.is_ascii_digit()) => n,
+            _ => return Err(format!("--warmup must be 0..={MAX_WARMUP}")),
         },
     };
     if candidate_only {
@@ -177,17 +215,19 @@ fn options(args: &[String]) -> Result<Options, String> {
         target_root: PathBuf::from(need(target_root, "--target-root")?),
         out: PathBuf::from(need(out, "--out")?),
         rounds,
+        warmup,
         with_bins,
         before_run,
         example_args,
         candidate_only,
         replace_helpers,
+        invalid_for_timing,
     })
 }
 
 /// `SPEED` samples and `SPEED_CHECK` values of one run's standard output.
 #[derive(Debug, Default, PartialEq)]
-struct RunOutput {
+pub(crate) struct RunOutput {
     samples: Vec<(String, u128)>,
     checks: Vec<String>,
 }
@@ -202,7 +242,7 @@ fn digits(value: &str) -> Option<u128> {
 /// Parse `SPEED name=<case> run=<i> ns=<n>` and `SPEED_CHECK <value>` lines.
 /// Other lines (including `SPEED_INPUT`, `SPEED_SETUP`) are ignored; a
 /// malformed `SPEED` or `SPEED_CHECK` line is an error, never a silent skip.
-fn parse_output(text: &str) -> Result<RunOutput, String> {
+pub(crate) fn parse_output(text: &str) -> Result<RunOutput, String> {
     let mut out = RunOutput::default();
     for (index, raw) in text.split('\n').enumerate() {
         let line = raw.strip_suffix('\r').unwrap_or(raw);
@@ -262,14 +302,14 @@ fn ratio(num: u128, den: u128) -> String {
 }
 
 #[derive(Debug, Default)]
-struct TreeData {
+pub(crate) struct TreeData {
     samples: BTreeMap<String, Vec<u128>>,
     checks: BTreeSet<String>,
     speed_lines: usize,
 }
 
 impl TreeData {
-    fn add(&mut self, run: RunOutput) {
+    pub(crate) fn add(&mut self, run: RunOutput) {
         self.speed_lines += run.samples.len();
         for (name, ns) in run.samples {
             self.samples.entry(name).or_default().push(ns);
@@ -291,7 +331,7 @@ impl TreeData {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum Verdict {
+pub(crate) enum Verdict {
     SameOutput,
     DifferentOutput,
     NoData,
@@ -299,7 +339,7 @@ enum Verdict {
 }
 
 impl Verdict {
-    fn word(self) -> &'static str {
+    pub(crate) fn word(self) -> &'static str {
         match self {
             Verdict::SameOutput => "SAME_OUTPUT",
             Verdict::DifferentOutput => "DIFFERENT_OUTPUT",
@@ -331,7 +371,7 @@ fn check_lines(report: &mut String, tree: Tree, data: &TreeData) {
     }
 }
 
-fn report_ab(a: &TreeData, a2: &TreeData, b: &TreeData) -> (String, Verdict) {
+pub(crate) fn report_ab(a: &TreeData, a2: &TreeData, b: &TreeData) -> (String, Verdict) {
     let mut report = String::new();
     let cases: BTreeSet<&String> = a
         .samples
@@ -1040,6 +1080,113 @@ fn first_line(program: &str, arg: &str, dir: &Path) -> String {
         .unwrap_or_else(|| "UNAVAILABLE".into())
 }
 
+/// The raw output file of one run: `<tree>-r<round>.txt`, or `w-<tree>-r<k>.txt`
+/// for warm-up round k.
+pub(crate) fn run_file(warm: bool, tree: Tree, round: usize) -> String {
+    format!(
+        "{}{}-r{round}.txt",
+        if warm { "w-" } else { "" },
+        tree.label()
+    )
+}
+
+/// True for a word that names a place on the host: an absolute path, a home
+/// path or a Windows drive or share path.
+pub(crate) fn names_a_path(word: &str) -> bool {
+    word.starts_with('/')
+        || word.starts_with('~')
+        || word.starts_with("\\\\")
+        || word.contains(":\\")
+        || Path::new(word).is_absolute()
+}
+
+/// Example arguments as the manifest records them: a path on the host is
+/// written as a label.
+fn labelled_args(args: &[String]) -> Vec<String> {
+    args.iter()
+        .map(|a| {
+            if names_a_path(a) {
+                PATH_LABEL.to_string()
+            } else {
+                a.clone()
+            }
+        })
+        .collect()
+}
+
+/// The build profile: always release through cargo, plus the environment
+/// that can change code generation, with paths written as labels.
+fn profile_lines() -> String {
+    let flags = std::env::var("RUSTFLAGS").unwrap_or_default();
+    let flags: Vec<&str> = flags
+        .split_whitespace()
+        .map(|w| {
+            if names_a_path(w) || w.contains('/') {
+                PATH_LABEL
+            } else {
+                w
+            }
+        })
+        .collect();
+    let mut env: Vec<String> = std::env::vars_os()
+        .filter_map(|(k, _)| k.into_string().ok())
+        .filter(|k| {
+            k.starts_with("CARGO_PROFILE_")
+                || k.starts_with("CARGO_BUILD_")
+                || k == "CARGO_ENCODED_RUSTFLAGS"
+        })
+        .collect();
+    env.sort();
+    let none = |s: String| if s.is_empty() { "none".to_string() } else { s };
+    format!(
+        "profile=release: cargo build --locked --offline --release with each tree's own Cargo.toml\nrustflags={}\ncargo_env={}\n",
+        none(flags.join(" ")),
+        none(env.join(","))
+    )
+}
+
+/// Host metadata without the host name, user name, paths or serial numbers:
+/// operating system, architecture, logical CPUs, CPU model, memory, kernel.
+fn host_lines() -> String {
+    let read = |p: &str| fs::read_to_string(p).ok();
+    let cpu = read("/proc/cpuinfo").and_then(|c| {
+        c.lines()
+            .find(|l| l.starts_with("model name"))
+            .and_then(|l| l.split_once(':'))
+            .map(|(_, v)| v.split_whitespace().collect::<Vec<_>>().join(" "))
+    });
+    let mem = read("/proc/meminfo").and_then(|m| {
+        m.lines()
+            .find(|l| l.starts_with("MemTotal:"))
+            .and_then(|l| l.split_whitespace().nth(1).map(str::to_string))
+    });
+    let kernel = read("/proc/sys/kernel/osrelease").map(|k| k.trim().to_string());
+    let value = |v: Option<String>| {
+        v.filter(|s| !s.is_empty() && !s.split_whitespace().any(names_a_path))
+            .unwrap_or_else(|| "NOT_MEASURED".into())
+    };
+    format!(
+        "host_os={}\nhost_arch={}\nhost_logical_cpus={}\nhost_cpu_model={}\nhost_mem_total_kib={}\nhost_kernel={}\n",
+        std::env::consts::OS,
+        std::env::consts::ARCH,
+        std::thread::available_parallelism().map_or(0, usize::from),
+        value(cpu),
+        value(mem),
+        value(kernel)
+    )
+}
+
+/// The three load averages (the run-queue and last-process fields of
+/// /proc/loadavg are left out).
+fn load_line(when: &str) -> String {
+    let load = fs::read_to_string("/proc/loadavg")
+        .ok()
+        .map(|l| l.split_whitespace().take(3).collect::<Vec<_>>().join(" "))
+        .filter(|l| !l.is_empty())
+        .unwrap_or_else(|| "NOT_MEASURED".into());
+    format!("host_load_{when}={load}\n")
+}
+
 struct Site {
     tree: Tree,
     root: PathBuf,
@@ -1092,7 +1239,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
         .collect();
 
     let mut manifest = String::new();
-    let _ = writeln!(manifest, "FORMAT=GEL_SPEED_AB_1");
+    let _ = writeln!(manifest, "{FORMAT}");
+    let _ = writeln!(manifest, "{PROTOCOL}");
+    let _ = writeln!(
+        manifest,
+        "timing_validity={}",
+        if o.invalid_for_timing {
+            "INVALID_FOR_TIMING"
+        } else {
+            "AS_MEASURED"
+        }
+    );
     let mode = if o.candidate_only {
         "candidate_only"
     } else {
@@ -1104,9 +1261,27 @@ pub fn run(args: &[String]) -> Result<(), String> {
         "package={} example={} rounds={}",
         o.package, o.example, o.rounds
     );
-    let _ = writeln!(manifest, "example_args={:?}", o.example_args);
+    let _ = writeln!(manifest, "input_args={:?}", labelled_args(&o.example_args));
     let _ = writeln!(manifest, "with_bins={:?}", o.with_bins);
-    let _ = writeln!(manifest, "before_run={:?}", o.before_run);
+    // The hook is described, not named: its path would name the host's files.
+    let _ = writeln!(
+        manifest,
+        "before_run={}",
+        if o.before_run.is_empty() {
+            "none".to_string()
+        } else {
+            format!("given args={}", o.before_run.len() - 1)
+        }
+    );
+    manifest.push_str(&profile_lines());
+    let _ = writeln!(manifest, "{CLOCK_BOUNDARY}");
+    let _ = writeln!(manifest, "warmup_rounds={}", o.warmup);
+    let _ = writeln!(manifest, "{ORDER}");
+    if !o.candidate_only {
+        let _ = writeln!(manifest, "{AA_CONTROL}");
+    }
+    manifest.push_str(&host_lines());
+    manifest.push_str(&load_line("start"));
     if o.replace_helpers {
         let _ = writeln!(manifest, "replace_helpers=yes");
     }
@@ -1123,9 +1298,8 @@ pub fn run(args: &[String]) -> Result<(), String> {
     for site in &sites {
         let _ = writeln!(
             manifest,
-            "tree={} root={} {} rustc={}",
+            "tree={} {} rustc={}",
             site.tree.label(),
-            site.root.display(),
             super::bench_compare::revision(&site.root),
             first_line("rustc", "--version", &site.root)
         );
@@ -1158,17 +1332,24 @@ pub fn run(args: &[String]) -> Result<(), String> {
             (placed.files.len(), placed.dirs.len(), placed.replaced.len());
         placed.apply(&site.root, &files, plan)?;
         let label = site.tree.label();
+        // Paths are written relative to the tree root.
+        let rel = |p: &Path| {
+            p.strip_prefix(&site.root)
+                .unwrap_or(p)
+                .display()
+                .to_string()
+        };
         for dir in &placed.dirs[dirs_before..] {
-            let _ = writeln!(manifest, "placed_dir tree={label} {}", dir.display());
+            let _ = writeln!(manifest, "placed_dir tree={label} {}", rel(dir));
         }
         for file in &placed.files[files_before..] {
-            let _ = writeln!(manifest, "placed tree={label} {}", file.display());
+            let _ = writeln!(manifest, "placed tree={label} {}", rel(file));
         }
         for (file, original) in &placed.replaced[replaced_before..] {
             let _ = writeln!(
                 manifest,
                 "replaced tree={label} {} original_sha256={}",
-                file.display(),
+                rel(file),
                 gel_source::hex(&gel_source::digest(original))
             );
         }
@@ -1191,24 +1372,51 @@ pub fn run(args: &[String]) -> Result<(), String> {
             ));
         }
     }
+    let binary_of = |site: &Site| {
+        let name = format!("{}{}", o.example, std::env::consts::EXE_SUFFIX);
+        site.target.join("release").join("examples").join(name)
+    };
+    let mut binaries = BTreeMap::new();
+    for site in &sites {
+        let path = binary_of(site);
+        let bytes = fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let hash = gel_source::hex(&gel_source::digest(&bytes));
+        let _ = writeln!(manifest, "binary_sha256 tree={} {hash}", site.tree.label());
+        binaries.insert(site.tree, hash);
+    }
+    if !o.candidate_only {
+        // Two builds of the same source may or may not give the same bytes;
+        // the line says which one this A/A control is.
+        let same = binaries.get(&Tree::A) == binaries.get(&Tree::A2);
+        let _ = writeln!(
+            manifest,
+            "aa_same_binary={}",
+            if same { "yes" } else { "no" }
+        );
+    }
 
     let mut data: BTreeMap<Tree, TreeData> = BTreeMap::new();
-    for round in 1..=o.rounds {
+    // Warm-up rounds first, numbered from 1 and written as w-<tree>-r<k>.txt;
+    // they are parsed like measured runs but never enter the medians.
+    let phases = (1..=o.warmup)
+        .map(|k| (true, k))
+        .chain((1..=o.rounds).map(|r| (false, r)));
+    for (warm, round) in phases {
         let trees: Vec<Tree> = if o.candidate_only {
             vec![Tree::B]
         } else {
             order(round).to_vec()
         };
         let labels: Vec<&str> = trees.iter().map(|t| t.label()).collect();
-        let _ = writeln!(manifest, "round={round} order={}", labels.join(","));
+        let key = if warm { "warmup_round" } else { "round" };
+        let _ = writeln!(manifest, "{key}={round} order={}", labels.join(","));
         for tree in trees {
             let site = sites
                 .iter()
                 .find(|s| s.tree == tree)
                 .ok_or("missing tree")?;
             hook(&o.before_run)?;
-            let name = format!("{}{}", o.example, std::env::consts::EXE_SUFFIX);
-            let binary = site.target.join("release").join("examples").join(name);
+            let binary = binary_of(site);
             let output = Command::new(&binary)
                 .args(&o.example_args)
                 .current_dir(&site.root)
@@ -1216,21 +1424,24 @@ pub fn run(args: &[String]) -> Result<(), String> {
                 .stderr(Stdio::inherit())
                 .output()
                 .map_err(|e| format!("{}: {e}", binary.display()))?;
-            let file = out.join(format!("{}-r{round}.txt", tree.label()));
+            let file = out.join(run_file(warm, tree, round));
             fs::write(&file, &output.stdout).map_err(|e| format!("{}: {e}", file.display()))?;
             if !output.status.success() {
                 return Err(format!(
-                    "example run failed in tree {} round {round}: {}",
+                    "example run failed in tree {} {key} {round}: {}",
                     tree.label(),
                     output.status
                 ));
             }
             let parsed = parse_output(&String::from_utf8_lossy(&output.stdout))
                 .map_err(|e| format!("{}: {e}", file.display()))?;
-            data.entry(tree).or_default().add(parsed);
+            if !warm {
+                data.entry(tree).or_default().add(parsed);
+            }
         }
     }
     placed.restore()?;
+    manifest.push_str(&load_line("end"));
     let _ = writeln!(manifest, "restored=yes");
     fs::write(out.join("manifest.txt"), &manifest).map_err(|e| e.to_string())?;
 
@@ -1467,6 +1678,11 @@ mod tests {
             "--rounds 5 --before-run-arg --x --with-bins gel-bench --before-run wait-quiet -- 1 --y",
         ));
         let o = options(&args).unwrap();
+        assert_eq!((o.warmup, o.invalid_for_timing), (0, false));
+        let mut warm = base.clone();
+        warm.extend(words("--warmup 2 --invalid-for-timing"));
+        let w = options(&warm).unwrap();
+        assert_eq!((w.warmup, w.invalid_for_timing), (2, true));
         assert_eq!(o.rounds, 5);
         assert_eq!(o.with_bins, words("gel-bench"));
         assert_eq!(o.before_run, words("wait-quiet --x"));
@@ -1475,6 +1691,11 @@ mod tests {
             "--rounds 0",
             "--rounds 1000",
             "--rounds x",
+            "--warmup 100",
+            "--warmup -1",
+            "--warmup +1",
+            "--warmup 1 --warmup 1",
+            "--invalid-for-timing --invalid-for-timing",
             "--a /again",
             "--before-run",
             "--before-run a --before-run b",
@@ -1494,6 +1715,41 @@ mod tests {
         let mut bad = candidate.clone();
         bad[6] = "../e".into();
         assert!(options(&bad).is_err());
+    }
+
+    #[test]
+    fn host_metadata_and_arguments_name_no_path_host_or_user() {
+        assert_eq!(
+            labelled_args(&words("9 /scratch/work ~/w rel")),
+            words(&format!("9 {PATH_LABEL} {PATH_LABEL} rel"))
+        );
+        let host = format!("{}{}{}", host_lines(), load_line("start"), profile_lines());
+        let keys = ["host_", "profile=", "rustflags=", "cargo_env="];
+        for line in host.lines() {
+            assert!(keys.iter().any(|k| line.starts_with(k)), "{line}");
+            assert!(!line.split_whitespace().any(names_a_path), "{line}");
+        }
+        // The host name and the user name are never read, so they cannot
+        // appear unless another field happens to contain the same word.
+        let others: Vec<String> = ["/proc/sys/kernel/hostname"]
+            .iter()
+            .filter_map(|p| fs::read_to_string(p).ok())
+            .chain(
+                ["USER", "LOGNAME"]
+                    .iter()
+                    .filter_map(|v| std::env::var(v).ok()),
+            )
+            .map(|s| s.trim().to_string())
+            .filter(|s| s.len() >= 4)
+            .collect();
+        for word in others {
+            assert!(
+                !host
+                    .split(|c: char| !c.is_ascii_alphanumeric() && c != '-')
+                    .any(|w| w == word),
+                "host metadata contains {word:?}"
+            );
+        }
     }
 
     #[test]

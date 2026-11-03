@@ -1,0 +1,37 @@
+# Re-run of docs/speed-results/2026-10-20-against-v0.6.1 under the comparison
+# protocol (docs/EVIDENCE-CAMPAIGN.md). A and A2: two clean checkouts of the
+# v0.6.1 tag. B: a clean checkout of 876247f; the recorded B was a local tree
+# equal to 876247f in tools/, Cargo.toml, Cargo.lock and crates/ except one
+# identity program that times nothing. Same examples, arguments and rounds as
+# the recorded set, plus one warm-up round.
+PLAN=GEL_SPEED_CAMPAIGN_1
+name=rerun-2026-10-20-against-v0.6.1
+reruns=docs/speed-results/2026-10-20-against-v0.6.1
+baseline=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d
+candidate=876247f7ba4d9b602e4d3b83a5cb0799852d7925
+rounds=3
+warmup=1
+example gel-source speed_backup_restore
+example gel-bench speed_bench_physics with_bins=gel-bench,gel-physics args=3
+example gel-source speed_catalog_parse
+example gel-source speed_corpus_load
+example gel-core speed_crc
+example gel-core speed_crc_large
+example gel-history speed_history
+example gel-source speed_load_overlap
+example gel-source speed_lowercase
+example gel-source speed_nfc_fast
+example gel-phase-quad speed_q8_masks
+example gel-phase-quad speed_q8_queries
+example gel-phase-quad speed_q8_read
+example gel-source speed_search
+example gel-source speed_sha256
+example gel-source speed_source_load
+example gel-store speed_store_crc
+example gel-store speed_store_io
+example gel-structural speed_structural_encode
+skip gel-reader speed_top1_many reason=its API does not exist in v0.6.1, so the example does not build in A and A2
+example gel-reader speed_topk
+example gel-source speed_tree_gates with_bins=xtask expect=different_output
+example gel-reader speed_views
+example gel-live-lab speed_witness
