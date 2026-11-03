@@ -15,6 +15,11 @@ const MENTIONS: &[(&str, &str)] = &[
     ("CANDIDATE-STATUS.md", "\nVERSION_LINE={v}\n"),
     ("CANDIDATE-STATUS.md", "\nTARGET_RELEASE={v}\n"),
     ("SECURITY.md", "(version line {v})"),
+    ("SECURITY.md", "| current `main` (version line {v}) |"),
+    (
+        "SECURITY.md",
+        "| tagged releases and other tags (v{v} and older) |",
+    ),
     (
         "docs/ROADMAP.md",
         "## Version boundary\n- Tagged `v{v}` is the current release",
