@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Independent reproductions are especially valuable. Please report the exact revision and all relevant results, including slow or failing runs. Do not include private GEL data or unpublished private mechanisms.
+        Independent reproductions are especially valuable. Slow machines and failing runs are wanted as much as fast passes. The shortest way: run `cargo run --locked --offline -p xtask -- witness ../gel-check` and paste the block it prints (see docs/CHECK-ON-YOUR-HARDWARE.md). Do not include private GEL data or unpublished private mechanisms.
   - type: dropdown
     id: relationship
     attributes:
@@ -21,54 +21,55 @@ body:
     id: revision
     attributes:
       label: Commit or release tag
-      description: Include the exact commit SHA or release tag tested.
+      description: Include the exact commit SHA or release tag tested (the `revision=` line of the block).
+    validations:
+      required: true
+  - type: textarea
+    id: witness
+    attributes:
+      label: Hardware check block
+      description: The whole block printed by `xtask witness`, from `GEL_WITNESS_2` to the `GEL_WITNESS=` line. It holds the tool version, revision, operating system and version, CPU architecture and model, logical cores, total RAM, rustc, and each step's result, exit status, wall time and result line. It is refused if it still holds your host name, user name or home directory; other paths and addresses are removed as far as the filter recognises them, so read it, then paste it unchanged, also when a step failed. If you ran only the complete suite or your own benchmark, paste REPRODUCTION.txt or your results here instead.
+      render: text
     validations:
       required: true
   - type: textarea
     id: reproduction
     attributes:
-      label: REPRODUCTION.txt (recommended)
-      description: Output of `cargo run --locked --offline -p xtask -- reproduce NEW_DIR` (see docs/REPRODUCE.md). It records the revision, host, isolation, every step and the SHA-256 of every produced file. Read it before pasting.
+      label: REPRODUCTION.txt (complete suite, optional)
+      description: Output of `cargo run --locked --offline -p xtask -- reproduce NEW_DIR` (see docs/REPRODUCE.md). It records the revision, host, isolation, every step and the SHA-256 of every produced file.
       render: text
   - type: textarea
     id: hardware
     attributes:
-      label: Hardware and environment
-      description: CPU, installed/usable RAM, OS, Rust version, compiler flags, affinity and background load/power settings if known.
-    validations:
-      required: true
+      label: What the block cannot know
+      description: For example a laptop on battery, a virtual machine or container, other work running at the same time, power or affinity settings, compiler flags. Without a block, give CPU, RAM, OS and Rust version here.
   - type: textarea
     id: commands
     attributes:
       label: Exact commands
+      description: Needed when you ran anything other than the witness or reproduce command above.
       render: text
-    validations:
-      required: true
   - type: textarea
     id: contract
     attributes:
       label: Input and success contract fixed before the test
-      description: Identify public or synthetic input, size, input hash, operation, expected result and accepted error. State cold/warm cache assumptions and build profile. Do not upload private data.
-    validations:
-      required: true
+      description: For your own benchmark. Identify public or synthetic input, size, input hash, operation, expected result and accepted error. State cold/warm cache assumptions and build profile. Do not upload private data.
   - type: textarea
     id: usability
     attributes:
       label: First-run usability and scope
-      description: Optional — time to first correct result, steps that failed, and which behavior you understood as public versus private. Do not count compilation time as retrieval latency.
+      description: Optional — how long the first run took including compiling, steps that failed or confused you, and which behavior you understood as public versus private. Do not count compilation time as retrieval latency.
   - type: textarea
     id: results
     attributes:
-      label: Correctness and complete results
+      label: Correctness and complete results of your own benchmark
       description: Include PASS/failure markers, every timing trial used in a summary, memory/resource observations and regressions. Do not report p99.9+ from insufficient sample counts.
       render: text
-    validations:
-      required: true
   - type: textarea
     id: hashes
     attributes:
       label: Output and log hashes
-      description: SHA256 of the input files, the complete output/log files and any generated report (for example the xtask ci-evidence SHA256SUMS.txt). A hash identifies bytes; it does not authenticate the tester or prove correctness.
+      description: SHA256 of the input files, the complete output/log files and any generated report (for example the xtask ci-evidence SHA256SUMS.txt). A hash identifies bytes; it does not authenticate the tester or prove correctness. Step logs are not filtered; read a log before you attach it.
       render: text
   - type: checkboxes
     id: scope

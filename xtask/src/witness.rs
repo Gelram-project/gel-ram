@@ -7,11 +7,36 @@
 //! `NEW_DIR/<step>.log`, and its result is read from the marker line the program
 //! itself prints (never from a test harness): a step passes only when the
 //! process succeeded and its last marker line starts with the expected value.
-//! Every step runs even when an earlier one failed. The block names the
-//! revision, the host and each step's marker, ends with its own SHA-256, and is
-//! written to NEW_DIR/WITNESS.txt; it holds no path, user or host name.
+//! Every step runs even when an earlier one failed. The block names the tool
+//! version, the revision, the host (system, CPU, cores, memory, rustc) and each
+//! step's result, exit status, wall time and marker, ends with its own SHA-256,
+//! and is written to NEW_DIR/WITNESS.txt. Before it is written the step lines
+//! pass the privacy filter of `host_report`, and a block in which a second
+//! check still finds this host's name, the user's name or a directory of the
+//! run is refused (docs/CHECK-ON-YOUR-HARDWARE.md).
 use gel_source::{digest, hex};
-use std::{fmt::Write as _, fs, path::Path, process::Command};
+use std::{
+    fmt::Write as _,
+    fs,
+    path::Path,
+    process::{Command, ExitStatus},
+    time::Instant,
+};
+
+/// The exit status as a number, or the signal that ended the process.
+fn exit_text(status: &ExitStatus) -> String {
+    if let Some(code) = status.code() {
+        return code.to_string();
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        if let Some(signal) = status.signal() {
+            return format!("signal-{signal}");
+        }
+    }
+    "unknown".into()
+}
 
 /// One step: name, the marker prefix it prints and the value that passes.
 struct Step {
@@ -134,10 +159,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
         .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
         .unwrap_or_else(|_| "NOT_MEASURED".into());
 
-    let mut block = String::from("GEL_WITNESS_1\n");
-    let _ = writeln!(block, "{}", super::bench_compare::revision(&root));
-    block.push_str(&super::reproduction::host_lines());
-    let _ = writeln!(block, "rustc={rustc}");
+    // The fact lines are made here; the step lines carry what the steps printed.
+    let mut facts = String::from("GEL_WITNESS_2\n");
+    let _ = writeln!(
+        facts,
+        "tool=xtask-witness version={}",
+        env!("CARGO_PKG_VERSION")
+    );
+    let _ = writeln!(facts, "{}", super::bench_compare::revision(&root));
+    facts.push_str(&super::host_report::facts());
+    let _ = writeln!(facts, "rustc={rustc}");
+    let mut block = String::new();
     let (mut pass, mut fail, mut skipped) = (0, 0, 0);
     for step in steps(&file) {
         if let Some(why) = step.skip {
@@ -151,14 +183,20 @@ pub fn run(args: &[String]) -> Result<(), String> {
         } else {
             Command::new(program)
         };
-        let (success, output) = match command.args(rest).current_dir(&root).output() {
+        let started = Instant::now();
+        let (success, exit, output) = match command.args(rest).current_dir(&root).output() {
             Ok(o) => {
                 let mut text = String::from_utf8_lossy(&o.stdout).into_owned();
                 text.push_str(&String::from_utf8_lossy(&o.stderr));
-                (o.status.success(), text)
+                (o.status.success(), exit_text(&o.status), text)
             }
-            Err(e) => (false, format!("could not start {program}: {e}\n")),
+            Err(e) => (
+                false,
+                "not-started".into(),
+                format!("could not start {program}: {e}\n"),
+            ),
         };
+        let seconds = started.elapsed().as_secs_f64();
         fs::write(out.join(format!("{}.log", step.name)), &output).map_err(|e| e.to_string())?;
         let (result, marker) = classify(success, &output, step.marker, step.pass);
         if result == "PASS" {
@@ -166,8 +204,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
         } else {
             fail += 1;
         }
-        let _ = writeln!(block, "step={} result={result} marker={marker}", step.name);
+        let _ = writeln!(
+            block,
+            "step={} result={result} exit={exit} seconds={seconds:.2} marker={marker}",
+            step.name
+        );
     }
+    // Nothing leaves this function before it has passed the filter.
+    let private = super::host_report::Private::of_this_host(&[&root, &out]);
+    let (mut block, redactions) = super::host_report::finish(&facts, &block, &private)
+        .map_err(|e| format!("GEL_WITNESS={e}"))?;
+    let _ = writeln!(block, "redactions={redactions}");
     let _ = writeln!(block, "block_sha256={}", hex(&digest(block.as_bytes())));
     let verdict = if fail == 0 { "PASS" } else { "FAIL" };
     let line = format!("GEL_WITNESS={verdict} pass={pass} fail={fail} skipped={skipped}");
