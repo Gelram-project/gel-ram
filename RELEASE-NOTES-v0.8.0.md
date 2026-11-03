@@ -2,7 +2,7 @@
 
 Date: 2026-11-02
 
-v0.8.0 collects everything merged after v0.7.0 (pull requests #91 to #96).
+v0.8.0 collects everything merged after v0.7.0 (pull requests #91 to #97).
 Every program says what it is and under which license, every GEL RAM-owned
 Rust source file begins with its license header, and a new program,
 `gel-license`, reads a copy of the tree, or a user's own answers about one use,
@@ -87,8 +87,13 @@ contents are or whether they are correct.
 
 ## CI
 
-The `verify` job has 40 minutes, the limit the portable builds already had;
-it had reached its 20-minute limit three times (#94).
+- The `verify` job has 40 minutes, the limit the portable builds already had;
+  it had reached its 20-minute limit three times (#94).
+- A test ties every file that names the current version (the citation file,
+  the status file, the guides, the batch example, the README builder and the
+  README link to these notes) to the workspace version, and allows only the
+  notes of that version in the root. Run on the v0.7.0 tree, it reports
+  `docs/TRY-IT.md`, which still checked out v0.6.0 (#97).
 
 ## Earlier versions
 

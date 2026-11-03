@@ -59,7 +59,7 @@ Nothing has been merged after v0.8.0 yet.
 
 ## v0.8.0
 
-Everything merged after v0.7.0 (PR #91 to PR #96). Every program says what it
+Everything merged after v0.7.0 (PR #91 to PR #97). Every program says what it
 is and under which license; every GEL RAM-owned `.rs` file carries a two-line
 source header naming the license and the Required Notice, which a gate checks;
 `gel-license` reads a distribution tree, and a user's own answers about one
@@ -77,6 +77,7 @@ makes; and one more private directory is fixed by a published commitment.
 | The CI `verify` job has 40 minutes instead of 20 | 3d48805 (PR #94) | none | [CI workflow](../.github/workflows/ci.yml) | None |
 | The README is generated as a whole; each claim at the top has one command; its counts, the crash series and the timing chart are read from their files, and a series that disagrees with its rows is refused; the license card quotes the LICENSE word for word | ed053c7 (PR #95) | the steps of the [readme-presentation job](../.github/workflows/readme-presentation.yml) | [presentation guide](README-PRESENTATION.md) | Independent reading of the README against the commands it names |
 | The license guides follow the words of the LICENSE: the Evaluation purpose condition, the full Monetized Use definition, the grant verbs, the Required Notice lines and a Commercial Agreement signed by both sides | e635149 (PR #96) | none | [licensing](../LICENSING.md), [decision guide](LICENSE-DECISION.md) | None; the LICENSE is unchanged |
+| Every file that names the current version is tied to the workspace version by a test, and only the notes of that version stay in the root; `docs/TRY-IT.md` follows the release instead of v0.6.0 | this change (PR #97) | `cargo test -p xtask --test version_line` | [try it](TRY-IT.md) | None |
 
 ## v0.7.0
 
