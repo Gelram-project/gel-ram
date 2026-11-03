@@ -125,6 +125,29 @@ pub(crate) struct Checked {
     pub(crate) validity: String,
 }
 
+/// `cargo_env` is `none` or `NAME=VALUE` entries joined with `; `, each a
+/// code-generation variable with its value: a name alone does not state
+/// the build profile.
+fn check_cargo_env(text: &str) -> Result<(), String> {
+    if text == "none" {
+        return Ok(());
+    }
+    for (index, entry) in text.split("; ").enumerate() {
+        let n = index + 1;
+        match entry.split_once('=') {
+            None => return Err(format!("cargo_env entry {n} has a name without a value")),
+            Some((_, "")) => return Err(format!("cargo_env entry {n} has an empty value")),
+            Some((name, _)) if !speed_ab::code_generation_var(name) => {
+                return Err(format!(
+                    "cargo_env entry {n} is not a code-generation variable"
+                ))
+            }
+            Some(_) => {}
+        }
+    }
+    Ok(())
+}
+
 /// The revision of a `tree=` line, which must name a full commit id and a
 /// clean working tree, in that order after the label.
 fn tree_state(line: &str) -> Result<String, String> {
@@ -194,6 +217,7 @@ fn check_manifest(text: &str) -> Result<(usize, usize, bool, String), String> {
     exact("order", speed_ab::ORDER)?;
     exact("aa_control", speed_ab::AA_CONTROL)?;
     exact("restored", "restored=yes")?;
+    check_cargo_env(value(one("cargo_env")?, "cargo_env").unwrap_or(""))?;
     match value(one("mode")?, "mode") {
         Some("ab") => {}
         Some("candidate_only") => {
@@ -998,6 +1022,30 @@ mod tests {
         fs::remove_file(dir.join("a2-r2.txt")).unwrap();
         assert!(check_dir(&dir).unwrap_err().contains("a2-r2.txt"));
         fs::remove_dir_all(dir).unwrap();
+    }
+
+    /// cargo_env states values: `none` or code-generation NAME=VALUE entries.
+    #[test]
+    fn cargo_env_must_state_values() {
+        for (text, ok) in [
+            ("none", true),
+            ("CARGO_PROFILE_RELEASE_OPT_LEVEL=3", true),
+            ("CARGO_ENCODED_RUSTFLAGS=-Copt-level=3 ABSOLUTE_PATH; CARGO_PROFILE_RELEASE_LTO=thin", true),
+            ("CARGO_PROFILE_RELEASE_OPT_LEVEL", false),
+            ("CARGO_PROFILE_RELEASE_OPT_LEVEL=", false),
+            ("CARGO_PROFILE_RELEASE_LTO=thin; CARGO_ENCODED_RUSTFLAGS", false),
+            ("CARGO_HOME=x", false),
+            ("CARGO_TARGET_DIR=x", false),
+            ("", false),
+        ] {
+            assert_eq!(check_cargo_env(text).is_ok(), ok, "{text:?}");
+            let dir = record("cargo-env", 3, 1);
+            edit_manifest(&dir, |t| {
+                t.replace("cargo_env=none\n", &format!("cargo_env={text}\n"))
+            });
+            assert_eq!(check_dir(&dir).is_ok(), ok, "record with cargo_env={text:?}");
+            fs::remove_dir_all(dir).unwrap();
+        }
     }
 
     /// The A/A control holds only when A and A2 are clean trees of one commit,

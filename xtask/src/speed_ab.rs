@@ -1135,9 +1135,38 @@ fn labelled_args(args: &[String]) -> Vec<String> {
 /// The build profile: always release through cargo, plus the environment
 /// that can change code generation, with paths written as labels.
 fn profile_lines() -> String {
-    let flags = std::env::var("RUSTFLAGS").unwrap_or_default();
-    let flags: Vec<&str> = flags
-        .split_whitespace()
+    let vars: Vec<(String, String)> = std::env::vars_os()
+        .filter_map(|(k, v)| Some((k.into_string().ok()?, v.into_string().ok()?)))
+        .collect();
+    profile_lines_from(&vars)
+}
+
+/// True for a cargo variable that changes the code a build produces; its
+/// value is recorded. Locations such as CARGO_HOME or CARGO_TARGET_DIR are not.
+pub(crate) fn code_generation_var(name: &str) -> bool {
+    let target = |suffix: &str| {
+        name.strip_prefix("CARGO_TARGET_")
+            .and_then(|t| t.strip_suffix(suffix))
+            .is_some_and(|t| !t.is_empty())
+    };
+    name.strip_prefix("CARGO_PROFILE_")
+        .is_some_and(|rest| !rest.is_empty())
+        || [
+            "CARGO_BUILD_RUSTFLAGS",
+            "CARGO_BUILD_TARGET",
+            "CARGO_ENCODED_RUSTFLAGS",
+            "CARGO_INCREMENTAL",
+        ]
+        .contains(&name)
+        || target("_RUSTFLAGS")
+        || target("_LINKER")
+}
+
+/// The words of a flag value as recorded: a word with a path on the host,
+/// or any `/`, becomes a label.
+fn labelled_words<'a>(words: impl Iterator<Item = &'a str>) -> String {
+    words
+        .filter(|w| !w.is_empty())
         .map(|w| {
             if has_a_path(w) || w.contains('/') {
                 PATH_LABEL
@@ -1145,21 +1174,40 @@ fn profile_lines() -> String {
                 w
             }
         })
-        .collect();
-    let mut env: Vec<String> = std::env::vars_os()
-        .filter_map(|(k, _)| k.into_string().ok())
-        .filter(|k| {
-            k.starts_with("CARGO_PROFILE_")
-                || k.starts_with("CARGO_BUILD_")
-                || k == "CARGO_ENCODED_RUSTFLAGS"
-        })
-        .collect();
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// `profile`, `rustflags` and `cargo_env` lines from the given environment:
+/// RUSTFLAGS and the value of every code-generation cargo variable, sorted
+/// by name, as `NAME=VALUE` joined with `; `. CARGO_ENCODED_RUSTFLAGS is
+/// split at its 0x1f separator. Paths in values are written as labels.
+fn profile_lines_from(vars: &[(String, String)]) -> String {
+    let mut flags = String::new();
+    let mut env: Vec<String> = Vec::new();
+    for (name, value) in vars {
+        if name == "RUSTFLAGS" {
+            flags = labelled_words(value.split_whitespace());
+        } else if code_generation_var(name) {
+            let words = if name == "CARGO_ENCODED_RUSTFLAGS" {
+                labelled_words(value.split('\u{1f}').flat_map(str::split_whitespace))
+            } else {
+                labelled_words(value.split_whitespace())
+            };
+            let words = if words.is_empty() {
+                "EMPTY".to_string()
+            } else {
+                words
+            };
+            env.push(format!("{name}={words}"));
+        }
+    }
     env.sort();
     let none = |s: String| if s.is_empty() { "none".to_string() } else { s };
     format!(
         "profile=release: cargo build --locked --offline --release with each tree's own Cargo.toml\nrustflags={}\ncargo_env={}\n",
-        none(flags.join(" ")),
-        none(env.join(","))
+        none(flags),
+        none(env.join("; "))
     )
 }
 
@@ -1733,6 +1781,49 @@ mod tests {
         let mut bad = candidate.clone();
         bad[6] = "../e".into();
         assert!(options(&bad).is_err());
+    }
+
+    #[test]
+    fn profile_values_are_recorded_and_paths_labelled() {
+        let vars = |pairs: &[(&str, &str)]| -> Vec<(String, String)> {
+            pairs
+                .iter()
+                .map(|(k, v)| (k.to_string(), v.to_string()))
+                .collect()
+        };
+        let o2 = profile_lines_from(&vars(&[("CARGO_PROFILE_RELEASE_OPT_LEVEL", "2")]));
+        let o3 = profile_lines_from(&vars(&[("CARGO_PROFILE_RELEASE_OPT_LEVEL", "3")]));
+        assert_ne!(o2, o3, "two opt-levels gave the same record");
+        assert!(
+            o3.contains("\ncargo_env=CARGO_PROFILE_RELEASE_OPT_LEVEL=3\n"),
+            "{o3}"
+        );
+        let remap = "--remap-path-prefix=/home\u{2f}jdoe/src=x";
+        let p = profile_lines_from(&vars(&[
+            ("RUSTFLAGS", &format!("-C target-cpu=native {remap}")),
+            (
+                "CARGO_ENCODED_RUSTFLAGS",
+                &format!("-Copt-level=3\u{1f}{remap}\u{1f}-Clink-arg=-fuse-ld=lld"),
+            ),
+            (
+                "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER",
+                "/usr\u{2f}bin/cc",
+            ),
+            ("CARGO_PROFILE_RELEASE_LTO", "thin"),
+            ("CARGO_HOME", "/opt/cargo"),
+            ("CARGO_TARGET_DIR", "/opt/target"),
+            ("CARGO_BUILD_TARGET_DIR", "/opt/target"),
+        ]));
+        assert!(
+            p.contains(&format!("\nrustflags=-C target-cpu=native {PATH_LABEL}\n")),
+            "{p}"
+        );
+        assert!(p.contains(&format!(
+            "cargo_env=CARGO_ENCODED_RUSTFLAGS=-Copt-level=3 {PATH_LABEL} -Clink-arg=-fuse-ld=lld; CARGO_PROFILE_RELEASE_LTO=thin; CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER={PATH_LABEL}\n"
+        )), "{p}");
+        assert!(!p.contains("jdoe") && !p.contains("/opt") && !p.contains("CARGO_HOME"));
+        assert!(!p.lines().any(has_a_path), "{p}");
+        assert!(profile_lines_from(&[]).contains("\nrustflags=none\ncargo_env=none\n"));
     }
 
     #[test]

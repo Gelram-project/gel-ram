@@ -54,7 +54,7 @@ the record itself and not only in a page about it:
 | Field | What it states |
 |---|---|
 | input | the program's arguments and the SHA-256 of the program source that generates its inputs from fixed seeds |
-| profile | release, the cargo command, `RUSTFLAGS` and the cargo variables that change code generation |
+| profile | release, the cargo command, the value of `RUSTFLAGS` and the name and value of every cargo variable that changes code generation (`CARGO_PROFILE_*`, `CARGO_BUILD_RUSTFLAGS`, `CARGO_BUILD_TARGET`, `CARGO_ENCODED_RUSTFLAGS` split at its separator, `CARGO_TARGET_*_RUSTFLAGS` and `_LINKER`, `CARGO_INCREMENTAL`), with paths written as labels; locations such as `CARGO_HOME` are not recorded, and a name without its value is refused |
 | clock boundary | what lies inside the timed interval and what lies outside it |
 | warm-up | how many untimed rounds ran first; their outputs are kept and excluded from the medians |
 | order | the run order of every round; the three trees rotate, so a multiple of three rounds puts each tree in each position equally often |
