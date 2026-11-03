@@ -30,6 +30,7 @@ mod roadmap;
 mod source_bundle;
 mod source_headers;
 mod speed_ab;
+mod speed_campaign;
 mod speed_convention;
 mod tree_scan;
 mod ucd_tables;
@@ -322,7 +323,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|source-headers|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|speed-ab-check|speed-campaign|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|source-headers|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 
 // Exact active-license text pin; not evidence of legal approval or authorship.
@@ -976,6 +977,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("speed-ab") => speed_ab::run(&args[1..]),
+        Some("speed-ab-check") => speed_campaign::check_cmd(&args[1..]),
+        Some("speed-campaign") => speed_campaign::campaign_cmd(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),

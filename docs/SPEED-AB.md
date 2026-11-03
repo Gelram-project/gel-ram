@@ -10,17 +10,27 @@ cargo run --locked --offline -p xtask -- speed-ab \
   --a BASELINE --a2 BASELINE_COPY --b CANDIDATE \
   --package PKG --example NAME \
   --target-root BUILD_DIR_OUTSIDE_TREES --out NEW_DIR_OUTSIDE_TREES \
-  [--rounds R] [--with-bins PKG]... [--replace-helpers] \
+  [--rounds R] [--warmup W] [--invalid-for-timing] [--with-bins PKG]... [--replace-helpers] \
   [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]
 
 cargo run --locked --offline -p xtask -- speed-ab --candidate-only \
   --b CANDIDATE --package PKG --example NAME \
   --target-root BUILD_DIR_OUTSIDE_TREES --out NEW_DIR_OUTSIDE_TREES \
-  [--rounds R] [--with-bins PKG]... \
+  [--rounds R] [--warmup W] [--invalid-for-timing] [--with-bins PKG]... \
   [--before-run PROGRAM [--before-run-arg ARG]...] [-- EXAMPLE_ARG...]
 ```
 
 Everything after `--` is passed to the example. R is 1 to 999 (default 3).
+W is 0 to 99 (default 0): that many warm-up rounds run first, in the same
+rotated order, and their outputs are kept but excluded from the medians.
+`--invalid-for-timing` marks the record as a trial run whose times must not be
+read as measurements. A record is checked against the comparison protocol with
+
+```text
+cargo run --locked --offline -p xtask -- speed-ab-check OUT_DIR
+```
+
+([protocol and checks](EVIDENCE-CAMPAIGN.md#the-comparison-protocol)).
 
 ## What a timing example prints
 
@@ -121,13 +131,25 @@ no threshold.
 
 ```text
 a-r1.txt a2-r1.txt b-r1.txt ...  standard output of each run, by tree and round
-manifest.txt                     arguments, SHA-256 of every carried source file,
-                                 files placed into and replaced in A and A2,
-                                 revision and compiler of each tree, run order of each round
+w-a-r1.txt w-a2-r1.txt ...       standard output of each warm-up run (--warmup only)
+manifest.txt                     GEL_SPEED_AB_2: the protocol fields (input arguments,
+                                 profile, clock boundary, warm-up, order, A/A control,
+                                 host metadata), SHA-256 of every carried source file and
+                                 of each tree's built example, files placed into and
+                                 replaced in A and A2 (relative to the tree), revision and
+                                 compiler of each tree, run order of each round
 summary.txt                      the same lines as the standard output
 replaced-a/... replaced-a2/...   with --replace-helpers only: the original bytes of every
                                  replaced helper, at its path in the tree
 ```
 
+The manifest names no tree root, hook program or path argument: they are
+written as `tree=a`, `before_run=given args=N` and `ABSOLUTE_PATH`, the last
+for any argument with a path piece as `speed-ab-check` judges it
+([protocol](EVIDENCE-CAMPAIGN.md#the-comparison-protocol)). Records in
+docs/speed-results were written as `GEL_SPEED_AB_1`, with roots and the hook
+replaced by hand; they are historical.
+
 The output directory must be new, and it and the build directory must be
-outside all three trees. The tool is implemented in `xtask/src/speed_ab.rs`.
+outside all three trees. The tool is implemented in `xtask/src/speed_ab.rs`,
+the protocol check and campaign runner in `xtask/src/speed_campaign.rs`.
