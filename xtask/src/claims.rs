@@ -341,9 +341,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "q8-record-size",
         dimension: "bytes",
-        scope: "public gel-phase-quad Record in memory",
-        input: "a record of 1,024 phase bytes and a 1,024-position activity mask",
-        expected: "the record takes 1,152 bytes (1,024 values and a 128-byte mask), four such copies 4,608; every phase byte and mask position reads back",
+        scope: "public gel-phase-quad Record in memory and as the public Q8DEMO01 encoder writes it",
+        input: "a record of 1,024 phase bytes and a 1,024-position activity mask, encoded alone and as four copies",
+        expected: "the type takes 1,152 bytes; the encoder writes it after the 12-byte header as its 1,024 phase bytes and a 128-byte mask (position j as bit j%8 of byte j/8), four copies as 4,608 bytes of four equal records; decoding gives the record back",
         counterexample: "read as process memory, as the 1,164-byte file, or as four independent memories",
         source: "docs/Q8-QUAD.md",
         evidence: Evidence::Probe(q8_record_size),
@@ -361,9 +361,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "no-network-code",
         dimension: "environment",
-        scope: "source text of every .rs file of the checkout; with no third-party package and unsafe code forbidden, the standard socket types are the only network interface in reach",
-        input: "the names of the standard TCP and UDP socket types; a file set where a library file names one as counterexample (unit test)",
-        expected: "they are named only in xtask/src/isolation.rs, the isolation check",
+        scope: "source text of every .rs file of the checkout, searched for six names of the standard library: the three TCP and UDP socket types and three names of host-name resolution (its trait, the trait's method and a lookup function); a name the scan does not list, or a program a tool starts, is outside it",
+        input: "the six names; file sets where a library file names a socket type or calls name resolution as counterexamples (unit test)",
+        expected: "only xtask/src/isolation.rs, the isolation check, names any of them",
         counterexample: "read as proof that a run used no network (see network-isolation), or as covering programs a tool starts as child processes",
         source: "SECURITY.md",
         evidence: Evidence::Probe(no_network_code),
@@ -771,8 +771,9 @@ const CLAIMS: &[Claim] = &[
 ];
 
 /// A sentence of another public file that names registry rows: the file, its
-/// words (a line break or a run of spaces counts as one space) and each row it
-/// stands for with the state the row must keep. Rewording the sentence or
+/// words (a line break or a run of spaces counts as one space), which must occur
+/// exactly once in the file, and each row it stands for with the state the row
+/// must keep. Rewording the sentence or
 /// changing the row's state fails `xtask claims` until both agree again.
 struct Citation {
     file: &'static str,
@@ -1280,16 +1281,29 @@ fn structural_xor() -> Result<bool, String> {
         && encode(&t94, 2).is_err()
         && e94.decode(Some(&Orb1024::ZERO)).map_err(text)? != t94)
 }
+/// The size of the type and the bytes the public encoder writes, against the
+/// numbers the README gives.
 fn q8_record_size() -> Result<bool, String> {
-    use gel_phase_quad::{grid::DIM, Record};
+    use gel_phase_quad::{fixture, grid::DIM, Record};
     let phase: [u8; DIM] = std::array::from_fn(|j| (j * 7 % 256) as u8);
     let mask: [bool; DIM] = std::array::from_fn(|j| j % 3 == 0);
     let record = Record::new(phase, &mask);
+    let one = fixture::encode(std::slice::from_ref(&record))?;
+    let four = fixture::encode(&vec![record.clone(); 4])?;
+    let Some((body, masks)) = one.get(12..).map(|b| b.split_at(b.len().min(1024))) else {
+        return Ok(false);
+    };
+    let back = fixture::decode(&one)?;
     Ok(std::mem::size_of::<Record>() == 1152
-        && DIM + DIM / 8 == 1152
-        && 4 * std::mem::size_of::<Record>() == 4608
-        && *record.phase() == phase
-        && record.active_mask() == mask)
+        && one.len() == 12 + 1152
+        && body == phase
+        && masks.len() == 128
+        && (0..DIM).all(|j| (masks[j / 8] >> (j % 8)) & 1 == u8::from(mask[j]))
+        && four.len() == 12 + 4608
+        && four[12..].chunks(1152).all(|r| r == &one[12..])
+        && back.len() == 1
+        && *back[0].phase() == phase
+        && back[0].active_mask() == mask)
 }
 /// The package names of `[[package]]` entries, or None when one has a
 /// source or checksum line, which only a package from outside the checkout has.
@@ -1340,11 +1354,20 @@ fn local_packages() -> Result<bool, String> {
     let members = member_packages(root)?;
     Ok(!members.is_empty() && lock_packages(&lock) == Some(members))
 }
-/// The standard socket types, split so that this file does not name them.
-const SOCKET_TYPES: [[&str; 2]; 3] = [["Tcp", "Stream"], ["Tcp", "Listener"], ["Udp", "Socket"]];
-/// The files, of (path relative to the root with `/`, text), that name a socket type.
+/// The standard socket types and the names of name resolution, split so that
+/// this file does not name them.
+const NETWORK_NAMES: [[&str; 2]; 6] = [
+    ["Tcp", "Stream"],
+    ["Tcp", "Listener"],
+    ["Udp", "Socket"],
+    ["ToSocket", "Addrs"],
+    ["to_socket", "_addrs"],
+    ["lookup", "_host"],
+];
+/// The files, of (path relative to the root with `/`, text), that name one of
+/// the network names.
 fn socket_users(files: &[(String, String)]) -> Vec<String> {
-    let needles: Vec<String> = SOCKET_TYPES.iter().map(|p| p.concat()).collect();
+    let needles: Vec<String> = NETWORK_NAMES.iter().map(|p| p.concat()).collect();
     files
         .iter()
         .filter(|(_, text)| needles.iter().any(|n| text.contains(n.as_str())))
@@ -1394,11 +1417,20 @@ fn check_citations(
 ) -> Result<usize, String> {
     let mut pairs = 0;
     for c in cited {
-        if !words(&read(c.file)?).contains(&words(c.words)) {
-            return Err(format!(
-                "{} no longer says \"{}\"; update CITED in xtask/src/claims.rs",
-                c.file, c.words
-            ));
+        match words(&read(c.file)?).matches(&words(c.words)).count() {
+            1 => {}
+            0 => {
+                return Err(format!(
+                    "{} no longer says \"{}\"; update CITED in xtask/src/claims.rs",
+                    c.file, c.words
+                ))
+            }
+            n => {
+                return Err(format!(
+                    "{} says \"{}\" {n} times; a citation must name one place",
+                    c.file, c.words
+                ))
+            }
         }
         for (id, mode) in c.rows {
             let row = claims.iter().find(|r| r.id == *id).ok_or(format!(
@@ -1418,9 +1450,9 @@ fn check_citations(
     Ok(pairs)
 }
 
-/// In a paragraph (not a table) that links the registry, a code span shaped
-/// like a row id must be a registry id and one shaped like a state must be a
-/// state. Returns the number of such paragraphs.
+/// In the lines outside a table of a paragraph that links the registry, a code
+/// span shaped like a row id must be a registry id and one shaped like a state
+/// must be a state. Returns the number of paragraphs with such lines.
 fn check_paragraphs(claims: &[Claim], files: &[(String, String)]) -> Result<usize, String> {
     let is_id = |s: &str| {
         s.contains('-')
@@ -1436,13 +1468,20 @@ fn check_paragraphs(claims: &[Claim], files: &[(String, String)]) -> Result<usiz
             continue;
         }
         for paragraph in text.split("\n\n") {
-            if !paragraph.contains("CLAIMS.md")
-                || paragraph.lines().any(|l| l.trim_start().starts_with('|'))
-            {
+            if !paragraph.contains("CLAIMS.md") {
+                continue;
+            }
+            // Table rows name commands and programs in code; the other lines
+            // of the paragraph are read.
+            let prose: Vec<&str> = paragraph
+                .lines()
+                .filter(|l| !l.trim_start().starts_with('|'))
+                .collect();
+            if prose.is_empty() {
                 continue;
             }
             paragraphs += 1;
-            for span in paragraph.split('`').skip(1).step_by(2) {
+            for span in prose.join("\n").split('`').skip(1).step_by(2) {
                 if is_id(span) && !claims.iter().any(|c| c.id == span) {
                     return Err(format!("{file} names `{span}`, which is not a registry id"));
                 }
@@ -1604,11 +1643,34 @@ mod tests {
         ] {
             assert!(check_paragraphs(CLAIMS, &file(&bad)).is_err(), "{bad}");
         }
-        // Tables and paragraphs without the link are not read.
+        // Table rows and paragraphs without the link are not read.
         let table = "| a | [claims](CLAIMS.md) `no-such-row` |";
         let unlinked = "`no-such-row` is `NOT_A_STATE`.";
         assert_eq!(check_paragraphs(CLAIMS, &file(table)), Ok(0));
         assert_eq!(check_paragraphs(CLAIMS, &file(unlinked)), Ok(0));
+        // The text lines next to a table row are read, wherever the link is.
+        let beside = |id: &str| {
+            format!("| a | `gel-backup` |\nRegistry row: `{id}`.\n| [claims](CLAIMS.md) |")
+        };
+        assert_eq!(
+            check_paragraphs(CLAIMS, &file(&beside("q8-literal-record"))),
+            Ok(1)
+        );
+        assert!(check_paragraphs(CLAIMS, &file(&beside("q8-literal-recrod"))).is_err());
+    }
+    #[test]
+    fn a_citation_must_name_one_place() {
+        let first = &CITED[0];
+        let twice = |file: &str| {
+            let text = read_tree(file)?;
+            Ok(if file == first.file {
+                format!("{text}\n{}\n", first.words)
+            } else {
+                text
+            })
+        };
+        let err = check_citations(CLAIMS, CITED, twice).unwrap_err();
+        assert!(err.contains("2 times"), "{err}");
     }
     #[test]
     fn a_package_from_outside_the_checkout_is_refused() {
@@ -1629,7 +1691,7 @@ mod tests {
     }
     #[test]
     fn a_library_naming_a_socket_type_is_found() {
-        let socket = SOCKET_TYPES[0].concat();
+        let socket = NETWORK_NAMES[0].concat();
         let files = |lib: &str| {
             vec![
                 ("crates/gel-core/src/lib.rs".to_string(), lib.to_string()),
@@ -1645,6 +1707,14 @@ mod tests {
         );
         assert_eq!(
             socket_users(&files(&format!("// {socket}"))),
+            ["crates/gel-core/src/lib.rs", "xtask/src/isolation.rs"]
+        );
+        // Name resolution names no socket type and is found too.
+        let resolve = NETWORK_NAMES[4].concat();
+        assert_eq!(
+            socket_users(&files(&format!(
+                "pub fn f() {{ let _ = (\"example.org\", 1).{resolve}(); }}"
+            ))),
             ["crates/gel-core/src/lib.rs", "xtask/src/isolation.rs"]
         );
     }

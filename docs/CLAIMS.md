@@ -117,12 +117,12 @@ series, the record history, the evidence summary and the boundary sentence of
 the external checks. `xtask claims` keeps them tied to the registry in two ways:
 
 - a fixed list in the registry code (`CITED`) holds each such sentence with the
-  rows it stands for and their state. The sentence must still be in its file
-  (line breaks count as spaces), every row must exist, and it must still carry
-  that state; rewording the sentence or moving the row fails the check until
-  both are changed together;
-- in every Markdown file, a paragraph outside a table that links this page may
-  name in code only ids of this registry and only its states.
+  rows it stands for and their state. The sentence must occur exactly once in
+  its file (line breaks count as spaces), every row must exist, and it must
+  still carry that state; rewording the sentence or moving the row fails the
+  check until both are changed together;
+- in every Markdown file, the lines outside a table of a paragraph that links
+  this page may name in code only ids of this registry and only its states.
 
 The command prints `CLAIMS_CITATIONS=PASS` with the number of sentences, rows
 and paragraphs it checked. The release notes are not in the list: they are
