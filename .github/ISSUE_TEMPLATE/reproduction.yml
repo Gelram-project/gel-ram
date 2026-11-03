@@ -27,9 +27,11 @@ body:
   - type: textarea
     id: witness
     attributes:
-      label: Hardware check block (recommended)
-      description: The whole block printed by `xtask witness`, from `GEL_WITNESS_2` to the `GEL_WITNESS=` line. It holds the tool version, revision, operating system and version, CPU architecture and model, logical cores, total RAM, rustc, and each step's result, exit status, wall time and result line. It names no host, user, path or address. Paste it unchanged, also when a step failed.
+      label: Hardware check block
+      description: The whole block printed by `xtask witness`, from `GEL_WITNESS_2` to the `GEL_WITNESS=` line. It holds the tool version, revision, operating system and version, CPU architecture and model, logical cores, total RAM, rustc, and each step's result, exit status, wall time and result line. It is refused if it still holds your host name, user name or home directory; other paths and addresses are removed as far as the filter recognises them, so read it, then paste it unchanged, also when a step failed. If you ran only the complete suite or your own benchmark, paste REPRODUCTION.txt or your results here instead.
       render: text
+    validations:
+      required: true
   - type: textarea
     id: reproduction
     attributes:

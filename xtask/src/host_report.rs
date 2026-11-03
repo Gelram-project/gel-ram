@@ -3,13 +3,21 @@
 //! Host facts and the privacy filter of the hardware check
 //! (docs/CHECK-ON-YOUR-HARDWARE.md).
 //!
-//! The facts come from files and the standard library only; nothing is
-//! spawned, and a value that cannot be read is `unknown`. A report passes
-//! `finish` before it is written or printed: this host's names, its user names
-//! and directories, absolute paths, IPv4 and IPv6 addresses, MAC addresses and
-//! serial-number values are replaced by `<redacted-…>` labels, and a report in
-//! which the same scanner still finds one of them is refused.
-use std::{fmt::Write as _, fs, path::Path};
+//! A report has two parts. The fact lines (tool, revision, system, CPU, cores,
+//! memory, rustc) are made by this program from system files and the standard
+//! library; to fill them it runs only `git` and `rustc -V`, and `hostname` to
+//! learn the name it must hide. The other lines carry what the steps printed
+//! and pass `sanitise`: this host's names, the user's names and directories,
+//! absolute paths, IPv4, IPv6 and MAC addresses and serial-number values that
+//! the scanner recognises become `<redacted-…>` labels.
+//!
+//! `finish` then checks the whole report by a second, separate method: it
+//! searches the text for this host's names, the user's names (also each part of
+//! a name with spaces) and the directories, in any letter case and with either
+//! path separator, and refuses the report if one is still there. Paths and
+//! addresses that do not belong to this host or its user are only as well
+//! hidden as the scanner recognises them.
+use std::{fmt::Write as _, fs, path::Path, process::Command};
 
 const HOST: &str = "<redacted-host>";
 const USER: &str = "<redacted-user>";
@@ -17,13 +25,29 @@ const PATH: &str = "<redacted-path>";
 const IP: &str = "<redacted-ip>";
 const MAC: &str = "<redacted-mac>";
 const SERIAL: &str = "<redacted-serial>";
+/// The labels this filter writes; nothing else is copied unread.
+const LABELS: [&str; 6] = [HOST, USER, PATH, IP, MAC, SERIAL];
+
+/// Keys that name a serial number, longest first.
+const SERIAL_KEYS: &[&str] = &[
+    "serial number",
+    "serial_number",
+    "serial-number",
+    "serialnumber",
+    "serial no",
+    "serial_no",
+    "serial",
+    "s/n",
+    "sn",
+];
 
 /// What names this host or its user.
 pub(crate) struct Private {
     /// Host and user names with their labels, longest first; matched as whole
     /// words, ignoring case.
     words: Vec<(String, &'static str)>,
-    /// Directories (home, checkout, output), longest first, matched as written.
+    /// Directories (home, checkout, output), longest first; matched ignoring
+    /// case, with `/`, `\` or a doubled `\` for each separator.
     dirs: Vec<String>,
 }
 
@@ -37,31 +61,48 @@ impl Private {
                 words.push((first.to_string(), HOST));
             }
         }
-        words.extend(users.iter().map(|u| (u.trim().to_string(), USER)));
+        for user in users.iter().map(|u| u.trim()) {
+            words.push((user.to_string(), USER));
+            // "John Doe" is also found as "John" and as "Doe".
+            words.extend(user.split_whitespace().map(|part| (part.to_string(), USER)));
+        }
         // A one-letter name would erase ordinary text and identifies nobody.
         words.retain(|(w, _)| w.chars().count() >= 2);
         words.sort_by_key(|(w, _)| (std::cmp::Reverse(w.chars().count()), w.to_lowercase()));
         words.dedup_by(|a, b| a.0.to_lowercase() == b.0.to_lowercase());
-        let mut dirs: Vec<String> = dirs
-            .iter()
-            .map(|d| d.trim_end_matches(['/', '\\']).to_string())
-            .filter(|d| d.chars().count() >= 2)
-            .collect();
-        dirs.sort_by_key(|d| (std::cmp::Reverse(d.chars().count()), d.clone()));
-        dirs.dedup();
-        Self { words, dirs }
+        let mut all: Vec<String> = Vec::new();
+        for dir in dirs {
+            let dir = dir.trim().trim_end_matches(['/', '\\']);
+            all.push(dir.to_string());
+            // A canonical Windows path starts with \\?\, which text rarely shows.
+            if let Some(plain) = dir.strip_prefix(r"\\?\") {
+                all.push(plain.to_string());
+            }
+        }
+        all.retain(|d| d.chars().count() >= 2);
+        all.sort_by_key(|d| (std::cmp::Reverse(d.chars().count()), d.to_lowercase()));
+        all.dedup_by(|a, b| a.to_lowercase() == b.to_lowercase());
+        Self { words, dirs: all }
     }
 
-    /// This host: its name, the user's names and home directory from the
-    /// environment and the host-name files, and the directories of the run.
+    /// This host: its name from the environment, the host-name files and the
+    /// `hostname` command; the user's names and home directory from the
+    /// environment; and the directories of the run.
     pub(crate) fn of_this_host(run_dirs: &[&Path]) -> Self {
         let env = |k: &str| std::env::var(k).ok();
         let file = |p: &str| fs::read_to_string(p).ok();
+        // macOS exports no host name and has no host-name file.
+        let command = Command::new("hostname")
+            .output()
+            .ok()
+            .filter(|o| o.status.success())
+            .map(|o| String::from_utf8_lossy(&o.stdout).into_owned());
         let hosts: Vec<String> = [
             env("HOSTNAME"),
             env("COMPUTERNAME"),
             file("/proc/sys/kernel/hostname"),
             file("/etc/hostname"),
+            command,
         ]
         .into_iter()
         .flatten()
@@ -75,9 +116,9 @@ impl Private {
             .flatten()
             .collect();
         // The last part of a home directory is usually the user name.
-        for home in dirs.clone() {
-            if let Some(name) = Path::new(&home).file_name() {
-                users.push(name.to_string_lossy().into_owned());
+        for home in &dirs {
+            if let Some(name) = home.rsplit(['/', '\\']).find(|s| !s.is_empty()) {
+                users.push(name.to_string());
             }
         }
         dirs.extend(run_dirs.iter().map(|d| d.to_string_lossy().into_owned()));
@@ -95,9 +136,37 @@ fn starts_with(c: &[char], i: usize, s: &str, fold: bool) -> bool {
         .all(|(k, ch)| c.get(i + k).is_some_and(|&x| same(x, ch, fold)))
 }
 
-/// A hyphen ends a word, so a name is also found inside `name-laptop`.
+/// Anything but a letter or digit ends a word, so a name is also found inside
+/// `name-laptop` or `name_x`.
 fn word_char(c: char) -> bool {
-    c.is_alphanumeric() || c == '_'
+    c.is_alphanumeric()
+}
+
+fn separator(c: char) -> bool {
+    c == '/' || c == '\\'
+}
+
+/// The length of `dir` written at `i`, in any letter case, with `/`, `\` or a
+/// doubled `\` (as in escaped text) for each separator.
+fn dir_at(c: &[char], i: usize, dir: &str) -> Option<usize> {
+    let mut j = i;
+    for d in dir.chars() {
+        let x = *c.get(j)?;
+        if separator(d) {
+            if !separator(x) {
+                return None;
+            }
+            j += 1;
+            if x == '\\' && c.get(j) == Some(&'\\') {
+                j += 1;
+            }
+        } else if same(x, d, true) {
+            j += 1;
+        } else {
+            return None;
+        }
+    }
+    Some(j - i)
 }
 
 /// Where a path that starts at `i` ends: at white space or a closing mark.
@@ -111,21 +180,41 @@ fn path_end(c: &[char], mut i: usize) -> usize {
     i
 }
 
-/// An absolute path: `/x`, `file:///x`, `~/x`, `C:\x` or `\\server\x`.
+/// A path may hold spaces (`John Doe\gel-ram`): it goes on across one space
+/// when the next piece holds a path separator.
+fn path_extent(c: &[char], i: usize) -> usize {
+    let mut end = path_end(c, i);
+    while c.get(end) == Some(&' ') {
+        let next = path_end(c, end + 1);
+        let piece = &c[end + 1..next];
+        // `Doe\gel-ram` goes on; `key=/x` or a new path does not.
+        let more = piece.first().is_some_and(|x| x.is_alphanumeric())
+            && piece.iter().any(|&x| separator(x))
+            && !piece.iter().any(|&x| x == '=' || x == ':');
+        if !more {
+            break;
+        }
+        end = next;
+    }
+    end
+}
+
+/// An absolute path: `/x`, `file:///x`, `~/x`, `C:\x` or `\\server\x`, after
+/// any character that cannot be part of a path.
 fn path(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
-    if !before.is_none_or(|b| b.is_whitespace() || "=([{\"'`,;:<>|".contains(b)) {
+    if before.is_some_and(|b| b.is_alphanumeric() || "_.-/\\~".contains(b)) {
         return None;
     }
     let at = |k: usize| c.get(i + k).copied().unwrap_or(' ');
     let start = match (at(0), at(1), at(2)) {
         ('/', '/', '/') => true,
-        ('/', n, _) => n.is_alphanumeric() || "._~-".contains(n),
+        ('/', n, _) => n.is_alphanumeric() || "._~".contains(n),
         ('~', '/' | '\\', _) => true,
         (d, ':', '\\' | '/') => d.is_ascii_alphabetic(),
         ('\\', '\\', n) => n.is_alphanumeric() || "?.".contains(n),
         _ => false,
     };
-    start.then(|| path_end(c, i) - i)
+    start.then(|| path_extent(c, i) - i)
 }
 
 /// Six pairs of hexadecimal digits joined by `:` or `-`.
@@ -146,7 +235,8 @@ fn mac(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
         .then_some(17)
 }
 
-/// Four decimal numbers of at most 255 joined by dots.
+/// Four decimal numbers of at most 255 joined by dots, not part of a longer
+/// version such as `6.6.87.2-microsoft`.
 fn ipv4(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
     if before.is_some_and(|b| b.is_alphanumeric() || b == '.') {
         return None;
@@ -173,13 +263,16 @@ fn ipv4(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
         j += digits;
     }
     let digit_at = |k: usize| c.get(k).is_some_and(|x| x.is_ascii_digit());
-    // Not followed by another digit or by a fifth number.
-    let longer = digit_at(j) || (c.get(j) == Some(&'.') && digit_at(j + 1));
+    // Not followed by another digit, a fifth number or a version suffix.
+    let longer = digit_at(j)
+        || (c.get(j) == Some(&'.') && digit_at(j + 1))
+        || (c.get(j) == Some(&'-') && c.get(j + 1).is_some_and(|x| x.is_alphanumeric()));
     (!longer).then_some(j - i)
 }
 
-/// Groups of at most four hexadecimal digits joined by `:`, with `::` or at
-/// least three groups and a digit, an optional IPv4 tail and zone.
+/// An IPv6 address: eight groups of at most four hexadecimal digits, or fewer
+/// with exactly one `::`; the last two groups may be an IPv4 address; an
+/// optional zone.
 fn ipv6(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
     if before.is_some_and(|b| b.is_alphanumeric() || b == ':' || b == '_' || b == '.') {
         return None;
@@ -189,22 +282,30 @@ fn ipv6(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
         .take_while(|x| x.is_ascii_hexdigit() || **x == ':')
         .count();
     let text: String = c[i..i + run].iter().collect();
-    let groups: Vec<&str> = text.split(':').collect();
-    let compressed = text.contains("::");
-    let shaped = text.matches(':').count() >= 2
-        && groups.iter().all(|g| g.len() <= 4)
-        && groups.iter().any(|g| !g.is_empty())
-        && (compressed
-            || (groups.len() >= 3
-                && groups.iter().all(|g| !g.is_empty())
-                && text.chars().any(|x| x.is_ascii_digit())));
-    if !shaped {
+    let compressed = text.matches("::").count();
+    if text.matches(':').count() < 2 || compressed > 1 || text.contains(":::") {
         return None;
     }
+    let mut groups: Vec<&str> = text.split(':').collect();
     let mut end = i + run;
-    if c.get(end) == Some(&'.') {
+    let tail = c.get(end) == Some(&'.');
+    if tail {
         let last = i + text.rfind(':')? + 1;
         end = last + ipv4(c, last, Some(':'))?;
+        groups.pop();
+    }
+    if groups.iter().any(|g| g.len() > 4) {
+        return None;
+    }
+    let filled = groups.iter().filter(|g| !g.is_empty()).count();
+    let room = if tail { 6 } else { 8 };
+    let shaped = if compressed == 1 {
+        (1..room).contains(&filled)
+    } else {
+        filled == room && groups.len() == room
+    };
+    if !shaped {
+        return None;
     }
     if c.get(end) == Some(&'%') {
         end += 1 + c[end + 1..]
@@ -218,31 +319,49 @@ fn ipv6(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
 }
 
 /// The value after a key that names a serial number (`Serial Number: X`,
-/// `serial=X`); the key is kept, the value is replaced.
+/// `serial\t: X`, `"serial": "X"`, `S/N=X`, or `serial X` when X has a digit);
+/// the key is kept, the value is replaced.
 fn serial(c: &[char], i: usize, before: Option<char>) -> Option<(usize, String)> {
-    if before.is_some_and(|b| b.is_alphanumeric() || b == '_') || !c[i].is_alphanumeric() {
+    if before.is_some_and(|b| b.is_alphanumeric() || b == '_') {
         return None;
     }
-    let key = c[i..]
+    let key = SERIAL_KEYS.iter().find(|k| {
+        starts_with(c, i, k, true)
+            && c.get(i + k.len())
+                .is_none_or(|x| !(x.is_alphanumeric() || *x == '_'))
+    })?;
+    let blank = |x: &char| *x == ' ' || *x == '\t';
+    let quote = |x: Option<&char>| matches!(x, Some('"' | '\''));
+    let mut j = i + key.len();
+    if quote(c.get(j)) {
+        j += 1;
+    }
+    let gap = j;
+    while c.get(j).is_some_and(blank) {
+        j += 1;
+    }
+    let separated = matches!(c.get(j), Some(':' | '='));
+    if separated {
+        j += 1;
+        while c.get(j).is_some_and(blank) {
+            j += 1;
+        }
+    } else if j == gap || *key == "sn" {
+        return None;
+    }
+    if quote(c.get(j)) {
+        j += 1;
+    }
+    let end = j + c[j..]
         .iter()
-        .take(40)
-        .take_while(|x| x.is_alphanumeric() || " _.-".contains(**x))
+        .take_while(|x| !x.is_whitespace() && !"\"'`,;)]}".contains(**x))
         .count();
-    let name: String = c[i..i + key].iter().collect();
-    let sep = i + key;
-    if !name.to_lowercase().contains("serial") || !matches!(c.get(sep), Some('=' | ':')) {
+    let value: String = c[j..end].iter().collect();
+    let digit = value.chars().any(|x| x.is_ascii_digit());
+    if value.is_empty() || value.starts_with("<redacted-") || (!separated && !digit) {
         return None;
     }
-    let mut value = sep + 1;
-    while c.get(value).is_some_and(|&x| x == ' ' || x == '\t') {
-        value += 1;
-    }
-    let end = value + c[value..].iter().take_while(|x| !x.is_whitespace()).count();
-    let rest: String = c[value..end].iter().collect();
-    if rest.is_empty() || rest.starts_with("<redacted-") {
-        return None;
-    }
-    let kept: String = c[i..value].iter().collect();
+    let kept: String = c[i..j].iter().collect();
     Some((end - i, format!("{kept}{SERIAL}")))
 }
 
@@ -255,8 +374,8 @@ fn redaction_at(
     p: &Private,
 ) -> Option<(usize, String, &'static str)> {
     for dir in &p.dirs {
-        if starts_with(c, i, dir, false) {
-            let end = path_end(c, i + dir.chars().count());
+        if let Some(n) = dir_at(c, i, dir) {
+            let end = path_extent(c, i + n);
             return Some((end - i, PATH.into(), PATH));
         }
     }
@@ -280,20 +399,17 @@ fn redaction_at(
     path(c, i, before).map(|n| (n, PATH.into(), PATH))
 }
 
-/// The length of a `<redacted-…>` label that starts at `i`.
+/// The length of one of this filter's own labels at `i`.
 fn label_len(c: &[char], i: usize) -> Option<usize> {
-    if !starts_with(c, i, "<redacted-", false) {
-        return None;
-    }
-    Some(c[i..].iter().take(24).position(|&x| x == '>')? + 1)
+    LABELS
+        .iter()
+        .find(|l| starts_with(c, i, l, false))
+        .map(|l| l.len())
 }
 
-/// The text with every finding replaced, and the kinds found in order.
-///
-/// A label is copied as it is, and the character after a label or a
-/// replacement is read as if it followed a letter. So the scan reads its own
-/// output as it read the input, and a refusal points at a finding that the
-/// replacement did not cover.
+/// The text with every finding replaced, and the kinds found in order. One of
+/// this filter's own labels is copied as it is, and the character after a
+/// label or a replacement is read as if it followed a letter.
 fn scan(text: &str, p: &Private) -> (String, Vec<&'static str>) {
     let c: Vec<char> = text.chars().collect();
     let (mut out, mut kinds) = (String::with_capacity(text.len()), Vec::new());
@@ -319,40 +435,101 @@ fn scan(text: &str, p: &Private) -> (String, Vec<&'static str>) {
     (out, kinds)
 }
 
-/// The text with this host's names, paths and addresses replaced, and the
-/// number of replacements.
+/// The text with what the scanner recognises replaced, and the number of
+/// replacements.
 pub(crate) fn sanitise(text: &str, p: &Private) -> (String, usize) {
     let (out, kinds) = scan(text, p);
     (out, kinds.len())
 }
 
-/// The kinds of private detail the scanner finds in `text`, each once.
-pub(crate) fn leaks(text: &str, p: &Private) -> Vec<&'static str> {
-    let mut kinds = scan(text, p).1;
-    kinds.sort_unstable();
-    kinds.dedup();
-    kinds
+/// Lower case, with every separator (also a doubled `\`) written as `/`.
+fn flat(text: &str) -> String {
+    text.to_lowercase().replace("\\\\", "/").replace('\\', "/")
 }
 
-/// The last gate before a report is written: a text that still names a private
-/// detail is refused.
-fn refuse_leaks(text: &str, p: &Private) -> Result<(), String> {
-    let left = leaks(text, p);
+/// The words of the system's own name in the fact lines (`os=`,
+/// `os_version=`). A host or user named like the system (`ubuntu`, `kali`) has
+/// its default name, which identifies nobody; in the fact lines it is allowed.
+fn system_words(facts: &str) -> Vec<String> {
+    facts
+        .lines()
+        .filter_map(|l| {
+            l.strip_prefix("os_version=")
+                .or_else(|| l.strip_prefix("os=").and_then(|v| v.split(' ').next()))
+        })
+        .flat_map(|v| {
+            v.split(|x: char| !x.is_alphanumeric())
+                .map(str::to_lowercase)
+                .collect::<Vec<_>>()
+        })
+        .filter(|w| w.chars().count() >= 2)
+        .collect()
+}
+
+/// The second check, made without the scanner: which of this host's names,
+/// user names and directories `text` still holds as plain text, in any letter
+/// case and with either separator. Names in `allowed` do not count.
+fn still_named(text: &str, p: &Private, allowed: &[String]) -> Vec<&'static str> {
+    let text = LABELS
+        .iter()
+        .fold(text.to_string(), |t, l| t.replace(l, " "));
+    let lower = text.to_lowercase();
+    let mut found = Vec::new();
+    for (word, kind) in &p.words {
+        let w = word.to_lowercase();
+        if allowed.contains(&w) {
+            continue;
+        }
+        let whole = lower.match_indices(&w).any(|(at, _)| {
+            let before = lower[..at].chars().next_back();
+            let after = lower[at + w.len()..].chars().next();
+            before.is_none_or(|b| !b.is_alphanumeric())
+                && after.is_none_or(|a| !a.is_alphanumeric())
+        });
+        if whole {
+            found.push(if *kind == HOST {
+                "host name"
+            } else {
+                "user name"
+            });
+        }
+    }
+    let text = flat(&text);
+    if p.dirs.iter().any(|d| text.contains(&flat(d))) {
+        found.push("directory");
+    }
+    found
+}
+
+/// The report: the fact lines as they are, the other lines filtered, and the
+/// number of replacements; or a refusal when the second check still finds this
+/// host's name, the user's name or a directory anywhere in it.
+pub(crate) fn finish(facts: &str, body: &str, p: &Private) -> Result<(String, usize), String> {
+    finish_with(facts, body, p, sanitise)
+}
+
+/// The first pass over the step lines: text and number of replacements.
+type Filter = fn(&str, &Private) -> (String, usize);
+
+fn finish_with(
+    facts: &str,
+    body: &str,
+    p: &Private,
+    filter: Filter,
+) -> Result<(String, usize), String> {
+    let (clean, n) = filter(body, p);
+    let mut left = still_named(facts, p, &system_words(facts));
+    left.extend(still_named(&clean, p, &[]));
+    left.sort_unstable();
+    left.dedup();
     if left.is_empty() {
-        Ok(())
+        Ok((format!("{facts}{clean}"), n))
     } else {
         Err(format!(
-            "REFUSED the report still holds {} after filtering; nothing was written",
-            left.join(",")
+            "REFUSED the report still holds a {} after filtering; nothing was written",
+            left.join(", a ")
         ))
     }
-}
-
-/// The filtered report and its number of replacements, or a refusal.
-pub(crate) fn finish(text: &str, p: &Private) -> Result<(String, usize), String> {
-    let (clean, n) = sanitise(text, p);
-    refuse_leaks(&clean, p)?;
-    Ok((clean, n))
 }
 
 /// One line of a value, with no control characters.
@@ -485,102 +662,191 @@ pub(crate) fn facts() -> String {
 mod tests {
     use super::*;
 
-    /// A made-up host. The paths are assembled at run time, so the public tree
-    /// itself holds no user directory path.
-    fn fake() -> (Private, String) {
+    /// A made-up host: its two home directories and the hostile text. The
+    /// paths are assembled at run time, so the public tree itself holds no
+    /// user directory path.
+    fn fake() -> (Private, String, String, String) {
         let home = ["/", "home", "/", "jdoe"].concat();
-        let windows = ["C:", "\\Use", "rs\\", "jdoe", "\\gel-ram"].concat();
+        let windows = ["C:", "\\Use", "rs\\", "John Doe"].concat();
         let p = Private::new(
             &["lab-box-7.example.net".into()],
-            &["jdoe".into()],
-            std::slice::from_ref(&home),
+            &["jdoe".into(), "John Doe".into()],
+            &[home.clone(), windows.clone()],
         );
+        let lower = windows.to_lowercase();
+        let escaped = windows.replace('\\', "\\\\");
         let text = format!(
             "host=lab-box-7 full=LAB-BOX-7.example.net by jdoe on jdoe-laptop\n\
              step=literal result=FAIL marker=GEL_LIVE_LAB_LITERAL=FAIL error={home}/gel-ram/README.md: denied\n\
-             cwd={windows}\n\
+             cwd={lower}\\gel-ram\\x.rs done\n\
+             debug=\"{escaped}\\\\gel\" end\n\
+             other=D:\\Data\\Jane Roe\\notes\\x.txt end\n\
              addr=203.0.113.7:8080 v6=2001:db8::7:1 mapped=::ffff:198.51.100.9\n\
              mac=02:00:5e:10:00:01 mac2=02-00-5E-10-00-02\n\
              Serial Number: SN-48151623\n\
-             tilde=~/notes.txt url=file:///srv/data\n"
+             Serial\t\t: 100000001\n\
+             {{\"serial\": \"ABC123\"}}\n\
+             serial XYZ987\n\
+             S/N: Q7W8E9\n\
+             tilde=~/notes.txt url=file:///srv/data at=x@/srv/secret/x star=a*/srv/s2 plus=b+/srv/s3\n\
+             label=<redacted-{home}>\n"
         );
-        (p, text)
+        (p, text, home, windows)
     }
 
     #[test]
     fn names_paths_and_addresses_of_the_host_are_removed() {
-        let (p, raw) = fake();
-        let found = leaks(&raw, &p);
-        for kind in [HOST, USER, PATH, IP, MAC, SERIAL] {
-            assert!(found.contains(&kind), "{kind} not seen: {found:?}");
+        let (p, raw, _, _) = fake();
+        let kinds = scan(&raw, &p).1;
+        for kind in LABELS {
+            assert!(kinds.contains(&kind), "{kind} not seen: {kinds:?}");
         }
-        let (clean, n) = finish(&raw, &p).expect("the filtered report is accepted");
+        let (clean, n) =
+            finish("os=linux arch=x86_64\n", &raw, &p).expect("the filtered report is accepted");
         let lower = clean.to_lowercase();
         for secret in [
             "lab-box-7",
             "jdoe",
+            "john",
+            "doe",
             "home",
             "users",
+            "jane",
+            "roe",
+            "data",
+            "notes",
+            "srv",
+            "secret",
             "203.0.113.7",
             "2001:db8",
             "198.51.100.9",
             "02:00:5e",
             "02-00-5e",
             "48151623",
-            "notes.txt",
-            "srv",
+            "100000001",
+            "abc123",
+            "xyz987",
+            "q7w8e9",
         ] {
             assert!(!lower.contains(secret), "{secret} is left in:\n{clean}");
         }
-        assert_eq!(n, 14, "{clean}");
+        assert_eq!(n, 24, "{clean}");
         // What the reader needs survives: keys, markers and the port.
         for kept in [
-            "step=literal result=FAIL marker=GEL_LIVE_LAB_LITERAL=FAIL error=",
+            "step=literal result=FAIL marker=GEL_LIVE_LAB_LITERAL=FAIL error=<redacted-path> denied",
+            "cwd=<redacted-path> done",
+            "debug=\"<redacted-path>\" end",
             ":8080 v6=",
             "Serial Number: <redacted-serial>",
+            "Serial\t\t: <redacted-serial>",
+            "{\"serial\": \"<redacted-serial>\"}",
+            "serial <redacted-serial>",
+            "S/N: <redacted-serial>",
             "url=file:<redacted-path>",
+            "at=x@<redacted-path>",
         ] {
             assert!(clean.contains(kept), "{kept} is missing in:\n{clean}");
         }
     }
 
+    /// No filter at all, and a weak one that removes only IPv4 addresses.
+    fn no_filter(text: &str, _: &Private) -> (String, usize) {
+        (text.to_string(), 0)
+    }
+
+    fn ipv4_only(text: &str, _: &Private) -> (String, usize) {
+        let c: Vec<char> = text.chars().collect();
+        let (mut out, mut n, mut i) = (String::new(), 0, 0);
+        while i < c.len() {
+            match ipv4(&c, i, i.checked_sub(1).map(|j| c[j])) {
+                Some(k) => {
+                    out.push_str(IP);
+                    (n, i) = (n + 1, i + k);
+                }
+                None => {
+                    out.push(c[i]);
+                    i += 1;
+                }
+            }
+        }
+        (out, n)
+    }
+
     #[test]
-    fn a_report_the_filter_did_not_clean_is_refused() {
-        let (p, raw) = fake();
-        assert!(refuse_leaks(&raw, &p).is_err());
-        let (clean, _) = sanitise(&raw, &p);
-        assert_eq!(refuse_leaks(&clean, &p), Ok(()));
-        // The labels themselves are never read as a finding, nor what follows them.
-        assert_eq!(sanitise(&clean, &p), (clean.clone(), 0));
-        let next = "by jdoe/notes and jdoe::1 at lab-box-7:/srv\n";
-        let (once, n) = finish(next, &p).expect("a filtered text is accepted");
-        assert_eq!(n, 4, "{once}");
-        assert!(!once.contains("srv"), "{once}");
-        assert_eq!(sanitise(&once, &p), (once.clone(), 0));
+    fn the_second_check_refuses_what_a_weak_filter_left() {
+        let (p, raw, home, windows) = fake();
+        let facts = "os=linux arch=x86_64\n";
+        let weak: [Filter; 2] = [no_filter, ipv4_only];
+        for filter in weak {
+            let refused = finish_with(facts, &raw, &p, filter).unwrap_err();
+            for kind in ["host name", "user name", "directory"] {
+                assert!(refused.contains(kind), "{kind}: {refused}");
+            }
+        }
+        // Each one alone, in any letter case and with either separator.
+        let escaped = windows.replace('\\', "\\\\");
+        for (text, kind) in [
+            ("built by JDOE\n".to_string(), "user name"),
+            ("for Doe only\n".to_string(), "user name"),
+            ("on Lab-Box-7\n".to_string(), "host name"),
+            (format!("in {}\n", home.to_uppercase()), "directory"),
+            (format!("in {}\n", home.replace('/', "\\")), "directory"),
+            (format!("in \"{escaped}\\\\x\"\n"), "directory"),
+        ] {
+            let refused = finish_with(facts, &text, &p, no_filter).unwrap_err();
+            assert!(refused.contains(kind), "{text}: {refused}");
+        }
+        // A name in the fact lines counts too.
+        let named = "os=linux arch=x86_64\ncpu_model=lab-box-7 CPU\n";
+        assert!(finish(named, "", &p).is_err());
+        // The filter's own labels are not names, whatever the names are.
+        let odd = Private::new(&["host".into()], &["user".into()], &[]);
+        let labelled = format!("{HOST} {USER} {PATH}\n");
+        assert_eq!(
+            finish(facts, &labelled, &odd),
+            Ok((format!("{facts}{labelled}"), 0))
+        );
+    }
+
+    #[test]
+    fn system_names_and_look_alikes_are_left_alone() {
+        let p = Private::new(&["ubuntu".into()], &["kali".into()], &[]);
+        let facts = "os=linux arch=x86_64\n\
+             os_version=Ubuntu 24.04.1 LTS\n\
+             kernel=6.6.87.2-microsoft-standard-WSL2\n\
+             cpu_model=Example CPU 8C @ 3.10GHz\n\
+             rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)\n";
+        let body = "step=x result=FAIL exit=1 seconds=0.10 marker=X=FAIL at 12:34:56 in a::b::c, \
+             deserialize: bad, serial port ok, build 6.6.87.2-microsoft-standard-WSL2\n";
+        assert_eq!(finish(facts, body, &p), Ok((format!("{facts}{body}"), 0)));
+        let kali = "os=linux arch=x86_64\nos_version=Kali GNU/Linux Rolling\n";
+        assert_eq!(finish(kali, "", &p), Ok((kali.to_string(), 0)));
+        // In the step lines the same name is still a name.
+        let (clean, n) = finish(facts, "seen on ubuntu\n", &p).unwrap();
+        assert_eq!((n, clean.ends_with("seen on <redacted-host>\n")), (1, true));
     }
 
     #[test]
     fn a_clean_report_passes_unchanged() {
-        let (p, _) = fake();
-        let clean = "GEL_WITNESS_2\n\
+        let (p, _, _, _) = fake();
+        let facts = "GEL_WITNESS_2\n\
              tool=xtask-witness version=0.8.0\n\
-             revision=319b4e8d0c1f2a3b4c5d6e7f8091a2b3c4d5e6f7 working_tree=clean\n\
+             revision=0123456789abcdef0123456789abcdef01234567 working_tree=clean\n\
              os=linux arch=x86_64\n\
-             os_version=Debian GNU/Linux 12 (bookworm)\n\
-             kernel=6.17.0-1033-oem\n\
-             cpu_model=Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz w/ Radeon 890M\n\
+             os_version=Example GNU/Linux 12 (codename)\n\
+             kernel=5.10.0-27-example\n\
+             cpu_model=ExampleCorp(R) Model(TM) X7-1234U CPU @ 1.80GHz w/ Example Graphics 600\n\
              logical_cpus=8 available_parallelism=8\n\
              memory_total_kib=16310532\n\
-             rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)\n\
-             step=literal result=PASS exit=0 seconds=12.34 marker=GEL_LIVE_LAB_LITERAL=PASS\n\
+             rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)\n";
+        let body = "step=literal result=PASS exit=0 seconds=12.34 marker=GEL_LIVE_LAB_LITERAL=PASS\n\
              step=quad result=PASS exit=0 seconds=1.05 marker=Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED\n\
              step=crash-series result=SKIPPED reason=the kill series needs a Unix host\n\
              step=history-crash-series result=PASS exit=0 seconds=9.80 marker=HISTORY_CRASH_SERIES=PASS kills=5/5 date=2026-11-03\n\
              step=same-bits result=FAIL exit=signal-9 seconds=0.50 marker=WITNESS=MISMATCH platform=windows-x86_64 | bits pinned on the author's Linux host before any other run\n\
-             note=DEGRADED_REFERENCE_SERIAL_FALLBACK absent; std::fs ok; see https://github.com/Gelram-project/gel-ram/blob/main/docs/REPRODUCE.md\n\
-             GEL_WITNESS=FAIL pass=3 fail=1 skipped=1\n";
-        assert_eq!(sanitise(clean, &p), (clean.to_string(), 0));
-        assert_eq!(finish(clean, &p), Ok((clean.to_string(), 0)));
+             note=DEGRADED_REFERENCE_SERIAL_FALLBACK absent; std::fs ok; see https://github.com/Gelram-project/gel-ram/blob/main/docs/REPRODUCE.md\n";
+        assert_eq!(sanitise(body, &p), (body.to_string(), 0));
+        assert_eq!(finish(facts, body, &p), Ok((format!("{facts}{body}"), 0)));
     }
 
     #[test]

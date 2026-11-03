@@ -10,9 +10,10 @@
 //! Every step runs even when an earlier one failed. The block names the tool
 //! version, the revision, the host (system, CPU, cores, memory, rustc) and each
 //! step's result, exit status, wall time and marker, ends with its own SHA-256,
-//! and is written to NEW_DIR/WITNESS.txt. Before it is written it passes the
-//! privacy filter of `host_report`: a block that still names this host, its
-//! user, a path or an address is refused (docs/CHECK-ON-YOUR-HARDWARE.md).
+//! and is written to NEW_DIR/WITNESS.txt. Before it is written the step lines
+//! pass the privacy filter of `host_report`, and a block in which a second
+//! check still finds this host's name, the user's name or a directory of the
+//! run is refused (docs/CHECK-ON-YOUR-HARDWARE.md).
 use gel_source::{digest, hex};
 use std::{
     fmt::Write as _,
@@ -158,15 +159,17 @@ pub fn run(args: &[String]) -> Result<(), String> {
         .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
         .unwrap_or_else(|_| "NOT_MEASURED".into());
 
-    let mut block = String::from("GEL_WITNESS_2\n");
+    // The fact lines are made here; the step lines carry what the steps printed.
+    let mut facts = String::from("GEL_WITNESS_2\n");
     let _ = writeln!(
-        block,
+        facts,
         "tool=xtask-witness version={}",
         env!("CARGO_PKG_VERSION")
     );
-    let _ = writeln!(block, "{}", super::bench_compare::revision(&root));
-    block.push_str(&super::host_report::facts());
-    let _ = writeln!(block, "rustc={rustc}");
+    let _ = writeln!(facts, "{}", super::bench_compare::revision(&root));
+    facts.push_str(&super::host_report::facts());
+    let _ = writeln!(facts, "rustc={rustc}");
+    let mut block = String::new();
     let (mut pass, mut fail, mut skipped) = (0, 0, 0);
     for step in steps(&file) {
         if let Some(why) = step.skip {
@@ -209,8 +212,8 @@ pub fn run(args: &[String]) -> Result<(), String> {
     }
     // Nothing leaves this function before it has passed the filter.
     let private = super::host_report::Private::of_this_host(&[&root, &out]);
-    let (mut block, redactions) =
-        super::host_report::finish(&block, &private).map_err(|e| format!("GEL_WITNESS={e}"))?;
+    let (mut block, redactions) = super::host_report::finish(&facts, &block, &private)
+        .map_err(|e| format!("GEL_WITNESS={e}"))?;
     let _ = writeln!(block, "redactions={redactions}");
     let _ = writeln!(block, "block_sha256={}", hex(&digest(block.as_bytes())));
     let verdict = if fail == 0 { "PASS" } else { "FAIL" };

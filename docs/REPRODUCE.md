@@ -83,8 +83,10 @@ reason. The block names the tool version, the commit, the operating system and
 its version, CPU, logical cores, memory and rustc, each step's line, exit status
 and wall time, and the block's own SHA-256, and ends with
 `GEL_WITNESS=PASS|FAIL pass=… fail=… skipped=…`. Before it is written, a filter
-replaces any host name, user name, path, IP or MAC address and serial number it
-finds and counts the replacements; a block that still holds one is refused. The
+replaces in the step lines what it recognises as a host name, user name, path,
+IP or MAC address or serial number, and counts the replacements; a second,
+separate check then refuses the block if it still holds this machine's host
+name, the user's name or a directory of the run in any letter case. The
 same block is in NEW_DIR/WITNESS.txt, and each step's whole output is in
 NEW_DIR/<step>.log (not filtered). On the author's machine (24 threads) the six
 steps take about 70 seconds. What the block holds and how to share it:
@@ -94,6 +96,6 @@ steps take about 70 seconds. What the block holds and how to share it:
 
 Open a [reproduction issue](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
 and paste REPRODUCTION.txt or the witness block. REPRODUCTION.txt passes the same
-filter as the witness block, so the error line of a failed step names no host, user,
-path or address; read it before posting all the same. Slow and failing runs are as
-useful as fast ones.
+filter and the same refusal as the witness block. Paths and addresses of other
+machines are removed only as far as the filter recognises them, so read either
+before posting. Slow and failing runs are as useful as fast ones.

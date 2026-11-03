@@ -45,24 +45,37 @@ the time of the step that needed it.
 - the `rustc` version;
 - for each step: PASS, FAIL or SKIPPED, the exit status, the wall time in
   seconds and the last result line the program printed;
-- the number of replacements made by the privacy filter, the block's own
+- the number of replacements made by the filter described below, the block's own
   SHA-256 and a final line `GEL_WITNESS=PASS|FAIL pass=… fail=… skipped=…`.
 
 A failed step stays in the block with its result line, and the command ends
 with a non-zero exit status. The steps themselves are listed in
 [the reproduction guide](REPRODUCE.md#a-short-witness).
 
-## What it does not hold
+## What it does not hold, and how that is checked
 
-No host name, user name, home directory or any other absolute path, no IP or
-MAC address and no serial number. The facts are read from system files such
-as `/proc/cpuinfo` and `/proc/meminfo`; nothing else is run to collect them,
-and nothing is sent anywhere: you decide what to paste. Before the block is
-written, a filter replaces any such detail it finds, for example in the result
-line of a failed step, by a label such as `<redacted-path>`, and counts the
-replacements on the line `redactions=`. A block that still holds one after
-filtering is refused and not written. The step logs in the output directory
-are not filtered; read a log before you attach it.
+The fact lines are read from system files such as `/proc/cpuinfo`,
+`/proc/meminfo` and os-release; to fill them the command also runs `git` (for
+the revision) and `rustc -V`, and it runs `hostname` to learn the name it must
+hide. Nothing is sent anywhere: you decide what to paste.
+
+The step lines carry what the checks printed, for example the error line of a
+failed step. Before the block is written, a filter replaces in them, by a label
+such as `<redacted-path>`, what it recognises as this machine's host name,
+your user name (also each part of a name with spaces), your home directory and
+the directories of the run, any other absolute path, IPv4, IPv6 and MAC
+addresses and serial numbers, and it counts the replacements on the line
+`redactions=`.
+
+A second, separate check then searches the whole block, fact lines included,
+for this machine's host name, your user name and those directories as plain
+text, in any letter case and with either path separator. If one is still
+there, the block is refused and not written. A host or user named like the
+system itself (`ubuntu`, `kali`) is the system's default name and is allowed
+in the system's own fact lines. Paths and addresses of other machines are
+removed only as far as the filter recognises them, so read the block before
+you paste it. The step logs in the output directory are not filtered; read a
+log before you attach it.
 
 ## Report it
 

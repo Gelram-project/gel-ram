@@ -146,17 +146,23 @@ pub fn run(args: &[String]) -> Result<(), String> {
     let out = out.canonicalize().map_err(|e| e.to_string())?;
 
     let isolation = super::isolation::status();
-    let mut text = String::from("FORMAT=GEL_REPRODUCTION_1\n");
-    let _ = writeln!(text, "{}", super::bench_compare::revision(&root));
-    text.push_str(&host_lines());
-    let _ = writeln!(text, "{isolation}");
-    text.push_str(&load("start"));
-    // The error line of a failed step may name a path; the file people share
-    // passes the same filter as the witness block.
+    // The head lines are made here; the step lines may carry an error message.
+    let mut head = String::from("FORMAT=GEL_REPRODUCTION_1\n");
+    let _ = writeln!(head, "{}", super::bench_compare::revision(&root));
+    head.push_str(&host_lines());
+    let _ = writeln!(head, "{isolation}");
+    head.push_str(&load("start"));
+    let mut text = String::new();
+    // The file people share passes the same filter and the same second check
+    // as the witness block; a refused file is removed, not left half written.
     let private = super::host_report::Private::of_this_host(&[&root, &out]);
-    let write = |text: &str| {
-        let (clean, _) = super::host_report::sanitise(text, &private);
-        fs::write(out.join("REPRODUCTION.txt"), clean).map_err(|e| e.to_string())
+    let report = out.join("REPRODUCTION.txt");
+    let write = |text: &str| match super::host_report::finish(&head, text, &private) {
+        Ok((clean, _)) => fs::write(&report, clean).map_err(|e| e.to_string()),
+        Err(e) => {
+            let _ = fs::remove_file(&report);
+            Err(format!("REPRODUCTION={e}"))
+        }
     };
     if require && !isolation.ends_with("=VERIFIED") {
         text.push_str("result=REFUSED network isolation was required but not verified\n");
