@@ -15,6 +15,16 @@ const MENTIONS: &[(&str, &str)] = &[
     ("CANDIDATE-STATUS.md", "\nVERSION_LINE={v}\n"),
     ("CANDIDATE-STATUS.md", "\nTARGET_RELEASE={v}\n"),
     ("SECURITY.md", "(version line {v})"),
+    ("SECURITY.md", "| current `main` (version line {v}) |"),
+    (
+        "SECURITY.md",
+        "| tagged releases and other tags (the v{v} tag, once published, and older) |",
+    ),
+    (
+        "docs/ROADMAP.md",
+        "## Version boundary\n- `v{v}` is the current version line; its tag and release page",
+    ),
+    ("docs/ROADMAP.md", "\n## After v{v}\n"),
     (".github/ISSUE_TEMPLATE/bug.yml", "placeholder: v{v} or"),
     ("docs/REPRODUCE.md", "\ngit checkout v{v}\n"),
     ("docs/TRY-IT.md", "\ngit checkout v{v}\n"),
@@ -22,6 +32,10 @@ const MENTIONS: &[(&str, &str)] = &[
     (
         "docs/CANDIDATE-QUICKCHECK.md",
         "# Verify Evidence Lab ({v}) yourself",
+    ),
+    (
+        "docs/CANDIDATE-QUICKCHECK.md",
+        "Run these commands from a {v} checkout (current main or the v{v} tag)",
     ),
     (
         "tools/readme_presentation.rs",
