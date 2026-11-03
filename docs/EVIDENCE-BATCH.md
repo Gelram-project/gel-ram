@@ -39,7 +39,7 @@ keep the order shown below.
 The first record is the session:
 
 ```json
-{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.7.0","license":"GEL-RAM-NCRL-1.0"}
+{"schema":"gel-evidence/1","record":"session","tool":"gel-evidence","version":"0.8.0","license":"GEL-RAM-NCRL-1.0"}
 ```
 
 | Field | Value |

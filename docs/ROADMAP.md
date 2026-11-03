@@ -5,10 +5,10 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- Tagged `v0.7.0` is the current release and `v0.6.1` the previous one; tagged
-  releases, including `v0.6.0` and `v0.5.3`, are listed on the Releases page. The tags
+- Tagged `v0.8.0` is the current release and `v0.7.0` the previous one; tagged
+  releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on the Releases page. The tags
   `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0` remain without a release
-  page. Changes merged after `v0.7.0` are listed under [after v0.7.0](#after-v070).
+  page. Changes merged after `v0.8.0` are listed under [after v0.8.0](#after-v080).
 - Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
   its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
 - Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
@@ -53,21 +53,31 @@ The following capabilities are present on public `main`:
    an explicit public encoder, held-out questions and abstention policy. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## After v0.7.0
+## After v0.8.0
 
-Merged after v0.7.0 and not yet released. Every program says what it is and
-under which license; every GEL RAM-owned `.rs` file carries a two-line source
-header naming the license and the Required Notice, which a gate checks; and
+Nothing has been merged after v0.8.0 yet.
+
+## v0.8.0
+
+Everything merged after v0.7.0 (PR #91 to PR #97). Every program says what it
+is and under which license; every GEL RAM-owned `.rs` file carries a two-line
+source header naming the license and the Required Notice, which a gate checks;
 `gel-license` reads a distribution tree, and a user's own answers about one
-use, against the license. One more private directory is fixed by a published
-commitment.
+use, against the license; the license guides follow the words of the LICENSE;
+the README is generated as a whole and gives one command for each claim it
+makes; and one more private directory is fixed by a published commitment.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
 | Every program prints one identity line for `--version`, and for `--license` the license name, the Required Notice, the NOTICE summary and a line saying that third-party material in the program keeps its own license; the gel-evidence batch session record names the license | 06d2959 (PR #91) | `cargo run -p gel-cli -- --version` | [binaries](BINARIES.md#version-and-license-of-each-program), [batch interface](EVIDENCE-BATCH.md) | The printed lines name the license; the LICENSE file, not this output, holds the terms |
 | Every GEL RAM-owned `.rs` file begins with a two-line source header, the license name and the Required Notice, checked in `verify`; the generated Unicode tables are exempt; `speed-ab` sets an exact header aside when it compares a carried example with an older tree; the measured bytes of three examples are kept beside their manifest and the current examples must equal the header and those bytes | 06d2959 (PR #91) | `cargo run -p xtask -- source-headers` | [gates](GATES.md), [contributing](../CONTRIBUTING.md), [A/B tool](SPEED-AB.md), [evidence collection](evidence-collection/README.md) | v0.7.0 and earlier releases carry no header; source hashes in earlier speed manifests describe their measured revision, not the files with headers |
 | `gel-license check DIR` reports whether a tree has the exact LICENSE, the Required Notice and intact source headers; `gel-license use ANSWERS_FILE` maps the user's own yes, no or unsure answers to the LICENSE sentences its rules cite; `verify` runs `check` on this repository; the decision guide lists worked cases | 06d2959 (PR #91) | `cargo run -p gel-live-lab --bin gel-license -- check .` | [license decision guide](LICENSE-DECISION.md) | Not legal advice and not a certification (`LEGAL_CERTIFICATION=NO`, LEGAL_APPROVED=NO); the answers are the user's own and are not checked; `check` reads only the license, notice, header and crate-name items listed; several worked cases say "ask the Licensor" |
-| Published commitment: private source tree 2 | this change | `cargo run -p xtask -- commitment-check MANIFEST DIR` | [commitments](COMMITMENTS.md) | The manifest and files stay private until shown |
+| NOTICE and `LICENSING.md` no longer list removed files among those that quote Wikipedia; `LICENSING.md` says the LICENSE is the complete public grant | 7e836c7 (PR #92) | `cargo run -p xtask -- verify` | [NOTICE](../NOTICE), [licensing](../LICENSING.md) | None; no license term changes |
+| Published commitment: private source tree 2 | bb71441 (PR #93) | `cargo run -p xtask -- commitment-check MANIFEST DIR` | [commitments](COMMITMENTS.md) | The manifest and files stay private until shown |
+| The CI `verify` job has 40 minutes instead of 20 | 3d48805 (PR #94) | none | [CI workflow](../.github/workflows/ci.yml) | None |
+| The README is generated as a whole; each claim at the top has one command; its counts, the crash series and the timing chart are read from their files, and a series that disagrees with its rows is refused; the license card quotes the LICENSE word for word | ed053c7 (PR #95) | the steps of the [readme-presentation job](../.github/workflows/readme-presentation.yml) | [presentation guide](README-PRESENTATION.md) | Independent reading of the README against the commands it names |
+| The license guides follow the words of the LICENSE: the Evaluation purpose condition, the full Monetized Use definition, the grant verbs, the Required Notice lines and a Commercial Agreement signed by both sides | e635149 (PR #96) | none | [licensing](../LICENSING.md), [decision guide](LICENSE-DECISION.md) | None; the LICENSE is unchanged |
+| Every file that names the current version is tied to the workspace version by a test, and only the notes of that version stay in the root; `docs/TRY-IT.md` follows the release instead of v0.6.0 | this change (PR #97) | `cargo test -p xtask --test version_line` | [try it](TRY-IT.md) | None |
 
 ## v0.7.0
 
