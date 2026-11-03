@@ -4,6 +4,7 @@
 use gel_source::{collection::Collection, context, digest};
 use std::{collections::BTreeSet, fs, path::Path};
 
+#[derive(Clone, Copy)]
 struct Claim {
     id: &'static str,
     dimension: &'static str,
@@ -14,9 +15,18 @@ struct Claim {
     source: &'static str,
     evidence: Evidence,
 }
+#[derive(Clone, Copy)]
 enum Evidence {
     Probe(fn() -> Result<bool, String>),
     Deferred(&'static str),
+}
+impl Claim {
+    fn mode(&self) -> &'static str {
+        match self.evidence {
+            Evidence::Probe(_) => "EXECUTABLE_CHECK",
+            Evidence::Deferred(s) => s,
+        }
+    }
 }
 
 /// The only open states a row may carry; none of them is a PASS.
@@ -299,6 +309,66 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Probe(record_history),
     },
     Claim {
+        id: "sha256-fips-vectors",
+        dimension: "bytes",
+        scope: "the SHA-256 of gel-source (gel_source::digest), written in this checkout",
+        input: "the FIPS 180-2 example messages abc and the 448-bit two-block message, the empty message, and abc with one bit changed",
+        expected: "the three published digests; another digest for the changed message",
+        counterexample: "a matching digest read as proof of who wrote a file or that its content is true, or three vectors read as a proof for every input",
+        source: "crates/gel-source/src/sha256.rs",
+        evidence: Evidence::Probe(sha256_vectors),
+    },
+    Claim {
+        id: "orb-record-layout",
+        dimension: "bytes",
+        scope: "public gel-orb Orb1024, one bit record in memory",
+        input: "a seeded record, its 128 little-endian bytes, the record with its last bit flipped, and 127- and 129-byte inputs",
+        expected: "128 bytes of 1,024 bits, aligned to 64 bytes; the bytes give back the same record; the flipped record differs in one bit and in its bytes; the wrong lengths are refused",
+        counterexample: "read as a file format or as a store with integrity checks (see the gel-store tests)",
+        source: "docs/FORMAT.md",
+        evidence: Evidence::Probe(orb_layout),
+    },
+    Claim {
+        id: "structural-exact-xor",
+        dimension: "structure",
+        scope: "public gel-structural EncodedOrb in memory, a prototype parent",
+        input: "a seeded parent and targets 94 and 95 bits away from it; decoding with the parent, without it, with stored depths 0 and 3, and with a wrong parent; a child of a depth-2 parent",
+        expected: "94 changed bits kept as a delta of depth 1 and 95 stored as a literal; decoding with the parent gives the target bit for bit; no parent, depth 0 or 3 and a child of depth 2 refused; a wrong parent decodes without an error to another record",
+        counterexample: "a wrong parent read as detected, or the break-even read as a compression ratio for real data",
+        source: "docs/STRUCTURAL-CODEC.md",
+        evidence: Evidence::Probe(structural_xor),
+    },
+    Claim {
+        id: "q8-record-size",
+        dimension: "bytes",
+        scope: "public gel-phase-quad Record in memory",
+        input: "a record of 1,024 phase bytes and a 1,024-position activity mask",
+        expected: "the record takes 1,152 bytes (1,024 values and a 128-byte mask), four such copies 4,608; every phase byte and mask position reads back",
+        counterexample: "read as process memory, as the 1,164-byte file, or as four independent memories",
+        source: "docs/Q8-QUAD.md",
+        evidence: Evidence::Probe(q8_record_size),
+    },
+    Claim {
+        id: "no-third-party-packages",
+        dimension: "distribution",
+        scope: "Cargo.lock of this checkout and the workspace members of Cargo.toml",
+        input: "every package entry of Cargo.lock; a copy with a registry source line or an extra package as counterexamples (unit test)",
+        expected: "the package names equal the workspace member names; no package has a source or checksum line",
+        counterexample: "read as a review of the Rust toolchain or its standard library, which are linked in and covered by their own notices",
+        source: "docs/DEPENDENCY-INVENTORY.md",
+        evidence: Evidence::Probe(local_packages),
+    },
+    Claim {
+        id: "no-network-code",
+        dimension: "environment",
+        scope: "source text of every .rs file of the checkout; with no third-party package and unsafe code forbidden, the standard socket types are the only network interface in reach",
+        input: "the names of the standard TCP and UDP socket types; a file set where a library file names one as counterexample (unit test)",
+        expected: "they are named only in xtask/src/isolation.rs, the isolation check",
+        counterexample: "read as proof that a run used no network (see network-isolation), or as covering programs a tool starts as child processes",
+        source: "SECURITY.md",
+        evidence: Evidence::Probe(no_network_code),
+    },
+    Claim {
         id: "mutation-memory",
         dimension: "memory",
         scope: "streamed versus historical mutation",
@@ -439,6 +509,96 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "tool-version-license",
+        dimension: "interface",
+        scope: "the eight tool programs gel-cli, gel-bench, gel-physics, gel-live-lab, gel-evidence, gel-backup, gel-source and gel-license; not the xtask runner",
+        input: "--version or --license as the only argument; the tool_flags and license_cli tests run the built programs",
+        expected: "one line GEL_TOOL=NAME VERSION=VERSION LICENSE=GEL-RAM-NCRL-1.0 and exit 0; --license adds the license name, the Required Notice line, the NOTICE summary and the third-party line; with other arguments a flag keeps its earlier meaning",
+        counterexample: "the printed lines read as the license terms, which only LICENSE holds",
+        source: "docs/BINARIES.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "source-license-headers",
+        dimension: "provenance",
+        scope: "every GEL RAM-owned .rs file; the generated Unicode tables are third-party data and exempt",
+        input: "xtask source-headers, run by verify",
+        expected: "each file begins with the exact two-line header, the license name and the Required Notice, with no byte order mark and LF line endings; SOURCE_HEADERS_GATE=PASS",
+        counterexample: "a header read as a grant beyond LICENSE or as proof of who wrote the file",
+        source: "docs/GATES.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "license-self-check",
+        dimension: "licensing",
+        scope: "gel-license check DIR and gel-license use ANSWERS_FILE",
+        input: "verify runs the release gel-license check of this workspace; the package smoke run checks each package and one answers file",
+        expected: "for this workspace LICENSE_FILE=EXACT, REQUIRED_NOTICE=KEPT, THIRD_PARTY_NOTICES=KEPT, every source header intact and DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT; use names the LICENSE sentences that apply to the user's own answers",
+        counterexample: "a report read as a finding of compliance, as proof that every notice was kept, or as legal advice",
+        source: "docs/LICENSE-DECISION.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "unicode-16-normalization",
+        dimension: "text",
+        scope: "Unicode Normalization Form C of gel-source, tables from the Unicode Character Database 16.0.0",
+        input: "workspace tests: every line of NormalizationTest 16.0.0 and of 15.1.0, every scalar value and random and adversarial strings against the earlier and an independent implementation",
+        expected: "every line gives its listed forms; the table version is 16.0.0",
+        counterexample: "normalization read as language understanding, or as a result for a later Unicode version",
+        source: "crates/gel-source/src/nfc.rs",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "readme-generated",
+        dimension: "presentation",
+        scope: "README.md and README-MULTIMEDIA.html, generated as a whole by tools/readme_presentation.rs",
+        input: "the read-only readme-presentation workflow in CI builds both again and compares; not part of verify",
+        expected: "README_PRESENTATION=UNCHANGED; its counts come from docs/COMMITMENTS.md, Cargo.lock, the crash series, the recorded Q8 runs and the timing records; a series that disagrees with its own rows, a run without its PASS line or a license quote missing from LICENSE stops the build",
+        counterexample: "a generated number read as checked beyond the file it is counted from",
+        source: "docs/README-PRESENTATION.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "version-line",
+        dimension: "interface",
+        scope: "the files that name the current version: the citation file, the status file, the guides, the batch example, the README builder and the README link to the release notes",
+        input: "xtask/tests/version_line.rs against the workspace version",
+        expected: "each listed text carries the workspace version, and the root holds the release notes of that version only",
+        counterexample: "a passing test read as a review of every version number in the tree",
+        source: "xtask/tests/version_line.rs",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "goal-statement",
+        dimension: "presentation",
+        scope: "docs/GOAL.md, the README and docs/START-HERE.md",
+        input: "xtask/tests/goal_statement.rs",
+        expected: "the README and start-here repeat the goal sentence word for word; the goal file keeps its shape: the sentence and four commitments, each with one status line",
+        counterexample: "the goal sentence read as a result (see text-ai-goal)",
+        source: "xtask/tests/goal_statement.rs",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "commitments-fixed-in-time",
+        dimension: "provenance",
+        scope: "the published commitments in docs/COMMITMENTS.md: date, label, counts and the SHA-256 of a manifest kept private",
+        input: "xtask commitment-check once a manifest and its files are handed over; its unit tests change every kind of entry",
+        expected: "the handed-over files match the published SHA-256, or the check names the first difference; no change passes",
+        counterexample: "a commitment read as evidence that the files are correct, or of which commitment holds what",
+        source: "docs/COMMITMENTS.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "rebuild-identical",
+        dimension: "distribution",
+        scope: "the four packaged binaries, built twice from git archive HEAD in two directories whose paths differ",
+        input: "xtask rebuild-check; the check job of the binaries workflow runs it on Linux, macOS and Windows",
+        expected: "REBUILD=IDENTICAL on the same system; a difference fails the job",
+        counterexample: "a release binary read as rebuildable byte for byte on another system: the v0.6.1 tag rebuilt on the author's machine gave other bytes",
+        source: "docs/BINARIES.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "grep-comparison",
         dimension: "comparison",
         scope: "36 public queries against grep and sha256sum, one host",
@@ -479,6 +639,46 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "crash-series-recorded",
+        dimension: "persistence",
+        scope: "public gel-evidence, one recorded series of 200 trials on the author's Linux machine, ext4, 2026-09-29",
+        input: "24 documents, a new snapshot after each, SIGKILL after a seeded random 1 to 344 ms",
+        expected: "2,683 acknowledged snapshots, 0 lost and 0 partial; 200 of 200 trials resumed to the uninterrupted result; 153 kills in the middle of a publication",
+        counterexample: "read as power-loss durability, as a result on another file system, or as the private store",
+        source: "docs/evidence-crash/crash-series-linux.txt",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "q8-recorded-runs",
+        dimension: "bytes",
+        scope: "the final local Q8 campaign of 2026-09-11 on synthetic fixtures",
+        input: "all 48 runs of the V2 benchmark and all 24 runs beside a packed canonical-single baseline, kept with their summary",
+        expected: "48 of 48 V2 runs end with Q8_QUAD_EXACT=PASS",
+        counterexample: "their timings read as a speedup of four views, or the runs read as semantic accuracy",
+        source: "docs/evidence-q8-current/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "speed-set-against-v0.6.1",
+        dimension: "timing",
+        scope: "xtask speed-ab: two checkouts of v0.6.1 (A, A2) against main at 876247f (B), one loaded machine, not pinned to cores, 2026-10-20",
+        input: "133 timed cases in 23 of 24 timing programs, 3 rounds with the order rotated",
+        expected: "103 cases faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it; 22 of 23 timed programs printed the same output digest in all three trees",
+        counterexample: "ratios of different programs compared with each other, a ratio read without its A/A band, or the timings read as the claim rather than the output digests",
+        source: "docs/speed-results/2026-10-20-against-v0.6.1/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "speed-set-quiet-machine",
+        dimension: "timing",
+        scope: "xtask speed-ab for the second and third speed packages, a quieter machine, not pinned to cores, 2026-10-25",
+        input: "each change (B) against two checkouts of its baseline (A, A2), 3 rounds with the order rotated",
+        expected: "every example printed the same output digest in A, A2 and B (SPEED_AB_VERDICT=SAME_OUTPUT); the ratios are in each summary",
+        counterexample: "a ratio read without its A/A band, or across programs",
+        source: "docs/speed-results/2026-10-25-quiet-machine/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "media-full-review",
         dimension: "presentation",
         scope: "three historical MP4 files",
@@ -486,6 +686,16 @@ const CLAIMS: &[Claim] = &[
         expected: "full human visual and privacy review; an AI review of every distinct frame is recorded separately",
         counterexample: "decode PASS substituted for visual review",
         source: "docs/MEDIA-DECODE-REVIEW.md",
+        evidence: Evidence::Deferred("NOT_VERIFIED"),
+    },
+    Claim {
+        id: "independent-reproduction",
+        dimension: "reproduction",
+        scope: "the public checks run on a second machine by someone other than the author",
+        input: "a reproduction report through the reproduction form or issue #20",
+        expected: "not verified: no independent run on a second machine has been reported yet",
+        counterexample: "hosted CI or a run on the author's machine read as an independent reproduction",
+        source: "docs/REPRODUCE.md",
         evidence: Evidence::Deferred("NOT_VERIFIED"),
     },
     Claim {
@@ -517,6 +727,273 @@ const CLAIMS: &[Claim] = &[
         counterexample: "different-sized sketches compared with full Q8 scans",
         source: "docs/GEL-EXPERIMENTAL-MEASUREMENTS.md",
         evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
+        id: "text-ai-goal",
+        dimension: "goal",
+        scope: "a text AI that holds a free conversation in Polish and English in sentences of its own, shows the source it relied on and says it does not know",
+        input: "a measured conversation; none has been run",
+        expected: "not established: the goal page gives each commitment as a goal; today the document tools return exact quotations",
+        counterexample: "phrase lookup, exact quotations or answer-or-abstain counts read as the text AI",
+        source: "docs/GOAL.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
+        id: "q8-semantic-accuracy",
+        dimension: "retrieval",
+        scope: "public Q8 records, which hold synthetic values or literal bytes",
+        input: "a measurement of meaning on public Q8 scores; none is part of the checks",
+        expected: "not established: quad_compare prints SEMANTIC_ACCURACY=NOT_MEASURED",
+        counterexample: "bit-identical scores read as accuracy of meaning",
+        source: "docs/Q8-QUAD.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
+        id: "snapshot-power-loss",
+        dimension: "persistence",
+        scope: "gel-evidence snapshot publication under a power cut",
+        input: "a power-cut test; none has been run",
+        expected: "not established: the crash series kills a process, and data in the operating system's or the disk's cache may not survive a power loss",
+        counterexample: "the crash series, the fault tests or a directory flush in the code read as a measured survival of a power cut",
+        source: "docs/CRASH-SERIES.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
+        id: "extreme-tail-latency",
+        dimension: "timing",
+        scope: "the historical Ocean full scans, 100 observations per long run",
+        input: "enough observations for p99.9 to p99.999; not collected",
+        expected: "not established: no stable p99.9, p99.99 or p99.999 tail",
+        counterexample: "the slowest of 100 runs read as a p99.9 or higher tail",
+        source: "docs/OCEAN-SCALE.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+];
+
+/// A sentence of another public file that names registry rows: the file, its
+/// words (a line break or a run of spaces counts as one space) and each row it
+/// stands for with the state the row must keep. Rewording the sentence or
+/// changing the row's state fails `xtask claims` until both agree again.
+struct Citation {
+    file: &'static str,
+    words: &'static str,
+    rows: &'static [(&'static str, &'static str)],
+}
+
+const HARDWARE: &[(&str, &str)] = &[("hardware-memory-compute", "NOT_ESTABLISHED")];
+const HARDWARE_NOT_ESTABLISHED: &str = "Hardware-level memory computation, the direction of the project, is not established by any run on these pages or in this repository";
+
+const CITED: &[Citation] = &[
+    Citation {
+        file: "README.md",
+        words: "The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md))",
+        rows: &[
+            ("text-ai-goal", "NOT_ESTABLISHED"),
+            ("hardware-memory-compute", "NOT_ESTABLISHED"),
+            ("record-history-durability", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "No independent run on a second machine has been reported yet",
+        rows: &[("independent-reproduction", "NOT_VERIFIED")],
+    },
+    Citation {
+        file: "README.md",
+        words: "| `--literal` | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED` |",
+        rows: &[("q8-literal-record", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "README.md",
+        words: "| `quad_compare` | `Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED` |",
+        rows: &[
+            ("q8-one-record-four-views", "SEPARATE_GATE"),
+            ("q8-semantic-accuracy", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "| `mutation-matrix` | `MUTATION_MATRIX=PASS mutants=179` |",
+        rows: &[("format-mutations", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "| `crash-series 20` | `CRASH_SERIES=PASS` with `acknowledged_lost=0` |",
+        rows: &[("crash-series-no-acknowledged-loss", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "48 of 48 recorded runs end with Q8_QUAD_EXACT=PASS",
+        rows: &[("q8-recorded-runs", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "README.md",
+        words: "a replaced document's old citation is refused, and a saved snapshot with one changed byte fails to load under the SHA-256 you kept",
+        rows: &[
+            ("stale-citation", "EXECUTABLE_CHECK"),
+            ("source-roundtrip", "EXECUTABLE_CHECK"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "0 of 2,683 acknowledged snapshots were lost, none was partial, and every trial resumed to the uninterrupted result",
+        rows: &[("crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "README.md",
+        words: "A process kill, not a power cut: power-loss durability is not established.",
+        rows: &[("snapshot-power-loss", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "README.md",
+        words: "Write failures, denied permissions and a full disk leave the previous snapshot intact",
+        rows: &[("publication-os-faults", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "the presentation check fails if either file changes without a rebuild",
+        rows: &[("readme-generated", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header",
+        rows: &[
+            ("tool-version-license", "SEPARATE_GATE"),
+            ("source-license-headers", "SEPARATE_GATE"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1",
+        rows: &[
+            ("no-third-party-packages", "EXECUTABLE_CHECK"),
+            ("sha256-fips-vectors", "EXECUTABLE_CHECK"),
+            ("speed-set-against-v0.6.1", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "normalization follows Unicode 16.0.0",
+        rows: &[("unicode-16-normalization", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "the files can be handed over later and checked with `xtask commitment-check`. It shows the files existed and did not change, not that they are correct.",
+        rows: &[("commitments-fixed-in-time", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "One fixed 128-byte record of 1,024 bits, 64-byte aligned",
+        rows: &[("orb-record-layout", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "README.md",
+        words: "a missing parent or an invalid depth is refused, a wrong parent is not detected",
+        rows: &[("structural-exact-xor", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "README.md",
+        words: "One 1,152-byte record read through four equivalent views",
+        rows: &[("q8-record-size", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/GOAL.md",
+        words: "The text AI is a goal, not a result.",
+        rows: &[("text-ai-goal", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/START-HERE.md",
+        words: "This repository does not establish hardware-level memory computation ([claim registry](CLAIMS.md): `NOT_ESTABLISHED`)",
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "may not survive a power loss. Power-loss durability is not established.",
+        rows: &[("snapshot-power-loss", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "Power-loss durability of the history file stays `NOT_ESTABLISHED` in the [claim registry](CLAIMS.md)",
+        rows: &[("record-history-durability", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "The [claim registry](CLAIMS.md) lists `record-history-exact` as an executable check, the kill series `record-history-kill-series` and the format mutation matrix `history-format-mutations` as `SEPARATE_GATE`, and `record-history-durability`, now a power cut only, as `NOT_ESTABLISHED`.",
+        rows: &[
+            ("record-history-exact", "EXECUTABLE_CHECK"),
+            ("record-history-kill-series", "SEPARATE_GATE"),
+            ("history-format-mutations", "SEPARATE_GATE"),
+            ("record-history-durability", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/MEASURED-PROGRESS.md",
+        words: "The claim registry lists this result as `MEASURED_LOCAL`.",
+        rows: &[("store-kill-during-learning", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "the [claim registry](CLAIMS.md) lists them as `MEASURED_LOCAL`",
+        rows: &[
+            ("gel-answer-verdict-self-read", "MEASURED_LOCAL"),
+            ("gel-natural-question-answers", "MEASURED_LOCAL"),
+            ("gel-answer-set-v2", "MEASURED_LOCAL"),
+            ("gel-beside-bm25-v3", "MEASURED_LOCAL"),
+            ("gel-beside-bm25-v4", "MEASURED_LOCAL"),
+            ("gel-beside-bm25-v5", "MEASURED_LOCAL"),
+            ("gel-beside-bm25-v6", "MEASURED_LOCAL"),
+            ("gel-beside-bm25-v7", "MEASURED_LOCAL"),
+            ("store-kill-during-learning", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- physical memory-side compute or other hardware-level memory computation; - production power-loss durability;",
+        rows: &[
+            ("hardware-memory-compute", "NOT_ESTABLISHED"),
+            ("snapshot-power-loss", "NOT_ESTABLISHED"),
+            ("record-history-durability", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/OCEAN-SCALE.md",
+        words: "100 observations do not establish stable p99.9–p99.999 tails.",
+        rows: &[("extreme-tail-latency", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/Q8-QUAD.md",
+        words: "`Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED`",
+        rows: &[("q8-semantic-accuracy", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/EXTERNAL-CHECKS.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/answer-or-abstain-v3/README.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/answer-or-abstain-v4/README.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/answer-or-abstain-v5/README.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/answer-or-abstain-v6/README.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/answer-or-abstain-v7/README.md",
+        words: HARDWARE_NOT_ESTABLISHED,
+        rows: HARDWARE,
     },
 ];
 
@@ -713,15 +1190,277 @@ fn cross_document() -> Result<bool, String> {
     c.add("B", "approved")?;
     Ok(c.search("not approved")?.status() == "UNKNOWN" && c.search("approved")?.hits.len() == 1)
 }
+/// The published FIPS 180-2 digests, written out here, not computed.
+fn sha256_vectors() -> Result<bool, String> {
+    let known: [(&[u8], &str); 3] = [
+        (
+            b"abc",
+            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        ),
+        (
+            b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+            "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1",
+        ),
+        (
+            b"",
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ),
+    ];
+    let changed = [b'a', b'b', b'c' ^ 1];
+    Ok(known
+        .iter()
+        .all(|(message, want)| gel_source::hex(&digest(message)) == *want)
+        && digest(&changed) != digest(b"abc"))
+}
+fn seeded_orb(seed: u64) -> gel_orb::Orb1024 {
+    gel_orb::Orb1024::from_words(std::array::from_fn(|i| {
+        gel_core::splitmix64(seed + i as u64)
+    }))
+}
+fn orb_layout() -> Result<bool, String> {
+    use gel_orb::Orb1024;
+    use std::mem::{align_of, size_of};
+    let text = |e: gel_core::GelError| e.to_string();
+    let orb = seeded_orb(7);
+    let bytes = orb.to_le_bytes();
+    let mut flipped = orb;
+    flipped
+        .set_bit(1023, !orb.bit(1023).map_err(text)?)
+        .map_err(text)?;
+    Ok(size_of::<Orb1024>() == 128
+        && align_of::<Orb1024>() == 64
+        && bytes.len() == 128
+        && Orb1024::from_le_bytes(&bytes).map_err(text)? == orb
+        && orb.hamming_distance(&flipped) == 1
+        && flipped.to_le_bytes() != bytes
+        && Orb1024::from_le_bytes(&bytes[..127]).is_err()
+        && Orb1024::from_le_bytes(&[0u8; 129]).is_err())
+}
+/// The break-even of docs/STRUCTURAL-CODEC.md for a prototype parent, the
+/// refusals of the decoder, and the limit the README states: a wrong parent
+/// is not detected.
+fn structural_xor() -> Result<bool, String> {
+    use gel_orb::Orb1024;
+    use gel_structural::{EncodedOrb, ParentRef};
+    let text = |e: gel_core::GelError| e.to_string();
+    let parent = seeded_orb(99);
+    let away = |k: usize| {
+        let mut target = parent;
+        for j in 0..k {
+            // 37 is odd, so the first 1,024 positions are all different.
+            let bit = j * 37 % 1024;
+            target.words_mut()[bit / 64] ^= 1u64 << (bit % 64);
+        }
+        target
+    };
+    let (t94, t95) = (away(94), away(95));
+    let encode = |t: &Orb1024, depth: u8| {
+        EncodedOrb::encode_against(t, &parent, ParentRef::Prototype(1), depth)
+    };
+    let e94 = encode(&t94, 0).map_err(text)?;
+    let EncodedOrb::Delta { residual, .. } = &e94 else {
+        return Ok(false);
+    };
+    let with_depth = |depth: u8| EncodedOrb::Delta {
+        parent: ParentRef::Prototype(1),
+        parent_depth: depth,
+        residual: residual.clone(),
+    };
+    Ok(matches!(
+        e94,
+        EncodedOrb::Delta {
+            parent_depth: 1,
+            ..
+        }
+    ) && matches!(encode(&t95, 0).map_err(text)?, EncodedOrb::Literal(_))
+        && e94.decode(Some(&parent)).map_err(text)? == t94
+        && e94.decode(None).is_err()
+        && with_depth(0).decode(Some(&parent)).is_err()
+        && with_depth(3).decode(Some(&parent)).is_err()
+        && encode(&t94, 2).is_err()
+        && e94.decode(Some(&Orb1024::ZERO)).map_err(text)? != t94)
+}
+fn q8_record_size() -> Result<bool, String> {
+    use gel_phase_quad::{grid::DIM, Record};
+    let phase: [u8; DIM] = std::array::from_fn(|j| (j * 7 % 256) as u8);
+    let mask: [bool; DIM] = std::array::from_fn(|j| j % 3 == 0);
+    let record = Record::new(phase, &mask);
+    Ok(std::mem::size_of::<Record>() == 1152
+        && DIM + DIM / 8 == 1152
+        && 4 * std::mem::size_of::<Record>() == 4608
+        && *record.phase() == phase
+        && record.active_mask() == mask)
+}
+/// The package names of `[[package]]` entries, or None when one has a
+/// source or checksum line, which only a package from outside the checkout has.
+fn lock_packages(lock: &str) -> Option<BTreeSet<String>> {
+    let mut names = BTreeSet::new();
+    for entry in lock.split("[[package]]\n").skip(1) {
+        let mut name = None;
+        for line in entry.lines() {
+            if line.starts_with("source = ") || line.starts_with("checksum = ") {
+                return None;
+            }
+            if let Some(n) = line.strip_prefix("name = \"") {
+                name = n.strip_suffix('"');
+            }
+        }
+        names.insert(name?.to_string());
+    }
+    Some(names)
+}
+/// The package names of the workspace members listed in the root Cargo.toml.
+fn member_packages(root: &Path) -> Result<BTreeSet<String>, String> {
+    let manifest = fs::read_to_string(root.join("Cargo.toml")).map_err(|e| e.to_string())?;
+    let list = manifest
+        .split_once("\nmembers = [\n")
+        .and_then(|(_, rest)| rest.split_once("\n]"))
+        .ok_or("Cargo.toml: no members list")?
+        .0;
+    let mut names = BTreeSet::new();
+    for member in list.lines() {
+        let member = member
+            .trim()
+            .strip_prefix('"')
+            .and_then(|m| m.strip_suffix("\","))
+            .ok_or("Cargo.toml: unexpected members line")?;
+        let text = fs::read_to_string(root.join(member).join("Cargo.toml"))
+            .map_err(|e| format!("{member}: {e}"))?;
+        let name = text
+            .lines()
+            .find_map(|l| l.strip_prefix("name = \"")?.strip_suffix('"'))
+            .ok_or(format!("{member}: no package name"))?;
+        names.insert(name.to_string());
+    }
+    Ok(names)
+}
+fn local_packages() -> Result<bool, String> {
+    let root = crate::workspace_root()?;
+    let lock = fs::read_to_string(root.join("Cargo.lock")).map_err(|e| e.to_string())?;
+    let members = member_packages(root)?;
+    Ok(!members.is_empty() && lock_packages(&lock) == Some(members))
+}
+/// The standard socket types, split so that this file does not name them.
+const SOCKET_TYPES: [[&str; 2]; 3] = [["Tcp", "Stream"], ["Tcp", "Listener"], ["Udp", "Socket"]];
+/// The files, of (path relative to the root with `/`, text), that name a socket type.
+fn socket_users(files: &[(String, String)]) -> Vec<String> {
+    let needles: Vec<String> = SOCKET_TYPES.iter().map(|p| p.concat()).collect();
+    files
+        .iter()
+        .filter(|(_, text)| needles.iter().any(|n| text.contains(n.as_str())))
+        .map(|(path, _)| path.clone())
+        .collect()
+}
+fn relative(root: &Path, path: &Path) -> Option<String> {
+    let parts: Option<Vec<&str>> = path
+        .strip_prefix(root)
+        .ok()?
+        .components()
+        .map(|c| c.as_os_str().to_str())
+        .collect();
+    Some(parts?.join("/"))
+}
+/// Every file of the checkout with the given extension, as (relative path, text).
+fn files_with(root: &Path, extension: &str) -> Result<Vec<(String, String)>, String> {
+    let tree = crate::tree_scan::walk(root).map_err(|e| e.to_string())?;
+    let mut files = Vec::new();
+    for (path, meta) in tree.paths.iter().zip(&tree.metadata) {
+        if !meta.is_file() || path.extension().and_then(|e| e.to_str()) != Some(extension) {
+            continue;
+        }
+        let rel = relative(root, path).ok_or("a path that is not UTF-8")?;
+        let text = fs::read_to_string(path).map_err(|e| format!("{rel}: {e}"))?;
+        files.push((rel, text.replace("\r\n", "\n")));
+    }
+    files.sort();
+    Ok(files)
+}
+fn no_network_code() -> Result<bool, String> {
+    let files = files_with(crate::workspace_root()?, "rs")?;
+    Ok(files.len() > 1 && socket_users(&files) == ["xtask/src/isolation.rs"])
+}
+
+/// Words with every line break or run of whitespace as one space.
+fn words(s: &str) -> String {
+    s.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// Every citation is in its file and every row it names carries the state
+/// given; returns the number of (citation, row) pairs checked.
+fn check_citations(
+    claims: &[Claim],
+    cited: &[Citation],
+    read: impl Fn(&str) -> Result<String, String>,
+) -> Result<usize, String> {
+    let mut pairs = 0;
+    for c in cited {
+        if !words(&read(c.file)?).contains(&words(c.words)) {
+            return Err(format!(
+                "{} no longer says \"{}\"; update CITED in xtask/src/claims.rs",
+                c.file, c.words
+            ));
+        }
+        for (id, mode) in c.rows {
+            let row = claims.iter().find(|r| r.id == *id).ok_or(format!(
+                "{} cites {id}, which is not in the registry",
+                c.file
+            ))?;
+            if row.mode() != *mode {
+                return Err(format!(
+                    "{} gives {id} as {mode}; the registry has {}",
+                    c.file,
+                    row.mode()
+                ));
+            }
+            pairs += 1;
+        }
+    }
+    Ok(pairs)
+}
+
+/// In a paragraph (not a table) that links the registry, a code span shaped
+/// like a row id must be a registry id and one shaped like a state must be a
+/// state. Returns the number of such paragraphs.
+fn check_paragraphs(claims: &[Claim], files: &[(String, String)]) -> Result<usize, String> {
+    let is_id = |s: &str| {
+        s.contains('-')
+            && s.starts_with(|c: char| c.is_ascii_lowercase() || c.is_ascii_digit())
+            && s.chars()
+                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-' || c == '.')
+    };
+    let is_state =
+        |s: &str| s.contains('_') && s.chars().all(|c| c.is_ascii_uppercase() || c == '_');
+    let mut paragraphs = 0;
+    for (file, text) in files {
+        if file == "docs/CLAIMS.md" {
+            continue;
+        }
+        for paragraph in text.split("\n\n") {
+            if !paragraph.contains("CLAIMS.md")
+                || paragraph.lines().any(|l| l.trim_start().starts_with('|'))
+            {
+                continue;
+            }
+            paragraphs += 1;
+            for span in paragraph.split('`').skip(1).step_by(2) {
+                if is_id(span) && !claims.iter().any(|c| c.id == span) {
+                    return Err(format!("{file} names `{span}`, which is not a registry id"));
+                }
+                if is_state(span) && !claims.iter().any(|c| c.mode() == span) {
+                    return Err(format!(
+                        "{file} names `{span}`, which is not a registry state"
+                    ));
+                }
+            }
+        }
+    }
+    Ok(paragraphs)
+}
 
 fn registry_table() -> String {
     let mut s = String::from("| ID | Dimension | Evidence mode |\n|---|---|---|\n");
     for c in CLAIMS {
-        let mode = match c.evidence {
-            Evidence::Probe(_) => "EXECUTABLE_CHECK",
-            Evidence::Deferred(s) => s,
-        };
-        s.push_str(&format!("| {} | {} | {} |\n", c.id, c.dimension, mode));
+        s.push_str(&format!("| {} | {} | {} |\n", c.id, c.dimension, c.mode()));
     }
     s
 }
@@ -768,6 +1507,16 @@ pub fn check(root: &Path) -> Result<(), String> {
             c.id, c.dimension, c.scope, c.input, c.expected, c.counterexample, c.source
         );
     }
+    let pairs = check_citations(CLAIMS, CITED, |file| {
+        fs::read_to_string(root.join(file))
+            .map(|t| t.replace("\r\n", "\n"))
+            .map_err(|e| format!("{file}: {e}"))
+    })?;
+    let paragraphs = check_paragraphs(CLAIMS, &files_with(root, "md")?)?;
+    println!(
+        "CLAIMS_CITATIONS=PASS citations={} rows={pairs} paragraphs={paragraphs}",
+        CITED.len()
+    );
     println!("CLAIMS_REGISTRY=PASS; only executable rows were tested, deferred rows remain open");
     Ok(())
 }
@@ -810,5 +1559,93 @@ mod tests {
     #[test]
     fn documentation_and_registry_agree() {
         check(crate::workspace_root().unwrap()).unwrap();
+    }
+    fn read_tree(file: &str) -> Result<String, String> {
+        fs::read_to_string(crate::workspace_root()?.join(file)).map_err(|e| e.to_string())
+    }
+    #[test]
+    fn a_reworded_citation_or_a_changed_state_is_refused() {
+        assert!(check_citations(CLAIMS, CITED, read_tree).unwrap() > CITED.len());
+        // The README first-screen sentence removed from a copy.
+        let first = &CITED[0];
+        let reworded = |file: &str| {
+            let text = read_tree(file)?;
+            Ok(if file == first.file {
+                words(&text).replace(&words(first.words), "")
+            } else {
+                text
+            })
+        };
+        assert!(check_citations(CLAIMS, CITED, reworded).is_err());
+        // The registry with a cited row moved to another state.
+        let mut moved: Vec<Claim> = CLAIMS.to_vec();
+        let row = moved
+            .iter_mut()
+            .find(|c| c.id == "hardware-memory-compute")
+            .unwrap();
+        row.evidence = Evidence::Deferred("MEASURED_LOCAL");
+        assert!(check_citations(&moved, CITED, read_tree).is_err());
+        // A citation of a row that is not in the registry.
+        let unknown = [Citation {
+            file: "docs/GOAL.md",
+            words: "The text AI is a goal",
+            rows: &[("text-ai-gaol", "NOT_ESTABLISHED")],
+        }];
+        assert!(check_citations(CLAIMS, &unknown, read_tree).is_err());
+    }
+    #[test]
+    fn a_paragraph_linking_the_registry_names_only_its_ids_and_states() {
+        let good = "See the [claims](CLAIMS.md): `q8-literal-record` is an executable check and\n`record-history-durability` is `NOT_ESTABLISHED`; `TAMPER=REJECTED`, `--save`.";
+        let file = |text: &str| vec![("docs/X.md".to_string(), text.to_string())];
+        assert_eq!(check_paragraphs(CLAIMS, &file(good)), Ok(1));
+        for bad in [
+            good.replace("q8-literal-record", "q8-literal-recrod"),
+            good.replace("`NOT_ESTABLISHED`", "`NOT_ESTABLISH`"),
+        ] {
+            assert!(check_paragraphs(CLAIMS, &file(&bad)).is_err(), "{bad}");
+        }
+        // Tables and paragraphs without the link are not read.
+        let table = "| a | [claims](CLAIMS.md) `no-such-row` |";
+        let unlinked = "`no-such-row` is `NOT_A_STATE`.";
+        assert_eq!(check_paragraphs(CLAIMS, &file(table)), Ok(0));
+        assert_eq!(check_paragraphs(CLAIMS, &file(unlinked)), Ok(0));
+    }
+    #[test]
+    fn a_package_from_outside_the_checkout_is_refused() {
+        let root = crate::workspace_root().unwrap();
+        let lock = fs::read_to_string(root.join("Cargo.lock")).unwrap();
+        let members = member_packages(root).unwrap();
+        assert_eq!(lock_packages(&lock).as_ref(), Some(&members));
+        let first = "[[package]]\nname = \"gel-bench\"\nversion = \"";
+        assert!(lock.contains(first));
+        let sourced = lock.replacen(
+            first,
+            "[[package]]\nname = \"gel-bench\"\nsource = \"registry+https://github.com/rust-lang/crates.io-index\"\nversion = \"",
+            1,
+        );
+        assert_eq!(lock_packages(&sourced), None);
+        let extra = format!("{lock}\n[[package]]\nname = \"outside\"\nversion = \"1.0.0\"\n");
+        assert_ne!(lock_packages(&extra).as_ref(), Some(&members));
+    }
+    #[test]
+    fn a_library_naming_a_socket_type_is_found() {
+        let socket = SOCKET_TYPES[0].concat();
+        let files = |lib: &str| {
+            vec![
+                ("crates/gel-core/src/lib.rs".to_string(), lib.to_string()),
+                (
+                    "xtask/src/isolation.rs".to_string(),
+                    format!("use std::net::{socket};"),
+                ),
+            ]
+        };
+        assert_eq!(
+            socket_users(&files("pub fn f() {}")),
+            ["xtask/src/isolation.rs"]
+        );
+        assert_eq!(
+            socket_users(&files(&format!("// {socket}"))),
+            ["crates/gel-core/src/lib.rs", "xtask/src/isolation.rs"]
+        );
     }
 }
