@@ -9,54 +9,170 @@ private performance work are intentionally outside this document.
   releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on the Releases page. The tags
   `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0` remain without a release
   page. Changes merged after `v0.8.0` are listed under [after v0.8.0](#after-v080).
-- Ocean Scale R3 1M/10M full-scan results remain as historical measurements;
-  its research archive is not part of the tree from 0.4.0 onward. See [results](OCEAN-SCALE.md).
-- Document readout is on `main` through [PR #4](https://github.com/Gelram-project/gel-ram/pull/4):
-  exact source quotations, Unicode/CR regressions and runtime CI on three OSes.
-- [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) were published
-  in PR #5. [Evidence Lab](EVIDENCE-LAB.md) was merged into main through
-  PR #9 (71142a2, workspace 0.4.0-rc.1); the PR #10 review repairs followed as
-  0c17f6e and became version 0.4.0 ([status](../CANDIDATE-STATUS.md)).
+- The workspace version is 0.8.0 ([Cargo.toml](../Cargo.toml)). A
+  [test](../xtask/tests/version_line.rs) ties every file that names the current
+  release to it, the first line of this section and the "After" heading included.
+- The sections [v0.8.0](#v080) back to [v0.5.0](#v050) list each merged change
+  with its commit, the command that checks it and its remaining acceptance.
+  Earlier release points are recorded in the [publication status](../CANDIDATE-STATUS.md).
+- This page keeps three kinds of statement apart:
+  [merged capabilities](#public-main--already-delivered), each shown by a file,
+  program, test or CI job of this tree; [historical evidence](#historical-evidence),
+  recorded at an earlier revision and not re-run; and gates that are still open,
+  in [open review items](#open-review-items) and the
+  [review work list](#review-work-list-and-next-acceptance). A merged capability
+  is not independent acceptance.
+- How the base arrived, as history: document readout through
+  [PR #4](https://github.com/Gelram-project/gel-ram/pull/4) (exact source
+  quotations, Unicode/CR regressions, runtime CI on three operating systems);
+  [Live Lab](LIVE-LAB.md) and [source building](SOURCE-BUILDER.md) in PR #5;
+  [Evidence Lab](EVIDENCE-LAB.md) through PR #9 (71142a2, workspace
+  0.4.0-rc.1), whose review repairs followed in PR #10 (0c17f6e) and became
+  version 0.4.0.
+- Pull requests, required checks and squash merges are branch rules of the
+  repository settings; this tree does not show them.
+
 ## Public main — already delivered
 
-The following capabilities are present on public `main`:
+Present on `main` at v0.8.0; each entry names what shows it in this tree.
 
-- Rust-only public workspace with locked toolchain/dependency verification.
-- Exact source-bound quotations with SHA-256 provenance and stale/corrupt input rejection.
-- Multipart source readout with explicit gaps, ambiguity and UNKNOWN handling.
+Source readout and integrity:
+
+- Exact source-bound quotations with SHA-256 provenance, refusing stale or
+  corrupt input ([source readout](SOURCE-READOUT.md),
+  [tests](../crates/gel-source/tests/source.rs)); SHA-256 and Unicode NFC are
+  computed by gel-source itself, NFC from UCD 16.0.0 tables that a test
+  regenerates byte for byte (`xtask ucd-tables`,
+  [Unicode normalization](DOCUMENT-READOUT.md#unicode-normalization)).
+- Multipart readout with explicit gaps, ambiguity and UNKNOWN
+  ([source parts](SOURCE-PARTS.md), [tests](../crates/gel-source/tests/parts.rs));
+  bounded quote context with omission flags ([quote context](QUOTE-CONTEXT.md)).
 - GELSRC01 plaintext source bundles with no-replace publication, caller-retained
-  full-file SHA-256 pins and fresh-process reopen.
-- Offline GEL Live Lab for caller-selected UTF-8 documents.
-- Synthetic Q8 records with four reversible coordinate views and exact inverse checks.
-- Independent byte/numeric/ranking audit.
-- Recorded Ocean Scale 1M/10M synthetic full-scan measurements (historical;
-  the research archive was withdrawn in 0.4.0).
-- Linux verification plus Windows/macOS workspace/runtime checks.
-- Evidence Lab (0.4.0-rc.1, PR #9): multi-document collection, exact citations,
-  stale-result rejection, GELSET01 snapshots and fresh-process reopen; native
-  Linux/Windows/macOS CI at the PR #9 head.
-- Active branch rules requiring pull requests, current required checks and squash merges.
+  full-file SHA-256 pins and fresh-process reopen ([source bundle](SOURCE-BUNDLE.md),
+  [source builder](SOURCE-BUILDER.md), [tests](../crates/gel-source/tests/persistence.rs)).
+
+Programs:
+
+- `gel-evidence`: multi-document collection, exact citations, stale-result
+  rejection, GELSET01 snapshots and fresh-process reopen
+  ([Evidence Lab](EVIDENCE-LAB.md), [tests](../crates/gel-live-lab/tests/evidence.rs)),
+  and a batch mode with the schema `gel-evidence/1`
+  ([batch interface](EVIDENCE-BATCH.md), [tests](../crates/gel-live-lab/tests/batch.rs)).
+- `gel-backup`: backup, restore, withdraw, delete and clear
+  ([backup](BACKUP.md), [tests](../crates/gel-live-lab/tests/backup_cli.rs)).
+- `gel-live-lab`: an offline lab for caller-selected UTF-8 documents
+  ([Live Lab](LIVE-LAB.md)); `--literal` places a file's first bytes into one Q8
+  record and `--reopen` checks it under its pin
+  ([your own bytes](LIVE-LAB.md#your-own-bytes-in-one-record),
+  [tests](../crates/gel-live-lab/tests/literal.rs)); `--witness` compares Q8
+  score bits with recorded pins, on every CI platform
+  ([same bits](LIVE-LAB.md#same-bits-on-your-machine)).
+- `gel-license`: `check DIR` and `use ANSWERS_FILE`; not legal advice
+  ([decision guide](LICENSE-DECISION.md), [tests](../crates/gel-live-lab/tests/license_cli.rs)).
+- Every program answers `--version` and `--license`
+  ([binaries](BINARIES.md#version-and-license-of-each-program)).
+
+Records:
+
+- Synthetic Q8 records with four reversible coordinate views, exact inverse
+  checks and one frozen cosine table ([Q8 contract](Q8-QUAD.md),
+  [table](../crates/gel-phase-quad/src/grid.rs)); the views are not independent information.
+- Record history in the GELHIS01 format, rebuilt bit for bit
+  ([record history](RECORD-HISTORY.md), [tests](../crates/gel-history/tests/history.rs)).
+- An independent byte, numeric and ranking audit, run in CI on every platform
+  ([data integrity](DATA-INTEGRITY.md)).
+
+Verification and gates:
+
+- `xtask verify` runs, among its steps, formatting, lints, the workspace tests
+  and doctests, the Rust-only, licensing, workflow-policy, documentation-reference,
+  disclosure, source-header and timing-example gates, the claim registry
+  ([claims](CLAIMS.md)), the answer re-scoring ([external checks](EXTERNAL-CHECKS.md)),
+  the recount of the review work list below, the crash series on Unix
+  ([crash series](CRASH-SERIES.md)), the format mutation matrices
+  ([matrices](MUTATION-MATRIX.md)) and the runtime demos ([gates](GATES.md),
+  [disclosure gate](PUBLIC-DISCLOSURE-GATE.md), [recorder safety](RECORDER-SAFETY.md)).
+- One command for a local report and a short witness (`xtask reproduce`,
+  `xtask witness`, [reproduce](REPRODUCE.md)); a release package built twice and
+  compared (`xtask rebuild-check`, [binaries](BINARIES.md#building-the-same-bytes));
+  a digest that fixes a directory that is not published
+  (`xtask commitment-check`, [commitments](COMMITMENTS.md)); an A/B timing tool
+  with an A/A control (`xtask speed-ab`, [A/B tool](SPEED-AB.md)).
+- No third-party package in [Cargo.lock](../Cargo.lock)
+  ([dependency inventory](DEPENDENCY-INVENTORY.md),
+  [test](../xtask/tests/dependency_inventory.rs)); Rust pinned to 1.85.0
+  ([toolchain](../rust-toolchain.toml)).
+- CI: `verify`, the source manifest, network isolation, a full-disk
+  publication and a sanitized evidence report on Linux, and workspace tests and
+  runtime checks on macOS and Windows ([CI workflow](../.github/workflows/ci.yml),
+  [CI evidence](CI-EVIDENCE.md)); binary packages built and checked in CI
+  ([binaries workflow](../.github/workflows/binaries.yml)); the generated README
+  rechecked ([README workflow](../.github/workflows/readme-presentation.yml),
+  [presentation guide](README-PRESENTATION.md)).
+- A property-to-test map checked on every CI platform ([property map](PROPERTY-TESTS.md))
+  and the goal stated once ([goal](GOAL.md), [test](../xtask/tests/goal_statement.rs)).
+
+### Historical evidence
+
+Recorded at an earlier revision or on the author's machine and kept as it was;
+not re-run by the checks above unless stated.
+
+- Ocean Scale R3 1M/10M synthetic full-scan measurements; the research archive
+  was withdrawn in 0.4.0 ([results](OCEAN-SCALE.md)).
+- Native CI of the PR #9 head ([platform record](PLATFORM-REVIEW.md)) and the
+  per-platform reports of two later revisions ([recorded reports](evidence-ci/README.md)).
+- Collection measurements r1, whose percentiles `collection_recheck` recomputes
+  from the raw observations, without timing again, in `verify` and on every CI
+  platform ([record](evidence-collection/README.md)).
+- The comparison with grep and sha256sum, run r1 ([summary](evidence-bench-r1/summary.txt)),
+  and the mutation campaign r1 ([campaign](evidence-mutation-campaign-r1/CAMPAIGN.txt)), each on one host.
+- Timing records of the v0.7.0 speed work on one machine
+  ([against v0.6.1](speed-results/2026-10-20-against-v0.6.1/README.md),
+  [quiet machine](speed-results/2026-10-25-quiet-machine/README.md)).
+- Recorded answers of private development builds to frozen question sets,
+  re-scored on every verify run but not re-run ([external checks](EXTERNAL-CHECKS.md)).
+- Author-reported component measurements of the private implementation
+  ([experimental measurements](GEL-EXPERIMENTAL-MEASUREMENTS.md)).
 
 ## Open review items
-1. Independent, non-author review of the multi-document Evidence Lab: source
-   boundaries, stale citation invalidation, snapshots and independently
-   recomputed raw measurements. The developer-authored assessment is not blind
-   validation. Single-document import/read/save/reopen belongs to the earlier published base.
-2. Keep per-platform CI evidence for every revision. Unix permission and
+
+Re-checked against the tree at v0.8.0 (`319b4e8`); the state words are those of
+the [review work list](#how-to-read-the-review-work-list).
+
+1. OPEN. Independent, non-author review of the multi-document Evidence Lab:
+   source boundaries, stale citation invalidation, snapshots and independently
+   recomputed raw measurements. The [assessment](ASSESSMENT-REVIEW.md) is
+   developer-authored, not blind validation; no outside review is recorded.
+   Single-document import/read/save/reopen belongs to the earlier published base.
+2. PARTIAL. Per-platform CI evidence for every revision: every CI run prints a
+   sanitized report on Linux, macOS and Windows (`xtask ci-evidence`), but runs
+   and logs expire and only two revisions are kept in the tree
+   ([recorded reports](evidence-ci/README.md)). Unix permission and
    directory-sync checks remain platform-specific, not portable guarantees.
-3. Provide one-command local reporting with raw output, resource/timing scope and
-   failures retained. Never infer robust performance from a single UI timing.
-4. Reproduce numeric Q8 evidence on an independent second host, including
-   regressions and complete memory costs. Keep addressed readout and full scan
-   distinct; coordinate views are not independent information.
-5. Evaluate knowledge retrieval only after defining a redistributable corpus,
-   an explicit public encoder, held-out questions and abstention policy. Phrase
+3. DONE_SCOPED, since v0.5.0. One-command local reporting: `xtask reproduce`
+   writes into one new directory the raw output of every step, host and load
+   at the start and end, each step's result and the SHA-256 of every file; a
+   failed step keeps its partial logs and the later steps are NOT_RUN
+   ([reproduce](REPRODUCE.md)). A run by someone outside the project is item 4.
+   Never infer robust performance from a single timing.
+4. OPEN. Reproduce numeric Q8 evidence on an independent second host, including
+   regressions and complete memory costs (work list A20). `gel-live-lab --witness`
+   gives the same score bits on the three CI platforms (PR #69), and memory per
+   mutation is measured on one host (A09); hosted CI is not a second host. Keep
+   addressed readout and full scan distinct; coordinate views are not
+   independent information.
+5. PARTIAL. Knowledge retrieval: the published question sets were frozen before
+   any run and use a published abstention rule ([external checks](EXTERNAL-CHECKS.md)),
+   but the measured builds and their bank are private and there is no public
+   encoder, so no retrieval result can be re-run from this tree. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
 ## After v0.8.0
 
-Nothing has been merged after v0.8.0 apart from this roadmap naming the
-commit of PR #97 in the v0.8.0 section.
+| Change | Commit | Command | Evidence | Remaining acceptance |
+|---|---|---|---|---|
+| The v0.8.0 section names the commit of PR #97 | 319b4e8 (PR #98) | none | [v0.8.0](#v080) | None |
+| The version boundary, the delivered capabilities and the open review items describe v0.8.0: each capability links what shows it in this tree, historical evidence is listed apart, and each open item is re-checked against the tree; the status file records v0.8.0 as published; tests require the first line of the version boundary and the heading of this section to name the workspace version, every relative link and anchor of this file and of the status file to resolve, and the historical test count of the status file to equal its platform record | this change | `cargo test -p xtask --test version_line --test doc_links` | [version boundary](#version-boundary), [open review items](#open-review-items), [status](../CANDIDATE-STATUS.md) | An independent reading of this page against the tree; the link test covers these two files only |
 
 ## v0.8.0
 

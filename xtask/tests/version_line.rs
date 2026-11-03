@@ -15,6 +15,11 @@ const MENTIONS: &[(&str, &str)] = &[
     ("CANDIDATE-STATUS.md", "\nVERSION_LINE={v}\n"),
     ("CANDIDATE-STATUS.md", "\nTARGET_RELEASE={v}\n"),
     ("SECURITY.md", "(version line {v})"),
+    (
+        "docs/ROADMAP.md",
+        "## Version boundary\n- Tagged `v{v}` is the current release",
+    ),
+    ("docs/ROADMAP.md", "\n## After v{v}\n"),
     (".github/ISSUE_TEMPLATE/bug.yml", "placeholder: v{v} or"),
     ("docs/REPRODUCE.md", "\ngit checkout v{v}\n"),
     ("docs/TRY-IT.md", "\ngit checkout v{v}\n"),
