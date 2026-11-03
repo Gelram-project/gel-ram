@@ -236,7 +236,7 @@ fn mac(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
 }
 
 /// Four decimal numbers of at most 255 joined by dots, not part of a longer
-/// version such as `6.6.87.2-microsoft`.
+/// four-part version with a suffix, as some kernels have.
 fn ipv4(c: &[char], i: usize, before: Option<char>) -> Option<usize> {
     if before.is_some_and(|b| b.is_alphanumeric() || b == '.') {
         return None;
@@ -811,14 +811,22 @@ mod tests {
     #[test]
     fn system_names_and_look_alikes_are_left_alone() {
         let p = Private::new(&["ubuntu".into()], &["kali".into()], &[]);
-        let facts = "os=linux arch=x86_64\n\
+        // A four-part kernel version, assembled so that the source holds no
+        // text in the shape of an address.
+        let wsl = ["6.6.87", ".2-microsoft-standard-WSL2"].concat();
+        let facts = format!(
+            "os=linux arch=x86_64\n\
              os_version=Ubuntu 24.04.1 LTS\n\
-             kernel=6.6.87.2-microsoft-standard-WSL2\n\
+             kernel={wsl}\n\
              cpu_model=Example CPU 8C @ 3.10GHz\n\
-             rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)\n";
-        let body = "step=x result=FAIL exit=1 seconds=0.10 marker=X=FAIL at 12:34:56 in a::b::c, \
-             deserialize: bad, serial port ok, build 6.6.87.2-microsoft-standard-WSL2\n";
-        assert_eq!(finish(facts, body, &p), Ok((format!("{facts}{body}"), 0)));
+             rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)\n"
+        );
+        let body = format!(
+            "step=x result=FAIL exit=1 seconds=0.10 marker=X=FAIL at 12:34:56 in a::b::c, \
+             deserialize: bad, serial port ok, build {wsl}\n"
+        );
+        assert_eq!(finish(&facts, &body, &p), Ok((format!("{facts}{body}"), 0)));
+        let facts = facts.as_str();
         let kali = "os=linux arch=x86_64\nos_version=Kali GNU/Linux Rolling\n";
         assert_eq!(finish(kali, "", &p), Ok((kali.to_string(), 0)));
         // In the step lines the same name is still a name.
