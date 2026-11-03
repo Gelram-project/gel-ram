@@ -11,6 +11,7 @@ mod crash_series;
 mod disclosure;
 mod history_crash_series;
 mod history_mutation_matrix;
+mod host_report;
 mod isolation;
 mod license_metadata;
 mod license_self;

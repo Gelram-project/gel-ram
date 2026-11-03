@@ -151,8 +151,13 @@ pub fn run(args: &[String]) -> Result<(), String> {
     text.push_str(&host_lines());
     let _ = writeln!(text, "{isolation}");
     text.push_str(&load("start"));
-    let write =
-        |text: &str| fs::write(out.join("REPRODUCTION.txt"), text).map_err(|e| e.to_string());
+    // The error line of a failed step may name a path; the file people share
+    // passes the same filter as the witness block.
+    let private = super::host_report::Private::of_this_host(&[&root, &out]);
+    let write = |text: &str| {
+        let (clean, _) = super::host_report::sanitise(text, &private);
+        fs::write(out.join("REPRODUCTION.txt"), clean).map_err(|e| e.to_string())
+    };
     if require && !isolation.ends_with("=VERIFIED") {
         text.push_str("result=REFUSED network isolation was required but not verified\n");
         write(&text)?;

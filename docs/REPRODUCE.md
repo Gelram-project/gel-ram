@@ -1,5 +1,8 @@
 # Run the public verification suite and record platform exclusions
 
+For one short command and one block to paste, see
+[check on your hardware](CHECK-ON-YOUR-HARDWARE.md). The complete suite:
+
 ```text
 cargo run --locked --offline -p xtask -- reproduce NEW_DIR_OUTSIDE_CHECKOUT [--require-isolation] [--strict]
 ```
@@ -76,16 +79,21 @@ line that program prints:
 A step passes only when its process succeeds and its last line of that kind is the
 passing one; a missing line is a failure. Every step runs even when an earlier one
 fails. The two kill series need a Unix host and are SKIPPED elsewhere, with the
-reason. The block names the commit, the operating system, CPU, memory and rustc,
-each step's line and the block's own SHA-256, and ends with
-`GEL_WITNESS=PASS|FAIL pass=… fail=… skipped=…`. It contains no path, user name
-or host name; the same block is in NEW_DIR/WITNESS.txt, and each step's whole
-output is in NEW_DIR/<step>.log. On the author's machine (24 threads) the six
-steps take about 70 seconds.
+reason. The block names the tool version, the commit, the operating system and
+its version, CPU, logical cores, memory and rustc, each step's line, exit status
+and wall time, and the block's own SHA-256, and ends with
+`GEL_WITNESS=PASS|FAIL pass=… fail=… skipped=…`. Before it is written, a filter
+replaces any host name, user name, path, IP or MAC address and serial number it
+finds and counts the replacements; a block that still holds one is refused. The
+same block is in NEW_DIR/WITNESS.txt, and each step's whole output is in
+NEW_DIR/<step>.log (not filtered). On the author's machine (24 threads) the six
+steps take about 70 seconds. What the block holds and how to share it:
+[check on your hardware](CHECK-ON-YOUR-HARDWARE.md).
 
 ## Report it
 
 Open a [reproduction issue](https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml)
-and paste REPRODUCTION.txt. After a successful run it contains no user name, host
-name or absolute path; an error message of a failed step may include a path, so read
-it before posting. Slow and failing runs are as useful as fast ones.
+and paste REPRODUCTION.txt or the witness block. REPRODUCTION.txt passes the same
+filter as the witness block, so the error line of a failed step names no host, user,
+path or address; read it before posting all the same. Slow and failing runs are as
+useful as fast ones.

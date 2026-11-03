@@ -128,10 +128,13 @@ remain documented as historical author-reported measurements in
 
 ## 7. Share a useful independent result
 
+The shortest way is one command that prints one block to paste:
+[check on your hardware](CHECK-ON-YOUR-HARDWARE.md).
+
 Open:
 https://github.com/Gelram-project/gel-ram/issues/new?template=reproduction.yml
 
-Include:
+For your own benchmark, include:
 
 - exact commit or release tag;
 - exact command;
