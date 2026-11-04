@@ -4,10 +4,16 @@ This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), a card of one stored Q8 record drawn from the 48
 recorded comparison runs in docs/evidence-q8-current, colour-coded workflow
-badges and six real GIF previews. Two of its numbers are counted from files when
-the README is built: the published commitments in docs/COMMITMENTS.md and the
-packages in Cargo.lock, which the builder refuses to count when one comes from
-outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+badges and six real GIF previews. Each section leads with a picture and one
+line; the full wording, with its limits, is folded under the picture in a
+`<details>` block and stays in the file. The pictures added with that layout are
+drawn from files too: what is checked here, private or not established; the
+README's own commands with the line each prints, drawn and not a recording; the
+timing set of 2026-10-20 beside its re-run; versions 0.7 and 0.8 at a glance; the
+published commitments on a time line; and the parts of the memory core. Two
+numbers in the text are counted from files when the README is built: the
+published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
+which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
@@ -46,8 +52,10 @@ by hand.
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
 Each preview retains its recorded source. Three cards over 12 seconds are edited
-log replays, not the CLI's elapsed execution time. No generated mock terminal,
-unmeasured speed figure, static CI-passing badge or source-truth claim is added.
+log replays, not the CLI's elapsed execution time. No generated mock terminal
+output, unmeasured speed figure, static CI-passing badge or source-truth claim
+is added: the card of commands shows only the README's command lines and the
+line to look for, and says it is drawn.
 
 ## Accessibility and scope
 

@@ -188,6 +188,54 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
         "69ae8d91a9881b27b08bcc6bb9a2a64d8f866be43749f07e14017c2b194a87b2",
     ),
     (
+        "media/presentation/core-dark.svg",
+        "b88d2c7e1887e4c4a814c012ccd67fcdab1b2df870281ab08d601fae73da471c",
+    ),
+    (
+        "media/presentation/core-light.svg",
+        "7bb51b6b5ea707765dff79e6f6842e7194166a9157e8bb09653cdb640f3dbaec",
+    ),
+    (
+        "media/presentation/glance-dark.svg",
+        "6ad690de975cb09f36b0422ecdb0eea5a7e420a5085966aa3127d948f605a1d8",
+    ),
+    (
+        "media/presentation/glance-light.svg",
+        "a20dcf0671cce9675b1f555b090aa9a847f8a0c84ae8cb4a5f7760172bb71837",
+    ),
+    (
+        "media/presentation/pledges-dark.svg",
+        "5374ea09c49a3a4590f928b87c6cb9c7431f4580f594009fe0f7ba13fc999ee8",
+    ),
+    (
+        "media/presentation/pledges-light.svg",
+        "e6ac58b7b086f5b0a7a84b619ae8c4e3ba13b8c543e1b913ed16215be1c7f2b8",
+    ),
+    (
+        "media/presentation/rerun-dark.svg",
+        "48f48cf6f5ab54d870f5bd262fabc0a2b90a25350d0cc5323099ed777f999c6b",
+    ),
+    (
+        "media/presentation/rerun-light.svg",
+        "66d87aed91efa463ec49ea4fcfac6c0d4540732551367f91e3c3490762f10993",
+    ),
+    (
+        "media/presentation/status-dark.svg",
+        "35abe8168c42bd851e9f5a462b4645ecf6fd6c30c5cbbcd2db3e629e21f46caa",
+    ),
+    (
+        "media/presentation/status-light.svg",
+        "01a3a54058a187c3aabf22da24de381a8768febe29852a733d33c89e4533d157",
+    ),
+    (
+        "media/presentation/terminal-dark.svg",
+        "420dc93197ba66ab22e1367a906cde442ca082042185f2ee86a7d33f77f0fa49",
+    ),
+    (
+        "media/presentation/terminal-light.svg",
+        "1728065734553e3a102fa5bb12e83bc917bce1832f3ad6a87eae4c15a38f6a93",
+    ),
+    (
         "media/presentation/license-light.svg",
         "5dc7211d988bc6db1122b25715786f68f71bde30af17c254015112866de7cb06",
     ),

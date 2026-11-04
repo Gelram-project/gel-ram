@@ -171,16 +171,25 @@ conversation in Polish and English: it answers in sentences of its own, not
 pasted excerpts, from what it holds, shows the source it relied on, and says it
 does not know when it holds nothing on the question.
 
+__STATUS__
+
+The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of snapshots and of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md)).
+
+<details><summary>What is public and what is private, in words</summary>
+
 | Status | What it covers |
 |:---|:---|
 | **You can check it here** | One record read back exactly through four views; a changed byte refused; a killed process losing nothing it confirmed. One command each, [below](#check-it-yourself). |
 | **Private** | The step that prints text into records, and the private build that answers from them; both exist only on the author's machine. [__COMMITMENTS__ published commitments](docs/COMMITMENTS.md) fix the exact contents of private source trees, data sets and a sealed sample as of their dates; which holds what is not published. |
-| **Not established** | The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md)). |
+| **Not established** | The text AI, hardware-level memory computation and power-cut durability of snapshots and of the record history; see the line above. |
+
+</details>
 
 ## Check it yourself
 
-With [Git](https://git-scm.com/) and [rustup](https://rustup.rs) installed, run each line separately.
-Only `git clone` and `rustup` need a network; no model and no private data are involved.
+__TERMINAL__
+
+With [Git](https://git-scm.com/) and [rustup](https://rustup.rs) installed, run each line separately; only `git clone` and `rustup` need a network.
 No independent run on a second machine has been reported yet: [post yours in issue #20](https://github.com/Gelram-project/gel-ram/issues/20).
 
 ```sh
@@ -195,6 +204,10 @@ cargo run --locked --offline -p xtask -- crash-series 20
 cargo run --locked --offline -p xtask -- verify
 ```
 
+<details><summary>What each line shows, and its limit</summary>
+
+No model and no private data are involved.
+
 | Command | Line to look for | What it shows | Its limit |
 |:---|:---|:---|:---|
 | `--literal` | `ROUNDTRIP=4/4 DIFFERENT_BITS=0`, `TAMPER=REJECTED` | The first 1,024 bytes of any file you name, placed in one record; all four views give them back bit for bit, and a copy with one changed byte is refused | Your bytes as they are, not knowledge printing: no meaning and no search |
@@ -203,19 +216,30 @@ cargo run --locked --offline -p xtask -- verify
 | `crash-series 20` | `CRASH_SERIES=PASS` with `acknowledged_lost=0` | Evidence Lab is killed 20 times at random while it writes; nothing it confirmed is lost | Recorded on Linux; `verify` runs it on Unix hosts only; a process kill, not a power cut |
 | `verify` | `GEL_VERIFY_ALL=PASS` | The workspace tests and public gates, with short forms of the runs above | Crash series on Unix hosts only; the private build is not in this checkout |
 
+</details>
+
 ## One record, four exact views
 
 __RECORD__
+
+One record, 1,152 bytes, read four ways, each bit for bit. [Contract](docs/Q8-QUAD.md) · [the recorded runs](docs/evidence-q8-current/README.md)
+
+<details><summary>What the four views are, and what they are not</summary>
 
 A record is stored once, in 1,152 bytes. A view reads the same values in another
 fixed arrangement; each of the four views scores exactly as a separate, fully
 written-out copy would, bit for bit, and four such copies would take 4,608 bytes.
 Four views are not four independent memories, four votes or a speedup.
-[Contract](docs/Q8-QUAD.md) · [the recorded runs](docs/evidence-q8-current/README.md)
+
+</details>
 
 ## Exact bytes, or a refusal
 
 __FLOW__
+
+Your quote comes back byte for byte; a changed byte is refused. [Evidence Lab guide](docs/EVIDENCE-LAB.md) · [as text](media/gifs/__HERO_ID__.txt)
+
+<details><summary>What Evidence Lab checks, and what a hash does not show</summary>
 
 Evidence Lab (`gel-evidence`), the public collection tool, works on your own
 UTF-8 files: each quotation comes back byte for byte with its byte range, a
@@ -225,11 +249,17 @@ these are your bytes, not that the source is true or private: snapshots and
 backups hold plain text ([backup contract](docs/BACKUP.md)). It is phrase lookup,
 not question answering. Its demo,
 `cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo`,
-ends with `GEL_EVIDENCE_DEMO=PASS`. [Evidence Lab guide](docs/EVIDENCE-LAB.md) · [a changed byte refused, as text](media/gifs/__HERO_ID__.txt)
+ends with `GEL_EVIDENCE_DEMO=PASS`.
+
+</details>
 
 ## A killed process loses nothing it confirmed
 
 __CRASH__
+
+200 random process kills in one recorded run: 0 of 2,683 confirmed snapshots lost. [Crash series](docs/CRASH-SERIES.md)
+
+<details><summary>The recorded series in words</summary>
 
 In the recorded series Evidence Lab was killed at random moments in 200 trials:
 0 of 2,683 acknowledged snapshots were lost, none was partial, and every trial
@@ -237,26 +267,69 @@ resumed to the uninterrupted result ([crash series](docs/CRASH-SERIES.md)).
 Write failures, denied permissions and a full disk leave the previous snapshot
 intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)).
 
+</details>
+
 ## The public checks, drawn from their files
 
 __BARS__
 
 __WALL__
 
+Every changed copy refused under its original SHA-256; CI requires every mapped property on three platforms, Unix-only tests exempt on Windows. [CI evidence](docs/CI-EVIDENCE.md)
+
+<details><summary>Where these images come from</summary>
+
 Both images are drawn from the committed mutation report and the property map when the README is built; the presentation check fails if either file changes without a rebuild. The map shows the rule CI enforces, not the outcome of one run ([CI evidence](docs/CI-EVIDENCE.md)).
+
+</details>
+
+## Speed, timed against v0.6.1
+
+__SPEED__
+
+__RERUN__
+
+Each case timed against two copies of the baseline, then once more with no other work running; most are faster, some slower. [Re-runs](docs/speed-results/2026-11-04-reruns/README.md)
 
 ## New in 0.8, and in 0.7
 
-__SPEED__
+__GLANCE__
+
+<details><summary>What changed, in words</summary>
 
 - **New in 0.8, programs and files name their license:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept. The license guides now follow the words of the LICENSE ([release notes](RELEASE-NOTES-v0.8.0.md)).
 - **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
 - **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([v0.7.0 in the roadmap](docs/ROADMAP.md#v070)).
 
+</details>
+
+## Private work, fixed in time
+
+__PLEDGES__
+
+Private files, hashed now; checkable once the owner hands them over. A hash shows they did not change, not that they are correct. [Commitments](docs/COMMITMENTS.md)
+
+<details><summary>What a commitment shows, and what it does not</summary>
+
+A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of every file in a private directory; the files can be handed over later and checked with `xtask commitment-check`.
+It shows the files existed and did not change, not that they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.
+
+</details>
+
+## See it in action
+
+Six edited 12-second replays of recorded public-tool runs; the pacing is not execution time.
+[Static view](media/gifs/STATIC.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
+
+__GRID__
 ## Using GEL RAM
 
 __LICENSE__
+
+Source-available: noncommercial use and evaluation are allowed; Monetized Use needs a written Commercial Agreement first; the [LICENSE](LICENSE) controls.
+
+<details><summary>The license in words</summary>
 
 GEL RAM uses the GEL RAM Noncommercial Reciprocal License 1.0: source-available,
 not an OSI-approved open-source license. You may reproduce, run, study, modify
@@ -276,18 +349,13 @@ a [CLA 2.0](CLA.md) accepted by both sides.
 This README adds no rights; the [LICENSE](LICENSE) controls
 ([licensing guide](LICENSING.md) · [license decision guide](docs/LICENSE-DECISION.md) · [commercial terms](COMMERCIAL-LICENSE.md) · [license pins](docs/LICENSE-PINS.md)).
 
-## Private work, fixed in time
+</details>
 
-A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of every file in a private directory; the files can be handed over later and checked with `xtask commitment-check`.
-It shows the files existed and did not change, not that they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.
-
-## See it in action
-
-Six edited 12-second replays of recorded public-tool runs; the pacing is not execution time.
-[Static view](media/gifs/STATIC.md) · [Original source and hashes](media/gifs/MANIFEST.txt)
-
-__GRID__
 ## The memory core
+
+__CORE__
+
+<details><summary>Each part, and the test that checks it</summary>
 
 | Part | What it does | Check it |
 |:---|:---|:---|
@@ -300,6 +368,8 @@ __GRID__
 | Memory cost (`gel-physics`) | Pointer-chase latency and read bandwidth of your own RAM from 48 KiB to 256 MiB; nanoseconds and GiB/s only, compared within one machine | `cargo run --locked --offline --release -p gel-physics -- 5` · [method](docs/PERFORMANCE.md) |
 
 `cargo test --locked --offline -p CRATE` runs the tests named here; `cargo run --locked --offline --release -p gel-cli -- selftest` checks the first four parts in one run (`GEL_SELFTEST_V2=PASS`).
+
+</details>
 
 ## Documentation
 
@@ -327,10 +397,16 @@ This presentation has two views. The root README is normal GitHub Markdown with
 an SVG banner with the GEL logo as a turning 3D glass cube (a still version when
 reduced motion is requested), a card of one stored Q8 record drawn from the 48
 recorded comparison runs in docs/evidence-q8-current, colour-coded workflow
-badges and six real GIF previews. Two of its numbers are counted from files when
-the README is built: the published commitments in docs/COMMITMENTS.md and the
-packages in Cargo.lock, which the builder refuses to count when one comes from
-outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+badges and six real GIF previews. Each section leads with a picture and one
+line; the full wording, with its limits, is folded under the picture in a
+`<details>` block and stays in the file. The pictures added with that layout are
+drawn from files too: what is checked here, private or not established; the
+README's own commands with the line each prints, drawn and not a recording; the
+timing set of 2026-10-20 beside its re-run; versions 0.7 and 0.8 at a glance; the
+published commitments on a time line; and the parts of the memory core. Two
+numbers in the text are counted from files when the README is built: the
+published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
+which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
@@ -369,8 +445,10 @@ by hand.
 The original GIF files, PNG alternatives, transcripts, fixtures and
 [media manifest](../media/gifs/MANIFEST.txt) are not regenerated or relabelled.
 Each preview retains its recorded source. Three cards over 12 seconds are edited
-log replays, not the CLI's elapsed execution time. No generated mock terminal,
-unmeasured speed figure, static CI-passing badge or source-truth claim is added.
+log replays, not the CLI's elapsed execution time. No generated mock terminal
+output, unmeasured speed figure, static CI-passing badge or source-truth claim
+is added: the card of commands shows only the README's command lines and the
+line to look for, and says it is drawn.
 
 ## Accessibility and scope
 
@@ -1181,7 +1259,22 @@ fn chip_path(i: usize, dark: bool) -> String {
     format!("media/presentation/chips/{:02}-{theme}.svg", i + 1)
 }
 /// A light/dark SVG picture. Only the width is fixed, so it keeps its proportions.
+/// Text made safe for SVG and HTML text and attribute values.
+fn xml(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '&' => out.push_str("&amp;"),
+            '<' => out.push_str("&lt;"),
+            '>' => out.push_str("&gt;"),
+            '"' => out.push_str("&quot;"),
+            _ => out.push(c),
+        }
+    }
+    out
+}
 fn themed(light: &str, dark: &str, alt: &str, width: u32) -> String {
+    let alt = xml(alt);
     format!(
         r#"<picture><source media="(prefers-color-scheme: dark)" srcset="{dark}"><img alt="{alt}" src="{light}" width="{width}"></picture>"#
     )
@@ -2775,6 +2868,2707 @@ fn speed_picture(s: &SpeedSet) -> String {
         1200,
     )
 }
+/// The README's own pictures added with the visual layout: one card per
+/// section, each drawn from the files it shows. A card is (name, drawing,
+/// alternative text); the drawing comes in a light and a dark theme.
+type Visual = (
+    &'static str,
+    fn(bool) -> Result<String>,
+    fn() -> Result<String>,
+);
+const VISUALS: [Visual; 6] = [
+    ("status", status_card, status_alt),
+    ("terminal", terminal_card, terminal_alt),
+    ("rerun", rerun_card, rerun_alt),
+    ("glance", glance_card, glance_alt),
+    ("pledges", pledges_card, pledges_alt),
+    ("core", core_card, core_alt),
+];
+fn visual_path(name: &str, dark: bool) -> String {
+    let theme = if dark { "dark" } else { "light" };
+    format!("media/presentation/{name}-{theme}.svg")
+}
+/// A visual for the README; without its data the placeholder stays and fails the checks.
+fn visual_picture(name: &str) -> String {
+    let Some((_, draw, alt)) = VISUALS.iter().find(|v| v.0 == name) else {
+        return format!("__{}__ unknown visual", name.to_ascii_uppercase());
+    };
+    match (draw(false), alt()) {
+        (Ok(_), Ok(alt)) => themed(
+            &visual_path(name, false),
+            &visual_path(name, true),
+            &alt,
+            1200,
+        ),
+        (Err(e), _) | (_, Err(e)) => format!("__{}__ {e}", name.to_ascii_uppercase()),
+    }
+}
+
+// ===== VISUAL status BEGIN =====
+/// The three columns: heading, the start of the README status-table row the
+/// items are quoted from, and the items. `status_rows` holds every item to its
+/// own row (the last column also to the line under the card).
+const STATUS_COLUMNS: [(&str, &str, [&str; 3]); 3] = [
+    (
+        "Check it here",
+        "| **You can check it here** |",
+        [
+            "One record read back exactly through four views",
+            "A changed byte refused",
+            "A killed process losing nothing it confirmed",
+        ],
+    ),
+    (
+        "Private",
+        "| **Private** |",
+        [
+            "The step that prints text into records",
+            "The private build that answers from them",
+            "Both exist only on the author's machine",
+        ],
+    ),
+    (
+        "Not established",
+        "| **Not established** |",
+        [
+            "The text AI is a goal, not a result",
+            "Hardware-level memory computation",
+            "Power-cut durability of snapshots and of the record history",
+        ],
+    ),
+];
+/// The start of the line under the card, which names what is not established.
+const STATUS_LINE: &str = "The text AI is a goal, not a result (";
+/// The foot of the first and of the last column; each is quoted like the items.
+const STATUS_FEET: [&str; 2] = ["One command each", "NOT_ESTABLISHED"];
+/// The foot of the middle column, beside the number of published commitments.
+const STATUS_PLEDGE: [&str; 3] = [
+    "published commitments",
+    "fix private files",
+    "as of their dates",
+];
+/// Refuses unless every item and foot of a column is quoted from its own row of
+/// the README's status table; the last column may also quote the line under the card.
+fn status_rows(readme: &str) -> Result<()> {
+    let low = readme.to_lowercase();
+    let line = low
+        .lines()
+        .find(|l| l.starts_with(&STATUS_LINE.to_lowercase()))
+        .ok_or("the README has no line under the status card")?;
+    for (i, (heading, row, items)) in STATUS_COLUMNS.iter().enumerate() {
+        let mut words = low
+            .lines()
+            .find(|l| l.starts_with(&row.to_lowercase()))
+            .ok_or(format!("the README has no status row {row}"))?
+            .to_string();
+        let mut quoted: Vec<&str> = items.to_vec();
+        match i {
+            0 => quoted.push(STATUS_FEET[0]),
+            2 => {
+                words.push_str(line);
+                quoted.push(STATUS_FEET[1]);
+            }
+            _ => {}
+        }
+        for item in quoted {
+            if !words.contains(&item.to_lowercase()) {
+                return Err(format!("{heading}: the README row does not say {item}").into());
+            }
+        }
+    }
+    Ok(())
+}
+/// A conservative width test: 0.62 of the font size per character, plus any
+/// letter spacing, must leave 8 % of the room free, so a wider fallback font fits.
+fn status_fit(text: &str, size: f64, spacing: f64, room: f64) -> Result<()> {
+    let need = text.chars().count() as f64 * (0.62 * size + spacing);
+    if need > 0.92 * room {
+        return Err(format!("{text} does not fit {room:.0} px at {size} px").into());
+    }
+    Ok(())
+}
+/// What the status card draws from files: the dated rows of the published commitments.
+struct StatusFacts {
+    commitments: usize,
+}
+impl StatusFacts {
+    fn read() -> Result<StatusFacts> {
+        status_rows(NATIVE)?;
+        let f = StatusFacts {
+            commitments: commitments()?,
+        };
+        f.check()?;
+        Ok(f)
+    }
+    fn check(&self) -> Result<()> {
+        if self.commitments == 0 {
+            return Err("no published commitment to draw".into());
+        }
+        Ok(())
+    }
+}
+/// What the status card says, as its description and as the README alternative text.
+fn status_text(f: &StatusFacts) -> String {
+    format!("Checkable here: exact read-back through four views, a changed byte refused, nothing confirmed lost to a kill. Private: printing and answering; {} published commitments fix the contents of private directories as of their dates; which holds what is not published. The text AI is a goal.", f.commitments)
+}
+/// The drawn icon of a column, centred on (0, 0): a check mark, a closed lock, an hourglass.
+fn status_icon(i: usize, colour: &str, hole: &str) -> String {
+    let draw = r#"class="sd" pathLength="100" stroke-dasharray="100" fill="none" stroke-linecap="round" stroke-linejoin="round""#;
+    match i {
+        0 => {
+            format!(r#"<path {draw} d="M-13 1L-4 10L14 -10" stroke="{colour}" stroke-width="6"/>"#)
+        }
+        1 => format!(
+            r#"<path {draw} d="M-8.5 -3V-9A8.5 8.5 0 0 1 8.5 -9V-3" stroke="{colour}" stroke-width="4.5"/><rect x="-14" y="-3" width="28" height="21" rx="4" fill="{colour}"/><circle cx="0" cy="5.5" r="3" fill="{hole}"/><rect x="-1.4" y="6" width="2.8" height="6" fill="{hole}"/>"#
+        ),
+        _ => format!(
+            r#"<path {draw} d="M-11 -15H11M-11 15H11M-8.5 -15C-8.5 -3 8.5 3 8.5 15M8.5 -15C8.5 -3 -8.5 3 -8.5 15" stroke="{colour}" stroke-width="3.5"/><path d="M-5.5 12H5.5L0 5Z" fill="{colour}"/>"#
+        ),
+    }
+}
+/// Three columns rising in one after another, each icon drawn and pulsed once;
+/// the count of published commitments pops in. Every line is tested against
+/// the room it has, so a long count or a wide font is refused, not clipped.
+fn status_draw(dark: bool, f: &StatusFacts) -> Result<String> {
+    f.check()?;
+    let t = theme(dark);
+    let colours = [t.good, t.accent, if dark { t.amber[0] } else { t.amber[2] }];
+    let kicker = "WHERE GEL RAM STANDS";
+    status_fit(kicker, 16.0, 2.0, 1120.0)?;
+    let mut b = format!(r#"<text class="kick" x="40" y="40">{}</text>"#, xml(kicker));
+    let (y0, w, step) = (58.0, 360.0, 24.0);
+    // The items of every column, wrapped; the foot boxes line up below the longest.
+    let mut last = 0.0_f64;
+    let mut items = Vec::new();
+    for (i, (_, _, list)) in STATUS_COLUMNS.iter().enumerate() {
+        let x = 40.0 + 380.0 * i as f64;
+        let mut y = y0 + 100.0;
+        let mut s = String::new();
+        for (k, item) in list.iter().enumerate() {
+            s.push_str(&format!(
+                r#"<g class="si" style="animation-delay:{:.2}s"><circle cx="{}" cy="{:.1}" r="4.5" fill="{}"/>"#,
+                0.55 + 0.4 * i as f64 + 0.15 * k as f64,
+                x + 26.0,
+                y - 7.0,
+                colours[i]
+            ));
+            for line in wrap(item, 22) {
+                status_fit(&line, 20.0, 0.0, w - 60.0)?;
+                s.push_str(&format!(
+                    r#"<text x="{}" y="{y:.1}" font-size="20">{}</text>"#,
+                    x + 40.0,
+                    xml(&line)
+                ));
+                last = last.max(y);
+                y += step;
+            }
+            s.push_str("</g>");
+            y += 10.0;
+        }
+        items.push(s);
+    }
+    let (foot, box_h) = (last + 18.0, 80.0);
+    let h_col = foot + box_h + 14.0 - y0;
+    for (i, (heading, _, _)) in STATUS_COLUMNS.iter().enumerate() {
+        let (x, c) = (40.0 + 380.0 * i as f64, colours[i]);
+        status_fit(heading, 26.0, 0.0, w - 96.0)?;
+        // The coloured bar follows the rounded top corners of its column.
+        b.push_str(&format!(
+            r#"<g class="sc" style="animation-delay:{:.2}s"><clipPath id="stcol{i}"><rect x="{x}" y="{y0}" width="{w}" height="{h_col:.1}" rx="18"/></clipPath><rect x="{x}" y="{y0}" width="{w}" height="{h_col:.1}" rx="18" fill="{c}" fill-opacity=".07" stroke="{c}" stroke-opacity=".45"/><rect x="{x}" y="{y0}" width="{w}" height="8" fill="{c}" clip-path="url(#stcol{i})"/>"#,
+            0.1 + 0.4 * i as f64
+        ));
+        b.push_str(&format!(
+            r#"<g transform="translate({} {})"><g class="sp" style="animation-delay:{:.2}s"><circle r="26" fill="{c}" fill-opacity=".14" stroke="{c}" stroke-width="2.5"/>{}</g></g><text x="{}" y="{}" font-size="26" class="b" style="fill:{c}">{}</text><path d="M{} {}H{}" stroke="{c}" stroke-opacity=".35" stroke-width="1.5"/>"#,
+            x + 46.0,
+            y0 + 46.0,
+            1.3 + 0.4 * i as f64,
+            status_icon(i, c, t.bg[0]),
+            x + 82.0,
+            y0 + 55.0,
+            xml(heading),
+            x + 24.0,
+            y0 + 76.0,
+            x + w - 24.0
+        ));
+        b.push_str(&items[i]);
+        b.push_str(&format!(
+            r#"<rect x="{}" y="{foot:.1}" width="{}" height="{box_h}" rx="12" fill="{c}" fill-opacity=".13"/>"#,
+            x + 16.0,
+            w - 32.0
+        ));
+        if i == 1 {
+            // The count, then three short lines beside it.
+            let n = f.commitments.to_string();
+            let tx = x + 32.0 + 0.7 * 40.0 * n.len() as f64 + 10.0;
+            b.push_str(&format!(
+                r#"<text class="sn b" x="{}" y="{:.1}" font-size="40" style="fill:{c}">{}</text>"#,
+                x + 32.0,
+                foot + 54.0,
+                xml(&n)
+            ));
+            for (k, words) in STATUS_PLEDGE.iter().enumerate() {
+                status_fit(words, 16.0, 0.0, x + w - 24.0 - tx)?;
+                let bold = if k == 0 { r#" class="b""# } else { "" };
+                b.push_str(&format!(
+                    r#"<text{bold} x="{tx:.1}" y="{:.1}" font-size="16">{}</text>"#,
+                    foot + 24.0 + 22.0 * k as f64,
+                    xml(words)
+                ));
+            }
+        } else {
+            let (words, mono) = if i == 0 {
+                (STATUS_FEET[0], "")
+            } else {
+                (STATUS_FEET[1], "mono ")
+            };
+            status_fit(words, 20.0, 0.0, w - 32.0)?;
+            b.push_str(&format!(
+                r#"<text class="{mono}b" x="{}" y="{:.1}" font-size="20" text-anchor="middle" style="fill:{c}">{}</text>"#,
+                x + w / 2.0,
+                foot + box_h / 2.0 + 7.0,
+                xml(words)
+            ));
+        }
+        b.push_str("</g>");
+    }
+    let style = format!(
+        ".kick{{font-size:16px}}.sc{{animation:strise .75s cubic-bezier(.2,.8,.2,1) both}}.si{{animation:stfade .6s ease-out both}}.sd{{animation:stdraw .9s ease-out both}}.sp{{animation:stpulse .7s ease-in-out both;transform-box:fill-box;transform-origin:center}}.sn{{animation:stpop .7s cubic-bezier(.2,.8,.2,1) 1.8s both;transform-box:fill-box;transform-origin:center}}@keyframes strise{{from{{opacity:0;transform:translateY(34px)}}to{{opacity:1;transform:none}}}}@keyframes stfade{{from{{opacity:0}}to{{opacity:1}}}}@keyframes stdraw{{from{{stroke-dashoffset:100}}to{{stroke-dashoffset:0}}}}@keyframes stpulse{{0%,100%{{transform:none}}50%{{transform:scale(1.16)}}}}@keyframes stpop{{from{{opacity:0;transform:scale(.3)}}to{{opacity:1;transform:none}}}}{}@media (prefers-reduced-motion:reduce){{.sc,.si,.sd,.sp,.sn{{animation:none}}}}",
+        RESULT_STYLE.replace("MUTED", t.muted)
+    );
+    let h = (y0 + h_col + 16.0).ceil() as u32;
+    Ok(card(
+        (1200, h),
+        t,
+        (&xml("Where GEL RAM stands"), &xml(&status_text(f))),
+        &style,
+        &b,
+    ))
+}
+/// Three columns: what can be checked here, what is private, what is not established.
+fn status_card(dark: bool) -> Result<String> {
+    status_draw(dark, &StatusFacts::read()?)
+}
+fn status_alt() -> Result<String> {
+    Ok(status_text(&StatusFacts::read()?))
+}
+// ===== VISUAL status END =====
+
+// ===== VISUAL terminal BEGIN =====
+/// One check of the README: a `cargo run` line of its code block and the
+/// line to look for from the table under it. `look` holds the code spans of
+/// that table cell, each with the plain words written before it.
+#[derive(Clone, Debug, PartialEq)]
+struct TerminalCheck {
+    key: String,
+    command: String,
+    look: Vec<(String, String)>,
+}
+/// The code spans of a table cell; any text outside them other than the words
+/// joining two spans is refused, so the cell holds lines to look for only.
+fn terminal_spans(cell: &str) -> Result<Vec<(String, String)>> {
+    let parts: Vec<&str> = cell.split('`').collect();
+    if parts.len() < 3 || parts.len() % 2 == 0 {
+        return Err(format!("no line to look for in the cell: {cell}").into());
+    }
+    if !parts[0].trim().is_empty() || !parts[parts.len() - 1].trim().is_empty() {
+        return Err(format!("text outside the code of the cell: {cell}").into());
+    }
+    let mut spans = Vec::new();
+    for pair in parts[..parts.len() - 1].chunks(2) {
+        let code = pair[1].trim();
+        if code.is_empty() {
+            return Err(format!("an empty code span in the cell: {cell}").into());
+        }
+        spans.push((pair[0].trim().to_string(), code.to_string()));
+    }
+    Ok(spans)
+}
+/// Reads the checks from a README template: the `cargo run` lines after
+/// `cargo fetch --locked` in its `sh` block, each matched to exactly one row of
+/// the table under "What each line shows, and its limit" by the words of the
+/// row's first cell.
+fn terminal_checks(template: &str) -> Result<Vec<TerminalCheck>> {
+    let lines: Vec<&str> = template.lines().collect();
+    let fetch = lines
+        .iter()
+        .position(|l| l.trim() == "cargo fetch --locked")
+        .ok_or("no cargo fetch --locked line")?;
+    let fence = lines[..fetch]
+        .iter()
+        .rposition(|l| l.starts_with("```"))
+        .ok_or("cargo fetch --locked is outside a code block")?;
+    if lines[fence].trim() != "```sh" {
+        return Err("cargo fetch --locked is not in the sh block".into());
+    }
+    let mut commands = Vec::new();
+    let mut closed = false;
+    for line in &lines[fetch + 1..] {
+        if line.starts_with("```") {
+            closed = true;
+            break;
+        }
+        let line = line.trim();
+        if !line.starts_with("cargo run ") {
+            return Err(format!("not a cargo run line in the check block: {line}").into());
+        }
+        commands.push(line.to_string());
+    }
+    if !closed || commands.is_empty() {
+        return Err("the check block has no cargo run line or is not closed".into());
+    }
+    let head = lines
+        .iter()
+        .position(|l| l.contains("What each line shows, and its limit"))
+        .ok_or("no table of the lines to look for")?;
+    let top = lines[head..]
+        .iter()
+        .position(|l| l.starts_with("| Command | Line to look for |"))
+        .ok_or("no Command / Line to look for header")?
+        + head;
+    if !lines.get(top + 1).is_some_and(|l| l.starts_with("|:")) {
+        return Err("the table has no separator line".into());
+    }
+    let mut rows = Vec::new();
+    for line in lines[top + 2..].iter().take_while(|l| l.starts_with('|')) {
+        let cells: Vec<&str> = line.trim().trim_matches('|').split('|').collect();
+        if cells.len() < 2 {
+            return Err(format!("a table row without a line to look for: {line}").into());
+        }
+        let key = cells[0].replace('`', "").trim().to_string();
+        if key.is_empty() {
+            return Err(format!("a table row without a command: {line}").into());
+        }
+        rows.push((key, terminal_spans(cells[1])?));
+    }
+    if rows.len() != commands.len() {
+        return Err(format!(
+            "{} cargo run lines but {} table rows",
+            commands.len(),
+            rows.len()
+        )
+        .into());
+    }
+    let names = |row: &str| {
+        row.split_whitespace()
+            .map(str::to_string)
+            .collect::<Vec<_>>()
+    };
+    let mut used = vec![false; rows.len()];
+    let mut checks = Vec::new();
+    for command in commands {
+        let words = names(&command);
+        let hits: Vec<usize> = (0..rows.len())
+            .filter(|&r| {
+                let key = names(&rows[r].0);
+                words.windows(key.len()).any(|w| w == key.as_slice())
+            })
+            .collect();
+        let [r] = hits[..] else {
+            return Err(format!("{} table rows name the command: {command}", hits.len()).into());
+        };
+        if used[r] {
+            return Err(format!("the table row {} names two commands", rows[r].0).into());
+        }
+        used[r] = true;
+        checks.push(TerminalCheck {
+            key: rows[r].0.clone(),
+            command,
+            look: rows[r].1.clone(),
+        });
+    }
+    Ok(checks)
+}
+/// The lines to look for of one check, joined as the table cell joins them.
+fn terminal_look(c: &TerminalCheck) -> String {
+    let mut s = String::new();
+    for (join, code) in &c.look {
+        match join.as_str() {
+            "" => {}
+            "," => s.push_str(", "),
+            w => s.push_str(&format!(" {w} ")),
+        }
+        s.push_str(code);
+    }
+    s
+}
+fn terminal_text(checks: &[TerminalCheck]) -> String {
+    let rows: Vec<String> = checks
+        .iter()
+        .map(|c| format!("{}: {}", c.key, terminal_look(c)))
+        .collect();
+    format!("Drawn, what to look for: {}.", rows.join("; "))
+}
+/// Monospace advance (0.6 em): the names and lines are drawn with exactly this
+/// length, so the typing cover and the caret land on the last letter.
+const TERMINAL_MONO: f64 = 0.6;
+/// A conservative advance for the fit checks: a wider fallback font still fits
+/// with 8 % to spare.
+const TERMINAL_WIDE: f64 = 0.62;
+const TERMINAL_SLACK: f64 = 1.08;
+/// Font sizes: the typed command name, the lines to look for, the joining word.
+const TERMINAL_NAME_PX: f64 = 24.0;
+const TERMINAL_LINE_PX: f64 = 16.0;
+/// Width of the badges of one check, conservatively estimated: each badge is
+/// its text plus 16 px, each joining word its text, 10 px between items.
+fn terminal_badges_width(c: &TerminalCheck) -> f64 {
+    let px = TERMINAL_WIDE * TERMINAL_LINE_PX;
+    let mut w = -10.0;
+    for (join, line) in &c.look {
+        if join.chars().any(char::is_alphanumeric) {
+            w += px * join.chars().count() as f64 + 10.0;
+        }
+        w += px * line.chars().count() as f64 + 16.0 + 10.0;
+    }
+    w
+}
+/// What success looks like, in two columns: each cell types the short name
+/// of one command (its table row), then shows a check mark and the line or
+/// lines to look for as green badges. A drawing of the README's own lines,
+/// not the output of a run; the full commands are only checked, not drawn.
+fn terminal_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
+    if checks.is_empty() {
+        return Err("no checks to draw".into());
+    }
+    let t = theme(dark);
+    let tile = if dark { "#0a1322" } else { "#0f2240" };
+    let (code, soft, blue, green) = ("#e6edf3", DARK.muted, DARK.accent, DARK.good);
+    let n = checks.len();
+    let (left, top, cell_w, cell_h, gap) = (24.0, 66.0, 571.0, 86.0, 10.0);
+    let rows = n.div_ceil(2);
+    let grid_end = top + rows as f64 * (cell_h + gap) - gap;
+    // The note goes into the free cell when there is one, else under the grid.
+    let free = n % 2 == 1;
+    let h = if free {
+        grid_end + 20.0
+    } else {
+        grid_end + 46.0
+    }
+    .ceil() as u32;
+    let mut b = format!(
+        r#"<text x="40" y="46" font-size="24" class="b">Run it yourself — drawn, not a recording</text><text class="kick" x="1160" y="44" text-anchor="end" style="font-size:16px">{n} COMMANDS · WHAT TO LOOK FOR</text>"#
+    );
+    let mut style = String::new();
+    let mut quiet = Vec::new();
+    // The whole sequence ends within six seconds, however many cells.
+    let slot = (5.2 / n as f64).min(1.2);
+    for (k, c) in checks.iter().enumerate() {
+        let (x, y) = (
+            left + (k % 2) as f64 * (cell_w + gap),
+            top + (k / 2) as f64 * (cell_h + gap),
+        );
+        let len = c.key.chars().count();
+        let width = TERMINAL_MONO * TERMINAL_NAME_PX * len as f64;
+        let wide = TERMINAL_WIDE * TERMINAL_NAME_PX * len as f64;
+        if (58.0 + wide + 44.0) * TERMINAL_SLACK > cell_w {
+            return Err(format!("the command name does not fit its cell: {}", c.key).into());
+        }
+        if terminal_badges_width(c) * TERMINAL_SLACK > cell_w - 22.0 {
+            return Err(format!("the lines to look for do not fit: {}", terminal_look(c)).into());
+        }
+        let at = 0.3 + slot * k as f64;
+        let typing = slot * 0.55;
+        let shown = at + slot * 0.6;
+        style.push_str(&format!(
+            ".n{k}{{animation:tlf .3s ease-out {at:.2}s both}}.w{k}{{animation:ttw {typing:.2}s steps({len}) {at:.2}s both}}.k{k}{{animation:tcm{k} {typing:.2}s steps({len}) {at:.2}s both,tcs {:.2}s linear {at:.2}s both}}.p{k}{{animation:tlf .4s ease-out {shown:.2}s both}}@keyframes tcm{k}{{to{{transform:translateX({width:.1}px)}}}}",
+            typing + 0.05
+        ));
+        quiet.extend([
+            format!(".n{k}"),
+            format!(".w{k}"),
+            format!(".k{k}"),
+            format!(".p{k}"),
+        ]);
+        let (xn, yn) = (x + 58.0, y + 36.0);
+        b.push_str(&format!(
+            r#"<rect x="{x:.0}" y="{y:.0}" width="{cell_w:.0}" height="{cell_h:.0}" rx="14" fill="{tile}" stroke="{line}"/><g class="n{k}"><circle cx="{:.0}" cy="{:.0}" r="16" fill="{blue}" fill-opacity=".16" stroke="{blue}"/><text x="{:.0}" y="{:.0}" font-size="17" class="b" text-anchor="middle" style="fill:{blue}">{}</text></g><text class="tc" x="{xn:.0}" y="{yn:.0}" font-size="{TERMINAL_NAME_PX:.0}" textLength="{width:.1}" lengthAdjust="spacing">{}</text><rect class="tv w{k}" x="{:.0}" y="{:.0}" width="{:.1}" height="32" fill="{tile}"/><rect class="tk k{k}" x="{xn:.0}" y="{:.0}" width="13" height="25" fill="{blue}"/>"#,
+            x + 30.0,
+            y + 28.0,
+            x + 30.0,
+            y + 34.0,
+            k + 1,
+            xml(&c.key),
+            xn - 2.0,
+            yn - 24.0,
+            width + 18.0,
+            yn - 21.0,
+            line = t.line
+        ));
+        // The check mark after the name, then the badges on the line below.
+        let xc = xn + width + 16.0;
+        let ly = y + 68.0;
+        let mut g = format!(
+            r#"<g class="p{k}"><path d="M{xc:.1} {:.0}l7 7 13-15" fill="none" stroke="{green}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>"#,
+            yn - 9.0
+        );
+        let mut xb = x + 14.0;
+        for (join, line) in &c.look {
+            if join.chars().any(char::is_alphanumeric) {
+                g.push_str(&format!(
+                    r#"<text x="{xb:.1}" y="{ly:.0}" font-size="{TERMINAL_LINE_PX:.0}" style="fill:{soft}">{}</text>"#,
+                    xml(join)
+                ));
+                xb += TERMINAL_WIDE * TERMINAL_LINE_PX * join.chars().count() as f64 + 10.0;
+            }
+            let w = TERMINAL_MONO * TERMINAL_LINE_PX * line.chars().count() as f64;
+            g.push_str(&format!(
+                r#"<rect x="{xb:.1}" y="{:.0}" width="{:.1}" height="28" rx="14" fill="{green}" fill-opacity=".14" stroke="{green}"/><text class="tp" x="{:.1}" y="{ly:.0}" font-size="{TERMINAL_LINE_PX:.0}" textLength="{w:.1}" lengthAdjust="spacing">{}</text>"#,
+                ly - 20.0,
+                w + 16.0,
+                xb + 8.0,
+                xml(line)
+            ));
+            xb += TERMINAL_WIDE * TERMINAL_LINE_PX * line.chars().count() as f64 + 16.0 + 10.0;
+        }
+        g.push_str("</g>");
+        b.push_str(&g);
+    }
+    let note = [
+        "Every name and line is read from",
+        "this README's code block and table",
+    ];
+    let (nx, ny) = if free {
+        (left + cell_w + gap + 24.0, grid_end - cell_h + 36.0)
+    } else {
+        (40.0, grid_end + 30.0)
+    };
+    if free {
+        b.push_str(&format!(
+            r#"<text x="{nx:.0}" y="{ny:.0}" font-size="18" class="mut">{}</text><text x="{nx:.0}" y="{:.0}" font-size="18" class="mut">{}</text>"#,
+            note[0],
+            ny + 26.0,
+            note[1]
+        ));
+    } else {
+        b.push_str(&format!(
+            r#"<text x="{nx:.0}" y="{ny:.0}" font-size="18" class="mut">{} {}</text>"#,
+            note[0], note[1]
+        ));
+    }
+    // Base rules hold the final look; only the keyframes hold the start, so a
+    // renderer without animation shows every name and line.
+    let style = format!(
+        ".tc,.tp{{font-family:ui-monospace,Consolas,\"DejaVu Sans Mono\",monospace}}.tc{{fill:{code}}}.tp{{fill:{green};font-weight:700}}.tv{{transform-box:fill-box;transform-origin:right;transform:scaleX(0)}}.tk{{opacity:0}}{style}@keyframes ttw{{from{{transform:scaleX(1)}}to{{transform:scaleX(0)}}}}@keyframes tcs{{0%,100%{{opacity:0}}1%,99%{{opacity:1}}}}@keyframes tlf{{from{{opacity:0;transform:translateX(-10px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{{}{{animation:none}}}}{}",
+        quiet.join(","),
+        RESULT_STYLE.replace("MUTED", t.muted)
+    );
+    Ok(card(
+        (1200, h),
+        t,
+        (
+            "Run it yourself — drawn, not a recording",
+            &xml(&terminal_text(checks)),
+        ),
+        &style,
+        &b,
+    ))
+}
+/// The commands of the README's code block, each followed by the line to look for.
+fn terminal_card(dark: bool) -> Result<String> {
+    terminal_draw(dark, &terminal_checks(NATIVE)?)
+}
+fn terminal_alt() -> Result<String> {
+    Ok(terminal_text(&terminal_checks(NATIVE)?))
+}
+// ===== VISUAL terminal END =====
+
+// ===== VISUAL rerun BEGIN =====
+/// The re-run of the speed card's timing set: the same plan, the same trees,
+/// timed again by `xtask speed-campaign`. Only this plan's re-run is compared.
+const RERUN_DIR: &str = "docs/speed-results/2026-11-04-reruns/rerun-2026-10-20-against-v0.6.1";
+/// One run of the cases as the card draws it.
+struct RerunRun {
+    date: String,
+    /// Cases faster beyond their own A/A band, inside it, slower beyond it.
+    sides: [usize; 3],
+    /// The median over the cases of |aa - 1|: the A/A noise of the run.
+    noise: f64,
+}
+/// The recorded set and its re-run, case by case.
+struct RerunData {
+    /// The tree A and A2 check out, as the recorded set names it.
+    base: String,
+    runs: [RerunRun; 2],
+    cases: usize,
+    /// Cases faster beyond their band in the record and beyond it again in the re-run.
+    again: usize,
+    /// Cases faster beyond their band in the record whose re-run ratio is above 1.
+    above_one: usize,
+}
+/// One timing program of a run: its name, its cases, and whether A, A2 and B
+/// printed the same output digest.
+type RerunProgram<'a> = (&'a str, &'a [SpeedCase], bool);
+/// Where the two runs come from: the recorded set's directory, the tree it
+/// times against and that tree's revision, and the date of each run.
+struct RerunOrigin {
+    set_dir: String,
+    base: String,
+    base_rev: String,
+    dates: (String, String),
+}
+/// The fixed order of the card: faster, inside, slower.
+fn rerun_sides<'a>(cases: impl Iterator<Item = &'a SpeedCase>) -> [usize; 3] {
+    let mut n = [0; 3];
+    for c in cases {
+        n[match c.side() {
+            Side::Faster => 0,
+            Side::Within => 1,
+            Side::Slower => 2,
+        }] += 1;
+    }
+    n
+}
+/// The median of |aa - 1|; the mean of the middle two for an even count.
+fn rerun_noise(cases: &[&SpeedCase]) -> Result<f64> {
+    let mut v: Vec<f64> = cases.iter().map(|c| (c.aa - 1.0).abs()).collect();
+    v.sort_by(f64::total_cmp);
+    let mid = v.len() / 2;
+    match v.len() {
+        0 => Err("no case to take the A/A noise of".into()),
+        n if n % 2 == 1 => Ok(v[mid]),
+        _ => Ok((v[mid - 1] + v[mid]) / 2.0),
+    }
+}
+/// The cases of one run keyed by program and case name, in key order. Refuses
+/// an empty run and a repeated case.
+fn rerun_keyed<'a>(run: &[RerunProgram<'a>]) -> Result<Vec<(String, &'a SpeedCase)>> {
+    let mut v: Vec<(String, &SpeedCase)> = Vec::new();
+    for (program, cases, _) in run {
+        for c in cases.iter() {
+            v.push((format!("{program}/{}", c.name), c));
+        }
+    }
+    v.sort_by(|a, b| a.0.cmp(&b.0));
+    if v.is_empty() || v.windows(2).any(|w| w[0].0 == w[1].0) {
+        return Err("a run with no case or a repeated case".into());
+    }
+    Ok(v)
+}
+/// Pairs the cases of two runs by program and case name. Refuses an empty run,
+/// a repeated case, two runs that do not hold exactly the same cases, and a
+/// program whose output verdict (same digest in A, A2 and B, or not) changed.
+fn rerun_compare(
+    base: &str,
+    dates: (&str, &str),
+    recorded: &[RerunProgram],
+    rerun: &[RerunProgram],
+) -> Result<RerunData> {
+    let (old, new) = (rerun_keyed(recorded)?, rerun_keyed(rerun)?);
+    if old.len() != new.len() || old.iter().zip(&new).any(|(a, b)| a.0 != b.0) {
+        return Err("the re-run does not hold the same cases as the record".into());
+    }
+    for (name, _, same) in recorded {
+        if rerun.iter().any(|(n, _, s)| n == name && s != same) {
+            return Err(format!("{name}: the output verdict differs between the runs").into());
+        }
+    }
+    let pairs: Vec<(&SpeedCase, &SpeedCase)> =
+        old.iter().zip(&new).map(|(a, b)| (a.1, b.1)).collect();
+    let faster_before = || pairs.iter().filter(|(a, _)| a.side() == Side::Faster);
+    let run = |date: &str, cases: Vec<&SpeedCase>| -> Result<RerunRun> {
+        Ok(RerunRun {
+            date: date.to_string(),
+            sides: rerun_sides(cases.iter().copied()),
+            noise: rerun_noise(&cases)?,
+        })
+    };
+    Ok(RerunData {
+        base: base.to_string(),
+        runs: [
+            run(dates.0, pairs.iter().map(|p| p.0).collect())?,
+            run(dates.1, pairs.iter().map(|p| p.1).collect())?,
+        ],
+        cases: pairs.len(),
+        again: faster_before()
+            .filter(|(_, b)| b.side() == Side::Faster)
+            .count(),
+        above_one: faster_before().filter(|(_, b)| b.gain > 1.0).count(),
+    })
+}
+/// The example names of a CAMPAIGN.txt, in file order. Refuses it unless it is
+/// a complete campaign of measured timings that re-runs the recorded set, with
+/// A and A2 clean checkouts of the set's base revision, B a clean checkout of
+/// the revision the speed card names, and every example checked and as expected.
+fn rerun_campaign(text: &str, o: &RerunOrigin) -> Result<Vec<String>> {
+    let lines: Vec<&str> = text.lines().collect();
+    let has = |want: &str| lines.iter().any(|l| *l == want);
+    let rev = &o.base_rev;
+    let b_clean = |l: &&str| {
+        l.starts_with(&format!("tree=b revision={SPEED_B}")) && l.ends_with(" working_tree=clean")
+    };
+    let refusal = if lines.first() != Some(&"FORMAT=GEL_SPEED_CAMPAIGN_1") {
+        Some("not a GEL_SPEED_CAMPAIGN_1 file".to_string())
+    } else if lines.last() != Some(&"SPEED_CAMPAIGN=COMPLETE") {
+        Some("the campaign is not complete".to_string())
+    } else if !has(&format!("reruns={}", o.set_dir)) {
+        Some(format!("it does not re-run {}", o.set_dir))
+    } else if !has("timing_validity=AS_MEASURED") {
+        Some("its timings are not as measured".to_string())
+    } else if !has(&format!("tree=a revision={rev} working_tree=clean"))
+        || !has(&format!("tree=a2 revision={rev} working_tree=clean"))
+    {
+        Some(format!("A and A2 are not clean checkouts of {rev}"))
+    } else if !lines.iter().any(b_clean) {
+        Some(format!("B is not a clean checkout of {SPEED_B}"))
+    } else {
+        None
+    };
+    if let Some(why) = refusal {
+        return Err(format!("CAMPAIGN.txt: {why}").into());
+    }
+    let mut names: Vec<String> = Vec::new();
+    for line in lines.iter().filter(|l| l.starts_with("example=")) {
+        let words: Vec<&str> = line.split(' ').collect();
+        let name = words[0].trim_start_matches("example=");
+        if !words.contains(&"check=PASS") || !words.contains(&"met=yes") {
+            return Err(format!("CAMPAIGN.txt: {name} is not checked or not as expected").into());
+        }
+        if names.iter().any(|n| n == name) {
+            return Err(format!("CAMPAIGN.txt: {name} is repeated").into());
+        }
+        names.push(name.to_string());
+    }
+    if names.is_empty() {
+        return Err("CAMPAIGN.txt: no example".into());
+    }
+    Ok(names)
+}
+/// Refuses a manifest that is not a `GEL_SPEED_AB_2` record of measured timings.
+fn rerun_manifest(text: &str) -> Result<()> {
+    let mut lines = text.lines();
+    if lines.next() != Some("FORMAT=GEL_SPEED_AB_2") {
+        return Err("not a GEL_SPEED_AB_2 manifest".into());
+    }
+    if !lines.any(|l| l == "timing_validity=AS_MEASURED") {
+        return Err("its timings are not as measured".into());
+    }
+    Ok(())
+}
+/// One program of the re-run as read: its name, cases and output verdict.
+type RerunOwned = (String, Vec<SpeedCase>, bool);
+/// The programs of the re-run from the texts of its files: CAMPAIGN.txt, then
+/// per program directory its name, manifest.txt and summary.txt. The program
+/// directories must be exactly the examples of the campaign. An error starts
+/// with the file it comes from, relative to the re-run directory.
+fn rerun_programs_from(
+    campaign: &str,
+    programs: &[(String, String, String)],
+    o: &RerunOrigin,
+) -> Result<Vec<RerunOwned>> {
+    let mut examples = rerun_campaign(campaign, o)?;
+    examples.sort();
+    let mut names: Vec<&str> = programs.iter().map(|p| p.0.as_str()).collect();
+    names.sort();
+    if names != examples {
+        return Err("CAMPAIGN.txt: its examples are not the program directories".into());
+    }
+    let mut out = Vec::new();
+    for (name, manifest, summary) in programs {
+        rerun_manifest(manifest).map_err(|e| format!("{name}/manifest.txt: {e}"))?;
+        let (cases, same) =
+            speed_summary(summary).map_err(|e| format!("{name}/summary.txt: {e}"))?;
+        out.push((name.clone(), cases, same));
+    }
+    Ok(out)
+}
+/// Reads the re-run directory. A directory whose name is not a plain program
+/// name is refused before any file in it is read. Only CAMPAIGN.txt and each
+/// program's manifest.txt and summary.txt are read: the round files, warm-up
+/// included, are not.
+fn rerun_programs(dir: &str, o: &RerunOrigin) -> Result<Vec<RerunOwned>> {
+    let read = |p: String| fs::read_to_string(&p).map_err(|e| format!("{p}: {e}"));
+    let mut names = Vec::new();
+    for entry in fs::read_dir(dir).map_err(|e| format!("{dir}: {e}"))? {
+        let entry = entry?;
+        if entry.file_type()?.is_dir() {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            if !plain_name(&name) {
+                return Err(format!("{dir}/{name}: unexpected program directory").into());
+            }
+            names.push(name);
+        }
+    }
+    names.sort();
+    let campaign = read(format!("{dir}/CAMPAIGN.txt"))?;
+    let mut programs = Vec::new();
+    for name in names {
+        let (m, s) = (
+            read(format!("{dir}/{name}/manifest.txt"))?,
+            read(format!("{dir}/{name}/summary.txt"))?,
+        );
+        programs.push((name, m, s));
+    }
+    rerun_programs_from(&campaign, &programs, o).map_err(|e| format!("{dir}/{e}").into())
+}
+/// The date a timing directory's name starts with.
+fn rerun_date(name: &str) -> Result<String> {
+    let date = name.get(..10).unwrap_or("");
+    let shape = date.len() == 10
+        && date.bytes().enumerate().all(|(i, b)| match i {
+            4 | 7 => b == b'-',
+            _ => b.is_ascii_digit(),
+        });
+    if !shape {
+        return Err(format!("{name} does not start with a date").into());
+    }
+    Ok(date.to_string())
+}
+/// Where the runs come from, from the two directory paths and the recorded
+/// set's README. The set is named `DATE-against-BASE`; the re-run directory is
+/// `DATE-reruns/rerun-` and the set's name. The README's title names the same
+/// base and date, and its A and A2 row the base's tag and full revision.
+fn rerun_origin(set_dir: &str, rerun_dir: &str, readme: &str) -> Result<RerunOrigin> {
+    let set_name = set_dir.rsplit('/').next().unwrap_or("");
+    let mut parts = rerun_dir.rsplit('/');
+    let (plan, campaign) = (parts.next().unwrap_or(""), parts.next().unwrap_or(""));
+    if plan != format!("rerun-{set_name}") || !campaign.ends_with("-reruns") {
+        return Err(format!("{rerun_dir} is not the re-run of {set_name}").into());
+    }
+    let dates = (rerun_date(set_name)?, rerun_date(campaign)?);
+    let base = set_name
+        .strip_prefix(&format!("{}-against-", dates.0))
+        .filter(|b| !b.is_empty() && b.bytes().all(|c| c.is_ascii_alphanumeric() || c == b'.'))
+        .ok_or(format!("{set_name} does not name its base"))?;
+    if readme.lines().next() != Some(&format!("# Timing against {base}, {}", dates.0)) {
+        return Err(format!("{set_dir}/README.md: its title does not name {base}").into());
+    }
+    let base_rev = readme
+        .lines()
+        .find_map(|l| {
+            l.strip_prefix(&format!(
+                "| A and A2 | two clean checkouts of the {base} tag, `"
+            ))?
+            .strip_suffix("` |")
+        })
+        .filter(|r| r.len() == 40 && r.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')))
+        .ok_or(format!(
+            "{set_dir}/README.md: no full revision of {base} for A and A2"
+        ))?;
+    Ok(RerunOrigin {
+        set_dir: set_dir.to_string(),
+        base: base.to_string(),
+        base_rev: base_rev.to_string(),
+        dates,
+    })
+}
+/// Reads the speed card's set and its re-run and pairs their cases.
+fn rerun_read() -> Result<RerunData> {
+    let path = format!("{SPEED_DIR}/README.md");
+    let readme = fs::read_to_string(&path).map_err(|e| format!("{path}: {e}"))?;
+    let o = rerun_origin(SPEED_DIR, RERUN_DIR, &readme)?;
+    let set = SpeedSet::read()?;
+    let recorded: Vec<RerunProgram> = set
+        .examples
+        .iter()
+        .filter_map(|e| {
+            Some((
+                e.name.as_str(),
+                &e.timed.as_ref()?.0[..],
+                e.timed.as_ref()?.1,
+            ))
+        })
+        .collect();
+    let programs = rerun_programs(RERUN_DIR, &o)?;
+    let rerun: Vec<RerunProgram> = programs
+        .iter()
+        .map(|(n, c, s)| (n.as_str(), &c[..], *s))
+        .collect();
+    rerun_compare(&o.base, (&o.dates.0, &o.dates.1), &recorded, &rerun)
+}
+/// Refuses data that does not add up: every run's counts sum to the cases, the
+/// cases faster again are among those faster before and faster now, those with
+/// a ratio above 1 include them, the noise is a number.
+fn rerun_check(d: &RerunData) -> Result<()> {
+    let adds_up = d.cases > 0
+        && !d.base.is_empty()
+        && d.runs.iter().all(|r| {
+            r.sides.iter().sum::<usize>() == d.cases && r.noise.is_finite() && r.noise >= 0.0
+        })
+        && d.again <= d.above_one
+        && d.above_one <= d.runs[0].sides[0]
+        && d.again <= d.runs[1].sides[0];
+    if !adds_up {
+        return Err("the re-run counts do not add up".into());
+    }
+    Ok(())
+}
+/// A noise value as the card prints it: up to four decimals, no trailing zero.
+fn rerun_number(v: f64) -> String {
+    let s = format!("{v:.4}");
+    let s = s.trim_end_matches('0').trim_end_matches('.');
+    s.to_string()
+}
+/// The card's title: what the picture is, with no verdict on the set as a whole.
+fn rerun_title(d: &RerunData) -> String {
+    format!("The same {} cases, timed twice", d.cases)
+}
+/// The alternative text, also the card's description.
+fn rerun_text(d: &RerunData) -> Result<String> {
+    rerun_check(d)?;
+    let ([f0, i0, s0], [f1, i1, s1]) = (d.runs[0].sides, d.runs[1].sides);
+    let (d0, d1) = (&d.runs[0].date, &d.runs[1].date);
+    Ok(format!(
+        "{} against {}, each against its own A/A band: {f0} faster, {i0} inside, {s0} slower on {d0}; {f1} faster, {i1} inside, {s1} slower on {d1}; {} of the {f0} faster again ({} with a ratio above 1). A/A noise {} → {}. One machine, not pinned to cores.",
+        rerun_title(d),
+        d.base,
+        d.again,
+        d.above_one,
+        rerun_number(d.runs[0].noise),
+        rerun_number(d.runs[1].noise),
+    ))
+}
+/// A conservative width of a line of text: 0.62 × font size per character.
+fn rerun_width(text: &str, size: f64) -> f64 {
+    0.62 * size * text.chars().count() as f64
+}
+const RERUN_STYLE: &str = ".mut{fill:MUTED}.b{font-weight:700}.rn-g{animation:rn-grow 1s cubic-bezier(.2,.8,.2,1) both;transform-box:view-box;transform-origin:X0px 0}.rn-f{animation:rn-fade .6s ease-out both}.rn-p{animation:rn-pop .5s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}.rn-d{animation:rn-drop .6s ease-out 1.7s both,rn-glow 1.8s ease-in-out 2.4s 3 both;transform-box:fill-box;transform-origin:top}@keyframes rn-grow{from{transform:scaleX(0)}to{transform:none}}@keyframes rn-fade{from{opacity:0}to{opacity:1}}@keyframes rn-pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}@keyframes rn-drop{from{opacity:0;transform:scaleY(0)}to{opacity:1;transform:none}}@keyframes rn-glow{0%,100%{fill-opacity:.18}50%{fill-opacity:.34}}@media (prefers-reduced-motion:reduce){.rn-g,.rn-f,.rn-p,.rn-d{animation:none}}";
+/// Two stacked bars, one per run, of faster / inside / slower cases; between
+/// them the cases faster beyond their band in both; under them the A/A noise
+/// of each run. No program and no case is named.
+fn rerun_draw(dark: bool, d: &RerunData) -> Result<String> {
+    rerun_check(d)?;
+    let t = theme(dark);
+    let (x0, width, bar) = (236.0, 700.0, 56.0);
+    let u = width / d.cases as f64;
+    let tops = [196.0, 344.0];
+    // Inside the band: a neutral grey that stands out from the card on both themes.
+    let grey = if dark { "#8b949e" } else { "#6e7781" };
+    let fills = [t.blue[1], grey, t.red[1]];
+    let inner = [
+        "#ffffff",
+        if dark { "#0d1117" } else { "#ffffff" },
+        "#ffffff",
+    ];
+    let outer = if dark {
+        [t.blue[0], t.muted, t.red[0]]
+    } else {
+        [t.blue[2], t.muted, t.red[2]]
+    };
+    let (d0, d1) = (xml(&d.runs[0].date), xml(&d.runs[1].date));
+    let base = xml(&d.base);
+    let mut b = format!(
+        r#"<g class="rn-f"><text class="kick" style="font-size:16px" x="40" y="46">RE-RUN · {d0} → {d1}</text><text x="40" y="90" font-size="30" class="b">{}</text><text x="40" y="124" font-size="20" class="mut">{base} time / new time, each case against its own A/A band</text></g>"#,
+        xml(&rerun_title(d))
+    );
+    // The legend.
+    let mut lx = 40.0;
+    for (k, word) in [
+        "faster beyond its A/A band",
+        "inside it",
+        "slower beyond it",
+    ]
+    .iter()
+    .enumerate()
+    {
+        b.push_str(&format!(
+            r#"<g class="rn-f" style="animation-delay:.2s"><rect x="{lx:.0}" y="148" width="18" height="18" rx="4" fill="{}"/><text x="{:.0}" y="164" font-size="20">{word}</text></g>"#,
+            fills[k],
+            lx + 28.0
+        ));
+        lx += 28.0 + rerun_width(word, 20.0) + 32.0;
+    }
+    for (r, run) in d.runs.iter().enumerate() {
+        let (top, rf) = (tops[r], r as f64);
+        // A bar grows for 1 s; its counts pop in as it settles.
+        let (grow, count) = (0.3 + 0.4 * rf, 1.2 + 0.4 * rf);
+        let role = if r == 0 { "recorded" } else { "re-run" };
+        b.push_str(&format!(
+            r#"<g class="rn-f" style="animation-delay:{grow:.1}s"><text x="40" y="{:.0}" font-size="22" class="b">{}</text><text x="40" y="{:.0}" font-size="18" class="mut">{role}</text></g><g class="rn-g" style="animation-delay:{grow:.1}s">"#,
+            top + 24.0,
+            xml(&run.date),
+            top + 48.0,
+        ));
+        let mut x = x0;
+        let mut labels = String::new();
+        for k in 0..3 {
+            let n = run.sides[k];
+            let w = n as f64 * u;
+            if n > 0 {
+                b.push_str(&format!(
+                    r#"<rect x="{x:.1}" y="{top:.0}" width="{w:.1}" height="{bar:.0}" fill="{}"/>"#,
+                    fills[k]
+                ));
+            }
+            // A wide segment holds its count; a narrow one has it above or below.
+            let cx = x + w / 2.0;
+            labels.push_str(&if w >= rerun_width(&n.to_string(), 24.0) * 1.08 + 8.0 {
+                format!(
+                    r#"<text class="rn-p b" style="animation-delay:{count:.1}s;fill:{}" x="{cx:.1}" y="{:.0}" font-size="24" text-anchor="middle">{n}</text>"#,
+                    inner[k],
+                    top + bar / 2.0 + 8.5
+                )
+            } else {
+                let y = if r == 0 { top - 6.0 } else { top + bar + 26.0 };
+                format!(
+                    r#"<text class="rn-p b" style="animation-delay:{count:.1}s;fill:{}" x="{cx:.1}" y="{y:.0}" font-size="20" text-anchor="middle">{n}</text>"#,
+                    outer[k]
+                )
+            });
+            x += w;
+        }
+        b.push_str(&format!(
+            r#"<rect x="{x0:.0}" y="{top:.0}" width="{width:.0}" height="{bar:.0}" rx="3" fill="none" stroke="{}"/></g>{labels}"#,
+            t.line
+        ));
+    }
+    // Right of the bars: the size of the set, then how the slower count moved.
+    let tag = format!("slower: {} → {}", d.runs[0].sides[2], d.runs[1].sides[2]);
+    let tag_w = rerun_width(&tag, 18.0) * 1.08 + 24.0;
+    let right = x0 + width + 16.0;
+    b.push_str(&format!(
+        r#"<text class="rn-f" style="animation-delay:.7s" x="{right:.0}" y="{:.0}" font-size="18">{} cases</text><g class="rn-p" style="animation-delay:2.0s"><rect x="{right:.0}" y="{:.0}" width="{tag_w:.0}" height="32" rx="16" fill="{}" fill-opacity=".14" stroke="{}" stroke-width="1.5"/><text x="{:.0}" y="{:.0}" font-size="18" class="b" text-anchor="middle" style="fill:{}">{}</text></g>"#,
+        tops[0] + bar / 2.0 + 6.0,
+        d.cases,
+        tops[1] + bar / 2.0 - 16.0,
+        t.red[1],
+        t.red[1],
+        right + tag_w / 2.0,
+        tops[1] + bar / 2.0 + 6.0,
+        outer[2],
+        xml(&tag)
+    ));
+    // The cases faster beyond their band in both runs: a band from bar to bar.
+    let (gap0, gap1) = (tops[0] + bar, tops[1]);
+    let span = d.again as f64 * u;
+    let mid = (gap0 + gap1) / 2.0;
+    let pill_text = format!("{} of {} faster again", d.again, d.runs[0].sides[0]);
+    let note = format!("{} with a ratio above 1", d.above_one);
+    let pill = rerun_width(&pill_text, 22.0) * 1.08 + 28.0;
+    let px = (x0 + span / 2.0).max(x0 + pill / 2.0);
+    let side = (x0 + span + 16.0)
+        .max(px + pill / 2.0 + 16.0)
+        .min(1176.0 - rerun_width(&note, 18.0) * 1.08);
+    b.push_str(&format!(
+        r#"<rect class="rn-d" x="{x0:.0}" y="{gap0:.0}" width="{span:.1}" height="{:.0}" fill="{a}" style="fill-opacity:.18"/><path class="rn-f" style="animation-delay:1.7s" d="M{x0:.0} {gap0:.0}V{gap1:.0}M{:.1} {gap0:.0}V{gap1:.0}" stroke="{a}" stroke-width="2" stroke-dasharray="5 4"/><g class="rn-p" style="animation-delay:2.1s"><rect x="{:.1}" y="{:.0}" width="{pill:.0}" height="40" rx="20" fill="{pf}"/><text x="{px:.1}" y="{:.0}" font-size="22" class="b" text-anchor="middle" style="fill:#ffffff">{}</text></g><text class="rn-f mut" style="animation-delay:2.3s" x="{side:.1}" y="{:.0}" font-size="18">{}</text>"#,
+        gap1 - gap0,
+        x0 + span,
+        px - pill / 2.0,
+        mid - 20.0,
+        mid + 8.0,
+        xml(&pill_text),
+        mid + 6.0,
+        xml(&note),
+        a = t.accent,
+        // White text needs the deeper blue on the dark theme.
+        pf = if dark { t.blue[2] } else { t.accent }
+    ));
+    // The A/A noise of each run, on one linear scale.
+    let most = d.runs[0].noise.max(d.runs[1].noise);
+    let meter = 300.0;
+    b.push_str(r#"<g class="rn-f" style="animation-delay:2.4s"><text x="40" y="476" font-size="22" class="b">A/A noise</text><text x="40" y="500" font-size="18" class="mut">median |aa - 1|</text></g>"#);
+    for (r, run) in d.runs.iter().enumerate() {
+        let y = 458.0 + 32.0 * r as f64;
+        let w = if most > 0.0 {
+            (run.noise / most * meter).max(if run.noise > 0.0 { 3.0 } else { 0.0 })
+        } else {
+            0.0
+        };
+        b.push_str(&format!(
+            r#"<rect class="rn-g" style="animation-delay:{:.1}s" x="{x0:.0}" y="{y:.0}" width="{w:.1}" height="18" rx="3" fill="{}"/><text class="rn-f" style="animation-delay:2.9s" x="{:.1}" y="{:.0}" font-size="20"><tspan class="b">{}</tspan><tspan class="mut"> · {}</tspan></text>"#,
+            2.4 + 0.2 * r as f64,
+            if r == 0 { grey } else { t.accent },
+            x0 + w + 12.0,
+            y + 16.0,
+            xml(&rerun_number(run.noise)),
+            xml(&run.date)
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text class="rn-p b" style="animation-delay:3.1s" x="1160" y="500" font-size="36" text-anchor="end">{} → {}</text><text class="rn-f mut" style="animation-delay:3.1s" x="40" y="548" font-size="18">One machine, not pinned to cores · A, A2: two checkouts of {base} · B: main at {}</text>"#,
+        xml(&rerun_number(d.runs[0].noise)),
+        xml(&rerun_number(d.runs[1].noise)),
+        xml(SPEED_B)
+    ));
+    Ok(card(
+        (1200, 574),
+        t,
+        (&xml(&rerun_title(d)), &xml(&rerun_text(d)?)),
+        &RERUN_STYLE
+            .replace("MUTED", t.muted)
+            .replace("X0", &format!("{x0:.0}")),
+        &b,
+    ))
+}
+/// The timing set of 2026-10-20 beside its re-run of 2026-11-04.
+fn rerun_card(dark: bool) -> Result<String> {
+    rerun_draw(dark, &rerun_read()?)
+}
+fn rerun_alt() -> Result<String> {
+    rerun_text(&rerun_read()?)
+}
+// ===== VISUAL rerun END =====
+
+// ===== VISUAL glance BEGIN =====
+/// The generated Unicode tables: their header and their version constant name the Unicode version.
+const GLANCE_TABLES: &str = "crates/gel-source/src/nfc_tables.rs";
+/// The binaries guide lists the tool programs that answer `--version` and `--license`.
+const GLANCE_BINARIES: &str = "docs/BINARIES.md";
+const GLANCE_NUMBER_WORDS: [&str; 13] = [
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve",
+];
+/// The roadmap, whose section of the earlier version states the older facts.
+const GLANCE_ROADMAP: &str = "docs/ROADMAP.md";
+/// The texts the glance card is read from; `GlanceFacts::read` fills them from the files.
+struct GlanceTexts<'a> {
+    /// `RELEASE` (e.g. v0.8.0) and the release notes of that version.
+    release: &'a str,
+    notes: &'a str,
+    roadmap: &'a str,
+    tables: &'a str,
+    binaries: &'a str,
+    lock: &'a str,
+    readme: &'a str,
+}
+/// What the glance card shows, each read from the file that states it.
+struct GlanceFacts {
+    /// The release as major.minor, from `RELEASE`; its release notes name the
+    /// programs that answer `--license`.
+    release: String,
+    /// The version before it, from the README heading; its roadmap section
+    /// states the packages, the Unicode version and SHA-256.
+    since: String,
+    /// The packages of Cargo.lock, every one a crate of this checkout.
+    packages: usize,
+    /// The Unicode version the normalization tables were generated from.
+    unicode: String,
+    /// The tool programs that answer `--version` and `--license`.
+    tools: Vec<String>,
+}
+/// A file of the checkout; an error names the file.
+fn glance_file(path: &str) -> Result<String> {
+    fs::read_to_string(path).map_err(|e| format!("{path}: {e}").into())
+}
+impl GlanceFacts {
+    fn read() -> Result<GlanceFacts> {
+        let notes = format!("RELEASE-NOTES-{RELEASE}.md");
+        GlanceFacts::from_texts(
+            &GlanceTexts {
+                release: RELEASE,
+                notes: &glance_file(&notes)?,
+                roadmap: &glance_file(GLANCE_ROADMAP)?,
+                tables: &glance_file(GLANCE_TABLES)?,
+                binaries: &glance_file(GLANCE_BINARIES)?,
+                lock: &glance_file("Cargo.lock")?,
+                readme: NATIVE,
+            },
+            &|dir| Path::new(dir).join("Cargo.toml").is_file(),
+        )
+    }
+    /// Refuses unless the release notes of `RELEASE` name the license programs,
+    /// the README and the roadmap name the earlier version and what it brought,
+    /// the table header and the version constant name one Unicode version, every
+    /// package of Cargo.lock is a crate directory of this checkout (`has_crate`),
+    /// and the binaries guide lists distinct programs, as many as the README says.
+    fn from_texts(s: &GlanceTexts, has_crate: &dyn Fn(&str) -> bool) -> Result<GlanceFacts> {
+        let parts: Vec<&str> = s
+            .release
+            .strip_prefix('v')
+            .unwrap_or("")
+            .split('.')
+            .collect();
+        let numeric = |p: &&str| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit());
+        if parts.len() != 3 || !parts.iter().all(numeric) {
+            return Err(format!("unexpected release {}", s.release).into());
+        }
+        let release = format!("{}.{}", parts[0], parts[1]);
+        // A new release must not relabel these facts: its own notes must name them.
+        if !s.notes.starts_with(&format!("# GEL RAM {} ", s.release))
+            || !s.notes.contains("Every tool program answers `--version`")
+            || !s.notes.contains("`--license`")
+        {
+            return Err(format!(
+                "RELEASE-NOTES-{}.md does not name the programs that answer --license",
+                s.release
+            )
+            .into());
+        }
+        let since = s
+            .readme
+            .lines()
+            .find_map(|l| l.strip_prefix(&format!("## New in {release}, and in ")))
+            .unwrap_or("");
+        let p: Vec<&str> = since.split('.').collect();
+        if p.len() != 2 || !p.iter().all(numeric) || since == release {
+            return Err(format!("the README names no earlier version beside {release}").into());
+        }
+        let since = since.to_string();
+        let header = s
+            .tables
+            .lines()
+            .find_map(|l| {
+                l.split_once("Character Database ")?
+                    .1
+                    .strip_suffix("; do not edit. Inputs (SHA-256):")
+            })
+            .ok_or(format!("{GLANCE_TABLES}: no Unicode version in the header"))?;
+        let constant = s
+            .tables
+            .lines()
+            .find_map(|l| l.strip_prefix("pub(crate) const UNICODE_VERSION: (u8, u8, u8) = ("))
+            .and_then(|l| l.strip_suffix(");"))
+            .ok_or(format!("{GLANCE_TABLES}: no version constant"))?;
+        let constant: Vec<&str> = constant.split(", ").collect();
+        let unicode = constant.join(".");
+        if constant.len() != 3 || !constant.iter().all(numeric) || header != unicode {
+            return Err(format!(
+                "{GLANCE_TABLES}: the header says {header}, the constant {unicode}"
+            )
+            .into());
+        }
+        // The section of the earlier version states the three older facts.
+        let section = s
+            .roadmap
+            .split_once(&format!("\n## v{since}.0\n"))
+            .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
+            .unwrap_or("");
+        for fact in [
+            "lists no third-party package".to_string(),
+            format!("follows Unicode {unicode}"),
+            "SHA-256".to_string(),
+        ] {
+            if !section.contains(&fact) {
+                return Err(format!("{GLANCE_ROADMAP}: v{since}.0 does not say {fact}").into());
+            }
+        }
+        // Every package of Cargo.lock is a crate of this checkout.
+        if s.lock.lines().any(|l| l.starts_with("source = ")) {
+            return Err("Cargo.lock: a package comes from outside this checkout".into());
+        }
+        let lines: Vec<&str> = s.lock.lines().collect();
+        let mut packages = 0;
+        for (i, l) in lines.iter().enumerate() {
+            if *l != "[[package]]" {
+                continue;
+            }
+            let name = lines
+                .get(i + 1)
+                .and_then(|n| n.strip_prefix("name = \"")?.strip_suffix('"'))
+                .filter(|n| {
+                    !n.is_empty()
+                        && n.bytes()
+                            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+                })
+                .ok_or("Cargo.lock: a package without a plain name")?;
+            let dir = if name == "xtask" {
+                name.to_string()
+            } else {
+                format!("crates/{name}")
+            };
+            if !has_crate(&dir) {
+                return Err(format!("Cargo.lock: {name} is not a crate of this checkout").into());
+            }
+            packages += 1;
+        }
+        let paragraph = s.binaries.lines().collect::<Vec<_>>().join(" ");
+        let list = paragraph
+            .split_once("Every program of the workspace (")
+            .and_then(|(_, rest)| rest.split_once(')'))
+            .ok_or(format!("{GLANCE_BINARIES}: no list of programs"))?
+            .0;
+        let tools: Vec<String> = list
+            .split('`')
+            .skip(1)
+            .step_by(2)
+            .map(str::to_string)
+            .collect();
+        let valid = |n: &String| {
+            !n.is_empty()
+                && n != "xtask"
+                && n.bytes()
+                    .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+        };
+        let distinct = tools
+            .iter()
+            .enumerate()
+            .all(|(i, n)| !tools[..i].contains(n));
+        if tools.is_empty() || !tools.iter().all(valid) || !distinct {
+            return Err(format!("{GLANCE_BINARIES}: unexpected program list: {list}").into());
+        }
+        let word = GLANCE_NUMBER_WORDS.get(tools.len()).ok_or(format!(
+            "{GLANCE_BINARIES}: too many programs to name in words"
+        ))?;
+        for (stated, what) in [
+            (
+                format!("the {word} tool programs answer `--version` and `--license`"),
+                "number of tool programs",
+            ),
+            (
+                format!("normalization follows Unicode {unicode},"),
+                "Unicode version",
+            ),
+        ] {
+            if !s.readme.contains(&stated) {
+                return Err(format!("the README states another {what}: {stated}").into());
+            }
+        }
+        let facts = GlanceFacts {
+            release,
+            since,
+            packages,
+            unicode,
+            tools,
+        };
+        facts.check()?;
+        Ok(facts)
+    }
+    /// What a drawing needs, also for facts made by hand.
+    fn check(&self) -> Result<()> {
+        let version = |v: &str, n: usize| {
+            let p: Vec<&str> = v.split('.').collect();
+            p.len() == n
+                && p.iter()
+                    .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
+        };
+        if self.packages == 0
+            || self.tools.is_empty()
+            || !version(&self.unicode, 3)
+            || !version(&self.release, 2)
+            || !version(&self.since, 2)
+            || self.since == self.release
+        {
+            return Err("the glance facts are empty or malformed".into());
+        }
+        Ok(())
+    }
+}
+/// What the glance card says, as its description and as the README alternative text.
+fn glance_text(f: &GlanceFacts) -> String {
+    format!("Versions {} and {} at a glance. New in {}: {} tool programs answer --version and --license. Since {}: {} packages in Cargo.lock, none from outside this checkout; Unicode {} for normalization; SHA-256 written here.", f.since, f.release, f.release, f.tools.len(), f.since, f.packages, f.unicode)
+}
+/// A conservative width test: 0.62 of the font size per character, plus any
+/// letter spacing, must leave 8 % of the room free, so a wider fallback font fits.
+fn glance_fit(text: &str, size: f64, spacing: f64, room: f64) -> Result<()> {
+    let need = text.chars().count() as f64 * (0.62 * size + spacing);
+    if need > 0.92 * room {
+        return Err(format!("{text} does not fit {room:.0} px at {size} px").into());
+    }
+    Ok(())
+}
+/// Big characters whose digits roll up into place like a counter, with the
+/// keyframes and classes they need; the final characters carry class `rf`.
+struct GlanceRoll {
+    body: String,
+    names: Vec<String>,
+    style: String,
+    clips: usize,
+}
+impl GlanceRoll {
+    fn new() -> GlanceRoll {
+        GlanceRoll {
+            body: String::new(),
+            names: Vec::new(),
+            style: String::new(),
+            clips: 0,
+        }
+    }
+    /// The advance of one character: wide enough for a wider fallback font,
+    /// since every character is placed on its own.
+    fn advance(c: char, size: f64) -> f64 {
+        size * match c {
+            '0'..='9' => 0.64,
+            '.' | ',' => 0.34,
+            _ => 0.72,
+        }
+    }
+    /// Draws `text` with its baseline at `y`, left-aligned at `x`.
+    fn put(&mut self, (x, y): Point, size: f64, text: &str, delay: f64, colour: &str) {
+        let line = 1.1 * size;
+        self.body.push_str(&format!(
+            r#"<g class="roll" aria-label="{}" font-size="{size}" font-weight="700" style="fill:{colour}">"#,
+            xml(text)
+        ));
+        let mut cx = x;
+        for (i, c) in text.chars().enumerate() {
+            let width = GlanceRoll::advance(c, size);
+            let Some(d) = c.to_digit(10) else {
+                self.body.push_str(&format!(
+                    r#"<text class="rf" x="{cx:.1}" y="{y:.1}" style="fill:{colour}">{}</text>"#,
+                    xml(&c.to_string())
+                ));
+                cx += width;
+                continue;
+            };
+            // A zero rolls a full turn, so every digit moves.
+            let steps = if d == 0 { 10 } else { d };
+            let name = format!("ro{}s{steps}", size.round() as u32);
+            if !self.names.contains(&name) {
+                self.style.push_str(&format!(
+                    ".{name}{{animation-name:{name}}}@keyframes {name}{{from{{transform:translateY({:.1}px)}}}}",
+                    f64::from(steps) * line
+                ));
+                self.names.push(name.clone());
+            }
+            let id = format!("glroll{}", self.clips);
+            self.clips += 1;
+            self.body.push_str(&format!(
+                r#"<clipPath id="{id}"><rect x="{:.1}" y="{:.1}" width="{:.1}" height="{:.1}"/></clipPath><g clip-path="url(#{id})"><g class="rl {name}" style="animation-delay:{:.2}s">"#,
+                cx - 0.04 * size,
+                y - 0.92 * size,
+                width + 0.08 * size,
+                1.16 * size,
+                delay + 0.08 * i as f64
+            ));
+            for k in 0..=steps {
+                let class = if k == steps { r#" class="rf""# } else { "" };
+                self.body.push_str(&format!(
+                    r#"<text{class} x="{cx:.1}" y="{:.1}" style="fill:{colour}">{}</text>"#,
+                    y - f64::from(steps - k) * line,
+                    k % 10
+                ));
+            }
+            self.body.push_str("</g></g>");
+            cx += width;
+        }
+        self.body.push_str("</g>");
+    }
+    /// The rules for the rolling digits, and the classes to still under reduced motion.
+    fn motion(&self) -> (String, String) {
+        let mut stilled = String::from(".rl");
+        for n in &self.names {
+            stilled.push_str(&format!(",.{n}"));
+        }
+        (
+            format!(
+                ".rl{{animation-duration:1.4s;animation-timing-function:cubic-bezier(.2,.8,.2,1);animation-fill-mode:both}}{}",
+                self.style
+            ),
+            stilled,
+        )
+    }
+}
+/// The headline of the glance card, in two lines.
+const GLANCE_HEADLINE: [&str; 2] = [
+    "No third-party packages · one Unicode version ·",
+    "programs that name their license",
+];
+/// Four tiles in two rows, each tagged with the version that brought it: the
+/// programs that name their license (new in the release), then the packages
+/// of Cargo.lock, the Unicode version and SHA-256 (since the version before);
+/// numbers roll into place. A line that does not fit its tile is refused.
+fn glance_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
+    f.check()?;
+    let t = theme(dark);
+    let mut roll = GlanceRoll::new();
+    let kicker = format!("{} AND {} AT A GLANCE", f.since, f.release);
+    glance_fit(&kicker, 16.0, 2.0, 1120.0)?;
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="40">{}</text>"#,
+        xml(&kicker)
+    );
+    for (k, line) in GLANCE_HEADLINE.iter().enumerate() {
+        glance_fit(line, 26.0, 0.0, 1120.0)?;
+        b.push_str(&format!(
+            r#"<text x="40" y="{}" font-size="26" class="b">{}</text>"#,
+            78 + 32 * k,
+            xml(line)
+        ));
+    }
+    let (new, since) = (
+        format!("new in {}", f.release),
+        format!("since {}", f.since),
+    );
+    let tiles: [(String, &str, &str, &str, &str, &str); 4] = [
+        (
+            f.tools.len().to_string(),
+            &new,
+            t.accent,
+            "tool programs answer",
+            "--version and --license",
+            t.muted,
+        ),
+        (
+            f.packages.to_string(),
+            &since,
+            t.accent,
+            "packages in Cargo.lock",
+            "0 from outside this checkout",
+            t.good,
+        ),
+        (
+            f.unicode.clone(),
+            &since,
+            t.accent,
+            "the Unicode version",
+            "that normalization follows",
+            t.ink,
+        ),
+        (
+            "SHA-256".to_string(),
+            &since,
+            t.good,
+            "written here",
+            "not taken from outside",
+            t.ink,
+        ),
+    ];
+    let (w, h) = (550.0, 158.0);
+    for (k, (big, tag, colour, l1, l2, c2)) in tiles.iter().enumerate() {
+        let (x, y) = (
+            40.0 + 570.0 * (k % 2) as f64,
+            132.0 + 174.0 * (k / 2) as f64,
+        );
+        let delay = 0.15 + 0.3 * k as f64;
+        b.push_str(&format!(
+            r#"<g class="gt" style="animation-delay:{delay:.2}s"><clipPath id="gtile{k}"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="16"/></clipPath><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="16" fill="{colour}" fill-opacity=".07" stroke="{line}"/><rect x="{x}" y="{y}" width="{w}" height="8" fill="{colour}" clip-path="url(#gtile{k})"/>"#,
+            line = t.line
+        ));
+        // The version tag in the upper right: filled when new in this release.
+        let pw = tag.chars().count() as f64 * 0.62 * 16.0 + 28.0;
+        let px = x + w - 24.0 - pw;
+        let (tag_fill, tag_ink) = if *tag == new {
+            (format!(r#"fill="{}""#, t.accent), t.bg[0])
+        } else {
+            (
+                format!(r#"fill="none" stroke="{}" stroke-width="1.5""#, t.muted),
+                t.muted,
+            )
+        };
+        b.push_str(&format!(
+            r#"<rect x="{px:.1}" y="{}" width="{pw:.1}" height="28" rx="14" {tag_fill}/><text x="{:.1}" y="{}" font-size="16" class="b" text-anchor="middle" style="fill:{tag_ink}">{}</text>"#,
+            y + 22.0,
+            px + pw / 2.0,
+            y + 42.0,
+            xml(tag)
+        ));
+        let room = px - x - 40.0;
+        if big.bytes().all(|c| c.is_ascii_digit() || c == b'.') {
+            let wide: f64 = big.chars().map(|c| GlanceRoll::advance(c, 60.0)).sum();
+            if wide > 0.92 * room {
+                return Err(format!("{big} does not fit its tile").into());
+            }
+            roll.put((x + 28.0, y + 80.0), 60.0, big, delay + 0.3, colour);
+            b.push_str(&std::mem::take(&mut roll.body));
+        } else {
+            glance_fit(big, 52.0, 0.0, room)?;
+            b.push_str(&format!(
+                r#"<text class="gp" style="animation-delay:{:.2}s;fill:{colour}" x="{}" y="{}" font-size="52" font-weight="700">{}</text>"#,
+                delay + 0.4,
+                x + 28.0,
+                y + 78.0,
+                xml(big)
+            ));
+        }
+        glance_fit(l1, 20.0, 0.0, w - 56.0)?;
+        glance_fit(l2, 18.0, 0.0, w - 56.0)?;
+        let mono = if l2.starts_with("--") { "mono " } else { "" };
+        b.push_str(&format!(
+            r#"<text x="{}" y="{}" font-size="20">{}</text><text class="{mono}b" x="{}" y="{}" font-size="18" style="fill:{c2}">{}</text></g>"#,
+            x + 28.0,
+            y + 116.0,
+            xml(l1),
+            x + 28.0,
+            y + 142.0,
+            xml(l2)
+        ));
+    }
+    let (roll_rules, stilled) = roll.motion();
+    let style = format!(
+        ".kick{{font-size:16px}}.gt{{animation:glrise .7s cubic-bezier(.2,.8,.2,1) both}}.gp{{animation:glpop .8s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:left bottom}}{roll_rules}@keyframes glrise{{from{{opacity:0;transform:translateY(26px)}}to{{opacity:1;transform:none}}}}@keyframes glpop{{0%{{opacity:0;transform:scale(.6)}}70%{{opacity:1;transform:scale(1.06)}}to{{opacity:1;transform:none}}}}{}@media (prefers-reduced-motion:reduce){{.gt,.gp,{stilled}{{animation:none}}}}",
+        RESULT_STYLE.replace("MUTED", t.muted)
+    );
+    Ok(card(
+        (1200, 484),
+        t,
+        (
+            &xml(&format!(
+                "Versions {} and {} at a glance",
+                f.since, f.release
+            )),
+            &xml(&glance_text(f)),
+        ),
+        &style,
+        &b,
+    ))
+}
+/// Version 0.8 at a glance: packages, Unicode version, programs that name their license.
+fn glance_card(dark: bool) -> Result<String> {
+    glance_draw(dark, &GlanceFacts::read()?)
+}
+fn glance_alt() -> Result<String> {
+    Ok(glance_text(&GlanceFacts::read()?))
+}
+// ===== VISUAL glance END =====
+
+// ===== VISUAL pledges BEGIN =====
+/// The file whose published-commitments table the time line is drawn from.
+const PLEDGES_FILE: &str = "docs/COMMITMENTS.md";
+/// The count columns a commitments table may have: header, one, many.
+const PLEDGES_COUNTED: [(&str, &str, &str); 2] = [
+    ("Directories", "directory", "directories"),
+    ("Files", "file", "files"),
+];
+/// One published commitment: only what the table states about it.
+#[derive(Clone, Debug, PartialEq)]
+struct PledgesRow {
+    date: String,
+    /// Days since 1970-01-01, to space the dates on the line.
+    day: i64,
+    label: String,
+    counts: [usize; 2],
+    hash: String,
+}
+/// The published-commitments table: what its two count columns count, and its rows in date order.
+#[derive(Clone, Debug, PartialEq)]
+struct Pledges {
+    /// What each count column counts, in the singular and the plural.
+    counted: [(&'static str, &'static str); 2],
+    rows: Vec<PledgesRow>,
+}
+impl Pledges {
+    /// The table of the repository, refused unless the README's own count agrees.
+    fn read() -> Result<Pledges> {
+        let text = fs::read_to_string(PLEDGES_FILE).map_err(|e| format!("{PLEDGES_FILE}: {e}"))?;
+        pledges_checked(&text, commitments()?)
+    }
+}
+/// The parsed table, refused when its rows are not the `counted` rows the README counts.
+fn pledges_checked(text: &str, counted: usize) -> Result<Pledges> {
+    let p = pledges_parse(text).map_err(|e| format!("{PLEDGES_FILE}: {e}"))?;
+    if p.rows.len() != counted {
+        return Err(format!(
+            "{PLEDGES_FILE}: {} commitment rows parsed, but the README counts {counted}",
+            p.rows.len()
+        )
+        .into());
+    }
+    Ok(p)
+}
+/// The trimmed cells of a table line `| a | b |`; None when it is no table line.
+fn pledges_cells(line: &str) -> Option<Vec<&str>> {
+    let inner = line.trim_end().strip_prefix('|')?.strip_suffix('|')?;
+    Some(inner.split('|').map(str::trim).collect())
+}
+/// A YYYY-MM-DD calendar date as days since 1970-01-01.
+fn pledges_day(date: &str) -> Result<i64> {
+    let b = date.as_bytes();
+    let shape = b.len() == 10
+        && b.iter().enumerate().all(|(i, c)| {
+            if i == 4 || i == 7 {
+                *c == b'-'
+            } else {
+                c.is_ascii_digit()
+            }
+        });
+    if !shape {
+        return Err(format!("commitment date {date:?} is not YYYY-MM-DD").into());
+    }
+    let (y, m, d): (i64, i64, i64) = (date[..4].parse()?, date[5..7].parse()?, date[8..].parse()?);
+    let leap = y % 4 == 0 && (y % 100 != 0 || y % 400 == 0);
+    let month = [
+        31,
+        28 + i64::from(leap),
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+    ];
+    if !(1..=12).contains(&m) || d < 1 || d > month[(m - 1) as usize] {
+        return Err(format!("commitment date {date} is not a calendar day").into());
+    }
+    // Days from the civil calendar, counted from a March-based year.
+    let y = if m <= 2 { y - 1 } else { y };
+    let era = y.div_euclid(400);
+    let yoe = y - era * 400;
+    let doy = (153 * ((m + 9) % 12) + 2) / 5 + d - 1;
+    Ok(era * 146_097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719_468)
+}
+/// A count as the table writes it, with commas between groups of three digits.
+fn pledges_count(text: &str) -> Result<usize> {
+    let n: usize = text
+        .replace(',', "")
+        .parse()
+        .map_err(|_| format!("commitment count {text:?} is not a number"))?;
+    if grouped(n) != text {
+        return Err(format!("commitment count {text:?} is not written as {}", grouped(n)).into());
+    }
+    Ok(n)
+}
+/// The rows under "## Published commitments": date | label | two counts | `SHA-256`.
+/// Refused: no table, a header that names other columns, a row of another shape,
+/// a date that is no calendar day, dates out of order, a hash of other than 64
+/// hex characters, and a table without rows.
+fn pledges_parse(text: &str) -> Result<Pledges> {
+    let table = text
+        .split_once("## Published commitments\n")
+        .ok_or("no published-commitments table")?
+        .1;
+    let mut lines = table
+        .lines()
+        .take_while(|l| l.is_empty() || l.starts_with('|'))
+        .filter(|l| !l.is_empty());
+    let head = lines
+        .next()
+        .and_then(pledges_cells)
+        .ok_or("no header line in the commitments table")?;
+    if head.len() != 5
+        || !head[0].starts_with("Date")
+        || head[1] != "Label"
+        || !head[4].starts_with("SHA-256")
+    {
+        return Err(format!("unexpected commitments header: {head:?}").into());
+    }
+    let words = |cell: &str| {
+        PLEDGES_COUNTED
+            .iter()
+            .find(|c| c.0 == cell)
+            .map(|c| (c.1, c.2))
+            .ok_or_else(|| format!("unknown count column {cell:?} in the commitments header"))
+    };
+    let counted = [words(head[2])?, words(head[3])?];
+    if counted[0] == counted[1] {
+        return Err(format!("the commitments header counts {} twice", head[2]).into());
+    }
+    let rule = lines
+        .next()
+        .and_then(pledges_cells)
+        .ok_or("no rule line under the commitments header")?;
+    if rule.len() != 5
+        || rule
+            .iter()
+            .any(|c| c.is_empty() || !c.chars().all(|ch| ch == '-' || ch == ':'))
+    {
+        return Err("the commitments header is not followed by its rule line".into());
+    }
+    let mut rows: Vec<PledgesRow> = Vec::new();
+    for line in lines {
+        let c = pledges_cells(line)
+            .filter(|c| c.len() == 5)
+            .ok_or_else(|| format!("commitment row of another shape: {line}"))?;
+        let day = pledges_day(c[0])?;
+        if let Some(prev) = rows.last() {
+            if day < prev.day {
+                return Err(format!("commitment {} comes after {}", c[0], prev.date).into());
+            }
+        }
+        let label = c[1].replace('`', "");
+        if label.trim().is_empty() {
+            return Err(format!("commitment {} has no label", c[0]).into());
+        }
+        let hash = c[4]
+            .strip_prefix('`')
+            .and_then(|h| h.strip_suffix('`'))
+            .filter(|h| h.len() == 64 && h.bytes().all(|b| b.is_ascii_hexdigit()))
+            .ok_or_else(|| format!("commitment hash {:?} is not 64 hex characters", c[4]))?;
+        rows.push(PledgesRow {
+            date: c[0].to_string(),
+            day,
+            label,
+            counts: [pledges_count(c[2])?, pledges_count(c[3])?],
+            hash: hash.to_string(),
+        });
+    }
+    if rows.is_empty() {
+        return Err("no published commitment".into());
+    }
+    Ok(Pledges { counted, rows })
+}
+/// "1 directory", "1,436 directories": a count with the word of its column.
+fn pledges_words(n: usize, (one, many): (&str, &str)) -> String {
+    format!("{} {}", grouped(n), if n == 1 { one } else { many })
+}
+/// Both counts of a row under the names of their columns.
+fn pledges_counts(p: &Pledges, row: &PledgesRow) -> [String; 2] {
+    [
+        pledges_words(row.counts[0], p.counted[0]),
+        pledges_words(row.counts[1], p.counted[1]),
+    ]
+}
+/// "8 commitments" or "1 commitment".
+fn pledges_many(n: usize) -> String {
+    format!("{n} commitment{}", if n == 1 { "" } else { "s" })
+}
+/// What the time line shows, as its description and as the README alternative text.
+fn pledges_text(p: &Pledges) -> String {
+    format!(
+        "{}, {} to {}: each the SHA-256 of a manifest of a private directory, shown by its first 8 hex characters with its {} and {} counts. Checkable with xtask commitment-check once the files are handed over; a hash shows they did not change, not that they are correct.",
+        pledges_many(p.rows.len()),
+        p.rows[0].date,
+        p.rows[p.rows.len() - 1].date,
+        p.counted[0].0,
+        p.counted[1].0
+    )
+}
+/// The commitment's name: its label up to a colon, the rest is in the table.
+fn pledges_name(label: &str) -> &str {
+    match label.split_once(": ") {
+        Some((name, _)) if !name.trim().is_empty() => name,
+        _ => label,
+    }
+}
+/// Every date as MM-DD when all share one year (the title names it), else in full.
+fn pledges_tag(p: &Pledges, date: &str) -> String {
+    let year = &p.rows[0].date[..4];
+    if p.rows.iter().all(|r| r.date.starts_with(year)) {
+        date[5..].to_string()
+    } else {
+        date.to_string()
+    }
+}
+/// A cautious width of `text` at `size` px: 0.62 em per character, wide enough
+/// for a fallback font such as DejaVu Sans.
+fn pledges_width(text: &str, size: f64) -> f64 {
+    text.chars().count() as f64 * 0.62 * size
+}
+/// `text` in lines no wider than `room` px at `size` px; a word too long is cut.
+fn pledges_fit(text: &str, size: f64, room: f64) -> Vec<String> {
+    let max = ((room / (0.62 * size)) as usize).max(1);
+    let mut lines = Vec::new();
+    let mut line = String::new();
+    for word in text.split_whitespace() {
+        let chars: Vec<char> = word.chars().collect();
+        for piece in chars.chunks(max) {
+            let piece: String = piece.iter().collect();
+            let len = line.chars().count();
+            if len > 0 && len + 1 + piece.chars().count() <= max {
+                line.push(' ');
+                line.push_str(&piece);
+            } else {
+                if len > 0 {
+                    lines.push(std::mem::take(&mut line));
+                }
+                line = piece;
+            }
+        }
+    }
+    if !line.is_empty() {
+        lines.push(line);
+    }
+    lines
+}
+/// Sizes and places: side padding, the gap between chips, the chip columns, the
+/// padding inside a chip and the room its lock takes, and the share of a box a
+/// line may fill.
+const PLEDGES_SIDE: f64 = 40.0;
+const PLEDGES_GAP: f64 = 12.0;
+const PLEDGES_COLUMNS: usize = 3;
+const PLEDGES_PAD: f64 = 14.0;
+const PLEDGES_LOCK: f64 = 34.0;
+const PLEDGES_SLACK: f64 = 0.92;
+/// Font sizes: the title, a commitment's name, everything else.
+const PLEDGES_TITLE: f64 = 26.0;
+const PLEDGES_NAME: f64 = 20.0;
+const PLEDGES_SMALL: f64 = 16.0;
+/// A date on the line (or dates too close for two dots): its dot, its label,
+/// placed within the card on a label row above the line, and how many
+/// commitments it holds.
+struct PledgesDot {
+    tag: String,
+    x: f64,
+    label_x: f64,
+    label_row: usize,
+    count: usize,
+}
+/// The least distance between two dots on the line: their 13 px radius twice and a little.
+const PLEDGES_DOT_ROOM: f64 = 30.0;
+/// One sealed chip: one commitment's name lines, count lines and date tag.
+struct PledgesChip {
+    row: usize,
+    x: f64,
+    y: f64,
+    w: f64,
+    h: f64,
+    name: Vec<String>,
+    counts: Vec<String>,
+    tag: String,
+}
+/// Where everything goes.
+struct PledgesLayout {
+    x0: f64,
+    x1: f64,
+    first: i64,
+    span: i64,
+    ay: f64,
+    dots: Vec<PledgesDot>,
+    chips: Vec<PledgesChip>,
+    foot: f64,
+    height: u32,
+}
+impl PledgesLayout {
+    /// The x of a day on the line: dates are spaced by real date.
+    fn px(&self, day: i64) -> f64 {
+        if self.span == 0 {
+            (self.x0 + self.x1) / 2.0
+        } else {
+            self.x0 + (self.x1 - self.x0) * (day - self.first) as f64 / self.span as f64
+        }
+    }
+}
+/// The room a chip line has: the name line leaves room for the lock.
+fn pledges_room(w: f64, name: bool) -> f64 {
+    let lock = if name { PLEDGES_LOCK } else { 0.0 };
+    (w - 2.0 * PLEDGES_PAD - lock) * PLEDGES_SLACK
+}
+/// The time line on top, one dot per date with the number of its commitments
+/// and its label (labels that would touch go to further rows), then one chip
+/// per commitment in date order, three to a row.
+fn pledges_layout(p: &Pledges) -> PledgesLayout {
+    let n = p.rows.len();
+    let tags: Vec<String> = p.rows.iter().map(|r| pledges_tag(p, &r.date)).collect();
+    let half = (pledges_width(&tags[0], PLEDGES_SMALL) / 2.0).max(13.0);
+    let mut l = PledgesLayout {
+        x0: PLEDGES_SIDE + half,
+        x1: 1200.0 - PLEDGES_SIDE - half,
+        first: p.rows[0].day,
+        span: p.rows[n - 1].day - p.rows[0].day,
+        ay: 0.0,
+        dots: Vec::new(),
+        chips: Vec::new(),
+        foot: 0.0,
+        height: 0,
+    };
+    // Dates closer on the line than one dot share the dot of the first, which
+    // is labelled "first → last" and holds the commitments of all of them.
+    let mut groups: Vec<(f64, usize, usize)> = Vec::new();
+    for (i, r) in p.rows.iter().enumerate() {
+        let x = l.px(r.day);
+        match groups.last_mut() {
+            Some(g) if x - g.0 < PLEDGES_DOT_ROOM => g.2 = i,
+            _ => groups.push((x, i, i)),
+        }
+    }
+    let mut ends: Vec<f64> = Vec::new();
+    for (x, a, z) in groups {
+        let tag = if tags[a] == tags[z] {
+            tags[a].clone()
+        } else {
+            format!("{} → {}", tags[a], tags[z])
+        };
+        let half = pledges_width(&tag, PLEDGES_SMALL) / 2.0;
+        let label_x = x.clamp(PLEDGES_SIDE + half, 1200.0 - PLEDGES_SIDE - half);
+        let row = match ends.iter().position(|end| end + 10.0 <= label_x - half) {
+            Some(row) => row,
+            None => {
+                ends.push(f64::MIN);
+                ends.len() - 1
+            }
+        };
+        ends[row] = label_x + half;
+        l.dots.push(PledgesDot {
+            tag,
+            x,
+            label_x,
+            label_row: row,
+            count: z + 1 - a,
+        });
+    }
+    l.ay = 112.0 + 20.0 * (ends.len() - 1) as f64;
+    let w = (1200.0 - 2.0 * PLEDGES_SIDE - PLEDGES_GAP * (PLEDGES_COLUMNS - 1) as f64)
+        / PLEDGES_COLUMNS as f64;
+    let mut y = l.ay + 28.0;
+    for (k, rows) in p.rows.chunks(PLEDGES_COLUMNS).enumerate() {
+        let start = l.chips.len();
+        for (j, r) in rows.iter().enumerate() {
+            let [a, b] = pledges_counts(p, r);
+            let both = format!("{a} · {b}");
+            let counts = if pledges_width(&both, PLEDGES_SMALL) <= pledges_room(w, false) {
+                vec![both]
+            } else {
+                [a, b]
+                    .iter()
+                    .flat_map(|c| pledges_fit(c, PLEDGES_SMALL, pledges_room(w, false)))
+                    .collect()
+            };
+            let name = pledges_fit(pledges_name(&r.label), PLEDGES_NAME, pledges_room(w, true));
+            let h = 28.0 + 24.0 * (name.len() - 1) as f64 + 22.0 * counts.len() as f64 + 33.0;
+            l.chips.push(PledgesChip {
+                row: k * PLEDGES_COLUMNS + j,
+                x: PLEDGES_SIDE + (w + PLEDGES_GAP) * j as f64,
+                y,
+                w,
+                h,
+                name,
+                counts,
+                tag: tags[k * PLEDGES_COLUMNS + j].clone(),
+            });
+        }
+        // The chips of one row share the height of the tallest.
+        let tall = l.chips[start..].iter().map(|c| c.h).fold(0.0, f64::max);
+        for c in &mut l.chips[start..] {
+            c.h = tall;
+        }
+        y += tall + 10.0;
+    }
+    l.foot = y - 10.0 + 30.0;
+    l.height = (l.foot + 24.0 + 16.0) as u32;
+    l
+}
+/// The two footer lines: how a commitment is checked, and what it shows.
+const PLEDGES_FOOT: [&str; 2] = [
+    "Hashed now · checkable with xtask commitment-check once the files are handed over",
+    "A hash shows they did not change, not that they are correct · each code: first 8 hex of its SHA-256",
+];
+const PLEDGES_STYLE: &str = ".hx{fill:ACCENT;font-weight:700}.ax{transform-box:view-box;transform-origin:X0px 0;animation:pl-draw 1.4s cubic-bezier(.4,0,.2,1) .2s both}.dt{transform-box:fill-box;transform-origin:center;animation:pl-pop .45s cubic-bezier(.2,.8,.2,1) both}.cd{animation:pl-drop .55s cubic-bezier(.2,.8,.2,1) both}.sh{animation:pl-shut .3s cubic-bezier(.5,0,.6,1.6) both}.lk{transform-box:fill-box;transform-origin:center;animation:pl-click .4s ease-out both}@keyframes pl-draw{from{transform:scaleX(0)}to{transform:none}}@keyframes pl-pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:none}}@keyframes pl-drop{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:none}}@keyframes pl-shut{from{transform:translateY(-6px)}to{transform:none}}@keyframes pl-click{0%,55%{transform:none}75%{transform:scale(1.3)}100%{transform:none}}@media (prefers-reduced-motion:reduce){.ax,.dt,.cd,.sh,.lk{animation:none}}";
+/// When the i-th commitment's chip drops in, in seconds.
+fn pledges_delay(i: usize) -> f64 {
+    1.6 + 0.22 * i as f64
+}
+/// The commitments on a line of real dates: a dot per date with the number of
+/// commitments it holds, and below it one sealed chip per commitment with its
+/// name, its two counts, its date and the first 8 hex characters of its hash.
+/// The line draws from the left, the dots appear as it reaches them, the chips
+/// drop in date order and their locks click shut.
+fn pledges_draw(dark: bool, p: &Pledges) -> Result<String> {
+    let t = theme(dark);
+    let n = p.rows.len();
+    if n == 0 {
+        return Err("no published commitment".into());
+    }
+    let l = pledges_layout(p);
+    let (x0, x1, ay) = (l.x0, l.x1, l.ay);
+    let mut b = format!(
+        r#"<text x="{PLEDGES_SIDE}" y="56" font-size="{PLEDGES_TITLE}" class="b">{} · {} → {}</text>"#,
+        pledges_many(n),
+        xml(&p.rows[0].date),
+        xml(&p.rows[n - 1].date)
+    );
+    // The line with a tick per day, drawn from the left.
+    let mut ticks = String::new();
+    if l.span > 0 && l.span <= 120 {
+        for d in 0..=l.span {
+            ticks.push_str(&format!("M{:.1} {:.1}v12", l.px(l.first + d), ay - 6.0));
+        }
+    }
+    b.push_str(&format!(
+        r#"<g class="ax"><path d="M{:.1} {ay:.1}H{:.1}" stroke="{}" stroke-width="3" stroke-linecap="round"/><path d="{ticks}" stroke="{}" stroke-width="1.5"/></g>"#,
+        x0 - 20.0,
+        x1 + 20.0,
+        t.floor,
+        t.floor
+    ));
+    // A dot per date, once the line reaches it, with its number of commitments.
+    for d in &l.dots {
+        b.push_str(&format!(
+            r#"<g class="dt" style="animation-delay:{:.2}s"><circle cx="{x:.1}" cy="{ay:.1}" r="13" fill="{acc}" stroke="{bg}" stroke-width="3"/><text x="{x:.1}" y="{:.1}" font-size="{PLEDGES_SMALL}" text-anchor="middle" class="b" style="fill:{bg}">{}</text><text x="{:.1}" y="{:.1}" font-size="{PLEDGES_SMALL}" text-anchor="middle" class="b">{}</text></g>"#,
+            0.2 + 1.4 * (d.x - x0) / (x1 - x0).max(1.0),
+            ay + 5.5,
+            d.count,
+            d.label_x,
+            ay - 22.0 - 20.0 * d.label_row as f64,
+            xml(&d.tag),
+            x = d.x,
+            acc = t.accent,
+            bg = t.bg[0]
+        ));
+    }
+    for c in &l.chips {
+        let (r, x, y, w, h) = (&p.rows[c.row], c.x, c.y, c.w, c.h);
+        let delay = pledges_delay(c.row);
+        let mut lines = String::new();
+        let mut base = y + 28.0;
+        for (j, line) in c.name.iter().enumerate() {
+            if j > 0 {
+                base += 24.0;
+            }
+            lines.push_str(&format!(
+                r#"<text x="{:.1}" y="{base:.1}" font-size="{PLEDGES_NAME}" class="b">{}</text>"#,
+                x + PLEDGES_PAD,
+                xml(line)
+            ));
+        }
+        for line in &c.counts {
+            base += 22.0;
+            lines.push_str(&format!(
+                r#"<text x="{:.1}" y="{base:.1}" font-size="{PLEDGES_SMALL}">{}</text>"#,
+                x + PLEDGES_PAD,
+                xml(line)
+            ));
+        }
+        let (lx, ly) = (x + w - PLEDGES_PAD - 20.0, y + 12.0);
+        b.push_str(&format!(
+            r#"<g class="cd" style="animation-delay:{delay:.2}s"><rect x="{x:.1}" y="{y:.1}" width="{w:.1}" height="{h:.1}" rx="12" fill="{acc}" fill-opacity=".07" stroke="{}"/>{lines}<text x="{:.1}" y="{:.1}" font-size="{PLEDGES_SMALL}"><tspan class="b" style="fill:{acc}">{}</tspan><tspan class="mono hx" dx="12">{}</tspan></text><path class="sh" style="animation-delay:{:.2}s" d="M{:.1} {:.1}v-5a6 6 0 0 1 12 0v5" fill="none" stroke="{acc}" stroke-width="2.6"/><rect class="lk" style="animation-delay:{:.2}s" x="{lx:.1}" y="{:.1}" width="20" height="15" rx="3" fill="{acc}"/></g>"#,
+            t.line,
+            x + PLEDGES_PAD,
+            base + 22.0,
+            xml(&c.tag),
+            xml(&r.hash[..8]),
+            delay + 0.45,
+            lx + 4.0,
+            ly + 7.0,
+            delay + 0.45,
+            ly + 7.0,
+            acc = t.accent
+        ));
+    }
+    b.push_str(&format!(
+        r#"<text x="{PLEDGES_SIDE}" y="{:.1}" font-size="{PLEDGES_SMALL}" class="b">{}</text><text x="{PLEDGES_SIDE}" y="{:.1}" font-size="{PLEDGES_SMALL}" class="mut">{}</text>"#,
+        l.foot,
+        xml(PLEDGES_FOOT[0]),
+        l.foot + 24.0,
+        xml(PLEDGES_FOOT[1])
+    ));
+    let style = PLEDGES_STYLE
+        .replace("ACCENT", t.accent)
+        .replace("X0", &format!("{:.1}", x0 - 20.0))
+        + &RESULT_STYLE.replace("MUTED", t.muted);
+    Ok(card(
+        (1200, l.height),
+        t,
+        (
+            "Published commitments on a time line",
+            &xml(&pledges_text(p)),
+        ),
+        &style,
+        &b,
+    ))
+}
+/// The published commitments on a time line.
+fn pledges_card(dark: bool) -> Result<String> {
+    pledges_draw(dark, &Pledges::read()?)
+}
+fn pledges_alt() -> Result<String> {
+    Ok(xml(&pledges_text(&Pledges::read()?)))
+}
+// ===== VISUAL pledges END =====
+
+// ===== VISUAL core BEGIN =====
+/// One row of the README table of the memory core: the part, its crate and what it does.
+struct CoreRow {
+    name: String,
+    krate: String,
+    does: String,
+}
+/// The colour of a block.
+#[derive(Clone, Copy)]
+enum CoreHue {
+    Blue,
+    Green,
+    Amber,
+    Purple,
+}
+/// Purple faces (top, side bar, right) in light and dark; the themes have none.
+const CORE_PURPLE: [[&str; 3]; 2] = [
+    ["#c297ff", "#8250df", "#6639ba"],
+    ["#d2a8ff", "#a371f7", "#8957e5"],
+];
+/// What the card adds to a row of the table: a tag of two short lines that
+/// restates the row in the row's own words, the grid slot of its block
+/// (column, row) and its colour. Where the blocks stand is chosen here; which
+/// arrows join them is read from the crates.
+struct CoreTag {
+    krate: &'static str,
+    tag: [&'static str; 2],
+    slot: (f64, f64),
+    hue: CoreHue,
+}
+const CORE_TAGS: [CoreTag; 7] = [
+    CoreTag {
+        krate: "gel-orb",
+        tag: ["128 bytes, 1,024 bits", "round-trip exactly"],
+        slot: (0.0, 1.0),
+        hue: CoreHue::Blue,
+    },
+    CoreTag {
+        krate: "gel-store",
+        tag: ["CRC64 over header", "and over payload"],
+        slot: (1.0, 0.0),
+        hue: CoreHue::Blue,
+    },
+    CoreTag {
+        krate: "gel-reader",
+        tag: ["16 judgments at once,", "not 16 measurements"],
+        slot: (1.0, 1.0),
+        hue: CoreHue::Blue,
+    },
+    CoreTag {
+        krate: "gel-structural",
+        tag: ["XOR; a wrong parent", "is not detected"],
+        slot: (1.0, 2.0),
+        hue: CoreHue::Green,
+    },
+    CoreTag {
+        krate: "gel-history",
+        tag: ["copy or XOR difference", "rebuilt bit for bit"],
+        slot: (2.0, 2.0),
+        hue: CoreHue::Green,
+    },
+    CoreTag {
+        krate: "gel-phase-quad",
+        tag: ["one 1,152-byte record", "four equivalent views"],
+        slot: (2.0, 0.0),
+        hue: CoreHue::Amber,
+    },
+    CoreTag {
+        krate: "gel-physics",
+        tag: ["latency and bandwidth", "of your own RAM"],
+        slot: (2.0, 1.0),
+        hue: CoreHue::Purple,
+    },
+];
+/// One drawn block: a table row with its tag.
+struct CorePart {
+    name: String,
+    krate: String,
+    tag: [String; 2],
+    slot: (f64, f64),
+    hue: CoreHue,
+}
+/// The parts in the order of the table, and the dependencies among them as
+/// (a, b): part b builds on part a, as b's Cargo.toml declares.
+struct CoreMap {
+    parts: Vec<CorePart>,
+    links: Vec<(usize, usize)>,
+}
+/// The rows of the table "Each part, and the test that checks it" under
+/// "## The memory core" of a README template, in order.
+fn core_rows(template: &str) -> Result<Vec<CoreRow>> {
+    let mut lines = template
+        .lines()
+        .skip_while(|l| *l != "## The memory core")
+        .skip_while(|l| *l != "| Part | What it does | Check it |");
+    if lines.next().is_none() || !lines.next().is_some_and(|l| l.starts_with("|:---")) {
+        return Err("no table of the memory core in the template".into());
+    }
+    let mut rows: Vec<CoreRow> = Vec::new();
+    for line in lines.take_while(|l| l.starts_with("| ")) {
+        let cells: Vec<&str> = line
+            .strip_prefix("| ")
+            .and_then(|l| l.strip_suffix(" |"))
+            .ok_or(format!("unexpected core row: {line}"))?
+            .split(" | ")
+            .collect();
+        let [part, does, _check] = cells[..] else {
+            return Err(format!("unexpected core row: {line}").into());
+        };
+        let (name, krate) = part
+            .strip_suffix("`)")
+            .and_then(|p| p.split_once(" (`"))
+            .ok_or(format!("no crate in the core row: {line}"))?;
+        if name.is_empty()
+            || !name.chars().all(|c| c.is_ascii_alphanumeric() || c == ' ')
+            || krate.is_empty()
+            || !krate
+                .chars()
+                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
+        {
+            return Err(format!("unexpected part or crate name: {part}").into());
+        }
+        if rows.iter().any(|r| r.krate == krate) {
+            return Err(format!("{krate} is named twice in the core table").into());
+        }
+        rows.push(CoreRow {
+            name: name.to_string(),
+            krate: krate.to_string(),
+            does: does.to_string(),
+        });
+    }
+    if rows.is_empty() {
+        return Err("the core table has no rows".into());
+    }
+    Ok(rows)
+}
+const CORE_W: f64 = 310.0;
+const CORE_H: f64 = 130.0;
+const CORE_D: f64 = 14.0;
+/// The top left corner of the front face of a block in grid slot (column, row).
+fn core_at((col, row): (f64, f64)) -> Point {
+    (40.0 + 398.0 * col, 150.0 + 156.0 * row)
+}
+/// Whether a line fits inside a block at `size` px, counting `wide` × size per
+/// character and leaving 8 % to spare for a wider fallback font.
+fn core_fits(text: &str, size: f64, wide: f64) -> bool {
+    text.chars().count() as f64 * wide * size <= (CORE_W - 26.0) * 0.92
+}
+/// The words of a tag that its row must contain: every word of three or more
+/// characters and every number, such as `1,024` or `CRC64`.
+fn core_words(tag: &str) -> Vec<String> {
+    tag.split(|c: char| !(c.is_ascii_alphanumeric() || c == ','))
+        .map(|w| w.trim_matches(',').to_ascii_lowercase())
+        .filter(|w| w.len() >= 3 || w.chars().any(|c| c.is_ascii_digit()))
+        .collect()
+}
+/// The crates a Cargo.toml names in its `[dependencies]` table. Development
+/// and build dependencies are not drawn; any other dependency table, or a line
+/// this reader does not understand, is refused rather than skipped.
+fn core_deps(toml: &str) -> Result<Vec<String>> {
+    let (mut on, mut out) = (false, Vec::new());
+    for line in toml.lines().map(str::trim) {
+        if line.starts_with('[') {
+            on = line == "[dependencies]";
+            if !on
+                && line.contains("dependencies")
+                && !line.starts_with("[dev-dependencies]")
+                && !line.starts_with("[build-dependencies]")
+            {
+                return Err(format!("unsupported dependency table {line}").into());
+            }
+        } else if on && !line.is_empty() && !line.starts_with('#') {
+            let name = line.split(['=', '.']).next().unwrap_or("").trim();
+            if name.is_empty()
+                || !name
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+            {
+                return Err(format!("unexpected dependency line {line}").into());
+            }
+            out.push(name.to_string());
+        }
+    }
+    Ok(out)
+}
+/// "a", "a and b", "a, b and c".
+fn core_list(names: &[&str]) -> String {
+    match names {
+        [] => String::new(),
+        [one] => one.to_string(),
+        [rest @ .., last] => format!("{} and {last}", rest.join(", ")),
+    }
+}
+/// Joins the table rows to their tags and reads each crate's dependencies from
+/// its Cargo.toml (through `cargo`, which gives the file's text). Refuses a
+/// crate whose Cargo.toml cannot be read, a row without a tag, a tag without a
+/// row, a tag word its row does not contain, a line too long for its block,
+/// two blocks in one slot, a slot off the grid, an arrow that would cross a
+/// block, and parts that stand alone but cannot be framed apart.
+fn core_map(
+    rows: &[CoreRow],
+    tags: &[CoreTag],
+    cargo: &dyn Fn(&str) -> Result<String>,
+) -> Result<CoreMap> {
+    let (mut parts, mut deps): (Vec<CorePart>, Vec<Vec<String>>) = (Vec::new(), Vec::new());
+    for row in rows {
+        let k = row.krate.as_str();
+        deps.push(core_deps(&cargo(k)?).map_err(|e| format!("crates/{k}/Cargo.toml: {e}"))?);
+        let tag = tags
+            .iter()
+            .find(|t| t.krate == k)
+            .ok_or(format!("the core card has no tag for {k}"))?;
+        let lines = [
+            (row.name.as_str(), 30.0, 0.66),
+            (k, 19.0, 0.62),
+            (tag.tag[0], 19.0, 0.62),
+            (tag.tag[1], 19.0, 0.62),
+        ];
+        if let Some((text, ..)) = lines.iter().find(|(s, size, w)| !core_fits(s, *size, *w)) {
+            return Err(format!("{text} does not fit its block").into());
+        }
+        let does = row.does.to_ascii_lowercase();
+        for word in tag.tag.iter().flat_map(|l| core_words(l)) {
+            if !does.contains(&word) {
+                return Err(format!("the tag of {k} says {word}, its row does not").into());
+            }
+        }
+        let (col, line) = tag.slot;
+        if ![0.0, 1.0, 2.0].contains(&col) || ![0.0, 1.0, 2.0].contains(&line) {
+            return Err(format!("the slot of {k} is off the grid").into());
+        }
+        if let Some(p) = parts.iter().find(|p| p.slot == tag.slot) {
+            return Err(format!("{k} and {} share a slot", p.krate).into());
+        }
+        parts.push(CorePart {
+            name: row.name.clone(),
+            krate: row.krate.clone(),
+            tag: tag.tag.map(str::to_string),
+            slot: tag.slot,
+            hue: tag.hue,
+        });
+    }
+    if let Some(t) = tags
+        .iter()
+        .find(|t| !rows.iter().any(|r| r.krate == t.krate))
+    {
+        return Err(format!("the tag of {} has no row in the core table", t.krate).into());
+    }
+    let mut links = Vec::new();
+    for (b, names) in deps.iter().enumerate() {
+        for name in names {
+            if let Some(a) = parts.iter().position(|p| p.krate == *name) {
+                links.push((a, b));
+            }
+        }
+    }
+    let m = CoreMap { parts, links };
+    m.routes()?;
+    m.frame()?;
+    Ok(m)
+}
+impl CoreMap {
+    fn read() -> Result<CoreMap> {
+        core_map(&core_rows(NATIVE)?, &CORE_TAGS, &|k: &str| {
+            let p = format!("crates/{k}/Cargo.toml");
+            Ok(fs::read_to_string(&p).map_err(|e| format!("{p}: {e}"))?)
+        })
+    }
+    /// The lowest edge of the blocks.
+    fn floor(&self) -> f64 {
+        self.parts
+            .iter()
+            .map(|p| core_at(p.slot).1 + CORE_H)
+            .fold(0.0, f64::max)
+    }
+    /// Each arrow as its path and its head. Between neighbouring columns it
+    /// runs through the gap; across a column it runs below every block, which
+    /// needs no block under either end. Anything else would cross a block.
+    fn routes(&self) -> Result<Vec<(String, String)>> {
+        let below = |p: &CorePart| {
+            self.parts
+                .iter()
+                .any(|q| q.slot.0 == p.slot.0 && q.slot.1 > p.slot.1)
+        };
+        let (mut lane, mut out) = (0.0, Vec::new());
+        for &(a, b) in &self.links {
+            let (pa, pb) = (&self.parts[a], &self.parts[b]);
+            let ((ax, ay), (bx, by)) = (core_at(pa.slot), core_at(pb.slot));
+            let step = pb.slot.0 - pa.slot.0;
+            if step == 1.0 {
+                let (x1, y1, x2, y2) = (
+                    ax + CORE_W + CORE_D + 2.0,
+                    ay + CORE_H / 2.0,
+                    bx - 12.0,
+                    by + CORE_H / 2.0,
+                );
+                let mx = (x1 + x2) / 2.0;
+                let d = if y1 == y2 {
+                    format!("M{x1:.1} {y1:.1}H{x2:.1}")
+                } else {
+                    format!("M{x1:.1} {y1:.1}C{mx:.1} {y1:.1} {mx:.1} {y2:.1} {x2:.1} {y2:.1}")
+                };
+                let head = format!(
+                    "{x2:.1},{:.1} {:.1},{y2:.1} {x2:.1},{:.1}",
+                    y2 - 7.0,
+                    x2 + 10.0,
+                    y2 + 7.0
+                );
+                out.push((d, head));
+            } else if step > 1.0 && !below(pa) && !below(pb) {
+                let y = self.floor() + 30.0 + 16.0 * lane;
+                lane += 1.0;
+                let (x1, x2, y2) = (ax + CORE_W / 2.0, bx + CORE_W / 2.0, by + CORE_H + 12.0);
+                let d = format!("M{x1:.1} {:.1}V{y:.1}H{x2:.1}V{y2:.1}", ay + CORE_H + 2.0);
+                let head = format!(
+                    "{:.1},{y2:.1} {x2:.1},{:.1} {:.1},{y2:.1}",
+                    x2 - 7.0,
+                    y2 - 10.0,
+                    x2 + 7.0
+                );
+                out.push((d, head));
+            } else {
+                return Err(format!(
+                    "{} builds on {}, but an arrow between their slots would cross a block",
+                    pb.krate, pa.krate
+                )
+                .into());
+            }
+        }
+        Ok(out)
+    }
+    /// How many arrows run below the blocks.
+    fn lanes(&self) -> usize {
+        self.links
+            .iter()
+            .filter(|&&(a, b)| self.parts[b].slot.0 - self.parts[a].slot.0 > 1.0)
+            .count()
+    }
+    /// The parts with no dependency either way among the parts.
+    fn alone(&self) -> Vec<usize> {
+        (0..self.parts.len())
+            .filter(|&i| !self.links.iter().any(|&(a, b)| a == i || b == i))
+            .collect()
+    }
+    /// The frame (left, top, right, bottom) around the parts that stand alone,
+    /// with room for its caption; refused when another block stands inside it.
+    fn frame(&self) -> Result<Option<(f64, f64, f64, f64)>> {
+        let alone = self.alone();
+        if alone.is_empty() {
+            return Ok(None);
+        }
+        let (mut l, mut t, mut r, mut b) = (f64::MAX, f64::MAX, 0.0_f64, 0.0_f64);
+        for &i in &alone {
+            let (x, y) = core_at(self.parts[i].slot);
+            (l, t) = (l.min(x - 14.0), t.min(y - CORE_D - 40.0));
+            (r, b) = (r.max(x + CORE_W + CORE_D + 12.0), b.max(y + CORE_H + 6.0));
+        }
+        for (i, p) in self.parts.iter().enumerate() {
+            let (x, y) = core_at(p.slot);
+            if !alone.contains(&i)
+                && x < r
+                && x + CORE_W + CORE_D > l
+                && y - CORE_D < b
+                && y + CORE_H > t
+            {
+                return Err(format!(
+                    "the parts that stand alone cannot be framed apart: {} stands among them",
+                    p.krate
+                )
+                .into());
+            }
+        }
+        Ok(Some((l, t, r, b)))
+    }
+    /// How many arrows lead to each part along the longest way.
+    fn depths(&self) -> Vec<usize> {
+        let mut depth = vec![0; self.parts.len()];
+        for _ in 0..self.parts.len() {
+            for &(a, b) in &self.links {
+                depth[b] = depth[b].max(depth[a] + 1);
+            }
+        }
+        depth
+    }
+}
+/// What the core card says, as its description and as the README alternative text.
+fn core_text(m: &CoreMap) -> String {
+    // Parts that build on the same parts are said together.
+    let mut groups: Vec<(Vec<usize>, Vec<&str>)> = Vec::new();
+    for (b, p) in m.parts.iter().enumerate() {
+        let on: Vec<usize> = m.links.iter().filter(|l| l.1 == b).map(|l| l.0).collect();
+        if on.is_empty() {
+            continue;
+        }
+        match groups.iter_mut().find(|g| g.0 == on) {
+            Some(g) => g.1.push(&p.name),
+            None => groups.push((on, vec![&p.name])),
+        }
+    }
+    let said: Vec<String> = groups
+        .iter()
+        .map(|(on, who)| {
+            let on: Vec<&str> = on.iter().map(|&a| m.parts[a].name.as_str()).collect();
+            let s = if who.len() == 1 { "s" } else { "" };
+            format!("{} build{s} on {}", core_list(who), core_list(&on))
+        })
+        .collect();
+    let e = m.links.len();
+    let mut s = format!(
+        "The {} parts of the memory core and the {e} {} their Cargo.toml files declare among them",
+        m.parts.len(),
+        if e == 1 { "dependency" } else { "dependencies" }
+    );
+    if said.is_empty() {
+        s.push('.');
+    } else {
+        s.push_str(&format!(": {}.", said.join("; ")));
+    }
+    let alone: Vec<&str> = m
+        .alone()
+        .iter()
+        .map(|&i| m.parts[i].name.as_str())
+        .collect();
+    if !alone.is_empty() {
+        let s1 = if alone.len() == 1 { "s" } else { "" };
+        s.push_str(&format!(" {} stand{s1} alone.", core_list(&alone)));
+    }
+    s
+}
+/// The parts as blocks with the part name, the crate and the tag, and an arrow
+/// for each dependency among them; the parts that stand alone are framed
+/// apart. The blocks appear in the order of the table, the arrows draw in, one
+/// pulse runs along them once, and the picture holds.
+fn core_draw(dark: bool, m: &CoreMap) -> Result<String> {
+    let t = theme(dark);
+    let (n, e) = (m.parts.len(), m.links.len());
+    let routes = m.routes()?;
+    let purple = CORE_PURPLE[usize::from(dark)];
+    let faces = |h: CoreHue| match h {
+        CoreHue::Blue => t.blue,
+        CoreHue::Green => t.green,
+        CoreHue::Amber => t.amber,
+        CoreHue::Purple => purple,
+    };
+    let front = if dark { t.bg[1] } else { t.paper[0] };
+    let enter = |i: usize| 0.2 + 0.22 * i as f64;
+    let after = enter(n) + 0.6;
+    let title = format!(
+        "{n} parts, {e} {} between them",
+        if e == 1 { "dependency" } else { "dependencies" }
+    );
+    let mut b = format!(
+        r#"<text class="kick" x="40" y="42" style="font-size:16px">THE MEMORY CORE</text><text x="40" y="80" font-size="30" class="b">{}</text><text x="40" y="114" font-size="20" class="mut">Arrow A → B: B builds on A, as its Cargo.toml says</text>"#,
+        xml(&title)
+    );
+    if let Some((l, top, r, bottom)) = m.frame()? {
+        b.push_str(&format!(
+            r#"<g class="cx" style="animation-delay:{:.2}s"><rect x="{l:.1}" y="{top:.1}" width="{:.1}" height="{:.1}" rx="18" fill="{}" fill-opacity=".05" stroke="{}" stroke-width="2" stroke-dasharray="7 6"/><text x="{:.1}" y="{:.1}" font-size="18" class="b mut">stand alone</text></g>"#,
+            enter(n),
+            r - l,
+            bottom - top,
+            t.accent,
+            t.muted,
+            l + 18.0,
+            top + 27.0
+        ));
+    }
+    for (i, p) in m.parts.iter().enumerate() {
+        let (x, y) = core_at(p.slot);
+        let hue = faces(p.hue);
+        b.push_str(&format!(
+            r#"<g class="cb" style="animation-delay:{:.2}s">{}<rect x="{x}" y="{y}" width="{CORE_W}" height="{CORE_H}" fill="{front}" stroke="{}"/><rect x="{x}" y="{y}" width="8" height="{CORE_H}" fill="{}"/><text x="{}" y="{}" font-size="30" class="b">{}</text><text class="mono" x="{}" y="{}" font-size="19">{}</text><text x="{}" y="{}" font-size="19">{}</text><text x="{}" y="{}" font-size="19">{}</text></g>"#,
+            enter(i),
+            oblique(x, y, (CORE_W, CORE_H, CORE_D), [hue[0], front, hue[2]]),
+            t.line,
+            hue[1],
+            x + 24.0,
+            y + 42.0,
+            xml(&p.name),
+            x + 24.0,
+            y + 70.0,
+            xml(&p.krate),
+            x + 24.0,
+            y + 98.0,
+            xml(&p.tag[0]),
+            x + 24.0,
+            y + 121.0,
+            xml(&p.tag[1])
+        ));
+    }
+    let depth = m.depths();
+    let mut pulses = String::new();
+    for (&(a, c), (d, head)) in m.links.iter().zip(&routes) {
+        let (cx, cy) = core_at(m.parts[c].slot);
+        let draw = enter(a.max(c)) + 0.45;
+        let pulse = after + 0.8 * depth[a] as f64;
+        b.push_str(&format!(
+            r#"<path class="cf" style="animation-delay:{draw:.2}s" d="{d}" pathLength="100" fill="none" stroke="{}" stroke-width="2.6"/><polygon class="ch" style="animation-delay:{:.2}s" points="{head}" fill="{}"/>"#,
+            t.muted,
+            draw + 0.4,
+            t.muted
+        ));
+        pulses.push_str(&format!(
+            r#"<path class="cp" style="animation-delay:{pulse:.2}s" d="{d}" pathLength="100" fill="none" stroke-width="7" stroke-linecap="round"/><rect class="cg" style="animation-delay:{:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="{:.1}" rx="8" fill="none" stroke-width="3"/>"#,
+            pulse + 0.65,
+            cx - 6.0,
+            cy - CORE_D - 6.0,
+            CORE_W + CORE_D + 12.0,
+            CORE_H + CORE_D + 12.0
+        ));
+    }
+    b.push_str(&pulses);
+    let lanes = m.lanes() as f64;
+    let height = m.floor()
+        + if lanes > 0.0 {
+            44.0 + 16.0 * lanes
+        } else {
+            40.0
+        };
+    // The pulse and the glow have no stroke outside their keyframes, so a
+    // picture that does not move shows the arrows and blocks alone.
+    let style = format!(
+        ".cb{{animation:core-in .55s cubic-bezier(.2,.8,.2,1) both}}.cf{{animation:core-draw .5s ease-out both}}.ch,.cx{{animation:core-fade .5s ease-out both}}.cp{{animation:core-run .8s ease-in-out both}}.cg{{animation:core-glow .9s ease-out both}}@keyframes core-in{{from{{opacity:0;transform:translateY(16px)}}to{{opacity:1;transform:none}}}}@keyframes core-draw{{from{{stroke-dasharray:100 100;stroke-dashoffset:100}}to{{stroke-dasharray:100 100;stroke-dashoffset:0}}}}@keyframes core-fade{{from{{opacity:0}}to{{opacity:1}}}}@keyframes core-run{{from{{stroke:{a};stroke-dasharray:12 200;stroke-dashoffset:20}}to{{stroke:{a};stroke-dasharray:12 200;stroke-dashoffset:-110}}}}@keyframes core-glow{{0%,100%{{stroke:{a};stroke-opacity:0}}35%{{stroke:{a};stroke-opacity:1}}}}@media (prefers-reduced-motion:reduce){{.cb,.cf,.ch,.cx,.cp,.cg{{animation:none}}}}{}",
+        RESULT_STYLE.replace("MUTED", t.muted),
+        a = t.accent
+    );
+    Ok(card(
+        (1200, height as u32),
+        t,
+        ("The memory core", &xml(&core_text(m))),
+        &style,
+        &b,
+    ))
+}
+/// The parts of the memory core and the dependencies among them.
+fn core_card(dark: bool) -> Result<String> {
+    core_draw(dark, &CoreMap::read()?)
+}
+fn core_alt() -> Result<String> {
+    Ok(core_text(&CoreMap::read()?))
+}
+// ===== VISUAL core END =====
+
 /// Every generated SVG asset with its body.
 fn assets() -> Result<Vec<(String, String)>> {
     let evidence = Evidence::read()?;
@@ -2834,6 +5628,11 @@ fn assets() -> Result<Vec<(String, String)>> {
             out.push((chip_path(i, dark), chip(i, dark)));
         }
     }
+    for (name, draw, _) in VISUALS {
+        for dark in [false, true] {
+            out.push((visual_path(name, dark), draw(dark)?));
+        }
+    }
     Ok(out)
 }
 fn page() -> String {
@@ -2859,8 +5658,9 @@ fn native_intro() -> String {
     let mut grid = String::from("<table>\n");
     for (r, row) in SCENES.chunks(2).enumerate() {
         grid.push_str("<tr>\n");
-        for (c, (id, title, desc)) in row.iter().enumerate() {
-            grid.push_str(&format!("<td width=\"50%\" valign=\"top\">{}<h4>{title}</h4><a href=\"media/gifs/{id}-light.gif\">{}</a><p>{desc}</p><p><a href=\"media/gifs/{id}.txt\">Transcript</a> · <a href=\"media/gifs/{id}-dark.gif\">Dark full size</a></p></td>\n",chip_picture(r*2+c),picture(id,title,false)));
+        // The picture and its title say it; the longer description stays on the full page.
+        for (c, (id, title, _)) in row.iter().enumerate() {
+            grid.push_str(&format!("<td width=\"50%\" valign=\"top\">{}<h4>{title}</h4><a href=\"media/gifs/{id}-light.gif\">{}</a><p><a href=\"media/gifs/{id}.txt\">Transcript</a> · <a href=\"media/gifs/{id}-dark.gif\">Dark full size</a></p></td>\n",chip_picture(r*2+c),picture(id,title,false)));
         }
         grid.push_str("</tr>\n");
     }
@@ -2900,6 +5700,12 @@ fn native_intro() -> String {
         .replace("__HERO__", &picture(hero_id, hero_title, false))
         .replace("__HERO_ID__", hero_id)
         .replace("__GRID__", &grid)
+        .replace("__STATUS__", &visual_picture("status"))
+        .replace("__TERMINAL__", &visual_picture("terminal"))
+        .replace("__RERUN__", &visual_picture("rerun"))
+        .replace("__GLANCE__", &visual_picture("glance"))
+        .replace("__PLEDGES__", &visual_picture("pledges"))
+        .replace("__CORE__", &visual_picture("core"))
 }
 /// The dated rows of the published-commitments table, as the README counts them.
 fn commitments() -> Result<usize> {
@@ -3067,15 +5873,30 @@ fn run() -> Result<()> {
         .collect::<Result<_>>()?;
     let before = fs::read_to_string("README.md")?;
     if before.contains("<!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->") {
-        let mut same = before.starts_with(&native_intro())
-            && fs::read_to_string("docs/README-PRESENTATION.md")?
-                == GUIDE.replace("__RELEASE__", RELEASE)
-            && fs::read_to_string("README-MULTIMEDIA.html")? == page();
-        for (name, body) in assets()? {
-            same &= fs::read_to_string(&name).is_ok_and(|found| found == body);
+        // Every differing file is named, so a change in a source shows which picture it moves.
+        let mut differ = Vec::new();
+        if !before.starts_with(&native_intro()) {
+            differ.push("README.md".to_string());
         }
-        if !same {
-            return Err("existing presentation differs; refuse to overwrite it".into());
+        if fs::read_to_string("docs/README-PRESENTATION.md")?
+            != GUIDE.replace("__RELEASE__", RELEASE)
+        {
+            differ.push("docs/README-PRESENTATION.md".to_string());
+        }
+        if fs::read_to_string("README-MULTIMEDIA.html")? != page() {
+            differ.push("README-MULTIMEDIA.html".to_string());
+        }
+        for (name, body) in assets()? {
+            if !fs::read_to_string(&name).is_ok_and(|found| found == body) {
+                differ.push(name);
+            }
+        }
+        if !differ.is_empty() {
+            return Err(format!(
+                "existing presentation differs ({}); refuse to overwrite it",
+                differ.join(", ")
+            )
+            .into());
         }
         check_page(&page())?;
         println!("README_PRESENTATION=UNCHANGED original media pins verified");
@@ -3166,7 +5987,7 @@ mod tests {
     #[test]
     fn themes_have_no_placeholders() {
         let all = assets().unwrap();
-        assert_eq!(all.len(), 24 + 2 * CHIPS.len());
+        assert_eq!(all.len(), 24 + 2 * CHIPS.len() + 2 * VISUALS.len());
         for (name, s) in all {
             assert!(!s.contains("__"), "{name}");
             assert!(!s.contains("<script"), "{name}");
@@ -3231,8 +6052,9 @@ mod tests {
     #[test]
     fn readme_is_short_and_names_no_question_set() {
         let s = native_intro();
-        // Each image is one line; the text itself stays near 160 lines.
-        assert!(s.lines().count() <= 200, "{} lines", s.lines().count());
+        // Each image is one line; folded details add lines a reader does not see,
+        // so the words in view are limited separately.
+        assert!(s.lines().count() <= 270, "{} lines", s.lines().count());
         let lower = s.to_lowercase();
         for named in [
             "answer-or-abstain",
@@ -3567,11 +6389,16 @@ mod tests {
     fn the_first_page_does_not_say_how_a_view_arranges_bytes() {
         let r = Q8Runs::read().unwrap();
         // Gradient stops carry an `offset` attribute, so the phrase is matched whole.
-        for text in [
+        let mut texts = vec![
             native_intro(),
             record_card(false, &r),
             record_card(true, &r),
-        ] {
+        ];
+        for (_, draw, _) in VISUALS {
+            texts.push(draw(false).unwrap());
+            texts.push(draw(true).unwrap());
+        }
+        for text in texts {
             let lower = text.to_lowercase();
             for word in ["reversal", "additive offset", "modulo", "seed"] {
                 assert!(!lower.contains(word), "{word}");
@@ -4157,4 +6984,2422 @@ mod tests {
             assert!(!new.contains(r#"class="sp "#) && !new.contains("<circle class=\"fd\""));
         }
     }
+    /// The words a reader sees without opening anything: outside code blocks,
+    /// outside folded `<details>`, outside HTML tags (alternative text
+    /// included) and table rules; a word has at least one ASCII letter or digit.
+    fn visible_words(readme: &str) -> usize {
+        let (mut code, mut folded, mut text) = (false, false, String::new());
+        for line in readme.lines() {
+            if line.starts_with("```") {
+                code = !code;
+                continue;
+            }
+            if code {
+                continue;
+            }
+            if line.contains("<details>") {
+                folded = true;
+            }
+            if folded {
+                folded = !line.contains("</details>");
+                continue;
+            }
+            let rule = line.starts_with('|') && line.chars().all(|c| "|:- ".contains(c));
+            if rule {
+                continue;
+            }
+            let mut tag = false;
+            for c in line.chars() {
+                match c {
+                    '<' => tag = true,
+                    '>' if tag => tag = false,
+                    _ if !tag => text.push(c),
+                    _ => {}
+                }
+            }
+            text.push(' ');
+        }
+        text.split_whitespace()
+            .filter(|w| w.bytes().any(|b| b.is_ascii_alphanumeric()))
+            .count()
+    }
+    #[test]
+    fn the_readme_shows_pictures_more_than_words() {
+        let s = native_intro();
+        let words = visible_words(&s);
+        assert!(words <= 600, "{words} visible words");
+        // The layout before the pictures, kept as the archive of this change, fails the limit.
+        let before = include_str!("readme_before_visual.txt");
+        assert!(visible_words(before) > 1600, "{}", visible_words(before));
+        assert!(s.matches("<img ").count() >= before.matches("<img ").count() + VISUALS.len());
+        // Every fold opens with a summary and closes, so no text is lost from view by accident.
+        assert_eq!(
+            s.matches("<details>").count(),
+            s.matches("</details>").count()
+        );
+        assert_eq!(
+            s.matches("<details><summary>").count(),
+            s.matches("<details>").count()
+        );
+    }
+    #[test]
+    fn every_sentence_the_registry_cites_occurs_once() {
+        // `xtask claims` refuses a cited sentence that occurs twice; an
+        // alternative text that repeats one would fail there, so it fails here first.
+        let claims = fs::read_to_string("xtask/src/claims.rs").unwrap();
+        let fold = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
+        let readme = fold(&native_intro());
+        let mut cited = 0;
+        for entry in claims.split("Citation {").skip(1) {
+            if !entry.contains("file: \"README.md\"") {
+                continue;
+            }
+            let words = entry
+                .split_once("words: \"")
+                .and_then(|(_, rest)| rest.split_once("\",\n"))
+                .map(|(w, _)| w.replace("\\\"", "\""))
+                .unwrap();
+            assert_eq!(readme.matches(&fold(&words)).count(), 1, "{words}");
+            cited += 1;
+        }
+        assert!(cited >= 10, "{cited} cited README sentences found");
+    }
+    #[test]
+    fn folding_counts_what_it_hides() {
+        let open = "# T\n\nOne two three.\n";
+        assert_eq!(visible_words(open), 4);
+        let folded = "# T\n\n<details><summary>s</summary>\n\nOne two three.\n\n</details>\n";
+        assert_eq!(visible_words(folded), 1);
+        let code = "```sh\ncargo run\n```\n| a | b |\n|:---|:---|\n<img alt=\"many words here\" src=\"x\">\n";
+        assert_eq!(visible_words(code), 2);
+    }
+    #[test]
+    fn every_visual_is_drawn_from_data_and_can_stand_still() {
+        for (name, draw, alt) in VISUALS {
+            let alt = alt().unwrap();
+            assert!(!alt.contains("STUB") && !alt.contains('"'), "{name}");
+            assert!(native_intro().contains(&visual_picture(name)), "{name}");
+            for dark in [false, true] {
+                let s = draw(dark).unwrap();
+                assert!(!s.contains("STUB"), "{name}");
+                assert!(s.contains("<title"), "{name}");
+                assert!(s.contains("prefers-reduced-motion"), "{name}");
+                assert!(s.contains("@keyframes"), "{name}: a visual moves");
+                assert!(!s.contains("<script") && !s.contains("href"), "{name}");
+            }
+            assert_ne!(draw(false).unwrap(), draw(true).unwrap(), "{name}");
+        }
+    }
+    // ===== TEST status BEGIN =====
+    /// Classes animated in a card's style that the reduced-motion rule does not
+    /// still, and base rules (outside keyframes) that hide content.
+    fn status_motion(svg: &str) -> (Vec<String>, Vec<String>) {
+        let style = svg.split_once("<style>").unwrap().1;
+        let style = style.split_once("</style>").unwrap().0;
+        let (main, reduced) = style
+            .split_once("@media (prefers-reduced-motion:reduce){")
+            .expect("a reduced-motion rule");
+        let stilled: Vec<&str> = reduced
+            .split_once("{animation:none}")
+            .expect("animation:none")
+            .0
+            .split(',')
+            .map(|s| s.trim().trim_start_matches('.'))
+            .collect();
+        let (mut missing, mut hidden, mut rest) = (Vec::new(), Vec::new(), main);
+        while let Some((selector, after)) = rest.split_once('{') {
+            if selector.trim_start().starts_with("@keyframes") {
+                rest = after.split_once("}}").unwrap().1;
+                continue;
+            }
+            let (body, after) = after.split_once('}').unwrap();
+            for name in selector.split(',') {
+                let name = name.trim().trim_start_matches('.');
+                if body.contains("animation") && !stilled.contains(&name) {
+                    missing.push(name.to_string());
+                }
+                if body.contains("opacity:0") || body.contains("display:none") {
+                    hidden.push(name.to_string());
+                }
+            }
+            rest = after;
+        }
+        (missing, hidden)
+    }
+    /// The drawn count of published commitments.
+    fn status_count(svg: &str) -> String {
+        let at = svg.split_once(r#"<text class="sn b""#).unwrap().1;
+        at.split_once('>')
+            .unwrap()
+            .1
+            .split_once('<')
+            .unwrap()
+            .0
+            .to_string()
+    }
+    #[test]
+    fn status_card_counts_the_published_commitments() {
+        let text = fs::read_to_string("docs/COMMITMENTS.md").unwrap();
+        let table = text.split_once("## Published commitments\n").unwrap().1;
+        let dated = table
+            .lines()
+            .take_while(|l| l.is_empty() || l.starts_with('|'))
+            .filter(|l| {
+                l.split('|').nth(1).is_some_and(|d| {
+                    let d = d.trim().as_bytes();
+                    d.len() == 10
+                        && d.iter().enumerate().all(|(i, c)| match i {
+                            4 | 7 => *c == b'-',
+                            _ => c.is_ascii_digit(),
+                        })
+                })
+            })
+            .count();
+        assert!(dated > 0);
+        let f = StatusFacts::read().unwrap();
+        assert_eq!(f.commitments, dated);
+        for dark in [false, true] {
+            let s = status_card(dark).unwrap();
+            assert_eq!(status_count(&s), dated.to_string());
+            let mut wants: Vec<&str> = STATUS_COLUMNS.iter().map(|c| c.0).collect();
+            wants.extend(STATUS_FEET);
+            wants.extend(STATUS_PLEDGE);
+            for want in wants {
+                assert!(s.contains(&format!(">{}<", xml(want))), "{want}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—→×✓".contains(ch)));
+        }
+        let alt = status_alt().unwrap();
+        assert!(
+            alt.contains(&format!("{dated} published commitments")),
+            "{alt}"
+        );
+        assert!(alt.contains("which holds what is not published"));
+        assert!(alt.chars().count() <= 300 && !alt.contains('"'), "{alt}");
+        assert!(status_card(false).unwrap().contains(&xml(&alt)));
+    }
+    #[test]
+    fn status_card_keeps_the_words_of_the_readme() {
+        // Every item is quoted from its own row, so the picture cannot claim more.
+        status_rows(NATIVE).unwrap();
+        for (from, to) in [
+            // A heading elsewhere still says it; the row is what counts.
+            (
+                "a killed process losing nothing it confirmed",
+                "a killed process may lose what it confirmed",
+            ),
+            ("the private build that answers from them", "the build"),
+            (
+                "power-cut durability of snapshots and of the record history",
+                "power-cut durability of snapshots",
+            ),
+            ("One command each", "Several commands"),
+            ("are `NOT_ESTABLISHED`", "are open"),
+            // No line under the card, or no row of a column.
+            ("The text AI is a goal, not a result (", "The text AI ("),
+            ("| **Private** |", "| **Closed** |"),
+        ] {
+            assert!(NATIVE.contains(from), "{from}");
+            let changed = NATIVE.replace(from, to);
+            assert!(status_rows(&changed).is_err(), "{from}");
+        }
+        // The rewritten row alone fails, though the section heading keeps the phrase.
+        let row = NATIVE.replace(
+            "a killed process losing nothing it confirmed",
+            "a killed process may lose what it confirmed",
+        );
+        assert!(row.contains("A killed process loses nothing it confirmed"));
+    }
+    #[test]
+    fn status_card_draws_another_count_and_refuses_none() {
+        let s = status_draw(true, &StatusFacts { commitments: 23 }).unwrap();
+        assert_eq!(status_count(&s), "23");
+        assert!(s.contains("23 published commitments fix the contents"));
+        assert_ne!(s, status_card(true).unwrap());
+        assert!(status_draw(false, &StatusFacts { commitments: 0 }).is_err());
+        assert!(StatusFacts { commitments: 0 }.check().is_err());
+        // A count too long for its box is refused, not drawn over the edge.
+        let e = status_draw(false, &StatusFacts { commitments: 123 }).unwrap_err();
+        assert!(e.to_string().contains("does not fit"), "{e}");
+    }
+    #[test]
+    fn status_card_moves_and_can_stand_still() {
+        let (light, dark) = (status_card(false).unwrap(), status_card(true).unwrap());
+        assert_ne!(light, dark);
+        assert!(light.contains(LIGHT.good) && dark.contains(DARK.good));
+        let items: usize = STATUS_COLUMNS.iter().map(|c| c.2.len()).sum();
+        for s in [&light, &dark] {
+            assert_eq!(status_motion(s), (Vec::new(), Vec::new()));
+            assert_eq!(s.matches(r#"<g class="sc""#).count(), STATUS_COLUMNS.len());
+            assert_eq!(s.matches(r#"class="sd""#).count(), STATUS_COLUMNS.len());
+            assert_eq!(s.matches(r#"<g class="si""#).count(), items);
+            // Each coloured bar is clipped to its rounded column.
+            assert_eq!(
+                s.matches("clip-path=\"url(#stcol").count(),
+                STATUS_COLUMNS.len()
+            );
+            let h: f64 = s
+                .split_once("height=\"")
+                .unwrap()
+                .1
+                .split_once('"')
+                .unwrap()
+                .0
+                .parse()
+                .unwrap();
+            assert!((400.0..=460.0).contains(&h), "{h}");
+        }
+        // The checker catches an animated class left out, and a base rule that hides.
+        let broken = light.replace("{.sc,.si,", "{.si,");
+        assert_eq!(status_motion(&broken).0, ["sc"]);
+        let hiding = light.replace(".kick{font-size:16px}", ".kick{opacity:0}");
+        assert_eq!(status_motion(&hiding).1, ["kick"]);
+    }
+    // ===== TEST status END =====
+
+    // ===== TEST terminal BEGIN =====
+    /// The README's check block and table, cut out of NATIVE, so a mutant
+    /// changes one line of the real text.
+    fn terminal_part() -> String {
+        let from = NATIVE.find("```sh").unwrap();
+        let to = NATIVE[from..].find("</details>").unwrap() + from;
+        NATIVE[from..to].to_string()
+    }
+    /// Counted another way: the code block lines after the fetch.
+    fn terminal_runs() -> Vec<String> {
+        terminal_part()
+            .lines()
+            .skip_while(|l| *l != "cargo fetch --locked")
+            .skip(1)
+            .take_while(|l| !l.starts_with("```"))
+            .map(str::to_string)
+            .collect()
+    }
+    /// Counted another way: the table rows between the header and the end of the details.
+    fn terminal_rows() -> Vec<String> {
+        terminal_part()
+            .lines()
+            .skip_while(|l| !l.starts_with("| Command |"))
+            .skip(2)
+            .take_while(|l| l.starts_with('|'))
+            .map(str::to_string)
+            .collect()
+    }
+    #[test]
+    fn terminal_card_shows_every_command_and_line_of_the_readme() {
+        let checks = terminal_checks(NATIVE).unwrap();
+        let (runs, rows) = (terminal_runs(), terminal_rows());
+        assert!(!runs.is_empty() && runs.iter().all(|r| r.starts_with("cargo run ")));
+        assert_eq!(checks.len(), runs.len());
+        assert_eq!(rows.len(), runs.len());
+        // Each drawn name is the first cell of a table row, each row drawn once.
+        let mut firsts: Vec<String> = rows
+            .iter()
+            .map(|r| {
+                r.split('|')
+                    .nth(1)
+                    .unwrap()
+                    .replace('`', "")
+                    .trim()
+                    .to_string()
+            })
+            .collect();
+        let mut keys: Vec<String> = checks.iter().map(|c| c.key.clone()).collect();
+        firsts.sort();
+        keys.sort();
+        assert_eq!(keys, firsts);
+        assert_eq!(
+            checks[0].look,
+            [
+                (String::new(), "ROUNDTRIP=4/4 DIFFERENT_BITS=0".to_string()),
+                (",".to_string(), "TAMPER=REJECTED".to_string())
+            ]
+        );
+        assert_eq!(checks[3].look[1].0, "with");
+        let alt = terminal_alt().unwrap();
+        assert!(!alt.contains('"') && alt.starts_with("Drawn") && alt.len() <= 300);
+        for dark in [false, true] {
+            let s = terminal_card(dark).unwrap();
+            for (c, run) in checks.iter().zip(&runs) {
+                // The full command is checked against the code block, not drawn.
+                assert_eq!(c.command, *run);
+                assert!(run.contains(c.key.as_str()));
+                assert!(s.contains(&format!(">{}</text>", xml(&c.key))), "{run}");
+                assert!(!s.contains(run.as_str()) && alt.contains(c.key.as_str()));
+                for (_, line) in &c.look {
+                    assert!(s.contains(&format!(">{line}</text>")), "{line}");
+                    assert!(alt.contains(line.as_str()), "{line}");
+                    assert!(rows.iter().any(|r| r.contains(&format!("`{line}`"))));
+                }
+            }
+            for line in [
+                "ROUNDTRIP=4/4 DIFFERENT_BITS=0",
+                "TAMPER=REJECTED",
+                "Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED",
+                "MUTATION_MATRIX=PASS mutants=179",
+                "CRASH_SERIES=PASS",
+                "acknowledged_lost=0",
+                "GEL_VERIFY_ALL=PASS",
+            ] {
+                assert!(s.contains(&format!(">{line}<")), "{line}");
+            }
+            // One check mark per command, and the joining word of the table.
+            assert!(s.contains(">with</text>") && s.matches("l7 7 13-15").count() == runs.len());
+            assert!(s.contains("Run it yourself — drawn, not a recording"));
+            assert!(s.contains("not a recording"));
+            assert!(s.contains(&format!(">{} COMMANDS · WHAT TO LOOK FOR<", runs.len())));
+            assert!(!s.contains("LINES TO LOOK FOR"));
+            assert!(s.contains("this README's code block and table"));
+            // A checklist, not a session: no prompt and no output beyond the lines.
+            assert!(!s.contains(">$") && !s.contains("$ cargo"));
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—→".contains(ch)));
+        }
+    }
+    #[test]
+    fn terminal_card_follows_a_changed_template() {
+        let part = terminal_part();
+        let changed = part
+            .replace(
+                "-- crash-series 20",
+                "-- crash-series 7\ncargo run --locked --offline -p xtask -- audit",
+            )
+            .replace("| `crash-series 20` |", "| `crash-series 7` |")
+            .replace(
+                "`CRASH_SERIES=PASS` with `acknowledged_lost=0`",
+                "`CRASH_SERIES=PASS` with `acknowledged_lost=3`",
+            )
+            .replace(
+                "| `verify` |",
+                "| `audit` | `AUDIT=PASS` | a | b |\n| `verify` |",
+            );
+        let checks = terminal_checks(&changed).unwrap();
+        assert_eq!(checks.len(), 6);
+        assert_eq!(
+            checks[4].command,
+            "cargo run --locked --offline -p xtask -- audit"
+        );
+        assert_eq!(checks[4].look, [(String::new(), "AUDIT=PASS".to_string())]);
+        // A hand-made check list draws its own lines.
+        let made = [TerminalCheck {
+            key: "probe <a&b>".to_string(),
+            command: "cargo run --locked --offline -p xtask -- probe <a&b>".to_string(),
+            look: vec![(String::new(), "PROBE=PASS rows=12".to_string())],
+        }];
+        for dark in [false, true] {
+            let s = terminal_draw(dark, &checks).unwrap();
+            assert!(s.contains(">acknowledged_lost=3<") && !s.contains(">acknowledged_lost=0<"));
+            assert!(s.contains(">crash-series 7</text>") && !s.contains("crash-series 20"));
+            assert!(s.contains(">AUDIT=PASS<") && s.contains(">audit</text>"));
+            assert!(s.contains(">6 COMMANDS ·"));
+            // With no free cell the note goes on one line under the grid.
+            assert!(s.contains("read from this README's code block and table<"));
+            let m = terminal_draw(dark, &made).unwrap();
+            assert!(
+                m.contains(">PROBE=PASS rows=12<") && m.contains(">probe &lt;a&amp;b&gt;</text>")
+            );
+            assert!(m.contains("probe &lt;a&amp;b&gt;: PROBE=PASS rows=12"));
+            assert!(!m.contains("GEL_VERIFY_ALL") && m.contains(">1 COMMANDS ·"));
+            assert!(!m.contains("<a&b>"));
+        }
+        assert!(terminal_text(&made).contains("probe <a&b>: PROBE=PASS rows=12"));
+    }
+    #[test]
+    fn terminal_card_refuses_a_template_that_does_not_add_up() {
+        let part = terminal_part();
+        let verify_row = terminal_rows()
+            .into_iter()
+            .find(|r| r.starts_with("| `verify` |"))
+            .unwrap();
+        let verify_run = "cargo run --locked --offline -p xtask -- verify\n";
+        assert!(part.contains(verify_run));
+        // Each mutant with the words of the refusal it must reach.
+        let broken = [
+            (
+                part.replace(
+                    verify_run,
+                    &format!("{verify_run}cargo run -p xtask -- audit\n"),
+                ),
+                "cargo run lines but",
+            ),
+            (part.replace(verify_run, ""), "cargo run lines but"),
+            (
+                part.replace("| `verify` |", "| `audit` |"),
+                "0 table rows name",
+            ),
+            (
+                part.replace("| `verify` |", "| `xtask` |"),
+                "2 table rows name",
+            ),
+            (
+                part.replace(verify_run, &format!("{verify_run}{verify_run}"))
+                    .replace(
+                        &verify_row,
+                        &format!("{verify_row}\n| `probe` | `P=1` | a | b |"),
+                    ),
+                "names two commands",
+            ),
+            (
+                part.replace("| `GEL_VERIFY_ALL=PASS` |", "| GEL_VERIFY_ALL=PASS |"),
+                "no line to look for",
+            ),
+            (
+                part.replace("| `GEL_VERIFY_ALL=PASS` |", "| `GEL_VERIFY_ALL=PASS` ` |"),
+                "no line to look for",
+            ),
+            (
+                part.replace("| `GEL_VERIFY_ALL=PASS` |", "| `` |"),
+                "an empty code span",
+            ),
+            (
+                part.replace(
+                    "`MUTATION_MATRIX=PASS mutants=179`",
+                    "`MUTATION_MATRIX=PASS` or so",
+                ),
+                "text outside the code",
+            ),
+            (
+                part.replace("| `GEL_VERIFY_ALL=PASS` |", "| see `GEL_VERIFY_ALL=PASS` |"),
+                "text outside the code",
+            ),
+            (
+                part.replace(&verify_row, "| `verify` |"),
+                "without a line to look for",
+            ),
+            (part.replace("| `verify` |", "|  |"), "without a command"),
+            (
+                part.replace(verify_run, &format!("{verify_run}echo done\n")),
+                "not a cargo run line",
+            ),
+            (part.replace("```sh", "```text"), "not in the sh block"),
+            (part.replacen("```sh\n", "", 1), "outside a code block"),
+            (
+                part.replace("cargo fetch --locked", "cargo fetch"),
+                "no cargo fetch",
+            ),
+            (String::new(), "no cargo fetch"),
+            (
+                "```sh\ncargo fetch --locked\ncargo run x\n".to_string(),
+                "not closed",
+            ),
+            (
+                "```sh\ncargo fetch --locked\n```\n".to_string(),
+                "not closed",
+            ),
+            (
+                part.replace("What each line shows, and its limit", "Notes"),
+                "no table of the lines",
+            ),
+            (
+                part.replace("| Command | Line to look for |", "| Command | Output |"),
+                "no Command / Line",
+            ),
+            (part.replace("|:---|:---|:---|:---|", ""), "no separator"),
+        ];
+        for (i, (text, words)) in broken.iter().enumerate() {
+            let e = terminal_checks(text).unwrap_err().to_string();
+            assert!(e.contains(words), "mutant {i}: {e}");
+        }
+        let checks = terminal_checks(NATIVE).unwrap();
+        let drawn =
+            |c: &TerminalCheck| terminal_draw(false, &[c.clone()]).map_err(|e| e.to_string());
+        assert!(terminal_draw(false, &[])
+            .unwrap_err()
+            .to_string()
+            .contains("no checks"));
+        // The longest name and the widest lines of the README fit with room to spare.
+        for c in &checks {
+            assert!(drawn(c).is_ok(), "{}", c.key);
+        }
+        let mut long = checks[0].clone();
+        long.key = "x".repeat(29);
+        assert!(drawn(&long).unwrap_err().contains("name does not fit"));
+        long.key = "x".repeat(28);
+        assert!(drawn(&long).is_ok());
+        long.look.push(("with".to_string(), "X".repeat(4)));
+        assert!(drawn(&long).unwrap_err().contains("do not fit"));
+    }
+    #[test]
+    fn terminal_card_moves_and_can_stand_still() {
+        let (light, dark) = (terminal_card(false).unwrap(), terminal_card(true).unwrap());
+        assert_ne!(light, dark);
+        for s in [light, dark] {
+            let style = &s[s.find("<style>").unwrap()..s.find("</style>").unwrap()];
+            let (moving, quiet) = style
+                .split_once("@media (prefers-reduced-motion:reduce){")
+                .unwrap();
+            assert!(quiet.contains("{animation:none}"));
+            let names: Vec<&str> = quiet[..quiet.find("{animation:none}").unwrap()]
+                .split(',')
+                .collect();
+            // Every class that animates is quieted under reduced motion, and
+            // the whole sequence is over within six seconds.
+            let mut animated = 0;
+            let mut end: f64 = 0.0;
+            for rule in moving.split('}') {
+                if let Some((sel, body)) = rule.split_once('{') {
+                    if let Some(value) = body.strip_prefix("animation:") {
+                        animated += 1;
+                        assert!(names.contains(&sel.trim()), "{sel}");
+                        for one in value.split(',') {
+                            let times: Vec<f64> = one
+                                .split_whitespace()
+                                .filter_map(|w| w.strip_suffix('s')?.parse().ok())
+                                .collect();
+                            assert_eq!(times.len(), 2, "{one}");
+                            end = end.max(times[0] + times[1]);
+                        }
+                    }
+                }
+            }
+            // Four animated parts per command, counted from the code block.
+            assert_eq!(animated, 4 * terminal_runs().len());
+            assert_eq!(names.len(), animated);
+            assert!(end > 3.0 && end <= 6.0, "{end}");
+            // Typing ends on the last letter: one step per character of the name.
+            for c in terminal_checks(NATIVE).unwrap() {
+                assert!(style.contains(&format!("steps({})", c.key.chars().count())));
+            }
+            assert!(s.contains("@keyframes ttw{from{transform:scaleX(1)}"));
+            // Without any animation the final state shows: the typing covers
+            // are already shrunk in their base rule, and nothing else but the
+            // caret starts hidden there.
+            assert!(moving.contains(
+                ".tv{transform-box:fill-box;transform-origin:right;transform:scaleX(0)}"
+            ));
+            assert_eq!(
+                moving.matches("opacity:0}").count(),
+                2,
+                "only .tk and the tcs frames"
+            );
+            assert!(moving.contains(".tk{opacity:0}"));
+        }
+    }
+    // ===== TEST terminal END =====
+
+    // ===== TEST rerun BEGIN =====
+    fn rerun_case(name: &str, aa: f64, gain: f64) -> SpeedCase {
+        SpeedCase {
+            name: name.to_string(),
+            aa,
+            gain,
+            runs: 27,
+        }
+    }
+    fn rerun_mutant() -> RerunData {
+        RerunData {
+            base: "v9.9".to_string(),
+            runs: [
+                RerunRun {
+                    date: "2031-01-02".to_string(),
+                    sides: [7, 1, 3],
+                    noise: 0.25,
+                },
+                RerunRun {
+                    date: "2031-02-03".to_string(),
+                    sides: [2, 6, 3],
+                    noise: 0.0125,
+                },
+            ],
+            cases: 11,
+            again: 2,
+            above_one: 5,
+        }
+    }
+    /// A made-up origin and a CAMPAIGN.txt that it accepts, with examples p and q.
+    fn rerun_fake_origin() -> RerunOrigin {
+        RerunOrigin {
+            set_dir: "docs/t/2031-01-02-against-v9.9".to_string(),
+            base: "v9.9".to_string(),
+            base_rev: "ab".repeat(20),
+            dates: ("2031-01-02".to_string(), "2031-02-03".to_string()),
+        }
+    }
+    fn rerun_fake_campaign() -> String {
+        let rev = "ab".repeat(20);
+        [
+            "FORMAT=GEL_SPEED_CAMPAIGN_1".to_string(),
+            "reruns=docs/t/2031-01-02-against-v9.9".to_string(),
+            "timing_validity=AS_MEASURED".to_string(),
+            format!("tree=a revision={rev} working_tree=clean"),
+            format!("tree=a2 revision={rev} working_tree=clean"),
+            format!("tree=b revision={SPEED_B}0123 working_tree=clean"),
+            "example=p expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes"
+                .to_string(),
+            "example=q expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes"
+                .to_string(),
+            "SPEED_CAMPAIGN=COMPLETE".to_string(),
+        ]
+        .join("\n")
+    }
+    #[test]
+    fn rerun_card_follows_the_two_timing_records() {
+        let d = rerun_read().unwrap();
+        assert_eq!(d.cases, 133);
+        assert_eq!(d.runs[0].sides, [103, 12, 18]);
+        assert_eq!(d.runs[1].sides, [105, 4, 24]);
+        assert_eq!((d.again, d.above_one), (100, 102));
+        let dates = (d.runs[0].date.as_str(), d.runs[1].date.as_str());
+        assert_eq!(dates, ("2026-10-20", "2026-11-04"));
+        let noise = (rerun_number(d.runs[0].noise), rerun_number(d.runs[1].noise));
+        assert_eq!(noise, ("0.04".to_string(), "0.004".to_string()));
+        // The base, as the set names it, and the A revision the campaign gives.
+        assert_eq!(d.base, "v0.6.1");
+        let campaign = fs::read_to_string(format!("{RERUN_DIR}/CAMPAIGN.txt")).unwrap();
+        let readme = fs::read_to_string(format!("{SPEED_DIR}/README.md")).unwrap();
+        let o = rerun_origin(SPEED_DIR, RERUN_DIR, &readme).unwrap();
+        assert!(campaign.contains(&format!("tree=a2 revision={} ", o.base_rev)));
+        // The record agrees with the speed card's own counts: faster, slower, inside.
+        assert_eq!(SpeedSet::read().unwrap().sides(), [103, 18, 12]);
+        // Counted another way: the case lines of the re-run, beside its warm-up rounds.
+        let (mut lines, mut warmups) = (0, 0);
+        for entry in fs::read_dir(RERUN_DIR).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                let text = fs::read_to_string(path.join("summary.txt")).unwrap();
+                lines += text
+                    .lines()
+                    .filter(|l| l.starts_with("SPEED_AB case="))
+                    .count();
+                warmups += usize::from(path.join("w-b-r1.txt").is_file());
+            }
+        }
+        assert_eq!((lines, warmups), (133, 23));
+        for dark in [false, true] {
+            let s = rerun_card(dark).unwrap();
+            for want in [
+                "<title id=\"t\">The same 133 cases, timed twice</title>",
+                ">The same 133 cases, timed twice<",
+                ">v0.6.1 time / new time, each case against its own A/A band<",
+                ">103<",
+                ">12<",
+                ">18<",
+                ">105<",
+                ">4<",
+                ">24<",
+                ">133 cases<",
+                ">slower: 18 → 24<",
+                ">2026-10-20<",
+                ">2026-11-04<",
+                ">100 of 103 faster again<",
+                ">102 with a ratio above 1<",
+                ">0.04<",
+                ">0.004<",
+                ">0.04 → 0.004<",
+                "One machine, not pinned to cores · A, A2: two checkouts of v0.6.1 · B: main at 876247f<",
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            // The headline is the card's own rule, not the looser ratio above 1.
+            assert!(!s.contains(">102 of 103"));
+            assert!(s.contains(&format!("<desc id=\"d\">{}</desc>", rerun_alt().unwrap())));
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—→×✓".contains(ch)));
+        }
+        let alt = rerun_alt().unwrap();
+        for want in [
+            "The same 133 cases, timed twice against v0.6.1",
+            "103 faster, 12 inside, 18 slower on 2026-10-20",
+            "105 faster, 4 inside, 24 slower on 2026-11-04",
+            "100 of the 103 faster again (102 with a ratio above 1)",
+            "A/A noise 0.04 → 0.004",
+            "One machine, not pinned to cores.",
+        ] {
+            assert!(alt.contains(want), "{want}");
+        }
+        assert!(alt.chars().count() <= 300, "{}", alt.chars().count());
+        assert!(!alt.contains('"') && !alt.contains('<') && !alt.contains('&'));
+        assert!(visual_picture("rerun").contains(&alt));
+    }
+    #[test]
+    fn rerun_card_names_no_case_and_no_program() {
+        let mut names = Vec::new();
+        for dir in [SPEED_DIR, RERUN_DIR] {
+            for entry in fs::read_dir(dir).unwrap() {
+                let path = entry.unwrap().path();
+                if !path.is_dir() {
+                    continue;
+                }
+                names.push(path.file_name().unwrap().to_string_lossy().into_owned());
+                if let Ok(text) = fs::read_to_string(path.join("summary.txt")) {
+                    for line in text.lines() {
+                        if let Some(rest) = line.strip_prefix("SPEED_AB case=") {
+                            names.push(rest.split(' ').next().unwrap().to_string());
+                        }
+                    }
+                }
+            }
+        }
+        assert_eq!(names.len(), 24 + 133 + 23 + 133);
+        let alt = rerun_alt().unwrap();
+        for dark in [false, true] {
+            let c = rerun_card(dark).unwrap();
+            for name in &names {
+                assert!(!c.contains(&format!(">{name}<")), "{name}");
+                if name.contains('_') || name.bytes().any(|b| b.is_ascii_digit()) {
+                    assert!(
+                        !c.contains(name.as_str()) && !alt.contains(name.as_str()),
+                        "{name}"
+                    );
+                }
+            }
+        }
+    }
+    #[test]
+    fn rerun_card_draws_the_numbers_it_is_given() {
+        let d = rerun_mutant();
+        let s = rerun_draw(false, &d).unwrap();
+        for want in [
+            ">7<",
+            ">1<",
+            ">3<",
+            ">2<",
+            ">6<",
+            ">11 cases<",
+            ">slower: 3 → 3<",
+            ">2031-01-02<",
+            ">2031-02-03<",
+            ">2 of 7 faster again<",
+            ">5 with a ratio above 1<",
+            ">0.25 → 0.0125<",
+            ">The same 11 cases, timed twice<",
+            ">v9.9 time / new time, each case against its own A/A band<",
+            "two checkouts of v9.9 ·",
+        ] {
+            assert!(s.contains(want), "{want}");
+        }
+        for real in [
+            ">103<",
+            ">105<",
+            ">100 of 103",
+            "0.004",
+            "2026-11-04",
+            ">133 cases<",
+            "v0.6.1",
+        ] {
+            assert!(!s.contains(real), "{real}");
+        }
+        let alt = rerun_text(&d).unwrap();
+        assert!(alt.starts_with("The same 11 cases, timed twice against v9.9,"));
+        assert!(alt.contains("7 faster, 1 inside, 3 slower on 2031-01-02"));
+        assert!(alt.contains("2 faster, 6 inside, 3 slower on 2031-02-03"));
+        assert!(alt.contains("2 of the 7 faster again (5 with a ratio above 1)"));
+        // The segments are as wide as their counts: 700 px over 11 cases.
+        assert!(s.contains(&format!(r#"width="{:.1}" height="56""#, 7.0 * 700.0 / 11.0)));
+        // Text from the data is escaped.
+        let mut odd = rerun_mutant();
+        odd.base = "<v&\">".to_string();
+        let s = rerun_draw(true, &odd).unwrap();
+        assert!(s.contains(">&lt;v&amp;&quot;&gt; time / new time") && !s.contains("<v&"));
+        // Paired by name: the order of the programs does not matter.
+        let (a, b) = (
+            vec![rerun_case("x", 1.0, 2.0), rerun_case("y", 0.9, 1.0)],
+            vec![rerun_case("z", 1.0, 0.5)],
+        );
+        let (c, e) = (
+            vec![rerun_case("z", 1.01, 1.001)],
+            vec![rerun_case("y", 0.99, 0.5), rerun_case("x", 1.002, 1.5)],
+        );
+        let p = rerun_compare(
+            "v9.9",
+            ("2031-01-02", "2031-02-03"),
+            &[("p", &a, true), ("q", &b, false)],
+            &[("q", &c, false), ("p", &e, true)],
+        )
+        .unwrap();
+        assert_eq!(p.runs[0].sides, [1, 1, 1]);
+        assert_eq!(p.runs[1].sides, [1, 1, 1]);
+        assert_eq!((p.cases, p.again, p.above_one), (3, 1, 1));
+        // Faster before, a ratio above 1 now but inside its band: counted apart.
+        let (f, g) = (
+            vec![rerun_case("x", 1.0, 2.0)],
+            vec![rerun_case("x", 0.99, 1.005)],
+        );
+        let q = rerun_compare("v9.9", ("a", "b"), &[("p", &f, true)], &[("p", &g, true)]).unwrap();
+        assert_eq!((q.again, q.above_one), (0, 1));
+        assert_eq!(rerun_number(p.runs[0].noise), "0");
+        assert_eq!(rerun_number(p.runs[1].noise), "0.01");
+    }
+    #[test]
+    fn rerun_card_refuses_data_that_does_not_add_up() {
+        let dates = ("2031-01-02", "2031-02-03");
+        let one = vec![rerun_case("x", 1.0, 2.0), rerun_case("y", 1.0, 2.0)];
+        let renamed = vec![rerun_case("x", 1.0, 2.0), rerun_case("w", 1.0, 2.0)];
+        let fewer = vec![rerun_case("x", 1.0, 2.0)];
+        let twice = vec![rerun_case("x", 1.0, 2.0), rerun_case("x", 1.0, 2.0)];
+        let ok = |a: &[RerunProgram], b: &[RerunProgram]| rerun_compare("v9.9", dates, a, b);
+        assert!(ok(&[("p", &one, true)], &[("p", &one, true)]).is_ok());
+        for (old, new) in [
+            (vec![("p", &one[..], true)], vec![("p", &renamed[..], true)]),
+            (vec![("p", &one[..], true)], vec![("p", &fewer[..], true)]),
+            (vec![("p", &one[..], true)], vec![("q", &one[..], true)]),
+            (vec![("p", &twice[..], true)], vec![("p", &twice[..], true)]),
+            (vec![("p", &[][..], true)], vec![("p", &[][..], true)]),
+            (vec![], vec![]),
+        ] {
+            assert!(ok(&old, &new).is_err());
+        }
+        // The same cases, but a program's output verdict changed between the runs.
+        let e = ok(&[("p", &one, true)], &[("p", &one, false)])
+            .err()
+            .unwrap();
+        assert!(
+            e.to_string().starts_with("p: the output verdict differs"),
+            "{e}"
+        );
+        let broken: [fn(&mut RerunData); 9] = [
+            |d| d.runs[0].sides[1] += 1,
+            |d| d.runs[1].sides[2] -= 1,
+            |d| d.above_one = d.runs[0].sides[0] + 1,
+            |d| d.again = d.above_one + 1,
+            |d| d.again = d.runs[1].sides[0] + 1,
+            |d| d.runs[1].noise = f64::NAN,
+            |d| d.runs[0].noise = -0.5,
+            |d| d.base = String::new(),
+            |d| {
+                d.cases = 0;
+                d.runs[0].sides = [0; 3];
+                d.runs[1].sides = [0; 3];
+                d.again = 0;
+                d.above_one = 0;
+            },
+        ];
+        for (k, f) in broken.iter().enumerate() {
+            let mut d = rerun_mutant();
+            f(&mut d);
+            assert!(rerun_draw(false, &d).is_err(), "{k}");
+            assert!(rerun_text(&d).is_err(), "{k}");
+        }
+    }
+    #[test]
+    fn rerun_card_refuses_records_of_another_origin() {
+        let err = |r: Result<RerunOrigin>| r.err().map(|e| e.to_string()).unwrap_or_default();
+        let set = "docs/t/2031-01-02-against-v9.9";
+        let rev = "ab".repeat(20);
+        let readme = format!("# Timing against v9.9, 2031-01-02\n\n| A and A2 | two clean checkouts of the v9.9 tag, `{rev}` |\n");
+        let o = rerun_origin(
+            set,
+            "docs/t/2031-02-03-reruns/rerun-2031-01-02-against-v9.9",
+            &readme,
+        )
+        .unwrap();
+        assert_eq!(
+            (o.base.as_str(), o.base_rev.as_str()),
+            ("v9.9", rev.as_str())
+        );
+        assert_eq!(
+            o.dates,
+            ("2031-01-02".to_string(), "2031-02-03".to_string())
+        );
+        for (set_dir, rerun_dir, readme, why) in [
+            (
+                set,
+                "docs/t/2031-02-03-reruns/rerun-2031-01-02-against-v9.8",
+                readme.clone(),
+                "is not the re-run of",
+            ),
+            (
+                set,
+                "docs/t/2031-02-03-other/rerun-2031-01-02-against-v9.9",
+                readme.clone(),
+                "is not the re-run of",
+            ),
+            (
+                set,
+                "docs/t/2031-2-03-reruns/rerun-2031-01-02-against-v9.9",
+                readme.clone(),
+                "does not start with a date",
+            ),
+            (
+                "docs/t/2031-1-02-against-v9.9",
+                "x/2031-02-03-reruns/rerun-2031-1-02-against-v9.9",
+                readme.clone(),
+                "does not start with a date",
+            ),
+            (
+                "docs/t/2031-01-02-versus-v9.9",
+                "x/2031-02-03-reruns/rerun-2031-01-02-versus-v9.9",
+                readme.clone(),
+                "does not name its base",
+            ),
+            (
+                "docs/t/2031-01-02-against-",
+                "x/2031-02-03-reruns/rerun-2031-01-02-against-",
+                readme.clone(),
+                "does not name its base",
+            ),
+            (
+                set,
+                "docs/t/2031-02-03-reruns/rerun-2031-01-02-against-v9.9",
+                readme.replace("v9.9, 2031", "v9.8, 2031"),
+                "README.md: its title",
+            ),
+            (
+                set,
+                "docs/t/2031-02-03-reruns/rerun-2031-01-02-against-v9.9",
+                readme.replace(&rev, &rev[1..]),
+                "README.md: no full revision",
+            ),
+            (
+                set,
+                "docs/t/2031-02-03-reruns/rerun-2031-01-02-against-v9.9",
+                readme.replace("v9.9 tag", "v9.8 tag"),
+                "README.md: no full revision",
+            ),
+        ] {
+            let e = err(rerun_origin(set_dir, rerun_dir, &readme));
+            assert!(e.contains(why), "{why}: {e}");
+        }
+        // CAMPAIGN.txt: one refusal per line that is missing or changed.
+        let o = rerun_fake_origin();
+        let good = rerun_fake_campaign();
+        assert_eq!(rerun_campaign(&good, &o).unwrap(), ["p", "q"]);
+        let b_line = format!("tree=b revision={SPEED_B}0123 working_tree=clean");
+        for (from, to, why) in [
+            (
+                "FORMAT=GEL_SPEED_CAMPAIGN_1",
+                "FORMAT=GEL_SPEED_CAMPAIGN_2",
+                "not a GEL_SPEED_CAMPAIGN_1 file",
+            ),
+            (
+                "SPEED_CAMPAIGN=COMPLETE",
+                "SPEED_CAMPAIGN=PARTIAL",
+                "not complete",
+            ),
+            (
+                "reruns=docs/t/2031-01-02-against-v9.9",
+                "reruns=docs/t/other",
+                "does not re-run docs/t/2031",
+            ),
+            (
+                "timing_validity=AS_MEASURED",
+                "timing_validity=NOT_VALID",
+                "not as measured",
+            ),
+            (
+                "tree=a revision=abab",
+                "tree=a revision=cdab",
+                "A and A2 are not clean",
+            ),
+            (
+                "tree=a2 revision=abab",
+                "tree=a2 revision=cdab",
+                "A and A2 are not clean",
+            ),
+            (
+                "abab working_tree=clean\ntree=b",
+                "abab working_tree=dirty\ntree=b",
+                "A and A2 are not clean",
+            ),
+            (
+                &b_line,
+                &b_line.replace(SPEED_B, "0000000"),
+                "B is not a clean checkout",
+            ),
+            (
+                &b_line,
+                &b_line.replace("clean", "dirty"),
+                "B is not a clean checkout",
+            ),
+            (
+                "SAME_OUTPUT speed_ab=ok check=PASS met=yes\nexample=q",
+                "SAME_OUTPUT speed_ab=ok check=FAIL met=yes\nexample=q",
+                "p is not checked",
+            ),
+            (
+                "check=PASS met=yes\nSPEED",
+                "check=PASS met=no\nSPEED",
+                "q is not checked or not as expected",
+            ),
+            ("example=q", "example=p", "p is repeated"),
+        ] {
+            assert!(good.contains(from), "{from}");
+            let e = rerun_campaign(&good.replacen(from, to, 1), &o)
+                .err()
+                .unwrap()
+                .to_string();
+            assert!(
+                e.starts_with("CAMPAIGN.txt: ") && e.contains(why),
+                "{why}: {e}"
+            );
+        }
+        let none: Vec<&str> = good
+            .lines()
+            .filter(|l| !l.starts_with("example="))
+            .collect();
+        let e = rerun_campaign(&none.join("\n"), &o)
+            .err()
+            .unwrap()
+            .to_string();
+        assert_eq!(e, "CAMPAIGN.txt: no example");
+        // Manifests: the format and measured timings.
+        let manifest = "FORMAT=GEL_SPEED_AB_2\nprotocol=P\ntiming_validity=AS_MEASURED\n";
+        assert!(rerun_manifest(manifest).is_ok());
+        let e = |m: &str| rerun_manifest(m).err().unwrap().to_string();
+        assert!(e(&manifest.replace("AB_2", "AB_1")).contains("not a GEL_SPEED_AB_2 manifest"));
+        assert!(e(&manifest.replace("AS_MEASURED", "UNKNOWN")).contains("not as measured"));
+        // The program directories against the campaign, and errors that name the file.
+        let summary = fs::read_to_string(format!("{RERUN_DIR}/speed_crc/summary.txt")).unwrap();
+        let program =
+            |name: &str, m: &str, s: &str| (name.to_string(), m.to_string(), s.to_string());
+        let both = [
+            program("p", manifest, &summary),
+            program("q", manifest, &summary),
+        ];
+        let read = rerun_programs_from(&good, &both, &o).unwrap();
+        assert_eq!(read.len(), 2);
+        assert!(read
+            .iter()
+            .all(|(_, cases, same)| cases.len() == 3 && *same));
+        let from = |programs: &[(String, String, String)]| {
+            rerun_programs_from(&good, programs, &o)
+                .err()
+                .unwrap()
+                .to_string()
+        };
+        assert!(from(&both[..1]).contains("its examples are not the program directories"));
+        let extra = [
+            both[0].clone(),
+            both[1].clone(),
+            program("r", manifest, &summary),
+        ];
+        assert!(from(&extra).contains("its examples are not the program directories"));
+        let bad_manifest = [both[0].clone(), program("q", "FORMAT=X", &summary)];
+        assert!(from(&bad_manifest).starts_with("q/manifest.txt: "));
+        let bad_summary = [
+            program("p", manifest, "SPEED_AB_VERDICT=SAME_OUTPUT"),
+            both[1].clone(),
+        ];
+        assert!(from(&bad_summary).starts_with("p/summary.txt: "));
+        // On disk: a directory that is not a program name is refused before any
+        // file is read, and a missing file is named.
+        let e = rerun_programs("docs/speed-results", &o)
+            .err()
+            .unwrap()
+            .to_string();
+        assert!(
+            e.starts_with("docs/speed-results/2026-")
+                && e.ends_with(": unexpected program directory"),
+            "{e}"
+        );
+        let e = rerun_programs(SPEED_DIR, &o).err().unwrap().to_string();
+        assert!(e.starts_with(&format!("{SPEED_DIR}/CAMPAIGN.txt: ")), "{e}");
+        let e = rerun_programs(RERUN_DIR, &o).err().unwrap().to_string();
+        assert!(e.starts_with(&format!("{RERUN_DIR}/CAMPAIGN.txt: ")), "{e}");
+    }
+    #[test]
+    fn rerun_card_moves_and_can_stand_still() {
+        let (light, dark) = (rerun_card(false).unwrap(), rerun_card(true).unwrap());
+        assert_ne!(light, dark);
+        assert!(light.contains(LIGHT.blue[1]) && dark.contains(DARK.blue[1]));
+        for s in [&light, &dark] {
+            let style = s
+                .split("<style>")
+                .nth(1)
+                .unwrap()
+                .split("</style>")
+                .next()
+                .unwrap();
+            let (moving, still) = style
+                .split_once("@media (prefers-reduced-motion:reduce){")
+                .unwrap();
+            assert!(moving.contains("@keyframes"));
+            let still = still.split("{animation:none}").next().unwrap();
+            let classes: Vec<&str> = moving
+                .split('}')
+                .filter(|rule| rule.contains("{animation:"))
+                .map(|rule| rule.split('{').next().unwrap().trim_start_matches('.'))
+                .collect();
+            assert_eq!(classes, ["rn-g", "rn-f", "rn-p", "rn-d"]);
+            for class in classes {
+                assert!(
+                    still.split(',').any(|c| c == format!(".{class}")),
+                    "{class}"
+                );
+                assert!(
+                    s.contains(&format!("class=\"{class}")) || s.contains(&format!(" {class}\"")),
+                    "{class}"
+                );
+            }
+            // Nothing starts hidden outside its animation.
+            assert!(!moving
+                .split("@keyframes")
+                .next()
+                .unwrap()
+                .contains("opacity:0"));
+            assert!(!s.contains("opacity=\"0\""));
+        }
+    }
+    /// Every text line of a drawing: its left and right ends by a conservative
+    /// width estimate with 8 % slack, and its font size.
+    fn rerun_lines(svg: &str) -> Vec<(String, f64, f64, f64)> {
+        let attr = |head: &str, key: &str| -> Option<String> {
+            let rest = head.split(&format!(" {key}=\"")).nth(1)?;
+            Some(rest.split('"').next()?.to_string())
+        };
+        let mut out = Vec::new();
+        for part in svg.split("<text").skip(1) {
+            let (head, rest) = part.split_once('>').unwrap();
+            let raw = rest.split("</text>").next().unwrap();
+            // Inner tags (tspans) carry no width; an entity is one character.
+            let mut text = String::new();
+            let mut inside = false;
+            for ch in raw.chars() {
+                match ch {
+                    '<' => inside = true,
+                    '>' => inside = false,
+                    _ if !inside => text.push(ch),
+                    _ => {}
+                }
+            }
+            for (entity, ch) in [
+                ("&lt;", "<"),
+                ("&gt;", ">"),
+                ("&quot;", "\""),
+                ("&amp;", "&"),
+            ] {
+                text = text.replace(entity, ch);
+            }
+            let size: f64 = attr(head, "font-size")
+                .or_else(|| {
+                    Some(
+                        head.split("font-size:")
+                            .nth(1)?
+                            .split("px")
+                            .next()?
+                            .to_string(),
+                    )
+                })
+                .unwrap()
+                .parse()
+                .unwrap();
+            let spacing = if head.contains("kick") { 2.0 } else { 0.0 };
+            let chars = text.chars().count() as f64;
+            let w = (rerun_width(&text, size) + spacing * chars) * 1.08;
+            let x: f64 = attr(head, "x").unwrap().parse().unwrap();
+            let (l, r) = match attr(head, "text-anchor").as_deref() {
+                Some("middle") => (x - w / 2.0, x + w / 2.0),
+                Some("end") => (x - w, x),
+                _ => (x, x + w),
+            };
+            out.push((text, l, r, size));
+        }
+        out
+    }
+    #[test]
+    fn rerun_card_is_legible_on_a_phone() {
+        let mut odd = rerun_mutant();
+        odd.runs[0].sides = [1, 1, 9];
+        odd.again = 1;
+        odd.above_one = 1;
+        odd.runs[1].sides = [9, 1, 1];
+        for s in [
+            rerun_card(false).unwrap(),
+            rerun_card(true).unwrap(),
+            rerun_draw(false, &rerun_mutant()).unwrap(),
+            rerun_draw(false, &odd).unwrap(),
+        ] {
+            let lines = rerun_lines(&s);
+            assert!(lines.len() > 20);
+            for (text, l, r, size) in lines {
+                assert!(size >= 16.0, "{text}: {size}");
+                assert!(l >= 20.0 && r <= 1180.0, "{text}: {l:.0} to {r:.0}");
+            }
+        }
+        // With no animation at all the final state shows: no base rule hides a
+        // thing; only keyframes start from nothing.
+        let s = rerun_card(false).unwrap();
+        let style = s.split(".b{font-weight:700}").nth(1).unwrap();
+        let base = style.split("@keyframes").next().unwrap();
+        assert!(
+            !base.contains("opacity") && !base.contains("scale"),
+            "{base}"
+        );
+    }
+    // ===== TEST rerun END =====
+
+    // ===== TEST glance BEGIN =====
+    /// The numbers that roll into place, in drawing order, each checked against
+    /// its final characters (class `rf`).
+    fn glance_rolled(svg: &str) -> Vec<String> {
+        let mut out = Vec::new();
+        for part in svg.split(r#"<g class="roll" aria-label=""#).skip(1) {
+            let (label, rest) = part.split_once('"').unwrap();
+            // The roll ends at its own closing tag; digits nest two groups deep.
+            let mut finals = String::new();
+            let mut depth = 1;
+            let mut s = rest;
+            while depth > 0 {
+                let open = s.find("<g").unwrap_or(usize::MAX);
+                let close = s.find("</g>").unwrap();
+                let fin = s.find(r#"class="rf""#).unwrap_or(usize::MAX);
+                if fin < open && fin < close {
+                    let after = &s[fin..];
+                    let text = after.split_once('>').unwrap().1;
+                    finals.push_str(text.split_once('<').unwrap().0);
+                    s = &after[1..];
+                } else if open < close {
+                    depth += 1;
+                    s = &s[open + 2..];
+                } else {
+                    depth -= 1;
+                    s = &s[close + 4..];
+                }
+            }
+            assert_eq!(finals, label, "the final characters spell the label");
+            out.push(label.to_string());
+        }
+        out
+    }
+    /// Classes animated in a card's style that the reduced-motion rule does not
+    /// still, and base rules (outside keyframes) that hide content.
+    fn glance_motion(svg: &str) -> (Vec<String>, Vec<String>) {
+        let style = svg.split_once("<style>").unwrap().1;
+        let style = style.split_once("</style>").unwrap().0;
+        let (main, reduced) = style
+            .split_once("@media (prefers-reduced-motion:reduce){")
+            .expect("a reduced-motion rule");
+        let stilled: Vec<&str> = reduced
+            .split_once("{animation:none}")
+            .expect("animation:none")
+            .0
+            .split(',')
+            .map(|s| s.trim().trim_start_matches('.'))
+            .collect();
+        let (mut missing, mut hidden, mut rest) = (Vec::new(), Vec::new(), main);
+        while let Some((selector, after)) = rest.split_once('{') {
+            if selector.trim_start().starts_with("@keyframes") {
+                rest = after.split_once("}}").unwrap().1;
+                continue;
+            }
+            let (body, after) = after.split_once('}').unwrap();
+            for name in selector.split(',') {
+                let name = name.trim().trim_start_matches('.');
+                if body.contains("animation") && !stilled.contains(&name) {
+                    missing.push(name.to_string());
+                }
+                if body.contains("opacity:0") || body.contains("display:none") {
+                    hidden.push(name.to_string());
+                }
+            }
+            rest = after;
+        }
+        (missing, hidden)
+    }
+    /// Texts of a release 0.9 after 0.8, read the way the files are read.
+    fn glance_texts() -> GlanceTexts<'static> {
+        GlanceTexts {
+            release: "v0.9.2",
+            notes: "# GEL RAM v0.9.2 — x\n\n- Every tool program answers `--version` with one line and `--license`\n",
+            roadmap: "# Roadmap\n\n## v0.9.0\n\nnew\n\n## v0.8.0\n\nCargo.lock lists no third-party package; NFC follows Unicode 17.0.0; SHA-256 here.\n\n## v0.7.0\n\nold\n",
+            tables: "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
+            binaries: "Every program of the workspace (`a`, `b`\nand `c`) given\n",
+            lock: "version = 4\n\n[[package]]\nname = \"a\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"xtask\"\nversion = \"0.1.0\"\n",
+            readme: "## New in 0.9, and in 0.8\n\nthe three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the version\n",
+        }
+    }
+    fn glance_has(dir: &str) -> bool {
+        dir == "crates/a" || dir == "xtask"
+    }
+    #[test]
+    fn glance_card_shows_the_numbers_of_the_files() {
+        let f = GlanceFacts::read().unwrap();
+        // Counted a second way: the name lines of Cargo.lock, each a directory here.
+        let lock = fs::read_to_string("Cargo.lock").unwrap();
+        let names: Vec<&str> = lock
+            .lines()
+            .filter_map(|l| l.strip_prefix("name = \"")?.strip_suffix('"'))
+            .collect();
+        assert_eq!(f.packages, names.len());
+        for n in &names {
+            let dir = if *n == "xtask" {
+                n.to_string()
+            } else {
+                format!("crates/{n}")
+            };
+            assert!(Path::new(&dir).is_dir(), "{dir}");
+        }
+        // The programs as the claim registry lists them.
+        let claims = fs::read_to_string("xtask/src/claims.rs").unwrap();
+        let scope = claims
+            .split_once("tool programs gel-")
+            .unwrap()
+            .1
+            .split_once("; not the xtask runner")
+            .unwrap()
+            .0;
+        let mut listed: Vec<String> = format!("gel-{scope}")
+            .replace(" and ", ", ")
+            .split(", ")
+            .map(str::to_string)
+            .collect();
+        let mut tools = f.tools.clone();
+        listed.sort();
+        tools.sort();
+        assert_eq!(tools, listed);
+        // The Unicode version as the name of the normalization test file the fast
+        // identity check includes (an older file is kept for a comparison).
+        let fast = fs::read_to_string("crates/gel-source/src/nfc_fast_identity.rs").unwrap();
+        let named: Vec<&str> = fast
+            .split("tests/data/NormalizationTest-")
+            .skip(1)
+            .filter_map(|s| s.split_once(".txt").map(|v| v.0))
+            .collect();
+        assert_eq!(named, [f.unicode.as_str()]);
+        // The release, and the earlier version's own roadmap section.
+        assert!(RELEASE.starts_with(&format!("v{}.", f.release)));
+        let roadmap = fs::read_to_string(GLANCE_ROADMAP).unwrap();
+        assert!(roadmap.contains(&format!("\n## v{}.0\n", f.since)));
+        for dark in [false, true] {
+            let s = glance_card(dark).unwrap();
+            assert_eq!(
+                glance_rolled(&s),
+                [
+                    f.tools.len().to_string(),
+                    f.packages.to_string(),
+                    f.unicode.clone()
+                ]
+            );
+            let kicker = format!("{} AND {} AT A GLANCE", f.since, f.release);
+            let new = format!(">new in {}<", f.release);
+            let since = format!(">since {}<", f.since);
+            assert_eq!(s.matches(&new).count(), 1);
+            assert_eq!(s.matches(&since).count(), 3);
+            for want in [
+                kicker.as_str(),
+                ">SHA-256<",
+                ">0 from outside this checkout<",
+                ">--version and --license<",
+                GLANCE_HEADLINE[0],
+                GLANCE_HEADLINE[1],
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—→×✓".contains(ch)));
+        }
+        let alt = glance_alt().unwrap();
+        for want in [
+            format!("{} packages", f.packages),
+            format!("Unicode {} for normalization", f.unicode),
+            format!("{} tool programs", f.tools.len()),
+            format!("New in {}:", f.release),
+            format!("Since {}:", f.since),
+        ] {
+            assert!(alt.contains(&want), "{want}");
+        }
+        assert!(alt.chars().count() <= 300 && !alt.contains('"'), "{alt}");
+        assert!(!alt.contains("normalization follows Unicode"));
+    }
+    #[test]
+    fn glance_card_draws_other_facts() {
+        let f = GlanceFacts {
+            release: "0.9".to_string(),
+            since: "0.8".to_string(),
+            packages: 2,
+            unicode: "17.0.0".to_string(),
+            tools: vec!["a".to_string(), "b".to_string(), "c".to_string()],
+        };
+        let s = glance_draw(false, &f).unwrap();
+        assert_eq!(glance_rolled(&s), ["3", "2", "17.0.0"]);
+        assert!(s.contains("0.8 AND 0.9 AT A GLANCE") && s.contains(">new in 0.9<"));
+        assert!(glance_text(&f).contains("3 tool programs"));
+        // Read from texts of their own, the facts follow those texts.
+        let g = GlanceFacts::from_texts(&glance_texts(), &glance_has).unwrap();
+        assert_eq!(
+            (
+                g.release.as_str(),
+                g.since.as_str(),
+                g.packages,
+                g.unicode.as_str(),
+                g.tools.len()
+            ),
+            ("0.9", "0.8", 2, "17.0.0", 3)
+        );
+        assert_eq!(
+            glance_draw(true, &g).unwrap(),
+            glance_draw(true, &f).unwrap()
+        );
+    }
+    #[test]
+    fn glance_card_refuses_empty_or_disagreeing_files() {
+        fn refused(t: GlanceTexts, has: &dyn Fn(&str) -> bool) -> bool {
+            GlanceFacts::from_texts(&t, has).is_err()
+        }
+        let base = glance_texts();
+        assert!(!refused(glance_texts(), &glance_has));
+        // A release that is not vX.Y.Z, or whose notes do not name the programs:
+        // a version bump cannot relabel the facts of an earlier release.
+        for release in ["0.9.2", "v0.9", "v1.0.0"] {
+            assert!(
+                refused(GlanceTexts { release, ..base }, &glance_has),
+                "{release}"
+            );
+        }
+        assert!(refused(
+            GlanceTexts {
+                notes: "# GEL RAM v0.9.2 — x\n",
+                ..base
+            },
+            &glance_has
+        ));
+        // The README names no earlier version, or the same one.
+        for readme in [
+            "the three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the\n",
+            "## New in 0.9, and in 0.9\nthe three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the\n",
+        ] {
+            assert!(refused(GlanceTexts { readme, ..base }, &glance_has));
+        }
+        // The Unicode tables: no header, no constant, or two versions.
+        for tables in [
+            "pub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
+            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\n",
+            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (16, 0, 0);\n",
+        ] {
+            assert!(refused(GlanceTexts { tables, ..base }, &glance_has), "{tables}");
+        }
+        // The earlier version's section is missing or does not state each fact;
+        // a fact stated only in another version's section does not count.
+        for (from, to) in [
+            ("## v0.8.0", "## v0.8.1"),
+            ("lists no third-party package", "lists one package"),
+            ("follows Unicode 17.0.0", "follows Unicode 16.0.0"),
+            ("SHA-256 here", "hashes here"),
+        ] {
+            let roadmap = base.roadmap.replace(from, to);
+            assert!(
+                refused(
+                    GlanceTexts {
+                        roadmap: &roadmap,
+                        ..base
+                    },
+                    &glance_has
+                ),
+                "{to}"
+            );
+        }
+        let moved = base
+            .roadmap
+            .replace("SHA-256 here.", "")
+            .replace("old", "SHA-256");
+        assert!(refused(
+            GlanceTexts {
+                roadmap: &moved,
+                ..base
+            },
+            &glance_has
+        ));
+        // Cargo.lock: a package from outside, without a plain name, not a crate
+        // directory of this checkout, or no package at all.
+        for lock in [
+            "[[package]]\nname = \"a\"\nsource = \"registry+https://example.invalid\"\n",
+            "[[package]]\nversion = \"0.1.0\"\n",
+            "[[package]]\nname = \"../a\"\n",
+            "[[package]]\nname = \"b\"\n",
+            "version = 4\n",
+        ] {
+            assert!(refused(GlanceTexts { lock, ..base }, &glance_has), "{lock}");
+        }
+        assert!(refused(glance_texts(), &|_: &str| false));
+        // The programs: no list, an empty one, a repeated name, the runner, more
+        // than words go to, or another number than the README states.
+        let many = format!(
+            "Every program of the workspace ({}) given",
+            (0..13)
+                .map(|i| format!("`p{i}`"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+        for binaries in [
+            "",
+            "Every program of the workspace () given",
+            "Every program of the workspace (`a`, `a` and `c`) given",
+            "Every program of the workspace (`a`, `xtask` and `c`) given",
+            "Every program of the workspace (`a` and `b`) given",
+            many.as_str(),
+        ] {
+            assert!(
+                refused(GlanceTexts { binaries, ..base }, &glance_has),
+                "{binaries}"
+            );
+        }
+        // The README states another Unicode version.
+        let readme = base.readme.replace("Unicode 17.0.0", "Unicode 16.0.0");
+        assert!(refused(
+            GlanceTexts {
+                readme: &readme,
+                ..base
+            },
+            &glance_has
+        ));
+        // Facts made by hand are checked before they are drawn.
+        let good = || GlanceFacts {
+            release: "0.8".to_string(),
+            since: "0.7".to_string(),
+            packages: 3,
+            unicode: "16.0.0".to_string(),
+            tools: vec!["a".to_string()],
+        };
+        assert!(glance_draw(false, &good()).is_ok());
+        for bad in [
+            GlanceFacts {
+                packages: 0,
+                ..good()
+            },
+            GlanceFacts {
+                tools: Vec::new(),
+                ..good()
+            },
+            GlanceFacts {
+                since: "0.8".to_string(),
+                ..good()
+            },
+            GlanceFacts {
+                since: "0".to_string(),
+                ..good()
+            },
+            GlanceFacts {
+                unicode: "16.0".to_string(),
+                ..good()
+            },
+            GlanceFacts {
+                release: "0.8.0".to_string(),
+                ..good()
+            },
+        ] {
+            assert!(glance_draw(false, &bad).is_err());
+        }
+        // A number or a line too long for its tile is refused, not drawn over the edge.
+        let e = glance_draw(
+            false,
+            &GlanceFacts {
+                packages: usize::MAX,
+                ..good()
+            },
+        )
+        .unwrap_err();
+        assert!(e.to_string().contains("does not fit"), "{e}");
+        let wide = GlanceFacts {
+            since: "123456789012345678901234567.0".to_string(),
+            ..good()
+        };
+        assert!(glance_draw(false, &wide).is_err());
+        assert!(glance_fit("packages in Cargo.lock", 20.0, 0.0, 494.0).is_ok());
+        assert!(glance_fit(&"x".repeat(40), 20.0, 0.0, 494.0).is_err());
+    }
+    #[test]
+    fn glance_card_moves_and_can_stand_still() {
+        let (light, dark) = (glance_card(false).unwrap(), glance_card(true).unwrap());
+        assert_ne!(light, dark);
+        for s in [&light, &dark] {
+            assert_eq!(glance_motion(s), (Vec::new(), Vec::new()));
+            assert_eq!(s.matches(r#"<g class="gt""#).count(), 4);
+            assert_eq!(s.matches("clip-path=\"url(#gtile").count(), 4);
+            assert!(s.contains("@keyframes ro60s"));
+        }
+        // The checker catches an animated class left out, and a base rule that hides.
+        let broken = light.replace("{.gt,.gp,", "{.gp,");
+        assert_eq!(glance_motion(&broken).0, ["gt"]);
+        let hiding = light.replace(".kick{font-size:16px}", ".kick{opacity:0}");
+        assert_eq!(glance_motion(&hiding).1, ["kick"]);
+    }
+    // ===== TEST glance END =====
+
+    // ===== TEST pledges BEGIN =====
+    /// A hand-made table in the shape of docs/COMMITMENTS.md, with its count columns swapped.
+    const PLEDGES_MUTANT: &str = "# x\n\n## Published commitments\n\n| Date (UTC) | Label | Files | Directories | SHA-256 of the manifest |\n|---|---|---|---|---|\n| 2027-01-01 | Alpha `set` & more | 1 | 12,345 | `0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef` |\n| 2027-01-02 | Beta: kept in the table | 7 | 1 | `fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210` |\n| 2027-01-11 | Gamma | 0 | 3 | `aaaabbbbccccddddeeeeffff00001111222233334444555566667777888899990` |\n\nAfter the table.\n";
+    fn pledges_mutant() -> String {
+        // The third hash above has 65 characters; the valid table drops the last.
+        PLEDGES_MUTANT.replace("888899990`", "88889999`")
+    }
+    /// The rows of the repository's table read a second way: the lines of its
+    /// section that hold a backticked 64-hex hash, as (date, hash).
+    fn pledges_rows_by_hand() -> Vec<(String, String)> {
+        let text = fs::read_to_string(PLEDGES_FILE).unwrap();
+        let section = text.split("## Published commitments").nth(1).unwrap();
+        let section = section.split("\n## ").next().unwrap();
+        section
+            .lines()
+            .filter_map(|line| {
+                let hash = line
+                    .split('`')
+                    .find(|s| s.len() == 64 && s.bytes().all(|b| b.is_ascii_hexdigit()))?;
+                let date = line.trim_start_matches('|').trim().get(..10)?;
+                Some((date.to_string(), hash.to_string()))
+            })
+            .collect()
+    }
+    /// The layout keeps every line inside its box by the cautious width, keeps
+    /// chips and same-row date labels apart, and stays inside the card.
+    fn pledges_fits(p: &Pledges, l: &PledgesLayout) {
+        let n = p.rows.len();
+        let full = (1200.0 - 2.0 * PLEDGES_SIDE) * PLEDGES_SLACK;
+        let title = format!(
+            "{} · {} → {}",
+            pledges_many(n),
+            p.rows[0].date,
+            p.rows[n - 1].date
+        );
+        assert!(pledges_width(&title, PLEDGES_TITLE) <= full, "{title}");
+        for line in PLEDGES_FOOT {
+            assert!(pledges_width(line, PLEDGES_SMALL) <= full, "{line}");
+        }
+        assert!(l.foot + 24.0 + 12.0 <= f64::from(l.height));
+        // The top label row stays clear of the title.
+        let rows = l.dots.iter().map(|d| d.label_row).max().unwrap();
+        assert!(l.ay - 22.0 - 20.0 * rows as f64 - PLEDGES_SMALL > 56.0 + 6.0);
+        let half = |d: &PledgesDot| pledges_width(&d.tag, PLEDGES_SMALL) / 2.0;
+        for (i, d) in l.dots.iter().enumerate() {
+            assert!(d.x - 13.0 >= PLEDGES_SIDE && d.x + 13.0 <= 1200.0 - PLEDGES_SIDE);
+            assert!(
+                d.label_x - half(d) + 1e-9 >= PLEDGES_SIDE
+                    && d.label_x + half(d) <= 1200.0 - PLEDGES_SIDE + 1e-9,
+                "{}",
+                d.tag
+            );
+            // Dots do not overlap, and labels in one label row do not touch.
+            if let Some(e) = l.dots.get(i + 1) {
+                assert!(e.x - d.x >= 2.0 * 13.0 + 2.0, "{} {}", d.tag, e.tag);
+            }
+            for e in &l.dots[i + 1..] {
+                if e.label_row == d.label_row {
+                    assert!(
+                        e.label_x - half(e) >= d.label_x + half(d) + 10.0 - 1e-9,
+                        "{} {}",
+                        d.tag,
+                        e.tag
+                    );
+                }
+            }
+        }
+        assert_eq!(l.dots.iter().map(|d| d.count).sum::<usize>(), n);
+        let mut drawn: Vec<usize> = l.chips.iter().map(|c| c.row).collect();
+        drawn.sort_unstable();
+        assert_eq!(drawn, (0..n).collect::<Vec<_>>());
+        for (i, c) in l.chips.iter().enumerate() {
+            assert!(c.x >= PLEDGES_SIDE && c.x + c.w <= 1200.0 - PLEDGES_SIDE + 1e-9);
+            assert!(c.y > l.ay + 13.0 && c.y + c.h + 16.0 < l.foot);
+            assert!(!c.name.is_empty());
+            for line in &c.name {
+                assert!(
+                    pledges_width(line, PLEDGES_NAME) <= pledges_room(c.w, true),
+                    "{line}"
+                );
+            }
+            for line in &c.counts {
+                assert!(
+                    pledges_width(line, PLEDGES_SMALL) <= pledges_room(c.w, false),
+                    "{line}"
+                );
+            }
+            let tag = pledges_width(&c.tag, PLEDGES_SMALL)
+                + 12.0
+                + pledges_width("01234567", PLEDGES_SMALL);
+            assert!(tag <= pledges_room(c.w, true));
+            // The text of a chip ends above its bottom edge.
+            let text = 28.0 + 24.0 * (c.name.len() - 1) as f64 + 22.0 * (c.counts.len() + 1) as f64;
+            assert!(text + 8.0 <= c.h);
+            // No two chips overlap: side by side in a row, one row below the other.
+            for e in &l.chips[i + 1..] {
+                if e.y == c.y {
+                    assert!(c.x + c.w + PLEDGES_GAP <= e.x + 1e-9);
+                    assert_eq!(c.h, e.h);
+                } else {
+                    assert!(c.y + c.h < e.y);
+                }
+            }
+        }
+    }
+    #[test]
+    fn pledges_card_shows_every_published_commitment() {
+        let p = Pledges::read().unwrap();
+        let by_hand = pledges_rows_by_hand();
+        assert!(!by_hand.is_empty());
+        assert_eq!(p.rows.len(), by_hand.len());
+        assert_eq!(commitments().unwrap(), by_hand.len());
+        for (r, (date, hash)) in p.rows.iter().zip(&by_hand) {
+            assert_eq!((&r.date, &r.hash), (date, hash));
+        }
+        assert_eq!(p.counted, [("directory", "directories"), ("file", "files")]);
+        let mut dates: Vec<&str> = by_hand.iter().map(|r| r.0.as_str()).collect();
+        dates.dedup();
+        let (first, last) = (&by_hand[0].0, &by_hand[by_hand.len() - 1].0);
+        let l = pledges_layout(&p);
+        pledges_fits(&p, &l);
+        for dark in [false, true] {
+            let s = pledges_card(dark).unwrap();
+            assert!(s.contains(&format!(r#"height="{}""#, l.height)));
+            assert_eq!(s.matches(r#"<g class="cd""#).count(), by_hand.len());
+            assert_eq!(s.matches(r#"<path class="sh""#).count(), by_hand.len());
+            assert_eq!(s.matches(r#"<g class="dt""#).count(), dates.len());
+            assert!(s.contains(&format!(
+                ">{} commitments · {first} → {last}<",
+                by_hand.len()
+            )));
+            for (_, hash) in &by_hand {
+                // Each hash is drawn by its first 8 characters only.
+                assert!(s.contains(&format!(">{}<", &hash[..8])), "{hash}");
+                assert!(!s.contains(&hash[..9]), "{hash}");
+            }
+            for want in [
+                ">69c10bd5<",
+                ">10-20<",
+                ">Private source tree 1<",
+                ">1,436 directories · 4,054 files<",
+                ">0 directories · 8 files<",
+                ">Sealed sample 1<",
+                ">Hashed now · checkable with xtask commitment-check once the files are handed over<",
+                "not that they are correct",
+                "first 8 hex of its SHA-256",
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            // The words after a label's colon stay in the table; no per-chip prefix.
+            assert!(!s.contains("Rust sources only") && !s.contains("SHA-256 <tspan"));
+        }
+        let alt = pledges_alt().unwrap();
+        let chars = alt.chars().count();
+        assert!(!alt.contains('"') && chars <= 300, "{chars}");
+        assert!(alt.starts_with(&format!(
+            "{} commitments, {first} to {last}: each the SHA-256",
+            by_hand.len()
+        )));
+        for want in [
+            "directory and file counts",
+            "once the files are handed over",
+        ] {
+            assert!(alt.contains(want), "{want}");
+        }
+    }
+    #[test]
+    fn pledges_card_draws_the_table_it_is_given() {
+        let p = pledges_parse(&pledges_mutant()).unwrap();
+        assert_eq!(p.counted, [("file", "files"), ("directory", "directories")]);
+        assert_eq!(p.rows[0].label, "Alpha set & more");
+        pledges_fits(&p, &pledges_layout(&p));
+        let real = Pledges::read().unwrap();
+        for dark in [false, true] {
+            let s = pledges_draw(dark, &p).unwrap();
+            assert_eq!(s.matches(r#"<g class="cd""#).count(), 3);
+            for want in [
+                ">01234567<",
+                ">fedcba98<",
+                ">aaaabbbb<",
+                ">01-01<",
+                ">01-11<",
+                ">Alpha set &amp; more<",
+                ">Beta<",
+                ">1 file · 12,345 directories<",
+                ">7 files · 1 directory<",
+                ">0 files · 3 directories<",
+                ">3 commitments · 2027-01-01 → 2027-01-11<",
+                // Spaced by real date: 10 days over 1070.4 px, one day is 107.04 px.
+                r#"cx="64.8""#,
+                r#"cx="171.8""#,
+                r#"cx="1135.2""#,
+            ] {
+                assert!(s.contains(want), "{want}");
+            }
+            for r in &real.rows {
+                assert!(!s.contains(&r.hash[..8]), "{}", r.date);
+                assert!(!s.contains(&r.date[5..]), "{}", r.date);
+            }
+            assert!(!s.contains("kept in the table") && !s.contains("Private"));
+        }
+        assert!(pledges_text(&p).contains("its file and directory counts"));
+        // Dates of two years are drawn in full.
+        let years = pledges_parse(&pledges_mutant().replace("2027-01-01", "2026-12-31")).unwrap();
+        let s = pledges_draw(false, &years).unwrap();
+        for want in [">2026-12-31<", ">2027-01-02<", ">2027-01-11<"] {
+            assert!(s.contains(want), "{want}");
+        }
+        pledges_fits(&years, &pledges_layout(&years));
+        // One date only: one dot in the middle of the line, holding all three.
+        let one = pledges_mutant()
+            .replace("2027-01-02", "2027-01-01")
+            .replace("2027-01-11", "2027-01-01");
+        let one = pledges_parse(&one).unwrap();
+        let s = pledges_draw(false, &one).unwrap();
+        assert_eq!(s.matches(r#"<g class="dt""#).count(), 1);
+        assert!(s.contains(r#"cx="600.0""#) && s.contains(">3</text>"));
+        pledges_fits(&one, &pledges_layout(&one));
+    }
+    #[test]
+    fn pledges_card_refuses_a_malformed_table() {
+        let good = pledges_mutant();
+        pledges_parse(&good).unwrap();
+        let hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+        let rows_start = good.find("| 2027-01-01").unwrap();
+        let rows_end = good.find("\nAfter").unwrap();
+        let header = &good[good.find("| Date").unwrap()..good.find("|---").unwrap()];
+        for (why, bad) in [
+            ("65 hex characters", PLEDGES_MUTANT.to_string()),
+            ("63 hex characters", good.replace(hash, &hash[1..])),
+            ("not hex", good.replace(hash, &hash.replace('a', "g"))),
+            ("no backticks", good.replace(&format!("`{hash}`"), hash)),
+            ("short date", good.replace("2027-01-01", "2027-1-01")),
+            ("slashes", good.replace("2027-01-01", "2027/01/01")),
+            ("month 13", good.replace("2027-01-01", "2027-13-01")),
+            ("month 0", good.replace("2027-01-01", "2027-00-01")),
+            ("day 0", good.replace("2027-01-01", "2027-01-00")),
+            ("no 30 February", good.replace("2027-01-01", "2027-02-30")),
+            (
+                "2100 is no leap year",
+                good.replace("2027-01-11", "2100-02-29"),
+            ),
+            ("out of order", good.replace("2027-01-02", "2026-12-31")),
+            ("count", good.replace("| 12,345 |", "| 12345 |")),
+            ("count text", good.replace("| 7 |", "| seven |")),
+            ("empty label", good.replace("| Gamma |", "| |")),
+            ("cell missing", good.replace("| 7 | 1 |", "| 7 |")),
+            ("header cells", good.replace("| Label | ", "| ")),
+            ("date column", good.replace("| Date (UTC) |", "| When |")),
+            ("label column", good.replace("| Label |", "| Name |")),
+            (
+                "hash column",
+                good.replace("| SHA-256 of the manifest |", "| Hash |"),
+            ),
+            (
+                "unknown count column",
+                good.replace("| Files |", "| Items |"),
+            ),
+            (
+                "one column twice",
+                good.replace("| Directories |", "| Files |"),
+            ),
+            (
+                "rule shape",
+                good.replace("|---|---|---|---|---|", "|---|---|---|---|"),
+            ),
+            ("rule text", good.replace("|---|---|---|", "|---|-x-|---|")),
+            ("no rule", format!("## Published commitments\n\n{header}")),
+            (
+                "no header",
+                "## Published commitments\n\nNone yet.\n".to_string(),
+            ),
+            ("no section", good.replace("## Published", "## Withdrawn")),
+            (
+                "empty table",
+                format!("{}{}", &good[..rows_start], &good[rows_end..]),
+            ),
+        ] {
+            assert!(pledges_parse(&bad).is_err(), "{why}");
+        }
+        // Calendar days: 2000 and 2028 have a 29 February, 2027 and 2100 do not.
+        for leap in ["2000-02-29", "2028-02-29"] {
+            pledges_day(leap).unwrap();
+        }
+        for no in ["2027-02-29", "2100-02-29"] {
+            assert!(pledges_day(no).is_err(), "{no}");
+        }
+        let day = |d: &str| pledges_day(d).unwrap();
+        assert_eq!(day("1970-01-01"), 0);
+        assert_eq!(day("2000-03-01") - day("2000-02-28"), 2);
+        assert_eq!(day("2100-03-01") - day("2100-02-28"), 1);
+        assert_eq!(day("2026-11-01") - day("2026-10-20"), 12);
+        // The table must hold the rows the README counts.
+        let text = fs::read_to_string(PLEDGES_FILE).unwrap();
+        let n = commitments().unwrap();
+        pledges_checked(&text, n).unwrap();
+        for wrong in [n - 1, n + 1] {
+            let e = pledges_checked(&text, wrong).unwrap_err().to_string();
+            assert!(e.starts_with(PLEDGES_FILE), "{e}");
+        }
+        // A table without rows is not drawn either.
+        let empty = Pledges {
+            counted: [("directory", "directories"), ("file", "files")],
+            rows: Vec::new(),
+        };
+        assert!(pledges_draw(false, &empty).is_err());
+    }
+    #[test]
+    fn pledges_card_scales_to_many_dates() {
+        // 9 dates, some one day apart, 14 rows.
+        let days = [
+            ("2027-01-01", 2),
+            ("2027-01-02", 1),
+            ("2027-01-03", 3),
+            ("2027-01-20", 1),
+            ("2027-02-01", 1),
+            ("2027-02-02", 2),
+            ("2027-03-15", 1),
+            ("2027-03-16", 1),
+            ("2027-06-30", 2),
+        ];
+        let mut text = String::from("## Published commitments\n\n| Date (UTC) | Label | Directories | Files | SHA-256 of the manifest |\n|---|---|---|---|---|\n");
+        let mut hashes = Vec::new();
+        for (date, count) in days {
+            for _ in 0..count {
+                let i = hashes.len();
+                let hash = format!("{:08x}", 0xa1b2_c300 + i).repeat(8);
+                let label = match i {
+                    3 => "Private source tree 9: Rust sources only (`*.rs`, `Cargo.toml`)"
+                        .to_string(),
+                    5 => "A commitment whose name is far too long for one line".to_string(),
+                    _ => format!("Set {i}"),
+                };
+                text.push_str(&format!(
+                    "| {date} | {label} | {} | {} | `{hash}` |\n",
+                    grouped(if i == 7 { 1 } else { i * 1000 }),
+                    grouped(i * 37 + 1)
+                ));
+                hashes.push(hash);
+            }
+        }
+        let p = pledges_parse(&text).unwrap();
+        assert_eq!(p.rows.len(), 14);
+        let l = pledges_layout(&p);
+        pledges_fits(&p, &l);
+        // Over 180 days one day is 6 px: dates one day apart share a dot.
+        let dots: Vec<(&str, usize)> = l.dots.iter().map(|d| (d.tag.as_str(), d.count)).collect();
+        assert_eq!(
+            dots,
+            [
+                ("01-01 → 01-03", 6),
+                ("01-20", 1),
+                ("02-01 → 02-02", 3),
+                ("03-15 → 03-16", 2),
+                ("06-30", 2)
+            ]
+        );
+        // The long name wraps, and its row of chips grows with it.
+        assert!(l.chips[5].name.len() >= 2);
+        assert!(l.chips[3].h > l.chips[0].h);
+        assert!(l.chips[7].counts.concat().contains("1 directory"));
+        for dark in [false, true] {
+            let s = pledges_draw(dark, &p).unwrap();
+            assert!(s.contains(&format!(r#"height="{}""#, l.height)));
+            assert_eq!(s.matches(r#"<g class="cd""#).count(), 14);
+            assert_eq!(s.matches(r#"<g class="dt""#).count(), 5);
+            assert!(s.contains(">01-01 → 01-03<") && s.contains(">6</text>"));
+            for hash in &hashes {
+                assert!(s.contains(&format!(">{}<", &hash[..8])), "{hash}");
+            }
+            for (date, _) in days {
+                assert!(s.contains(&format!(">{}<", &date[5..])), "{date}");
+            }
+            assert!(s.contains(">14 commitments · 2027-01-01 → 2027-06-30<"));
+            assert!(s.contains(">Private source tree 9<") && s.contains(">1 directory"));
+        }
+    }
+    #[test]
+    fn pledges_card_moves_and_can_stand_still() {
+        let (light, dark) = (pledges_card(false).unwrap(), pledges_card(true).unwrap());
+        assert_ne!(light, dark);
+        assert!(light.contains(LIGHT.accent) && dark.contains(DARK.accent));
+        for s in [&light, &dark] {
+            let style = s
+                .split("<style>")
+                .nth(1)
+                .unwrap()
+                .split("</style>")
+                .next()
+                .unwrap();
+            let (moving, still) = style
+                .split_once("@media (prefers-reduced-motion:reduce){")
+                .unwrap();
+            assert!(moving.contains("@keyframes"));
+            // Every class with an animation stops under reduced motion, where its
+            // base style is the final state: nothing starts hidden outside a keyframe.
+            let mut animated = 0;
+            for rule in moving.split('}') {
+                if let Some((sel, body)) = rule.split_once('{') {
+                    if body.contains("animation:") {
+                        let class = sel.trim();
+                        assert!(class.starts_with('.'), "{class}");
+                        assert!(still.contains(class), "{class}");
+                        assert!(!body.contains("opacity"), "{class}");
+                        animated += 1;
+                    }
+                }
+            }
+            assert_eq!(animated, 5);
+            assert!(still.contains("animation:none"));
+            for word in ["<script", "href", "url(http", "<image", "STUB"] {
+                assert!(!s.contains(word), "{word}");
+            }
+            // Readable on a phone: no drawn text under 16 px.
+            let sizes: Vec<f64> = s
+                .split(r#"font-size=""#)
+                .skip(1)
+                .map(|rest| rest.split('"').next().unwrap().parse().unwrap())
+                .collect();
+            assert!(
+                !sizes.is_empty() && sizes.iter().all(|&px| px >= 16.0),
+                "{sizes:?}"
+            );
+            assert!(!s.contains("class=\"kick\""));
+        }
+    }
+    // ===== TEST pledges END =====
+
+    // ===== TEST core BEGIN =====
+    fn core_cargo(k: &str) -> Result<String> {
+        let p = format!("crates/{k}/Cargo.toml");
+        Ok(fs::read_to_string(&p).map_err(|e| format!("{p}: {e}"))?)
+    }
+    fn core_of(template: &str) -> Result<CoreMap> {
+        core_map(&core_rows(template)?, &CORE_TAGS, &core_cargo)
+    }
+    /// The arrows of a map as (crate built on, crate that builds on it), sorted.
+    fn core_links(m: &CoreMap) -> Vec<(String, String)> {
+        let mut l: Vec<(String, String)> = m
+            .links
+            .iter()
+            .map(|&(a, b)| (m.parts[a].krate.clone(), m.parts[b].krate.clone()))
+            .collect();
+        l.sort();
+        l
+    }
+    fn core_refused(m: Result<CoreMap>, why: &str) {
+        let e = m.err().expect(why).to_string();
+        assert!(e.contains(why), "{e}");
+    }
+    #[test]
+    fn core_card_draws_the_parts_and_the_dependencies_of_the_crates() {
+        // A second reading of the table: the crate between "(`" and "`)" of
+        // every table row of the section.
+        let section = NATIVE.split("## The memory core").nth(1).unwrap();
+        let section = section.split("\n## ").next().unwrap();
+        let crates: Vec<&str> = section
+            .lines()
+            .filter(|l| l.starts_with("| ") && l.contains(" (`"))
+            .map(|l| l.split("(`").nth(1).unwrap().split('`').next().unwrap())
+            .collect();
+        let m = CoreMap::read().unwrap();
+        let drawn: Vec<&str> = m.parts.iter().map(|p| p.krate.as_str()).collect();
+        assert_eq!(drawn, crates);
+        // A second reading of the dependencies: b builds on a when a line of
+        // b's Cargo.toml begins with the name of a.
+        let mut expected = Vec::new();
+        for b in &crates {
+            let toml = fs::read_to_string(format!("crates/{b}/Cargo.toml")).unwrap();
+            for a in &crates {
+                let named = |l: &str| {
+                    l.strip_prefix(a)
+                        .is_some_and(|r| r.trim_start().starts_with('=') || r.starts_with('.'))
+                };
+                if toml.lines().any(named) {
+                    expected.push((a.to_string(), b.to_string()));
+                }
+            }
+        }
+        expected.sort();
+        assert!(!expected.is_empty());
+        assert_eq!(core_links(&m), expected);
+        let alone: Vec<&CorePart> = m
+            .parts
+            .iter()
+            .filter(|p| !expected.iter().any(|(a, b)| *a == p.krate || *b == p.krate))
+            .collect();
+        let (n, e) = (crates.len(), expected.len());
+        let alt = core_alt().unwrap();
+        for dark in [false, true] {
+            let s = core_card(dark).unwrap();
+            assert_eq!(s.matches("<g class=\"cb\"").count(), n);
+            for class in [
+                "<path class=\"cf\"",
+                "<polygon class=\"ch\"",
+                "<path class=\"cp\"",
+            ] {
+                assert_eq!(s.matches(class).count(), e, "{class}");
+            }
+            assert_eq!(s.matches("<rect class=\"cg\"").count(), e);
+            for p in &m.parts {
+                for line in [&p.name, &p.krate, &p.tag[0], &p.tag[1]] {
+                    assert!(s.contains(&format!(">{}<", xml(line))), "{line}");
+                }
+            }
+            let title = format!("{n} parts, {e} dependencies between them");
+            assert!(s.contains(&format!(">{title}<")));
+            assert!(s.contains(">Arrow A → B: B builds on A, as its Cargo.toml says<"));
+            assert_eq!(s.contains(">stand alone<"), !alone.is_empty());
+            assert!(s.contains(&format!("<desc id=\"d\">{}</desc>", xml(&alt))));
+            assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
+            assert!(s.chars().all(|ch| ch.is_ascii() || "·—→".contains(ch)));
+            // The heading lines end left of the frame of the parts that stand alone.
+            let right = m.frame().unwrap().map_or(1160.0, |f| f.0);
+            assert!(40.0 + title.chars().count() as f64 * 0.66 * 30.0 <= right * 0.98);
+            assert!(40.0 + 51.0 * 0.62 * 20.0 <= right * 0.98);
+        }
+        assert_eq!(alt, core_text(&m));
+        assert!(alt.len() <= 300 && !alt.contains('"'), "{alt}");
+        assert!(alt.starts_with(&format!(
+            "The {n} parts of the memory core and the {e} dependencies"
+        )));
+        for p in &alone {
+            assert!(alt.contains(&p.name), "{}", p.name);
+        }
+        assert!(native_intro().contains(&visual_picture("core")));
+        assert!(visual_picture("core").contains(&format!("alt=\"{alt}\"")));
+    }
+    #[test]
+    fn core_card_follows_changed_dependencies_and_a_changed_table() {
+        let real = CoreMap::read().unwrap();
+        // History no longer builds on the bit record: no arrow runs below.
+        let fewer = |k: &str| -> Result<String> {
+            let s = core_cargo(k)?;
+            Ok(if k == "gel-history" {
+                s.lines()
+                    .filter(|l| !l.starts_with("gel-orb"))
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            } else {
+                s
+            })
+        };
+        let m = core_map(&core_rows(NATIVE).unwrap(), &CORE_TAGS, &fewer).unwrap();
+        let mut want = core_links(&real);
+        want.retain(|l| *l != ("gel-orb".to_string(), "gel-history".to_string()));
+        assert_eq!(core_links(&m), want);
+        assert_eq!(m.lanes(), 0);
+        let s = core_draw(false, &m).unwrap();
+        assert_eq!(s.matches("<path class=\"cf\"").count(), want.len());
+        assert!(core_text(&m).contains("; History builds on Rebuild."));
+        // Memory cost builds on Reader: one more arrow, and only Q8 record stands alone.
+        let more = |k: &str| -> Result<String> {
+            let s = core_cargo(k)?;
+            Ok(if k == "gel-physics" {
+                s.replace(
+                    "[dependencies]",
+                    "[dependencies]\ngel-reader = { path = \"../gel-reader\" }",
+                )
+            } else {
+                s
+            })
+        };
+        let m = core_map(&core_rows(NATIVE).unwrap(), &CORE_TAGS, &more).unwrap();
+        assert_eq!(m.links.len(), real.links.len() + 1);
+        let s = core_draw(true, &m).unwrap();
+        assert_eq!(
+            s.matches("<path class=\"cf\"").count(),
+            real.links.len() + 1
+        );
+        let text = core_text(&m);
+        assert!(
+            text.contains("Memory cost builds on Reader")
+                && text.ends_with(" Q8 record stands alone."),
+            "{text}"
+        );
+        let (x, y) = core_at((2.0, 0.0));
+        let frame = format!("<rect x=\"{:.1}\" y=\"{:.1}\"", x - 14.0, y - CORE_D - 40.0);
+        assert!(s.contains(&frame), "{frame}");
+        // Renamed parts are drawn as the table names them.
+        let renamed = NATIVE
+            .replace("| Bit record (`gel-orb`)", "| One record (`gel-orb`)")
+            .replace("| Reader (`gel-reader`)", "| Search (`gel-reader`)");
+        let m = core_of(&renamed).unwrap();
+        let s = core_draw(false, &m).unwrap();
+        assert!(s.contains(">One record<") && s.contains(">Search<"));
+        assert!(!s.contains(">Bit record<") && !s.contains(">Reader<"));
+        assert!(core_text(&m).contains("on One record"));
+        // Reordered rows: the block drawn first is the first row of the table.
+        let row = |k: &str| {
+            NATIVE
+                .lines()
+                .find(|l| l.contains(&format!("(`{k}`)")))
+                .unwrap()
+                .to_string()
+        };
+        let swapped = NATIVE
+            .replace(&row("gel-orb"), "@@ORB@@")
+            .replace(&row("gel-history"), &row("gel-orb"))
+            .replace("@@ORB@@", &row("gel-history"));
+        let m = core_of(&swapped).unwrap();
+        assert_eq!(m.parts[0].krate, "gel-history");
+        assert_eq!(core_links(&m), core_links(&real));
+        let s = core_draw(true, &m).unwrap();
+        let first = s
+            .find("<g class=\"cb\" style=\"animation-delay:0.20s\"")
+            .unwrap();
+        assert!(s[first..].find(">History<").unwrap() < s[first..].find(">Bit record<").unwrap());
+    }
+    #[test]
+    fn core_card_refuses_what_it_cannot_draw_faithfully() {
+        let rows = core_rows(NATIVE).unwrap();
+        let with = |krate: &'static str, from: &'static str, to: &'static str| {
+            move |k: &str| -> Result<String> {
+                let s = core_cargo(k)?;
+                Ok(if k == krate { s.replace(from, to) } else { s })
+            }
+        };
+        // The table: none, empty, a row without a crate, a row of two cells, a
+        // row without its closing bar, an odd part name, a crate named twice.
+        core_refused(core_of("# GEL RAM\n"), "no table of the memory core");
+        let head = "## The memory core\n\n| Part | What it does | Check it |\n|:---|:---|:---|\n";
+        core_refused(core_of(head), "the core table has no rows");
+        for (row, why) in [
+            ("| Bit record | x | y |", "no crate in the core row"),
+            ("| Bit record (`gel-orb`) | x |", "unexpected core row"),
+            ("| Bit record (`gel-orb`) | x | y", "unexpected core row"),
+            (
+                "| Bit-record (`gel-orb`) | x | y |",
+                "unexpected part or crate name",
+            ),
+        ] {
+            core_refused(core_of(&format!("{head}{row}\n")), why);
+        }
+        let orb = NATIVE.lines().find(|l| l.contains("(`gel-orb`)")).unwrap();
+        core_refused(
+            core_of(&format!("{head}{orb}\n{orb}\n")),
+            "gel-orb is named twice",
+        );
+        // A crate that does not exist, even with a tag of its own.
+        let missing = NATIVE.replace("(`gel-orb`)", "(`gel-imaginary`)");
+        core_refused(core_of(&missing), "crates/gel-imaginary/Cargo.toml: ");
+        let mut tags = CORE_TAGS;
+        tags[0].krate = "gel-imaginary";
+        core_refused(
+            core_map(&core_rows(&missing).unwrap(), &tags, &core_cargo),
+            "crates/gel-imaginary/Cargo.toml: ",
+        );
+        // Dependency tables this reader does not understand.
+        let target = with(
+            "gel-orb",
+            "[lib]",
+            "[target.'cfg(unix)'.dependencies]\nlibc = \"1\"\n[lib]",
+        );
+        core_refused(
+            core_map(&rows, &CORE_TAGS, &target),
+            "crates/gel-orb/Cargo.toml: unsupported dependency table",
+        );
+        let split = with(
+            "gel-store",
+            "[dependencies]",
+            "[dependencies]\nx = { version = \"1\", features = [\n\"y\",\n] }",
+        );
+        core_refused(
+            core_map(&rows, &CORE_TAGS, &split),
+            "crates/gel-store/Cargo.toml: unexpected dependency line",
+        );
+        // A part with no tag, a tag with no part.
+        core_refused(
+            core_of(&NATIVE.replace(
+                "| Store (`gel-store`)",
+                "| Kernel (`gel-kernel`) | a part | `t` |\n| Store (`gel-store`)",
+            )),
+            "no tag for gel-kernel",
+        );
+        let without = NATIVE
+            .lines()
+            .filter(|l| !l.contains("(`gel-physics`)"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        core_refused(core_of(&without), "the tag of gel-physics has no row");
+        // A tag saying what its row no longer says, or a limit the row dropped.
+        core_refused(
+            core_of(&NATIVE.replace("One 1,152-byte record", "One 1,280-byte record")),
+            "the tag of gel-phase-quad says 1,152",
+        );
+        core_refused(
+            core_of(&NATIVE.replace(", a wrong parent is not detected", "")),
+            "the tag of gel-structural says wrong",
+        );
+        // A name too long for its block.
+        core_refused(
+            core_of(&NATIVE.replace(
+                "| Store (`gel-store`)",
+                "| Store of every record (`gel-store`)",
+            )),
+            "Store of every record does not fit its block",
+        );
+        // Slots: off the grid, between rows, shared.
+        for (i, slot, why) in [
+            (5, (3.0, 0.0), "the slot of gel-phase-quad is off the grid"),
+            (0, (0.0, 0.5), "the slot of gel-orb is off the grid"),
+            (6, (2.0, 0.0), "gel-physics and gel-phase-quad share a slot"),
+        ] {
+            let mut tags = CORE_TAGS;
+            tags[i].slot = slot;
+            core_refused(core_map(&rows, &tags, &core_cargo), why);
+        }
+        // Arrows that would cross a block: within one column, and below a
+        // column whose end block has another under it.
+        let same = with(
+            "gel-reader",
+            "[dependencies]",
+            "[dependencies]\ngel-store = { path = \"../gel-store\" }",
+        );
+        core_refused(
+            core_map(&rows, &CORE_TAGS, &same),
+            "gel-reader builds on gel-store, but an arrow",
+        );
+        let blocked = with(
+            "gel-phase-quad",
+            "[dependencies]",
+            "[dependencies]\ngel-orb = { path = \"../gel-orb\" }",
+        );
+        core_refused(
+            core_map(&rows, &CORE_TAGS, &blocked),
+            "gel-phase-quad builds on gel-orb, but an arrow",
+        );
+        // Rebuild and History without dependencies would stand alone among Store and Reader.
+        let loose = |k: &str| -> Result<String> {
+            let s = core_cargo(k)?;
+            Ok(if k == "gel-structural" || k == "gel-history" {
+                s.lines()
+                    .filter(|l| !l.starts_with("gel-"))
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            } else {
+                s
+            })
+        };
+        core_refused(
+            core_map(&rows, &CORE_TAGS, &loose),
+            "cannot be framed apart: gel-store stands among them",
+        );
+        assert!(core_of(NATIVE).is_ok());
+    }
+    #[test]
+    fn core_card_moves_and_can_stand_still() {
+        let (light, dark) = (core_card(false).unwrap(), core_card(true).unwrap());
+        assert_ne!(light, dark);
+        assert!(light.contains(CORE_PURPLE[0][1]) && dark.contains(CORE_PURPLE[1][1]));
+        for s in [light, dark] {
+            let style = &s[s.find("<style>").unwrap()..s.find("</style>").unwrap()];
+            let (moving, still) = style
+                .split_once("@media (prefers-reduced-motion:reduce){")
+                .unwrap();
+            let (overridden, _) = still.split_once("{animation:none}").unwrap();
+            let mut animated = Vec::new();
+            for rule in moving.split('}') {
+                let Some((selectors, body)) = rule.split_once('{') else {
+                    continue;
+                };
+                if body.starts_with("animation:") || body.contains(";animation:") {
+                    for class in selectors.split(',') {
+                        animated.push(class.trim_start_matches(['\n', '}']).to_string());
+                    }
+                }
+            }
+            let mut listed: Vec<String> = overridden.split(',').map(str::to_string).collect();
+            animated.sort();
+            listed.sort();
+            assert_eq!(animated, listed);
+            // Nothing outside the keyframes hides or strokes what a still
+            // picture must show; pulse and glow carry no stroke of their own.
+            let base = &style[..style.find("@keyframes").unwrap()];
+            for hide in [
+                "opacity:0",
+                "dasharray",
+                "dashoffset",
+                "stroke:",
+                "display",
+                "visibility",
+            ] {
+                assert!(!base.contains(hide), "{hide}");
+            }
+            for class in ["<path class=\"cp\"", "<rect class=\"cg\""] {
+                for el in s.split(class).skip(1) {
+                    let el = &el[..el.find("/>").unwrap()];
+                    assert!(!el.contains(" stroke=\""), "{el}");
+                }
+            }
+            assert!(style.contains("stroke-dasharray:12 200;stroke-dashoffset:-110}"));
+            assert!(style.contains("stroke-dasharray:100 100;stroke-dashoffset:0}"));
+        }
+    }
+    // ===== TEST core END =====
 }

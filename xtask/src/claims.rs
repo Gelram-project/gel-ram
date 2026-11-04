@@ -797,10 +797,11 @@ const HARDWARE_NOT_ESTABLISHED: &str = "Hardware-level memory computation, the d
 const CITED: &[Citation] = &[
     Citation {
         file: "README.md",
-        words: "The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md))",
+        words: "The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of snapshots and of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md))",
         rows: &[
             ("text-ai-goal", "NOT_ESTABLISHED"),
             ("hardware-memory-compute", "NOT_ESTABLISHED"),
+            ("snapshot-power-loss", "NOT_ESTABLISHED"),
             ("record-history-durability", "NOT_ESTABLISHED"),
         ],
     },
