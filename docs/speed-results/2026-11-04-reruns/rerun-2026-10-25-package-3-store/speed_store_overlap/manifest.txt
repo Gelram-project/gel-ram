@@ -1,0 +1,39 @@
+FORMAT=GEL_SPEED_AB_2
+protocol=GEL_COMPARISON_PROTOCOL_1
+timing_validity=AS_MEASURED
+mode=ab
+package=gel-store example=speed_store_overlap rounds=3
+input_args=["9", "ABSOLUTE_PATH"]
+with_bins=[]
+before_run=given args=0
+profile=release: cargo build --locked --offline --release with each tree's own Cargo.toml
+rustflags=none
+cargo_env=none
+clock_boundary=SPEED ns of the example's own timed region (Instant::elapsed); build, process start, input generation outside that region and output writing are outside
+warmup_rounds=1
+order=rotated: round r runs b,a,a2 when r mod 3 = 1, a2,b,a when 2, a,a2,b when 0; warm-up rounds use the same rotation
+aa_control=a2: a second tree of the baseline source, built and run like a
+host_os=linux
+host_arch=x86_64
+host_logical_cpus=24
+host_cpu_model=AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+host_mem_total_kib=98474940
+host_kernel=6.17.0-1033-oem
+host_load_start=3.16 2.77 2.34
+source_sha256=205e2a7273efa8b763c0249f2ae6895dd024fd3d5686ae4bae2cf212d3d3b7f0  crates/gel-store/examples/speed_store_overlap.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b revision=331f4948ca4889ce230c29129f70955a2dc8b304 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a crates/gel-store/examples/speed_store_overlap.rs
+placed tree=a2 crates/gel-store/examples/speed_store_overlap.rs
+binary_sha256 tree=a 9fc72bab51965e2aa2610252a14fb78dbf9cf3e9e76fa000bc0a346efbfb859a
+binary_sha256 tree=a2 57083edc39817b92a703ad2de4b081b657b2a24055e467bd4e5eeb1535506e5d
+binary_sha256 tree=b caceba19742421627821d1e5aa1ffb6c6e651143d161bf29ff3cca7ed19bb5ce
+aa_same_binary=no
+warmup_round=1 order=b,a,a2
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+host_load_end=3.42 2.85 2.40
+restored=yes

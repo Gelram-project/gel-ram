@@ -1,0 +1,20 @@
+SPEED_SETUP example=speed_sha256 runs=9 large_bytes=67108864 small_messages=65536
+SPEED name=large run=0 ns=26729565
+SPEED name=small run=0 ns=4225890
+SPEED name=large run=1 ns=27815958
+SPEED name=small run=1 ns=4181737
+SPEED name=large run=2 ns=26798614
+SPEED name=small run=2 ns=4162140
+SPEED name=large run=3 ns=27709638
+SPEED name=small run=3 ns=4199861
+SPEED name=large run=4 ns=26687725
+SPEED name=small run=4 ns=3994414
+SPEED name=large run=5 ns=26737580
+SPEED name=small run=5 ns=4037255
+SPEED name=large run=6 ns=27201141
+SPEED name=small run=6 ns=4044558
+SPEED name=large run=7 ns=26785119
+SPEED name=small run=7 ns=4091617
+SPEED name=large run=8 ns=26766505
+SPEED name=small run=8 ns=4017788
+SPEED_CHECK sha256=98c8d54aea3e7783935d79300a438053c8e9c4187991145ef76472b09e153be1

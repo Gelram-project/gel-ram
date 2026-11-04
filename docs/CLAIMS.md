@@ -78,6 +78,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | q8-recorded-runs | bytes | MEASURED_LOCAL |
 | speed-set-against-v0.6.1 | timing | MEASURED_LOCAL |
 | speed-set-quiet-machine | timing | MEASURED_LOCAL |
+| speed-sets-rerun | timing | MEASURED_LOCAL |
 | media-full-review | presentation | NOT_VERIFIED |
 | independent-reproduction | reproduction | NOT_VERIFIED |
 | record-history-durability | persistence | NOT_ESTABLISHED |

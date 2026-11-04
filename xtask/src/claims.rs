@@ -679,6 +679,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "speed-sets-rerun",
+        dimension: "timing",
+        scope: "xtask speed-campaign: the four re-run plans from public revisions, one machine, not pinned to cores, 2026-11-04",
+        input: "195 timed cases in 33 programs, 3 rounds with the order rotated and 1 warm-up round, two clean checkouts of each baseline (A, A2)",
+        expected: "each plan SPEED_CAMPAIGN=COMPLETE and 33 of 33 records SPEED_AB_CHECK=PASS; against v0.6.1 105 cases faster beyond their A/A band, 24 slower beyond it and 4 inside it; output digests equal to the recorded sets except B of speed_tree_gates",
+        counterexample: "the re-run read as hardware-independent, a ratio read without its A/A band, or across programs",
+        source: "docs/speed-results/2026-11-04-reruns/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "media-full-review",
         dimension: "presentation",
         scope: "three historical MP4 files",

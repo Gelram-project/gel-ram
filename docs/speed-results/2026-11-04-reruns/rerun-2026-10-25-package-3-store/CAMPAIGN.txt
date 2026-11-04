@@ -1,0 +1,11 @@
+FORMAT=GEL_SPEED_CAMPAIGN_1
+plan=rerun-2026-10-25-package-3-store plan_sha256=8ae1de0c9e152ccc8d7e866e46b3a009642d34c88f33099af1d5d86e9231623a
+reruns=docs/speed-results/2026-10-25-quiet-machine/package-3
+rounds=3 warmup=1
+runs=as_planned
+timing_validity=AS_MEASURED
+tree=a revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean
+tree=a2 revision=bb3da1b7f0cb23f8ade354068a11c68b1281d4c9 working_tree=clean
+tree=b revision=331f4948ca4889ce230c29129f70955a2dc8b304 working_tree=clean
+example=speed_store_overlap expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+SPEED_CAMPAIGN=COMPLETE

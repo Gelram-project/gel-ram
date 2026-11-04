@@ -1,0 +1,39 @@
+FORMAT=GEL_SPEED_AB_2
+protocol=GEL_COMPARISON_PROTOCOL_1
+timing_validity=AS_MEASURED
+mode=ab
+package=gel-source example=speed_collection_memory rounds=3
+input_args=["3", "ABSOLUTE_PATH"]
+with_bins=[]
+before_run=given args=0
+profile=release: cargo build --locked --offline --release with each tree's own Cargo.toml
+rustflags=none
+cargo_env=none
+clock_boundary=SPEED ns of the example's own timed region (Instant::elapsed); build, process start, input generation outside that region and output writing are outside
+warmup_rounds=1
+order=rotated: round r runs b,a,a2 when r mod 3 = 1, a2,b,a when 2, a,a2,b when 0; warm-up rounds use the same rotation
+aa_control=a2: a second tree of the baseline source, built and run like a
+host_os=linux
+host_arch=x86_64
+host_logical_cpus=24
+host_cpu_model=AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+host_mem_total_kib=98474940
+host_kernel=6.17.0-1033-oem
+host_load_start=3.41 2.88 2.42
+source_sha256=2eb09a3457345eeb96bfbf774b13dbf8db6e1ba0b8c913293e0d2bff18b1b162  crates/gel-source/examples/speed_collection_memory.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a revision=3cf1be53b75c0eabb35ce46fcb9ca9a7acc5076b working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 revision=3cf1be53b75c0eabb35ce46fcb9ca9a7acc5076b working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b revision=331f4948ca4889ce230c29129f70955a2dc8b304 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a crates/gel-source/examples/speed_collection_memory.rs
+placed tree=a2 crates/gel-source/examples/speed_collection_memory.rs
+binary_sha256 tree=a 543a927c334400903cc38d028f1158a21312b783dbfb08152b6f0cacda0050a5
+binary_sha256 tree=a2 b3835dc91430b8ca07ca0ff2f3550384c1fe1ea808618351784cd44018df181f
+binary_sha256 tree=b 95262cebd6debb60a099581de82f67477e83e1be25ad0342147ce9e6720c2c34
+aa_same_binary=no
+warmup_round=1 order=b,a,a2
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+host_load_end=3.14 2.85 2.42
+restored=yes

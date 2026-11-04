@@ -1,0 +1,10 @@
+SPEED_AB case=apply_near a_ns=9993110 a2_ns=10069253 b_ns=6469281 aa=1.008 gain=1.545 runs=27
+SPEED_AB case=encode_best_prototype_pool64 a_ns=218590996 a2_ns=218804827 b_ns=2178308 aa=1.001 gain=100.349 runs=27
+SPEED_AB case=from_exact_xor_far a_ns=109714271 a2_ns=107999113 b_ns=1427886 aa=0.984 gain=76.837 runs=27
+SPEED_AB case=from_exact_xor_mid a_ns=54031918 a2_ns=53368560 b_ns=1430441 aa=0.988 gain=37.773 runs=27
+SPEED_AB case=from_exact_xor_near a_ns=38313367 a2_ns=38380002 b_ns=20015133 aa=1.002 gain=1.914 runs=27
+SPEED_AB case=popcount_near a_ns=6578196 a2_ns=6571713 b_ns=4578824 aa=0.999 gain=1.437 runs=27
+SPEED_AB_CHECK tree=a sha256=c79e15b9cee2dc735b73e87b254682c687c59a1749cbe0331634dcbfa161573a
+SPEED_AB_CHECK tree=a2 sha256=c79e15b9cee2dc735b73e87b254682c687c59a1749cbe0331634dcbfa161573a
+SPEED_AB_CHECK tree=b sha256=c79e15b9cee2dc735b73e87b254682c687c59a1749cbe0331634dcbfa161573a
+SPEED_AB_VERDICT=SAME_OUTPUT

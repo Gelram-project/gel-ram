@@ -1,0 +1,18 @@
+SPEED_AB case=ascii_line a_ns=213702 a2_ns=215556 b_ns=59723 aa=1.009 gain=3.578 runs=27
+SPEED_AB case=doc_ascii a_ns=3660458 a2_ns=3648566 b_ns=796909 aa=0.997 gain=4.593 runs=27
+SPEED_AB case=doc_hangul_jamo a_ns=120451701 a2_ns=120015485 b_ns=20827291 aa=0.996 gain=5.783 runs=27
+SPEED_AB case=doc_hangul_syllables a_ns=89649189 a2_ns=88062719 b_ns=3668273 aa=0.982 gain=24.439 runs=27
+SPEED_AB case=doc_polish_nfc a_ns=97312406 a2_ns=95476459 b_ns=5111058 aa=0.981 gain=19.040 runs=27
+SPEED_AB case=doc_polish_nfd a_ns=92808843 a2_ns=90951940 b_ns=12019798 aa=0.980 gain=7.721 runs=27
+SPEED_AB case=doc_reversed_marks a_ns=313770693 a2_ns=313558095 b_ns=51886657 aa=0.999 gain=6.047 runs=27
+SPEED_AB case=hangul_jamo_line a_ns=5944836 a2_ns=5946840 b_ns=5004216 aa=1.000 gain=1.188 runs=27
+SPEED_AB case=hangul_syllables_line a_ns=4431850 a2_ns=4363240 b_ns=691341 aa=0.985 gain=6.411 runs=27
+SPEED_AB case=ordered_marks_line a_ns=14970601 a2_ns=14942247 b_ns=12238910 aa=0.998 gain=1.223 runs=27
+SPEED_AB case=polish_late_mark_line a_ns=6466067 a2_ns=6382070 b_ns=2849422 aa=0.987 gain=2.269 runs=27
+SPEED_AB case=polish_nfc_line a_ns=4787909 a2_ns=4709652 b_ns=992758 aa=0.984 gain=4.823 runs=27
+SPEED_AB case=polish_nfd_line a_ns=4576391 a2_ns=4498905 b_ns=2593681 aa=0.983 gain=1.764 runs=27
+SPEED_AB case=reversed_marks_line a_ns=15297565 a2_ns=15406531 b_ns=12408991 aa=1.007 gain=1.233 runs=27
+SPEED_AB_CHECK tree=a sha256=6f3fc112483a816454e2daf4a4414eaeda6aed680d721065d7c7901811f12f68
+SPEED_AB_CHECK tree=a2 sha256=6f3fc112483a816454e2daf4a4414eaeda6aed680d721065d7c7901811f12f68
+SPEED_AB_CHECK tree=b sha256=6f3fc112483a816454e2daf4a4414eaeda6aed680d721065d7c7901811f12f68
+SPEED_AB_VERDICT=SAME_OUTPUT

@@ -117,6 +117,7 @@ did not build, failed or printed an unexpected verdict. `--runs N` and `--only
 EXAMPLE` shrink a campaign for a trial run; they require `--invalid-for-timing`,
 which every record of that run carries, and the last line is then `PARTIAL`.
 
-These plans have not been run as a timing campaign yet. Until such a run is
-retained, the recorded sets stay as they were measured: unchecked by this
-protocol, not re-labelled.
+All four plans were run once on 2026-11-04, on the author's machine; the
+records are in [2026-11-04-reruns](speed-results/2026-11-04-reruns/README.md).
+The recorded sets of 2026-10-20 and 2026-10-25 stay as they were measured and
+are not re-labelled; the re-run stands beside them.

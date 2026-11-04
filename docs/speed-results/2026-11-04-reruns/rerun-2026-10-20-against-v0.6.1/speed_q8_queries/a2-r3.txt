@@ -1,0 +1,20 @@
+SPEED_SETUP example=speed_q8_queries runs=9 bank=32768 record_bytes=37748736 queries=16 threads=1,8 policy=active
+SPEED name=queries16_t1 run=0 ns=985714461
+SPEED name=queries16_t1 run=1 ns=962876258
+SPEED name=queries16_t1 run=2 ns=959167231
+SPEED name=queries16_t1 run=3 ns=959063926
+SPEED name=queries16_t1 run=4 ns=958866193
+SPEED name=queries16_t1 run=5 ns=962806806
+SPEED name=queries16_t1 run=6 ns=962466125
+SPEED name=queries16_t1 run=7 ns=961915598
+SPEED name=queries16_t1 run=8 ns=960985356
+SPEED name=queries16_t8 run=0 ns=270766023
+SPEED name=queries16_t8 run=1 ns=278524820
+SPEED name=queries16_t8 run=2 ns=274313387
+SPEED name=queries16_t8 run=3 ns=282454995
+SPEED name=queries16_t8 run=4 ns=273054097
+SPEED name=queries16_t8 run=5 ns=273542445
+SPEED name=queries16_t8 run=6 ns=276227428
+SPEED name=queries16_t8 run=7 ns=274020235
+SPEED name=queries16_t8 run=8 ns=278250584
+SPEED_CHECK sha256=c3229c44e77e4a422823c3d1f2af41558ede52d99842ac521e447c026b69ebb7

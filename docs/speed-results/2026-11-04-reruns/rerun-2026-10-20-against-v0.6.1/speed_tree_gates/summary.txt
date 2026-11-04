@@ -1,0 +1,9 @@
+SPEED_AB case=ci_policy a_ns=1885187 a2_ns=1942204 b_ns=1187895 aa=1.030 gain=1.587 runs=27
+SPEED_AB case=disclosure a_ns=216041605 a2_ns=217924147 b_ns=36842610 aa=1.009 gain=5.864 runs=27
+SPEED_AB case=docs_refs a_ns=5647004 a2_ns=6602912 b_ns=3820578 aa=1.169 gain=1.478 runs=27
+SPEED_AB case=licensing a_ns=71795134 a2_ns=75542883 b_ns=32360077 aa=1.052 gain=2.219 runs=27
+SPEED_AB case=rust_only a_ns=16247335 a2_ns=19789198 b_ns=8843237 aa=1.218 gain=1.837 runs=27
+SPEED_AB_CHECK tree=a sha256=d4fc13913ea2b7d91a3718fd2b5c6daf0cf91561974a2bae91e813e9716970b2
+SPEED_AB_CHECK tree=a2 sha256=d4fc13913ea2b7d91a3718fd2b5c6daf0cf91561974a2bae91e813e9716970b2
+SPEED_AB_CHECK tree=b sha256=a1df4d3631899ac9ddde238bf2dad39fcc01bc4d655894c51a529dc7ac7e2a87
+SPEED_AB_VERDICT=DIFFERENT_OUTPUT

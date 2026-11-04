@@ -1,0 +1,10 @@
+SPEED_AB case=builder_push_k50 a_ns=56265027 a2_ns=56198931 b_ns=31341725 aa=0.999 gain=1.795 runs=27
+SPEED_AB case=encoded_load_k50 a_ns=38994176 a2_ns=38770663 b_ns=24670921 aa=0.994 gain=1.581 runs=27
+SPEED_AB case=find_title_k5 a_ns=894446 a2_ns=895999 b_ns=714087 aa=1.002 gain=1.253 runs=27
+SPEED_AB case=hex_digest_x100k a_ns=32057756 a2_ns=32006248 b_ns=7345108 aa=0.998 gain=4.365 runs=27
+SPEED_AB case=import_load_8mib a_ns=15298962 a2_ns=15348897 b_ns=34833921 aa=1.003 gain=0.439 runs=27
+SPEED_AB case=quote_k50 a_ns=4829235 a2_ns=4734366 b_ns=4967455 aa=0.980 gain=0.972 runs=27
+SPEED_AB_CHECK tree=a sha256=bfcdbef3ebd6e86a73a1bbfee996d8c3b15c8932121e1079e429875eb9400acb
+SPEED_AB_CHECK tree=a2 sha256=bfcdbef3ebd6e86a73a1bbfee996d8c3b15c8932121e1079e429875eb9400acb
+SPEED_AB_CHECK tree=b sha256=bfcdbef3ebd6e86a73a1bbfee996d8c3b15c8932121e1079e429875eb9400acb
+SPEED_AB_VERDICT=SAME_OUTPUT

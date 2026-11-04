@@ -1,0 +1,14 @@
+SPEED_SETUP example=speed_bench_physics runs=3 physics_repeats=3 bench_orbs=1310720,8192
+SPEED name=gel_bench_1310720_t1 run=0 ns=1471318296
+SPEED name=gel_bench_1310720_t1 run=1 ns=1465728628
+SPEED name=gel_bench_1310720_t1 run=2 ns=1463221654
+SPEED name=gel_bench_1310720_t4 run=0 ns=1470970442
+SPEED name=gel_bench_1310720_t4 run=1 ns=1447354636
+SPEED name=gel_bench_1310720_t4 run=2 ns=1483935715
+SPEED name=gel_bench_8192_t1 run=0 ns=19780195
+SPEED name=gel_bench_8192_t1 run=1 ns=17171150
+SPEED name=gel_bench_8192_t1 run=2 ns=20174426
+SPEED name=gel_physics_r3 run=0 ns=62286966923
+SPEED name=gel_physics_r3 run=1 ns=62748482757
+SPEED name=gel_physics_r3 run=2 ns=62596992132
+SPEED_CHECK sha256=115c890ccac6ed8afdc17e54babc6531e52bb615c8d5e85ee99acbeaa602387e
