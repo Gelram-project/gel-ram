@@ -47,7 +47,7 @@ cargo run --locked --offline -p xtask -- speed-ab-check docs/speed-results/2026-
 A case is beyond its A/A band when `gain` lies outside the interval between
 `aa` and 1/`aa`; this rule gives 103, 18 and 12 for the
 [record of 2026-10-20](../2026-10-20-against-v0.6.1/README.md). Of the 103
-cases faster there, 102 are faster again. The cases slower beyond the band are
+cases faster there, 102 have a ratio above 1 again, 100 of them beyond their band. The cases slower beyond the band are
 those of loading a corpus, a bundle or a collection, the SHA-256 runs, the
 backup inspection and restore and a few within 4% of 1; on this quieter
 machine the A/A band is narrower (median |aa − 1| 0.004 here, 0.04 on
