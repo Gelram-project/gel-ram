@@ -1,0 +1,10 @@
+SPEED_AB case=distinct_encoded_64mib a_ns=38203368 a2_ns=37711562 b_ns=36354109 aa=0.987 gain=1.051 runs=27
+SPEED_AB case=distinct_r50k_16mib a_ns=30221903 a2_ns=30211362 b_ns=30390870 aa=1.000 gain=0.994 runs=27
+SPEED_AB case=repeat_2049x32kib a_ns=20652772 a2_ns=20503611 b_ns=873654 aa=0.993 gain=23.640 runs=27
+SPEED_AB case=repeat_conflict_2049x32kib a_ns=20112776 a2_ns=20073061 b_ns=945008 aa=0.998 gain=21.283 runs=27
+SPEED_AB case=repeat_cycle_r8192_64x32kib a_ns=77775950 a2_ns=78010242 b_ns=8903740 aa=1.003 gain=8.735 runs=27
+SPEED_AB case=reversed_r50k_16mib a_ns=64877967 a2_ns=65137635 b_ns=64382485 aa=1.004 gain=1.008 runs=27
+SPEED_AB_CHECK tree=a sha256=7f13d4987ca9abfd01a55da590c99f33b890cec346556d01567923d6deb463c9
+SPEED_AB_CHECK tree=a2 sha256=7f13d4987ca9abfd01a55da590c99f33b890cec346556d01567923d6deb463c9
+SPEED_AB_CHECK tree=b sha256=7f13d4987ca9abfd01a55da590c99f33b890cec346556d01567923d6deb463c9
+SPEED_AB_VERDICT=SAME_OUTPUT

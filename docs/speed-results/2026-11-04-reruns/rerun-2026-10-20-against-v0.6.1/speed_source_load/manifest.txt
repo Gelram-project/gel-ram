@@ -1,0 +1,41 @@
+FORMAT=GEL_SPEED_AB_2
+protocol=GEL_COMPARISON_PROTOCOL_1
+timing_validity=AS_MEASURED
+mode=ab
+package=gel-source example=speed_source_load rounds=3
+input_args=[]
+with_bins=[]
+before_run=given args=0
+profile=release: cargo build --locked --offline --release with each tree's own Cargo.toml
+rustflags=none
+cargo_env=none
+clock_boundary=SPEED ns of the example's own timed region (Instant::elapsed); build, process start, input generation outside that region and output writing are outside
+warmup_rounds=1
+order=rotated: round r runs b,a,a2 when r mod 3 = 1, a2,b,a when 2, a,a2,b when 0; warm-up rounds use the same rotation
+aa_control=a2: a second tree of the baseline source, built and run like a
+host_os=linux
+host_arch=x86_64
+host_logical_cpus=24
+host_cpu_model=AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+host_mem_total_kib=98474940
+host_kernel=6.17.0-1033-oem
+host_load_start=2.36 2.38 2.24
+source_sha256=95a70b3c41633276410ff4847f244dc6ad5d7de4e492a10f4c986ff10584003b  crates/gel-source/examples/speed_source_load.rs
+source_sha256=b7236bd79139f6e0098f06892e7a099c659f8bb947724f818be3af448a252e03  tools/speed_support.rs
+tree=a revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=a2 revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+tree=b revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=clean rustc=rustc 1.85.0 (4d91de4e4 2025-02-17)
+placed tree=a crates/gel-source/examples/speed_source_load.rs
+placed tree=a tools/speed_support.rs
+placed tree=a2 crates/gel-source/examples/speed_source_load.rs
+placed tree=a2 tools/speed_support.rs
+binary_sha256 tree=a 3027783af9b70e21647d2d2c7a7f43cb8a3009193f0a695576784994e6aedc84
+binary_sha256 tree=a2 3027783af9b70e21647d2d2c7a7f43cb8a3009193f0a695576784994e6aedc84
+binary_sha256 tree=b 69ba712edcad98fde547bad53f086d960b38c49bfd73dece6de40ce0aaed9e74
+aa_same_binary=yes
+warmup_round=1 order=b,a,a2
+round=1 order=b,a,a2
+round=2 order=a2,b,a
+round=3 order=a,a2,b
+host_load_end=2.03 2.28 2.22
+restored=yes

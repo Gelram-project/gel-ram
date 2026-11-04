@@ -1,0 +1,10 @@
+SPEED_AB case=backup_create_64mib a_ns=189244424 a2_ns=185802958 b_ns=176314676 aa=0.982 gain=1.073 runs=27
+SPEED_AB case=backup_inspect_64mib a_ns=111626280 a2_ns=110440906 b_ns=125872123 aa=0.989 gain=0.887 runs=27
+SPEED_AB case=backup_restore_1mib a_ns=15226320 a2_ns=14883335 b_ns=13838620 aa=0.977 gain=1.100 runs=27
+SPEED_AB case=backup_restore_64mib a_ns=281338179 a2_ns=279138689 b_ns=157806128 aa=0.992 gain=1.783 runs=27
+SPEED_AB case=backup_restore_target_exists_64mib a_ns=110155294 a2_ns=110675045 b_ns=123590017 aa=1.005 gain=0.891 runs=27
+SPEED_AB case=backup_restore_withdrawn_64mib a_ns=111490614 a2_ns=111148383 b_ns=124813703 aa=0.997 gain=0.893 runs=27
+SPEED_AB_CHECK tree=a sha256=2ba38b04fded34d08b7735c05fa2158da3f2042200008247028cb454b8b3f8dd
+SPEED_AB_CHECK tree=a2 sha256=2ba38b04fded34d08b7735c05fa2158da3f2042200008247028cb454b8b3f8dd
+SPEED_AB_CHECK tree=b sha256=2ba38b04fded34d08b7735c05fa2158da3f2042200008247028cb454b8b3f8dd
+SPEED_AB_VERDICT=SAME_OUTPUT

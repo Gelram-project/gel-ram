@@ -1,0 +1,34 @@
+FORMAT=GEL_SPEED_CAMPAIGN_1
+plan=rerun-2026-10-20-against-v0.6.1 plan_sha256=91ae3911c218beab0b4b9f7c197f1e1adf8a5f0197b6524a5a066576e8d4749e
+reruns=docs/speed-results/2026-10-20-against-v0.6.1
+rounds=3 warmup=1
+runs=as_planned
+timing_validity=AS_MEASURED
+tree=a revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean
+tree=a2 revision=db9cee36bca3c589fe4f6e0395aaaf89ca8b2b1d working_tree=clean
+tree=b revision=876247f7ba4d9b602e4d3b83a5cb0799852d7925 working_tree=clean
+skip=speed_top1_many reason=its API does not exist in v0.6.1, so the example does not build in A and A2
+example=speed_backup_restore expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_bench_physics expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_catalog_parse expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_corpus_load expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_crc expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_crc_large expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_history expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_load_overlap expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_lowercase expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_nfc_fast expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_q8_masks expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_q8_queries expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_q8_read expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_search expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_sha256 expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_source_load expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_store_crc expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_store_io expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_structural_encode expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_topk expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_tree_gates expect=different_output verdict=DIFFERENT_OUTPUT speed_ab=error check=PASS met=yes
+example=speed_views expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+example=speed_witness expect=same_output verdict=SAME_OUTPUT speed_ab=ok check=PASS met=yes
+SPEED_CAMPAIGN=COMPLETE

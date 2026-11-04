@@ -1,0 +1,11 @@
+SPEED_AB case=apply_affine_masked_65536 a_ns=340376873 a2_ns=340360956 b_ns=39213179 aa=1.000 gain=8.680 runs=27
+SPEED_AB case=apply_affine_perm_65536 a_ns=233335885 a2_ns=233144397 b_ns=38513772 aa=0.999 gain=6.059 runs=27
+SPEED_AB case=apply_reverse_65536 a_ns=843497 a2_ns=841793 b_ns=845150 aa=0.998 gain=0.998 runs=27
+SPEED_AB case=apply_rotate_65536 a_ns=662827 a2_ns=659861 b_ns=659891 aa=0.996 gain=1.004 runs=27
+SPEED_AB case=apply_xor_mask_65536 a_ns=939788 a2_ns=940319 b_ns=941501 aa=1.001 gain=0.998 runs=27
+SPEED_AB case=invert_affine_masked_65536 a_ns=339314245 a2_ns=339110954 b_ns=66238328 aa=0.999 gain=5.123 runs=27
+SPEED_AB case=invert_affine_perm_65536 a_ns=220637447 a2_ns=220112049 b_ns=65787851 aa=0.998 gain=3.354 runs=27
+SPEED_AB_CHECK tree=a sha256=65d4b321b55098a64c7c7a1ea8f061884714d0046fe8332e2a292c686f08af7c
+SPEED_AB_CHECK tree=a2 sha256=65d4b321b55098a64c7c7a1ea8f061884714d0046fe8332e2a292c686f08af7c
+SPEED_AB_CHECK tree=b sha256=65d4b321b55098a64c7c7a1ea8f061884714d0046fe8332e2a292c686f08af7c
+SPEED_AB_VERDICT=SAME_OUTPUT

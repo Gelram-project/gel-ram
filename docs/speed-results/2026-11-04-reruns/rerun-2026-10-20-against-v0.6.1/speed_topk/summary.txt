@@ -1,0 +1,10 @@
+SPEED_AB case=clustered_k256 a_ns=5861196 a2_ns=5856006 b_ns=5795763 aa=0.999 gain=1.011 runs=27
+SPEED_AB case=staircase_k256 a_ns=23205465 a2_ns=20937629 b_ns=12180485 aa=0.902 gain=1.905 runs=27
+SPEED_AB case=tail_entry_k256 a_ns=5841660 a2_ns=5848914 b_ns=5758003 aa=1.001 gain=1.015 runs=27
+SPEED_AB case=ties_k256 a_ns=5784662 a2_ns=5753153 b_ns=5760187 aa=0.995 gain=1.004 runs=27
+SPEED_AB case=uniform_k256 a_ns=5889229 a2_ns=5961355 b_ns=5842892 aa=1.012 gain=1.008 runs=27
+SPEED_AB case=uniform_k8 a_ns=5691627 a2_ns=5688562 b_ns=5713368 aa=0.999 gain=0.996 runs=27
+SPEED_AB_CHECK tree=a sha256=cfb969694872bff8f25c72c0694910026f5e125c42cc8c79ccdf86a06f107c39
+SPEED_AB_CHECK tree=a2 sha256=cfb969694872bff8f25c72c0694910026f5e125c42cc8c79ccdf86a06f107c39
+SPEED_AB_CHECK tree=b sha256=cfb969694872bff8f25c72c0694910026f5e125c42cc8c79ccdf86a06f107c39
+SPEED_AB_VERDICT=SAME_OUTPUT
