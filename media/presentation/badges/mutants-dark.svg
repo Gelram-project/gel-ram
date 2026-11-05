@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="162" height="34" viewBox="-1 -1 162 34" role="img" aria-labelledby="t">
+<title id="t">format mutants: 179</title>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.bl{font-size:14px;fill:#e6edf3}
+.bv{font-size:16px;font-weight:700;fill:#0d1117;animation:bg-rise .6s ease-out 0.45s both}
+.bs{animation:bg-shine 1.4s ease-in-out 0.15s both}
+@keyframes bg-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes bg-shine{from{transform:translateX(0)}to{transform:translateX(300px)}}
+@media (prefers-reduced-motion:reduce){.bv,.bs{animation:none}}
+</style>
+<defs><clipPath id="pill"><rect width="160" height="32" rx="16"/></clipPath><linearGradient id="shine" x2="1"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<g clip-path="url(#pill)"><rect width="116" height="32" fill="#30465f"/><rect x="116" width="44" height="32" fill="#56d364"/><rect class="bs" x="-70" width="50" height="32" fill="url(#shine)"/></g>
+<rect x=".5" y=".5" width="159" height="31" rx="15.5" fill="none" stroke="#30465f"/>
+<text class="bl" x="58" y="21" text-anchor="middle">format mutants</text><text class="bv" x="138" y="22" text-anchor="middle">179</text>
+</svg>

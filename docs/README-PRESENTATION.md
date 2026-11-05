@@ -10,7 +10,13 @@ line; the full wording, with its limits, is folded under the picture in a
 drawn from files too: what is checked here, private or not established; the
 README's own commands with the line each prints, drawn and not a recording; the
 timing set of 2026-10-20 beside its re-run; versions 0.7 and 0.8 at a glance; the
-published commitments on a time line; and the parts of the memory core. Two
+published commitments on a time line; the parts of the memory core; and what one
+Q8 record holds, as docs/Q8-QUAD.md states it: 1,024 one-byte values and a
+128-byte activity mask in one 1,152-byte record that four views read, and what
+the views are not. Under the banner a row of badges shows numbers read from
+files when the README is built, each linking to the file its number comes from;
+none is a CI badge. Every wide card also comes 600 wide, with text of at least 20 px, for
+a phone: the picture sends a screen up to 600 px wide to it. Two
 numbers in the text are counted from files when the README is built: the
 published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
 which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
