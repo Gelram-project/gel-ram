@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="203" height="34" viewBox="-1 -1 203 34" role="img" aria-labelledby="t">
+<title id="t">faster, both runs: 100/133</title>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.bl{font-size:14px;fill:#ffffff}
+.bv{font-size:16px;font-weight:700;fill:#ffffff;animation:bg-rise .6s ease-out 0.90s both}
+.bs{animation:bg-shine 1.4s ease-in-out 0.60s both}
+@keyframes bg-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes bg-shine{from{transform:translateX(0)}to{transform:translateX(341px)}}
+@media (prefers-reduced-motion:reduce){.bv,.bs{animation:none}}
+</style>
+<defs><clipPath id="pill"><rect width="201" height="32" rx="16"/></clipPath><linearGradient id="shine" x2="1"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<g clip-path="url(#pill)"><rect width="124" height="32" fill="#102949"/><rect x="124" width="77" height="32" fill="#1f5fb0"/><rect class="bs" x="-70" width="50" height="32" fill="url(#shine)"/></g>
+<rect x=".5" y=".5" width="200" height="31" rx="15.5" fill="none" stroke="#cbdcf0"/>
+<text class="bl" x="62" y="21" text-anchor="middle">faster, both runs</text><text class="bv" x="162.5" y="22" text-anchor="middle">100/133</text>
+</svg>

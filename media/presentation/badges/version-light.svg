@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119" height="34" viewBox="-1 -1 119 34" role="img" aria-labelledby="t">
+<title id="t">version: 0.8.0</title>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.bl{font-size:14px;fill:#ffffff}
+.bv{font-size:16px;font-weight:700;fill:#ffffff;animation:bg-rise .6s ease-out 1.20s both}
+.bs{animation:bg-shine 1.4s ease-in-out 0.90s both}
+@keyframes bg-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes bg-shine{from{transform:translateX(0)}to{transform:translateX(257px)}}
+@media (prefers-reduced-motion:reduce){.bv,.bs{animation:none}}
+</style>
+<defs><clipPath id="pill"><rect width="117" height="32" rx="16"/></clipPath><linearGradient id="shine" x2="1"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<g clip-path="url(#pill)"><rect width="64" height="32" fill="#102949"/><rect x="64" width="53" height="32" fill="#1f5fb0"/><rect class="bs" x="-70" width="50" height="32" fill="url(#shine)"/></g>
+<rect x=".5" y=".5" width="116" height="31" rx="15.5" fill="none" stroke="#cbdcf0"/>
+<text class="bl" x="32" y="21" text-anchor="middle">version</text><text class="bv" x="90.5" y="22" text-anchor="middle">0.8.0</text>
+</svg>

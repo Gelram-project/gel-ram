@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="145" height="34" viewBox="-1 -1 145 34" role="img" aria-labelledby="t">
+<title id="t">exact runs: 48/48</title>
+<style>
+text{font-family:Arial,Helvetica,sans-serif}
+.bl{font-size:14px;fill:#ffffff}
+.bv{font-size:16px;font-weight:700;fill:#ffffff;animation:bg-rise .6s ease-out 0.30s both}
+.bs{animation:bg-shine 1.4s ease-in-out 0.00s both}
+@keyframes bg-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes bg-shine{from{transform:translateX(0)}to{transform:translateX(283px)}}
+@media (prefers-reduced-motion:reduce){.bv,.bs{animation:none}}
+</style>
+<defs><clipPath id="pill"><rect width="143" height="32" rx="16"/></clipPath><linearGradient id="shine" x2="1"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<g clip-path="url(#pill)"><rect width="85" height="32" fill="#102949"/><rect x="85" width="58" height="32" fill="#1a7f37"/><rect class="bs" x="-70" width="50" height="32" fill="url(#shine)"/></g>
+<rect x=".5" y=".5" width="142" height="31" rx="15.5" fill="none" stroke="#cbdcf0"/>
+<text class="bl" x="42.5" y="21" text-anchor="middle">exact runs</text><text class="bv" x="114" y="22" text-anchor="middle">48/48</text>
+</svg>

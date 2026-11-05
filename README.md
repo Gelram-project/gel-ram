@@ -2,11 +2,15 @@
 
 <!-- GEL_MULTIMEDIA_PRESENTATION_V1 -->
 <picture>
+  <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/header-dark.svg">
+  <source media="(max-width: 600px)" srcset="media/presentation/phone/header-light.svg">
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="media/presentation/header-still-dark.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="media/presentation/header-still-light.svg">
   <source media="(prefers-color-scheme: dark)" srcset="media/presentation/header-dark.svg">
   <img alt="GEL RAM. Knowledge printed, not trained. One stored record, four exact views, 1,152 bytes. Read back exactly; it can say UNKNOWN; a process kill, not a power cut, loses nothing it confirmed. Logo: a glass cube of record cells around an accent core." src="media/presentation/header-light.svg" width="1200">
 </picture>
+
+<p align="center"><a href="docs/evidence-q8-current/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/views-dark.svg"><img alt="4 of 4 views score bit for bit as their written-out copies in 48 recorded runs" src="media/presentation/badges/views-light.svg" width="145"></picture></a> <a href="docs/evidence-mutation/matrix-r1.txt"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/mutants-dark.svg"><img alt="Mutation matrix: 179 format mutants, each row as expected" src="media/presentation/badges/mutants-light.svg" width="162"></picture></a> <a href="docs/CRASH-SERIES.md"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/lost-dark.svg"><img alt="Crash series: 0 of 2,683 confirmed snapshots lost in 200 process kills, not a power cut" src="media/presentation/badges/lost-light.svg" width="188"></picture></a> <a href="Cargo.lock"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/packages-dark.svg"><img alt="14 packages in Cargo.lock, none from outside this checkout" src="media/presentation/badges/packages-light.svg" width="151"></picture></a> <a href="docs/speed-results/2026-11-04-reruns/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/faster-dark.svg"><img alt="Speed: 100 of 133 cases faster beyond their A/A band in both runs, one machine" src="media/presentation/badges/faster-light.svg" width="203"></picture></a> <a href="docs/COMMITMENTS.md"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/commitments-dark.svg"><img alt="9 published commitments" src="media/presentation/badges/commitments-light.svg" width="131"></picture></a> <a href="RELEASE-NOTES-v0.8.0.md"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/version-dark.svg"><img alt="Version 0.8.0: release notes" src="media/presentation/badges/version-light.svg" width="119"></picture></a> <a href="LICENSE"><picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/badges/license-dark.svg"><img alt="License: noncommercial, source-available; LICENSE controls" src="media/presentation/badges/license-light.svg" width="207"></picture></a></p>
 
 **GEL RAM prints knowledge into memory as fixed Q8 records, instead of training
 it into model weights, and reads the records back exactly, working toward
@@ -15,7 +19,7 @@ conversation in Polish and English: it answers in sentences of its own, not
 pasted excerpts, from what it holds, shows the source it relied on, and says it
 does not know when it holds nothing on the question.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/status-dark.svg"><img alt="Checkable here: exact read-back through four views, a changed byte refused, nothing confirmed lost to a kill. Private: printing and answering; 8 published commitments fix the contents of private directories as of their dates; which holds what is not published. The text AI is a goal." src="media/presentation/status-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/status-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/status-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/status-dark.svg"><img alt="Checkable here: exact read-back through four views, a changed byte refused, nothing confirmed lost to a kill. Private: printing and answering; 9 published commitments fix the contents of private directories as of their dates; only their labels say what each holds. The text AI is a goal." src="media/presentation/status-light.svg" width="1200"></picture>
 
 The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level memory computation and power-cut durability of snapshots and of the record history are `NOT_ESTABLISHED` ([claim registry](docs/CLAIMS.md)).
 
@@ -24,14 +28,14 @@ The text AI is a goal, not a result ([the goal](docs/GOAL.md)). Hardware-level m
 | Status | What it covers |
 |:---|:---|
 | **You can check it here** | One record read back exactly through four views; a changed byte refused; a killed process losing nothing it confirmed. One command each, [below](#check-it-yourself). |
-| **Private** | The step that prints text into records, and the private build that answers from them; both exist only on the author's machine. [8 published commitments](docs/COMMITMENTS.md) fix the exact contents of private source trees, data sets and a sealed sample as of their dates; which holds what is not published. |
+| **Private** | The step that prints text into records, and the private build that answers from them; both exist only on the author's machine. [9 published commitments](docs/COMMITMENTS.md) fix the exact contents of private source trees, data sets, a sealed sample and the target Q8 Quad quantizer as of their dates; only their labels say what each holds. |
 | **Not established** | The text AI, hardware-level memory computation and power-cut durability of snapshots and of the record history; see the line above. |
 
 </details>
 
 ## Check it yourself
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/terminal-dark.svg"><img alt="Drawn, what to look for: --literal: ROUNDTRIP=4/4 DIFFERENT_BITS=0, TAMPER=REJECTED; quad_compare: Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED; mutation-matrix: MUTATION_MATRIX=PASS mutants=179; crash-series 20: CRASH_SERIES=PASS with acknowledged_lost=0; verify: GEL_VERIFY_ALL=PASS." src="media/presentation/terminal-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/terminal-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/terminal-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/terminal-dark.svg"><img alt="Drawn, what to look for: --literal: ROUNDTRIP=4/4 DIFFERENT_BITS=0, TAMPER=REJECTED; quad_compare: Q8_QUAD_EXACT=PASS SEMANTIC_ACCURACY=NOT_MEASURED; mutation-matrix: MUTATION_MATRIX=PASS mutants=179; crash-series 20: CRASH_SERIES=PASS with acknowledged_lost=0; verify: GEL_VERIFY_ALL=PASS." src="media/presentation/terminal-light.svg" width="1200"></picture>
 
 With [Git](https://git-scm.com/) and [rustup](https://rustup.rs) installed, run each line separately; only `git clone` and `rustup` need a network.
 No independent run on a second machine has been reported yet: [post yours in issue #20](https://github.com/Gelram-project/gel-ram/issues/20).
@@ -64,14 +68,16 @@ No model and no private data are involved.
 
 ## One record, four exact views
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/record-dark.svg"><img alt="One stored Q8 record: 1,024 one-byte values and a 128-byte activity mask, 1,152 bytes, read through four equivalent views without four copies. Four packed copies would take 4,608 bytes; the reference layout used for checking takes 8,192 bytes. 48 of 48 recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories." src="media/presentation/record-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/q8-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/q8-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/q8-dark.svg"><img alt="What a Q8 record holds: 1,024 values of one byte each plus a 128-byte mask, one bit per value, make 1,152 bytes in memory, held once. Four views read that same record, each exactly as its own full copy would; four copies would take 4,608 bytes. Not four memories, votes or a speedup." src="media/presentation/q8-light.svg" width="1200"></picture>
+
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/record-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/record-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/record-dark.svg"><img alt="One stored Q8 record: 1,024 one-byte values and a 128-byte activity mask, 1,152 bytes, read through four equivalent views without four copies. Four packed copies would take 4,608 bytes; the reference layout used for checking takes 8,192 bytes. 48 of 48 recorded runs end with Q8_QUAD_EXACT=PASS; semantic accuracy is not measured. Record payload only, not process memory; not four independent memories." src="media/presentation/record-light.svg" width="1200"></picture>
 
 One record, 1,152 bytes, read four ways, each bit for bit. [Contract](docs/Q8-QUAD.md) · [the recorded runs](docs/evidence-q8-current/README.md)
 
 <details><summary>What the four views are, and what they are not</summary>
 
-A record is stored once, in 1,152 bytes. A view reads the same values in another
-fixed arrangement; each of the four views scores exactly as a separate, fully
+A record is held once, in 1,152 bytes of memory on the tested ABI. A view reads
+the same values in another fixed arrangement; each of the four views scores exactly as a separate, fully
 written-out copy would, bit for bit, and four such copies would take 4,608 bytes.
 Four views are not four independent memories, four votes or a speedup.
 
@@ -79,7 +85,7 @@ Four views are not four independent memories, four votes or a speedup.
 
 ## Exact bytes, or a refusal
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/flow-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/flow-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/flow-dark.svg"><img alt="What happens to a citation, drawn in 3D: your document with an exact quote, a snapshot pinned by the SHA-256 you keep, a new process that reopens it with the same pin and passes, and a copy with one changed byte that is refused." src="media/presentation/flow-light.svg" width="1200"></picture>
 
 Your quote comes back byte for byte; a changed byte is refused. [Evidence Lab guide](docs/EVIDENCE-LAB.md) · [as text](media/gifs/05-integrity.txt)
 
@@ -99,7 +105,7 @@ ends with `GEL_EVIDENCE_DEMO=PASS`.
 
 ## A killed process loses nothing it confirmed
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/crash-dark.svg"><img alt="One recorded crash series on the author's Linux machine (ext4, 2026-09-29): in each of 200 trials a collection growing to 24 snapshots was killed with SIGKILL at a random moment within 344 ms. 2,683 snapshots were acknowledged before the kills; 0 were lost and 0 were partial, and 200 of 200 trials resumed to the uninterrupted result. 153 kills came in the middle of a publication. A process kill, not a power cut: power-loss durability is not established." src="media/presentation/crash-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/crash-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/crash-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/crash-dark.svg"><img alt="One recorded crash series on the author's Linux machine (ext4, 2026-09-29): in each of 200 trials a collection growing to 24 snapshots was killed with SIGKILL at a random moment within 344 ms. 2,683 snapshots were acknowledged before the kills; 0 were lost and 0 were partial, and 200 of 200 trials resumed to the uninterrupted result. 153 kills came in the middle of a publication. A process kill, not a power cut: power-loss durability is not established." src="media/presentation/crash-light.svg" width="1200"></picture>
 
 200 random process kills in one recorded run: 0 of 2,683 confirmed snapshots lost. [Crash series](docs/CRASH-SERIES.md)
 
@@ -115,9 +121,9 @@ intact ([fault tests](docs/PUBLICATION-FAULT-TESTS.md)).
 
 ## The public checks, drawn from their files
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/bars-dark.svg"><img alt="Format mutation matrix: rejected and accepted rows per public format in the committed report, and how many rows matched their expected verdict." src="media/presentation/bars-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/bars-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/bars-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/bars-dark.svg"><img alt="Format mutation matrix: rejected and accepted rows per public format in the committed report, and how many rows matched their expected verdict." src="media/presentation/bars-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/wall-dark.svg"><img alt="Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows." src="media/presentation/wall-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/wall-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/wall-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/wall-dark.svg"><img alt="Property map across CI platforms: one cell per documented property on Linux, macOS and Windows. Every mapped test must run and pass exactly once on each platform; declared Unix-only tests are exempt on Windows." src="media/presentation/wall-light.svg" width="1200"></picture>
 
 Every changed copy refused under its original SHA-256; CI requires every mapped property on three platforms, Unix-only tests exempt on Windows. [CI evidence](docs/CI-EVIDENCE.md)
 
@@ -129,15 +135,15 @@ Both images are drawn from the committed mutation report and the property map wh
 
 ## Speed, timed against v0.6.1
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/speed-dark.svg"><img alt="Timing set 2026-10-20-against-v0.6.1: v0.6.1 against main at 876247f, the first v0.7 speed package. 133 timed cases in 23 of 24 timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1. 103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it. 22 of 23 timed programs printed the same output digest in all three trees. speed_top1_many has only a manifest: its API does not exist in v0.6.1, so the example does not build there. speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in, and the two trees differ. Machine: AMD Ryzen AI 9 HX 370, 24 hardware threads, 94 GiB RAM, Linux 6.17; load average 2.7 at the start, 12.6 to 19.4 at the end, from other work on the machine; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim." src="media/presentation/speed-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/speed-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/speed-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/speed-dark.svg"><img alt="Timing set 2026-10-20-against-v0.6.1: v0.6.1 against main at 876247f, the first v0.7 speed package. 133 timed cases in 23 of 24 timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1. 103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it. 22 of 23 timed programs printed the same output digest in all three trees. speed_top1_many has only a manifest: its API does not exist in v0.6.1, so the example does not build there. speed_tree_gates prints DIFFERENT_OUTPUT because it counts the files of the tree it runs in, and the two trees differ. Machine: AMD Ryzen AI 9 HX 370, 24 hardware threads, 94 GiB RAM, Linux 6.17; load average 2.7 at the start, 12.6 to 19.4 at the end, from other work on the machine; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim." src="media/presentation/speed-light.svg" width="1200"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/rerun-dark.svg"><img alt="The same 133 cases, timed twice against v0.6.1, each against its own A/A band: 103 faster, 12 inside, 18 slower on 2026-10-20; 105 faster, 4 inside, 24 slower on 2026-11-04; 100 of the 103 faster again (102 with a ratio above 1). A/A noise 0.04 → 0.004. One machine, not pinned to cores." src="media/presentation/rerun-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/rerun-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/rerun-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/rerun-dark.svg"><img alt="The same 133 cases, timed twice against v0.6.1, each against its own A/A band: 103 faster, 12 inside, 18 slower on 2026-10-20; 105 faster, 4 inside, 24 slower on 2026-11-04; 100 of the 103 faster again (102 with a ratio above 1). A/A noise 0.04 → 0.004. One machine, not pinned to cores." src="media/presentation/rerun-light.svg" width="1200"></picture>
 
 Each case timed against two copies of the baseline, then once more with no other work running; most are faster, some slower. [Re-runs](docs/speed-results/2026-11-04-reruns/README.md)
 
 ## New in 0.8, and in 0.7
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Versions 0.7 and 0.8 at a glance. New in 0.8: 8 tool programs answer --version and --license. Since 0.7: 14 packages in Cargo.lock, none from outside this checkout; Unicode 16.0.0 for normalization; SHA-256 written here." src="media/presentation/glance-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/glance-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/glance-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/glance-dark.svg"><img alt="Versions 0.7 and 0.8 at a glance. New in 0.8: 8 tool programs answer --version and --license. Since 0.7: 14 packages in Cargo.lock, none from outside this checkout; Unicode 16.0.0 for normalization; SHA-256 written here." src="media/presentation/glance-light.svg" width="1200"></picture>
 
 <details><summary>What changed, in words</summary>
 
@@ -150,7 +156,7 @@ Each case timed against two copies of the baseline, then once more with no other
 
 ## Private work, fixed in time
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/pledges-dark.svg"><img alt="8 commitments, 2026-10-20 to 2026-11-01: each the SHA-256 of a manifest of a private directory, shown by its first 8 hex characters with its directory and file counts. Checkable with xtask commitment-check once the files are handed over; a hash shows they did not change, not that they are correct." src="media/presentation/pledges-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/pledges-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/pledges-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/pledges-dark.svg"><img alt="9 commitments, 2026-10-20 to 2026-11-05: each the SHA-256 of a manifest of a private directory, shown by its first 8 hex characters with its directory and file counts. Checkable with xtask commitment-check once the files are handed over; a hash shows they did not change, not that they are correct." src="media/presentation/pledges-light.svg" width="1200"></picture>
 
 Private files, hashed now; checkable once the owner hands them over. A hash shows they did not change, not that they are correct. [Commitments](docs/COMMITMENTS.md)
 
@@ -183,7 +189,7 @@ Six edited 12-second replays of recorded public-tool runs; the pacing is not exe
 
 ## Using GEL RAM
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/license-dark.svg"><img alt="GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE. Noncommercial use (section 3): 'a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.' 'You may keep Noncommercial Modifications private without a time limit.' Evaluation, by anyone (sections 4 and 2): 'Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.' 'in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.' Money needs an agreement (section 5): 'No Monetized Use is licensed by these public terms.' 'Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor.' Every copy (section 8): 'each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.' Commercial Agreements: gelram.licensing@gmail.com. A summary adds no rights; LICENSE controls (section 17)." src="media/presentation/license-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/license-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/license-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/license-dark.svg"><img alt="GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE. Noncommercial use (section 3): 'a worldwide, non-exclusive, non-transferable, non-sublicensable, royalty-free copyright license to reproduce, run, study, modify, and share the Software for Noncommercial Purposes.' 'You may keep Noncommercial Modifications private without a time limit.' Evaluation, by anyone (sections 4 and 2): 'Any person or organization may evaluate the Software and may create Evaluation Modifications without payment and without a fixed evaluation deadline.' 'in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.' Money needs an agreement (section 5): 'No Monetized Use is licensed by these public terms.' 'Before beginning a Monetized Use, You must obtain a Commercial Agreement from the Licensor.' Every copy (section 8): 'each recipient receives this license, all copyright notices, and all plain-text lines beginning with `Required Notice:` supplied by the Licensor.' Commercial Agreements: gelram.licensing@gmail.com. A summary adds no rights; LICENSE controls (section 17)." src="media/presentation/license-light.svg" width="1200"></picture>
 
 Source-available: noncommercial use and evaluation are allowed; Monetized Use needs a written Commercial Agreement first; the [LICENSE](LICENSE) controls.
 
@@ -211,7 +217,7 @@ This README adds no rights; the [LICENSE](LICENSE) controls
 
 ## The memory core
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="media/presentation/core-dark.svg"><img alt="The 7 parts of the memory core and the 5 dependencies their Cargo.toml files declare among them: Store, Reader and Rebuild build on Bit record; History builds on Bit record and Rebuild. Q8 record and Memory cost stand alone." src="media/presentation/core-light.svg" width="1200"></picture>
+<picture><source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="media/presentation/phone/core-dark.svg"><source media="(max-width: 600px)" srcset="media/presentation/phone/core-light.svg"><source media="(prefers-color-scheme: dark)" srcset="media/presentation/core-dark.svg"><img alt="The 7 parts of the memory core and the 5 dependencies their Cargo.toml files declare among them: Store, Reader and Rebuild build on Bit record; History builds on Bit record and Rebuild. Q8 record and Memory cost stand alone." src="media/presentation/core-light.svg" width="1200"></picture>
 
 <details><summary>Each part, and the test that checks it</summary>
 

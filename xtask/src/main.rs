@@ -145,7 +145,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     // Exact script-free documentation presentation assets; no HTML/SVG wildcard.
     (
         "README-MULTIMEDIA.html",
-        "014ae3d9b042fcb79b04f69c2355cc998757c538fc20c1c197ee77b4791e199b",
+        "732f35349eec8bb241bafe9bcdad69b37cc5d4c0aa3c45b5993981551b3b311b",
     ),
     (
         "media/presentation/header-light.svg",
@@ -165,11 +165,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/record-light.svg",
-        "65d50ddecf4cb4115713e8086975954aed1c69259d677b07d654b750b7e1a92f",
+        "70acfe3d34f42a7ebfa2ff3da1878d0fc71e0a4d60eee00b747725a852f8572c",
     ),
     (
         "media/presentation/record-dark.svg",
-        "81ec117030fe27eb2b9c2b0d0fe9a62509beffd1566779732f09962e056cc709",
+        "ab125b943b68bc8425b5609eaf6bed8cdf4023fcc81b5ae8da15de11a81d6e65",
     ),
     (
         "media/presentation/crash-light.svg",
@@ -205,11 +205,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/pledges-dark.svg",
-        "5374ea09c49a3a4590f928b87c6cb9c7431f4580f594009fe0f7ba13fc999ee8",
+        "8fd6da72abbb25012c100c4d0eb74fc7bdc56a2fd19711c8873e7e6b15cc2aab",
     ),
     (
         "media/presentation/pledges-light.svg",
-        "e6ac58b7b086f5b0a7a84b619ae8c4e3ba13b8c543e1b913ed16215be1c7f2b8",
+        "99000e3ace53834b6fb0283b1c7a29339e26a19b3f40771e6c7fa5ba4fe6e7ce",
     ),
     (
         "media/presentation/rerun-dark.svg",
@@ -221,11 +221,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/status-dark.svg",
-        "35abe8168c42bd851e9f5a462b4645ecf6fd6c30c5cbbcd2db3e629e21f46caa",
+        "dc1313d5741ed331feb75724059703989e1b20fa987768030c31a586301d581b",
     ),
     (
         "media/presentation/status-light.svg",
-        "01a3a54058a187c3aabf22da24de381a8768febe29852a733d33c89e4533d157",
+        "75df85035e87bdda43cf243644ea7c76cbf4da3f7e55c3033a0d7a018bd6da70",
     ),
     (
         "media/presentation/terminal-dark.svg",
@@ -245,7 +245,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/flow-light.svg",
-        "f69dccd7b004f5b95d36fbc4773e8c962b2c39be1a5c23186b152991d1274f5a",
+        "a7e0ad9b7a482712f7aede142e23162580ca1d85b50ac5ce490faadd60bb438d",
     ),
     (
         "media/presentation/facts-light.svg",
@@ -269,7 +269,7 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/flow-dark.svg",
-        "4248e73198f4274634098a70f0b6739f981da45f040f20a8444e8051dc005032",
+        "9edc076af21a8b82f31c8e355b284e0b34e3f05707ce81ceaa72f5a822adcb09",
     ),
     (
         "media/presentation/facts-dark.svg",
@@ -362,6 +362,198 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     (
         "docs/images/evidence-limits-en.png",
         "6a6b9af2ea626591863d56b6d082613794d52ae1b8f825244ba0b62fecd8b9fd",
+    ),
+    (
+        "media/presentation/badges/commitments-dark.svg",
+        "6fee3f55e264bd1b3cfa2604233f3b490a1bff7c3864c524d41a662266d14bde",
+    ),
+    (
+        "media/presentation/badges/commitments-light.svg",
+        "430b08526db72bcf73ab1fb4fbae2f5bc96683f5ace09b399fcf7877c58aa8f0",
+    ),
+    (
+        "media/presentation/badges/faster-dark.svg",
+        "a235dd89c7ae7206d9f5a6a18b6c24aaf0072593d854f27e7d419e6beca057fa",
+    ),
+    (
+        "media/presentation/badges/faster-light.svg",
+        "afee602addf16f856f2daa9b7081227e3b115cc97bc1050b26ccfb24fa7f502c",
+    ),
+    (
+        "media/presentation/badges/license-dark.svg",
+        "b88d5aa1514c48f4f92ad46bd53821147c0b55c31d9566bcf890435adf5788dd",
+    ),
+    (
+        "media/presentation/badges/license-light.svg",
+        "37be4353432548e02610a1dd8bc6b5505c15b8f811cb60fbb48b0849b4a647c8",
+    ),
+    (
+        "media/presentation/badges/lost-dark.svg",
+        "98ed74f8672e132e6eda132cbbc2e26f15d425357d8c89f79aef4c75fd77df9d",
+    ),
+    (
+        "media/presentation/badges/lost-light.svg",
+        "d22c5a7d36c0b58c2fdb473226b2d0a58fb783d8341ef84f3f718ff8904cc8d3",
+    ),
+    (
+        "media/presentation/badges/mutants-dark.svg",
+        "b774d16618ffe1d7ddfd4b8d28526ee27efa6f2aeccf76ec572e68f773f65a50",
+    ),
+    (
+        "media/presentation/badges/mutants-light.svg",
+        "c9d864592601c5d4e9bef8306fe45c94de9fb6f38f8010801d407fb8e76f10a4",
+    ),
+    (
+        "media/presentation/badges/packages-dark.svg",
+        "bcbb4c004c58759e37bc70c88a431ae63deafac46a1682c6ff072e2e309fe909",
+    ),
+    (
+        "media/presentation/badges/packages-light.svg",
+        "b57511fecd10dbcd404e6bb8c1d0f8e4bbcda2852948ee53718f9b3c79416e95",
+    ),
+    (
+        "media/presentation/badges/version-dark.svg",
+        "d856d66cb13676c39e9e79dc79c8cf7c1f9db40bcd2a2741f913e76085020f38",
+    ),
+    (
+        "media/presentation/badges/version-light.svg",
+        "dee3e2bf1abb4bd2552ec96e09185c25a4746af0927fd885b04292bc52dd419a",
+    ),
+    (
+        "media/presentation/badges/views-dark.svg",
+        "8b0de64284dd8a9634f347a67f0035a62eaee9da3099874554d1f20eee126bc6",
+    ),
+    (
+        "media/presentation/badges/views-light.svg",
+        "0a31425923acd6746f8746a130449723598e786b2d62e428ed446fb74a02b596",
+    ),
+    (
+        "media/presentation/phone/bars-dark.svg",
+        "f5a956c54e9a48bd9720d4fa55ac543c948fa03d51c8f0e08030bbadd285e2af",
+    ),
+    (
+        "media/presentation/phone/bars-light.svg",
+        "6a8be619dba88b70f04e691f18e72d3e441fa5b2304553120b35b03cbd03d441",
+    ),
+    (
+        "media/presentation/phone/core-dark.svg",
+        "0bf2481c4d27812993df94444b6b48d0e89a0f7d97b0ac93779a37a49537d526",
+    ),
+    (
+        "media/presentation/phone/core-light.svg",
+        "4a5e1654d3ac6e623df1aeea36046c30b75718406d8d635ae780c25b96a18349",
+    ),
+    (
+        "media/presentation/phone/crash-dark.svg",
+        "69c19962bda8fecb36a856a1cf8d00d52a5fa09ab1f2a1d1f46c0140d776092c",
+    ),
+    (
+        "media/presentation/phone/crash-light.svg",
+        "2a89c0799e9d9c4ab9a8c3949133e1b6b2729cf08774689b7a9a3cce66b9a4bf",
+    ),
+    (
+        "media/presentation/phone/flow-dark.svg",
+        "73e65aabc3e2b653e14db25feca2139c1b6131e7525b221e6dd3d0d946377753",
+    ),
+    (
+        "media/presentation/phone/flow-light.svg",
+        "661e5d6f912a846935037cd75de9a6d0491cc7f5ee5640656cf7cbe22cc46593",
+    ),
+    (
+        "media/presentation/phone/glance-dark.svg",
+        "6a1146a2aa71166e3feeea50814684f2772af05499402797f25fcc7f46e7574e",
+    ),
+    (
+        "media/presentation/phone/glance-light.svg",
+        "168457ee36fc356dd27b69ec93dfec1aa9db32756fc439377ee3adb3d184cff1",
+    ),
+    (
+        "media/presentation/phone/header-dark.svg",
+        "3bde21e5723ba6f2c0ff7fddd38f3f065719033dd2b96c33e2dc7e3e7e916e23",
+    ),
+    (
+        "media/presentation/phone/header-light.svg",
+        "dd6f942b028b7ab48d948a4ae74613709449e1502a470752b7db3d878ea42508",
+    ),
+    (
+        "media/presentation/phone/license-dark.svg",
+        "7129c50be0d9062fe2eab88577001d78f06ae7a74b6311af2a40ad39decdc3be",
+    ),
+    (
+        "media/presentation/phone/license-light.svg",
+        "2c6dc8ef698fed1675ea02a9e87f254da548f03f079115ad72930fc87c66503a",
+    ),
+    (
+        "media/presentation/phone/pledges-dark.svg",
+        "ac6e0d084543eb5b5bfe5e9732957f9146d2b7719632c2fdc38b27833413bc51",
+    ),
+    (
+        "media/presentation/phone/pledges-light.svg",
+        "c6b411928131a24c50b6dd88360e40b3ee63df2126b064f09d5828ba1b326e56",
+    ),
+    (
+        "media/presentation/phone/q8-dark.svg",
+        "9a75067082ec6ecd4f3d1d3907d23165aca46623a6b9cf892aedf41464714195",
+    ),
+    (
+        "media/presentation/phone/q8-light.svg",
+        "706a663b5b7be8f2c9c9844f8b89dc742941ce99b64a9eb5312bdea473914ea0",
+    ),
+    (
+        "media/presentation/phone/record-dark.svg",
+        "44b976202c4ccec6a44c123d24ca0faffed001ba5b76ff1566272f3f07dfe049",
+    ),
+    (
+        "media/presentation/phone/record-light.svg",
+        "0d515c99b6f7a0a013b37ec24a916bbb39d990e56edac26d0967b17b55e8913c",
+    ),
+    (
+        "media/presentation/phone/rerun-dark.svg",
+        "296909ce86a9cab7cd37d411013b535baebece3f7c4d9c1c4e62fd8a61142402",
+    ),
+    (
+        "media/presentation/phone/rerun-light.svg",
+        "45da8143fe144a4db4b8b9f88e9525a64e36171d22d39f7a65ffff1d3bc0d3aa",
+    ),
+    (
+        "media/presentation/phone/speed-dark.svg",
+        "2e79c47d8fcf4872bc6a532c72d4d5068adc00bf195daa2c7bba6cc943e6972a",
+    ),
+    (
+        "media/presentation/phone/speed-light.svg",
+        "18da2cc50e8a12da999d8560f7550e605c45348c5c6d44e73193457f5667ab40",
+    ),
+    (
+        "media/presentation/phone/status-dark.svg",
+        "9e690b73f4ac721196112e7bdfa9bb4e3b9d5f31e1291ffaf594456b9847f02e",
+    ),
+    (
+        "media/presentation/phone/status-light.svg",
+        "b38f88c7820fe10a2100a9aafd3dcafe067ae1662b52c1536f5a0fa5d33624ad",
+    ),
+    (
+        "media/presentation/phone/terminal-dark.svg",
+        "22ad932914a38f2a8e3c529e5a505383a696120f3df7f533884179fb73002ccc",
+    ),
+    (
+        "media/presentation/phone/terminal-light.svg",
+        "1b06814e3991dcca435569aee280ef2318323d2a9f377c4a401866f4a300f3ec",
+    ),
+    (
+        "media/presentation/phone/wall-dark.svg",
+        "31901217cfcc5756c09f93eddc3c1618bfea1426d35ff09e58834256cca280b0",
+    ),
+    (
+        "media/presentation/phone/wall-light.svg",
+        "1f29a24978fa3a86ed17fe656dc6fe52a42c31565643d94fb9ed61da01dcb809",
+    ),
+    (
+        "media/presentation/q8-dark.svg",
+        "5e1817e133c443482c392a9aea5be6b1d31f4c2e44f096b20c6d6f444e5ae5f0",
+    ),
+    (
+        "media/presentation/q8-light.svg",
+        "a81597ef68d792bb93d09af295cd9bcda91a33e6f4402d0ee9c530b7a25ca456",
     ),
 ];
 

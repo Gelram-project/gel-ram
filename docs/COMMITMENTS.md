@@ -71,6 +71,7 @@ the tests in `xtask/src/commitment.rs` compare with such a manifest.
 | 2026-10-24 | Private data set 5 | 70 | 519 | `9c0ed62b02aedc6f2a201043a505b20f9135ae4bf2e5b092014b7f688fbb4b2e` |
 | 2026-10-24 | Sealed sample 1 | 4 | 129 | `8260b56c0e4f0933d8d4bce4f3950b5b90536d30a99557c9e6d2740455b59c96` |
 | 2026-11-01 | Private source tree 2 | 18 | 82 | `59a95b6fadad8e01cf8bdc485080a2b28bb41b8806da69ae8018da840d0479bd` |
+| 2026-11-05 | Target Q8 Quad quantizer | 3 | 10 | `0034f6ee14b457c1ba11fbd8756c2830763d26ac262b35ca9474541f98e1861a` |
 
 The draft of PR #81 first listed `26b84cb5…deafe9` for Private source tree 1 in
 an earlier manifest format that did not record directories. That digest is
