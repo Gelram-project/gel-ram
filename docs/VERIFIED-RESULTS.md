@@ -18,7 +18,7 @@ retains its own license terms.
 | Q8 coordinate views | Four reversible views of one 1152-byte public Q8 record with inverse/exactness checks | Four views are not four independent facts or 4× storage capacity |
 | Independent integrity audit | Byte/numeric/ranking audit reports exact recovery for the encoded representations it tests | Conversion loss and semantic quality are separate questions |
 | Ocean Scale R3 (historical) | Recorded 1M/10M synthetic full-scan measurements; the research archive was withdrawn from the tree in 0.4.0, so they cannot be re-run from it | CPU/RAM full-scan baseline, not the private execution path |
-| Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Linux-only persistence tests are declared per platform |
+| Cross-platform public core | Linux, macOS and Windows required checks execute workspace/runtime verification | Platform-only tests are declared per platform |
 | Evidence Lab collections (main since PR #9) | Multi-document add/replace/drop, exact citations, stale-result rejection, GELSET01 no-replace snapshots and fresh-process reopen ([guide](EVIDENCE-LAB.md)) | Phrase retrieval over plaintext sources, not a semantic chatbot or encrypted storage |
 | Precision matrix (PR #10) | F32/F16/affine Q1–Q16 reference precisions in a GPMX v1 example container, with independent checks ([matrix](PRECISION-MATRIX.md)) | Not the private codec; timing not measured |
 | Publication faults (PR #10) | Injected I/O failures, kernel permission denial (Unix test) and a physically full 1 MiB tmpfs in Linux CI ([fault matrix](PUBLICATION-FAULT-TESTS.md)) | Not a power-cut test |

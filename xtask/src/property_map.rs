@@ -4,8 +4,8 @@
 //!
 //! `verify` checks that the map is well formed. The CI evidence collector
 //! checks, on every platform, that each named test ran and passed exactly once
-//! in the debug workspace pass, or is a declared Unix-only test absent on
-//! another platform. That shows the tests ran, not that they cover everything.
+//! in the debug workspace pass, or is a declared platform-only test absent where
+//! it is not compiled. That shows the tests ran, not that they cover everything.
 use std::{fs, path::Path};
 
 pub const MAP: &str = "docs/PROPERTY-TESTS.md";
@@ -68,7 +68,7 @@ pub fn read(root: &Path) -> Result<Vec<Row>, String> {
 
 /// Report lines for a TESTS.txt: `counts(name)` gives (passed, listed) in the
 /// debug workspace pass; `excluded(name)` says the test is compiled only on
-/// Unix and this platform is not Unix.
+/// Unix or only on Linux and this platform is not one of those.
 pub fn check(
     rows: &[Row],
     counts: impl Fn(&str) -> (usize, usize),

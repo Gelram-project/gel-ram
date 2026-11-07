@@ -51,6 +51,11 @@ A release candidate is green only when all applicable gates pass on the same sou
     all intact (none altered) and `DISTRIBUTION_NOTICES=LISTED_ITEMS_PRESENT`
     ([license decision guide](LICENSE-DECISION.md)). This reads the project's
     own listed items, not legal validity.
+26. recorded CI evidence (`xtask ci-evidence-recorded`, in `verify`): every
+    revision in [evidence-ci](evidence-ci/README.md) has its nine files and no
+    others, the checksums and report format hold, each report names its recorded
+    run, commit and platform, Linux and macOS pass the strict comparison with
+    Windows, and the table there is recomputed from the reports.
 
 Performance results are evidence, not correctness substitutes.
 

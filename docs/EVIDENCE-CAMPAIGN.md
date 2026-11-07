@@ -121,3 +121,11 @@ All four plans were run once on 2026-11-04, on the author's machine; the
 records are in [2026-11-04-reruns](speed-results/2026-11-04-reruns/README.md).
 The recorded sets of 2026-10-20 and 2026-10-25 stay as they were measured and
 are not re-labelled; the re-run stands beside them.
+
+## Memory accounting
+
+`xtask memory-run` records payload, mapped and resident peaks, page faults,
+threads and host conditions of public operations, at least five processes each,
+and `xtask memory-check` refuses an incomplete record
+([instrument, format and limits](MEMORY-ACCOUNTING.md)). It records no time, so
+its records are not timing campaigns and do not follow the comparison protocol.

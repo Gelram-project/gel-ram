@@ -16,7 +16,9 @@ Q8 record holds, as docs/Q8-QUAD.md states it: 1,024 one-byte values and a
 the views are not. Under the banner a row of badges shows numbers read from
 files when the README is built, each linking to the file its number comes from;
 none is a CI badge. Every wide card also comes 600 wide, with text of at least 20 px, for
-a phone: the picture sends a screen up to 600 px wide to it. Two
+a phone: the picture sends a screen up to 600 px wide to it. A phone card says
+less than its wide card: the speed card shows the totals, the license card a
+subset of the quotes. Two
 numbers in the text are counted from files when the README is built: the
 published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
 which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
@@ -39,8 +41,8 @@ appears. It pictures the public workflow, not how the engine works inside, and
 it is not a claim of general AI; under reduced motion it shows its final state.
 
 The builder draws the facts strip and the two check graphics from the property
-map, the Unix-only exclusion list of the CI evidence collector and the committed
-mutation matrix report. The property-map graphic shows the rule the collector
+map, the Unix and Linux exclusion list of the CI evidence collector and the
+committed mutation matrix report. The property-map graphic shows the rule the collector
 enforces on each CI platform, not the result of a particular run. A change to
 any of these sources makes the read-only check fail until the images are rebuilt.
 The record card is drawn the same way from the recorded comparison runs: the

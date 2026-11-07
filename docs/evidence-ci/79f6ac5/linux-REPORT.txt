@@ -1,0 +1,61 @@
+FORMAT=GEL_CI_EVIDENCE_2
+COMMIT=79f6ac5c4490a646ea63e4d6d51543c5e37db198
+SOURCE_MANIFEST_SHA256=0496ebe6fbc364beb55a6d6fb496b28feb1419b76ab5e03c1c3bd86ea0554f78
+RUN_ID=42077523488
+RUN_ATTEMPT=1
+OS=linux
+ARCH=x86_64
+SCOPE=workspace tests (debug), core-path tests (release), doctests, saved R1 recheck; not full CI or a fresh benchmark
+RUST_VERSION=1.85.0
+REDACTION=only strict test identifiers and derived counts; raw stdout/stderr excluded
+CASE=workspace-debug accepted=true exit_code=Some(0) named_test_executions=813 summaries=138 passed=812 failed=0 ignored=2 filtered_out=0 unlisted_executions=1 stdout_bytes=72803 stderr_bytes=17741
+CASE=core-release accepted=true exit_code=Some(0) named_test_executions=382 summaries=73 passed=381 failed=0 ignored=1 filtered_out=0 unlisted_executions=0 stdout_bytes=34889 stderr_bytes=9482
+CASE=doctests-debug accepted=true exit_code=Some(0) named_test_executions=0 summaries=10 passed=2 failed=0 ignored=0 filtered_out=0 unlisted_executions=2 stdout_bytes=1278 stderr_bytes=318
+CASE=saved-r1-release accepted=true exit_code=Some(0) named_test_executions=0 summaries=0 passed=0 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=24 stderr_bytes=251
+PLATFORM_EXCLUSION test=sigkill_after_save_ack_keeps_a_readable_snapshot condition=unix here=RAN_PASSED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=sigkill_at_observable_publication_never_installs_a_partial_snapshot condition=unix here=RAN_PASSED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=symlink_input_and_output_rejected condition=unix here=RAN_PASSED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::rust_only_gate_rejects_symlinks_and_executable_files condition=unix here=RAN_PASSED reason=Unix symlink and execute-bit creation
+PLATFORM_EXCLUSION test=source_bundle::tests::symlink_file_and_directory_rejected condition=unix here=RAN_PASSED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::atomic_write_is_private_by_default_and_preserves_existing_mode condition=unix here=RAN_PASSED reason=Unix permission bits
+PLATFORM_EXCLUSION test=kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file condition=unix here=RAN_PASSED reason=Unix permission bits
+PARTIAL_PLATFORM_BRANCH test=reproduction::tests::report_inventory_rejects_links_and_preserves_complete_hashes condition=unix here=RAN_PASSED branch=active detail=report symlink rejection assertion
+PARTIAL_PLATFORM_BRANCH test=persisted_roundtrip_and_no_temporary_files condition=unix here=RAN_PASSED branch=active detail=0600 file mode assertion
+PARTIAL_PLATFORM_BRANCH test=recorder_usage_and_closed_display_fail_closed condition=linux here=RAN_PASSED branch=active detail=/dev/full display assertion
+PLATFORM_EXCLUSIONS=CHECKED whole_tests=7 partial_branches=3
+PROPERTY id=P01 tests=1 passed=1 excluded_here=0
+PROPERTY id=P02 tests=1 passed=1 excluded_here=0
+PROPERTY id=P03 tests=1 passed=1 excluded_here=0
+PROPERTY id=P04 tests=1 passed=1 excluded_here=0
+PROPERTY id=P05 tests=2 passed=2 excluded_here=0
+PROPERTY id=P06 tests=2 passed=2 excluded_here=0
+PROPERTY id=P07 tests=1 passed=1 excluded_here=0
+PROPERTY id=P08 tests=1 passed=1 excluded_here=0
+PROPERTY id=P09 tests=2 passed=2 excluded_here=0
+PROPERTY id=P10 tests=1 passed=1 excluded_here=0
+PROPERTY id=P11 tests=2 passed=2 excluded_here=0
+PROPERTY id=P12 tests=1 passed=1 excluded_here=0
+PROPERTY id=P13 tests=3 passed=3 excluded_here=0
+PROPERTY id=P14 tests=2 passed=2 excluded_here=0
+PROPERTY id=P15 tests=1 passed=1 excluded_here=0
+PROPERTY id=P16 tests=2 passed=2 excluded_here=0
+PROPERTY id=P17 tests=3 passed=3 excluded_here=0
+PROPERTY id=P18 tests=3 passed=3 excluded_here=0
+PROPERTY id=P19 tests=2 passed=2 excluded_here=0
+PROPERTY id=P20 tests=2 passed=2 excluded_here=0
+PROPERTY id=P21 tests=1 passed=1 excluded_here=0
+PROPERTY id=P22 tests=2 passed=2 excluded_here=0
+PROPERTY id=P23 tests=4 passed=4 excluded_here=0
+PROPERTY id=P24 tests=4 passed=4 excluded_here=0
+PROPERTY id=P25 tests=3 passed=3 excluded_here=0
+PROPERTY id=P26 tests=3 passed=3 excluded_here=0
+PROPERTY id=P27 tests=2 passed=2 excluded_here=0
+PROPERTY id=P28 tests=2 passed=2 excluded_here=0
+PROPERTY id=P29 tests=2 passed=2 excluded_here=0
+PROPERTY id=P30 tests=4 passed=4 excluded_here=0
+PROPERTY id=P31 tests=2 passed=2 excluded_here=0
+PROPERTY id=P32 tests=2 passed=2 excluded_here=0
+PROPERTY id=P33 tests=2 passed=2 excluded_here=0
+PROPERTY id=P34 tests=2 passed=2 excluded_here=0
+PROPERTY id=P35 tests=2 passed=2 excluded_here=0
+PROPERTY_MAP=CHECKED rows=35 tests=71

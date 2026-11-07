@@ -45,11 +45,17 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | orb-record-layout | bytes | EXECUTABLE_CHECK |
 | structural-exact-xor | structure | EXECUTABLE_CHECK |
 | q8-record-size | bytes | EXECUTABLE_CHECK |
+| store-file-refusals | integrity | EXECUTABLE_CHECK |
+| reader16-one-comparison | structure | EXECUTABLE_CHECK |
+| progressive-top-k-exact | ranking | EXECUTABLE_CHECK |
+| source-builder-limits | interface | EXECUTABLE_CHECK |
 | no-third-party-packages | distribution | EXECUTABLE_CHECK |
 | no-network-code | environment | EXECUTABLE_CHECK |
 | mutation-memory | memory | MEASURED_LOCAL |
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
+| ci-evidence-records | test-scope | SEPARATE_GATE |
+| saved-file-faults | persistence | SEPARATE_GATE |
 | recorder-fail-closed | tooling | SEPARATE_GATE |
 | crash-series-no-acknowledged-loss | persistence | SEPARATE_GATE |
 | record-history-kill-series | persistence | SEPARATE_GATE |
@@ -70,12 +76,16 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | goal-statement | presentation | SEPARATE_GATE |
 | commitments-fixed-in-time | provenance | SEPARATE_GATE |
 | rebuild-identical | distribution | SEPARATE_GATE |
+| memory-core-selftest | test-scope | SEPARATE_GATE |
+| real-source-readout | provenance | SEPARATE_GATE |
 | grep-comparison | comparison | MEASURED_LOCAL |
 | mutation-timing | timing | MEASURED_LOCAL |
 | gel-sketch-search | timing | MEASURED_LOCAL |
 | ocean-full-scan | timing | MEASURED_LOCAL |
 | crash-series-recorded | persistence | MEASURED_LOCAL |
+| history-crash-series-recorded | persistence | MEASURED_LOCAL |
 | q8-recorded-runs | bytes | MEASURED_LOCAL |
+| q8-r2-recorded-runs | bytes | MEASURED_LOCAL |
 | speed-set-against-v0.6.1 | timing | MEASURED_LOCAL |
 | speed-set-quiet-machine | timing | MEASURED_LOCAL |
 | speed-sets-rerun | timing | MEASURED_LOCAL |
@@ -88,6 +98,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | q8-semantic-accuracy | retrieval | NOT_ESTABLISHED |
 | snapshot-power-loss | persistence | NOT_ESTABLISHED |
 | extreme-tail-latency | timing | NOT_ESTABLISHED |
+| queries-per-second | timing | NOT_ESTABLISHED |
 <!-- REGISTRY-END -->
 
 Rows named gel-beside-bm25-* are external checks; see [what has nothing to compare with](EXTERNAL-CHECKS.md#what-has-nothing-to-compare-with).
@@ -106,16 +117,18 @@ row cannot declare itself passed. The registry covers the tools added for
 v0.5.0, every timing table of the [measured progress](MEASURED-PROGRESS.md)
 page, the timing records under [speed results](speed-results/2026-10-20-against-v0.6.1/README.md)
 that the README chart is drawn from, the command table and status cells at the
-top of the README, the memory-core parts that `xtask` can call directly, and the
-limits the README and the release notes state as not established; the GEL
-sketch-search and Ocean full-scan rows are author-reported and cannot be re-run
-from this checkout.
+top of the README, the parts of the memory core that its table states, including
+the store and the reader, and the limits the README and the release notes state
+as not established; the GEL sketch-search and Ocean full-scan rows are
+author-reported and cannot be re-run from this checkout.
 
 ## Sentences that name a row
 
 Other pages state what a row says: the README, the goal, start-here, the crash
-series, the record history, the evidence summary and the boundary sentence of
-the external checks. `xtask claims` keeps them tied to the registry in two ways:
+series, the record history, the evidence summary, the illustrated guide, the
+source builder, the real-source demo, the commitments, the boundary sentence of
+the external checks and the last lines of three recorded runs. `xtask claims`
+keeps them tied to the registry in two ways:
 
 - a fixed list in the registry code (`CITED`) holds each such sentence with the
   rows it stands for and their state. The sentence must occur exactly once in
@@ -130,7 +143,10 @@ and paragraphs it checked. The release notes are not in the list: they are
 replaced with each version.
 
 This register is not yet an exhaustive map of every historic statement in the
-repository. In particular it does not retroactively validate videos or timing
-tables, the roadmap rows or the gel-store and gel-reader parts of the README,
-which have their own tests but no row here. Preserve the actual tested commit/source manifest and run attempt using
+repository. It does not retroactively validate videos, the roadmap rows or the
+release notes, and most pages outside the lists above are not read sentence by
+sentence: their tables of measurements, the license section and the memory-cost
+line of the README, and most image text. A citation ties the words of a sentence
+to a row and its state; only an executable row checks what the sentence says.
+Preserve the actual tested commit/source manifest and run attempt using
 the [CI evidence report](CI-EVIDENCE.md); a SHA is an identity, not authentication.

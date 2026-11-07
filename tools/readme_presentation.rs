@@ -310,7 +310,7 @@ Private files, hashed now; checkable once the owner hands them over. A hash show
 
 <details><summary>What a commitment shows, and what it does not</summary>
 
-A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of every file in a private directory; the files can be handed over later and checked with `xtask commitment-check`.
+A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of a private directory; the files can be handed over later and checked with `xtask commitment-check`.
 It shows the files existed and did not change, not that they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.
 
 </details>
@@ -407,7 +407,9 @@ Q8 record holds, as docs/Q8-QUAD.md states it: 1,024 one-byte values and a
 the views are not. Under the banner a row of badges shows numbers read from
 files when the README is built, each linking to the file its number comes from;
 none is a CI badge. Every wide card also comes 600 wide, with text of at least 20 px, for
-a phone: the picture sends a screen up to 600 px wide to it. Two
+a phone: the picture sends a screen up to 600 px wide to it. A phone card says
+less than its wide card: the speed card shows the totals, the license card a
+subset of the quotes. Two
 numbers in the text are counted from files when the README is built: the
 published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
 which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
@@ -430,8 +432,8 @@ appears. It pictures the public workflow, not how the engine works inside, and
 it is not a claim of general AI; under reduced motion it shows its final state.
 
 The builder draws the facts strip and the two check graphics from the property
-map, the Unix-only exclusion list of the CI evidence collector and the committed
-mutation matrix report. The property-map graphic shows the rule the collector
+map, the Unix and Linux exclusion list of the CI evidence collector and the
+committed mutation matrix report. The property-map graphic shows the rule the collector
 enforces on each CI platform, not the result of a particular run. A change to
 any of these sources makes the read-only check fail until the images are rebuilt.
 The record card is drawn the same way from the recorded comparison runs: the
@@ -865,12 +867,40 @@ struct FormatCount {
     /// Report rows whose observed result equals the declared one.
     matched: usize,
 }
+/// The Unix tests of the collector's exclusion list, which holds (test,
+/// condition, reason) triples of string literals. A mapped test that only runs
+/// on Linux is refused: the property-map cards would draw its macOS cell as
+/// required.
+fn evidence_exclusions(list: &str, rows: &[(String, Vec<String>)]) -> Result<Vec<String>> {
+    let literals: Vec<&str> = list.split('"').skip(1).step_by(2).collect();
+    if literals.len() % 3 != 0 {
+        return Err("unexpected CI exclusion list".into());
+    }
+    let mut unix_only = Vec::new();
+    for triple in literals.chunks(3) {
+        let (test, condition) = (triple[0], triple[1]);
+        let mapped = rows.iter().any(|r| r.1.iter().any(|t| t == test));
+        match condition {
+            _ if test.is_empty() || test.contains(' ') => {
+                return Err("unexpected CI exclusion list".into());
+            }
+            "unix" => unix_only.push(test.to_string()),
+            "linux" if mapped => {
+                return Err(format!("{test} runs on Linux only but a property maps it").into());
+            }
+            "linux" => {}
+            _ => return Err("unexpected CI exclusion list".into()),
+        }
+    }
+    Ok(unix_only)
+}
 /// Public evidence the facts strip and the data graphics are drawn from, read
 /// from this checkout so that no number can drift from its source.
 struct Evidence {
     /// Property map rows: the ID and the tests the row names.
     rows: Vec<(String, Vec<String>)>,
-    /// Tests the CI evidence collector declares Unix-only.
+    /// Tests the CI evidence collector declares for Unix. Its list also holds
+    /// Linux-only tests, which `evidence_exclusions` refuses in the map.
     unix_only: Vec<String>,
     /// Formats in name order.
     formats: Vec<FormatCount>,
@@ -894,12 +924,7 @@ impl Evidence {
             .and_then(|(_, rest)| rest.split_once("];"))
             .ok_or("missing CI exclusion list")?
             .0;
-        // The list holds (test, reason) pairs of string literals.
-        let literals: Vec<&str> = list.split('"').skip(1).step_by(2).collect();
-        let unix_only: Vec<String> = literals.iter().step_by(2).map(|s| s.to_string()).collect();
-        if literals.len() % 2 != 0 || unix_only.iter().any(|s| s.is_empty() || s.contains(' ')) {
-            return Err("unexpected CI exclusion list".into());
-        }
+        let unix_only = evidence_exclusions(list, &rows)?;
         let matrix = fs::read_to_string("docs/evidence-mutation/matrix-r1.txt")?;
         let mut lines = matrix.lines();
         if lines.next() != Some("format\tcase\tregion\toperator\tpin\texpected\tobserved\tverdict")
@@ -2635,26 +2660,32 @@ fn ratio(v: f64) -> String {
         format!("{v:.2}")
     }
 }
+/// The name of the timing set: the last part of its directory.
+fn speed_set_name() -> &'static str {
+    SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR)
+}
+/// How the set's results are arranged, as the description of either card says it.
+const SPEED_GROUPED: &str = "Cases are grouped by timing program";
+/// The gains of the SHA-256 program in the words of the description, if the
+/// set has that program timed.
+fn speed_sha_gains(s: &SpeedSet) -> Option<String> {
+    let e = s.examples.iter().find(|e| e.name == "speed_sha256")?;
+    let gains: Vec<String> = e.cases().iter().map(|c| ratio(c.gain)).collect();
+    Some(format!("SHA-256 alone at {}", gains.join(" and ")))
+}
 /// What the speed card says, as its description and as the README alternative
 /// text. Like the card it names timing programs, never a case.
 fn speed_text(s: &SpeedSet) -> String {
     let [faster, slower, within] = s.sides();
     let (timed, same) = s.verdicts();
-    let sha = s
-        .examples
-        .iter()
-        .find(|e| e.name == "speed_sha256")
-        .map_or(String::new(), |e| {
-            let gains: Vec<String> = e.cases().iter().map(|c| ratio(c.gain)).collect();
-            format!(" (SHA-256 alone at {})", gains.join(" and "))
-        });
+    let sha = speed_sha_gains(s).map_or(String::new(), |g| format!(" ({g})"));
     let notes: Vec<&str> = s
         .examples
         .iter()
         .filter_map(|e| e.note.as_deref())
         .collect();
-    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
-    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} of {} timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. Cases are grouped by timing program; per-case results are in {SPEED_DIR}. {faster} cases are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed programs printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), s.examples.len(), notes.join(" "), s.machine, s.load)
+    let set = speed_set_name();
+    format!("Timing set {set}: v0.6.1 against main at {SPEED_B}, the first v0.7 speed package. {} timed cases in {timed} of {} timing programs, one row per program in name order: the range from the lowest to the highest v0.6.1 median time divided by the new one over the cases of the program, and their median, on a log scale centred at 1 over the widest A/A noise band of those cases. {SPEED_GROUPED}; per-case results are in {SPEED_DIR}. {faster} cases are faster beyond their A/A band, {slower} slower beyond it{sha} and {within} inside it. {same} of {timed} timed programs printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim.", s.cases().count(), s.examples.len(), notes.join(" "), s.machine, s.load)
 }
 /// One row of the speed card: what the cases of one timing program add up to.
 /// The card names no case; the per-case results stay in the timing set.
@@ -2737,7 +2768,7 @@ fn speed_card(dark: bool, s: &SpeedSet) -> String {
             t.good
         )
     };
-    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
+    let set = speed_set_name();
     let mut b = format!(
         r#"<text class="kick" x="40" y="42">SPEED · v0.6.1 AGAINST main AT {SPEED_B} · SET {set}</text><text x="40" y="72" font-size="22" class="b">{} timed cases in {timed} of {} timing programs: v0.6.1 time divided by the new time</text><text x="40" y="95" font-size="13.5">One row per timing program: the range of its cases from min to max, and their median · cases grouped by timing program; per-case results are in docs/speed-results</text><text class="mono" x="40" y="116" font-size="12">A, A2: two checkouts of v0.6.1 · B: main at {SPEED_B}, the first v0.7 speed package · medians of {runs} runs per case</text><text class="mono" x="40" y="133" font-size="12">Machine: {} · not pinned to cores</text><text class="mono" x="40" y="150" font-size="12">Load: {}</text>"#,
         s.cases().count(),
@@ -3163,10 +3194,12 @@ fn header_phone_draw(dark: bool, record: usize) -> Result<String> {
 fn header_phone(dark: bool) -> Result<String> {
     header_phone_draw(dark, Q8Runs::read()?.record)
 }
+/// The longest line of an item on the status phone card, in characters.
+const STATUS_PHONE_WRAP: usize = 36;
 /// The status card stacked: what can be checked here, what is private, what is
-/// not established, one block under the other; each icon drawn in and the count
-/// of published commitments rolling into place. A line that does not fit its
-/// room is refused, not clipped.
+/// not established, one block under the other, each foot on the heading's line;
+/// each icon drawn in and the count of published commitments rolling into
+/// place. A line that does not fit its room is refused, not clipped.
 fn status_phone_draw(dark: bool, f: &StatusFacts) -> Result<String> {
     f.check()?;
     let t = theme(dark);
@@ -3174,86 +3207,91 @@ fn status_phone_draw(dark: bool, f: &StatusFacts) -> Result<String> {
     let (x0, w) = (24.0, 552.0);
     let kicker = "WHERE GEL RAM STANDS";
     status_fit(kicker, 20.0, 2.0, w)?;
-    let mut b = format!(r#"<text class="kick" x="32" y="50">{}</text>"#, xml(kicker));
+    let mut b = format!(r#"<text class="kick" x="32" y="44">{}</text>"#, xml(kicker));
     let mut roll = GlanceRoll::new();
-    let mut y = 72.0;
+    let mut y = 58.0;
     for (i, (heading, _, items)) in STATUS_COLUMNS.iter().enumerate() {
         let (c, delay) = (colours[i], 0.1 + 0.5 * i as f64);
-        status_fit(heading, 30.0, 0.0, w - 92.0 - 16.0)?;
+        let (hx, right) = (x0 + 72.0, x0 + w - 16.0);
+        // The foot of a column stands at the end of its heading's line.
+        let foot = match i {
+            0 => Some((STATUS_FEET[0], "")),
+            2 => Some((STATUS_FEET[1], "mono ")),
+            _ => None,
+        };
+        let foot_w = foot.map_or(0.0, |(words, _)| {
+            words.chars().count() as f64 * 0.62 * 20.0 / 0.92 + 8.0
+        });
+        status_fit(heading, 24.0, 0.0, right - hx - foot_w)?;
         let mut s = format!(
-            r#"<g transform="translate({} {})"><g class="sq" style="animation-delay:{:.2}s"><circle r="26" fill="{c}" fill-opacity=".14" stroke="{c}" stroke-width="2.5"/>{}</g></g><text x="{}" y="{}" font-size="30" class="b" style="fill:{c}">{}</text><path d="M{} {}H{}" stroke="{c}" stroke-opacity=".35" stroke-width="1.5"/>"#,
-            x0 + 48.0,
-            y + 50.0,
+            r#"<g transform="translate({} {})"><g class="sq" style="animation-delay:{:.2}s"><circle r="22" fill="{c}" fill-opacity=".14" stroke="{c}" stroke-width="2.5"/>{}</g></g><text x="{hx}" y="{}" font-size="24" class="b" style="fill:{c}">{}</text><path d="M{} {}H{}" stroke="{c}" stroke-opacity=".35" stroke-width="1.5"/>"#,
+            x0 + 40.0,
+            y + 34.0,
             delay + 0.6,
             status_icon(i, c, t.bg[0]),
-            x0 + 92.0,
-            y + 61.0,
+            y + 43.0,
             xml(heading),
-            x0 + 24.0,
-            y + 82.0,
-            x0 + w - 24.0
+            x0 + 16.0,
+            y + 62.0,
+            right
         );
-        let mut ly = y + 116.0;
+        if let Some((words, mono)) = foot {
+            s.push_str(&format!(
+                r#"<text class="{mono}b" x="{right}" y="{:.1}" font-size="20" text-anchor="end" style="fill:{c}">{}</text>"#,
+                y + 43.0,
+                xml(words)
+            ));
+        }
+        let mut ly = y + 86.0;
         for (k, item) in items.iter().enumerate() {
             s.push_str(&format!(
                 r#"<g class="si" style="animation-delay:{:.2}s"><circle cx="{}" cy="{:.1}" r="5" fill="{c}"/>"#,
                 delay + 0.3 + 0.15 * k as f64,
-                x0 + 34.0,
-                ly - 8.0
+                x0 + 26.0,
+                ly - 7.0
             ));
-            for line in wrap(item, 28) {
-                status_fit(&line, 24.0, 0.0, w - 56.0 - 20.0)?;
+            for line in wrap(item, STATUS_PHONE_WRAP) {
+                status_fit(&line, 20.0, 0.0, right - x0 - 42.0)?;
                 s.push_str(&format!(
-                    r#"<text x="{}" y="{ly:.1}" font-size="24">{}</text>"#,
-                    x0 + 56.0,
+                    r#"<text x="{}" y="{ly:.1}" font-size="20">{}</text>"#,
+                    x0 + 42.0,
                     xml(&line)
                 ));
-                ly += 31.0;
+                ly += 26.0;
             }
             s.push_str("</g>");
-            ly += 8.0;
+            ly += 4.0;
         }
-        let foot = ly - 6.0;
-        let box_h = if i == 1 { 100.0 } else { 60.0 };
-        s.push_str(&format!(
-            r#"<rect x="{}" y="{foot:.1}" width="{}" height="{box_h}" rx="12" fill="{c}" fill-opacity=".13"/>"#,
-            x0 + 16.0,
-            w - 32.0
-        ));
+        let mut bottom = ly - 14.0;
         if i == 1 {
             // The count rolls into place; three short lines beside it.
+            let (foot, box_h) = (ly - 10.0, 84.0);
+            s.push_str(&format!(
+                r#"<rect x="{}" y="{foot:.1}" width="{}" height="{box_h}" rx="12" fill="{c}" fill-opacity=".13"/>"#,
+                x0 + 16.0,
+                w - 32.0
+            ));
             let n = f.commitments.to_string();
-            let wide: f64 = n.chars().map(|ch| GlanceRoll::advance(ch, 56.0)).sum();
+            let wide: f64 = n.chars().map(|ch| GlanceRoll::advance(ch, 52.0)).sum();
             let tx = x0 + 36.0 + wide + 18.0;
             for (k, words) in STATUS_PLEDGE.iter().enumerate() {
-                status_fit(words, 22.0, 0.0, x0 + w - 28.0 - tx)?;
+                status_fit(words, 20.0, 0.0, x0 + w - 28.0 - tx)?;
                 let bold = if k == 0 { r#" class="b""# } else { "" };
                 s.push_str(&format!(
-                    r#"<text{bold} x="{tx:.1}" y="{:.1}" font-size="22">{}</text>"#,
-                    foot + 31.0 + 28.0 * k as f64,
+                    r#"<text{bold} x="{tx:.1}" y="{:.1}" font-size="20">{}</text>"#,
+                    foot + 22.0 + 24.0 * k as f64,
                     xml(words)
                 ));
             }
-            roll.put((x0 + 36.0, foot + 70.0), 56.0, &n, delay + 0.6, c);
+            roll.put((x0 + 36.0, foot + 60.0), 52.0, &n, delay + 0.6, c);
             s.push_str(&std::mem::take(&mut roll.body));
-        } else {
-            let (words, mono) = if i == 0 {
-                (STATUS_FEET[0], "")
-            } else {
-                (STATUS_FEET[1], "mono ")
-            };
-            status_fit(words, 24.0, 0.0, w - 32.0 - 24.0)?;
-            s.push_str(&format!(
-                r#"<text class="{mono}b" x="300" y="{:.1}" font-size="24" text-anchor="middle" style="fill:{c}">{}</text>"#,
-                foot + 39.0,
-                xml(words)
-            ));
+            bottom = foot + box_h + 14.0;
         }
-        let h = foot + box_h + 16.0 - y;
+        let h = bottom - y;
         b.push_str(&format!(
-            r#"<g class="sc" style="animation-delay:{delay:.2}s"><clipPath id="spcol{i}"><rect x="{x0}" y="{y}" width="{w}" height="{h:.1}" rx="20"/></clipPath><rect x="{x0}" y="{y}" width="{w}" height="{h:.1}" rx="20" fill="{c}" fill-opacity=".07" stroke="{c}" stroke-opacity=".45"/><rect x="{x0}" y="{y}" width="{w}" height="8" fill="{c}" clip-path="url(#spcol{i})"/>{s}</g>"#
+            r#"<g class="sc" style="animation-delay:{delay:.2}s"><clipPath id="spcol{i}"><rect x="{x0}" y="{y}" width="{w}" height="{h:.1}" rx="20"/></clipPath><rect x="{x0}" y="{y}" width="{w}" height="{h:.1}" rx="20" fill="{c}" fill-opacity=".07" stroke="{c}" stroke-opacity=".45"/><rect x="{x0}" y="{y}" width="{w}" height="6" fill="{c}" clip-path="url(#spcol{i})"/>{s}</g>"#
         ));
-        y += h + 16.0;
+        y += h + 10.0;
     }
     let (roll_rules, stilled) = roll.motion();
     let style = format!(
@@ -3262,7 +3300,7 @@ fn status_phone_draw(dark: bool, f: &StatusFacts) -> Result<String> {
     );
     Ok(phone_card(
         dark,
-        (y - 4.0).ceil() as u32,
+        (y + 8.0).ceil() as u32,
         (&xml("Where GEL RAM stands"), &xml(&status_text(f))),
         &style,
         &b,
@@ -3271,8 +3309,8 @@ fn status_phone_draw(dark: bool, f: &StatusFacts) -> Result<String> {
 fn status_phone(dark: bool) -> Result<String> {
     status_phone_draw(dark, &StatusFacts::read()?)
 }
-/// The glance card stacked: four tiles one under the other, each tagged with
-/// the version that brought it, as on the wide card; numbers roll into place.
+/// The glance card stacked: four low tiles one under the other, each tagged
+/// with the version that brought it, as on the wide card; numbers roll into place.
 fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
     f.check()?;
     let t = theme(dark);
@@ -3281,7 +3319,7 @@ fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
     let kicker = format!("{} AND {} AT A GLANCE", f.since, f.release);
     glance_fit(&kicker, 20.0, 2.0, w)?;
     let mut b = format!(
-        r#"<text class="kick" x="32" y="50">{}</text>"#,
+        r#"<text class="kick" x="32" y="44">{}</text>"#,
         xml(&kicker)
     );
     let (new, since) = (
@@ -3322,12 +3360,12 @@ fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
             t.ink,
         ),
     ];
-    let (h, gap) = (196.0, 18.0);
-    let mut y = 72.0;
+    let (h, gap) = (126.0, 8.0);
+    let mut y = 58.0;
     for (k, (big, tag, colour, l1, l2, c2)) in tiles.iter().enumerate() {
         let delay = 0.15 + 0.3 * k as f64;
         b.push_str(&format!(
-            r#"<g class="gt" style="animation-delay:{delay:.2}s"><clipPath id="gptile{k}"><rect x="{x0}" y="{y}" width="{w}" height="{h}" rx="18"/></clipPath><rect x="{x0}" y="{y}" width="{w}" height="{h}" rx="18" fill="{colour}" fill-opacity=".07" stroke="{line}"/><rect x="{x0}" y="{y}" width="{w}" height="8" fill="{colour}" clip-path="url(#gptile{k})"/>"#,
+            r#"<g class="gt" style="animation-delay:{delay:.2}s"><clipPath id="gptile{k}"><rect x="{x0}" y="{y}" width="{w}" height="{h}" rx="18"/></clipPath><rect x="{x0}" y="{y}" width="{w}" height="{h}" rx="18" fill="{colour}" fill-opacity=".07" stroke="{line}"/><rect x="{x0}" y="{y}" width="{w}" height="6" fill="{colour}" clip-path="url(#gptile{k})"/>"#,
             line = t.line
         ));
         // The version tag in the upper right: filled when new in this release.
@@ -3342,40 +3380,40 @@ fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
             )
         };
         b.push_str(&format!(
-            r#"<rect x="{px:.1}" y="{}" width="{pw:.1}" height="36" rx="18" {tag_fill}/><text x="{:.1}" y="{}" font-size="20" class="b" text-anchor="middle" style="fill:{tag_ink}">{}</text>"#,
-            y + 22.0,
+            r#"<rect x="{px:.1}" y="{}" width="{pw:.1}" height="32" rx="16" {tag_fill}/><text x="{:.1}" y="{}" font-size="20" class="b" text-anchor="middle" style="fill:{tag_ink}">{}</text>"#,
+            y + 14.0,
             px + pw / 2.0,
-            y + 47.0,
+            y + 37.0,
             xml(tag)
         ));
         let room = px - x0 - 40.0;
         if big.bytes().all(|c| c.is_ascii_digit() || c == b'.') {
-            let wide: f64 = big.chars().map(|c| GlanceRoll::advance(c, 72.0)).sum();
+            let wide: f64 = big.chars().map(|c| GlanceRoll::advance(c, 52.0)).sum();
             if wide > 0.92 * room {
                 return Err(format!("{big} does not fit its tile").into());
             }
-            roll.put((x0 + 28.0, y + 104.0), 72.0, big, delay + 0.3, colour);
+            roll.put((x0 + 24.0, y + 56.0), 52.0, big, delay + 0.3, colour);
             b.push_str(&std::mem::take(&mut roll.body));
         } else {
-            glance_fit(big, 60.0, 0.0, room)?;
+            glance_fit(big, 46.0, 0.0, room)?;
             b.push_str(&format!(
-                r#"<text class="gp" style="animation-delay:{:.2}s;fill:{colour}" x="{}" y="{}" font-size="60" font-weight="700">{}</text>"#,
+                r#"<text class="gp" style="animation-delay:{:.2}s;fill:{colour}" x="{}" y="{}" font-size="46" font-weight="700">{}</text>"#,
                 delay + 0.4,
-                x0 + 28.0,
-                y + 100.0,
+                x0 + 24.0,
+                y + 54.0,
                 xml(big)
             ));
         }
-        glance_fit(l1, 24.0, 0.0, w - 56.0)?;
-        glance_fit(l2, 22.0, 0.0, w - 56.0)?;
+        glance_fit(l1, 22.0, 0.0, w - 48.0)?;
+        glance_fit(l2, 20.0, 0.0, w - 48.0)?;
         let mono = if l2.starts_with("--") { "mono " } else { "" };
         b.push_str(&format!(
-            r#"<text x="{}" y="{}" font-size="24">{}</text><text class="{mono}b" x="{}" y="{}" font-size="22" style="fill:{c2}">{}</text></g>"#,
-            x0 + 28.0,
-            y + 146.0,
+            r#"<text x="{}" y="{}" font-size="22">{}</text><text class="{mono}b" x="{}" y="{}" font-size="20" style="fill:{c2}">{}</text></g>"#,
+            x0 + 24.0,
+            y + 87.0,
             xml(l1),
-            x0 + 28.0,
-            y + 178.0,
+            x0 + 24.0,
+            y + 113.0,
             xml(l2)
         ));
         y += h + gap;
@@ -3387,7 +3425,7 @@ fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
     );
     Ok(phone_card(
         dark,
-        (y - gap + 24.0).ceil() as u32,
+        (y - gap + 18.0).ceil() as u32,
         (
             &xml(&format!(
                 "Versions {} and {} at a glance",
@@ -3530,25 +3568,25 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
     let (name_px, line_px) = (26.0, 20.0);
     let n = checks.len();
     let mut m = TerminalPhoneMotion::new("tq");
-    let mut b = terminal_phone_kick((x + 8.0, 52.0), room, "", "RUN IT YOURSELF")?;
+    let mut b = terminal_phone_kick((x + 8.0, 42.0), room, "", "RUN IT YOURSELF")?;
     b += &terminal_phone_line(
-        (x + 8.0, 96.0),
-        32.0,
+        (x + 8.0, 76.0),
+        28.0,
         room,
         r#" class="b""#,
         "Drawn, not a recording",
     )?;
     b += &terminal_phone_kick(
-        (x + 8.0, 134.0),
+        (x + 8.0, 104.0),
         room,
         &format!(r#" style="fill:{}""#, t.muted),
         &format!("{n} COMMANDS · WHAT TO LOOK FOR"),
     )?;
-    let mut y = 160.0;
+    let mut y = 116.0;
     for (k, c) in checks.iter().enumerate() {
         let at = 0.3 + 0.7 * k as f64;
         let len = c.key.chars().count();
-        let (xn, yn) = (x + 66.0, y + 43.0);
+        let (xn, yn) = (x + 66.0, y + 35.0);
         // The name, then its check mark, in the first row of the tile.
         let name = terminal_phone_line(
             (xn, yn),
@@ -3569,7 +3607,7 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
         );
         // The badges, each in its own row, after the joining word when it fits.
         let mut rows = String::new();
-        let mut yb = y + 66.0;
+        let mut yb = y + 48.0;
         for (join, line) in &c.look {
             let mut xb = x + 16.0;
             let parts = terminal_phone_wrap(line, line_px, room - 32.0 - 28.0)?;
@@ -3578,7 +3616,7 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
             if join.chars().any(char::is_alphanumeric) {
                 let jw = TERMINAL_WIDE * line_px * join.chars().count() as f64 + 12.0;
                 let inline = xb + jw + bw <= x + w - 16.0;
-                let jy = if inline { yb + 28.0 } else { yb + 20.0 };
+                let jy = if inline { yb + 24.0 } else { yb + 18.0 };
                 rows += &terminal_phone_line(
                     (xb, jy),
                     line_px,
@@ -3589,34 +3627,34 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
                 if inline {
                     xb += jw;
                 } else {
-                    yb += 30.0;
+                    yb += 26.0;
                 }
             }
-            let bh = 30.0 * parts.len() as f64 + 10.0;
+            let bh = 26.0 * parts.len() as f64 + 10.0;
             rows.push_str(&format!(
-                r#"<rect x="{xb:.1}" y="{yb:.0}" width="{bw:.1}" height="{bh:.0}" rx="16" fill="{green}" fill-opacity=".14" stroke="{green}"/>"#
+                r#"<rect x="{xb:.1}" y="{yb:.0}" width="{bw:.1}" height="{bh:.0}" rx="14" fill="{green}" fill-opacity=".14" stroke="{green}"/>"#
             ));
             for (i, part) in parts.iter().enumerate() {
                 rows += &terminal_phone_line(
-                    (xb + 14.0, yb + 28.0 + 30.0 * i as f64),
+                    (xb + 14.0, yb + 25.0 + 26.0 * i as f64),
                     line_px,
                     room - 32.0 - 28.0,
                     &format!(r#" class="mono b" style="fill:{green}""#),
                     part,
                 )?;
             }
-            yb += bh + 10.0;
+            yb += bh + 6.0;
         }
-        let h = yb - y + 6.0;
+        let h = yb - y + 4.0;
         let xc = xn + typed + 12.0;
         // The name and the cover typing it out belong to the tile's group, so
         // neither shows before the tile does.
         b.push_str(&format!(
             r#"<g class="{shown}"><rect x="{x:.0}" y="{y:.0}" width="{w:.0}" height="{h:.0}" rx="16" fill="{tile}" stroke="{line}"/><circle cx="{:.0}" cy="{:.0}" r="18" fill="{blue}" fill-opacity=".16" stroke="{blue}"/><text x="{:.0}" y="{:.0}" font-size="20" class="b" text-anchor="middle" style="fill:{blue}">{}</text>{name}<rect class="tq-c {cover}" x="{:.0}" y="{:.0}" width="{:.1}" height="38" fill="{tile}"/></g><g class="{done}"><path d="M{xc:.1} {:.0}l7 7 13-15" fill="none" stroke="{green}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>{}</g>"#,
             x + 36.0,
-            y + 34.0,
+            y + 26.0,
             x + 36.0,
-            y + 41.0,
+            y + 33.0,
             k + 1,
             xn - 2.0,
             yn - 30.0,
@@ -3625,7 +3663,7 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
             rows,
             line = t.line
         ));
-        y += h + 12.0;
+        y += h + 6.0;
     }
     // The cover's base rule holds the final look; only the keyframes hold the
     // start, so a renderer without animation shows every name and line.
@@ -3635,14 +3673,14 @@ fn terminal_phone_draw(dark: bool, checks: &[TerminalCheck]) -> Result<String> {
     ];
     for (i, line) in note.iter().enumerate() {
         b += &terminal_phone_line(
-            (x + 8.0, y + 24.0 + 28.0 * i as f64),
+            (x + 8.0, y + 18.0 + 26.0 * i as f64),
             20.0,
             room,
             r#" class="mut""#,
             line,
         )?;
     }
-    let h = (y + 24.0 + 28.0 + 26.0).ceil() as u32;
+    let h = (y + 18.0 + 26.0 + 18.0).ceil() as u32;
     let style = format!(
         "{}.tq-c{{transform-box:fill-box;transform-origin:right;transform:scaleX(0)}}{}@keyframes tq-in{{from{{opacity:0;transform:translateX(-12px)}}to{{opacity:1;transform:none}}}}@keyframes tq-type{{from{{transform:scaleX(1)}}to{{transform:scaleX(0)}}}}",
         RESULT_STYLE.replace("MUTED", t.muted),
@@ -3677,43 +3715,57 @@ fn record_phone_draw(dark: bool, r: &Q8Runs) -> Result<String> {
         terminal_phone_line(at, size, w, attrs, text)
     };
     // 1. The verdict of every recorded run, in the words the runs print.
-    let mut b = terminal_phone_kick((x0, 56.0), w, "", "THE RECORDED RUNS")?;
+    let mut b = terminal_phone_kick((x0, 48.0), w, "", "THE RECORDED RUNS")?;
     let a = m.add("rq-pop .6s cubic-bezier(.2,.8,.2,1) .1s");
     b += &format!(r#"<g class="rq-c {a}">"#);
+    let big = format!("{} of {}", r.ok, r.n);
     b += &line(
-        (x0, 136.0),
-        68.0,
+        (x0, 112.0),
+        60.0,
         &format!(r#" class="b" style="fill:{}""#, t.good),
-        &format!("{} of {}", r.ok, r.n),
+        &big,
     )?;
     b += "</g>";
     let a = m.add("rq-in .5s ease-out .5s");
     b += &format!(r#"<g class="{a}">"#);
-    b += &line((x0, 176.0), 24.0, "", "recorded runs end with")?;
+    // The words stand beside the count, or under it when it is wide.
+    let wide = TERMINAL_WIDE * 60.0 * big.chars().count() as f64 * TERMINAL_SLACK + 16.0;
+    let words = ["recorded runs", "end with"];
+    let (wx, wy, top) = if terminal_phone_fits(words[0], 20.0, 0.0, w - wide) {
+        (x0 + wide, 88.0, 130.0)
+    } else {
+        (x0, 138.0, 188.0)
+    };
+    for (k, word) in words.iter().enumerate() {
+        b += &terminal_phone_line((wx, wy + 26.0 * k as f64), 20.0, right - wx, "", word)?;
+    }
     b.push_str(&format!(
-        r#"<rect x="{x0}" y="196" width="{w}" height="104" rx="16" fill="{}" stroke="{}"/>"#,
+        r#"<rect x="{x0}" y="{top}" width="{w}" height="84" rx="14" fill="{}" stroke="{}"/>"#,
         t.bg[0], t.line
     ));
     for (k, verdict) in Q8_PASS.split(' ').enumerate() {
         b += &terminal_phone_line(
-            (x0 + 20.0, 238.0 + 38.0 * k as f64),
+            (x0 + 18.0, top + 34.0 + 32.0 * k as f64),
             20.0,
-            w - 40.0,
+            w - 36.0,
             r#" class="mono b""#,
             verdict,
         )?;
     }
     b += "</g>";
     // 2. What every run compared: each view's score with a separate copy's.
-    b += &terminal_phone_kick((x0, 360.0), w, "", "EACH VIEW, BIT FOR BIT")?;
+    let view = top + 126.0;
+    b += &terminal_phone_kick((x0, view), w, "", "EACH VIEW, BIT FOR BIT")?;
     b += &line(
-        (x0, 392.0),
+        (x0, view + 30.0),
         20.0,
         r#" class="mono""#,
         "score vs a separate written-out copy",
     )?;
+    // One chip per view; the words of the comparison once, under them.
+    let (chip, gap) = (122.0, 10.0);
     for i in 0..4u32 {
-        let y = 414.0 + 64.0 * f64::from(i);
+        let (x, y) = (x0 + (chip + gap) * f64::from(i), view + 46.0);
         let row = m.add(&format!(
             "rq-in .4s ease-out {:.2}s",
             0.9 + 0.1 * f64::from(i)
@@ -3723,45 +3775,45 @@ fn record_phone_draw(dark: bool, r: &Q8Runs) -> Result<String> {
             1.4 + 0.3 * f64::from(i)
         ));
         b.push_str(&format!(
-            r#"<g class="{row}"><rect x="{x0}" y="{y}" width="{w}" height="54" rx="12" fill="{bg}" stroke="{a}" stroke-width="2"/>{}</g><g class="rq-c {pop}">{}<circle cx="{:.0}" cy="{:.0}" r="15" fill="{}"/><path d="M{:.0} {:.0}l5 5 10-10" stroke="{bg}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>"#,
+            r#"<g class="{row}"><rect x="{x}" y="{y}" width="{chip}" height="48" rx="12" fill="{bg}" stroke="{a}" stroke-width="2"/>{}</g><g class="rq-c {pop}"><circle cx="{:.0}" cy="{:.0}" r="12" fill="{}"/><path d="M{:.0} {:.0}l4 4 8-8" stroke="{bg}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>"#,
             terminal_phone_line(
-                (x0 + 18.0, y + 36.0),
-                24.0,
-                110.0,
+                (x + 8.0, y + 32.0),
+                20.0,
+                chip - 34.0,
                 r#" class="b""#,
                 &format!("view {}", i + 1)
             )?,
-            terminal_phone_line(
-                (x0 + 134.0, y + 34.0),
-                20.0,
-                w - 134.0 - 50.0,
-                "",
-                "score = copy's score"
-            )?,
-            right - 30.0,
-            y + 27.0,
+            x + chip - 17.0,
+            y + 24.0,
             t.good,
-            right - 37.0,
-            y + 27.0,
+            x + chip - 23.0,
+            y + 24.0,
             bg = t.bg[0],
             a = t.accent
         ));
     }
+    let a = m.add("rq-in .5s ease-out 2.6s");
+    b += &format!(r#"<g class="{a}">"#);
+    b += &line(
+        (x0, view + 122.0),
+        20.0,
+        r#" class="b""#,
+        "score = copy's score",
+    )?;
     // 3. The layout the separate copies were written out in, for checking.
     let (label, size) = ("reference layout", grouped(r.frames) + " B");
     if !terminal_phone_fits(&format!("{label}  {size}"), 22.0, 0.0, w) {
         return Err("the reference layout row does not fit".into());
     }
-    let a = m.add("rq-in .5s ease-out 2.6s");
-    b += &format!(r#"<g class="{a}">"#);
-    b += &line((x0, 718.0), 22.0, r#" class="b""#, label)?;
+    let (rule, end) = (view + 164.0, view + 192.0);
+    b += &line((x0, rule), 22.0, r#" class="b""#, label)?;
     b += &line(
-        (right, 718.0),
+        (right, rule),
         22.0,
         r#" class="b" text-anchor="end""#,
         &size,
     )?;
-    b += &line((x0, 746.0), 20.0, r#" class="mut""#, "used for checking")?;
+    b += &line((x0, end), 20.0, r#" class="mut""#, "used for checking")?;
     b += "</g>";
     // 4. The limits stay in view throughout.
     let limits = terminal_phone_wrap(
@@ -3769,10 +3821,11 @@ fn record_phone_draw(dark: bool, r: &Q8Runs) -> Result<String> {
         20.0,
         w,
     )?;
+    let first = end + 40.0;
     for (k, text) in limits.iter().enumerate() {
-        b += &line((x0, 802.0 + 28.0 * k as f64), 20.0, r#" class="mut""#, text)?;
+        b += &line((x0, first + 26.0 * k as f64), 20.0, r#" class="mut""#, text)?;
     }
-    let h = (802.0 + 28.0 * (limits.len() - 1) as f64 + 30.0).ceil() as u32;
+    let h = (first + 26.0 * (limits.len() - 1) as f64 + 24.0).ceil() as u32;
     let style = format!(
         "{}.rq-c{{transform-box:fill-box;transform-origin:center}}{}@keyframes rq-in{{from{{opacity:0;transform:translateY(12px)}}to{{opacity:1;transform:none}}}}@keyframes rq-pop{{0%{{opacity:0;transform:scale(.6)}}70%{{opacity:1;transform:scale(1.08)}}100%{{opacity:1;transform:none}}}}",
         RESULT_STYLE.replace("MUTED", t.muted),
@@ -3834,55 +3887,55 @@ fn flow_phone_read(scene: &str) -> Result<FlowPhone> {
 fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
     let t = theme(dark);
     let side = TERMINAL_PHONE_SIDE;
-    let (tx, room) = (180.0, f64::from(PHONE_WIDTH) - 180.0 - side);
+    let (tx, room) = (164.0, f64::from(PHONE_WIDTH) - 164.0 - side);
     let mut m = TerminalPhoneMotion::new("fq");
     let mut b = terminal_phone_kick(
-        (side + 16.0, 56.0),
+        (side + 16.0, 48.0),
         f64::from(PHONE_WIDTH) - 2.0 * side - 16.0,
         "",
         "WHAT HAPPENS TO A CITATION",
     )?;
-    let (cx, step, top0) = (100.0, 176.0, 96.0);
+    let (cx, step, top0) = (100.0, 106.0, 62.0);
     let top = |k: usize| top0 + step * k as f64;
-    // The pictures of the four steps, each in a box about 96 px high.
+    // The pictures of the four steps, each in a box about 76 px high.
     let mut sheets = String::new();
-    for (i, d) in [16.0, 8.0, 0.0].into_iter().enumerate() {
-        sheets += &oblique(cx - 46.0 + d, top(0) + 18.0 + d, (78.0, 86.0, 6.0), t.paper);
+    for (i, d) in [12.0, 6.0, 0.0].into_iter().enumerate() {
+        sheets += &oblique(cx - 40.0 + d, top(0) + 12.0 + d, (60.0, 62.0, 5.0), t.paper);
         if i == 2 {
-            for (k, row) in [16.0, 30.0, 44.0, 58.0, 72.0].into_iter().enumerate() {
-                let (fill, hh, len) = if k == 2 {
-                    (t.accent, 8.0, 62.0)
+            for (k, row) in [12.0, 23.0, 33.0, 43.0, 53.0].into_iter().enumerate() {
+                let (fill, hh, len) = if k == 1 {
+                    (t.accent, 7.0, 48.0)
                 } else {
-                    (t.floor, 4.0, 52.0 - 4.0 * k as f64)
+                    (t.floor, 3.0, 40.0 - 3.0 * k as f64)
                 };
                 sheets.push_str(&format!(
                     r#"<rect x="{:.0}" y="{:.0}" width="{len}" height="{hh}" rx="2" fill="{fill}"/>"#,
-                    cx - 38.0 + d,
-                    top(0) + 18.0 + d + row - hh / 2.0
+                    cx - 34.0 + d,
+                    top(0) + 12.0 + d + row - hh / 2.0
                 ));
             }
         }
     }
-    let (bx, by) = (cx - 48.0, top(1) + 14.0);
+    let (bx, by) = (cx - 38.0, top(1) + 10.0);
     let snap = format!(
-        r##"{}<rect x="{:.0}" y="{:.0}" width="34" height="28" rx="5" fill="#ffffff" opacity=".92"/><path d="M{:.0} {:.0}v-8a9 9 0 0 1 18 0v8" fill="none" stroke="#ffffff" stroke-width="5" opacity=".92"/><circle cx="{:.0}" cy="{:.0}" r="4.5" fill="{}"/>"##,
-        oblique(bx, by, (84.0, 84.0, 14.0), t.blue),
-        bx + 25.0,
-        by + 36.0,
+        r##"{}<rect x="{:.0}" y="{:.0}" width="28" height="23" rx="4" fill="#ffffff" opacity=".92"/><path d="M{:.0} {:.0}v-7a7 7 0 0 1 14 0v7" fill="none" stroke="#ffffff" stroke-width="4" opacity=".92"/><circle cx="{:.0}" cy="{:.0}" r="3.5" fill="{}"/>"##,
+        oblique(bx, by, (66.0, 66.0, 10.0), t.blue),
+        bx + 19.0,
+        by + 29.0,
+        bx + 26.0,
+        by + 29.0,
         bx + 33.0,
-        by + 36.0,
-        bx + 42.0,
-        by + 50.0,
+        by + 41.0,
         t.blue[2]
     );
-    let (gx, gy) = (cx - 42.0, top(2) + 18.0);
+    let (gx, gy) = (cx - 36.0, top(2) + 12.0);
     let ok = format!(
-        r##"{}<path d="M{:.0} {:.0}l13 13 24-28" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>"##,
-        oblique(gx, gy, (76.0, 76.0, 12.0), t.green),
-        gx + 16.0,
-        gy + 38.0
+        r##"{}<path d="M{:.0} {:.0}l10 10 19-22" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>"##,
+        oblique(gx, gy, (62.0, 62.0, 10.0), t.green),
+        gx + 15.0,
+        gy + 31.0
     );
-    let (rx, ry) = (cx - 42.0, top(3) + 18.0);
+    let (rx, ry) = (cx - 36.0, top(3) + 12.0);
     // The changed cell pulses six times once its copy has landed, then holds.
     let hot = m.add("fq-hot 1s ease-in-out 4.6s 6 alternate");
     let mut cells = String::new();
@@ -3890,19 +3943,19 @@ fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
         for j in 0..4 {
             let is_hot = (i, j) == (2, 1);
             cells.push_str(&format!(
-                r##"<rect{} x="{:.0}" y="{:.0}" width="15" height="15" rx="2" fill="#ffffff" opacity="{}"/>"##,
+                r##"<rect{} x="{:.0}" y="{:.0}" width="12" height="12" rx="2" fill="#ffffff" opacity="{}"/>"##,
                 if is_hot {
                     format!(r#" class="{hot}""#)
                 } else {
                     String::new()
                 },
-                rx + 5.0 + 17.0 * f64::from(i),
-                ry + 5.0 + 17.0 * f64::from(j),
+                rx + 5.0 + 13.5 * f64::from(i),
+                ry + 5.0 + 13.5 * f64::from(j),
                 if is_hot { "1" } else { ".22" }
             ));
         }
     }
-    let bad = oblique(rx, ry, (76.0, 76.0, 12.0), t.red) + &cells;
+    let bad = oblique(rx, ry, (62.0, 62.0, 10.0), t.red) + &cells;
     // The dashed beams: down from the document to the snapshot, down to the
     // reopened copy, and around it on the left to the changed copy.
     let flow = m.add("fq-flow 1s linear infinite");
@@ -3913,13 +3966,13 @@ fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
         )
     };
     let down = |k: usize| {
-        let (y1, y2) = (top(k) + 120.0, top(k + 1) + 2.0);
+        let (y1, y2) = (top(k) + 82.0, top(k + 1) + 1.0);
         beam(
-            &format!("M{cx} {y1:.0}V{:.0}", y2 - 10.0),
-            &format!("M{cx} {y2:.0}l-8 -13h16z"),
+            &format!("M{cx} {y1:.0}V{:.0}", y2 - 8.0),
+            &format!("M{cx} {y2:.0}l-7 -11h14z"),
         )
     };
-    let (ya, yz) = (top(1) + 60.0, top(3) + 64.0);
+    let (ya, yz) = (top(1) + 44.0, top(3) + 44.0);
     let around = beam(
         &format!(
             "M{} {ya:.0}C14 {ya:.0} 14 {yz:.0} {} {yz:.0}",
@@ -3940,18 +3993,29 @@ fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
         let a = m.add(&format!("fq-in .5s ease-out {at}"));
         b.push_str(&format!(r#"<g class="{a}">{beam}</g>"#));
     }
+    // The verdicts stand in one column, after the longest name that has one.
+    let wide_of = |lines: &[String]| {
+        let used = lines.last().map_or(0, |l| l.chars().count()) as f64;
+        TERMINAL_WIDE * 24.0 * used * TERMINAL_SLACK + 10.0
+    };
+    let mut verdict_at: f64 = 0.0;
+    for (head, _) in &f.steps {
+        if let Some((name, _)) = head.split_once(" · ") {
+            verdict_at = verdict_at.max(wide_of(&terminal_phone_wrap(name, 24.0, room)?));
+        }
+    }
     for (k, ((head, sub), picture)) in f.steps.iter().zip(pictures).enumerate() {
         let a = m.add(&enter[k]);
-        // A head with a verdict after " · " puts the verdict on its own line,
+        // A head with a verdict after " · " puts the verdict after the name,
         // green for the reopened copy, red for the changed one.
         let (name, verdict) = head.split_once(" · ").unwrap_or((head, ""));
         let heads = terminal_phone_wrap(name, 24.0, room)?;
         let subs = terminal_phone_wrap(sub, 20.0, room)?;
-        let mut y = top(k) + 40.0;
+        let mut y = top(k) + 36.0;
         let mut words = String::new();
         for line in &heads {
             words += &terminal_phone_line((tx, y), 24.0, room, r#" class="b""#, line)?;
-            y += 30.0;
+            y += 28.0;
         }
         if !verdict.is_empty() {
             let colour = match (k == 3, dark) {
@@ -3959,20 +4023,20 @@ fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
                 (true, true) => t.red[0],
                 (true, false) => t.red[2],
             };
+            let vx = tx + verdict_at.max(wide_of(&heads));
             words += &terminal_phone_line(
-                (tx, y),
+                (vx, y - 28.0),
                 24.0,
-                room,
+                tx + room - vx,
                 &format!(r#" class="b" style="fill:{colour}""#),
                 verdict,
             )?;
-            y += 30.0;
         }
         for line in &subs {
             words += &terminal_phone_line((tx, y), 20.0, room, r#" class="mono""#, line)?;
             y += 26.0;
         }
-        if y > top(k) + step - 12.0 {
+        if y > top(k) + step {
             return Err(format!("the words of a step do not fit its row: {head}").into());
         }
         b.push_str(&format!(
@@ -3981,14 +4045,14 @@ fn flow_phone_draw(dark: bool, f: &FlowPhone) -> Result<String> {
     }
     // The note: drawn, not recorded, and not a timing measurement.
     let wide = f64::from(PHONE_WIDTH) - 2.0 * side - 16.0;
-    let mut y = top(4) + 10.0;
+    let mut y = top(4) + 8.0;
     for part in f.note.split(" · ") {
         for line in terminal_phone_wrap(part, 20.0, wide)? {
             b += &terminal_phone_line((side + 16.0, y), 20.0, wide, r#" class="mut""#, &line)?;
-            y += 28.0;
+            y += 26.0;
         }
     }
-    let h = (y + 6.0).ceil() as u32;
+    let h = (y + 2.0).ceil() as u32;
     let style = format!(
         "{}.fq-c{{transform-box:fill-box;transform-origin:center}}{}@keyframes fq-in{{from{{opacity:0}}to{{opacity:1}}}}@keyframes fq-drop{{from{{opacity:0;transform:translateY(-30px)}}to{{opacity:1;transform:none}}}}@keyframes fq-pop{{0%{{opacity:0;transform:scale(.6)}}70%{{opacity:1;transform:scale(1.06)}}100%{{opacity:1;transform:none}}}}@keyframes fq-shake{{0%,100%{{transform:none}}25%{{transform:translateX(-6px)}}50%{{transform:translateX(6px)}}75%{{transform:translateX(-4px)}}}}@keyframes fq-hot{{from{{opacity:1}}to{{opacity:.35}}}}@keyframes fq-flow{{to{{stroke-dashoffset:-36}}}}",
         RESULT_STYLE.replace("MUTED", t.muted),
@@ -4041,12 +4105,11 @@ fn speed_phone_lines(
     (s, last)
 }
 /// The motion of the four phone cards of this block, with class prefix `p`:
-/// fade in (`f`), grow from the left (`g`), grow out of the x `one` (`o`), pop
-/// (`p`) and rise (`u`). Only keyframes start from nothing; reduced motion
-/// stills every one of them.
-fn speed_phone_style(p: &str, muted: &str, one: f64) -> String {
+/// fade in (`f`), grow from the left (`g`), pop (`p`) and rise (`u`). Only
+/// keyframes start from nothing; reduced motion stills every one of them.
+fn speed_phone_style(p: &str, muted: &str) -> String {
     format!(
-        ".mut{{fill:{muted}}}.b{{font-weight:700}}.{p}-f{{animation:{p}-fade .7s ease-out both}}.{p}-g{{animation:{p}-grow 1s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:left}}.{p}-o{{animation:{p}-grow .9s cubic-bezier(.2,.8,.2,1) both;transform-box:view-box;transform-origin:{one:.1}px 0}}.{p}-p{{animation:{p}-pop .5s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}}.{p}-u{{animation:{p}-rise .8s cubic-bezier(.2,.8,.2,1) both}}@keyframes {p}-fade{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:none}}}}@keyframes {p}-grow{{from{{transform:scaleX(0)}}to{{transform:none}}}}@keyframes {p}-pop{{from{{opacity:0;transform:scale(.6)}}to{{opacity:1;transform:none}}}}@keyframes {p}-rise{{from{{opacity:0;transform:translateY(22px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.{p}-f,.{p}-g,.{p}-o,.{p}-p,.{p}-u{{animation:none}}}}"
+        ".mut{{fill:{muted}}}.b{{font-weight:700}}.{p}-f{{animation:{p}-fade .7s ease-out both}}.{p}-g{{animation:{p}-grow 1s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:left}}.{p}-p{{animation:{p}-pop .5s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}}.{p}-u{{animation:{p}-rise .8s cubic-bezier(.2,.8,.2,1) both}}@keyframes {p}-fade{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:none}}}}@keyframes {p}-grow{{from{{transform:scaleX(0)}}to{{transform:none}}}}@keyframes {p}-pop{{from{{opacity:0;transform:scale(.6)}}to{{opacity:1;transform:none}}}}@keyframes {p}-rise{{from{{opacity:0;transform:translateY(22px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.{p}-f,.{p}-g,.{p}-p,.{p}-u{{animation:none}}}}"
     )
 }
 /// The neutral grey of cases inside their A/A band, as the re-run card has it.
@@ -4057,26 +4120,51 @@ fn speed_phone_grey(dark: bool) -> &'static str {
         "#6e7781"
     }
 }
+/// The gains of the SHA-256 program as a phone sentence: the phone card draws
+/// no axis, so the sentence says what the numbers divide.
+fn speed_phone_sha(s: &SpeedSet) -> Option<String> {
+    speed_sha_gains(s).map(|g| format!("{g}: v0.6.1 time divided by the new time."))
+}
+/// What the speed phone card says, as its description: the wide card's words
+/// without its rows, which only the wide card and the folded text carry.
+fn speed_phone_text(s: &SpeedSet) -> String {
+    let [faster, slower, within] = s.sides();
+    let (timed, same) = s.verdicts();
+    let notes: Vec<&str> = s
+        .examples
+        .iter()
+        .filter_map(|e| e.note.as_deref())
+        .collect();
+    let sha = speed_phone_sha(s).map_or(String::new(), |g| format!(" {g}"));
+    format!(
+        "Speed against v0.6.1, timing set {}: main at {SPEED_B}. {} timed cases in {timed} of {} timing programs: {faster} faster beyond their own A/A band, {slower} slower beyond it and {within} inside it.{sha} {SPEED_GROUPED}; per-case results are in {SPEED_DIR}. {same} of {timed} timed programs printed the same output digest in all three trees. {} Machine: {}; {}; not pinned to cores. Ratios of different programs are not comparable with each other; the output digests, not the timings, are the claim.",
+        speed_set_name(),
+        s.cases().count(),
+        s.examples.len(),
+        notes.join(" "),
+        s.machine,
+        s.load
+    )
+}
 /// The speed card on a phone: the totals of the set as one bar of its cases,
 /// faster / inside / slower each against its own A/A band, the output digests,
-/// then one row per timing program on the wide card's log scale, without names,
-/// and the limits the wide card states.
+/// and the limits the wide card states. The rows per program are the wide
+/// card's.
 fn speed_phone_draw(dark: bool, s: &SpeedSet) -> String {
     let t = theme(dark);
     let grey = speed_phone_grey(dark);
-    let (x0, w) = (40.0, 520.0);
+    let (x0, w) = (30.0, 540.0);
     let [faster, slower, within] = s.sides();
     let (timed, same) = s.verdicts();
     let cases = s.cases().count();
-    let set = SPEED_DIR.rsplit('/').next().unwrap_or(SPEED_DIR);
     let mut b = format!(
-        r#"<text class="kick" x="40" y="56">SPEED AGAINST v0.6.1</text><g class="sph-f"><text x="40" y="122" font-size="48" class="b">{cases} timed cases</text><text x="40" y="160" font-size="24">in {timed} of {} timing programs</text><text x="40" y="194" font-size="22" class="mut">v0.6.1 time / new time</text><text class="mono" x="40" y="226" font-size="20">set {}</text><text class="mono" x="40" y="254" font-size="20">B: main at {}</text></g>"#,
+        r#"<text class="kick" x="{x0}" y="44">SPEED AGAINST v0.6.1</text><g class="sph-f"><text x="{x0}" y="96" font-size="44" class="b">{cases} timed cases</text><text x="{x0}" y="130" font-size="24">in {timed} of {} timing programs</text><text class="mono" x="{x0}" y="160" font-size="20">B: main at {}</text><text class="mono" x="{x0}" y="186" font-size="20">set {}</text></g>"#,
         s.examples.len(),
-        xml(set),
-        xml(SPEED_B)
+        xml(SPEED_B),
+        xml(speed_set_name())
     );
     // One bar of every case: faster, inside, slower, each against its own band.
-    let (top, bar) = (280.0, 44.0);
+    let (top, bar) = (202.0, 36.0);
     let u = w / cases.max(1) as f64;
     let parts = [
         (faster, t.blue[1], "faster"),
@@ -4099,14 +4187,14 @@ fn speed_phone_draw(dark: bool, s: &SpeedSet) -> String {
         t.line
     ));
     for (k, (n, fill, word)) in parts.iter().enumerate() {
-        let cx = x0 + 176.0 * k as f64;
+        let cx = x0 + 180.0 * k as f64;
         b.push_str(&format!(
-            r#"<g class="sph-p" style="animation-delay:{:.1}s"><text x="{cx:.0}" y="382" font-size="44" class="b" style="fill:{fill}">{n}</text><text x="{cx:.0}" y="412" font-size="22">{word}</text></g>"#,
+            r#"<g class="sph-p" style="animation-delay:{:.1}s"><text x="{cx:.0}" y="280" font-size="40" class="b" style="fill:{fill}">{n}</text><text x="{cx:.0}" y="308" font-size="22">{word}</text></g>"#,
             1.0 + 0.15 * k as f64
         ));
     }
     let (rule, y) = speed_phone_lines(
-        (40.0, 452.0),
+        (x0, 338.0),
         (20.0, 26.0),
         r#" class="mut""#,
         &speed_phone_wrap(
@@ -4119,18 +4207,20 @@ fn speed_phone_draw(dark: bool, s: &SpeedSet) -> String {
         r#"<g class="sph-f" style="animation-delay:1.3s">{rule}</g>"#
     ));
     // The output digests.
-    let y = y + 62.0;
+    let y = y + 48.0;
     b.push_str(&format!(
-        r#"<g class="sph-p" style="animation-delay:1.5s"><path d="M42 {:.0}l9 9 17-20" fill="none" stroke="{g}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><text x="84" y="{y:.0}" font-size="36" class="b" style="fill:{g}">{same} of {timed}</text></g><text class="sph-f" style="animation-delay:1.6s" x="40" y="{:.0}" font-size="22">same output digest in A, A2 and B</text>"#,
+        r#"<g class="sph-p" style="animation-delay:1.5s"><path d="M{:.0} {:.0}l9 9 17-20" fill="none" stroke="{g}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><text x="{:.0}" y="{y:.0}" font-size="34" class="b" style="fill:{g}">{same} of {timed}</text></g><text class="sph-f" style="animation-delay:1.6s" x="{x0}" y="{:.0}" font-size="20">same output digest in A, A2 and B</text>"#,
+        x0 + 2.0,
         y - 14.0,
-        y + 34.0,
+        x0 + 44.0,
+        y + 30.0,
         g = t.good
     ));
     // Why a digest differs, in the words of the set's README, as the wide
     // card's note says it; the phone names no program, so the reason starts
     // after "because".
     let (mut why, mut last) = (String::new(), None);
-    let mut at = y + 70.0;
+    let mut at = y + 56.0;
     for e in &s.examples {
         if !matches!(e.timed, Some((_, false))) {
             continue;
@@ -4143,7 +4233,7 @@ fn speed_phone_draw(dark: bool, s: &SpeedSet) -> String {
             None => "1 differs".to_string(),
         };
         let (lines, end) = speed_phone_lines(
-            (40.0, at),
+            (x0, at),
             (20.0, 26.0),
             r#" class="mut""#,
             &speed_phone_wrap(&text, 20.0, w),
@@ -4157,146 +4247,52 @@ fn speed_phone_draw(dark: bool, s: &SpeedSet) -> String {
             r#"<g class="sph-f" style="animation-delay:1.7s">{why}</g>"#
         ));
     }
-    let y = last.map_or(y, |end| end - 34.0);
-    // One row per timing program on a log2 axis in whole octaves, wide enough
-    // for every ratio and every band, as the wide card draws it.
-    let (mut lo, mut hi) = (0.5_f64, 2.0_f64);
-    for c in s.cases() {
-        let (a, z) = c.noise();
-        lo = lo.min(a).min(c.gain);
-        hi = hi.max(z).max(c.gain);
-    }
-    let (lo, hi) = (lo.log2().floor() as i32, hi.log2().ceil() as i32);
-    let (p0, p1) = (72.0, 528.0);
-    let ax = |v: f64| p0 + (v.log2() - f64::from(lo)) / f64::from(hi - lo) * (p1 - p0);
-    let one = ax(1.0);
-    let y = y + 104.0;
-    b.push_str(&format!(
-        r#"<g class="sph-f" style="animation-delay:1.8s"><text x="40" y="{y:.0}" font-size="26" class="b">One row per timing program</text><text x="40" y="{:.0}" font-size="20" class="mut">range of its cases, min to max:</text><text x="40" y="{:.0}" font-size="20" class="mut">red below 1, blue above 1</text><circle cx="50" cy="{:.0}" r="7" fill="{}" stroke="{}" stroke-width="2"/><text x="66" y="{:.0}" font-size="20" class="mut">median</text><rect x="178" y="{:.0}" width="34" height="16" rx="3" fill="{}" fill-opacity=".25"/><text x="222" y="{:.0}" font-size="20" class="mut">widest A/A band</text></g>"#,
-        y + 32.0,
-        y + 58.0,
-        y + 85.0,
-        t.ink,
-        t.bg[0],
-        y + 92.0,
-        y + 77.0,
-        t.muted,
-        y + 92.0
-    ));
-    // Tick labels: every octave drawn, labelled often enough to stay apart; 1 always.
-    let label_y = y + 172.0;
-    let octave = (p1 - p0) / f64::from(hi - lo);
-    let every = (70.0 / octave).ceil().max(1.0) as i32;
-    let (row, top) = (17.0, label_y + 14.0);
-    let rows: Vec<SpeedRow> = s.examples.iter().filter_map(SpeedRow::of).collect();
-    let bottom = top + row * rows.len() as f64;
-    b.push_str(&format!(
-        r#"<g class="sph-f" style="animation-delay:1.9s"><text x="{:.1}" y="{:.0}" font-size="20" text-anchor="end" class="mut b">slower</text><text x="{:.1}" y="{:.0}" font-size="20" class="mut b">faster</text>"#,
-        one - 10.0,
-        label_y - 36.0,
-        one + 10.0,
-        label_y - 36.0
-    ));
-    for k in lo..=hi {
-        let v = 2f64.powi(k);
-        let (stroke, sw) = if k == 0 { (t.ink, 2.0) } else { (t.line, 1.2) };
-        b.push_str(&format!(
-            r#"<path d="M{gx:.1} {:.0}V{bottom:.0}" stroke="{stroke}" stroke-width="{sw}"/>"#,
-            top - 4.0,
-            gx = ax(v)
-        ));
-        if k.rem_euclid(every) == 0 {
-            b.push_str(&format!(
-                r#"<text class="mono" x="{:.1}" y="{label_y:.0}" text-anchor="middle" font-size="20">{v}</text>"#,
-                ax(v)
-            ));
-        }
-    }
-    b.push_str("</g>");
-    for (k, r) in rows.iter().enumerate() {
-        let (y0, kf) = (top + row * k as f64, k as f64);
-        let cy = y0 + row / 2.0;
-        let (grow, mark) = (2.0 + 0.05 * kf, 2.7 + 0.05 * kf);
-        if k % 2 == 0 {
-            b.push_str(&format!(
-                r#"<rect x="32" y="{y0:.1}" width="536" height="{row:.0}" fill="{}" fill-opacity=".35"/>"#,
-                t.line
-            ));
-        }
-        b.push_str(&format!(
-            r#"<rect class="sph-f" style="animation-delay:{grow:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="13" rx="2" fill="{}" fill-opacity=".25"/>"#,
-            ax(r.band.0),
-            cy - 6.5,
-            ax(r.band.1) - ax(r.band.0),
-            t.muted
-        ));
-        for (from, to, fill) in [
-            (r.min, r.max.min(1.0), t.red[1]),
-            (r.min.max(1.0), r.max, t.blue[1]),
-        ] {
-            if from < to {
-                b.push_str(&format!(
-                    r#"<rect class="sph-o" style="animation-delay:{grow:.2}s" x="{:.1}" y="{:.1}" width="{:.1}" height="7" rx="2" fill="{fill}"/>"#,
-                    ax(from),
-                    cy - 3.5,
-                    ax(to) - ax(from)
-                ));
-            }
-        }
-        b.push_str(&format!(
-            r#"<circle class="sph-p" style="animation-delay:{mark:.2}s" cx="{:.1}" cy="{cy:.1}" r="5" fill="{}" stroke="{}" stroke-width="1.6"/>"#,
-            ax(r.median),
-            t.ink,
-            t.bg[0]
-        ));
-    }
-    // What the rows leave out, then the limits the wide card states.
+    let y = last.map_or(y + 30.0, |end| end);
+    // What the totals leave out, then the limits the wide card states.
     let mut tail = Vec::new();
     let untimed = s.examples.len() - timed;
     if untimed > 0 {
         tail.push(format!("{untimed} not built in v0.6.1: no timing."));
     }
+    tail.extend(speed_phone_sha(s));
     tail.push("Ratios of different programs are not comparable with each other.".to_string());
     tail.push("The output digests, not the timings, are the claim.".to_string());
-    let mut y = bottom + 46.0;
-    let mut lines = String::new();
-    for line in &tail {
-        let (s, last) = speed_phone_lines(
-            (40.0, y),
-            (20.0, 26.0),
-            "",
-            &speed_phone_wrap(line, 20.0, w),
-        );
-        lines.push_str(&s);
-        y = last + 36.0;
-    }
-    y += 4.0;
-    for line in [
-        format!("Machine: {}", s.machine),
-        format!("Load: {}", s.load),
-        "Not pinned to cores.".to_string(),
-        "Per-case results: docs/speed-results".to_string(),
-    ] {
-        let (s, last) = speed_phone_lines(
-            (40.0, y),
-            (20.0, 26.0),
-            r#" class="mono""#,
-            &speed_phone_wrap(&line, 20.0, w),
-        );
-        lines.push_str(&s);
-        y = last + 34.0;
-    }
+    let (limits, y) = speed_phone_lines(
+        (x0, y + 36.0),
+        (20.0, 26.0),
+        "",
+        &speed_phone_wrap(&tail.join(" "), 20.0, w),
+    );
+    let (run, y) = speed_phone_lines(
+        (x0, y + 36.0),
+        (20.0, 26.0),
+        r#" class="mut""#,
+        &speed_phone_wrap(
+            &format!(
+                "Machine: {}. Load: {}. Not pinned to cores.",
+                s.machine, s.load
+            ),
+            20.0,
+            w,
+        ),
+    );
+    let (path, y) = speed_phone_lines(
+        (x0, y + 26.0),
+        (20.0, 26.0),
+        r#" class="mono""#,
+        &[
+            format!("{SPEED_GROUPED}."),
+            "Per-case results: docs/speed-results".to_string(),
+        ],
+    );
     b.push_str(&format!(
-        r#"<g class="sph-f" style="animation-delay:3.2s">{lines}</g>"#
+        r#"<g class="sph-f" style="animation-delay:1.9s">{limits}</g><g class="sph-f" style="animation-delay:2.2s">{run}{path}</g>"#
     ));
     phone_card(
         dark,
-        (y + 2.0) as u32,
-        (
-            "Speed against v0.6.1, one row per timing program",
-            &xml(&speed_text(s)),
-        ),
-        &speed_phone_style("sph", t.muted, one),
+        (y + 24.0) as u32,
+        ("Speed against v0.6.1", &xml(&speed_phone_text(s))),
+        &speed_phone_style("sph", t.muted),
         &b,
     )
 }
@@ -4310,21 +4306,21 @@ fn rerun_phone_draw(dark: bool, d: &RerunData) -> Result<String> {
     rerun_check(d)?;
     let t = theme(dark);
     let grey = speed_phone_grey(dark);
-    let (x0, w, bar) = (40.0, 520.0, 48.0);
+    let (x0, w, bar) = (40.0, 520.0, 36.0);
     let u = w / d.cases as f64;
     let fills = [t.blue[1], grey, t.red[1]];
     let (d0, d1) = (&d.runs[0].date, &d.runs[1].date);
     let mut b = format!(
-        r#"<text class="kick" x="40" y="56">{}</text><g class="rph-f"><text x="40" y="116" font-size="40" class="b">{}</text><text x="40" y="152" font-size="24">timed twice against {}</text><text x="40" y="184" font-size="20" class="mut">each case against its own A/A band</text></g>"#,
+        r#"<text class="kick" x="40" y="48">{}</text><g class="rph-f"><text x="40" y="96" font-size="36" class="b">{}</text><text x="40" y="128" font-size="22">timed twice against {}</text><text x="40" y="156" font-size="20" class="mut">each case against its own A/A band</text></g>"#,
         xml(&format!("RE-RUN · {d0} → {d1}")),
         xml(&format!("The same {} cases", d.cases)),
         xml(&d.base)
     );
-    let tops = [252.0, 384.0];
+    let tops = [200.0, 288.0];
     for (r, run) in d.runs.iter().enumerate() {
         let (top, rf) = (tops[r], r as f64);
         let role = if r == 0 { "recorded" } else { "re-run" };
-        let label_y = if r == 0 { top - 14.0 } else { top + bar + 32.0 };
+        let label_y = if r == 0 { top - 12.0 } else { top + bar + 28.0 };
         b.push_str(&format!(
             r#"<text class="rph-f" style="animation-delay:{:.1}s" x="40" y="{label_y:.0}" font-size="22"><tspan class="b">{}</tspan><tspan class="mut"> · {role}</tspan></text><g class="rph-g" style="animation-delay:{:.1}s">"#,
             0.3 + 0.4 * rf,
@@ -4350,18 +4346,18 @@ fn rerun_phone_draw(dark: bool, d: &RerunData) -> Result<String> {
     let (gap0, gap1) = (tops[0] + bar, tops[1]);
     let span = d.again as f64 * u;
     let pill_text = format!("{} of {} faster again", d.again, d.runs[0].sides[0]);
-    let pill = speed_phone_width(&pill_text, 24.0) + 28.0;
+    let pill = speed_phone_width(&pill_text, 22.0) + 28.0;
     let px = (x0 + span / 2.0)
         .max(x0 + pill / 2.0)
         .min(560.0 - pill / 2.0);
     let mid = (gap0 + gap1) / 2.0;
     b.push_str(&format!(
-        r#"<rect class="rph-f" style="animation-delay:1.3s" x="{x0:.0}" y="{gap0:.0}" width="{span:.1}" height="{:.0}" fill="{a}" fill-opacity=".18"/><path class="rph-f" style="animation-delay:1.3s" d="M{x0:.0} {gap0:.0}V{gap1:.0}M{:.1} {gap0:.0}V{gap1:.0}" stroke="{a}" stroke-width="2.5" stroke-dasharray="6 5"/><g class="rph-p" style="animation-delay:1.6s"><rect x="{:.1}" y="{:.0}" width="{pill:.0}" height="44" rx="22" fill="{pf}"/><text x="{px:.1}" y="{:.0}" font-size="24" class="b" text-anchor="middle" style="fill:#ffffff">{}</text></g>"#,
+        r#"<rect class="rph-f" style="animation-delay:1.3s" x="{x0:.0}" y="{gap0:.0}" width="{span:.1}" height="{:.0}" fill="{a}" fill-opacity=".18"/><path class="rph-f" style="animation-delay:1.3s" d="M{x0:.0} {gap0:.0}V{gap1:.0}M{:.1} {gap0:.0}V{gap1:.0}" stroke="{a}" stroke-width="2.5" stroke-dasharray="6 5"/><g class="rph-p" style="animation-delay:1.6s"><rect x="{:.1}" y="{:.0}" width="{pill:.0}" height="38" rx="19" fill="{pf}"/><text x="{px:.1}" y="{:.0}" font-size="22" class="b" text-anchor="middle" style="fill:#ffffff">{}</text></g>"#,
         gap1 - gap0,
         x0 + span,
         px - pill / 2.0,
-        mid - 22.0,
-        mid + 8.5,
+        mid - 19.0,
+        mid + 7.5,
         xml(&pill_text),
         a = t.accent,
         pf = if dark { t.blue[2] } else { t.accent }
@@ -4371,77 +4367,49 @@ fn rerun_phone_draw(dark: bool, d: &RerunData) -> Result<String> {
     let mut table = String::new();
     for (k, word) in ["faster", "inside", "slower"].iter().enumerate() {
         table.push_str(&format!(
-            r#"<text x="{:.0}" y="530" font-size="22" class="b" text-anchor="end" style="fill:{}">{word}</text>"#,
+            r#"<text x="{:.0}" y="392" font-size="22" class="b" text-anchor="end" style="fill:{}">{word}</text>"#,
             cols[k],
             if k == 1 { t.muted } else { fills[k] }
         ));
     }
     for (r, run) in d.runs.iter().enumerate() {
-        let y = 580.0 + 48.0 * r as f64;
+        let y = 438.0 + 38.0 * r as f64;
         table.push_str(&format!(
             r#"<text class="mono" x="40" y="{y:.0}" font-size="22">{}</text>"#,
             xml(&run.date)
         ));
         for (k, n) in run.sides.iter().enumerate() {
             table.push_str(&format!(
-                r#"<text x="{:.0}" y="{y:.0}" font-size="36" class="b" text-anchor="end">{n}</text>"#,
+                r#"<text x="{:.0}" y="{y:.0}" font-size="30" class="b" text-anchor="end">{n}</text>"#,
                 cols[k]
             ));
         }
     }
     b.push_str(&format!(
-        r#"<path class="rph-f" style="animation-delay:1.8s" d="M40 546H560" stroke="{}" stroke-width="1.5"/><g class="rph-f" style="animation-delay:1.8s">{table}</g><text class="rph-f mut" style="animation-delay:2.0s" x="40" y="682" font-size="22">{}</text>"#,
+        r#"<path class="rph-f" style="animation-delay:1.8s" d="M40 404H560" stroke="{}" stroke-width="1.5"/><g class="rph-f" style="animation-delay:1.8s">{table}</g><text class="rph-f mut" style="animation-delay:2.0s" x="40" y="510" font-size="20">{}</text>"#,
         t.line,
         xml(&format!(
             "{} of the {} with a ratio above 1",
             d.above_one, d.runs[0].sides[0]
         ))
     ));
-    // The A/A noise of each run, on one linear scale.
-    // The longest bar leaves room for the longest value beside it.
-    let most = d.runs[0].noise.max(d.runs[1].noise);
-    let meter = d
-        .runs
-        .iter()
-        .map(|run| {
-            let label = format!("{} · {}", rerun_number(run.noise), run.date);
-            w - 14.0 - speed_phone_width(&label, 22.0)
-        })
-        .fold(w, f64::min)
-        .max(40.0);
-    b.push_str(r#"<g class="rph-f" style="animation-delay:2.2s"><text x="40" y="752" font-size="26" class="b">A/A noise</text><text x="40" y="780" font-size="20" class="mut">median |aa - 1| of each run</text></g>"#);
-    for (r, run) in d.runs.iter().enumerate() {
-        let y = 806.0 + 42.0 * r as f64;
-        let bw = if most > 0.0 {
-            (run.noise / most * meter).max(if run.noise > 0.0 { 4.0 } else { 0.0 })
-        } else {
-            0.0
-        };
-        b.push_str(&format!(
-            r#"<rect class="rph-g" style="animation-delay:{:.1}s" x="40" y="{y:.0}" width="{bw:.1}" height="22" rx="4" fill="{}"/><text class="rph-f" style="animation-delay:2.7s" x="{:.1}" y="{:.0}" font-size="22"><tspan class="b">{}</tspan><tspan class="mut"> · {}</tspan></text>"#,
-            2.3 + 0.2 * r as f64,
-            if r == 0 { grey } else { t.accent },
-            40.0 + bw + 14.0,
-            y + 19.0,
-            xml(&rerun_number(run.noise)),
-            xml(&run.date)
-        ));
-    }
+    // The A/A noise of the two runs, the older first, then the limits.
+    let noise = format!(
+        "{} → {}",
+        rerun_number(d.runs[0].noise),
+        rerun_number(d.runs[1].noise)
+    );
     b.push_str(&format!(
-        r#"<text class="rph-p b" style="animation-delay:2.9s" x="40" y="950" font-size="44">{}</text><g class="rph-f" style="animation-delay:3.1s"><text x="40" y="1004" font-size="20" class="mut">One machine, not pinned to cores</text><text x="40" y="1032" font-size="20" class="mut">{}</text><text x="40" y="1060" font-size="20" class="mut">{}</text></g>"#,
-        xml(&format!(
-            "{} → {}",
-            rerun_number(d.runs[0].noise),
-            rerun_number(d.runs[1].noise)
-        )),
+        r#"<g class="rph-f" style="animation-delay:2.2s"><text x="40" y="556" font-size="26" class="b">A/A noise</text><text x="40" y="584" font-size="20" class="mut">median |aa - 1| of each run</text></g><text class="rph-p b" style="animation-delay:2.4s" x="560" y="562" font-size="36" text-anchor="end">{}</text><g class="rph-f" style="animation-delay:2.7s"><text x="40" y="622" font-size="20" class="mut">One machine, not pinned to cores</text><text x="40" y="648" font-size="20" class="mut">{}</text><text x="40" y="674" font-size="20" class="mut">{}</text></g>"#,
+        xml(&noise),
         xml(&format!("A, A2: two checkouts of {}", d.base)),
         xml(&format!("B: main at {SPEED_B}"))
     ));
     Ok(phone_card(
         dark,
-        1092,
+        696,
         (&xml(&rerun_title(d)), &xml(&rerun_text(d)?)),
-        &speed_phone_style("rph", t.muted, 0.0),
+        &speed_phone_style("rph", t.muted),
         &b,
     ))
 }
@@ -4468,9 +4436,9 @@ fn bars_phone_draw(dark: bool, e: &Evidence) -> String {
         .max(1);
     let verdict = if matched == rows { t.good } else { t.red[1] };
     let mut b = format!(
-        r#"<text class="kick" x="40" y="56">FORMAT MUTATION MATRIX</text><g class="bph-p" style="animation-delay:.2s"><text x="40" y="140" font-size="72" class="b" style="fill:{verdict}">{matched}/{rows}</text></g><g class="bph-f" style="animation-delay:.4s"><text x="40" y="180" font-size="24">rows matched their</text><text x="40" y="210" font-size="24">expected verdict</text></g>"#
+        r#"<text class="kick" x="40" y="48">FORMAT MUTATION MATRIX</text><g class="bph-p" style="animation-delay:.2s"><text x="40" y="114" font-size="60" class="b" style="fill:{verdict}">{matched}/{rows}</text></g><g class="bph-f" style="animation-delay:.4s"><text x="40" y="148" font-size="22">rows matched their expected verdict</text></g>"#
     );
-    let mut y = 270.0;
+    let mut y = 194.0;
     for (i, f) in e.formats.iter().enumerate() {
         let delay = 0.6 + 0.3 * i as f64;
         let (wr, wa) = (
@@ -4478,7 +4446,7 @@ fn bars_phone_draw(dark: bool, e: &Evidence) -> String {
             f.accepted as f64 / tallest as f64 * w,
         );
         b.push_str(&format!(
-            r#"<g class="bph-f" style="animation-delay:{delay:.1}s"><text x="40" y="{y:.0}" font-size="24" class="b">{}</text><text x="560" y="{y:.0}" font-size="24" class="b" text-anchor="end" style="fill:{}">{} mutants</text></g><g class="bph-g" style="animation-delay:{delay:.1}s">"#,
+            r#"<g class="bph-f" style="animation-delay:{delay:.1}s"><text x="40" y="{y:.0}" font-size="22" class="b">{}</text><text x="560" y="{y:.0}" font-size="22" class="b" text-anchor="end" style="fill:{}">{} mutants</text></g><g class="bph-g" style="animation-delay:{delay:.1}s">"#,
             xml(&f.name),
             t.accent,
             f.mutants
@@ -4486,49 +4454,50 @@ fn bars_phone_draw(dark: bool, e: &Evidence) -> String {
         for (x, bw, fill) in [(40.0, wr, t.red[1]), (40.0 + wr, wa, t.blue[1])] {
             if bw > 0.0 {
                 b.push_str(&format!(
-                    r#"<rect x="{x:.1}" y="{:.0}" width="{bw:.1}" height="34" fill="{fill}"/>"#,
-                    y + 14.0
+                    r#"<rect x="{x:.1}" y="{:.0}" width="{bw:.1}" height="24" fill="{fill}"/>"#,
+                    y + 10.0
                 ));
             }
         }
         b.push_str(&format!(
-            r#"<rect x="40" y="{:.0}" width="{:.1}" height="34" rx="3" fill="none" stroke="{}"/></g><text class="bph-f mono" style="animation-delay:{:.1}s" x="40" y="{:.0}" font-size="20">{} rejected · {} accepted</text>"#,
-            y + 14.0,
+            r#"<rect x="40" y="{:.0}" width="{:.1}" height="24" rx="3" fill="none" stroke="{}"/></g><text class="bph-f mono" style="animation-delay:{:.1}s" x="40" y="{:.0}" font-size="20">{} rejected · {} accepted</text>"#,
+            y + 10.0,
             wr + wa,
             t.line,
             delay + 0.6,
-            y + 76.0,
+            y + 58.0,
             f.rejected,
             f.accepted
         ));
-        y += 128.0;
+        y += 92.0;
     }
     // The totals, with what each colour means.
-    let y = y + 16.0;
     b.push_str(&format!(
-        r#"<g class="bph-f" style="animation-delay:1.8s"><rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/><text x="72" y="{y:.0}" font-size="22">rejected: {rejected}</text><rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/><text x="72" y="{:.0}" font-size="22">accepted as documented: {accepted}</text></g>"#,
-        y - 18.0,
+        r#"<g class="bph-f" style="animation-delay:1.8s"><rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/><text x="72" y="{y:.0}" font-size="20">rejected: {rejected}</text><rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/><text x="72" y="{:.0}" font-size="20">accepted as documented: {accepted}</text></g>"#,
+        y - 17.0,
         t.red[1],
-        y + 18.0,
+        y + 13.0,
         t.blue[1],
-        y + 36.0
+        y + 30.0
     ));
-    let y = y + 112.0;
+    // The mutants: the number, the words of what they are beside it.
+    let y = y + 76.0;
+    let tx = 40.0 + speed_phone_width(&mutants.to_string(), 44.0) + 16.0;
     let (what, last) = speed_phone_lines(
-        (40.0, y + 40.0),
-        (22.0, 30.0),
+        (tx, y - 14.0),
+        (20.0, 26.0),
         "",
         &speed_phone_wrap(
             &format!(
                 "byte-level mutants of the {} public formats, each read with the original pin and with a recomputed one",
                 e.formats.len()
             ),
-            22.0,
-            w,
+            20.0,
+            560.0 - tx,
         ),
     );
     let (foot, last) = speed_phone_lines(
-        (40.0, last + 46.0),
+        (40.0, last + 42.0),
         (20.0, 26.0),
         r#" class="mono""#,
         &speed_phone_wrap(
@@ -4538,17 +4507,18 @@ fn bars_phone_draw(dark: bool, e: &Evidence) -> String {
         ),
     );
     b.push_str(&format!(
-        r#"<g class="bph-p" style="animation-delay:2.1s"><text x="40" y="{y:.0}" font-size="48" class="b" style="fill:{}">{mutants}</text></g><g class="bph-f" style="animation-delay:2.3s">{what}</g><g class="bph-f" style="animation-delay:2.6s">{foot}</g>"#,
+        r#"<g class="bph-p" style="animation-delay:2.1s"><text x="40" y="{:.0}" font-size="44" class="b" style="fill:{}">{mutants}</text></g><g class="bph-f" style="animation-delay:2.3s">{what}</g><g class="bph-f" style="animation-delay:2.6s">{foot}</g>"#,
+        y + 12.0,
         t.accent
     ));
     phone_card(
         dark,
-        (last + 34.0) as u32,
+        (last + 24.0) as u32,
         (
             "Format mutation matrix",
             &format!("{mutants} byte-level mutants of the {} public formats, each read with the original pin and with a recomputed one. In the committed report {matched} of {rows} rows matched their expected verdict: {rejected} rejected, {accepted} accepted as documented.", e.formats.len()),
         ),
-        &speed_phone_style("bph", t.muted, 0.0),
+        &speed_phone_style("bph", t.muted),
         &b,
     )
 }
@@ -4560,13 +4530,13 @@ fn bars_phone(dark: bool) -> Result<String> {
 /// exempt on Windows. Like the wide card it draws the rule, not one run.
 fn wall_phone_draw(dark: bool, e: &Evidence) -> String {
     let t = theme(dark);
-    let w = 520.0;
+    let (x0, w) = (30.0, 540.0);
     let n = e.rows.len();
     let unix = e.unix_rows();
     let partial = unix.iter().filter(|u| **u).count();
     let full = 3 * n - partial;
     let (rule, last) = speed_phone_lines(
-        (40.0, 216.0),
+        (x0, 130.0),
         (20.0, 26.0),
         "",
         &speed_phone_wrap(
@@ -4575,16 +4545,18 @@ fn wall_phone_draw(dark: bool, e: &Evidence) -> String {
             w,
         ),
     );
+    let title = format!("{n} properties");
     let mut b = format!(
-        r#"<text class="kick" x="40" y="56">PROPERTY MAP × CI PLATFORMS</text><g class="wph-f"><text x="40" y="122" font-size="48" class="b">{n} properties</text><text x="40" y="164" font-size="32">× 3 platforms</text></g><g class="wph-f" style="animation-delay:.3s">{rule}</g>"#
+        r#"<text class="kick" x="{x0}" y="44">PROPERTY MAP × CI PLATFORMS</text><g class="wph-f"><text x="{x0}" y="92" font-size="34" class="b">{title}</text><text x="{:.0}" y="92" font-size="24">× 3 platforms</text></g><g class="wph-f" style="animation-delay:.3s">{rule}</g>"#,
+        x0 + speed_phone_width(&title, 34.0) + 12.0
     );
-    // Twelve cubes to a line: a block per platform, in property order.
-    let (per, step, side, depth) = (12, 43.0, 32.0, 8.0);
+    // Twenty cubes to a line: a block per platform, in property order.
+    let (per, step, side, depth) = (20, 27.0, 20.0, 4.0);
     let lines = n.div_ceil(per).max(1);
-    let mut y = last + 70.0;
+    let mut y = last + 42.0;
     for (r, platform) in ["Linux", "macOS", "Windows"].into_iter().enumerate() {
         b.push_str(&format!(
-            r#"<text class="wph-f b" style="animation-delay:{:.2}s" x="40" y="{y:.0}" font-size="24">{platform}</text>"#,
+            r#"<text class="wph-f b" style="animation-delay:{:.2}s" x="{x0}" y="{y:.0}" font-size="22">{platform}</text>"#,
             0.4 + 0.5 * r as f64
         ));
         for (c, unix_only) in unix.iter().enumerate() {
@@ -4594,8 +4566,8 @@ fn wall_phone_draw(dark: bool, e: &Evidence) -> String {
                 t.blue
             };
             let (cx, cy) = (
-                40.0 + step * (c % per) as f64,
-                y + 22.0 + depth + step * (c / per) as f64,
+                x0 + step * (c % per) as f64,
+                y + 14.0 + depth + step * (c / per) as f64,
             );
             b.push_str(&format!(
                 r#"<g class="wph-u" style="animation-delay:{:.2}s">{}</g>"#,
@@ -4603,57 +4575,57 @@ fn wall_phone_draw(dark: bool, e: &Evidence) -> String {
                 oblique(cx, cy, (side, side, depth), faces)
             ));
         }
-        y += 22.0 + depth + step * lines as f64 + 46.0;
+        y += 14.0 + depth + step * lines as f64 + 34.0;
     }
     let first = e.rows.first().map_or("", |r| r.0.as_str());
     let last_id = e.rows.last().map_or("", |r| r.0.as_str());
     let (order, y) = speed_phone_lines(
-        (40.0, y - 14.0),
+        (x0, y - 10.0),
         (20.0, 26.0),
         r#" class="mut""#,
         &[format!("one cube per property, {first} to {last_id}")],
     );
     let (blue, yb) = speed_phone_lines(
-        (72.0, y + 50.0),
-        (22.0, 28.0),
+        (x0 + 26.0, y + 34.0),
+        (20.0, 26.0),
         "",
         &speed_phone_wrap(
             &format!("{full} cells: every mapped test required"),
-            22.0,
-            488.0,
+            20.0,
+            w - 26.0,
         ),
     );
     let (amber, ya) = speed_phone_lines(
-        (72.0, yb + 48.0),
-        (22.0, 28.0),
+        (x0 + 26.0, yb + 32.0),
+        (20.0, 26.0),
         "",
         &speed_phone_wrap(
             &format!("{partial} Windows cells: declared Unix-only tests exempt, the rest required"),
-            22.0,
-            488.0,
+            20.0,
+            w - 26.0,
         ),
     );
     let (foot, end) = speed_phone_lines(
-        (40.0, ya + 50.0),
+        (x0, ya + 36.0),
         (20.0, 26.0),
         r#" class="mono""#,
         &speed_phone_wrap("the rule, not one run: read each run's CI report", 20.0, w),
     );
     b.push_str(&format!(
-        r#"<g class="wph-f" style="animation-delay:2.4s">{order}<rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/>{blue}<rect x="40" y="{:.0}" width="20" height="20" rx="4" fill="{}"/>{amber}</g><g class="wph-f" style="animation-delay:2.7s">{foot}</g>"#,
-        y + 32.0,
+        r#"<g class="wph-f" style="animation-delay:2.4s">{order}<rect x="{x0}" y="{:.0}" width="16" height="16" rx="3" fill="{}"/>{blue}<rect x="{x0}" y="{:.0}" width="16" height="16" rx="3" fill="{}"/>{amber}</g><g class="wph-f" style="animation-delay:2.7s">{foot}</g>"#,
+        y + 19.0,
         t.blue[1],
-        yb + 30.0,
+        yb + 17.0,
         t.amber[1]
     ));
     phone_card(
         dark,
-        (end + 34.0) as u32,
+        (end + 24.0) as u32,
         (
             "Property map across CI platforms",
             &format!("{n} documented properties by 3 CI platforms, as the CI evidence collector checks them. In {full} cells every mapped test must run and pass exactly once; in {partial} Windows cells the declared Unix-only tests are exempt and the rest are required. This is the rule, not the result of a particular run."),
         ),
-        &speed_phone_style("wph", t.muted, 0.0),
+        &speed_phone_style("wph", t.muted),
         &b,
     )
 }
@@ -4688,9 +4660,9 @@ fn pledges_phone_lines(
     }
     y
 }
-/// The published commitments on a phone: their number, then one card per
-/// commitment down a time line (date and dot on the line, name, counts and the
-/// first 8 hex of the hash on the card), then how a commitment is checked.
+/// The published commitments on a phone: their number, then one compact row per
+/// commitment (name and the first 8 hex of the hash, date and counts), then how
+/// a commitment is checked.
 fn pledges_phone_draw(dark: bool, p: &Pledges) -> Result<String> {
     let t = theme(dark);
     let n = p.rows.len();
@@ -4699,7 +4671,7 @@ fn pledges_phone_draw(dark: bool, p: &Pledges) -> Result<String> {
     }
     let side = PLEDGES_PHONE_SIDE;
     let right = f64::from(PHONE_WIDTH) - side;
-    let mut b = String::from(r#"<text class="kick" x="30" y="50">PUBLISHED COMMITMENTS</text>"#);
+    let mut b = String::from(r#"<text class="kick" x="30" y="44">PUBLISHED COMMITMENTS</text>"#);
     let count = n.to_string();
     let word = if n == 1 { "commitment" } else { "commitments" };
     let span = if p.rows[0].date == p.rows[n - 1].date {
@@ -4707,98 +4679,60 @@ fn pledges_phone_draw(dark: bool, p: &Pledges) -> Result<String> {
     } else {
         format!("{} → {}", p.rows[0].date, p.rows[n - 1].date)
     };
+    let nx = side + pledges_width(&count, 56.0) / PLEDGES_PHONE_SLACK + 14.0;
     b.push_str(&format!(
-        r#"<g class="pp-big"><text x="{side}" y="128" font-size="72" class="b" style="fill:{acc}">{count}</text><text x="{:.1}" y="128" font-size="30" class="b">{word}</text></g><text x="{side}" y="170" font-size="22" class="mut">{}</text>"#,
-        side + pledges_width(&count, 72.0) + 14.0,
+        r#"<g class="pp-big"><text x="{side}" y="106" font-size="56" class="b" style="fill:{acc}">{count}</text><text x="{nx:.1}" y="84" font-size="26" class="b">{word}</text></g><text x="{nx:.1}" y="110" font-size="20" class="mut">{}</text>"#,
         xml(&span),
         acc = t.accent
     ));
-    // The line with its dots on the left, the cards right of it; each card
-    // carries its date, as the chips of the wide card do.
-    let tags: Vec<String> = p.rows.iter().map(|r| pledges_tag(p, &r.date)).collect();
-    let line_x = side + 18.0;
-    let x = line_x + 30.0;
-    let w = right - x;
-    let (pad, lock) = (16.0, 34.0);
-    let mut y = 204.0;
-    let (mut first_dot, mut last_dot) = (0.0, 0.0);
-    let mut cards = String::new();
-    let mut dots = String::new();
+    let (x, w, pad) = (side, right - side, 14.0);
+    let hash_w = pledges_width("00000000", 20.0) / PLEDGES_PHONE_SLACK + 12.0;
+    let mut y = 124.0;
     for (i, r) in p.rows.iter().enumerate() {
-        let delay = 0.7 + 0.2 * i as f64;
-        let name = pledges_phone_fit(pledges_name(&r.label), 24.0, w - 2.0 * pad - lock);
+        let delay = 0.3 + 0.15 * i as f64;
+        let tag = pledges_tag(p, &r.date);
+        // The name beside the hash, the date beside the counts.
+        let name = pledges_phone_fit(pledges_name(&r.label), 20.0, w - 2.0 * pad - hash_w);
+        let cx = x + pad + pledges_width(&tag, 20.0) / PLEDGES_PHONE_SLACK + 12.0;
+        let room = x + w - pad - cx;
         let [c0, c1] = pledges_counts(p, r);
         let both = format!("{c0} · {c1}");
-        let counts = if pledges_width(&both, 20.0) <= (w - 2.0 * pad) * PLEDGES_PHONE_SLACK {
+        let counts = if pledges_width(&both, 20.0) <= room * PLEDGES_PHONE_SLACK {
             vec![both]
         } else {
             [c0, c1]
                 .iter()
-                .flat_map(|c| pledges_phone_fit(c, 20.0, w - 2.0 * pad))
+                .flat_map(|c| pledges_phone_fit(c, 20.0, room))
                 .collect()
         };
         let mut text = String::new();
         let next = pledges_phone_lines(
             &mut text,
             &name,
-            (x + pad, y + 36.0, 30.0),
-            r#"font-size="24" class="b""#,
-        );
-        let next = pledges_phone_lines(
-            &mut text,
-            &counts,
-            (x + pad, next - 2.0, 28.0),
-            r#"font-size="20""#,
+            (x + pad, y + 24.0, 24.0),
+            r#"font-size="20" class="b""#,
         );
         text.push_str(&format!(
-            r#"<text x="{:.1}" y="{base:.1}" font-size="20" class="b" style="fill:{}">{}</text><text x="{:.1}" y="{base:.1}" font-size="20" class="mono pp-hx">{}</text>"#,
+            r#"<text x="{:.1}" y="{:.1}" font-size="20" text-anchor="end" class="mono pp-hx">{}</text><text x="{:.1}" y="{next:.1}" font-size="20" class="b" style="fill:{}">{}</text>"#,
+            x + w - pad,
+            y + 24.0,
+            xml(&r.hash[..8]),
             x + pad,
             t.accent,
-            xml(&tags[i]),
-            x + pad + pledges_width(&tags[i], 20.0) / PLEDGES_PHONE_SLACK + 14.0,
-            xml(&r.hash[..8]),
-            base = next + 2.0
+            xml(&tag)
         ));
-        let h = next + 2.0 + 18.0 - y;
-        let (lx, ly) = (x + w - pad - 20.0, y + 16.0);
-        cards.push_str(&format!(
-            r#"<g class="pp-cd" style="animation-delay:{delay:.2}s"><rect x="{x:.1}" y="{y:.1}" width="{w:.1}" height="{h:.1}" rx="14" fill="{acc}" fill-opacity=".08" stroke="{}"/>{text}<g class="pp-lk" style="animation-delay:{:.2}s"><path d="M{:.1} {:.1}v-5a6 6 0 0 1 12 0v5" fill="none" stroke="{acc}" stroke-width="2.6"/><rect x="{lx:.1}" y="{:.1}" width="20" height="15" rx="3" fill="{acc}"/></g></g>"#,
+        let end = pledges_phone_lines(&mut text, &counts, (cx, next, 24.0), r#"font-size="20""#);
+        let h = end - 24.0 + 12.0 - y;
+        b.push_str(&format!(
+            r#"<g class="pp-cd" style="animation-delay:{delay:.2}s"><rect x="{x:.1}" y="{y:.1}" width="{w:.1}" height="{h:.1}" rx="10" fill="{acc}" fill-opacity=".08" stroke="{}"/>{text}</g>"#,
             t.line,
-            delay + 0.4,
-            lx + 4.0,
-            ly + 7.0,
-            ly + 7.0,
             acc = t.accent
         ));
-        // A dot with the date's number of commitments where a new date starts.
-        let dy = y + 30.0;
-        if i == 0 || p.rows[i - 1].date != r.date {
-            let k = p.rows[i..].iter().take_while(|o| o.date == r.date).count();
-            dots.push_str(&format!(
-                r#"<g class="pp-dt" style="animation-delay:{delay:.2}s"><circle cx="{line_x:.1}" cy="{dy:.1}" r="16" fill="{acc}" stroke="{bg}" stroke-width="3"/><text x="{line_x:.1}" y="{:.1}" font-size="20" text-anchor="middle" class="b" style="fill:{bg}">{k}</text></g>"#,
-                dy + 7.0,
-                acc = t.accent,
-                bg = t.bg[0]
-            ));
-        } else {
-            dots.push_str(&format!(
-                r#"<circle class="pp-dt" style="animation-delay:{delay:.2}s" cx="{line_x:.1}" cy="{dy:.1}" r="6" fill="{}" stroke="{}" stroke-width="3"/>"#,
-                t.bg[0], t.accent
-            ));
-        }
-        if i == 0 {
-            first_dot = dy;
-        }
-        last_dot = dy;
-        y += h + 12.0;
+        y += h + 4.0;
     }
-    b.push_str(&format!(
-        r#"<path class="pp-ax" d="M{line_x:.1} {first_dot:.1}V{last_dot:.1}" stroke="{}" stroke-width="4" stroke-linecap="round"/>{dots}{cards}"#,
-        t.floor
-    ));
     // The two footer sentences of the wide card, one thought per line group,
-    // after the last card has come in.
-    let mut y = y + 22.0;
+    // after the last row has come in.
+    let mut y = y + 20.0;
     let mut foot = String::new();
     for (k, line) in PLEDGES_FOOT.iter().enumerate() {
         let attrs = if k == 0 {
@@ -4808,26 +4742,23 @@ fn pledges_phone_draw(dark: bool, p: &Pledges) -> Result<String> {
         };
         for part in line.split(" · ") {
             let lines = pledges_phone_fit(part, 20.0, right - side);
-            y = pledges_phone_lines(&mut foot, &lines, (side, y, 28.0), attrs) + 6.0;
+            y = pledges_phone_lines(&mut foot, &lines, (side, y, 26.0), attrs) + 2.0;
         }
     }
     b.push_str(&format!(
         r#"<g class="pp-ft" style="animation-delay:{:.2}s">{foot}</g>"#,
-        0.9 + 0.2 * n as f64
+        0.5 + 0.15 * n as f64
     ));
-    let height = (y + 12.0) as u32;
+    let height = y as u32;
     let style = format!(
-        ".pp-hx{{fill:{acc};font-weight:700}}.pp-big{{transform-box:fill-box;transform-origin:0 100%;animation:pp-pop .6s cubic-bezier(.2,.8,.2,1) .1s both}}.pp-ax{{transform-box:fill-box;transform-origin:50% 0;animation:pp-grow 1.6s cubic-bezier(.4,0,.2,1) .5s both}}.pp-dt{{transform-box:fill-box;transform-origin:center;animation:pp-pop .45s cubic-bezier(.2,.8,.2,1) both}}.pp-cd{{animation:pp-in .55s cubic-bezier(.2,.8,.2,1) both}}.pp-lk{{transform-box:fill-box;transform-origin:center;animation:pp-click .5s ease-out both}}.pp-ft{{animation:pp-fade .8s ease-out both}}@keyframes pp-fade{{from{{opacity:0}}to{{opacity:1}}}}@keyframes pp-pop{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}@keyframes pp-grow{{from{{transform:scaleY(0)}}to{{transform:none}}}}@keyframes pp-in{{from{{opacity:0;transform:translateX(36px)}}to{{opacity:1;transform:none}}}}@keyframes pp-click{{0%{{transform:translateY(-7px)}}60%{{transform:none}}80%{{transform:scale(1.25)}}100%{{transform:none}}}}@media (prefers-reduced-motion:reduce){{.pp-big,.pp-ax,.pp-dt,.pp-cd,.pp-lk,.pp-ft{{animation:none}}}}{}",
+        ".pp-hx{{fill:{acc};font-weight:700}}.pp-big{{transform-box:fill-box;transform-origin:0 100%;animation:pp-pop .6s cubic-bezier(.2,.8,.2,1) .1s both}}.pp-cd{{animation:pp-in .55s cubic-bezier(.2,.8,.2,1) both}}.pp-ft{{animation:pp-fade .8s ease-out both}}@keyframes pp-fade{{from{{opacity:0}}to{{opacity:1}}}}@keyframes pp-pop{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}@keyframes pp-in{{from{{opacity:0;transform:translateX(36px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.pp-big,.pp-cd,.pp-ft{{animation:none}}}}{}",
         RESULT_STYLE.replace("MUTED", t.muted),
         acc = t.accent
     );
     Ok(phone_card(
         dark,
         height,
-        (
-            "Published commitments on a time line",
-            &xml(&pledges_text(p)),
-        ),
+        ("Published commitments", &xml(&pledges_text(p))),
         &style,
         &b,
     ))
@@ -4836,17 +4767,17 @@ fn pledges_phone(dark: bool) -> Result<String> {
     pledges_phone_draw(dark, &Pledges::read()?)
 }
 /// The crash series on a phone: the headline, every trial as a point, the
-/// totals one per row, and the limit of the run.
+/// totals the headline and the legend do not state, and the limit of the run.
 fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
     let t = theme(dark);
     let n = c.trials.len();
     let side = PLEDGES_PHONE_SIDE;
     let right = f64::from(PHONE_WIDTH) - side;
     let mut b = String::from(
-        r#"<text class="kick" x="30" y="50">CRASH SERIES · KILLED WHILE SAVING</text>"#,
+        r#"<text class="kick" x="30" y="44">CRASH SERIES · KILLED WHILE SAVING</text>"#,
     );
     let mut head = String::new();
-    let mut y = 94.0;
+    let mut y = 82.0;
     for sentence in [
         format!("{n} kills while saving."),
         format!("{} acknowledged snapshots lost.", c.lost),
@@ -4855,15 +4786,15 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
         y = pledges_phone_lines(
             &mut head,
             &lines,
-            (side, y, 34.0),
+            (side, y, 32.0),
             r#"font-size="26" class="b""#,
         );
     }
     b.push_str(&format!(r#"<g class="cp-in">{head}</g>"#));
     // The plot: kill time across, acknowledged snapshots up.
-    let cap = y + 10.0;
-    let top = cap + 56.0;
-    let bottom = top + 210.0;
+    let cap = y + 2.0;
+    let top = cap + 44.0;
+    let bottom = top + 140.0;
     let tick_w = pledges_width(&c.documents.to_string(), 20.0);
     let (x0, x1) = (side + tick_w / PLEDGES_PHONE_SLACK + 14.0, right - 6.0);
     let px = |ms: u32| x0 + (x1 - x0) * f64::from(ms) / f64::from(c.window_ms.max(1));
@@ -4893,7 +4824,7 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
             b.push_str(&format!(
                 r#"<text class="mono" x="{:.1}" y="{:.1}" text-anchor="middle" font-size="20">{ms}</text>"#,
                 px(ms),
-                bottom + 32.0
+                bottom + 28.0
             ));
         }
     }
@@ -4912,7 +4843,7 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
     let mut y = pledges_phone_lines(
         &mut b,
         &axis,
-        (side, bottom + 66.0, 28.0),
+        (side, bottom + 56.0, 26.0),
         r#"font-size="20" class="mut""#,
     );
     // Every trial survived (the reader refuses a PASS line over a lost, partial
@@ -4933,7 +4864,7 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
             py(trial.acknowledged)
         ));
     }
-    y += 8.0;
+    y += 4.0;
     for (filled, label) in [
         (
             true,
@@ -4959,18 +4890,16 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
             side + 26.0,
             xml(&label)
         ));
-        y += 30.0;
+        y += 28.0;
     }
-    // The totals of the wide card, one per row.
+    // The totals of the wide card that the headline and the legend do not state.
     let rows = [
-        (n.to_string(), t.accent, "trials, each", "killed once"),
         (
             grouped(c.acknowledged),
             t.accent,
             "snapshots acknowledged",
             "before the kills",
         ),
-        (c.lost.to_string(), t.good, "acknowledged", "snapshots lost"),
         (
             c.partial.to_string(),
             t.good,
@@ -4983,45 +4912,34 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
             "resumed to the",
             "uninterrupted result",
         ),
-        (
-            c.mid_publication.to_string(),
-            t.accent,
-            "killed in the middle",
-            "of a publication",
-        ),
     ];
     let num_w = rows
         .iter()
-        .map(|r| pledges_width(&r.0, 40.0))
+        .map(|r| pledges_width(&r.0, 32.0))
         .fold(0.0, f64::max);
-    let lx = side + 18.0 + num_w / PLEDGES_PHONE_SLACK + 18.0;
-    y += 6.0;
+    let lx = side + 14.0 + num_w / PLEDGES_PHONE_SLACK + 14.0;
+    y -= 10.0;
     for (k, (num, colour, l1, l2)) in rows.iter().enumerate() {
         let label: Vec<String> = [l1, l2]
             .iter()
-            .flat_map(|l| pledges_phone_fit(l, 20.0, right - 16.0 - lx))
+            .flat_map(|l| pledges_phone_fit(l, 20.0, right - 14.0 - lx))
             .collect();
-        let h = (22.0 + 26.0 * label.len() as f64).max(74.0);
+        let h = 12.0 + 24.0 * label.len() as f64;
         let mut text = String::new();
-        pledges_phone_lines(
-            &mut text,
-            &label,
-            (lx, y + (h - 26.0 * label.len() as f64) / 2.0 + 19.0, 26.0),
-            r#"font-size="20""#,
-        );
+        pledges_phone_lines(&mut text, &label, (lx, y + 24.0, 24.0), r#"font-size="20""#);
         b.push_str(&format!(
-            r#"<g class="cp-in" style="animation-delay:{:.2}s"><rect x="{side}" y="{y:.1}" width="{:.1}" height="{h:.1}" rx="12" fill="{}" fill-opacity=".07" stroke="{}"/><text x="{:.1}" y="{:.1}" font-size="40" class="b" style="fill:{colour}">{num}</text>{text}</g>"#,
+            r#"<g class="cp-in" style="animation-delay:{:.2}s"><rect x="{side}" y="{y:.1}" width="{:.1}" height="{h:.1}" rx="10" fill="{}" fill-opacity=".07" stroke="{}"/><text x="{:.1}" y="{:.1}" font-size="32" class="b" style="fill:{colour}">{num}</text>{text}</g>"#,
             2.6 + 0.15 * k as f64,
             right - side,
             t.accent,
             t.line,
-            side + 18.0,
-            y + h / 2.0 + 14.0
+            side + 14.0,
+            y + h / 2.0 + 11.0
         ));
-        y += h + 10.0;
+        y += h + 6.0;
     }
     // The limit of the run, as the wide card states it.
-    y += 24.0;
+    y += 22.0;
     let mut foot = String::new();
     let machine = pledges_phone_fit(
         &format!(
@@ -5034,11 +4952,11 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
     y = pledges_phone_lines(
         &mut foot,
         &machine,
-        (side, y, 28.0),
+        (side, y, 26.0),
         r#"font-size="20" class="mut""#,
     );
-    let box_y = y - 8.0;
-    let mut ly = box_y + 36.0;
+    let box_y = y - 12.0;
+    let mut ly = box_y + 30.0;
     for (part, attrs) in [
         ("a process kill (SIGKILL),", r#"font-size="20" class="b""#),
         ("not a power cut:", r#"font-size="20" class="b""#),
@@ -5048,15 +4966,15 @@ fn crash_phone_draw(dark: bool, c: &CrashSeries) -> String {
         ),
     ] {
         let lines = pledges_phone_fit(part, 20.0, right - side - 36.0);
-        ly = pledges_phone_lines(&mut foot, &lines, (side + 18.0, ly, 28.0), attrs);
+        ly = pledges_phone_lines(&mut foot, &lines, (side + 18.0, ly, 26.0), attrs);
     }
-    let box_h = ly - 28.0 + 20.0 - box_y;
+    let box_h = ly - 26.0 + 14.0 - box_y;
     b.push_str(&format!(
         r#"<g class="cp-in" style="animation-delay:3.6s"><rect x="{side}" y="{box_y:.1}" width="{:.1}" height="{box_h:.1}" rx="12" fill="{a}" fill-opacity=".10" stroke="{a}" stroke-width="2"/>{foot}</g>"#,
         right - side,
         a = t.amber[1]
     ));
-    let height = (box_y + box_h + 24.0) as u32;
+    let height = (box_y + box_h + 16.0) as u32;
     let style = format!(".cp-pt{{animation:cp-pop .45s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center}}.cp-in{{animation:cp-rise .6s cubic-bezier(.2,.8,.2,1) both}}@keyframes cp-pop{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}@keyframes cp-rise{{from{{opacity:0;transform:translateY(16px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.cp-pt,.cp-in{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
     phone_card(
         dark,
@@ -5072,6 +4990,10 @@ fn crash_phone(dark: bool) -> Result<String> {
 /// One quoted subject on the license phone card: its LICENSE sections, its
 /// heading and the sentences quoted.
 type LicensePhoneColumn<'a> = (&'a str, &'a str, Vec<&'a str>);
+/// Which quotes of each column of the wide card the phone card shows: what the
+/// public terms give, who may evaluate and within what limit, and what money
+/// needs. The folded README text and the LICENSE hold the rest.
+const LICENSE_PHONE_SHOWN: [&[usize]; 3] = [&[0], &[0, 1], &[1]];
 /// The quote lines of `quote` in its own group, each line exact words of it,
 /// with quotation marks on the first and the last line.
 fn license_phone_quote(out: &mut String, quote: &str, (x, y): (f64, f64), room: f64) -> f64 {
@@ -5086,123 +5008,83 @@ fn license_phone_quote(out: &mut String, quote: &str, (x, y): (f64, f64), room: 
             r#"<text x="{x:.1}" y="{y:.1}" font-size="20">{open}{}{close}</text>"#,
             xml(line)
         ));
-        y += 27.0;
+        y += 25.0;
     }
     out.push_str("</g>");
     y
 }
-/// The license on a phone: the columns of the wide card one under the other,
-/// every quote word for word, then what every copy carries and that LICENSE
-/// controls.
+/// The license on a phone: one tinted box per subject with the quotes it is
+/// given, word for word, then what every copy carries and that LICENSE controls.
 fn license_phone_draw(dark: bool, columns: &[LicensePhoneColumn], notice: &str) -> String {
     let t = theme(dark);
     let side = PLEDGES_PHONE_SIDE;
     let right = f64::from(PHONE_WIDTH) - side;
-    let mut b = String::from(r#"<text class="kick" x="30" y="50">LICENSE AT A GLANCE</text>"#);
+    let mut b = String::from(r#"<text class="kick" x="30" y="44">LICENSE AT A GLANCE</text>"#);
     let mut head = String::new();
     let title = pledges_phone_fit(
         "GEL RAM Noncommercial Reciprocal License 1.0",
-        28.0,
+        24.0,
         right - side,
     );
     let y = pledges_phone_lines(
         &mut head,
         &title,
-        (side, 94.0, 34.0),
-        r#"font-size="28" class="b""#,
+        (side, 78.0, 29.0),
+        r#"font-size="24" class="b""#,
     );
     let sub = pledges_phone_fit(
-        "Source-available, not an OSI-approved open-source license. Each quoted line below is from LICENSE.",
+        "Source-available, not an OSI-approved open-source license.",
         20.0,
         right - side,
     );
     let mut y = pledges_phone_lines(
         &mut head,
         &sub,
-        (side, y + 4.0, 27.0),
+        (side, y + 2.0, 25.0),
         r#"font-size="20" class="mut""#,
     );
     b.push_str(&format!(r#"<g class="lp-col">{head}</g>"#));
+    y -= 12.0;
     let colours = [t.green, t.blue, t.amber];
     for (i, (section, heading, quotes)) in columns.iter().enumerate() {
         let c = colours[i % colours.len()];
-        y += 6.0;
-        let (ix, iy) = (side + 34.0, y + 38.0);
-        let icon = if i % colours.len() < 2 {
-            format!(
-                r#"<circle cx="{ix:.1}" cy="{iy:.1}" r="17" fill="{}"/><path d="M{:.1} {iy:.1}l6 6 11-11" stroke="{}" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>"#,
-                c[1],
-                ix - 8.5,
-                t.bg[0]
-            )
-        } else {
-            format!(
-                r#"<rect x="{:.1}" y="{:.1}" width="26" height="32" rx="3" fill="{}"/><path d="M{:.1} {:.1}h13M{:.1} {:.1}h13M{:.1} {:.1}c3-4 5 2 9-2" stroke="{}" stroke-width="2" fill="none" stroke-linecap="round"/>"#,
-                ix - 13.0,
-                iy - 16.0,
-                c[1],
-                ix - 6.5,
-                iy - 6.0,
-                ix - 6.5,
-                iy + 1.0,
-                ix - 6.5,
-                iy + 9.0,
-                t.bg[0]
-            )
-        };
-        let hx = side + 66.0;
-        let mut text = String::new();
-        let hy = pledges_phone_lines(
-            &mut text,
-            &pledges_phone_fit(heading, 24.0, right - 16.0 - hx),
-            (hx, y + 46.0, 30.0),
-            r#"font-size="24" class="b""#,
+        let (x, room) = (side + 14.0, right - side - 28.0);
+        // Under its heading as on the wide card: beside it, two do not fit.
+        let mut text = format!(
+            r#"<text x="{x:.1}" y="{:.1}" font-size="20" class="b">{}</text><text x="{x:.1}" y="{:.1}" font-size="20" class="mono">LICENSE {}</text>"#,
+            y + 28.0,
+            xml(heading),
+            y + 53.0,
+            xml(section)
         );
-        let sy = pledges_phone_lines(
-            &mut text,
-            &pledges_phone_fit(&format!("LICENSE {section}"), 20.0, right - 16.0 - hx),
-            (hx, hy - 4.0, 26.0),
-            r#"font-size="20" class="mono""#,
-        );
-        let qx = side + 34.0;
-        let mut qy = sy + 18.0;
-        let bar_top = qy - 22.0;
+        let mut qy = y + 81.0;
         for q in quotes {
-            qy = license_phone_quote(&mut text, q, (qx, qy), right - 16.0 - qx) + 10.0;
+            qy = license_phone_quote(&mut text, q, (x, qy), room) + 4.0;
         }
-        let bar_h = qy - 10.0 - 27.0 + 8.0 - bar_top;
-        let h = qy - 10.0 - 27.0 + 26.0 - y;
+        let h = qy - 4.0 - 25.0 + 14.0 - y;
         b.push_str(&format!(
-            r#"<g class="lp-col" style="animation-delay:{:.2}s"><rect x="{side}" y="{y:.1}" width="{:.1}" height="{h:.1}" rx="16" fill="{c1}" fill-opacity=".10" stroke="{c1}" stroke-width="2"/><rect class="lp-bar" style="animation-delay:{:.2}s" x="{:.1}" y="{bar_top:.1}" width="3" height="{bar_h:.1}" rx="1.5" fill="{c1}"/><g class="lp-ic" style="animation-delay:{:.2}s">{icon}</g>{text}</g>"#,
+            r#"<g class="lp-col" style="animation-delay:{:.2}s"><rect x="{side}" y="{y:.1}" width="{:.1}" height="{h:.1}" rx="12" fill="{c1}" fill-opacity=".10" stroke="{c1}" stroke-width="2"/>{text}</g>"#,
             0.3 + 0.35 * i as f64,
             right - side,
-            0.6 + 0.35 * i as f64,
-            side + 16.0,
-            0.7 + 0.35 * i as f64,
             c1 = c[1]
         ));
-        y += h + 10.0;
+        y += h + 8.0;
     }
     // What every copy carries, then who to write to and what controls.
     let delay = 0.3 + 0.35 * columns.len() as f64;
     let mut text = format!(
         r#"<text class="kick" x="{side}" y="{:.1}">EVERY COPY · SECTION 8</text>"#,
-        y + 40.0
+        y + 26.0
     );
-    let ny = license_phone_quote(
-        &mut text,
-        notice,
-        (side + 16.0, y + 76.0),
-        right - side - 16.0,
-    );
+    let ny = license_phone_quote(&mut text, notice, (side, y + 54.0), right - side);
     let ey = pledges_phone_lines(
         &mut text,
         &[
             "Commercial Agreements:".to_string(),
             "gelram.licensing@gmail.com".to_string(),
         ],
-        (side, ny + 22.0, 30.0),
-        &format!(r#"font-size="22" class="b" style="fill:{}""#, t.accent),
+        (side, ny + 8.0, 26.0),
+        &format!(r#"font-size="20" class="b" style="fill:{}""#, t.accent),
     );
     let mut controls = Vec::new();
     for part in [
@@ -5214,18 +5096,14 @@ fn license_phone_draw(dark: bool, columns: &[LicensePhoneColumn], notice: &str) 
     let end = pledges_phone_lines(
         &mut text,
         &controls,
-        (side, ey + 14.0, 27.0),
+        (side, ey + 4.0, 25.0),
         r#"font-size="20" class="mut""#,
     );
     b.push_str(&format!(
-        r#"<g class="lp-col" style="animation-delay:{delay:.2}s"><rect x="{:.1}" y="{:.1}" width="3" height="{:.1}" rx="1.5" fill="{}"/>{text}</g>"#,
-        side,
-        y + 56.0,
-        ny - 27.0 + 8.0 - (y + 56.0),
-        t.accent
+        r#"<g class="lp-col" style="animation-delay:{delay:.2}s">{text}</g>"#
     ));
-    let height = (end - 27.0 + 30.0) as u32;
-    let style = format!(".lp-col{{animation:lp-rise .7s cubic-bezier(.2,.8,.2,1) both}}.lp-bar{{transform-box:fill-box;transform-origin:50% 0;animation:lp-grow .9s cubic-bezier(.4,0,.2,1) both}}.lp-ic{{transform-box:fill-box;transform-origin:center;animation:lp-pop .5s cubic-bezier(.2,.8,.2,1) both}}@keyframes lp-rise{{from{{opacity:0;transform:translateY(18px)}}to{{opacity:1;transform:none}}}}@keyframes lp-grow{{from{{transform:scaleY(0)}}to{{transform:none}}}}@keyframes lp-pop{{from{{opacity:0;transform:scale(.3)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.lp-col,.lp-bar,.lp-ic{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
+    let height = (end - 25.0 + 22.0) as u32;
+    let style = format!(".lp-col{{animation:lp-rise .7s cubic-bezier(.2,.8,.2,1) both}}@keyframes lp-rise{{from{{opacity:0;transform:translateY(18px)}}to{{opacity:1;transform:none}}}}@media (prefers-reduced-motion:reduce){{.lp-col{{animation:none}}}}{}", RESULT_STYLE.replace("MUTED", t.muted));
     phone_card(
         dark,
         height,
@@ -5237,8 +5115,8 @@ fn license_phone_draw(dark: bool, columns: &[LicensePhoneColumn], notice: &str) 
         &b,
     )
 }
-/// The description of the license phone card: for the quotes of LICENSE the
-/// same words as the wide card's description.
+/// The description of the license phone card: the quotes it draws, in the
+/// words of the wide card's description.
 fn license_phone_text(columns: &[LicensePhoneColumn], notice: &str) -> String {
     let mut s = String::from(
         "GEL RAM Noncommercial Reciprocal License 1.0 at a glance, quoted from LICENSE.",
@@ -5257,7 +5135,8 @@ fn license_phone_of(dark: bool, license: &str) -> Result<String> {
     license_quotes(license)?;
     let columns: Vec<LicensePhoneColumn> = LICENSE_COLUMNS
         .iter()
-        .map(|(s, h, q)| (*s, *h, q.to_vec()))
+        .zip(LICENSE_PHONE_SHOWN)
+        .map(|((s, h, q), shown)| (*s, *h, shown.iter().map(|i| q[*i]).collect()))
         .collect();
     Ok(license_phone_draw(dark, &columns, LICENSE_NOTICE_QUOTE))
 }
@@ -5271,10 +5150,10 @@ fn license_phone(dark: bool) -> Result<String> {
 /// oblique face, the step from one block to the next and the top of the first.
 const CORE_PHONE_X: f64 = 104.0;
 const CORE_PHONE_W: f64 = 456.0;
-const CORE_PHONE_H: f64 = 100.0;
-const CORE_PHONE_D: f64 = 12.0;
-const CORE_PHONE_STEP: f64 = 116.0;
-const CORE_PHONE_TOP: f64 = 284.0;
+const CORE_PHONE_H: f64 = 78.0;
+const CORE_PHONE_D: f64 = 5.0;
+const CORE_PHONE_STEP: f64 = 84.0;
+const CORE_PHONE_TOP: f64 = 186.0;
 /// The two lines under the counts, the wide card's legend cut for a phone.
 const CORE_PHONE_LEGEND: [&str; 2] = ["Arrow A → B: B builds on A,", "as its Cargo.toml says"];
 /// A conservative width of a line: 0.62 × font size per character.
@@ -5315,23 +5194,23 @@ fn core_phone_layout(m: &CoreMap) -> CorePhoneLayout {
     let mut frame = None;
     if !alone.is_empty() {
         let f = if joined.is_empty() {
-            CORE_PHONE_TOP - 24.0
+            CORE_PHONE_TOP - 14.0
         } else {
-            bottom + 24.0
+            bottom + 14.0
         };
         for (k, &i) in alone.iter().enumerate() {
             row[i] = joined.len() + k;
-            top[i] = f + 62.0 + CORE_PHONE_STEP * k as f64;
+            top[i] = f + 44.0 + CORE_PHONE_STEP * k as f64;
             bottom = top[i] + CORE_PHONE_H;
         }
-        frame = Some((f, bottom + 16.0));
-        bottom += 16.0;
+        frame = Some((f, bottom + 12.0));
+        bottom += 12.0;
     }
     CorePhoneLayout {
         row,
         top,
         frame,
-        height: bottom + 30.0,
+        height: bottom + 18.0,
     }
 }
 /// Refuses a part or a count whose text would not fit its box on the phone card.
@@ -5339,11 +5218,14 @@ fn core_phone_check(m: &CoreMap) -> Result<()> {
     let (n, e) = (m.parts.len(), m.links.len());
     let deps = if e == 1 { "dependency" } else { "dependencies" };
     let room = CORE_PHONE_W - 38.0;
+    // A count and its word share a line: the first stops before the second starts.
+    let count = |v: usize, word: &str| {
+        core_phone_width(&v.to_string(), 52.0) + 10.0 + core_phone_width(word, 24.0)
+    };
+    if !core_phone_fits(count(n, "parts"), 190.0) || !core_phone_fits(count(e, deps), 312.0) {
+        return Err("the counts do not fit the phone core card".into());
+    }
     let mut lines: Vec<(String, f64, f64)> = vec![
-        (n.to_string(), 64.0, 240.0),
-        ("parts".to_string(), 24.0, 240.0),
-        (e.to_string(), 64.0, 240.0),
-        (deps.to_string(), 24.0, 260.0),
         (CORE_PHONE_LEGEND[0].to_string(), 20.0, 520.0),
         (CORE_PHONE_LEGEND[1].to_string(), 20.0, 520.0),
     ];
@@ -5351,7 +5233,7 @@ fn core_phone_check(m: &CoreMap) -> Result<()> {
         lines.push((p.tag[0].clone(), 20.0, room));
         lines.push((p.tag[1].clone(), 20.0, room));
         // The name and the crate share the first line of a block.
-        let both = core_phone_width(&p.name, 26.0) + 16.0 + core_phone_width(&p.krate, 20.0);
+        let both = core_phone_width(&p.name, 24.0) + 16.0 + core_phone_width(&p.krate, 20.0);
         if !core_phone_fits(both, room) {
             return Err(format!(
                 "{} and {} do not fit one line of a phone block",
@@ -5388,14 +5270,18 @@ fn core_phone_draw(dark: bool, m: &CoreMap) -> Result<String> {
     let enter = |row: usize| 0.45 + 0.16 * row as f64;
     let after = enter(n) + 0.5;
     let (x, w, h, d) = (CORE_PHONE_X, CORE_PHONE_W, CORE_PHONE_H, CORE_PHONE_D);
+    // Each count with its word beside it, on one line.
+    let beside = |x: f64, v: usize| x + core_phone_width(&v.to_string(), 52.0) + 10.0;
     let mut b = format!(
-        r#"<text class="kick" x="40" y="52">THE MEMORY CORE</text><g class="pn" style="animation-delay:.05s"><text x="40" y="128" font-size="64" class="big">{n}</text><text x="40" y="162" font-size="24" class="mut">parts</text></g><g class="pn" style="animation-delay:.2s"><text x="300" y="128" font-size="64" class="big">{e}</text><text x="300" y="162" font-size="24" class="mut">{deps}</text></g><text x="40" y="212" font-size="20" class="mut">{}</text><text x="40" y="240" font-size="20" class="mut">{}</text>"#,
+        r#"<text class="kick" x="40" y="44">THE MEMORY CORE</text><g class="pn" style="animation-delay:.05s"><text x="40" y="104" font-size="52" class="big">{n}</text><text x="{:.1}" y="104" font-size="24" class="mut">parts</text></g><g class="pn" style="animation-delay:.2s"><text x="240" y="104" font-size="52" class="big">{e}</text><text x="{:.1}" y="104" font-size="24" class="mut">{deps}</text></g><text x="40" y="140" font-size="20" class="mut">{}</text><text x="40" y="166" font-size="20" class="mut">{}</text>"#,
+        beside(40.0, n),
+        beside(240.0, e),
         xml(CORE_PHONE_LEGEND[0]),
         xml(CORE_PHONE_LEGEND[1])
     );
     if let Some((top, bottom)) = lay.frame {
         b.push_str(&format!(
-            r#"<g class="px" style="animation-delay:{:.2}s"><rect x="{:.1}" y="{top:.1}" width="{:.1}" height="{:.1}" rx="18" fill="{}" fill-opacity=".05" stroke="{}" stroke-width="2" stroke-dasharray="7 6"/><text x="{:.1}" y="{:.1}" font-size="22" class="b mut">stand alone</text></g>"#,
+            r#"<g class="px" style="animation-delay:{:.2}s"><rect x="{:.1}" y="{top:.1}" width="{:.1}" height="{:.1}" rx="16" fill="{}" fill-opacity=".05" stroke="{}" stroke-width="2" stroke-dasharray="7 6"/><text x="{:.1}" y="{:.1}" font-size="20" class="b mut">stand alone</text></g>"#,
             enter(n - m.alone().len()),
             x - 16.0,
             w + d + 28.0,
@@ -5403,29 +5289,29 @@ fn core_phone_draw(dark: bool, m: &CoreMap) -> Result<String> {
             t.accent,
             t.muted,
             x + 6.0,
-            top + 34.0
+            top + 28.0
         ));
     }
     for (i, p) in m.parts.iter().enumerate() {
         let y = lay.top[i];
         let hue = faces(p.hue);
         b.push_str(&format!(
-            r#"<g class="pb" style="animation-delay:{:.2}s">{}<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{face}" stroke="{}"/><rect x="{x}" y="{y}" width="8" height="{h}" fill="{}"/><text x="{:.1}" y="{:.1}" font-size="26" class="b">{}</text><text class="mono" x="{:.1}" y="{:.1}" font-size="20" text-anchor="end">{}</text><text x="{:.1}" y="{:.1}" font-size="20">{}</text><text x="{:.1}" y="{:.1}" font-size="20">{}</text></g>"#,
+            r#"<g class="pb" style="animation-delay:{:.2}s">{}<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{face}" stroke="{}"/><rect x="{x}" y="{y}" width="8" height="{h}" fill="{}"/><text x="{:.1}" y="{:.1}" font-size="24" class="b">{}</text><text class="mono" x="{:.1}" y="{:.1}" font-size="20" text-anchor="end">{}</text><text x="{:.1}" y="{:.1}" font-size="20">{}</text><text x="{:.1}" y="{:.1}" font-size="20">{}</text></g>"#,
             enter(lay.row[i]),
             oblique(x, y, (w, h, d), [hue[0], face, hue[2]]),
             t.line,
             hue[1],
             x + 22.0,
-            y + 36.0,
+            y + 25.0,
             xml(&p.name),
             x + w - 16.0,
-            y + 36.0,
+            y + 25.0,
             xml(&p.krate),
             x + 22.0,
-            y + 66.0,
+            y + 49.0,
             xml(&p.tag[0]),
             x + 22.0,
-            y + 90.0,
+            y + 71.0,
             xml(&p.tag[1])
         ));
     }
@@ -11216,6 +11102,8 @@ mod tests {
             let width = text.chars().count() as f64 * (0.62 * size + spacing) / 0.92;
             let (l, r) = if attrs.contains(r#"text-anchor="middle""#) {
                 (x - width / 2.0, x + width / 2.0)
+            } else if attrs.contains(r#"text-anchor="end""#) {
+                (x - width, x)
             } else {
                 assert!(!attrs.contains("text-anchor"), "{attrs}");
                 (x, x + width)
@@ -11293,7 +11181,7 @@ mod tests {
                 let tall = if name == "header" {
                     560.0..=820.0
                 } else {
-                    700.0..=1400.0
+                    500.0..=1050.0
                 };
                 assert!(tall.contains(&h), "{name}: {h}");
             }
@@ -11370,13 +11258,29 @@ mod tests {
             for (heading, _, items) in STATUS_COLUMNS {
                 wants.push(heading.to_string());
                 for item in items {
-                    wants.extend(wrap(item, 28));
+                    wants.extend(wrap(item, STATUS_PHONE_WRAP));
                 }
             }
             wants.extend(STATUS_FEET.map(str::to_string));
             wants.extend(STATUS_PLEDGE.map(str::to_string));
             for want in wants {
                 assert!(s.contains(&format!(">{}<", xml(&want))), "{want}");
+            }
+            // Each foot stands on its heading's line, at the far end, clear of it.
+            let lines = header_phone_spans(&s);
+            let line = |words: &str| lines.iter().position(|t| t.0 == words).unwrap();
+            let y_of = |words: &str| {
+                let at = s.find(&format!(">{words}<")).unwrap();
+                let tag = s[..at].rsplit("<text").next().unwrap();
+                let y = tag.split_once(" y=\"").unwrap().1;
+                y.split('"').next().unwrap().parse::<f64>().unwrap()
+            };
+            for (heading, foot) in [
+                (STATUS_COLUMNS[0].0, STATUS_FEET[0]),
+                (STATUS_COLUMNS[2].0, STATUS_FEET[1]),
+            ] {
+                assert_eq!(y_of(heading), y_of(foot), "{foot}");
+                assert!(lines[line(heading)].2 <= lines[line(foot)].1, "{foot}");
             }
             assert!(s.contains(&xml(&status_alt().unwrap())));
             // One block per column, in order, each with its icon drawn in.
@@ -11998,7 +11902,7 @@ mod tests {
                     "{name}"
                 );
                 let h = terminal_phone_height(&s);
-                assert!((600.0..=1500.0).contains(&h), "{name}: {h}");
+                assert!((500.0..=1050.0).contains(&h), "{name}: {h}");
                 // Only the passing reading window and the typing cover are hidden
                 // by a base rule; every class that moves stops with reduced motion.
                 let css = s
@@ -12199,7 +12103,8 @@ mod tests {
             let s = record_phone(dark).unwrap();
             for want in [
                 format!(">{ok} of {n}<"),
-                ">recorded runs end with<".to_string(),
+                ">recorded runs<".to_string(),
+                ">end with<".to_string(),
                 format!(">{} B<", grouped(frames)),
                 ">reference layout<".to_string(),
                 ">used for checking<".to_string(),
@@ -12213,15 +12118,19 @@ mod tests {
                 assert!(s.contains(&format!(">view {i}<")));
             }
             assert!(!s.contains("view 5"));
-            assert_eq!(s.matches(">score = copy's score<").count(), 4);
+            // Every view has its check; what the check means is said once.
+            assert_eq!(s.matches("l4 4 8-8").count(), 4);
+            assert_eq!(s.matches(">score = copy's score<").count(), 1);
             // The verdict comes first, then the views, then the layout.
             let at = |needle: &str| s.find(needle).unwrap();
             assert!(at(">Q8_QUAD_EXACT=PASS<") < at(">view 1<"));
-            assert!(at(">view 4<") < at(">reference layout<"));
+            assert!(at(">view 4<") < at(">score = copy's score<"));
+            assert!(at(">score = copy's score<") < at(">reference layout<"));
             let texts = terminal_phone_texts(&s);
             let limits: Vec<String> = texts
                 .iter()
-                .filter(|t| t.1 > 780.0)
+                .skip_while(|t| t.5 != "used for checking")
+                .skip(1)
                 .map(|t| t.5.clone())
                 .collect();
             assert_eq!(
@@ -12263,6 +12172,18 @@ mod tests {
         for stale in ["48 of 48", "8,192 B"] {
             assert!(!s.contains(stale), "{stale}");
         }
+        // A count too wide to share its line puts the words under it.
+        let wide = Q8Runs {
+            n: 1000,
+            ok: 1000,
+            ..other
+        };
+        let s = record_phone_draw(false, &wide).unwrap();
+        terminal_phone_inside(&s);
+        let texts = terminal_phone_texts(&s);
+        let y_of = |w: &str| texts.iter().find(|t| t.5 == w).unwrap().1;
+        assert!(y_of("recorded runs") > y_of("1000 of 1000"));
+        assert!(y_of("end with") < y_of("Q8_QUAD_EXACT=PASS") - 20.0);
     }
     #[test]
     fn flow_phone_card_says_what_the_flow_card_says() {
@@ -12303,6 +12224,12 @@ mod tests {
                 assert!(all.contains(words.as_str()), "{words}");
             }
             assert!(texts.iter().any(|t| t == "PASS") && texts.iter().any(|t| t == "REFUSED"));
+            // A verdict shares its name's line; the verdicts stand in one column.
+            let drawn = terminal_phone_texts(&s);
+            let of = |w: &str| drawn.iter().find(|t| t.5 == w).unwrap();
+            assert_eq!(of("PASS").1, of("Reopened").1);
+            assert_eq!(of("REFUSED").1, of("1 byte changed").1);
+            assert_eq!(of("PASS").0, of("REFUSED").0);
             for want in [
                 "Drawn, not recorded",
                 "not a timing measurement",
@@ -12543,8 +12470,34 @@ mod tests {
             " The output digests, not the timings, are the claim. ".to_string(),
             " Not pinned to cores. ".to_string(),
             format!(" B: main at {SPEED_B} "),
+            " set 2026-10-20-against-v0.6.1 ".to_string(),
+            " Cases are grouped by timing program. Per-case results: docs/speed-results "
+                .to_string(),
         ] {
             assert!(said.contains(&want), "{want} not in {said}");
+        }
+        // The gains of the SHA-256 program read a second way, from its lines.
+        // Two digits each: the same rounding as the wide card's description.
+        let summary = fs::read_to_string(format!("{SPEED_DIR}/speed_sha256/summary.txt")).unwrap();
+        let gains: Vec<String> = summary
+            .lines()
+            .filter(|l| l.starts_with("SPEED_AB case="))
+            .map(|l| l.split(" gain=").nth(1).unwrap().split(' ').next().unwrap())
+            .map(|g| format!("{:.2}", g.parse::<f64>().unwrap()))
+            .collect();
+        let sha = format!(
+            " SHA-256 alone at {}: v0.6.1 time divided by the new time. ",
+            gains.join(" and ")
+        );
+        assert!(said.contains(&sha), "{sha} not in {said}");
+        let desc = svg.split_once("<desc id=\"d\">").unwrap().1;
+        let desc = desc.split_once("</desc>").unwrap().0;
+        for want in [
+            "timing set 2026-10-20-against-v0.6.1",
+            "Cases are grouped by timing program; per-case results are in docs/speed-results/2026-10-20-against-v0.6.1.",
+            sha.trim(),
+        ] {
+            assert!(desc.contains(want), "{want} not in {desc}");
         }
         // Each differing digest with its reason, read a second way: the set
         // README's sentence on that program, from "because" to its full stop.
@@ -12571,11 +12524,31 @@ mod tests {
         assert_eq!(differ, timed - same);
         assert!(differ > 0 && said.contains(" same output digest in A, A2 and B 1 differs: "));
         assert_eq!(said.matches(" 1 differs").count(), differ);
-        // One median mark per timed program, and the machine as the set states it.
-        assert_eq!(svg.matches(r#"<circle class="sph-p""#).count(), timed);
+        // The machine and the load as the set states them, then the limit.
         let set = SpeedSet::read().unwrap();
-        let machine = said.split(" Machine: ").nth(1).unwrap();
-        assert!(machine.starts_with(&set.machine), "{machine}");
+        let run = format!(
+            " Machine: {}. Load: {}. Not pinned to cores. ",
+            set.machine, set.load
+        );
+        assert!(said.contains(&run), "{run} not in {said}");
+        // The rows are the wide card's: neither the picture nor its description
+        // speaks of them.
+        for rows in ["One row", "one row", "log scale", "median"] {
+            assert!(!svg.contains(rows), "{rows}");
+        }
+        assert!(svg.contains(&xml(&speed_phone_text(&set))));
+    }
+    /// The widths of the segments of the speed card's bar, by fill.
+    fn speed_phone_bar(svg: &str, fill: &str) -> Vec<f64> {
+        svg.split("<rect ")
+            .skip(1)
+            .map(|r| r.split("/>").next().unwrap())
+            .filter(|r| r.contains(&format!("fill=\"{fill}\"")) && r.contains("height=\"36\""))
+            .map(|r| {
+                let w = r.split_once("width=\"").unwrap().1;
+                w.split('"').next().unwrap().parse().unwrap()
+            })
+            .collect()
     }
     fn speed_phone_case(name: &str, aa: f64, gain: f64) -> SpeedCase {
         SpeedCase {
@@ -12636,25 +12609,20 @@ mod tests {
                 " 3 faster 1 inside 2 slower ",
                 " 2 of 3 same output digest ",
                 " 2 not built in v0.6.1: no timing. ",
-                " Machine: Box 7 ",
-                " Load: light ",
+                " Machine: Box 7. Load: light. Not pinned to cores. ",
             ] {
                 assert!(said.contains(want), "{want} not in {said}");
             }
             // q differs and has no note: the card says so and gives no reason.
-            assert!(said.contains(" same output digest in A, A2 and B 1 differs One row "));
-            assert_eq!(svg.matches(r#"<circle class="sph-p""#).count(), 3);
-            // p only above 1, q only below 1: one span each; o, one case, none.
-            assert_eq!(svg.matches(r#"<rect class="sph-o""#).count(), 2);
+            assert!(said.contains(" same output digest in A, A2 and B 1 differs 2 not built "));
+            // One bar of the six cases: each side as wide as its count.
             let t = theme(dark);
-            let spans: Vec<&str> = svg
-                .split(r#"<rect class="sph-o""#)
-                .skip(1)
-                .map(|s| s.split("/>").next().unwrap())
-                .collect();
-            for fill in [t.red[1], t.blue[1]] {
-                let n = spans.iter().filter(|s| s.contains(fill)).count();
-                assert_eq!(n, 1, "{fill}");
+            for (fill, n) in [
+                (t.blue[1], 3.0),
+                (speed_phone_grey(dark), 1.0),
+                (t.red[1], 2.0),
+            ] {
+                assert_eq!(speed_phone_bar(&svg, fill), [90.0 * n], "{fill}");
             }
         }
         // With the README's note, its reason follows; the program is not named.
@@ -12665,11 +12633,26 @@ mod tests {
         let said = speed_phone_said(&svg);
         assert!(
             said.contains(
-                " same output digest in A, A2 and B 1 differs: it reads the clock. One row "
+                " same output digest in A, A2 and B 1 differs: it reads the clock. 2 not built "
             ),
             "{said}"
         );
         assert!(!said.contains("DIFFERENT_OUTPUT"));
+        // No SHA-256 program, no sentence; with one, the numbers it is given.
+        assert!(!said.contains("SHA-256"));
+        s.examples.push(example(
+            "speed_sha256",
+            vec![
+                speed_phone_case("x", 1.01, 0.51),
+                speed_phone_case("y", 1.01, 0.62),
+            ],
+            true,
+        ));
+        let svg = speed_phone_draw(false, &s);
+        speed_phone_fits(&svg);
+        let sha = " SHA-256 alone at 0.51 and 0.62: v0.6.1 time divided by the new time. ";
+        assert!(speed_phone_said(&svg).contains(sha));
+        assert!(svg.contains(sha.trim()));
     }
     /// The recorded set and its re-run read a second way: case by case from
     /// the printed lines, keyed by program and case.
@@ -12739,6 +12722,7 @@ mod tests {
         for want in [
             format!(" RE-RUN · {d0} → {d1} "),
             format!(" The same {cases} cases timed twice against v0.6.1 "),
+            " each case against its own A/A band ".to_string(),
             format!(" {again} of {} faster again ", s0[0]),
             format!(" faster inside slower {d0} {} {} {} ", s0[0], s0[1], s0[2]),
             format!(" {d1} {} {} {} ", s1[0], s1[1], s1[2]),
@@ -12951,6 +12935,29 @@ mod tests {
             assert_eq!(svg.matches(r#"<g class="wph-u""#).count(), 9);
         }
     }
+    #[test]
+    fn a_linux_only_test_in_the_property_map_is_refused() {
+        let rows = vec![("P1".to_string(), vec!["mapped".to_string()])];
+        // Unix tests come back; a Linux test outside the map is left out, as
+        // the cards draw only Windows cells as exempt.
+        let list = r#"("mapped", "unix", "why"), ("free", "linux", "why")"#;
+        assert_eq!(evidence_exclusions(list, &rows).unwrap(), ["mapped"]);
+        // In the map, its macOS cell would be drawn as required.
+        let list = r#"("free", "unix", "why"), ("mapped", "linux", "why")"#;
+        let e = evidence_exclusions(list, &rows).unwrap_err().to_string();
+        assert!(e.contains("mapped runs on Linux only"), "{e}");
+        // What the list says today passes: the cards draw it as it is.
+        Evidence::read().unwrap();
+        // A list of another shape is refused.
+        for bad in [
+            r#"("t", "unix")"#,
+            r#"("t", "windows", "why")"#,
+            r#"("a b", "unix", "why")"#,
+            r#"("", "linux", "why")"#,
+        ] {
+            assert!(evidence_exclusions(bad, &rows).is_err(), "{bad}");
+        }
+    }
     // ===== PHONE TEST a3 END =====
 
     // ===== PHONE TEST a4 BEGIN =====
@@ -13130,19 +13137,15 @@ mod tests {
             .collect();
         assert!(!rows.is_empty());
         assert_eq!(commitments().unwrap(), rows.len());
-        let mut dates: Vec<&str> = rows.iter().map(|r| r[1].as_str()).collect();
-        dates.dedup();
         for dark in [false, true] {
             let s = pledges_phone(dark).unwrap();
             pledges_phone_common(&s);
+            // One compact row per commitment: name, hash, date, counts, no more.
             assert_eq!(s.matches(r#"<g class="pp-cd""#).count(), rows.len());
-            assert_eq!(s.matches(r#"<g class="pp-lk""#).count(), rows.len());
-            // A numbered dot per date, a small one per further commitment of it.
-            assert_eq!(s.matches(r#"<g class="pp-dt""#).count(), dates.len());
-            assert_eq!(
-                s.matches(r#"<circle class="pp-dt""#).count(),
-                rows.len() - dates.len()
-            );
+            for row in s.split(r#"<g class="pp-cd""#).skip(1) {
+                let row = row.split("</g>").next().unwrap();
+                assert_eq!(row.matches("<text ").count(), 4, "{row}");
+            }
             assert!(s.contains(&format!(">{}</text><text", rows.len())));
             assert!(s.contains(&format!(">{} → {}<", rows[0][1], rows[rows.len() - 1][1])));
             for r in &rows {
@@ -13209,14 +13212,12 @@ mod tests {
             let s = pledges_phone_draw(dark, &p).unwrap();
             pledges_phone_common(&s);
             assert_eq!(s.matches(r#"<g class="pp-cd""#).count(), 3);
-            assert_eq!(s.matches(r#"<g class="pp-dt""#).count(), 2);
             for want in [
                 ">3</text><text",
                 ">commitments<",
                 ">2027-03-01 → 2027-04-15<",
                 ">03-01<",
                 ">04-15<",
-                ">2</text>",
                 ">Hand set &amp; co<",
                 ">Second<",
                 ">1 file · 23,456 directories<",
@@ -13291,7 +13292,6 @@ mod tests {
                 format!(">{}<", rows.len()),
                 format!(">{}<", grouped(acknowledged)),
                 format!(">{partial}<"),
-                format!(">{mid}<"),
                 format!(">killed mid-publication ({mid})<"),
                 format!(">killed between saves ({})<", rows.len() - mid),
                 ">not a power cut:<".to_string(),
@@ -13393,13 +13393,42 @@ mod tests {
         let folded = license.split_whitespace().collect::<Vec<_>>().join(" ");
         let quotes = license_quotes(&license).unwrap();
         assert_eq!(quotes.len(), 7);
+        // The quotes of each subject and the notice, in the wide card's order.
+        let shown: Vec<&str> = LICENSE_COLUMNS
+            .iter()
+            .zip(LICENSE_PHONE_SHOWN)
+            .flat_map(|(c, picked)| picked.iter().map(|i| c.2[*i]))
+            .chain([LICENSE_NOTICE_QUOTE])
+            .collect();
+        assert_eq!(shown.len(), LICENSE_COLUMNS.len() + 2);
+        // What the public terms give, who may evaluate and within what limit,
+        // what money needs. The right to evaluate is never drawn without its
+        // limit: this sentence is typed here, not taken from the list.
+        let limit = "in a non-production environment solely to assess, learn about, validate, or decide whether to obtain commercial rights.";
+        assert!(folded.contains(limit));
+        assert!(shown[0].ends_with("share the Software for Noncommercial Purposes."));
+        assert!(shown[1].starts_with("Any person or organization may evaluate"));
+        assert!(shown[3].starts_with("Before beginning a Monetized Use"));
         for dark in [false, true] {
             let s = license_phone(dark).unwrap();
             pledges_phone_common(&s);
             let drawn = license_phone_drawn(&s);
-            assert_eq!(drawn, quotes);
-            // The description says what the wide card's says.
-            assert!(s.contains(&format!("<desc id=\"d\">{}</desc>", xml(&license_text()))));
+            assert_eq!(drawn, shown);
+            let at = |q: &str| drawn.iter().position(|d| d == q);
+            assert_eq!(
+                at(limit).unwrap(),
+                at(shown[1]).unwrap() + 1,
+                "the limit follows the right it limits"
+            );
+            // The description says what the card draws, in the wide card's words.
+            let wide = xml(&license_text());
+            let desc = s.split_once("<desc id=\"d\">").unwrap().1;
+            let desc = desc.split_once("</desc>").unwrap().0;
+            for q in &quotes {
+                assert!(wide.contains(&xml(q)), "{q}");
+                assert_eq!(desc.contains(&xml(q)), shown.contains(q), "{q}");
+            }
+            assert!(desc.contains("A summary adds no rights; LICENSE controls (section 17)."));
             for q in &drawn {
                 assert!(folded.contains(q.as_str()), "{q}");
             }
@@ -13641,6 +13670,7 @@ mod tests {
             let s = core_phone(dark).unwrap();
             let texts = core_phone_texts(&s);
             assert!(texts.len() > 20);
+            let mut counts = 0;
             for t in &texts {
                 let (l, r) = core_phone_extent(t);
                 assert!(l >= 16.0 && r <= right, "{} at {l:.0}..{r:.0}", t.5);
@@ -13649,11 +13679,13 @@ mod tests {
                 if t.0 >= CORE_PHONE_X + 16.0 {
                     assert!(l >= block.0 && r <= block.1, "{} leaves its block", t.5);
                 }
-                // The first column of counts ends before the second begins.
-                if t.0 == 40.0 && (t.2 == 64.0 || t.2 == 24.0) {
-                    assert!(r <= 290.0, "{}", t.5);
+                // The first count and its word end before the second begin.
+                if t.1 == 104.0 && t.0 < 240.0 {
+                    counts += 1;
+                    assert!(r <= 240.0, "{}", t.5);
                 }
             }
+            assert_eq!(counts, 2);
             // The name and the crate of a block share a line without meeting.
             let mut shared = 0;
             for a in texts.iter().filter(|t| !t.4 && t.0 > CORE_PHONE_X) {
@@ -13677,6 +13709,157 @@ mod tests {
         let mut tag = core_phone_mutant();
         tag.parts[2].tag[1] = "a tag line that runs on and on and on".to_string();
         assert!(core_phone_draw(true, &tag).is_err());
+        // Counts too wide for their line are refused too.
+        let mut many = core_phone_mutant();
+        while many.parts.len() < 100 {
+            many.parts.push(core_phone_mutant().parts.remove(0));
+        }
+        let e = core_phone_draw(true, &many).unwrap_err().to_string();
+        assert!(e.contains("the counts do not fit"), "{e}");
+    }
+    /// The tallest a phone card may be, except the q8 card, and the most the
+    /// fourteen may add up to: about ten phone screens together. Both hold at
+    /// the commitments and properties counted below; more of those grow the
+    /// cards that list them, and each limit by exactly that.
+    const PHONE_MOST_TALL: f64 = 1180.0;
+    const PHONE_MOST_SUM: f64 = 10_800.0;
+    const PHONE_BASE_COMMITMENTS: usize = 9;
+    const PHONE_BASE_PROPERTIES: usize = 40;
+    /// One phone card: its name, its height, and how much of that the data
+    /// beyond the base counts adds.
+    type PhoneHeight = (&'static str, f64, f64);
+    /// The height a drawn phone card states. The view box must say the same.
+    fn phone_height(name: &str, s: &str) -> f64 {
+        let root = s.split_once('>').unwrap().0;
+        let word = |key: &str| root.split_once(key).unwrap().1.split('"').next().unwrap();
+        let (tall, view) = (word(" height=\""), word(" viewBox=\"0 0 600 "));
+        assert_eq!(tall, view, "{name}");
+        tall.parse().unwrap()
+    }
+    /// Every phone card but q8 in one theme, the two that grow with data drawn
+    /// from `p` and `e` and again from their first rows up to the base counts.
+    fn phone_heights_of(dark: bool, p: &Pledges, e: &Evidence) -> Vec<PhoneHeight> {
+        let base_p = Pledges {
+            rows: p.rows[..p.rows.len().min(PHONE_BASE_COMMITMENTS)].to_vec(),
+            ..p.clone()
+        };
+        let base_e = Evidence {
+            rows: e.rows[..e.rows.len().min(PHONE_BASE_PROPERTIES)].to_vec(),
+            unix_only: e.unix_only.clone(),
+            formats: Vec::new(),
+        };
+        let out: Vec<PhoneHeight> = PHONES
+            .iter()
+            .filter(|c| c.0 != "q8")
+            .map(|(name, draw)| {
+                let (now, base) = match *name {
+                    "pledges" => (
+                        pledges_phone_draw(dark, p).unwrap(),
+                        pledges_phone_draw(dark, &base_p).unwrap(),
+                    ),
+                    "wall" => (wall_phone_draw(dark, e), wall_phone_draw(dark, &base_e)),
+                    _ => {
+                        let s = draw(dark).unwrap();
+                        (s.clone(), s)
+                    }
+                };
+                let tall = phone_height(name, &now);
+                (*name, tall, tall - phone_height(name, &base))
+            })
+            .collect();
+        assert_eq!(out.len(), 14);
+        out
+    }
+    /// The tallest cards first, for the message of a limit that is passed.
+    fn phone_largest(cards: &[PhoneHeight]) -> String {
+        let mut by_height = cards.to_vec();
+        by_height.sort_by(|a, b| b.1.total_cmp(&a.1));
+        let top: Vec<String> = by_height
+            .iter()
+            .take(5)
+            .map(|c| format!("{} {}", c.0, c.1))
+            .collect();
+        top.join(", ")
+    }
+    fn phone_tall_check(cards: &[PhoneHeight]) -> std::result::Result<(), String> {
+        match cards.iter().find(|c| c.1 > PHONE_MOST_TALL + c.2) {
+            Some(c) => Err(format!(
+                "{} is {} tall, more than {PHONE_MOST_TALL} + {} for its data",
+                c.0, c.1, c.2
+            )),
+            None => Ok(()),
+        }
+    }
+    fn phone_sum_check(cards: &[PhoneHeight]) -> std::result::Result<(), String> {
+        let sum: f64 = cards.iter().map(|c| c.1).sum();
+        let grown: f64 = cards.iter().map(|c| c.2).sum();
+        if sum > PHONE_MOST_SUM + grown {
+            return Err(format!(
+                "the cards add up to {sum}, more than {PHONE_MOST_SUM} + {grown} for their data; largest: {}",
+                phone_largest(cards)
+            ));
+        }
+        Ok(())
+    }
+    fn phone_heights(dark: bool) -> Vec<PhoneHeight> {
+        phone_heights_of(dark, &Pledges::read().unwrap(), &Evidence::read().unwrap())
+    }
+    #[test]
+    fn no_phone_card_but_q8_is_taller_than_its_limit() {
+        for dark in [false, true] {
+            phone_tall_check(&phone_heights(dark)).unwrap();
+        }
+    }
+    #[test]
+    fn the_fourteen_phone_cards_stay_within_their_sum() {
+        for dark in [false, true] {
+            phone_sum_check(&phone_heights(dark)).unwrap();
+        }
+    }
+    #[test]
+    fn the_height_limits_follow_the_data_and_not_a_taller_card() {
+        let (p, e) = (Pledges::read().unwrap(), Evidence::read().unwrap());
+        let mut more_p = p.clone();
+        for _ in 0..12 {
+            more_p.rows.push(p.rows[0].clone());
+        }
+        let mut more_e = Evidence {
+            rows: e.rows.clone(),
+            unix_only: e.unix_only.clone(),
+            formats: Vec::new(),
+        };
+        for _ in 0..60 {
+            more_e.rows.push(e.rows[0].clone());
+        }
+        for dark in [false, true] {
+            let cards = phone_heights_of(dark, &p, &e);
+            // New commitments and properties grow their cards past the plain
+            // limits, and no code changes: the limits grow with them.
+            let grown = phone_heights_of(dark, &more_p, &more_e);
+            let sum = |c: &[PhoneHeight]| c.iter().map(|h| h.1).sum::<f64>();
+            assert!(sum(&grown) > PHONE_MOST_SUM && sum(&grown) > sum(&cards));
+            assert!(grown
+                .iter()
+                .any(|c| c.1 > PHONE_MOST_TALL && c.0 == "pledges"));
+            phone_tall_check(&grown).unwrap();
+            phone_sum_check(&grown).unwrap();
+            // Only what the data adds: all other cards keep their heights.
+            for (now, then) in grown.iter().zip(&cards) {
+                let listed = matches!(now.0, "pledges" | "wall");
+                assert_eq!(now.1 > then.1, listed, "{}", now.0);
+                assert_eq!(now.2 > then.2, listed, "{}", now.0);
+            }
+            // A card that merely got taller has no data to show for it.
+            let over = PHONE_MOST_SUM + cards.iter().map(|c| c.2).sum::<f64>() - sum(&cards);
+            let mut taller = cards.clone();
+            taller[0].1 += over + 1.0;
+            let message = phone_sum_check(&taller).unwrap_err();
+            assert!(message.contains(&phone_largest(&taller)), "{message}");
+            assert!(message.contains("largest: "), "{message}");
+            let mut taller = cards.clone();
+            taller[0].1 = PHONE_MOST_TALL + taller[0].2 + 1.0;
+            assert!(phone_tall_check(&taller).is_err());
+        }
     }
     /// The numbers of the badges counted a second way from the files: the
     /// drawn values in the order of the row, and the views, the passing runs

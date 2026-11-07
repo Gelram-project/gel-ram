@@ -162,7 +162,7 @@ Private files, hashed now; checkable once the owner hands them over. A hash show
 
 <details><summary>What a commitment shows, and what it does not</summary>
 
-A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of every file in a private directory; the files can be handed over later and checked with `xtask commitment-check`.
+A [commitment](docs/COMMITMENTS.md) publishes now the SHA-256 of a manifest of a private directory; the files can be handed over later and checked with `xtask commitment-check`.
 It shows the files existed and did not change, not that they are correct. The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.
 
 </details>

@@ -48,9 +48,11 @@ last snapshot:
 | 200 | 2,683 | **0** | **0** | 200 | 153 | 2.3 / 4.5 / 4.5 ms |
 
 The reopen times were measured while gel-source hashed with the RustCrypto sha2
-crate. Its own SHA-256 now hashes about 6.3 times slower on the author's machine
-([source readout](SOURCE-READOUT.md)), so a new series would measure longer
-reopen times; the counts of lost and partial snapshots do not depend on it.
+crate. Its own SHA-256 ran at 0.28 and 0.39 of the speed of v0.6.1, which used
+that crate, on 2026-10-20, 0.26 and 0.35 in the re-run of 2026-11-04, on the
+author's machine ([speed set](speed-results/2026-10-20-against-v0.6.1/speed_sha256/summary.txt), [re-run](speed-results/2026-11-04-reruns/rerun-2026-10-20-against-v0.6.1/speed_sha256/summary.txt)), so a new series
+would measure longer reopen times; the counts of lost and partial snapshots do
+not depend on it.
 
 In 151 trials a temporary file was left, and in 74 a complete snapshot existed
 that had not been acknowledged; none was partial. 28 kills came after the last
@@ -130,6 +132,8 @@ the same.
 - The limits above hold here too: a process kill, not a power cut, and one file
   system and one machine per report. Power-loss durability of the history file
   stays `NOT_ESTABLISHED` in the [claim registry](CLAIMS.md).
-- One writer per file: two processes saving the same path are not tested.
+- One writer per file: this series does not race two processes on one path.
+  That is tested apart from it, without a kill, under
+  [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes).
 - The writer runs in the build of xtask that `cargo run` makes; the reopen times
   in a report are for that build.

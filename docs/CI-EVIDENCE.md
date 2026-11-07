@@ -19,12 +19,12 @@ Files:
   sums of cargo's `test result:` lines — passed, failed, ignored, filtered out —
   plus `unlisted_executions` (executions whose names are not projected, such as
   path-bearing doctests). Then one `PLATFORM_EXCLUSION` line per whole test that
-  is compiled only on Unix and one `PARTIAL_PLATFORM_BRANCH` line per test with
+  is compiled only on Unix or only on Linux and one `PARTIAL_PLATFORM_BRANCH` line per test with
   an extra platform-only assertion block; its branch field says whether that
   block was active on the recording platform (active or inactive). Then one
   `PROPERTY` line per row of the [property-to-test map](PROPERTY-TESTS.md) and a
   `PROPERTY_MAP=CHECKED` total; a mapped test that did not run and pass exactly
-  once, other than a declared Unix-only test elsewhere, withholds COMPLETE.
+  once, other than a declared platform-only test elsewhere, withholds COMPLETE.
 - TESTS.txt (generated): strict ASCII test identifiers and their standard statuses.
 - SHA256SUMS.txt (generated): checksums of those two files.
 - `COMPLETE`: emitted only after all commands and evidence writes succeed.
@@ -51,8 +51,9 @@ Failed checks also print the sanitized report; they still never emit COMPLETE.
 Raw stdout/stderr, environment variables, compiler diagnostics and filesystem
 paths are not copied. Test-name projection admits only ASCII letters, digits,
 underscore and colon; only `ok`, `FAILED` and `ignored` statuses are accepted.
-Tests with other output formats (including path-bearing doctest names) are not
-listed; their command exit status still applies. Repeated names remain repeated
+Tests with other output formats (including path-bearing doctest names and an
+ignored test that prints its reason) are not listed but are counted in
+`unlisted_executions`; their command exit status still applies. Repeated names remain repeated
 executions, not distinct scientific experiments.
 
 No untrusted output is interpreted as a command. A successful process exit is
@@ -61,24 +62,42 @@ not author authentication or proof of truth. Failure prevents COMPLETE.
 
 ## Platform exclusions
 
-Seven whole tests are compiled only on Unix: two SIGKILL process tests, three
-symlink tests and two permission-bit tests. They are declared in the collector.
-On Linux/macOS each must appear exactly once in the debug workspace pass as
-`ok` (`here=RAN_PASSED`); on Windows each must be absent
+Twenty-three whole tests are platform-only. Nineteen are compiled only on Unix:
+three SIGKILL process tests, eight symlink tests, one FIFO test, four
+permission-bit tests and three that race processes on a file replaced by rename.
+Four are compiled only on Linux: three read a procfs file that reports length zero,
+and one runs `xtask memory-run`, which reads `/proc`.
+They are declared in the collector with their condition. Where the condition
+holds each must appear exactly once in the debug workspace pass as `ok`
+(`here=RAN_PASSED`); elsewhere each must be absent
 (`here=EXCLUDED_NOT_COUNTED`). Any other combination — missing, repeated,
 ignored, or present where excluded — fails the report, so a stale declaration
-cannot pass and an exclusion is never counted as a Windows success. Three tests
-that run everywhere but contain an extra Unix- or Linux-only assertion block
-must run and pass once on every platform (`PARTIAL_PLATFORM_BRANCH … here=RAN_PASSED`).
+cannot pass and an exclusion is never counted as a success elsewhere. Three named
+tests that run everywhere but contain an extra Unix- or Linux-only assertion block
+must run and pass once on every platform (`PARTIAL_PLATFORM_BRANCH … here=RAN_PASSED`);
+this list is not complete, and other tests hold such a block without being listed.
 Platform reports are separate; do not add them into one number of unique tests.
 
 Reports for selected commits are kept in [evidence-ci](evidence-ci/README.md),
-because Actions runs, logs and artifacts expire.
+because Actions runs, logs and artifacts expire. `xtask ci-evidence-import`
+rebuilds them from a job log and `xtask ci-evidence-recorded`, part of `verify`,
+checks them; a report altered, a platform file missing or an unlisted file fails
+it. They are sanitized reports of hosted CI runs of one revision each; hosted CI
+is not an independent second host.
 
 A single job cannot see a test that another platform never compiled, so the
-per-job check alone cannot find an undeclared Unix-only test. Compare two
-reports' test lists (for example the TESTS.txt of a Linux and a Windows run of
-the same commit, or the same lines printed in their CI logs):
+per-job check alone cannot find an undeclared platform-only test, and no CI job
+compares two platforms. A unit test of xtask therefore reads the workspace's Rust
+sources on every platform: a test under a platform `cfg`, on the test, on an
+enclosing module or at the head of its file, must be declared with that
+condition, and a declared test must stand under it. So a platform-only test is
+found when it is added. It reads source text only: it does not see a test made by
+a macro, a platform-only block inside a test that runs everywhere, or a check of
+the platform at run time, and it says nothing about what ran.
+
+The comparison of two platforms runs when a revision is recorded. Compare two
+reports' test lists (for example the TESTS.txt of a Linux and a Windows run
+of the same commit, or the same lines printed in their CI logs):
 
 ```sh
 cargo run --locked --offline -p xtask -- platform-diff UNIX_TESTS.txt WINDOWS_TESTS.txt UNIX_REPORT.txt WINDOWS_REPORT.txt
@@ -86,9 +105,13 @@ cargo run --locked --offline -p xtask -- platform-diff UNIX_TESTS.txt WINDOWS_TE
 
 It fails unless the tests passing on Unix but not on Windows are exactly the
 declared exclusions (each run exactly once on Unix) and nothing passes on
-Windows only. Every line must be a projected test line of a known case. With
-the two REPORT files it also requires one commit and a Unix and a Windows
-host. Test names are not
+Windows only. A Linux-only test may not appear in a macOS list. Every line must
+be a projected test line of a known case; an ignored line is accepted only for
+the five declared child-process helpers, and each must be ignored equally on both sides.
+With the two REPORT files it also requires one commit and a Unix and a Windows
+host, and takes the first report's OS; a test declared after that revision, so
+not named in that report, may be missing from an older list but still may not
+run on Windows. Without them the first list is taken as Linux. Test names are not
 qualified by crate; each declared name is currently defined once.
 
 ## Native command sequencing

@@ -12,7 +12,9 @@ gel-history = { path = "../crates/gel-history" }
 gel-live-lab = { path = "../crates/gel-live-lab" }
 gel-orb = { path = "../crates/gel-orb" }
 gel-phase-quad = { path = "../crates/gel-phase-quad" }
+gel-reader = { path = "../crates/gel-reader" }
 gel-source = { path = "../crates/gel-source" }
+gel-store = { path = "../crates/gel-store" }
 gel-structural = { path = "../crates/gel-structural" }
 
 [lints]

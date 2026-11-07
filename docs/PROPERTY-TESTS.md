@@ -3,7 +3,7 @@
 Each row names a documented property and the tests that exercise it. On every
 platform the [CI evidence collector](CI-EVIDENCE.md) checks that each named
 test ran and passed exactly once in the debug workspace pass, or is a declared
-Unix-only test that is absent elsewhere, and writes one `PROPERTY` line per row
+platform-only test that is absent elsewhere, and writes one `PROPERTY` line per row
 to its report; any other result withholds COMPLETE. A test name that is not
 unique in the workspace fails that check, so every name here identifies one
 test.
@@ -51,6 +51,11 @@ the binary package smoke run) are listed under the table.
 | P33 | The dependency inventory matches every locked external package | [dependency inventory](DEPENDENCY-INVENTORY.md) | `inventory_matches_every_locked_external_package` `rejects_stale_extra_duplicate_or_missing_inventory_entries` |
 | P34 | The file gate rejects symlinks and executable files, and a reviewed asset must have its exact bytes and path | [gates](GATES.md) | `tests::rust_only_gate_rejects_symlinks_and_executable_files` `tests::documentation_png_gate_requires_exact_reviewed_bytes_and_path` |
 | P35 | The claims registry and its documentation agree, and an open row cannot declare itself passed | [claims](CLAIMS.md) | `claims::tests::documentation_and_registry_agree` `claims::tests::every_open_row_uses_an_allowed_mode` |
+| P36 | A saved file cut short is refused on disk: a history at every byte, a collection and a bundle at every byte even under a pin taken from the cut file, and a collection over 1 MiB at its fields | [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `every_cut_of_a_saved_history_is_refused_on_disk` `every_prefix_of_a_saved_collection_is_refused_even_under_its_own_pin` `every_prefix_of_a_saved_bundle_is_refused_even_under_its_own_pin` `cuts_at_the_fields_of_a_large_collection_are_refused_on_the_threaded_load` |
+| P37 | Damage that keeps the length of a saved file is refused, for a snapshot under its kept pin: splices of two versions, zeroed and exchanged blocks | [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `damage_that_keeps_the_length_of_a_saved_history_is_refused` `damage_that_keeps_the_length_of_a_saved_store_is_refused` `damage_that_keeps_the_length_of_a_snapshot_is_refused_under_its_pin` |
+| P38 | Two processes writing one path leave one whole file of one of them, and on the no-replace publisher one is refused | [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `two_processes_saving_one_history_leave_one_complete_file` `two_processes_saving_one_store_leave_one_complete_file` `two_processes_publishing_one_path_have_one_winner_and_one_whole_file` |
+| P39 | A restart after a kill, a stopped save or leftover temporary files keeps what was saved, resumes to the uninterrupted bytes and never opens a leftover | [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `a_killed_store_writer_keeps_acknowledged_saves_and_a_restart_resumes` `a_save_stopped_at_every_byte_resumes_to_the_uninterrupted_collection` `a_history_restart_meeting_its_own_leftover_names_skips_them_and_then_fails_closed` `a_store_restart_meeting_its_own_leftover_names_skips_them_and_then_fails_closed` `a_source_restart_meeting_its_own_leftover_names_skips_them_and_then_fails_closed` |
+| P40 | A reader beside a writer sees nothing or a whole file, and reading changes no byte, time of change, permission or name on disk | [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `reading_during_saves_sees_whole_histories_and_changes_no_byte` `a_reader_at_every_step_of_a_publication_sees_nothing_or_the_whole_file` `opening_a_saved_history_changes_nothing_on_disk` `reading_a_saved_store_changes_nothing_on_disk` `loading_a_saved_snapshot_changes_nothing_on_disk` |
 
 Checks outside the table:
 

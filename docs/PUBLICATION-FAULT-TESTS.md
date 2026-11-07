@@ -99,6 +99,45 @@ apart.
 
 Ending a process at a point is not a power cut. The test runs on Linux, macOS
 and Windows in CI; the directory flush exists on Unix only.
+
+## Faults of saved files, on disk and between processes
+
+```sh
+cargo test --locked --offline -p gel-history -p gel-store -p gel-source --test faults
+```
+
+Three test files take the files a save leaves, write the bytes a damaged disk
+could leave, start a second process or restart. Where processes matter, the child is the
+test binary run again.
+
+| Fault | Record history | Store | Collection and bundle |
+|---|---|---|---|
+| File cut at every byte | every length, on disk through `open_verified` | a version 1 file at every length past its header (version 2 sweeps sit beside the code) | every length, under the kept pin and under a pin taken from the cut file, so the structure alone refuses it; 12 field cuts of a file over 1 MiB, the threaded load |
+| Damage that keeps the length | a splice of two versions at every byte, zeroed blocks of 64, 512 and 1,024 bytes, two blocks exchanged, one stale block | a splice of two generations, zeroed blocks of 128, 512 and 4,096 bytes, blocks exchanged, a new header over an old payload, a header sealed for a shorter file; version 1 too | a splice of two files at every byte and zeroed blocks of 16, 64 and 256 bytes, each under the kept pin |
+| Two writers on one path | two processes save 40 versions each while three threads read; each read and the last file is one whole version of one writer, and no temporary file stays (Unix) | the same, with loading and streaming verification on the readers (Unix) | two processes meet at the link: one publishes, the other is refused, and the file is the winner's |
+| Restart after a partial write | leftovers at the writer's own names: 127 are skipped, 128 fail closed, and the file stays | the same; a writer killed in 8 trials, each a little later into its next save, leaves the last acknowledged generation or a later whole one, and a fresh process resumes (Unix) | a save stopped after every byte, after the flush, after the link and after the directory flush; a restart reaches the bytes of an uninterrupted save and never touches the leftover. 32 leftover names are skipped, 33 fail closed |
+| Reader beside a writer | saves with readers end in the same bytes as saves without; no read sees part of a file (Unix) | as in the row of two writers | a reader in step with the writer at every piece, the flush, the link and the directory flush finds nothing before the link and the whole file after it |
+| What reading leaves | on a read-only file with an old time of change: opening, a refused limit and a refused file change no byte, time, permission or name | loading, verifying, and a refused `write_if_newer`, version 1 included | loading, a wrong pin and a refused save |
+
+Limits:
+
+- A killed or stopped process is **not a power cut**. Nothing here establishes
+  power-loss durability, for any of these formats.
+- Saves of a history or a store replace the file by a rename, and the last
+  rename wins. Two writers leave one whole file, not both sets of changes:
+  this is not a compare-and-swap, and generations can go backwards between two
+  writers, because `write_if_newer` assumes one writer. Only the no-replace
+  publisher of collections and bundles refuses a second writer.
+- The three tests of what reading leaves compare bytes, time of change,
+  permissions and directory names. The time of access can change with any read and is not compared.
+- A same-length exchange of two texts is a valid collection under a pin taken
+  from the changed file; only a pin kept apart from the file tells them apart.
+- The tests that race a replaced file, and the kill of a store writer, are
+  compiled on Unix only: replacing a file another process has open is a rename
+  guarantee of that platform. One machine and one file system per run.
+- 16 of the 20 tests compile on Windows and all 20 on macOS. They run there only
+  in CI, and no recorded report holds them yet. No timing property is covered.
+
 The old measured publisher remains preserved as
 [bundle.measured.rs.txt](evidence-collection/bundle.measured.rs.txt).
 

@@ -101,8 +101,9 @@ host only; they establish no speed advantage.
 
 Revision dc38282 hashed with the RustCrypto sha2 crate, which uses the
 processor's SHA instructions. gel-source now computes SHA-256 itself in safe
-Rust, about 6.3 times slower in hashing on the author's machine
-([source readout](SOURCE-READOUT.md)). A new run would therefore measure a
+Rust, at 0.28 and 0.39 of the speed of v0.6.1 on 2026-10-20, 0.26 and 0.35 in the
+re-run of 2026-11-04, on the author's machine
+([speed set](speed-results/2026-10-20-against-v0.6.1/speed_sha256/summary.txt), [re-run](speed-results/2026-11-04-reruns/rerun-2026-10-20-against-v0.6.1/speed_sha256/summary.txt)). A new run would therefore measure a
 slower integrity-process and slightly slower process-workload phase; that
 difference comes from the hash implementation, not from the readout, and r1
 is not to be compared with such a run without saying so.
