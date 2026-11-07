@@ -110,6 +110,11 @@ reason.
   A process kill during saving is tested by the
   [kill series](CRASH-SERIES.md#the-record-history-one-file-replaced-while-it-grows);
   a power cut is not.
+- Two processes saving one path leave one whole version of one of them, never
+  a mix, because each saves through its own temporary file. The later rename
+  wins, and nothing tells the other writer: this is not a compare-and-swap, and
+  states the winner does not hold are lost. See
+  [faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes).
 - Nothing here concerns meaning, ranking or answers.
 
 ## Tests
@@ -140,6 +145,16 @@ In `crates/gel-history/src/lib.rs`:
 - `rebuilding_refuses_a_parent_that_does_not_precede_its_child`
 - `a_dense_residual_is_never_encoded`
 - `a_leftover_temporary_file_does_not_block_saving`
+
+In `crates/gel-history/tests/faults.rs`, for a saved file on disk and between
+processes:
+
+- `every_cut_of_a_saved_history_is_refused_on_disk`
+- `damage_that_keeps_the_length_of_a_saved_history_is_refused`
+- `two_processes_saving_one_history_leave_one_complete_file` (Unix)
+- `reading_during_saves_sees_whole_histories_and_changes_no_byte` (Unix)
+- `a_history_restart_meeting_its_own_leftover_names_skips_them_and_then_fails_closed`
+- `opening_a_saved_history_changes_nothing_on_disk`
 
 In `xtask/src/history_crash_series.rs`, for the kill series:
 

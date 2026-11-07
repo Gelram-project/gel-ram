@@ -2,7 +2,12 @@
 // Required Notice: Copyright (C) 2026 RR — GEL RAM Project (gelram.licensing@gmail.com)
 //! One registry for scoped claims, executable counterexamples and explicit gaps.
 use gel_source::{collection::Collection, context, digest};
-use std::{collections::BTreeSet, fs, path::Path};
+use std::{
+    collections::BTreeSet,
+    fs,
+    path::{Path, PathBuf},
+    sync::atomic::{AtomicU64, Ordering},
+};
 
 #[derive(Clone, Copy)]
 struct Claim {
@@ -264,7 +269,7 @@ const CLAIMS: &[Claim] = &[
         scope: "public gel-phase-quad Record and Reader on synthetic records",
         input: "quad_compare scores every record through four materialized reference views per query; xtask verify runs it",
         expected: "a 1152-byte record; each view's score bit-identical to the shared read on the same build and platform; Q8_QUAD_EXACT=PASS",
-        counterexample: "read as four independent memories, four votes, a 4x speedup, process RAM or semantic accuracy",
+        counterexample: "read as four independent memories, facts or files, four votes, 4x storage capacity, a 4x speedup, process RAM or semantic accuracy",
         source: "docs/Q8-QUAD.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
@@ -349,6 +354,46 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Probe(q8_record_size),
     },
     Claim {
+        id: "store-file-refusals",
+        dimension: "integrity",
+        scope: "one public gel-store .gel v2 file of three seeded records, 448 bytes",
+        input: "the saved file; each of its 512 header bits flipped; each payload byte with one bit flipped and inverted; each shorter length; a save with an older and an equal counter; a payload change with both CRC64 fields recomputed",
+        expected: "both CRC64 fields equal an expectation built from the file bytes alone; the file reopens to the same records; every flipped and every cut file is refused; an older or equal counter is refused and leaves the file as it was, a newer one is saved; the change with recomputed CRC64 fields opens without complaint",
+        counterexample: "read as tamper-proof storage (CRC64 is not a pin), as a result for every possible file, or as power-loss durability",
+        source: "crates/gel-store/src/lib.rs",
+        evidence: Evidence::Probe(store_refusals),
+    },
+    Claim {
+        id: "reader16-one-comparison",
+        dimension: "structure",
+        scope: "public gel-reader reader16 on five pairs: two seeded records both ways, a record beside a near copy and beside its opposite, and two empty records",
+        input: "the 16 values against the same 16 formulas computed from counts built bit by bit; a pair with two bit positions swapped in both records",
+        expected: "every value equal bit for bit; contradiction is 1 minus global agreement and global agreement is the mean of the eight local views; the swapped pair is another pair of records with the same 16 values",
+        counterexample: "16 judgments read as 16 independent measurements, or any value read as a measure of meaning",
+        source: "docs/READER16.md",
+        evidence: Evidence::Probe(reader16_comparison),
+    },
+    Claim {
+        id: "progressive-top-k-exact",
+        dimension: "ranking",
+        scope: "public gel-reader top_k_progressive on a bank of 256 seeded records, 64 of them near the query, each closer than the one before, and two pairs tied",
+        input: "three queries, k of 0, 1, 2, 8, 32, 256 and 300, against a reference scored bit by bit and sorted in full",
+        expected: "the search that stops early and the full scan both equal the reference, entry for entry, with ties to the lower index; every record is counted once and some are left after 32 or 64 bytes",
+        counterexample: "read as a speedup on every bank, as a result for every bank, or as relevance rather than bit agreement",
+        source: "docs/READER16.md",
+        evidence: Evidence::Probe(progressive_top_k),
+    },
+    Claim {
+        id: "source-builder-limits",
+        dimension: "interface",
+        scope: "public gel-source CorpusBuilder, the limits of a push; the 64 MiB total-text limit is checked here by its constant only, its boundary in the gel-source tests",
+        input: "passages of 0, 32,768 and 32,769 bytes, labels of 512 and 513 bytes, blank and control labels, a repeated address, a node with another entry or title, 50,001 records and rows up to the 16 MiB catalog limit",
+        expected: "the passage, label and record limits hold at their boundary with their errors and rows stop within about 1% of the catalog limit; a refused push leaves the same bytes as a builder that never saw it; an empty builder cannot finish; the kept passage reads back byte for byte",
+        counterexample: "read as limits on process memory, or the writer read as a semantic retriever or an answer generator",
+        source: "docs/SOURCE-BUILDER.md",
+        evidence: Evidence::Probe(source_builder_limits),
+    },
+    Claim {
         id: "no-third-party-packages",
         dimension: "distribution",
         scope: "Cargo.lock of this checkout and the workspace members of Cargo.toml",
@@ -391,11 +436,31 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "platform-exclusions",
         dimension: "test-scope",
-        scope: "seven Unix-only whole tests",
-        input: "per-platform ci-evidence report and platform-diff of two platforms",
-        expected: "ran once on Unix, absent on Windows, never counted as success there",
-        counterexample: "a compile-time exclusion reported as a Windows pass",
+        scope: "twenty-three platform-only whole tests (19 Unix, 4 Linux)",
+        input: "per-platform ci-evidence report, platform-diff of two platforms and a unit test that reads the workspace's Rust sources for platform cfg attributes",
+        expected: "ran once where compiled, absent elsewhere, never counted as success there",
+        counterexample: "a compile-time exclusion reported as a pass where it was not compiled",
         source: "docs/CI-EVIDENCE.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "ci-evidence-records",
+        dimension: "test-scope",
+        scope: "sanitized reports of the recorded revisions, hosted CI runs of one revision each",
+        input: "docs/evidence-ci and the list of recorded revisions in xtask",
+        expected: "nine files per revision; checksums, report format, run, commit and strict comparison all hold, and the table is recomputed from the reports",
+        counterexample: "an altered report, a missing platform file, a table row other than the recomputed one, or hosted CI read as an independent second host",
+        source: "docs/evidence-ci/README.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "saved-file-faults",
+        dimension: "persistence",
+        scope: "GELHIS01, GEL store v1 and v2, GELSET01 and GELSRC01 files through their public save and open paths; one machine, one file system per run",
+        input: "cuts at every byte (12 stated field cuts over 1 MiB), damage that keeps the length, two child processes on one path, a save stopped at every byte, a writer killed along a save, leftover temporary names at the limit, readers beside writers",
+        expected: "every damaged file refused, collections and bundles under the pin kept apart from the file; one whole file after two writers and one winner on the no-replace publisher; restart resumes to the uninterrupted bytes; reading changes no byte, time of change, permission or name",
+        counterexample: "a mix of two saves accepted, part of a file visible at the path, an acknowledged save lost to a kill of the one writer, a leftover opened, or any of this read as power-loss durability",
+        source: "docs/PUBLICATION-FAULT-TESTS.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
@@ -501,9 +566,9 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "property-map",
         dimension: "test-scope",
-        scope: "35 documented properties mapped to 71 tests",
+        scope: "40 documented properties mapped to 91 tests",
         input: "per-platform ci-evidence TESTS.txt",
-        expected: "each mapped test ran and passed once, or is a declared Unix-only exclusion",
+        expected: "each mapped test ran and passed once, or is a declared platform-only exclusion",
         counterexample: "a passing row read as full coverage of its property",
         source: "docs/PROPERTY-TESTS.md",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
@@ -599,6 +664,26 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
+        id: "memory-core-selftest",
+        dimension: "test-scope",
+        scope: "gel-cli selftest: one run over the bit record, the store, the reader and the rebuild",
+        input: "verify runs the release program; views of one record, a Reader16 count, Top-1, Top-K, a structural delta and one saved store",
+        expected: "GEL_SELFTEST_V2=PASS, or the program stops with an error",
+        counterexample: "one small round trip read as the exhaustive tests of those parts",
+        source: "crates/gel-cli/src/main.rs",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
+        id: "real-source-readout",
+        dimension: "provenance",
+        scope: "the gel-source source_real example on a 1,157-byte excerpt of three paragraphs, its pins fixed in the example",
+        input: "verify runs it; a changed text, a changed catalog and a wrong part count",
+        expected: "paragraphs 1, 2 and 3 in order from shuffled rows; each changed input rejected; SOURCE_REAL_E2E=PASS",
+        counterexample: "read as factual truth checking, semantic accuracy, compression, or fourfold independent capacity",
+        source: "docs/REAL-SOURCE-DEMO.md",
+        evidence: Evidence::Deferred("SEPARATE_GATE"),
+    },
+    Claim {
         id: "grep-comparison",
         dimension: "comparison",
         scope: "36 public queries against grep and sha256sum, one host",
@@ -649,6 +734,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "history-crash-series-recorded",
+        dimension: "persistence",
+        scope: "public gel-history, one recorded series of 200 trials and 20 control trials on the author's Linux machine, ext4, debug build of xtask, 2026-10-10",
+        input: "240 states of one record, the whole file saved after each, SIGKILL after a seeded random 1 to 3,444 ms; a control writer rewriting the file in place",
+        expected: "23,379 acknowledged states, 0 lost and 0 partial; 200 of 200 trials resumed to the uninterrupted bytes; 181 kills in the middle of a save; 14 of 20 control kills left a partial file",
+        counterexample: "read as power-loss durability, as a result on another file system or with two writers, or the reopen times read as those of a release build",
+        source: "docs/evidence-crash/history-crash-series-linux.txt",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "q8-recorded-runs",
         dimension: "bytes",
         scope: "the final local Q8 campaign of 2026-09-11 on synthetic fixtures",
@@ -656,6 +751,16 @@ const CLAIMS: &[Claim] = &[
         expected: "48 of 48 V2 runs end with Q8_QUAD_EXACT=PASS",
         counterexample: "their timings read as a speedup of four views, or the runs read as semantic accuracy",
         source: "docs/evidence-q8-current/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
+        id: "q8-r2-recorded-runs",
+        dimension: "bytes",
+        scope: "the complete local rerun of the Q8 campaign after the input fix of revision 2, 2026-09-11, on synthetic fixtures and one input that is not shipped",
+        input: "48 V2 runs and 24 runs beside a packed canonical-single baseline, kept with their summary",
+        expected: "all 8,355,840 V2 and 2,509,056 canonical view-score comparisons passed",
+        counterexample: "the transforms read as creating independent information, or the comparisons read as semantic accuracy",
+        source: "docs/evidence-q8-r2/summary.txt",
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
@@ -761,7 +866,7 @@ const CLAIMS: &[Claim] = &[
     Claim {
         id: "snapshot-power-loss",
         dimension: "persistence",
-        scope: "gel-evidence snapshot publication under a power cut",
+        scope: "gel-evidence snapshots and gel-source bundles, published through the same no-replace publisher, under a power cut",
         input: "a power-cut test; none has been run",
         expected: "not established: the crash series kills a process, and data in the operating system's or the disk's cache may not survive a power loss",
         counterexample: "the crash series, the fault tests or a directory flush in the code read as a measured survival of a power cut",
@@ -776,6 +881,16 @@ const CLAIMS: &[Claim] = &[
         expected: "not established: no stable p99.9, p99.99 or p99.999 tail",
         counterexample: "the slowest of 100 runs read as a p99.9 or higher tail",
         source: "docs/OCEAN-SCALE.md",
+        evidence: Evidence::Deferred("NOT_ESTABLISHED"),
+    },
+    Claim {
+        id: "queries-per-second",
+        dimension: "timing",
+        scope: "a rate of queries per second taken from internal update-rate measurements",
+        input: "a measured query rate on a stated task; none is published",
+        expected: "not established: the public pages give no such rate and no such conversion",
+        counterexample: "an internal update rate read as queries per second",
+        source: "docs/VERIFIED-RESULTS.md",
         evidence: Evidence::Deferred("NOT_ESTABLISHED"),
     },
 ];
@@ -1006,6 +1121,406 @@ const CITED: &[Citation] = &[
         file: "docs/answer-or-abstain-v7/README.md",
         words: HARDWARE_NOT_ESTABLISHED,
         rows: HARDWARE,
+    },
+    // The limit of each README table cell and each number a reader will quote.
+    Citation {
+        file: "README.md",
+        words: "`.gel` v2 files carry a CRC64 over the header and over the payload; in the tests every single header bit flip, every payload byte flip and every truncation is rejected, and so is an older or equal save counter",
+        rows: &[("store-file-refusals", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "README.md",
+        words: "One comparison of two records returns 16 judgments at once, not 16 independent measurements; a search that stops early returns exactly the same top-K matches as a full scan",
+        rows: &[
+            ("reader16-one-comparison", "EXECUTABLE_CHECK"),
+            ("progressive-top-k-exact", "EXECUTABLE_CHECK"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "`cargo run --locked --offline --release -p gel-cli -- selftest` checks the first four parts in one run (`GEL_SELFTEST_V2=PASS`)",
+        rows: &[("memory-core-selftest", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "Four views are not four independent memories, four votes or a speedup.",
+        rows: &[
+            ("q8-one-record-four-views", "SEPARATE_GATE"),
+            ("q8-record-size", "EXECUTABLE_CHECK"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "Meaning is not measured; one plain copy can still be read faster than the shared record",
+        rows: &[
+            ("q8-semantic-accuracy", "NOT_ESTABLISHED"),
+            ("q8-recorded-runs", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "Your bytes as they are, not knowledge printing: no meaning and no search",
+        rows: &[("q8-literal-record", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "README.md",
+        words: "A finite set of changes, not every possible one",
+        rows: &[("format-mutations", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "Recorded on Linux; `verify` runs it on Unix hosts only; a process kill, not a power cut",
+        rows: &[
+            ("crash-series-no-acknowledged-loss", "SEPARATE_GATE"),
+            ("crash-series-recorded", "MEASURED_LOCAL"),
+            ("snapshot-power-loss", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "200 random process kills in one recorded run: 0 of 2,683 confirmed snapshots lost.",
+        rows: &[("crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "README.md",
+        words: "A matching hash shows these are your bytes, not that the source is true or private",
+        rows: &[
+            ("sha256-fips-vectors", "EXECUTABLE_CHECK"),
+            ("source-roundtrip", "EXECUTABLE_CHECK"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "It is phrase lookup, not question answering.",
+        rows: &[
+            ("no-cross-document", "EXECUTABLE_CHECK"),
+            ("text-ai-goal", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "The map shows the rule CI enforces, not the outcome of one run",
+        rows: &[("property-map", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "103 cases are faster beyond their A/A band, 18 slower beyond it (SHA-256 alone at 0.28 and 0.39) and 12 inside it.",
+        rows: &[("speed-set-against-v0.6.1", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "README.md",
+        words: "105 faster, 4 inside, 24 slower on 2026-11-04",
+        rows: &[("speed-sets-rerun", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "README.md",
+        words: "every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree",
+        rows: &[
+            ("speed-set-against-v0.6.1", "MEASURED_LOCAL"),
+            ("speed-set-quiet-machine", "MEASURED_LOCAL"),
+            ("speed-sets-rerun", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "README.md",
+        words: "the target Q8 Quad quantizer as of their dates; only their labels say what each holds.",
+        rows: &[("commitments-fixed-in-time", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "README.md",
+        words: "The author's own measurements are in [measured progress](docs/MEASURED-PROGRESS.md); nobody else has re-run them.",
+        rows: &[("independent-reproduction", "NOT_VERIFIED")],
+    },
+    Citation {
+        file: "docs/GOAL.md",
+        words: "Status: goal: knowledge updates without training.",
+        rows: &[("text-ai-goal", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/GOAL.md",
+        words: "Status: goal: answers in its own words, not yet measured; today the document tools return exact quotations.",
+        rows: &[("text-ai-goal", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/GOAL.md",
+        words: "Status: goal: one conversation across both languages, not yet measured.",
+        rows: &[("text-ai-goal", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/GOAL.md",
+        words: "Status: process killed mid-write: 0 confirmed entries lost in the recorded crash series; not a power-cut test.",
+        rows: &[
+            ("crash-series-recorded", "MEASURED_LOCAL"),
+            ("snapshot-power-loss", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "Four views are not four independent facts or 4× storage capacity",
+        rows: &[("q8-one-record-four-views", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- fourfold independent capacity from four reversible views.",
+        rows: &[("q8-one-record-four-views", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "**1152 bytes per record**, excluding runtime tables and buffers.",
+        rows: &[("q8-record-size", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- 8,355,840 V2 view-score comparisons passing; - 2,509,056 canonical-baseline comparisons passing;",
+        rows: &[("q8-r2-recorded-runs", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- no claim that the coordinate transforms create independent information.",
+        rows: &[("q8-r2-recorded-runs", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "| 1M | 41119 | 100 | 72.427 ms | 81.018 ms | 82.859 ms | 90.949 ms | | 1M | 61141 | 100 | 71.962 ms | 79.860 ms | 80.576 ms | 88.227 ms | | 10M | 41119 | 100 | 615.428 ms | 684.888 ms | 710.313 ms | 734.085 ms | | 10M | 61141 | 100 | 704.995 ms | 757.900 ms | 783.038 ms | 810.236 ms |",
+        rows: &[("ocean-full-scan", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "With only 100 observations per long run, the project does **not** claim stable p99.9, p99.99 or p99.999 tails from this dataset.",
+        rows: &[("extreme-tail-latency", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- stable extreme-tail latency without sufficient observations;",
+        rows: &[("extreme-tail-latency", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- unrestricted semantic AI accuracy;",
+        rows: &[
+            ("text-ai-goal", "NOT_ESTABLISHED"),
+            ("q8-semantic-accuracy", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "- 30M queries/s or any conversion from internal update-rate measurements to queries/s;",
+        rows: &[("queries-per-second", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "they do not establish an end-to-end advantage over this baseline.",
+        rows: &[
+            ("commercial-advantage", "NOT_ESTABLISHED"),
+            ("gel-sketch-search", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "Re-scores recorded answers; it does not re-run GEL, the models or the engines",
+        rows: &[("answer-bench-rescoring", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "| Not independent second-host acceptance |",
+        rows: &[("independent-reproduction", "NOT_VERIFIED")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "| Not a power-cut test |",
+        rows: &[
+            ("publication-os-faults", "SEPARATE_GATE"),
+            ("snapshot-power-loss", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "| Platform-only tests are declared per platform |",
+        rows: &[("platform-exclusions", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "207 trials: 0 of 235,712 confirmed records lost; every reopen check passed; every resume equal to a run without a kill | A process kill, not a power cut; a small store",
+        rows: &[("store-kill-during-learning", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/VERIFIED-RESULTS.md",
+        words: "99% precision is not established across v4 to v7",
+        rows: &[("gel-beside-bm25-v7", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/ILLUSTRATED-GUIDE.md",
+        words: "Four equivalent views do not store four arbitrary, independent files in one record.",
+        rows: &[("q8-one-record-four-views", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/ILLUSTRATED-GUIDE.md",
+        words: "Numeric exactness after quantization does not make quantization itself lossless.",
+        rows: &[("numeric-loss", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/ILLUSTRATED-GUIDE.md",
+        words: "These are not tests of full semantic understanding, universal acceleration, fourfold independent capacity, hardware-level memory computation or hardware identity.",
+        rows: &[
+            ("q8-semantic-accuracy", "NOT_ESTABLISHED"),
+            ("q8-one-record-four-views", "SEPARATE_GATE"),
+            ("hardware-memory-compute", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/ILLUSTRATED-GUIDE.md",
+        words: "the reported timing campaign is CPU-only.",
+        rows: HARDWARE,
+    },
+    Citation {
+        file: "docs/ILLUSTRATED-GUIDE.md",
+        words: "Reference implementations and CI are not an independent third-party scientific validation.",
+        rows: &[("independent-reproduction", "NOT_VERIFIED")],
+    },
+    Citation {
+        file: "docs/SOURCE-BUILDER.md",
+        words: "- Labels: nonblank, no control characters, at most 512 UTF-8 bytes each",
+        rows: &[("source-builder-limits", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/SOURCE-BUILDER.md",
+        words: "- Passages: 1..32768 bytes; total text <=64 MiB, catalog <=16 MiB and <=50000 records. Those are serialized-content limits, **not** total process RSS limits.",
+        rows: &[("source-builder-limits", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/SOURCE-BUILDER.md",
+        words: "This is not a hardware power-cut test.",
+        rows: &[("snapshot-power-loss", "NOT_ESTABLISHED")],
+    },
+    Citation {
+        file: "docs/SOURCE-BUILDER.md",
+        words: "This is a **source-catalog writer**, not a private encoder, Q8 numeric quantizer, multimedia analyzer, semantic retriever or answer generator.",
+        rows: &[("source-builder-limits", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/SOURCE-BUILDER.md",
+        words: "It does not prove truth or add fourfold independent capacity.",
+        rows: &[("q8-one-record-four-views", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/REAL-SOURCE-DEMO.md",
+        words: "The success marker is `SOURCE_REAL_E2E=PASS`.",
+        rows: &[("real-source-readout", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/REAL-SOURCE-DEMO.md",
+        words: "This demonstrates exact approved-source readout, **not** factual truth checking, semantic accuracy, autonomous reasoning, compression, quantization quality or fourfold independent information capacity.",
+        rows: &[
+            ("real-source-readout", "SEPARATE_GATE"),
+            ("q8-one-record-four-views", "SEPARATE_GATE"),
+        ],
+    },
+    Citation {
+        file: "docs/REAL-SOURCE-DEMO.md",
+        words: "There are no speedup or tokens-per-second claims from this tiny fixture.",
+        rows: &[("real-source-readout", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "| 200 | 2,683 | **0** | **0** | 200 | 153 | 2.3 / 4.5 / 4.5 ms |",
+        rows: &[("crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "Its own SHA-256 ran at 0.28 and 0.39 of the speed of v0.6.1, which used that crate, on 2026-10-20, 0.26 and 0.35 in the re-run of 2026-11-04",
+        rows: &[
+            ("speed-set-against-v0.6.1", "MEASURED_LOCAL"),
+            ("speed-sets-rerun", "MEASURED_LOCAL"),
+        ],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "`xtask verify` runs 5 trials on Unix hosts.",
+        rows: &[("crash-series-no-acknowledged-loss", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "It tests the public collection tool, not the private implementation.",
+        rows: &[("crash-series-no-acknowledged-loss", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "| 200 | 23,379 | **0** | **0** | 200 | 181 | 1.6 / 3.9 / 5.2 ms |",
+        rows: &[("history-crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "In the control, 14 of 20 kills left a partial file",
+        rows: &[("history-crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "`xtask verify` runs 5 trials on Unix hosts, without the control.",
+        rows: &[("record-history-kill-series", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/CRASH-SERIES.md",
+        words: "One writer per file: this series does not race two processes on one path.",
+        rows: &[("record-history-kill-series", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "Storage grows with every appended state.",
+        rows: &[("record-history-exact", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "Synthetic walks show the format, not how real records change.",
+        rows: &[("record-history-exact", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "CRC64 detects accidental change; whoever rewrites the file can recompute it.",
+        rows: &[("record-history-exact", "EXECUTABLE_CHECK")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "of GELHIS01 changes one 338-byte file of four states, not every possible file.",
+        rows: &[("history-format-mutations", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/RECORD-HISTORY.md",
+        words: "A process kill during saving is tested by the [kill series](CRASH-SERIES.md#the-record-history-one-file-replaced-while-it-grows); a power cut is not.",
+        rows: &[
+            ("record-history-kill-series", "SEPARATE_GATE"),
+            ("record-history-durability", "NOT_ESTABLISHED"),
+        ],
+    },
+    Citation {
+        file: "docs/COMMITMENTS.md",
+        words: "It says nothing about what the contents are or whether they are correct.",
+        rows: &[("commitments-fixed-in-time", "SEPARATE_GATE")],
+    },
+    Citation {
+        file: "docs/COMMITMENTS.md",
+        words: "`COMMITMENT_CHECK=FAIL first=PATH` names the first path in byte order that differs, and the command exits with status 2.",
+        rows: &[("commitments-fixed-in-time", "SEPARATE_GATE")],
+    },
+    // The file behind a recorded number, so that the page and the record cannot part.
+    Citation {
+        file: "docs/evidence-crash/crash-series-linux.txt",
+        words: "CRASH_SERIES=PASS trials=200 acknowledged=2683 acknowledged_lost=0 partial=0 resumed=200 killed_mid_publication=153",
+        rows: &[("crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/evidence-crash/history-crash-series-linux.txt",
+        words: "HISTORY_CRASH_SERIES=PASS trials=200 acknowledged=23379 acknowledged_lost=0 partial=0 resumed=200",
+        rows: &[("history-crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/evidence-crash/history-crash-series-linux.txt",
+        words: "control_trials=20 control_partial=14",
+        rows: &[("history-crash-series-recorded", "MEASURED_LOCAL")],
+    },
+    Citation {
+        file: "docs/evidence-q8-r2/summary.txt",
+        words: "V2_view_comparisons=8355840 EVIDENCE_view_comparisons=2509056",
+        rows: &[("q8-r2-recorded-runs", "MEASURED_LOCAL")],
     },
 ];
 
@@ -1315,6 +1830,288 @@ fn q8_record_size() -> Result<bool, String> {
         && back.len() == 1
         && *back[0].phase() == phase
         && back[0].active_mask() == mask)
+}
+/// A directory of its own for one probe, removed when the probe ends. `check`
+/// and the unit tests run a probe at the same time in one process, so the
+/// process id alone does not keep them apart.
+struct ProbeDir(PathBuf);
+impl ProbeDir {
+    fn new() -> Result<Self, String> {
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, Ordering::Relaxed);
+        let dir = std::env::temp_dir().join(format!("gel-claims-{}-{n}", std::process::id()));
+        fs::create_dir(&dir).map_err(|e| e.to_string())?;
+        Ok(Self(dir))
+    }
+}
+impl Drop for ProbeDir {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+/// The README row of gel-store on a saved file, with the two CRC64 fields
+/// rebuilt from the file bytes alone; the same rebuilding shows what they do
+/// not give: a change with both fields recomputed opens.
+fn store_refusals() -> Result<bool, String> {
+    use gel_core::{crc64_ecma, GelError, Generation};
+    use gel_store::{RamStore, HEADER_BYTES};
+    let text = |e: GelError| e.to_string();
+    let dir = ProbeDir::new()?;
+    let path = dir.0.join("store.gel");
+    let orbs = vec![seeded_orb(300), seeded_orb(400), seeded_orb(500)];
+    let save = |generation: u64| RamStore::from_orbs(orbs.clone(), Generation(generation));
+    save(7).write_atomic(&path).map_err(text)?;
+    let bytes = fs::read(&path).map_err(|e| e.to_string())?;
+    if bytes.len() != HEADER_BYTES + 3 * 128 {
+        return Ok(false);
+    }
+    let seal = |file: &mut Vec<u8>| {
+        let payload = crc64_ecma(&file[HEADER_BYTES..]);
+        file[40..48].copy_from_slice(&payload.to_le_bytes());
+        file[48..56].fill(0);
+        let header = crc64_ecma(&file[..HEADER_BYTES]);
+        file[48..56].copy_from_slice(&header.to_le_bytes());
+    };
+    let mut sealed = bytes.clone();
+    seal(&mut sealed);
+    let opens = |file: &[u8]| -> Result<Option<RamStore>, String> {
+        fs::write(&path, file).map_err(|e| e.to_string())?;
+        Ok(RamStore::open_verified(&path).ok())
+    };
+    let mut ok = sealed == bytes
+        && opens(&bytes)?.is_some_and(|s| s.orbs() == orbs && s.header().generation.0 == 7);
+    let flipped = |index: usize, mask: u8| -> Result<bool, String> {
+        let mut changed = bytes.clone();
+        changed[index] ^= mask;
+        Ok(opens(&changed)?.is_none())
+    };
+    for bit in 0..HEADER_BYTES * 8 {
+        ok &= flipped(bit / 8, 1 << (bit % 8))?;
+    }
+    for index in HEADER_BYTES..bytes.len() {
+        ok &= flipped(index, 1 << (index % 8))? && flipped(index, 0xFF)?;
+    }
+    for len in 0..bytes.len() {
+        ok &= opens(&bytes[..len])?.is_none();
+    }
+    let mut forged = bytes.clone();
+    forged[HEADER_BYTES + 13] ^= 1;
+    seal(&mut forged);
+    ok &= opens(&forged)?.is_some_and(|s| s.orbs() != orbs);
+    // An older and an equal counter leave the file, a newer one replaces it.
+    fs::write(&path, &bytes).map_err(|e| e.to_string())?;
+    for attempted in [6, 7] {
+        ok &= matches!(
+            save(attempted).write_if_newer(&path),
+            Err(GelError::GenerationRollback { current: 7, attempted: a }) if a == attempted
+        );
+    }
+    ok &= fs::read(&path).map_err(|e| e.to_string())? == bytes;
+    save(8).write_if_newer(&path).map_err(text)?;
+    Ok(ok
+        && RamStore::open_verified(&path)
+            .map_err(text)?
+            .header()
+            .generation
+            == Generation(8))
+}
+fn record_bit(orb: &gel_orb::Orb1024, bit: usize) -> u64 {
+    (orb.words()[bit / 64] >> (bit % 64)) & 1
+}
+/// The 16 values of Reader16 from counts built bit by bit, without the kernel.
+fn reader16_formulas(a: &gel_orb::Orb1024, b: &gel_orb::Orb1024) -> [f32; 16] {
+    let (mut n, mut local) = ([0u32; 4], [0u32; 8]);
+    for bit in 0..1024 {
+        let (x, y) = (record_bit(a, bit), record_bit(b, bit));
+        n[(x * 2 + y) as usize] += 1;
+        local[bit / 128] += u32::from(x == y);
+    }
+    let [n00, n01, n10, n11] = n;
+    let part = |top: u32, bottom: u32| {
+        if bottom == 0 {
+            1.0
+        } else {
+            top as f32 / bottom as f32
+        }
+    };
+    let product =
+        f64::from(n11 + n10) * f64::from(n01 + n00) * f64::from(n11 + n01) * f64::from(n10 + n00);
+    let phi = if product == 0.0 {
+        0.0
+    } else {
+        ((f64::from(n11) * f64::from(n00) - f64::from(n10) * f64::from(n01)) / product.sqrt())
+            as f32
+    };
+    let mut want = [0f32; 16];
+    want[..8].copy_from_slice(&[
+        (n00 + n11) as f32 / 1024.0,
+        part(n11, n11 + n10 + n01),
+        part(2 * n11, 2 * n11 + n10 + n01),
+        part(n11, n11 + n10),
+        part(n11, n11 + n01),
+        phi,
+        (n10 + n01) as f32 / 1024.0,
+        (n10 as f32 - n01 as f32) / 1024.0,
+    ]);
+    for (slot, count) in want[8..].iter_mut().zip(local) {
+        *slot = count as f32 / 128.0;
+    }
+    want
+}
+/// 16 values from one pair of records: each equals its formula, and they are
+/// not independent of each other, which is the limit the README states.
+fn reader16_comparison() -> Result<bool, String> {
+    use gel_orb::Orb1024;
+    use gel_reader::{reader16, READER16_NAMES};
+    let (a, b) = (seeded_orb(600), seeded_orb(700));
+    let mut near = a;
+    near.words_mut()[3] ^= 0xFF00;
+    let opposite = Orb1024::from_words(a.words().map(|w| !w));
+    let pairs = [
+        (a, b),
+        (b, a),
+        (a, near),
+        (a, opposite),
+        (Orb1024::ZERO, Orb1024::ZERO),
+    ];
+    let mut ok = READER16_NAMES.len() == 16;
+    for (x, y) in &pairs {
+        let got = reader16(x, y).values;
+        let want = reader16_formulas(x, y);
+        ok &= got
+            .iter()
+            .zip(&want)
+            .all(|(g, w)| g.to_bits() == w.to_bits())
+            && got[0] + got[6] == 1.0
+            && got[8..].iter().sum::<f32>() / 8.0 == got[0];
+    }
+    // The same counts from other records: two positions of one local view,
+    // holding different bits of `a`, swapped in both records.
+    let (p, q) = (
+        0,
+        1 + (1..128)
+            .position(|i| record_bit(&a, i) != record_bit(&a, 0))
+            .ok_or("a flat local view")?,
+    );
+    let swap = |orb: &Orb1024| {
+        let mut out = *orb;
+        let (bp, bq) = (record_bit(orb, p), record_bit(orb, q));
+        out.words_mut()[p / 64] ^= (bp ^ bq) << (p % 64);
+        out.words_mut()[q / 64] ^= (bp ^ bq) << (q % 64);
+        out
+    };
+    let (moved_a, moved_b) = (swap(&a), swap(&b));
+    let same = reader16(&moved_a, &moved_b).values == reader16(&a, &b).values;
+    Ok(ok && same && moved_a != a)
+}
+/// A search that stops early against a reference that scores every bit and
+/// sorts everything. Each near record is one bit closer to the query than the
+/// one before it, and the closest differs from it only in the first 32 bytes,
+/// so its bound there equals its score: a bound that leaves out a score one
+/// above the k-th drops the true best match.
+fn progressive_top_k() -> Result<bool, String> {
+    use gel_reader::{top_k, top_k_progressive};
+    let query = seeded_orb(4000);
+    let mut bank: Vec<_> = (0..256usize)
+        .map(|i| {
+            if i % 4 != 0 {
+                return seeded_orb(5000 + i as u64 * 32);
+            }
+            let mut near = query;
+            for j in 0..64 - i / 4 {
+                // 37 is odd, so these positions of one 256-bit stretch differ.
+                let bit = ((i / 4 + 1) % 3) * 256 + (i * 91 + j * 37) % 256;
+                near.words_mut()[bit / 64] ^= 1 << (bit % 64);
+            }
+            near
+        })
+        .collect();
+    bank[200] = bank[8];
+    bank[252] = bank[248];
+    let mut ok = true;
+    let mut left_early = 0;
+    for q in [query, bank[1], bank[100]] {
+        let mut sorted: Vec<(usize, u16)> = bank
+            .iter()
+            .enumerate()
+            .map(|(index, orb)| {
+                let same = (0..1024).filter(|&b| record_bit(orb, b) == record_bit(&q, b));
+                (index, same.count() as u16)
+            })
+            .collect();
+        sorted.sort_unstable_by(|x, y| y.1.cmp(&x.1).then(x.0.cmp(&y.0)));
+        for k in [0, 1, 2, 8, 32, 256, 300] {
+            let want = &sorted[..k.min(sorted.len())];
+            let (got, stats) = top_k_progressive(&bank, &q, k);
+            let early = stats.rejected_after_32b + stats.rejected_after_64b;
+            left_early += early;
+            ok &= got == want
+                && top_k(&bank, &q, k) == want
+                && stats.candidates == bank.len()
+                && (k == 0 || stats.full_128b_scores + early == bank.len());
+        }
+    }
+    Ok(ok && left_early > 0)
+}
+/// The limits of the contract in docs/SOURCE-BUILDER.md, each at its boundary.
+fn source_builder_limits() -> Result<bool, String> {
+    use gel_source::{
+        Address, CorpusBuilder, Error, MAX_CATALOG, MAX_PASSAGE, MAX_RECORDS, MAX_TEXT,
+    };
+    let at = |node, role| Address { node, role };
+    let text = |e: Error| format!("{e:?}");
+    let longest = "ł".repeat(256);
+    let quote = "Zażo\u{301}łć\r\n🦀";
+    let passage = "x".repeat(32_768);
+    let mut kept = CorpusBuilder::new();
+    let mut seen = CorpusBuilder::new();
+    let good: [(Address, u64, &str, &str, &str); 2] = [
+        (at(1, 1), 1, &longest, &longest, quote),
+        (at(1, 2), 1, &longest, "Lead", &passage),
+    ];
+    let mut ok = (MAX_PASSAGE, MAX_RECORDS, MAX_CATALOG, MAX_TEXT)
+        == (32_768, 50_000, 16 << 20, 64 << 20)
+        && CorpusBuilder::new().finish().err() == Some(Error::Format);
+    for (address, entry, title, section, body) in good {
+        ok &= kept.push(address, entry, title, section, body) == Ok(());
+        ok &= seen.push(address, entry, title, section, body) == Ok(());
+    }
+    let long_label = "a".repeat(513);
+    let long_passage = "x".repeat(32_769);
+    let refused: [(Address, u64, &str, &str, &str, Error); 8] = [
+        (at(2, 1), 2, "T", "S", "", Error::Limit),
+        (at(2, 1), 2, "T", "S", &long_passage, Error::Limit),
+        (at(2, 1), 2, &long_label, "S", "x", Error::Limit),
+        (at(2, 1), 2, "T", &long_label, "x", Error::Limit),
+        (at(2, 1), 2, " \t", "S", "x", Error::Format),
+        (at(2, 1), 2, "T", "a\nb", "x", Error::Format),
+        (at(1, 1), 1, &longest, "S", "x", Error::Duplicate),
+        (at(1, 3), 9, &longest, "S", "x", Error::Format),
+    ];
+    for (address, entry, title, section, body, error) in refused {
+        ok &= seen.push(address, entry, title, section, body) == Err(error);
+    }
+    ok &= seen.push(at(1, 3), 1, "Another title", "S", "x") == Err(Error::Format);
+    let (kept, seen) = (kept.finish().map_err(text)?, seen.finish().map_err(text)?);
+    ok &= seen.text_bytes() == kept.text_bytes() && seen.catalog_bytes() == kept.catalog_bytes();
+    let loaded = seen.load().map_err(text)?;
+    ok &= loaded.quote(at(1, 1)).map_err(text)?.quote() == quote;
+    let mut records = CorpusBuilder::new();
+    for role in 0..50_000 {
+        ok &= records.push(at(1, role), 1, "T", "S", "x") == Ok(());
+    }
+    ok &= records.push(at(1, 50_000), 1, "T", "S", "x") == Err(Error::Limit);
+    // A row of two longest labels holds 2,048 hexadecimal digits, 64 of the
+    // digest and 8 separators: at least 2,125 bytes and fewer than 2,150 here.
+    let mut rows = CorpusBuilder::new();
+    let mut row = |role| rows.push(at(1, role), 1, &longest, &longest, "x");
+    let mut accepted = 0;
+    while accepted < 8_000 && row(accepted).is_ok() {
+        accepted += 1;
+    }
+    ok &= (MAX_CATALOG as u64 / 2_150..=MAX_CATALOG as u64 / 2_125).contains(&accepted)
+        && row(accepted) == Err(Error::Limit);
+    Ok(ok)
 }
 /// The package names of `[[package]]` entries, or None when one has a
 /// source or checksum line, which only a package from outside the checkout has.
@@ -1642,6 +2439,48 @@ mod tests {
             rows: &[("text-ai-gaol", "NOT_ESTABLISHED")],
         }];
         assert!(check_citations(CLAIMS, &unknown, read_tree).is_err());
+    }
+    #[test]
+    fn every_citation_fails_when_its_sentence_goes_or_its_row_moves() {
+        // Each sentence reworded by one letter in a copy of its file.
+        for c in CITED {
+            let changed = words(c.words).replacen(' ', "  x", 1);
+            let reworded = |file: &str| {
+                let text = words(&read_tree(file)?);
+                Ok(if file == c.file {
+                    text.replace(&words(c.words), &changed)
+                } else {
+                    text
+                })
+            };
+            let one = std::slice::from_ref(c);
+            assert!(
+                check_citations(CLAIMS, one, reworded).is_err(),
+                "{}",
+                c.words
+            );
+            // Each row it stands for moved to another state.
+            for (id, mode) in c.rows {
+                let other = if *mode == "NOT_VERIFIED" {
+                    "NOT_ESTABLISHED"
+                } else {
+                    "NOT_VERIFIED"
+                };
+                let mut moved: Vec<Claim> = CLAIMS.to_vec();
+                moved.iter_mut().find(|r| r.id == *id).unwrap().evidence =
+                    Evidence::Deferred(other);
+                let err = check_citations(&moved, one, read_tree).unwrap_err();
+                assert!(err.contains(id), "{err}");
+            }
+        }
+    }
+    #[test]
+    fn probe_directories_do_not_collide() {
+        let (a, b) = (ProbeDir::new().unwrap(), ProbeDir::new().unwrap());
+        assert_ne!(a.0, b.0);
+        let path = a.0.clone();
+        drop(a);
+        assert!(!path.exists());
     }
     #[test]
     fn a_paragraph_linking_the_registry_names_only_its_ids_and_states() {

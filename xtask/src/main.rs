@@ -16,6 +16,7 @@ mod isolation;
 mod license_metadata;
 mod license_self;
 mod measured_sources;
+mod memory;
 mod mutation_campaign;
 mod mutation_matrix;
 mod package;
@@ -249,11 +250,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/facts-light.svg",
-        "93624f881d896900e63d1694c1cc4219150d48b5ef95461ccedcb353ba89a44e",
+        "5dc0ece7ef69cd8950686a4941e2c27b13bc9faa131ab2b24d58833b223958fa",
     ),
     (
         "media/presentation/wall-light.svg",
-        "1587f805345b09c171b74af481190f74ac49a78c54f373ccda7142cd0f273d83",
+        "d68cfb645e2e03099e6c345261250ff51b7b2199226d67b81240cc0f683fb9c9",
     ),
     (
         "media/presentation/bars-light.svg",
@@ -273,11 +274,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/facts-dark.svg",
-        "9f12978745d6dc6cb1298fd5bd1b85f032e670b0401b5a9f8ab5326a6675a2a5",
+        "7cf40c42f11a5859c41094223073eb8b7c531599d45171de840d06e835abf45e",
     ),
     (
         "media/presentation/wall-dark.svg",
-        "db451d62af58b85ac21d9f9f68822b709e85c48a9a34a4eff1109a3dddebb3ff",
+        "4e1cb7ce5c971ec2c5a90c916b5375378a787caae3e5304457df5b66fccd26b1",
     ),
     (
         "media/presentation/bars-dark.svg",
@@ -429,43 +430,43 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/phone/bars-dark.svg",
-        "f5a956c54e9a48bd9720d4fa55ac543c948fa03d51c8f0e08030bbadd285e2af",
+        "d5826edc082c38cc535989fa830c86b9d1f6c4dcb557147b56d4dfbdb4858a37",
     ),
     (
         "media/presentation/phone/bars-light.svg",
-        "6a8be619dba88b70f04e691f18e72d3e441fa5b2304553120b35b03cbd03d441",
+        "500b0ff238f86118c3bd42a2970e04a8dcae5564f47ec0bd3a0f636b816f8f90",
     ),
     (
         "media/presentation/phone/core-dark.svg",
-        "0bf2481c4d27812993df94444b6b48d0e89a0f7d97b0ac93779a37a49537d526",
+        "fa8420bcda409a427081b5552a6f3b49b7f3f46963bc5ec5c699580b2f7483f0",
     ),
     (
         "media/presentation/phone/core-light.svg",
-        "4a5e1654d3ac6e623df1aeea36046c30b75718406d8d635ae780c25b96a18349",
+        "d86001219be70bdb2a602264ca60b8a98828143af1aace2e90d2bbf25c7310ab",
     ),
     (
         "media/presentation/phone/crash-dark.svg",
-        "69c19962bda8fecb36a856a1cf8d00d52a5fa09ab1f2a1d1f46c0140d776092c",
+        "c8da63a85bcafcda3622598495be8652e394b3087f70127b50486cd75e569414",
     ),
     (
         "media/presentation/phone/crash-light.svg",
-        "2a89c0799e9d9c4ab9a8c3949133e1b6b2729cf08774689b7a9a3cce66b9a4bf",
+        "e07abe512bda01379080971d507ba82c10ec21bf526461a453b942d4527bb504",
     ),
     (
         "media/presentation/phone/flow-dark.svg",
-        "73e65aabc3e2b653e14db25feca2139c1b6131e7525b221e6dd3d0d946377753",
+        "d8d2a2fcb527229222b93c1531dc1c76ca3a4400d08f0226318e0381bf611ad2",
     ),
     (
         "media/presentation/phone/flow-light.svg",
-        "661e5d6f912a846935037cd75de9a6d0491cc7f5ee5640656cf7cbe22cc46593",
+        "b5134023de67d4d066956dad8b6a3d5ec99c59b7442556483ea6f0ee222f41f0",
     ),
     (
         "media/presentation/phone/glance-dark.svg",
-        "6a1146a2aa71166e3feeea50814684f2772af05499402797f25fcc7f46e7574e",
+        "b327d5b5bfe34e6ccece4ef2254f89a30edf7668a9b39163688664811b02532a",
     ),
     (
         "media/presentation/phone/glance-light.svg",
-        "168457ee36fc356dd27b69ec93dfec1aa9db32756fc439377ee3adb3d184cff1",
+        "9fe8311d56f48035e8bac9356b79fa3a469d155b2998f7931244c11bdd9a7f45",
     ),
     (
         "media/presentation/phone/header-dark.svg",
@@ -477,19 +478,19 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/phone/license-dark.svg",
-        "7129c50be0d9062fe2eab88577001d78f06ae7a74b6311af2a40ad39decdc3be",
+        "e40bfad73a9031456c36f2394a0adeb284a8cce8eb4e451f04e4c3892c7b3835",
     ),
     (
         "media/presentation/phone/license-light.svg",
-        "2c6dc8ef698fed1675ea02a9e87f254da548f03f079115ad72930fc87c66503a",
+        "cc99b41efd30556037210931cc42147bd48594a9cee0e6dba309b2deaa745ff5",
     ),
     (
         "media/presentation/phone/pledges-dark.svg",
-        "ac6e0d084543eb5b5bfe5e9732957f9146d2b7719632c2fdc38b27833413bc51",
+        "fde803ca5696442b3407748305511c80fcf6b4f2650dcefa90d6a7b96528366f",
     ),
     (
         "media/presentation/phone/pledges-light.svg",
-        "c6b411928131a24c50b6dd88360e40b3ee63df2126b064f09d5828ba1b326e56",
+        "73ac1444d9453b1a0cc1ca873ae05eec1f04fefbf83d8d57dd76f3ba85907a58",
     ),
     (
         "media/presentation/phone/q8-dark.svg",
@@ -501,51 +502,51 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/phone/record-dark.svg",
-        "44b976202c4ccec6a44c123d24ca0faffed001ba5b76ff1566272f3f07dfe049",
+        "6b18852be5b4ec6f26f16ef710b628f486235e09baf88b3df8389b68404142f2",
     ),
     (
         "media/presentation/phone/record-light.svg",
-        "0d515c99b6f7a0a013b37ec24a916bbb39d990e56edac26d0967b17b55e8913c",
+        "7dcb5498b3f95ddb07a9dc8c7c26ad27d486f045a8ac25429817b9e319b59b38",
     ),
     (
         "media/presentation/phone/rerun-dark.svg",
-        "296909ce86a9cab7cd37d411013b535baebece3f7c4d9c1c4e62fd8a61142402",
+        "349c08b880338eedc4b901fbc23455de63ea6c5ebbe1653e6e92a03c65b10e39",
     ),
     (
         "media/presentation/phone/rerun-light.svg",
-        "45da8143fe144a4db4b8b9f88e9525a64e36171d22d39f7a65ffff1d3bc0d3aa",
+        "a6b668ee0cd7ebbb3c1dae93b4b70e9d3a44d8e0c179cf4215e4b00f49e82a17",
     ),
     (
         "media/presentation/phone/speed-dark.svg",
-        "2e79c47d8fcf4872bc6a532c72d4d5068adc00bf195daa2c7bba6cc943e6972a",
+        "d2450a8d7a9b612f16c962e586f3f4f83680bf4d0b2327fb1cf2cd82fa3b94a5",
     ),
     (
         "media/presentation/phone/speed-light.svg",
-        "18da2cc50e8a12da999d8560f7550e605c45348c5c6d44e73193457f5667ab40",
+        "7ff94b9b5dfb3963e19149f93d101091d029cddedb4e14ff492f3f362b36c595",
     ),
     (
         "media/presentation/phone/status-dark.svg",
-        "9e690b73f4ac721196112e7bdfa9bb4e3b9d5f31e1291ffaf594456b9847f02e",
+        "7541d433779df2e531392ce144095e17427597a7061ee2c604204781145d06d1",
     ),
     (
         "media/presentation/phone/status-light.svg",
-        "b38f88c7820fe10a2100a9aafd3dcafe067ae1662b52c1536f5a0fa5d33624ad",
+        "71381f5a909561a99882257908dfd22933bcf2c5175f5cc8e17f39b4b6669029",
     ),
     (
         "media/presentation/phone/terminal-dark.svg",
-        "22ad932914a38f2a8e3c529e5a505383a696120f3df7f533884179fb73002ccc",
+        "5d41f5291c698d0ae2e87d6b8426d33ec27342c465f79947660b378b893fabdf",
     ),
     (
         "media/presentation/phone/terminal-light.svg",
-        "1b06814e3991dcca435569aee280ef2318323d2a9f377c4a401866f4a300f3ec",
+        "9eb561f342c782d3c36dc4d5d2f8af932b98d3ed760d1378e5a2cb2249b60a24",
     ),
     (
         "media/presentation/phone/wall-dark.svg",
-        "31901217cfcc5756c09f93eddc3c1618bfea1426d35ff09e58834256cca280b0",
+        "9539a2b6a9f5fd94a396df6eb3ca1b18f768c85e257f5183a458980e005501e8",
     ),
     (
         "media/presentation/phone/wall-light.svg",
-        "1f29a24978fa3a86ed17fe656dc6fe52a42c31565643d94fb9ed61da01dcb809",
+        "b4def92c98015541efbf47c4658e2cc5a0f17b89fcbe8c7d4f66ef716c0be603",
     ),
     (
         "media/presentation/q8-dark.svg",
@@ -564,7 +565,7 @@ const CLA_ACK_TICKED: &[&str] = &[
 ];
 
 const USAGE: &str =
-    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|bench-compare|speed-ab|speed-ab-check|speed-campaign|package-binaries|ci-evidence|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|source-headers|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
+    "verify|report|reproduce|witness|rebuild-check|isolation-check|mutation-matrix|history-mutation-matrix|mutation-campaign|memory-run|memory-check|bench-compare|speed-ab|speed-ab-check|speed-campaign|package-binaries|ci-evidence|ci-evidence-import|ci-evidence-recorded|claims|roadmap|crash-series|history-crash-series|runtime-examples|source-audit|source-bundle|source-headers|ucd-tables|commitment|commitment-check|rust-only|licensing|ci-policy|docs-refs|cla-ack|fmt|clippy|recorder-lint|platform-diff|test|bench|physics";
 const CHECKOUT_SHA: &str = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 
 // Exact active-license text pin; not evidence of legal approval or authorship.
@@ -1107,6 +1108,7 @@ fn verify() -> Result<(), String> {
     claims::check(workspace_root()?)?;
     answer_bench::check(workspace_root()?)?;
     roadmap::check(workspace_root()?)?;
+    ci_evidence::recorded(&[])?;
     if cfg!(unix) {
         let report = crash_series::run(&gel_evidence_binary(workspace_root()?), 5, 20_260_929)?;
         println!("{}", report.lines().last().unwrap_or(""));
@@ -1215,6 +1217,9 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("mutation-matrix") => mutation_matrix::run(&args[1..]),
         Some("history-mutation-matrix") => history_mutation_matrix::run(&args[1..]),
         Some("mutation-campaign") => mutation_campaign::run(&args[1..]),
+        Some("memory-run") => memory::run(&args[1..]),
+        Some("memory-check") => memory::check_cmd(&args[1..]),
+        Some("memory-touch") => memory::touch(&args[1..]),
         Some("answer-bench") => answer_bench::run(&args[1..]),
         Some("bench-compare") => bench_compare::run(&args[1..]),
         Some("speed-ab") => speed_ab::run(&args[1..]),
@@ -1222,6 +1227,8 @@ fn dispatch(args: &[String]) -> Result<(), String> {
         Some("speed-campaign") => speed_campaign::campaign_cmd(&args[1..]),
         Some("package-binaries") => package::run(&args[1..]),
         Some("ci-evidence") => ci_evidence::report(&args[1..]),
+        Some("ci-evidence-import") => ci_evidence::import(&args[1..]),
+        Some("ci-evidence-recorded") => ci_evidence::recorded(&args[1..]),
         Some("claims") => claims::check(workspace_root()?),
         Some("roadmap") => roadmap::check(workspace_root()?),
         Some("crash-series") => crash_series_cmd(&args[1..]),

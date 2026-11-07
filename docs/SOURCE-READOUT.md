@@ -43,9 +43,11 @@ valid. Its tests check the FIPS 180-2 example messages, including one million
 `a`, compare it for every length up to 1,024 bytes with digests made by the
 RustCrypto sha2 crate before that crate left the tree, and check every way of
 feeding a short message in pieces. Without `unsafe` it cannot use the processor's SHA
-instructions: on the author's machine it hashes about 274 MB/s against about
-1,736 MB/s for sha2 with SHA-NI, so integrity timings measured with sha2 are not
-comparable with new runs.
+instructions: when it was added it hashed about 274 MB/s on the author's machine
+against about 1,736 MB/s for sha2 with SHA-NI, and it ran at 0.28 and 0.39 of the
+speed of v0.6.1 on 2026-10-20, 0.26 and 0.35 in the re-run of 2026-11-04
+([speed set](speed-results/2026-10-20-against-v0.6.1/speed_sha256/summary.txt), [re-run](speed-results/2026-11-04-reruns/rerun-2026-10-20-against-v0.6.1/speed_sha256/summary.txt)),
+so integrity timings measured with sha2 are not comparable with new runs.
 
 ## Provenance and release boundary
 

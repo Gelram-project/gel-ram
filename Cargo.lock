@@ -112,6 +112,8 @@ dependencies = [
  "gel-live-lab",
  "gel-orb",
  "gel-phase-quad",
+ "gel-reader",
  "gel-source",
+ "gel-store",
  "gel-structural",
 ]

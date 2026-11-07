@@ -25,8 +25,8 @@ Run the complete synthetic PL/EN demonstration:
 cargo run --locked --offline -p gel-source --example source_build
 ```
 
-Dependencies must already be available for offline builds. The example emits
-exact quotations, separate text/catalog byte sizes and a modified-text rejection.
+The example emits exact quotations, separate text/catalog byte sizes and a
+modified-text rejection.
 It does not open private files, access the network, write files or execute input.
 
 ## Contract
