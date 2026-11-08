@@ -5,18 +5,18 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- `v0.8.0` is the current version line; its tag and release page are made by
+- `v0.9.0` is the current version line; its tag and release page are made by
   the owner's publication from the merge commit of its version cutover, and the
-  Releases page shows whether that has happened. `v0.7.0` is the release before
-  it; tagged releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on
-  the Releases page. The tags `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0`
-  remain without a release page. Changes merged after `v0.8.0` are listed under
-  [after v0.8.0](#after-v080).
-- The workspace version is 0.8.0 ([Cargo.toml](../Cargo.toml)). A
+  Releases page shows whether that has happened. `v0.8.0` is the release before
+  it; tagged releases, including `v0.7.0`, `v0.6.1`, `v0.6.0` and `v0.5.3`, are
+  listed on the Releases page. The tags `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and
+  `v0.3.0` remain without a release page. Changes merged after `v0.9.0` are listed
+  under [after v0.9.0](#after-v090).
+- The workspace version is 0.9.0 ([Cargo.toml](../Cargo.toml)). A
   [test](../xtask/tests/version_line.rs) ties a fixed list of files that name
   the current version to it, the first line of this section and the "After"
   heading among them; a mention outside that list is not checked.
-- The sections [v0.8.0](#v080) back to [v0.5.0](#v050) list each merged change
+- The sections [v0.9.0](#v090) back to [v0.5.0](#v050) list each merged change
   with its commit, the command that checks it and its remaining acceptance.
   Earlier release points are recorded in the [publication status](../CANDIDATE-STATUS.md).
 - This page keeps three kinds of statement apart:
@@ -180,7 +180,20 @@ the [review work list](#how-to-read-the-review-work-list).
    encoder, so no retrieval result can be re-run from this tree. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## After v0.8.0
+## After v0.9.0
+
+Nothing has been merged after v0.9.0 yet.
+
+## v0.9.0
+
+Everything merged after v0.8.0 (PR #98 to PR #111). One command runs the short
+public checks on any host and writes one block that holds nothing private; the
+speed sets were re-run from public revisions with an A/A control; the saved
+files are cut, damaged and raced in fault tests; sanitized CI reports of a third
+revision are kept and checked; memory of public operations is recorded, with
+one record of a public revision kept; the claim registry ties more sentences to
+its rows; and the README leads with pictures drawn from the files, with a phone
+size of each.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
@@ -198,6 +211,7 @@ the [review work list](#how-to-read-the-review-work-list).
 | The claim registry grows from 74 to 85 rows and from 35 to 105 tied sentences: executable rows for the gel-store file refusals, Reader16, exact progressive Top-K and the source-builder limits; separate-gate rows for the selftest, the real-source readout, the recorded CI reports and the faults of saved files; measured rows for the recorded history kill series and the Q8 R2 comparisons; the query-rate limit as not established; recorded numbers tied to their evidence files | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- claims` | [Claims](CLAIMS.md) | Not an exhaustive map of historical statements; the roadmap rows, the release notes, videos and the measurement tables of other pages have no row |
 | Thirteen of the fourteen phone cards drop, from 16,620 to 10,799 px at 600 wide in all, each at most 1,180 tall (the header card is unchanged): repetition and decoration are cut, the phone speed card shows totals and not one row per program, and the phone license card shows five of the seven quotes, with the limit on evaluation | 390136f (PR #108) | `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [Presentation guide](README-PRESENTATION.md) | A local rendering is not a check of the page GitHub shows; the q8 card is not shortened |
 | A memory record of a public revision is retained: `xtask memory-run --reps 9` at 390136f, the merge commit of PR #108, from a clean checkout, eight operations with nine processes each, 72 samples; a test puts it through the check of `memory-check`, requires every row of its table to be the one the record gives and no major fault, and sees it refused with one sample number changed; the claim registry gains the row `memory-accounting-public-operations` | this change | `cargo test --locked --offline -p xtask the_retained_record` | [Memory record of 2026-11-08](memory-results/2026-11-08/README.md), [instrument and limits](MEMORY-ACCOUNTING.md) | One machine on one day, not pinned to cores; process-wide numbers, not the cost of a format; the peak is the `VmHWM` of the last read of `/proc`, and the kernel's final account was not read for this record; no time is recorded |
+| The version line is 0.9.0: every file that names the current version names it, the release notes of 0.9.0 replace those of 0.8.0 in the root, and the release card of the README shows what is new in 0.9 beside what came in 0.8 | this change (PR #111) | `cargo test -p xtask --test version_line` | [release notes](../RELEASE-NOTES-v0.9.0.md), [publication status](../CANDIDATE-STATUS.md) | The tag and the release page exist only after the owner publishes them |
 
 ## v0.8.0
 

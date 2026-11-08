@@ -5,7 +5,7 @@
 use std::{fs, io::Write, path::Path, process::Command};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// The release whose sources the page links to and checks out.
-const RELEASE: &str = "v0.8.0";
+const RELEASE: &str = "v0.9.0";
 const SCENES: &[(&str, &str, &str)] = &[
     (
         "01-evidence",
@@ -289,16 +289,23 @@ __RERUN__
 
 Each case timed against two copies of the baseline, then once more with no other work running; most are faster, some slower. [Re-runs](docs/speed-results/2026-11-04-reruns/README.md)
 
-## New in 0.8, and in 0.7
+<details><summary>What came in 0.7, in words</summary>
+
+- **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
+- **One Unicode version:** normalization follows Unicode __UNICODE__, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
+- **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([v0.7.0 in the roadmap](docs/ROADMAP.md#v070)).
+
+</details>
+
+## New in 0.9, and in 0.8
 
 __GLANCE__
 
 <details><summary>What changed, in words</summary>
 
-- **New in 0.8, programs and files name their license:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept. The license guides now follow the words of the LICENSE ([release notes](RELEASE-NOTES-v0.8.0.md)).
-- **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
-- **One Unicode version:** normalization follows Unicode 16.0.0, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
-- **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([v0.7.0 in the roadmap](docs/ROADMAP.md#v070)).
+- **New in 0.9, checks on your own host and faults of saved files:** `xtask witness NEW_DIR` runs the six short public checks on any host and writes one plain-text block; a filter replaces host and user names, paths, network addresses and serial numbers in the step lines, and a separate check refuses the block if this host's names or directories remain anywhere in it. No block from a host other than the author's is retained yet ([check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md)). 20 tests in three new files cut the saved files of gel-history, gel-store and gel-source at every byte, damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; none is a power-loss test ([faults of saved files](docs/PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)).
+- **New in 0.9, memory and CI reports on record:** `xtask memory-run` starts each public operation as a child process and records payload, peak mapped and resident memory, page faults and threads; one record of a public revision is kept, nine processes of each of eight operations, 72 samples, on one machine, process-wide, with no time recorded ([memory record](docs/memory-results/2026-11-08/README.md)). Sanitized CI reports of a third revision are kept and checked by `xtask ci-evidence-recorded`; they are hosted CI runs of one revision each, not an independent second host ([recorded reports](docs/evidence-ci/README.md), [release notes](RELEASE-NOTES-v0.9.0.md)).
+- **New in 0.8, programs and files name their license:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept. The license guides now follow the words of the LICENSE ([v0.8.0 in the roadmap](docs/ROADMAP.md#v080)).
 
 </details>
 
@@ -374,7 +381,7 @@ __CORE__
 | Start and use | Inspect and reproduce | Project |
 |:---|:---|:---|
 | [Project map](docs/START-HERE.md) | [Claim registry](docs/CLAIMS.md) | [Roadmap](docs/ROADMAP.md) |
-| [Evidence Lab](docs/EVIDENCE-LAB.md) · [batch mode](docs/EVIDENCE-BATCH.md) | [Reproduction guide](docs/REPRODUCE.md) · [check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md) | [Release notes v0.8.0](RELEASE-NOTES-v0.8.0.md) |
+| [Evidence Lab](docs/EVIDENCE-LAB.md) · [batch mode](docs/EVIDENCE-BATCH.md) | [Reproduction guide](docs/REPRODUCE.md) · [check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md) | [Release notes v0.9.0](RELEASE-NOTES-v0.9.0.md) |
 | [Backup and restore](docs/BACKUP.md) | [Per-platform CI evidence](docs/CI-EVIDENCE.md) | [Publication status](CANDIDATE-STATUS.md) |
 | [Your bytes in one record](docs/LIVE-LAB.md) | [Mutation matrix](docs/MUTATION-MATRIX.md) · [crash series](docs/CRASH-SERIES.md) | [Measured progress](docs/MEASURED-PROGRESS.md) |
 | [License decision guide](docs/LICENSE-DECISION.md) | [External checks](docs/EXTERNAL-CHECKS.md) | [All media and their scope](media/INDEX.md) |
@@ -400,7 +407,7 @@ line; the full wording, with its limits, is folded under the picture in a
 `<details>` block and stays in the file. The pictures added with that layout are
 drawn from files too: what is checked here, private or not established; the
 README's own commands with the line each prints, drawn and not a recording; the
-timing set of 2026-10-20 beside its re-run; versions 0.7 and 0.8 at a glance; the
+timing set of 2026-10-20 beside its re-run; versions 0.8 and 0.9 at a glance; the
 published commitments on a time line; the parts of the memory core; and what one
 Q8 record holds, as docs/Q8-QUAD.md states it: 1,024 one-byte values and a
 128-byte activity mask in one 1,152-byte record that four views read, and what
@@ -409,10 +416,12 @@ files when the README is built, each linking to the file its number comes from;
 none is a CI badge. Every wide card also comes 600 wide, with text of at least 20 px, for
 a phone: the picture sends a screen up to 600 px wide to it. A phone card says
 less than its wide card: the speed card shows the totals, the license card a
-subset of the quotes. Two
-numbers in the text are counted from files when the README is built: the
-published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
-which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+subset of the quotes. Three
+values in the text are read from files when the README is built: the
+published commitments in docs/COMMITMENTS.md, the packages in Cargo.lock,
+which the builder refuses to count when one comes from outside the checkout or
+is not one of its crates, and the Unicode version of the normalization tables,
+refused when their header and their version constant disagree. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
@@ -3322,44 +3331,8 @@ fn glance_phone_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
         r#"<text class="kick" x="32" y="44">{}</text>"#,
         xml(&kicker)
     );
-    let (new, since) = (
-        format!("new in {}", f.release),
-        format!("since {}", f.since),
-    );
-    let tiles: [(String, &str, &str, &str, &str, &str); 4] = [
-        (
-            f.tools.len().to_string(),
-            &new,
-            t.accent,
-            "tool programs answer",
-            "--version and --license",
-            t.muted,
-        ),
-        (
-            f.packages.to_string(),
-            &since,
-            t.accent,
-            "packages in Cargo.lock",
-            "0 from outside this checkout",
-            t.good,
-        ),
-        (
-            f.unicode.clone(),
-            &since,
-            t.accent,
-            "the Unicode version",
-            "that normalization follows",
-            t.ink,
-        ),
-        (
-            "SHA-256".to_string(),
-            &since,
-            t.good,
-            "written here",
-            "not taken from outside",
-            t.ink,
-        ),
-    ];
+    let new = format!("new in {}", f.release);
+    let tiles = glance_tiles(t, f);
     let (h, gap) = (126.0, 8.0);
     let mut y = 58.0;
     for (k, (big, tag, colour, l1, l2, c2)) in tiles.iter().enumerate() {
@@ -6842,68 +6815,190 @@ fn rerun_alt() -> Result<String> {
 // ===== VISUAL rerun END =====
 
 // ===== VISUAL glance BEGIN =====
-/// The generated Unicode tables: their header and their version constant name the Unicode version.
-const GLANCE_TABLES: &str = "crates/gel-source/src/nfc_tables.rs";
 /// The binaries guide lists the tool programs that answer `--version` and `--license`.
 const GLANCE_BINARIES: &str = "docs/BINARIES.md";
 const GLANCE_NUMBER_WORDS: [&str; 13] = [
     "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
     "eleven", "twelve",
 ];
-/// The roadmap, whose section of the earlier version states the older facts.
+/// The roadmap, whose section of the earlier version states the older fact.
 const GLANCE_ROADMAP: &str = "docs/ROADMAP.md";
+/// What the roadmap section of the earlier version says of the programs.
+const GLANCE_SINCE_FACT: &str =
+    "Every program prints one identity line for `--version`, and for `--license`";
+/// The kept memory record of a public revision: its MEMORY.txt is counted, and
+/// the README links its README.
+const GLANCE_MEMORY: &str = "docs/memory-results/2026-11-08";
+/// The fault tests of saved files, one file per crate.
+const GLANCE_FAULTS: [&str; 3] = [
+    "crates/gel-history/tests/faults.rs",
+    "crates/gel-store/tests/faults.rs",
+    "crates/gel-source/tests/faults.rs",
+];
+/// The reproduction guide, whose section of the short witness lists its steps.
+const GLANCE_REPRODUCE: &str = "docs/REPRODUCE.md";
 /// The texts the glance card is read from; `GlanceFacts::read` fills them from the files.
 struct GlanceTexts<'a> {
-    /// `RELEASE` (e.g. v0.8.0) and the release notes of that version.
+    /// `RELEASE` (e.g. v0.9.0) and the release notes of that version.
     release: &'a str,
     notes: &'a str,
     roadmap: &'a str,
-    tables: &'a str,
     binaries: &'a str,
-    lock: &'a str,
+    /// MEMORY.txt of the kept memory record.
+    memory: &'a str,
+    /// The fault test files, in the order of `GLANCE_FAULTS`.
+    faults: &'a [&'a str],
+    reproduce: &'a str,
     readme: &'a str,
 }
 /// What the glance card shows, each read from the file that states it.
 struct GlanceFacts {
-    /// The release as major.minor, from `RELEASE`; its release notes name the
-    /// programs that answer `--license`.
+    /// The release as major.minor, from `RELEASE`; its release notes name
+    /// what the card says is new in it.
     release: String,
     /// The version before it, from the README heading; its roadmap section
-    /// states the packages, the Unicode version and SHA-256.
+    /// names the programs that answer `--license`.
     since: String,
-    /// The packages of Cargo.lock, every one a crate of this checkout.
-    packages: usize,
-    /// The Unicode version the normalization tables were generated from.
-    unicode: String,
-    /// The tool programs that answer `--version` and `--license`.
+    /// New in the release: the fault tests of saved files, without the
+    /// ignored child processes they start.
+    faults: usize,
+    /// New in the release: the operations of the kept memory record, the
+    /// processes of each and the samples, one per process.
+    operations: usize,
+    processes: usize,
+    samples: usize,
+    /// New in the release: the steps of `xtask witness`.
+    steps: usize,
+    /// Since the version before: the tool programs that answer `--version` and `--license`.
     tools: Vec<String>,
 }
 /// A file of the checkout; an error names the file.
 fn glance_file(path: &str) -> Result<String> {
     fs::read_to_string(path).map_err(|e| format!("{path}: {e}").into())
 }
+/// The test functions of a test file, without the ignored ones: a `#[test]`
+/// among the attributes right above a function.
+fn glance_tests(text: &str) -> usize {
+    let (mut test, mut ignored, mut n) = (false, false, 0);
+    for line in text.lines().map(str::trim) {
+        if line.starts_with("#[") {
+            test |= line == "#[test]";
+            ignored |= line.starts_with("#[ignore");
+            continue;
+        }
+        if test && !ignored && line.starts_with("fn ") {
+            n += 1;
+        }
+        (test, ignored) = (false, false);
+    }
+    n
+}
+/// The operations of a memory record, the processes of each and its samples:
+/// the end line must count the record and sample lines, and every operation
+/// must have run as many processes, which add up to the samples.
+fn glance_memory(text: &str) -> Result<(usize, usize, usize)> {
+    let number = |v: &str| -> Option<usize> {
+        if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit()) {
+            return None;
+        }
+        v.parse().ok()
+    };
+    let end = text
+        .lines()
+        .last()
+        .and_then(|l| l.strip_prefix("end records="))
+        .and_then(|l| l.split_once(" samples="))
+        .and_then(|(r, s)| Some((number(r)?, number(s.split(' ').next()?)?)));
+    let (Some((records, samples)), Some("GEL_MEMORY_1")) = (end, text.lines().next()) else {
+        return Err(
+            format!("{GLANCE_MEMORY}/MEMORY.txt: not a memory record with an end line").into(),
+        );
+    };
+    let reps: Vec<Option<usize>> = text
+        .lines()
+        .filter(|l| l.starts_with("record "))
+        .map(|l| {
+            l.split(' ')
+                .find_map(|f| f.strip_prefix("reps="))
+                .and_then(number)
+        })
+        .collect();
+    let counted = text.lines().filter(|l| l.starts_with("sample ")).count();
+    let processes = reps.first().copied().flatten().unwrap_or(0);
+    if records == 0
+        || reps.len() != records
+        || counted != samples
+        || reps.iter().any(|r| *r != Some(processes))
+        || records.checked_mul(processes) != Some(samples)
+    {
+        return Err(format!(
+            "{GLANCE_MEMORY}/MEMORY.txt: the end line says {records} records and {samples} samples, the file holds {} and {counted}",
+            reps.len()
+        )
+        .into());
+    }
+    Ok((records, processes, samples))
+}
+/// The steps of `xtask witness`: the rows of the step table in the section of
+/// the short witness, which must name the command and give their number in words.
+fn glance_witness(text: &str) -> Result<usize> {
+    let section = text
+        .split_once("\n## A short witness\n")
+        .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
+        .unwrap_or("");
+    let names: Vec<&str> = section
+        .lines()
+        .skip_while(|l| !l.starts_with("| Step |"))
+        .skip(2)
+        .take_while(|l| l.starts_with("| "))
+        .map(|l| l[2..].split(" |").next().unwrap_or(""))
+        .collect();
+    let plain = |n: &&str| !n.is_empty() && n.bytes().all(|b| b.is_ascii_lowercase() || b == b'-');
+    let distinct = names
+        .iter()
+        .enumerate()
+        .all(|(i, n)| !names[..i].contains(n));
+    let said = GLANCE_NUMBER_WORDS
+        .get(names.len())
+        .is_some_and(|w| section.contains(&format!("It runs {w} steps")));
+    if names.is_empty()
+        || !names.iter().all(plain)
+        || !distinct
+        || !said
+        || !section.contains("-p xtask -- witness ")
+    {
+        return Err(format!(
+            "{GLANCE_REPRODUCE}: the short witness does not list the steps it counts"
+        )
+        .into());
+    }
+    Ok(names.len())
+}
 impl GlanceFacts {
     fn read() -> Result<GlanceFacts> {
         let notes = format!("RELEASE-NOTES-{RELEASE}.md");
-        GlanceFacts::from_texts(
-            &GlanceTexts {
-                release: RELEASE,
-                notes: &glance_file(&notes)?,
-                roadmap: &glance_file(GLANCE_ROADMAP)?,
-                tables: &glance_file(GLANCE_TABLES)?,
-                binaries: &glance_file(GLANCE_BINARIES)?,
-                lock: &glance_file("Cargo.lock")?,
-                readme: NATIVE,
-            },
-            &|dir| Path::new(dir).join("Cargo.toml").is_file(),
-        )
+        let faults = GLANCE_FAULTS
+            .iter()
+            .map(|f| glance_file(f))
+            .collect::<Result<Vec<String>>>()?;
+        let faults: Vec<&str> = faults.iter().map(String::as_str).collect();
+        GlanceFacts::from_texts(&GlanceTexts {
+            release: RELEASE,
+            notes: &glance_file(&notes)?,
+            roadmap: &glance_file(GLANCE_ROADMAP)?,
+            binaries: &glance_file(GLANCE_BINARIES)?,
+            memory: &glance_file(&format!("{GLANCE_MEMORY}/MEMORY.txt"))?,
+            faults: &faults,
+            reproduce: &glance_file(GLANCE_REPRODUCE)?,
+            readme: NATIVE,
+        })
     }
-    /// Refuses unless the release notes of `RELEASE` name the license programs,
-    /// the README and the roadmap name the earlier version and what it brought,
-    /// the table header and the version constant name one Unicode version, every
-    /// package of Cargo.lock is a crate directory of this checkout (`has_crate`),
-    /// and the binaries guide lists distinct programs, as many as the README says.
-    fn from_texts(s: &GlanceTexts, has_crate: &dyn Fn(&str) -> bool) -> Result<GlanceFacts> {
+    /// Refuses unless the README names the earlier version, the roadmap section
+    /// of that version names the programs, the binaries guide lists distinct
+    /// programs, as many as the README says, and the memory record, the fault
+    /// test files and the guide of the short witness give numbers that the
+    /// release notes of `RELEASE` and the README both state.
+    fn from_texts(s: &GlanceTexts) -> Result<GlanceFacts> {
         let parts: Vec<&str> = s
             .release
             .strip_prefix('v')
@@ -6915,16 +7010,11 @@ impl GlanceFacts {
             return Err(format!("unexpected release {}", s.release).into());
         }
         let release = format!("{}.{}", parts[0], parts[1]);
-        // A new release must not relabel these facts: its own notes must name them.
-        if !s.notes.starts_with(&format!("# GEL RAM {} ", s.release))
-            || !s.notes.contains("Every tool program answers `--version`")
-            || !s.notes.contains("`--license`")
-        {
-            return Err(format!(
-                "RELEASE-NOTES-{}.md does not name the programs that answer --license",
-                s.release
-            )
-            .into());
+        // Line breaks and runs of spaces count as one space.
+        let fold = |t: &str| t.split_whitespace().collect::<Vec<_>>().join(" ");
+        let (notes, readme) = (fold(s.notes), fold(s.readme));
+        if !s.notes.starts_with(&format!("# GEL RAM {} ", s.release)) {
+            return Err(format!("RELEASE-NOTES-{}.md is not the notes of it", s.release).into());
         }
         let since = s
             .readme
@@ -6936,72 +7026,17 @@ impl GlanceFacts {
             return Err(format!("the README names no earlier version beside {release}").into());
         }
         let since = since.to_string();
-        let header = s
-            .tables
-            .lines()
-            .find_map(|l| {
-                l.split_once("Character Database ")?
-                    .1
-                    .strip_suffix("; do not edit. Inputs (SHA-256):")
-            })
-            .ok_or(format!("{GLANCE_TABLES}: no Unicode version in the header"))?;
-        let constant = s
-            .tables
-            .lines()
-            .find_map(|l| l.strip_prefix("pub(crate) const UNICODE_VERSION: (u8, u8, u8) = ("))
-            .and_then(|l| l.strip_suffix(");"))
-            .ok_or(format!("{GLANCE_TABLES}: no version constant"))?;
-        let constant: Vec<&str> = constant.split(", ").collect();
-        let unicode = constant.join(".");
-        if constant.len() != 3 || !constant.iter().all(numeric) || header != unicode {
-            return Err(format!(
-                "{GLANCE_TABLES}: the header says {header}, the constant {unicode}"
-            )
-            .into());
-        }
-        // The section of the earlier version states the three older facts.
+        // A new release must not relabel the fact of the earlier one: the
+        // section of the earlier version states it.
         let section = s
             .roadmap
             .split_once(&format!("\n## v{since}.0\n"))
             .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
             .unwrap_or("");
-        for fact in [
-            "lists no third-party package".to_string(),
-            format!("follows Unicode {unicode}"),
-            "SHA-256".to_string(),
-        ] {
-            if !section.contains(&fact) {
-                return Err(format!("{GLANCE_ROADMAP}: v{since}.0 does not say {fact}").into());
-            }
-        }
-        // Every package of Cargo.lock is a crate of this checkout.
-        if s.lock.lines().any(|l| l.starts_with("source = ")) {
-            return Err("Cargo.lock: a package comes from outside this checkout".into());
-        }
-        let lines: Vec<&str> = s.lock.lines().collect();
-        let mut packages = 0;
-        for (i, l) in lines.iter().enumerate() {
-            if *l != "[[package]]" {
-                continue;
-            }
-            let name = lines
-                .get(i + 1)
-                .and_then(|n| n.strip_prefix("name = \"")?.strip_suffix('"'))
-                .filter(|n| {
-                    !n.is_empty()
-                        && n.bytes()
-                            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
-                })
-                .ok_or("Cargo.lock: a package without a plain name")?;
-            let dir = if name == "xtask" {
-                name.to_string()
-            } else {
-                format!("crates/{name}")
-            };
-            if !has_crate(&dir) {
-                return Err(format!("Cargo.lock: {name} is not a crate of this checkout").into());
-            }
-            packages += 1;
+        if !fold(section).contains(GLANCE_SINCE_FACT) {
+            return Err(
+                format!("{GLANCE_ROADMAP}: v{since}.0 does not say {GLANCE_SINCE_FACT}").into(),
+            );
         }
         let paragraph = s.binaries.lines().collect::<Vec<_>>().join(" ");
         let list = paragraph
@@ -7028,28 +7063,71 @@ impl GlanceFacts {
         if tools.is_empty() || !tools.iter().all(valid) || !distinct {
             return Err(format!("{GLANCE_BINARIES}: unexpected program list: {list}").into());
         }
-        let word = GLANCE_NUMBER_WORDS.get(tools.len()).ok_or(format!(
-            "{GLANCE_BINARIES}: too many programs to name in words"
-        ))?;
+        // New in the release: the fault tests, the memory record and the steps
+        // of the short witness, each counted in its own file.
+        let mut faults = 0;
+        for (k, text) in s.faults.iter().enumerate() {
+            let n = glance_tests(text);
+            if n == 0 {
+                let file = GLANCE_FAULTS.get(k).unwrap_or(&"a fault test file");
+                return Err(format!("{file}: no test").into());
+            }
+            faults += n;
+        }
+        let (operations, processes, samples) = glance_memory(s.memory)?;
+        let steps = glance_witness(s.reproduce)?;
+        let word = |n: usize| {
+            GLANCE_NUMBER_WORDS
+                .get(n)
+                .ok_or(format!("{n} is too many to name in words"))
+        };
+        let witness = format!(
+            "`xtask witness NEW_DIR` runs the {} short public checks",
+            word(steps)?
+        );
+        let tests = format!("{faults} tests in {} new files", word(s.faults.len())?);
+        let memory = format!(
+            "{} processes of each of {} operations",
+            word(processes)?,
+            word(operations)?
+        );
+        // A new release must not relabel what came later either: its own notes
+        // name the numbers the card says are new in it.
+        for stated in [
+            witness.clone(),
+            tests.clone(),
+            memory.clone(),
+            format!("records={operations} samples={samples}"),
+        ] {
+            if !notes.contains(&stated) {
+                return Err(format!("RELEASE-NOTES-{}.md does not say {stated}", s.release).into());
+            }
+        }
         for (stated, what) in [
             (
-                format!("the {word} tool programs answer `--version` and `--license`"),
+                format!(
+                    "the {} tool programs answer `--version` and `--license`",
+                    word(tools.len())?
+                ),
                 "number of tool programs",
             ),
-            (
-                format!("normalization follows Unicode {unicode},"),
-                "Unicode version",
-            ),
+            (witness, "number of witness steps"),
+            (tests, "number of fault tests"),
+            (format!("{memory}, {samples} samples"), "memory record"),
+            (format!("({GLANCE_MEMORY}/README.md)"), "memory record"),
         ] {
-            if !s.readme.contains(&stated) {
+            if !readme.contains(&stated) {
                 return Err(format!("the README states another {what}: {stated}").into());
             }
         }
         let facts = GlanceFacts {
             release,
             since,
-            packages,
-            unicode,
+            faults,
+            operations,
+            processes,
+            samples,
+            steps,
             tools,
         };
         facts.check()?;
@@ -7063,9 +7141,11 @@ impl GlanceFacts {
                 && p.iter()
                     .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
         };
-        if self.packages == 0
-            || self.tools.is_empty()
-            || !version(&self.unicode, 3)
+        if self.tools.is_empty()
+            || self.faults == 0
+            || self.steps == 0
+            || self.operations == 0
+            || self.operations.checked_mul(self.processes) != Some(self.samples)
             || !version(&self.release, 2)
             || !version(&self.since, 2)
             || self.since == self.release
@@ -7077,7 +7157,59 @@ impl GlanceFacts {
 }
 /// What the glance card says, as its description and as the README alternative text.
 fn glance_text(f: &GlanceFacts) -> String {
-    format!("Versions {} and {} at a glance. New in {}: {} tool programs answer --version and --license. Since {}: {} packages in Cargo.lock, none from outside this checkout; Unicode {} for normalization; SHA-256 written here.", f.since, f.release, f.release, f.tools.len(), f.since, f.packages, f.unicode)
+    format!("Versions {} and {} at a glance. New in {}: {} fault tests of saved files, no power-loss test; {} memory samples of {} operations, one machine, process-wide, no time; {} steps of xtask witness on any host, one block. Since {}: {} tool programs answer --version and --license.", f.since, f.release, f.release, f.faults, f.samples, f.operations, f.steps, f.since, f.tools.len())
+}
+/// One tile of a glance card: the big number, the version tag, the colour of
+/// the tile, the two lines under the number and the colour of the second.
+type GlanceTile = (
+    String,
+    String,
+    &'static str,
+    String,
+    &'static str,
+    &'static str,
+);
+/// The four tiles, the same on the wide and on the phone card: what is new in
+/// the release first, then what came in the version before it.
+fn glance_tiles(t: &'static Theme, f: &GlanceFacts) -> [GlanceTile; 4] {
+    let (new, since) = (
+        format!("new in {}", f.release),
+        format!("since {}", f.since),
+    );
+    [
+        (
+            f.faults.to_string(),
+            new.clone(),
+            t.accent,
+            "fault tests of saved files".to_string(),
+            "no power-loss test among them",
+            t.ink,
+        ),
+        (
+            f.samples.to_string(),
+            new.clone(),
+            t.accent,
+            format!("memory samples of {} operations", f.operations),
+            "one machine, process-wide, no time",
+            t.ink,
+        ),
+        (
+            f.steps.to_string(),
+            new,
+            t.good,
+            "steps of xtask witness, any host".to_string(),
+            "one block, no host or user names",
+            t.ink,
+        ),
+        (
+            f.tools.len().to_string(),
+            since,
+            t.accent,
+            "tool programs answer".to_string(),
+            "--version and --license",
+            t.muted,
+        ),
+    ]
 }
 /// A conservative width test: 0.62 of the font size per character, plus any
 /// letter spacing, must leave 8 % of the room free, so a wider fallback font fits.
@@ -7182,13 +7314,14 @@ impl GlanceRoll {
 }
 /// The headline of the glance card, in two lines.
 const GLANCE_HEADLINE: [&str; 2] = [
-    "No third-party packages · one Unicode version ·",
-    "programs that name their license",
+    "Checks on your own host · fault tests of saved files ·",
+    "a kept memory record · programs that name their license",
 ];
 /// Four tiles in two rows, each tagged with the version that brought it: the
-/// programs that name their license (new in the release), then the packages
-/// of Cargo.lock, the Unicode version and SHA-256 (since the version before);
-/// numbers roll into place. A line that does not fit its tile is refused.
+/// fault tests of saved files, the samples of the kept memory record and the
+/// steps of the short witness (new in the release), then the programs that
+/// name their license (since the version before); numbers roll into place.
+/// A line that does not fit its tile is refused.
 fn glance_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
     f.check()?;
     let t = theme(dark);
@@ -7207,44 +7340,8 @@ fn glance_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
             xml(line)
         ));
     }
-    let (new, since) = (
-        format!("new in {}", f.release),
-        format!("since {}", f.since),
-    );
-    let tiles: [(String, &str, &str, &str, &str, &str); 4] = [
-        (
-            f.tools.len().to_string(),
-            &new,
-            t.accent,
-            "tool programs answer",
-            "--version and --license",
-            t.muted,
-        ),
-        (
-            f.packages.to_string(),
-            &since,
-            t.accent,
-            "packages in Cargo.lock",
-            "0 from outside this checkout",
-            t.good,
-        ),
-        (
-            f.unicode.clone(),
-            &since,
-            t.accent,
-            "the Unicode version",
-            "that normalization follows",
-            t.ink,
-        ),
-        (
-            "SHA-256".to_string(),
-            &since,
-            t.good,
-            "written here",
-            "not taken from outside",
-            t.ink,
-        ),
-    ];
+    let new = format!("new in {}", f.release);
+    let tiles = glance_tiles(t, f);
     let (w, h) = (550.0, 158.0);
     for (k, (big, tag, colour, l1, l2, c2)) in tiles.iter().enumerate() {
         let (x, y) = (
@@ -7324,7 +7421,7 @@ fn glance_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
         &b,
     ))
 }
-/// Version 0.8 at a glance: packages, Unicode version, programs that name their license.
+/// The release at a glance beside the version before it, drawn from the files.
 fn glance_card(dark: bool) -> Result<String> {
     glance_draw(dark, &GlanceFacts::read()?)
 }
@@ -9463,6 +9560,7 @@ fn native_intro() -> String {
     let packages = packages()
         .map(|n| n.to_string())
         .unwrap_or_else(|e| format!("__PACKAGES__ {e}"));
+    let unicode = unicode_version().unwrap_or_else(|e| format!("__UNICODE__ {e}"));
     let crash = CrashSeries::read()
         .map(|c| crash_picture(&c))
         .unwrap_or_else(|e| format!("__CRASH__ {e}"));
@@ -9483,6 +9581,7 @@ fn native_intro() -> String {
         .replace("__RECORD__", &record)
         .replace("__COMMITMENTS__", &commitments)
         .replace("__PACKAGES__", &packages)
+        .replace("__UNICODE__", &unicode)
         .replace("__FLOW__", &flow_picture())
         .replace("__BARS__", &bars_picture())
         .replace("__WALL__", &wall_picture())
@@ -9520,11 +9619,111 @@ fn commitments() -> Result<usize> {
 }
 /// The packages in Cargo.lock; refused when one comes from outside this checkout.
 fn packages() -> Result<usize> {
-    let lock = fs::read_to_string("Cargo.lock")?;
+    lock_packages(&fs::read_to_string("Cargo.lock")?, &|dir| {
+        Path::new(dir).join("Cargo.toml").is_file()
+    })
+}
+/// The packages of a Cargo.lock, refused when one comes from outside the
+/// checkout, has no plain name or is not a crate directory of it (`has_crate`).
+fn lock_packages(lock: &str, has_crate: &dyn Fn(&str) -> bool) -> Result<usize> {
     if lock.lines().any(|l| l.starts_with("source = ")) {
         return Err("Cargo.lock lists a package from outside this checkout".into());
     }
-    Ok(lock.lines().filter(|l| *l == "[[package]]").count())
+    let lines: Vec<&str> = lock.lines().collect();
+    let mut packages = 0;
+    for (i, l) in lines.iter().enumerate() {
+        if *l != "[[package]]" {
+            continue;
+        }
+        let name = lines
+            .get(i + 1)
+            .and_then(|n| n.strip_prefix("name = \"")?.strip_suffix('"'))
+            .filter(|n| {
+                !n.is_empty()
+                    && n.bytes()
+                        .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+            })
+            .ok_or("Cargo.lock: a package without a plain name")?;
+        let dir = if name == "xtask" {
+            name.to_string()
+        } else {
+            format!("crates/{name}")
+        };
+        if !has_crate(&dir) {
+            return Err(format!("Cargo.lock: {name} is not a crate of this checkout").into());
+        }
+        packages += 1;
+    }
+    if packages == 0 {
+        return Err("Cargo.lock lists no package".into());
+    }
+    Ok(packages)
+}
+/// The generated Unicode tables: their header and their version constant name the Unicode version.
+const UNICODE_TABLES: &str = "crates/gel-source/src/nfc_tables.rs";
+/// The release whose roadmap section states what the README folds under the
+/// speed cards: no third-party package, one Unicode version, SHA-256 written here.
+const UNICODE_RELEASE: &str = "v0.7.0";
+/// The Unicode version of the normalization tables, the same in their header
+/// and in their version constant.
+fn unicode_of(tables: &str) -> Result<String> {
+    let header = tables
+        .lines()
+        .find_map(|l| {
+            l.split_once("Character Database ")?
+                .1
+                .strip_suffix("; do not edit. Inputs (SHA-256):")
+        })
+        .ok_or(format!(
+            "{UNICODE_TABLES}: no Unicode version in the header"
+        ))?;
+    let constant = tables
+        .lines()
+        .find_map(|l| l.strip_prefix("pub(crate) const UNICODE_VERSION: (u8, u8, u8) = ("))
+        .and_then(|l| l.strip_suffix(");"))
+        .ok_or(format!("{UNICODE_TABLES}: no version constant"))?;
+    let constant: Vec<&str> = constant.split(", ").collect();
+    let unicode = constant.join(".");
+    let numeric = |p: &&str| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit());
+    if constant.len() != 3 || !constant.iter().all(numeric) || header != unicode {
+        return Err(
+            format!("{UNICODE_TABLES}: the header says {header}, the constant {unicode}").into(),
+        );
+    }
+    Ok(unicode)
+}
+/// Refuses unless the roadmap section of `UNICODE_RELEASE` states the three
+/// facts the README gives under that release; one stated only in another
+/// section does not count.
+fn unicode_release_check(roadmap: &str, unicode: &str) -> Result<()> {
+    let section = roadmap
+        .split_once(&format!("\n## {UNICODE_RELEASE}\n"))
+        .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
+        .unwrap_or("");
+    for fact in [
+        "lists no third-party package".to_string(),
+        format!("follows Unicode {unicode}"),
+        "SHA-256".to_string(),
+    ] {
+        if !section.contains(&fact) {
+            return Err(format!("{GLANCE_ROADMAP}: {UNICODE_RELEASE} does not say {fact}").into());
+        }
+    }
+    Ok(())
+}
+/// The Unicode version the README states, read from the tables; the README
+/// links the roadmap section of the release that brought it, which says so.
+fn unicode_version() -> Result<String> {
+    let unicode = unicode_of(&fs::read_to_string(UNICODE_TABLES)?)?;
+    unicode_release_check(&fs::read_to_string(GLANCE_ROADMAP)?, &unicode)?;
+    let link = format!(
+        "([{UNICODE_RELEASE} in the roadmap](docs/ROADMAP.md#{}))",
+        UNICODE_RELEASE.replace('.', "")
+    );
+    if NATIVE.matches(&link).count() != 1 {
+        return Err(format!("the README does not link {link} once").into());
+    }
+    Ok(unicode)
 }
 fn rewrite_readme(before: &str) -> Result<String> {
     let marker = "### What you can inspect\n";
@@ -11332,10 +11531,6 @@ mod tests {
     #[test]
     fn glance_phone_shows_the_numbers_of_the_files() {
         let f = GlanceFacts::read().unwrap();
-        // Counted a second way: the name lines of Cargo.lock.
-        let lock = fs::read_to_string("Cargo.lock").unwrap();
-        let names = lock.lines().filter(|l| l.starts_with("name = \"")).count();
-        assert_eq!(f.packages, names);
         // The version before, from the README heading; the release from RELEASE.
         let since = NATIVE
             .lines()
@@ -11352,20 +11547,22 @@ mod tests {
                 format!("new in {}", f.release),
                 format!("since {}", f.since),
             );
-            // Only the programs are new in the release; the rest came before it.
+            // Three tiles are new in the release; the programs came before it.
             assert_eq!(
                 glance_phone_tiles(&s),
                 [
-                    (new, vec![f.tools.len().to_string()]),
-                    (old.clone(), vec![names.to_string()]),
-                    (old.clone(), vec![f.unicode.clone()]),
-                    (old, vec![]),
+                    (new.clone(), vec![f.faults.to_string()]),
+                    (new.clone(), vec![f.samples.to_string()]),
+                    (new, vec![f.steps.to_string()]),
+                    (old, vec![f.tools.len().to_string()]),
                 ]
             );
             for want in [
                 format!("{} AND {} AT A GLANCE", f.since, f.release),
-                ">SHA-256<".to_string(),
-                ">0 from outside this checkout<".to_string(),
+                format!(">memory samples of {} operations<", f.operations),
+                ">no power-loss test among them<".to_string(),
+                ">one machine, process-wide, no time<".to_string(),
+                ">one block, no host or user names<".to_string(),
                 ">--version and --license<".to_string(),
                 xml(&glance_alt().unwrap()),
             ] {
@@ -11375,29 +11572,25 @@ mod tests {
     }
     #[test]
     fn glance_phone_draws_other_facts_and_refuses_one_too_wide() {
-        let mut f = GlanceFacts {
-            release: "0.9".to_string(),
-            since: "0.8".to_string(),
-            packages: 2,
-            unicode: "17.0.0".to_string(),
-            tools: vec!["a".to_string(), "b".to_string(), "c".to_string()],
-        };
+        let mut f = glance_other_facts();
         let s = glance_phone_draw(false, &f).unwrap();
         assert_eq!(
             glance_phone_tiles(&s),
             [
                 ("new in 0.9".to_string(), vec!["3".to_string()]),
-                ("since 0.8".to_string(), vec!["2".to_string()]),
-                ("since 0.8".to_string(), vec!["17.0.0".to_string()]),
-                ("since 0.8".to_string(), vec![]),
+                ("new in 0.9".to_string(), vec!["4".to_string()]),
+                ("new in 0.9".to_string(), vec!["2".to_string()]),
+                ("since 0.8".to_string(), vec!["3".to_string()]),
             ]
         );
         assert!(s.contains("0.8 AND 0.9 AT A GLANCE"));
+        assert!(s.contains(">memory samples of 2 operations<"));
         assert_ne!(s, glance_phone(false).unwrap());
-        f.unicode = "1234567.0.0".to_string();
+        f.faults = usize::MAX;
         let e = glance_phone_draw(false, &f).unwrap_err();
         assert!(e.to_string().contains("does not fit"), "{e}");
-        f.unicode = "17.0".to_string();
+        f.faults = 3;
+        f.samples = 5;
         assert!(glance_phone_draw(false, &f).is_err());
     }
     #[test]
@@ -14060,6 +14253,10 @@ mod tests {
     }
     #[test]
     fn badges_follow_other_data() {
+        // The version is the one whose release notes the root holds, since the
+        // badge links them; every other number is made up.
+        let version = &RELEASE[1..];
+        let version_alt = format!("Version {version}");
         let other = BadgeFacts {
             views: 3,
             q8_runs: 7,
@@ -14072,7 +14269,7 @@ mod tests {
             cases: 9,
             commitments: 77,
             packages: 15,
-            version: "0.8.0".to_string(),
+            version: version.to_string(),
             license: "noncommercial".to_string(),
         };
         let badges = badges_checked(&other).unwrap();
@@ -14090,7 +14287,7 @@ mod tests {
                 "15",
                 "5/9",
                 "77",
-                "0.8.0",
+                version,
                 "noncommercial"
             ]
         );
@@ -14104,7 +14301,7 @@ mod tests {
             "15 packages",
             "5 of 9 cases",
             "77 published",
-            "Version 0.8.0",
+            version_alt.as_str(),
             "License: noncommercial",
         ]) {
             assert!(badge_alt(cell).contains(alt), "{alt}");
@@ -15528,38 +15725,68 @@ mod tests {
         }
         out
     }
+    /// Two fault test files of a release 0.9 after 0.8: three tests and an
+    /// ignored child process.
+    const GLANCE_FAULT_TEXTS: [&str; 2] = [
+        "use x;\n#[test]\nfn one() {}\n/// The child.\n#[test]\n#[ignore]\nfn child() {}\n",
+        "#[cfg(unix)]\n#[test]\nfn two() {\n    #[cfg(unix)]\n    let x = 1;\n}\nfn helper() {}\n#[test]\nfn three() {}\n",
+    ];
     /// Texts of a release 0.9 after 0.8, read the way the files are read.
     fn glance_texts() -> GlanceTexts<'static> {
         GlanceTexts {
             release: "v0.9.2",
-            notes: "# GEL RAM v0.9.2 — x\n\n- Every tool program answers `--version` with one line and `--license`\n",
-            roadmap: "# Roadmap\n\n## v0.9.0\n\nnew\n\n## v0.8.0\n\nCargo.lock lists no third-party package; NFC follows Unicode 17.0.0; SHA-256 here.\n\n## v0.7.0\n\nold\n",
-            tables: "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
+            notes: "# GEL RAM v0.9.2 — x\n\n- `xtask witness NEW_DIR` runs the two short\n  public checks; 3 tests in two new files; two processes of each of two\n  operations: `records=2 samples=4`\n",
+            roadmap: "# Roadmap\n\n## v0.9.0\n\nnew\n\n## v0.8.0\n\n| Every program prints one identity line for\n`--version`, and for `--license` the license name |\n\n## v0.7.0\n\nold\n",
             binaries: "Every program of the workspace (`a`, `b`\nand `c`) given\n",
-            lock: "version = 4\n\n[[package]]\nname = \"a\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"xtask\"\nversion = \"0.1.0\"\n",
-            readme: "## New in 0.9, and in 0.8\n\nthe three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the version\n",
+            memory: "GEL_MEMORY_1\nsample op=a rep=1\nsample op=a rep=2\nsample op=b rep=1\nsample op=b rep=2\nrecord op=a reps=2 x=1\nrecord op=b reps=2 x=1\nend records=2 samples=4 redactions=0\n",
+            faults: &GLANCE_FAULT_TEXTS,
+            reproduce: "# R\n\n## A short witness\n\n```text\ncargo run --locked --offline -p xtask -- witness NEW_DIR\n```\n\nIt runs two steps, each as its own process:\n\n| Step | What it runs | Passing line |\n|---|---|---|\n| literal | x | `A=PASS` |\n| same-bits | y | `B=MATCH` |\n\nAfter.\n\n## Report it\n\n| Step | z | w |\n|---|---|---|\n| more | x | y |\n",
+            readme: "## New in 0.9, and in 0.8\n\nthe three tool programs answer `--version` and `--license`; `xtask witness NEW_DIR` runs the two short public checks; 3 tests in two new files; two processes of each of two operations, 4 samples ([record](docs/memory-results/2026-11-08/README.md))\n",
         }
     }
-    fn glance_has(dir: &str) -> bool {
-        dir == "crates/a" || dir == "xtask"
+    /// The facts of `glance_texts`, made by hand.
+    fn glance_other_facts() -> GlanceFacts {
+        GlanceFacts {
+            release: "0.9".to_string(),
+            since: "0.8".to_string(),
+            faults: 3,
+            operations: 2,
+            processes: 2,
+            samples: 4,
+            steps: 2,
+            tools: vec!["a".to_string(), "b".to_string(), "c".to_string()],
+        }
     }
     #[test]
     fn glance_card_shows_the_numbers_of_the_files() {
         let f = GlanceFacts::read().unwrap();
-        // Counted a second way: the name lines of Cargo.lock, each a directory here.
-        let lock = fs::read_to_string("Cargo.lock").unwrap();
-        let names: Vec<&str> = lock
-            .lines()
-            .filter_map(|l| l.strip_prefix("name = \"")?.strip_suffix('"'))
+        // Counted a second way: each `#[test]` of the fault files, less the
+        // ignored child processes.
+        let tests: usize = GLANCE_FAULTS
+            .iter()
+            .map(|file| {
+                let text = fs::read_to_string(file).unwrap();
+                text.matches("#[test]").count() - text.matches("\n#[ignore]\n").count()
+            })
+            .sum();
+        assert_eq!(f.faults, tests);
+        // The memory record as its own README says `memory-check` prints it.
+        let record = fs::read_to_string(format!("{GLANCE_MEMORY}/README.md")).unwrap();
+        assert!(record.contains(&format!(
+            "`GEL_MEMORY_CHECK=PASS records={} samples={}`",
+            f.operations, f.samples
+        )));
+        // The steps as the witness names them, each a row of the guide's table.
+        let witness = fs::read_to_string("xtask/src/witness.rs").unwrap();
+        let names: Vec<&str> = witness
+            .split("            name: \"")
+            .skip(1)
+            .map(|s| s.split_once('"').unwrap().0)
             .collect();
-        assert_eq!(f.packages, names.len());
-        for n in &names {
-            let dir = if *n == "xtask" {
-                n.to_string()
-            } else {
-                format!("crates/{n}")
-            };
-            assert!(Path::new(&dir).is_dir(), "{dir}");
+        assert_eq!(f.steps, names.len());
+        let guide = fs::read_to_string(GLANCE_REPRODUCE).unwrap();
+        for name in &names {
+            assert!(guide.contains(&format!("\n| {name} | ")), "{name}");
         }
         // The programs as the claim registry lists them.
         let claims = fs::read_to_string("xtask/src/claims.rs").unwrap();
@@ -15579,51 +15806,59 @@ mod tests {
         listed.sort();
         tools.sort();
         assert_eq!(tools, listed);
-        // The Unicode version as the name of the normalization test file the fast
-        // identity check includes (an older file is kept for a comparison).
-        let fast = fs::read_to_string("crates/gel-source/src/nfc_fast_identity.rs").unwrap();
-        let named: Vec<&str> = fast
-            .split("tests/data/NormalizationTest-")
-            .skip(1)
-            .filter_map(|s| s.split_once(".txt").map(|v| v.0))
-            .collect();
-        assert_eq!(named, [f.unicode.as_str()]);
         // The release, and the earlier version's own roadmap section.
         assert!(RELEASE.starts_with(&format!("v{}.", f.release)));
         let roadmap = fs::read_to_string(GLANCE_ROADMAP).unwrap();
         assert!(roadmap.contains(&format!("\n## v{}.0\n", f.since)));
+        assert!(roadmap.contains(&format!("\n## v{}.0\n", f.release)));
         for dark in [false, true] {
             let s = glance_card(dark).unwrap();
             assert_eq!(
                 glance_rolled(&s),
                 [
+                    f.faults.to_string(),
+                    f.samples.to_string(),
+                    f.steps.to_string(),
                     f.tools.len().to_string(),
-                    f.packages.to_string(),
-                    f.unicode.clone()
                 ]
             );
             let kicker = format!("{} AND {} AT A GLANCE", f.since, f.release);
             let new = format!(">new in {}<", f.release);
             let since = format!(">since {}<", f.since);
-            assert_eq!(s.matches(&new).count(), 1);
-            assert_eq!(s.matches(&since).count(), 3);
+            assert_eq!(s.matches(&new).count(), 3);
+            assert_eq!(s.matches(&since).count(), 1);
             for want in [
                 kicker.as_str(),
-                ">SHA-256<",
-                ">0 from outside this checkout<",
+                ">fault tests of saved files<",
+                ">no power-loss test among them<",
+                &format!(">memory samples of {} operations<", f.operations),
+                ">one machine, process-wide, no time<",
+                ">steps of xtask witness, any host<",
+                ">one block, no host or user names<",
                 ">--version and --license<",
                 GLANCE_HEADLINE[0],
                 GLANCE_HEADLINE[1],
             ] {
                 assert!(s.contains(want), "{want}");
             }
+            // The facts of 0.7 are stated under the speed cards, not here.
+            for gone in ["Cargo.lock", "Unicode", "SHA-256"] {
+                assert!(!s.contains(gone), "{gone}");
+            }
             assert!(!s.contains("__") && !s.contains("<script") && !s.contains("href"));
             assert!(s.chars().all(|ch| ch.is_ascii() || "·—→×✓".contains(ch)));
         }
         let alt = glance_alt().unwrap();
         for want in [
-            format!("{} packages", f.packages),
-            format!("Unicode {} for normalization", f.unicode),
+            format!(
+                "{} fault tests of saved files, no power-loss test",
+                f.faults
+            ),
+            format!(
+                "{} memory samples of {} operations, one machine, process-wide, no time",
+                f.samples, f.operations
+            ),
+            format!("{} steps of xtask witness", f.steps),
             format!("{} tool programs", f.tools.len()),
             format!("New in {}:", f.release),
             format!("Since {}:", f.since),
@@ -15631,32 +15866,26 @@ mod tests {
             assert!(alt.contains(&want), "{want}");
         }
         assert!(alt.chars().count() <= 300 && !alt.contains('"'), "{alt}");
-        assert!(!alt.contains("normalization follows Unicode"));
     }
     #[test]
     fn glance_card_draws_other_facts() {
-        let f = GlanceFacts {
-            release: "0.9".to_string(),
-            since: "0.8".to_string(),
-            packages: 2,
-            unicode: "17.0.0".to_string(),
-            tools: vec!["a".to_string(), "b".to_string(), "c".to_string()],
-        };
+        let f = glance_other_facts();
         let s = glance_draw(false, &f).unwrap();
-        assert_eq!(glance_rolled(&s), ["3", "2", "17.0.0"]);
+        assert_eq!(glance_rolled(&s), ["3", "4", "2", "3"]);
         assert!(s.contains("0.8 AND 0.9 AT A GLANCE") && s.contains(">new in 0.9<"));
+        assert!(s.contains(">memory samples of 2 operations<"));
         assert!(glance_text(&f).contains("3 tool programs"));
+        assert!(glance_text(&f).contains("2 steps of xtask witness"));
         // Read from texts of their own, the facts follow those texts.
-        let g = GlanceFacts::from_texts(&glance_texts(), &glance_has).unwrap();
+        let g = GlanceFacts::from_texts(&glance_texts()).unwrap();
         assert_eq!(
             (
                 g.release.as_str(),
                 g.since.as_str(),
-                g.packages,
-                g.unicode.as_str(),
+                (g.faults, g.operations, g.processes, g.samples, g.steps),
                 g.tools.len()
             ),
-            ("0.9", "0.8", 2, "17.0.0", 3)
+            ("0.9", "0.8", (3, 2, 2, 4, 2), 3)
         );
         assert_eq!(
             glance_draw(true, &g).unwrap(),
@@ -15665,84 +15894,155 @@ mod tests {
     }
     #[test]
     fn glance_card_refuses_empty_or_disagreeing_files() {
-        fn refused(t: GlanceTexts, has: &dyn Fn(&str) -> bool) -> bool {
-            GlanceFacts::from_texts(&t, has).is_err()
+        fn refused(t: GlanceTexts) -> bool {
+            GlanceFacts::from_texts(&t).is_err()
         }
         let base = glance_texts();
-        assert!(!refused(glance_texts(), &glance_has));
-        // A release that is not vX.Y.Z, or whose notes do not name the programs:
-        // a version bump cannot relabel the facts of an earlier release.
+        assert!(!refused(glance_texts()));
+        // A release that is not vX.Y.Z.
         for release in ["0.9.2", "v0.9", "v1.0.0"] {
+            assert!(refused(GlanceTexts { release, ..base }), "{release}");
+        }
+        // Notes that are not those of the release, or do not state a number the
+        // card says is new in it: a version bump cannot relabel later work.
+        for (from, to) in [
+            ("# GEL RAM v0.9.2 ", "# GEL RAM v0.9.1 "),
+            ("runs the two short", "runs the three short"),
+            ("3 tests in two", "4 tests in two"),
+            ("in two new files", "in three new files"),
+            ("two processes of each", "three processes of each"),
+            ("of two\n  operations", "of three\n  operations"),
+            ("records=2 samples=4", "records=2 samples=5"),
+        ] {
+            let notes = base.notes.replace(from, to);
+            assert_ne!(notes, base.notes, "{from}");
             assert!(
-                refused(GlanceTexts { release, ..base }, &glance_has),
-                "{release}"
+                refused(GlanceTexts {
+                    notes: &notes,
+                    ..base
+                }),
+                "{to}"
             );
         }
-        assert!(refused(
-            GlanceTexts {
-                notes: "# GEL RAM v0.9.2 — x\n",
-                ..base
-            },
-            &glance_has
-        ));
-        // The README names no earlier version, or the same one.
-        for readme in [
-            "the three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the\n",
-            "## New in 0.9, and in 0.9\nthe three tool programs answer `--version` and `--license`; normalization follows Unicode 17.0.0, the\n",
+        // The README names no earlier version, or the same one, states another
+        // number, or does not link the memory record the card counts.
+        for (from, to) in [
+            ("## New in 0.9, and in 0.8", "## New in 0.9"),
+            ("## New in 0.9, and in 0.8", "## New in 0.9, and in 0.9"),
+            ("the three tool programs", "the two tool programs"),
+            ("runs the two short", "runs the six short"),
+            ("3 tests in two", "20 tests in two"),
+            ("two processes of each", "nine processes of each"),
+            ("operations, 4 samples", "operations, 72 samples"),
+            ("2026-11-08/README.md", "2026-11-09/README.md"),
         ] {
-            assert!(refused(GlanceTexts { readme, ..base }, &glance_has));
+            let readme = base.readme.replace(from, to);
+            assert_ne!(readme, base.readme, "{from}");
+            assert!(
+                refused(GlanceTexts {
+                    readme: &readme,
+                    ..base
+                }),
+                "{to}"
+            );
         }
-        // The Unicode tables: no header, no constant, or two versions.
-        for tables in [
-            "pub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
-            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\n",
-            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (16, 0, 0);\n",
-        ] {
-            assert!(refused(GlanceTexts { tables, ..base }, &glance_has), "{tables}");
-        }
-        // The earlier version's section is missing or does not state each fact;
-        // a fact stated only in another version's section does not count.
+        // The earlier version's section is missing or does not name the
+        // programs; the sentence only in another version's section does not count.
         for (from, to) in [
             ("## v0.8.0", "## v0.8.1"),
-            ("lists no third-party package", "lists one package"),
-            ("follows Unicode 17.0.0", "follows Unicode 16.0.0"),
-            ("SHA-256 here", "hashes here"),
+            ("for\n`--version`, and", "for\n`--help`, and"),
         ] {
             let roadmap = base.roadmap.replace(from, to);
+            assert_ne!(roadmap, base.roadmap, "{from}");
             assert!(
-                refused(
-                    GlanceTexts {
-                        roadmap: &roadmap,
-                        ..base
-                    },
-                    &glance_has
-                ),
+                refused(GlanceTexts {
+                    roadmap: &roadmap,
+                    ..base
+                }),
                 "{to}"
             );
         }
         let moved = base
             .roadmap
-            .replace("SHA-256 here.", "")
-            .replace("old", "SHA-256");
-        assert!(refused(
-            GlanceTexts {
-                roadmap: &moved,
-                ..base
-            },
-            &glance_has
-        ));
-        // Cargo.lock: a package from outside, without a plain name, not a crate
-        // directory of this checkout, or no package at all.
-        for lock in [
-            "[[package]]\nname = \"a\"\nsource = \"registry+https://example.invalid\"\n",
-            "[[package]]\nversion = \"0.1.0\"\n",
-            "[[package]]\nname = \"../a\"\n",
-            "[[package]]\nname = \"b\"\n",
-            "version = 4\n",
+            .replace("| Every program prints one identity line for\n`--version`, and for `--license` the license name |", "")
+            .replace("old", GLANCE_SINCE_FACT);
+        assert!(refused(GlanceTexts {
+            roadmap: &moved,
+            ..base
+        }));
+        // The memory record: another format, no end line, an end line that does
+        // not count its lines, an operation with another number of processes,
+        // or no operation at all.
+        for memory in [
+            base.memory.replace("GEL_MEMORY_1", "GEL_MEMORY_2"),
+            base.memory
+                .replace("end records=2 samples=4 redactions=0\n", ""),
+            base.memory.replace("records=2", "records=3"),
+            base.memory.replace("samples=4", "samples=5"),
+            base.memory.replace("sample op=b rep=2\n", ""),
+            base.memory
+                .replace("record op=b reps=2", "record op=b reps=3"),
+            base.memory.replace("record op=b reps=2", "record op=b"),
+            "GEL_MEMORY_1\nend records=0 samples=0\n".to_string(),
         ] {
-            assert!(refused(GlanceTexts { lock, ..base }, &glance_has), "{lock}");
+            assert!(
+                refused(GlanceTexts {
+                    memory: &memory,
+                    ..base
+                }),
+                "{memory}"
+            );
         }
-        assert!(refused(glance_texts(), &|_: &str| false));
+        // The fault test files: one without a test, with its only test ignored or
+        // cut off from its function, one test more, or a file fewer.
+        let more = format!("{}#[test]\nfn four() {{}}\n", GLANCE_FAULT_TEXTS[1]);
+        for second in [
+            "fn helper() {}\n",
+            "#[test]\n#[ignore]\nfn child() {}\n",
+            "#[test]\n// a comment\nfn two() {}\n",
+            more.as_str(),
+        ] {
+            let faults = [GLANCE_FAULT_TEXTS[0], second];
+            assert!(
+                refused(GlanceTexts {
+                    faults: &faults,
+                    ..base
+                }),
+                "{second}"
+            );
+        }
+        assert!(refused(GlanceTexts {
+            faults: &GLANCE_FAULT_TEXTS[..1],
+            ..base
+        }));
+        // The guide of the short witness: no section, another number in words,
+        // no command, a repeated step, a step that is not a plain name, or a
+        // row more than it says.
+        let more = base.reproduce.replace(
+            "| same-bits | y | `B=MATCH` |\n",
+            "| same-bits | y | `B=MATCH` |\n| quad | z | `C=PASS` |\n",
+        );
+        for (from, to) in [
+            ("## A short witness", "## A long witness"),
+            ("It runs two steps", "It runs three steps"),
+            ("-p xtask -- witness ", "-p xtask -- witnesses "),
+            ("| same-bits |", "| literal |"),
+            ("| same-bits |", "| Same bits |"),
+        ] {
+            let reproduce = base.reproduce.replace(from, to);
+            assert_ne!(reproduce, base.reproduce, "{from}");
+            assert!(
+                refused(GlanceTexts {
+                    reproduce: &reproduce,
+                    ..base
+                }),
+                "{to}"
+            );
+        }
+        assert!(refused(GlanceTexts {
+            reproduce: &more,
+            ..base
+        }));
         // The programs: no list, an empty one, a repeated name, the runner, more
         // than words go to, or another number than the README states.
         let many = format!(
@@ -15760,40 +16060,36 @@ mod tests {
             "Every program of the workspace (`a` and `b`) given",
             many.as_str(),
         ] {
-            assert!(
-                refused(GlanceTexts { binaries, ..base }, &glance_has),
-                "{binaries}"
-            );
+            assert!(refused(GlanceTexts { binaries, ..base }), "{binaries}");
         }
-        // The README states another Unicode version.
-        let readme = base.readme.replace("Unicode 17.0.0", "Unicode 16.0.0");
-        assert!(refused(
-            GlanceTexts {
-                readme: &readme,
-                ..base
-            },
-            &glance_has
-        ));
         // Facts made by hand are checked before they are drawn.
-        let good = || GlanceFacts {
-            release: "0.8".to_string(),
-            since: "0.7".to_string(),
-            packages: 3,
-            unicode: "16.0.0".to_string(),
-            tools: vec!["a".to_string()],
-        };
+        let good = glance_other_facts;
         assert!(glance_draw(false, &good()).is_ok());
         for bad in [
-            GlanceFacts {
-                packages: 0,
-                ..good()
-            },
             GlanceFacts {
                 tools: Vec::new(),
                 ..good()
             },
             GlanceFacts {
-                since: "0.8".to_string(),
+                faults: 0,
+                ..good()
+            },
+            GlanceFacts { steps: 0, ..good() },
+            GlanceFacts {
+                operations: 0,
+                samples: 0,
+                ..good()
+            },
+            GlanceFacts {
+                samples: 5,
+                ..good()
+            },
+            GlanceFacts {
+                processes: usize::MAX,
+                ..good()
+            },
+            GlanceFacts {
+                since: "0.9".to_string(),
                 ..good()
             },
             GlanceFacts {
@@ -15801,33 +16097,114 @@ mod tests {
                 ..good()
             },
             GlanceFacts {
-                unicode: "16.0".to_string(),
-                ..good()
-            },
-            GlanceFacts {
-                release: "0.8.0".to_string(),
+                release: "0.9.0".to_string(),
                 ..good()
             },
         ] {
             assert!(glance_draw(false, &bad).is_err());
+            assert!(glance_phone_draw(false, &bad).is_err());
         }
         // A number or a line too long for its tile is refused, not drawn over the edge.
         let e = glance_draw(
             false,
             &GlanceFacts {
-                packages: usize::MAX,
+                faults: usize::MAX,
                 ..good()
             },
         )
         .unwrap_err();
         assert!(e.to_string().contains("does not fit"), "{e}");
+        let many = GlanceFacts {
+            operations: 10_000_000_000_000_000,
+            processes: 1,
+            samples: 10_000_000_000_000_000,
+            ..good()
+        };
+        assert!(glance_draw(false, &many).is_err());
         let wide = GlanceFacts {
-            since: "123456789012345678901234567.0".to_string(),
+            since: "1234567890123456789012345678901234567890.0".to_string(),
             ..good()
         };
         assert!(glance_draw(false, &wide).is_err());
-        assert!(glance_fit("packages in Cargo.lock", 20.0, 0.0, 494.0).is_ok());
+        assert!(glance_fit("fault tests of saved files", 20.0, 0.0, 494.0).is_ok());
         assert!(glance_fit(&"x".repeat(40), 20.0, 0.0, 494.0).is_err());
+    }
+    #[test]
+    fn the_facts_of_0_7_are_read_from_their_files() {
+        // The Unicode version as the name of the normalization test file the fast
+        // identity check includes (an older file is kept for a comparison).
+        let unicode = unicode_version().unwrap();
+        let fast = fs::read_to_string("crates/gel-source/src/nfc_fast_identity.rs").unwrap();
+        let named: Vec<&str> = fast
+            .split("tests/data/NormalizationTest-")
+            .skip(1)
+            .filter_map(|s| s.split_once(".txt").map(|v| v.0))
+            .collect();
+        assert_eq!(named, [unicode.as_str()]);
+        let readme = native_intro();
+        assert!(readme.contains(&format!(
+            "normalization follows Unicode {unicode}, the version"
+        )));
+        assert!(!readme.contains("__UNICODE__"));
+        // The packages: each name line of Cargo.lock, a crate directory here.
+        let lock = fs::read_to_string("Cargo.lock").unwrap();
+        let names: Vec<&str> = lock
+            .lines()
+            .filter_map(|l| l.strip_prefix("name = \"")?.strip_suffix('"'))
+            .collect();
+        assert_eq!(packages().unwrap(), names.len());
+        for n in &names {
+            let dir = if *n == "xtask" {
+                n.to_string()
+            } else {
+                format!("crates/{n}")
+            };
+            assert!(Path::new(&dir).is_dir(), "{dir}");
+        }
+        // The tables: no header, no constant, or two versions.
+        let tables = "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n";
+        assert_eq!(unicode_of(tables).unwrap(), "17.0.0");
+        for bad in [
+            "pub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
+            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\n",
+            "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (16, 0, 0);\n",
+            "// Character Database 17.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0);\n",
+        ] {
+            assert!(unicode_of(bad).is_err(), "{bad}");
+        }
+        // The roadmap section of the release the README names states each fact;
+        // a fact stated only in another version's section does not count.
+        let roadmap = "# Roadmap\n\n## v0.8.0\n\nnew\n\n## v0.7.0\n\nCargo.lock lists no third-party package; NFC follows Unicode 17.0.0; SHA-256 here.\n\n## v0.6.0\n\nold\n";
+        assert!(unicode_release_check(roadmap, "17.0.0").is_ok());
+        assert!(unicode_release_check(roadmap, "16.0.0").is_err());
+        for (from, to) in [
+            ("## v0.7.0", "## v0.7.1"),
+            ("lists no third-party package", "lists one package"),
+            ("follows Unicode 17.0.0", "follows Unicode 16.0.0"),
+            ("SHA-256 here", "hashes here"),
+        ] {
+            let changed = roadmap.replace(from, to);
+            assert!(unicode_release_check(&changed, "17.0.0").is_err(), "{to}");
+        }
+        let moved = roadmap
+            .replace("SHA-256 here.", "")
+            .replace("old", "SHA-256");
+        assert!(unicode_release_check(&moved, "17.0.0").is_err());
+        // Cargo.lock: a package from outside, without a plain name, not a crate
+        // directory of this checkout, or no package at all.
+        let has = |dir: &str| dir == "crates/a" || dir == "xtask";
+        let lock = "version = 4\n\n[[package]]\nname = \"a\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"xtask\"\nversion = \"0.1.0\"\n";
+        assert_eq!(lock_packages(lock, &has).unwrap(), 2);
+        for bad in [
+            "[[package]]\nname = \"a\"\nsource = \"registry+https://example.invalid\"\n",
+            "[[package]]\nversion = \"0.1.0\"\n",
+            "[[package]]\nname = \"../a\"\n",
+            "[[package]]\nname = \"b\"\n",
+            "version = 4\n",
+        ] {
+            assert!(lock_packages(bad, &has).is_err(), "{bad}");
+        }
+        assert!(lock_packages(lock, &|_: &str| false).is_err());
     }
     #[test]
     fn glance_card_moves_and_can_stand_still() {
