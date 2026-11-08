@@ -197,6 +197,7 @@ the [review work list](#how-to-read-the-review-work-list).
 | Memory accounting of public operations: `xtask memory-run` starts each operation as a child process at least five times and records payload, peak mapped and resident memory, page faults, threads and host conditions with min, median and max; `memory-check` refuses a missing field, a non-zero exit, a malformed number, too few samples, a summary that does not recompute and a peak below a resident payload | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- memory-check FILE` | [Instrument and limits](MEMORY-ACCOUNTING.md) | No run is retained yet; the record of a public revision follows. Linux only; the peak is read from `/proc` during the run, not taken from `wait4`; no time is recorded, so latency is not read beside memory |
 | The claim registry grows from 74 to 85 rows and from 35 to 105 tied sentences: executable rows for the gel-store file refusals, Reader16, exact progressive Top-K and the source-builder limits; separate-gate rows for the selftest, the real-source readout, the recorded CI reports and the faults of saved files; measured rows for the recorded history kill series and the Q8 R2 comparisons; the query-rate limit as not established; recorded numbers tied to their evidence files | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- claims` | [Claims](CLAIMS.md) | Not an exhaustive map of historical statements; the roadmap rows, the release notes, videos and the measurement tables of other pages have no row |
 | Thirteen of the fourteen phone cards drop, from 16,620 to 10,799 px at 600 wide in all, each at most 1,180 tall (the header card is unchanged): repetition and decoration are cut, the phone speed card shows totals and not one row per program, and the phone license card shows five of the seven quotes, with the limit on evaluation | 390136f (PR #108) | `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [Presentation guide](README-PRESENTATION.md) | A local rendering is not a check of the page GitHub shows; the q8 card is not shortened |
+| A memory record of a public revision is retained: `xtask memory-run --reps 9` at 390136f, the merge commit of PR #108, from a clean checkout, eight operations with nine processes each, 72 samples; a test puts it through the check of `memory-check`, requires every row of its table to be the one the record gives and no major fault, and sees it refused with one sample number changed; the claim registry gains the row `memory-accounting-public-operations` | this change | `cargo test --locked --offline -p xtask the_retained_record` | [Memory record of 2026-11-08](memory-results/2026-11-08/README.md), [instrument and limits](MEMORY-ACCOUNTING.md) | One machine on one day, not pinned to cores; process-wide numbers, not the cost of a format; the peak is the `VmHWM` of the last read of `/proc`, and the kernel's final account was not read for this record; no time is recorded |
 
 ## v0.8.0
 
@@ -561,8 +562,12 @@ this baseline. Any such claim requires an exact public reproduction package.
    failures, not only best runs.
 2. **Larger statistical campaigns.** Where performance claims need tail latency,
    retain raw samples and use a sufficient N before reporting p99.9 or deeper tails.
-3. **Memory-accounting evidence.** Report payload, mapped bytes, RSS/peak RSS,
-   page faults, worker count and host conditions alongside latency.
+3. **Memory beside latency.** A memory record of eight operations at one public
+   revision is retained ([2026-11-08](memory-results/2026-11-08/README.md)):
+   payload, mapped and resident peaks, page faults, threads and host conditions
+   on one machine, with no time. Still open: the same accounting in the same
+   campaign as latency, the kernel's final peak beside the one read, and a
+   second host.
 4. **Exactness before speed.** Any faster public path must be differential-tested
    against the existing exact reference and must not weaken integrity,
    abstention, ordering or restart/replay checks.

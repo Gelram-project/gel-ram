@@ -2,7 +2,9 @@
 
 `xtask memory-run` starts named public operations as child processes and records
 what each process held. It is an instrument: it reports no time, compares
-nothing with anything else and does not say that a cost is low.
+nothing with anything else and does not say that a cost is low. One run of a
+public revision is retained in
+[memory-results/2026-11-08](memory-results/2026-11-08/README.md).
 
 ```text
 cargo run --locked --offline -p xtask -- memory-run \

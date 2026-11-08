@@ -52,6 +52,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | no-third-party-packages | distribution | EXECUTABLE_CHECK |
 | no-network-code | environment | EXECUTABLE_CHECK |
 | mutation-memory | memory | MEASURED_LOCAL |
+| memory-accounting-public-operations | memory | MEASURED_LOCAL |
 | publication-os-faults | persistence | SEPARATE_GATE |
 | platform-exclusions | test-scope | SEPARATE_GATE |
 | ci-evidence-records | test-scope | SEPARATE_GATE |
