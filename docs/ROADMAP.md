@@ -117,8 +117,8 @@ Verification and gates:
   writes the block `GEL_WITNESS_2` with the facts of the host, replaces in its
   step lines host and user names, paths, network addresses and serial numbers
   as far as it recognises them, and refuses the block by a separate check if
-  this host's names or directories remain in it; the step logs are not
-  filtered ([check on your hardware](CHECK-ON-YOUR-HARDWARE.md),
+  this host's names or directories remain in it (a system's default name may
+  stand in its own fact lines); the step logs are not filtered ([check on your hardware](CHECK-ON-YOUR-HARDWARE.md),
   [host facts and filter](../xtask/src/host_report.rs)).
 - A release package built twice and compared (`xtask rebuild-check`,
   [binaries](BINARIES.md#building-the-same-bytes)); a digest that fixes a

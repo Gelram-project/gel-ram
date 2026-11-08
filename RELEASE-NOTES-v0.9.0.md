@@ -9,7 +9,8 @@ states, one memory record of public operations is retained, saved files are
 tested under fault, and the CI reports of a third revision are recorded. No
 library code, data file format, search result, license term or third-party
 dependency changes; the output records of the tools `speed-ab` and `witness`
-move to a second format, and `memory-run` writes a new one. The Rust pin stays
+move to a second format, and `speed-campaign`, `memory-run` and
+`ci-evidence-import` write new ones. The Rust pin stays
 1.85.0; the workspace version moves to 0.9.0. The
 [roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.9.0/docs/ROADMAP.md)
 lists each change with its commit; #104, #107 and #109 only name the merge
@@ -35,7 +36,9 @@ hold synthetic values or literal bytes.
   outcome, exit status, wall time and result line. A filter replaces six kinds
   of value in the step lines (host names, user names, paths, IP and MAC
   addresses, serial numbers), and a separate check refuses the block if this
-  host's names or directories remain anywhere in it (#102).
+  host's names or directories remain anywhere in it; a host or user named like
+  the system itself (`ubuntu`, `kali`) is allowed in the system's own fact lines
+  (#102).
 - `docs/CHECK-ON-YOUR-HARDWARE.md` and the reproduction form ask for that block.
   None from a host other than the author's is retained yet; paths and addresses
   of other machines are removed only as far as the filter recognises them, and
@@ -94,7 +97,7 @@ hold synthetic values or literal bytes.
   `xtask claims` checks 105 sentences of other pages against the rows they name.
   It is not an exhaustive map: the roadmap rows, the release notes, videos and
   measurement tables have no row (#100, #103, #108, #110).
-- Each README section leads with a picture drawn from the files and one line,
+- Most README sections lead with a picture drawn from the files and one line,
   the full wording folded under it; new cards show the re-run, the commitments,
   the memory core and what one Q8 record holds, as `docs/Q8-QUAD.md` states it;
   every wide card also comes 600 wide for a phone (#105, #106, #108). A viewer
@@ -133,7 +136,7 @@ cargo run --locked --offline -p gel-live-lab --bin gel-license -- check .
 cargo run --locked --offline -p xtask -- memory-check docs/memory-results/2026-11-08/MEMORY.txt
 ```
 
-Expected final markers: `GEL_VERIFY_ALL=PASS`, `WITNESS=MATCH`,
+Expected markers: `GEL_VERIFY_ALL=PASS`, `WITNESS=MATCH`,
 `LISTED_ITEMS_PRESENT` and `GEL_MEMORY_CHECK=PASS records=8 samples=72`.
 `SOURCE-SHA256SUMS.txt` lists every other tracked file of the tagged tree. The
 release asset GEL-RAM-v0.9.0-SOURCE.zip is `git archive` of the tagged commit;
