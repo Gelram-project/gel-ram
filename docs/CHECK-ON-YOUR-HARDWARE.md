@@ -71,7 +71,7 @@ for this machine's host name, your user name and those directories as plain
 text, in any letter case and with either path separator. If one is still
 there, the block is refused and not written. A host or user named like the
 system itself (`ubuntu`, `kali`) is the system's default name and is allowed
-in the system's own fact lines. Paths and addresses of other machines are
+in the fact lines. Paths and addresses of other machines are
 removed only as far as the filter recognises them, so read the block before
 you paste it. The step logs in the output directory are not filtered; read a
 log before you attach it.

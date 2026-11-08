@@ -19,9 +19,11 @@ The v0.6.0 GitHub Release was published on 2026-10-10 from
 GitHub Release on 2026-11-02 from `ed8bf2b06e0f1b0e6ce5534fe95f8744562ee448`,
 and the v0.8.0 GitHub Release on 2026-11-03 from
 `5131104d911524dc225c1fa19467d0354c2c64c5`, the merge commit of its version
-cutover (PR #97). The version line is now 0.9.0. The owner publishes the v0.9.0
-GitHub Release from the merge commit of this version cutover; the Releases page
-shows whether that has happened.
+cutover (PR #97). The version line is now 0.9.0, from
+`259e7e990665f241eef210afa61899feda753d95`, the merge commit of its version
+cutover (PR #111); PR #112 corrects its release notes before the tag. The owner
+publishes the v0.9.0 GitHub Release from the merge commit of PR #112; the
+Releases page shows whether that has happened.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text
