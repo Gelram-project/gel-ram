@@ -129,3 +129,7 @@ threads and host conditions of public operations, at least five processes each,
 and `xtask memory-check` refuses an incomplete record
 ([instrument, format and limits](MEMORY-ACCOUNTING.md)). It records no time, so
 its records are not timing campaigns and do not follow the comparison protocol.
+One run at revision 390136f, nine processes of each of the eight operations on
+one machine, is retained in
+[memory-results/2026-11-08](memory-results/2026-11-08/README.md); it passes
+`memory-check`.

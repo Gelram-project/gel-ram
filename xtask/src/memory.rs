@@ -1263,6 +1263,64 @@ mod tests {
         assert!(error.contains(reason), "{error}");
     }
 
+    /// The record kept in the documentation and the table that reports it.
+    fn retained() -> (String, String) {
+        let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../docs/memory-results/2026-11-08");
+        let read = |name: &str| {
+            fs::read_to_string(dir.join(name))
+                .unwrap()
+                .replace("\r\n", "\n")
+        };
+        (read("MEMORY.txt"), read("README.md"))
+    }
+
+    #[test]
+    fn the_retained_record_passes_and_its_table_follows_it() {
+        let (record, table) = retained();
+        assert_eq!(check_text(&record), Ok((OPERATIONS.len(), 72)));
+        assert!(record
+            .contains("\nrevision=390136ff770cec281be79eb7e73a7c4645f805bf working_tree=clean\n"));
+        for op in &OPERATIONS {
+            let line = record
+                .lines()
+                .find(|l| l.starts_with(&format!("record op={} ", op.name)))
+                .unwrap_or_else(|| panic!("{}", op.name));
+            let field = |name: &str| -> Vec<String> {
+                let value = line
+                    .split(' ')
+                    .find_map(|f| f.strip_prefix(&format!("{name}=")))
+                    .unwrap();
+                value.split(',').map(str::to_string).collect()
+            };
+            let range = |name: &str| {
+                let v = field(name);
+                format!("{} to {}", v[0], v[2])
+            };
+            let (payload, peak) = (field("payload_bytes"), field("peak_rss_kib"));
+            let row = format!(
+                "| `{}` | {} | {} | {} | {} | {} | {} |",
+                op.name,
+                payload[0],
+                peak[1],
+                range("peak_rss_kib"),
+                range("mapped_peak_kib"),
+                range("minor_faults"),
+                range("threads_peak")
+            );
+            assert!(table.lines().any(|l| l == row), "{row}");
+            // The table says that no operation had a major fault.
+            assert_eq!(field("major_faults"), ["0", "0", "0"], "{}", op.name);
+        }
+        let rows = table.lines().filter(|l| l.starts_with("| `")).count();
+        assert_eq!(rows, OPERATIONS.len());
+        // One changed number of one sample is refused: the summary no longer
+        // recomputes from the samples.
+        let changed = record.replacen("peak_rss_kib=71320", "peak_rss_kib=71321", 1);
+        assert_ne!(changed, record);
+        let error = check_text(&changed).unwrap_err();
+        assert!(error.contains("peak_rss_kib does not recompute"), "{error}");
+    }
+
     #[test]
     fn a_complete_record_passes_and_is_counted() {
         assert_eq!(check(&record_text(|_| {})), Ok((1, 5)));

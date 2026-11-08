@@ -424,6 +424,16 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("MEASURED_LOCAL"),
     },
     Claim {
+        id: "memory-accounting-public-operations",
+        dimension: "memory",
+        scope: "xtask memory-run at revision 390136f from a clean checkout, one machine, not pinned to cores, 2026-11-08",
+        input: "eight operations, the control among them, nine processes each in rounds; the record kept with its table",
+        expected: "72 samples, every exit 0, no major fault; the control peak holds its 64 MiB block; memory-check accepts the record and a test requires every table row to be the one the record gives",
+        counterexample: "the numbers read as the cost of a format, as compared with another system, as time, as what another host would show, or peak mapped read as memory in use",
+        source: "docs/memory-results/2026-11-08/README.md",
+        evidence: Evidence::Deferred("MEASURED_LOCAL"),
+    },
+    Claim {
         id: "publication-os-faults",
         dimension: "persistence",
         scope: "no-replace snapshot publication",
