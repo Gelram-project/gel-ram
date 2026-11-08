@@ -3,14 +3,17 @@
 Date: 2026-11-08
 
 v0.9.0 collects everything merged after v0.8.0 (pull requests #98 to #111).
-One command prints a filtered block of the short public checks on any host, the
-recorded speed sets were re-run under a protocol that every speed record now
+The short public checks now write a filtered block with the facts of the host,
+the recorded speed sets were re-run under a protocol that every new speed record
 states, one memory record of public operations is retained, saved files are
 tested under fault, and the CI reports of a third revision are recorded. No
-library code, file format, search result, license term or third-party
-dependency changes. The Rust pin stays 1.85.0; the workspace version moves to
-0.9.0. Every change is listed with its pull request in the
-[roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.9.0/docs/ROADMAP.md).
+library code, data file format, search result, license term or third-party
+dependency changes; the output records of the tools `speed-ab` and `witness`
+move to a second format, and `memory-run` writes a new one. The Rust pin stays
+1.85.0; the workspace version moves to 0.9.0. The
+[roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.9.0/docs/ROADMAP.md)
+lists each change with its commit; #104, #107 and #109 only name the merge
+commits of earlier rows and have no row of their own.
 
 ## What the project is
 
@@ -25,13 +28,14 @@ hold synthetic values or literal bytes.
 
 ## Check on your hardware
 
-- `xtask witness NEW_DIR` runs the six short public checks, nothing private, and
-  writes one block, `GEL_WITNESS_2`: tool version, revision, operating system,
-  kernel, CPU, cores, RAM and `rustc`, and each step's outcome, exit status,
-  wall time and result line. A filter replaces host and user names, directories,
-  absolute paths, network addresses and serial numbers in the step lines, and a
-  separate check refuses the block if this host's names or directories remain
-  anywhere in it (#102).
+- `xtask witness NEW_DIR` has run the six short public checks since v0.7.0 (the
+  two kill series only on Unix; elsewhere they are SKIPPED). It now writes one
+  block, `GEL_WITNESS_2`: tool version, revision and whether the tree was clean,
+  operating system, kernel, CPU, cores, RAM and `rustc`, and each step's
+  outcome, exit status, wall time and result line. A filter replaces six kinds
+  of value in the step lines (host names, user names, paths, IP and MAC
+  addresses, serial numbers), and a separate check refuses the block if this
+  host's names or directories remain anywhere in it (#102).
 - `docs/CHECK-ON-YOUR-HARDWARE.md` and the reproduction form ask for that block.
   None from a host other than the author's is retained yet; paths and addresses
   of other machines are removed only as far as the filter recognises them, and
@@ -45,19 +49,22 @@ hold synthetic values or literal bytes.
   ends `COMPLETE`, `INCOMPLETE` or `PARTIAL` (#101).
 - Four plans re-ran the speed sets of 2026-10-20 and 2026-10-25 once, from
   public revisions, on the author's 24-thread Linux machine, not pinned to
-  cores; all 33 records pass the check. Against v0.6.1, 105 of 133 cases are
-  faster beyond their A/A band, 24 slower beyond it and 4 inside it; SHA-256
-  alone runs at 0.26 and 0.35 of its v0.6.1 speed (A/A 1.00 and 0.99). The
+  cores; all 33 records pass the check. In the plan against v0.6.1, whose
+  candidate is 876247f, a revision before v0.7.0 and not this release, 105 of
+  133 cases are faster beyond their A/A band, 24 slower beyond it and 4 inside
+  it; among the slower are SHA-256, at 0.26 and 0.35 of its v0.6.1 speed (A/A
+  1.00 and 0.99), which no longer uses the processor's SHA instructions, and
+  several file loads. The
   package-3 load plan uses public revisions instead of the recorded local trees,
   so it is not the same comparison. The recorded sets stay as they were
   measured; a re-run on other hardware remains open (#103).
-- `xtask memory-run`, on Linux, starts each public operation as a child process
-  at least five times and records payload, peak mapped and resident memory,
-  page faults and threads; `memory-check` refuses a missing field, a non-zero
-  exit, too few samples or a summary that does not recompute (#108). One record
-  is retained: nine processes of each of eight operations at 390136f, the merge
-  commit of PR #108; a test checks it and refuses it with one sample changed
-  (PR #110). One machine on one day, not pinned to cores; the numbers are
+- `xtask memory-run`, on Linux, starts each of eight operations, the control
+  among them, as a child process at least five times and records payload, peak
+  mapped and resident memory, page faults and threads; `memory-check` refuses a
+  missing field, a non-zero exit, too few samples or a summary that does not
+  recompute (#108). One record is retained: nine processes of each of eight
+  operations at 390136f, the merge commit of #108; a test checks it and refuses
+  it with one sample changed (#110). One machine on one day, not pinned to cores; the numbers are
   process-wide, not the cost of a format; the peak is the `VmHWM` of the last
   read, and the kernel's final account was not read; no time is recorded.
 
@@ -69,14 +76,15 @@ hold synthetic values or literal bytes.
   processes on one path, stop or kill a save and restart, and read beside a
   writer; properties P36 to P40 join the map (#108). There is no power-loss
   test and no timing property; 16 of the 20 tests compile on Windows and all 20
-  on macOS, and they run there only from the CI of PR #108 on, with no recorded
+  on macOS, and they run there only from the CI of #108 on, with no recorded
   report yet.
 - Sanitized CI reports of a third revision, 79f6ac5, are recorded;
   `xtask ci-evidence-recorded`, in `verify`, refuses an altered report, a
   missing or extra file and a table that differs. Their strict comparison found
-  11 undeclared platform-only tests, now declared. These are hosted CI runs of
-  one revision each, not an independent second host, and the comparison runs
-  only when a revision is recorded (#108).
+  11 undeclared platform-only tests and refused one ignored child-process
+  helper; both are declared since. These are hosted CI runs of one revision
+  each, not an independent second host; the comparison runs only when a
+  revision is recorded and reads the debug workspace lists only (#108).
 
 ## Claims, README and roadmap
 
@@ -85,7 +93,7 @@ hold synthetic values or literal bytes.
   speed re-run and the memory record, and the query rate as not established;
   `xtask claims` checks 105 sentences of other pages against the rows they name.
   It is not an exhaustive map: the roadmap rows, the release notes, videos and
-  measurement tables have no row (#100, #103, #108, PR #110).
+  measurement tables have no row (#100, #103, #108, #110).
 - Each README section leads with a picture drawn from the files and one line,
   the full wording folded under it; new cards show the re-run, the commitments,
   the memory core and what one Q8 record holds, as `docs/Q8-QUAD.md` states it;
@@ -95,7 +103,7 @@ hold synthetic values or literal bytes.
 - The roadmap lists each delivered capability with what shows it in this tree,
   historical evidence apart and each open review item re-checked; a test
   requires every relative link and anchor of the roadmap and the status file to
-  resolve (#99). #98, #104, #107 and PR #109 name the merge commits of rows.
+  resolve (#99). #98, #104, #107 and #109 name the merge commits of rows.
 
 ## Private work, fixed in time
 

@@ -303,8 +303,8 @@ __GLANCE__
 
 <details><summary>What changed, in words</summary>
 
-- **New in 0.9, checks on your own host and faults of saved files:** `xtask witness NEW_DIR` runs the six short public checks on any host and writes one plain-text block; a filter replaces host and user names, paths, network addresses and serial numbers in the step lines, and a separate check refuses the block if this host's names or directories remain anywhere in it. No block from a host other than the author's is retained yet ([check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md)). 20 tests in three new files cut the saved files of gel-history, gel-store and gel-source at every byte, damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; none is a power-loss test ([faults of saved files](docs/PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)).
-- **New in 0.9, memory and CI reports on record:** `xtask memory-run` starts each public operation as a child process and records payload, peak mapped and resident memory, page faults and threads; one record of a public revision is kept, nine processes of each of eight operations, 72 samples, on one machine, process-wide, with no time recorded ([memory record](docs/memory-results/2026-11-08/README.md)). Sanitized CI reports of a third revision are kept and checked by `xtask ci-evidence-recorded`; they are hosted CI runs of one revision each, not an independent second host ([recorded reports](docs/evidence-ci/README.md), [release notes](RELEASE-NOTES-v0.9.0.md)).
+- **New in 0.9, a filtered witness block and faults of saved files:** `xtask witness NEW_DIR` has run the six short public checks since 0.7 (the two kill series only on Unix; elsewhere they are SKIPPED). It now writes one block with the facts of the host, a filter replaces six kinds of value in the step lines (host names, user names, paths, IP and MAC addresses, serial numbers), and a separate check refuses the block if this host's names or directories remain anywhere in it. The step logs beside the block are not filtered, paths and addresses of other machines are removed only as far as the filter recognises them, and no block from a host other than the author's is retained yet ([check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md)). 20 tests in three new files (four of them Unix-only) cut the saved files of gel-history, gel-store and gel-source at every byte (a store of version 1 past its header; a collection over 1 MiB at 12 fields), damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; none is a power-loss test ([faults of saved files](docs/PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)).
+- **New in 0.9, memory and CI reports on record:** `xtask memory-run`, on Linux, starts each of eight operations, the control among them, as a child process and records payload, peak mapped and resident memory, page faults and threads; one record of a public revision is kept, nine processes of each of eight operations, 72 samples, on one machine, process-wide, with no time recorded ([memory record](docs/memory-results/2026-11-08/README.md)). Sanitized CI reports of a third revision are kept and checked by `xtask ci-evidence-recorded`; they are hosted CI runs of one revision each, not an independent second host, and their strict comparison found 11 undeclared platform-only tests, declared since ([recorded reports](docs/evidence-ci/README.md), [release notes](RELEASE-NOTES-v0.9.0.md)).
 - **New in 0.8, programs and files name their license:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept. The license guides now follow the words of the LICENSE ([v0.8.0 in the roadmap](docs/ROADMAP.md#v080)).
 
 </details>
@@ -421,7 +421,13 @@ values in the text are read from files when the README is built: the
 published commitments in docs/COMMITMENTS.md, the packages in Cargo.lock,
 which the builder refuses to count when one comes from outside the checkout or
 is not one of its crates, and the Unicode version of the normalization tables,
-refused when their header and their version constant disagree. The adjacent README-MULTIMEDIA.html is a script-free local
+refused when their header and their version constant disagree. The numbers
+of the release card and of the words folded under it (the fault tests and the
+Unix-only ones among them, the memory record, the kinds of value the witness
+filter replaces, the steps of the witness and the platform-only tests the CI
+reports found undeclared) are read from their files as well, and the builder
+refuses them when the README, the release notes or the roadmap section of the
+release states another number. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
@@ -6821,7 +6827,7 @@ const GLANCE_NUMBER_WORDS: [&str; 13] = [
     "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
     "eleven", "twelve",
 ];
-/// The roadmap, whose section of the earlier version states the older fact.
+/// The roadmap, whose section of each version states what came in it.
 const GLANCE_ROADMAP: &str = "docs/ROADMAP.md";
 /// What the roadmap section of the earlier version says of the programs.
 const GLANCE_SINCE_FACT: &str =
@@ -6835,8 +6841,23 @@ const GLANCE_FAULTS: [&str; 3] = [
     "crates/gel-store/tests/faults.rs",
     "crates/gel-source/tests/faults.rs",
 ];
-/// The reproduction guide, whose section of the short witness lists its steps.
+/// The property map, whose rows on the faults of saved files name their tests,
+/// and the link those rows carry.
+const GLANCE_PROPERTIES: &str = "docs/PROPERTY-TESTS.md";
+const GLANCE_FAULT_LINK: &str =
+    "(PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)";
+/// The CI evidence collector, whose exclusions name the Unix-only tests.
+const GLANCE_EXCLUSIONS: &str = "xtask/src/ci_evidence.rs";
+/// The recorded CI reports, whose README counts the platform-only tests that
+/// were undeclared in the third revision.
+const GLANCE_CI: &str = "docs/evidence-ci/README.md";
+/// The filter of the witness block: its `LABELS` are the kinds of value it replaces.
+const GLANCE_FILTER: &str = "xtask/src/host_report.rs";
+/// The witness, its guide, whose section of the short witness lists its
+/// steps, and the version whose roadmap section brought them.
+const GLANCE_WITNESS: &str = "xtask/src/witness.rs";
 const GLANCE_REPRODUCE: &str = "docs/REPRODUCE.md";
+const GLANCE_WITNESS_SINCE: &str = "0.7";
 /// The texts the glance card is read from; `GlanceFacts::read` fills them from the files.
 struct GlanceTexts<'a> {
     /// `RELEASE` (e.g. v0.9.0) and the release notes of that version.
@@ -6848,27 +6869,33 @@ struct GlanceTexts<'a> {
     memory: &'a str,
     /// The fault test files, in the order of `GLANCE_FAULTS`.
     faults: &'a [&'a str],
+    properties: &'a str,
+    exclusions: &'a str,
+    ci: &'a str,
+    filter: &'a str,
+    witness: &'a str,
     reproduce: &'a str,
     readme: &'a str,
 }
 /// What the glance card shows, each read from the file that states it.
 struct GlanceFacts {
-    /// The release as major.minor, from `RELEASE`; its release notes name
-    /// what the card says is new in it.
+    /// The release as major.minor, from `RELEASE`; its release notes and its
+    /// roadmap section state what the card says is new in it.
     release: String,
-    /// The version before it, from the README heading; its roadmap section
-    /// names the programs that answer `--license`.
+    /// The version right before it, from the README heading; its roadmap
+    /// section names the programs that answer `--license`.
     since: String,
     /// New in the release: the fault tests of saved files, without the
-    /// ignored child processes they start.
+    /// ignored child processes they start, and the Unix-only ones among them.
     faults: usize,
+    unix: usize,
     /// New in the release: the operations of the kept memory record, the
     /// processes of each and the samples, one per process.
     operations: usize,
     processes: usize,
     samples: usize,
-    /// New in the release: the steps of `xtask witness`.
-    steps: usize,
+    /// New in the release: the kinds of value the filter of the witness block replaces.
+    labels: usize,
     /// Since the version before: the tool programs that answer `--version` and `--license`.
     tools: Vec<String>,
 }
@@ -6876,80 +6903,221 @@ struct GlanceFacts {
 fn glance_file(path: &str) -> Result<String> {
     fs::read_to_string(path).map_err(|e| format!("{path}: {e}").into())
 }
-/// The test functions of a test file, without the ignored ones: a `#[test]`
-/// among the attributes right above a function.
-fn glance_tests(text: &str) -> usize {
-    let (mut test, mut ignored, mut n) = (false, false, 0);
-    for line in text.lines().map(str::trim) {
+/// A number of plain digits.
+fn glance_number(v: &str) -> Option<usize> {
+    if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    v.parse().ok()
+}
+/// The value of `key` among the space-separated fields of a line.
+fn glance_field<'a>(line: &'a str, key: &str) -> Option<&'a str> {
+    line.split(' ').find_map(|f| f.strip_prefix(key))
+}
+/// Whether `text` states `phrase`, a line break or a run of spaces counting as
+/// one space, with no letter, digit or joining mark right before or right
+/// after it: `20 tests` is not found in `120 tests`, nor `samples=72` in
+/// `samples=720` or in `samples=72.5`.
+fn glance_says(text: &str, phrase: &str) -> bool {
+    let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    let joins = |c: char| c.is_ascii_alphanumeric() || c == '-' || c == '_';
+    text.match_indices(phrase).any(|(at, _)| {
+        let before = text[..at].chars().next_back();
+        let mut after = text[at + phrase.len()..].chars();
+        let next = after.next();
+        let decimal =
+            matches!(next, Some('.' | ',')) && after.next().is_some_and(|c| c.is_ascii_digit());
+        !before.is_some_and(|c| joins(c) || c == '.' || c == ',')
+            && !next.is_some_and(joins)
+            && !decimal
+    })
+}
+/// The section of a version in the roadmap, empty when it has none.
+fn glance_section<'a>(roadmap: &'a str, version: &str) -> &'a str {
+    roadmap
+        .split_once(&format!("\n## v{version}.0\n"))
+        .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
+        .unwrap_or("")
+}
+/// Whether `since` is the version right before `release`, both major.minor:
+/// the minor before, or any minor of the major before a release x.0.
+fn glance_follows(since: &str, release: &str) -> bool {
+    let parse = |v: &str| -> Option<(usize, usize)> {
+        let (major, minor) = v.split_once('.')?;
+        Some((glance_number(major)?, glance_number(minor)?))
+    };
+    match (parse(since), parse(release)) {
+        (Some((sa, sb)), Some((ra, rb))) => {
+            (sa == ra && sb.checked_add(1) == Some(rb))
+                || (rb == 0 && sa.checked_add(1) == Some(ra))
+        }
+        _ => false,
+    }
+}
+/// The tests of a fault test file that run, each with its name and whether it
+/// is Unix-only: a function at the start of a line under attributes that hold
+/// `#[test]` and no `#[ignore]`. Only the attributes these files use are read;
+/// any other attribute on a test, a test inside a module and a `#![cfg` for
+/// the whole file are refused rather than guessed.
+fn glance_tests(text: &str) -> Result<Vec<(String, bool)>> {
+    const KNOWN: [&str; 3] = ["#[test]", "#[ignore]", "#[cfg(unix)]"];
+    let mut attributes: Vec<&str> = Vec::new();
+    let mut tests = Vec::new();
+    for line in text.lines() {
+        if line.starts_with("#![cfg") || (line != "#[test]" && line.trim() == "#[test]") {
+            return Err(format!("a test that may not run as it is read: {line}").into());
+        }
         if line.starts_with("#[") {
-            test |= line == "#[test]";
-            ignored |= line.starts_with("#[ignore");
+            attributes.push(line.trim_end());
             continue;
         }
-        if test && !ignored && line.starts_with("fn ") {
-            n += 1;
+        if attributes.contains(&"#[test]") {
+            let name = line
+                .strip_prefix("fn ")
+                .and_then(|l| l.split_once("()"))
+                .map(|(n, _)| n)
+                .filter(|n| {
+                    !n.is_empty()
+                        && n.bytes()
+                            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_')
+                })
+                .ok_or(format!("a #[test] above no plain function: {line}"))?;
+            if let Some(other) = attributes.iter().find(|a| !KNOWN.contains(a)) {
+                return Err(format!("{name}: an attribute not read here: {other}").into());
+            }
+            if !attributes.contains(&"#[ignore]") {
+                tests.push((name.to_string(), attributes.contains(&"#[cfg(unix)]")));
+            }
         }
-        (test, ignored) = (false, false);
+        attributes.clear();
     }
-    n
+    Ok(tests)
 }
-/// The operations of a memory record, the processes of each and its samples:
-/// the end line must count the record and sample lines, and every operation
-/// must have run as many processes, which add up to the samples.
+/// The tests the property map names in its rows on the faults of saved files.
+fn glance_listed(map: &str) -> Vec<String> {
+    map.lines()
+        .filter(|l| l.starts_with("| P") && l.contains(GLANCE_FAULT_LINK))
+        .flat_map(|l| {
+            let cell = l.rsplit(" | ").next().unwrap_or("");
+            cell.split('`')
+                .skip(1)
+                .step_by(2)
+                .map(str::to_string)
+                .collect::<Vec<_>>()
+        })
+        .collect()
+}
+/// The kept memory record: its operations, the processes of each and its
+/// samples. Operation names are distinct and one operation is the control;
+/// each ran the same number of processes, more than none; every sample names
+/// an operation and exited 0, each operation has as many samples as
+/// processes, and the end line counts the operations and the samples.
 fn glance_memory(text: &str) -> Result<(usize, usize, usize)> {
-    let number = |v: &str| -> Option<usize> {
-        if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit()) {
-            return None;
-        }
-        v.parse().ok()
+    let bad = |why: String| -> Box<dyn std::error::Error> {
+        format!("{GLANCE_MEMORY}/MEMORY.txt: {why}").into()
     };
-    let end = text
+    let counts = text
         .lines()
         .last()
-        .and_then(|l| l.strip_prefix("end records="))
-        .and_then(|l| l.split_once(" samples="))
-        .and_then(|(r, s)| Some((number(r)?, number(s.split(' ').next()?)?)));
-    let (Some((records, samples)), Some("GEL_MEMORY_1")) = (end, text.lines().next()) else {
-        return Err(
-            format!("{GLANCE_MEMORY}/MEMORY.txt: not a memory record with an end line").into(),
-        );
+        .and_then(|l| l.strip_prefix("end "))
+        .and_then(|end| {
+            Some((
+                glance_number(glance_field(end, "records=")?)?,
+                glance_number(glance_field(end, "samples=")?)?,
+            ))
+        });
+    let (Some((records, samples)), Some("GEL_MEMORY_1")) = (counts, text.lines().next()) else {
+        return Err(bad("not a memory record with an end line".to_string()));
     };
-    let reps: Vec<Option<usize>> = text
-        .lines()
-        .filter(|l| l.starts_with("record "))
-        .map(|l| {
-            l.split(' ')
-                .find_map(|f| f.strip_prefix("reps="))
-                .and_then(number)
-        })
-        .collect();
-    let counted = text.lines().filter(|l| l.starts_with("sample ")).count();
-    let processes = reps.first().copied().flatten().unwrap_or(0);
+    let mut operations: Vec<(&str, usize)> = Vec::new();
+    let mut controls = 0;
+    for line in text.lines().filter(|l| l.starts_with("record ")) {
+        let op = glance_field(line, "op=").unwrap_or("");
+        let reps = glance_field(line, "reps=")
+            .and_then(glance_number)
+            .unwrap_or(0);
+        if op.is_empty() || reps == 0 || operations.iter().any(|o| o.0 == op) {
+            return Err(bad(format!(
+                "an operation without a name or processes, or twice: {op}"
+            )));
+        }
+        controls += usize::from(glance_field(line, "kind=") == Some("control"));
+        operations.push((op, reps));
+    }
+    let mut counted = vec![0; operations.len()];
+    for line in text.lines().filter(|l| l.starts_with("sample ")) {
+        let op = glance_field(line, "op=").unwrap_or("");
+        let k = operations
+            .iter()
+            .position(|o| o.0 == op)
+            .ok_or_else(|| bad(format!("a sample of no operation: {op}")))?;
+        if glance_field(line, "exit=") != Some("0") {
+            return Err(bad(format!("a sample of {op} did not exit 0")));
+        }
+        counted[k] += 1;
+    }
+    let processes = operations.first().map_or(0, |o| o.1);
+    let all: usize = counted.iter().sum();
     if records == 0
-        || reps.len() != records
-        || counted != samples
-        || reps.iter().any(|r| *r != Some(processes))
-        || records.checked_mul(processes) != Some(samples)
+        || operations.len() != records
+        || all != samples
+        || controls != 1
+        || operations
+            .iter()
+            .zip(&counted)
+            .any(|(o, n)| o.1 != processes || *n != processes)
     {
-        return Err(format!(
-            "{GLANCE_MEMORY}/MEMORY.txt: the end line says {records} records and {samples} samples, the file holds {} and {counted}",
-            reps.len()
-        )
-        .into());
+        return Err(bad(format!(
+            "the end line says {records} operations and {samples} samples; the file holds {} and {all}, {controls} of them a control",
+            operations.len()
+        )));
     }
     Ok((records, processes, samples))
 }
-/// The steps of `xtask witness`: the rows of the step table in the section of
-/// the short witness, which must name the command and give their number in words.
-fn glance_witness(text: &str) -> Result<usize> {
-    let section = text
+/// The kinds of value the filter of the witness block replaces: the labels of
+/// its `LABELS`, each a constant `<redacted-KIND>`, distinct and as many as
+/// the array says.
+fn glance_labels(source: &str) -> Result<Vec<String>> {
+    let bad = || format!("{GLANCE_FILTER}: no list of distinct labels");
+    let (size, list) = source
+        .lines()
+        .find_map(|l| l.strip_prefix("const LABELS: [&str; "))
+        .and_then(|l| l.split_once("] = ["))
+        .ok_or_else(bad)?;
+    let list = list.strip_suffix("];").ok_or_else(bad)?;
+    let mut kinds: Vec<String> = Vec::new();
+    for name in list.split(", ") {
+        let label = format!("const {name}: &str = \"<redacted-");
+        let kind = source
+            .lines()
+            .find_map(|l| l.strip_prefix(&label)?.strip_suffix(">\";"))
+            .filter(|k| !k.is_empty() && k.bytes().all(|b| b.is_ascii_lowercase()))
+            .ok_or_else(bad)?;
+        if kinds.iter().any(|k| k == kind) {
+            return Err(bad().into());
+        }
+        kinds.push(kind.to_string());
+    }
+    if glance_number(size) != Some(kinds.len()) {
+        return Err(bad().into());
+    }
+    Ok(kinds)
+}
+/// The steps of `xtask witness` and those it skips off Unix: the rows of the
+/// step table in the section of the short witness, under its header and rule,
+/// as many as the section says in words and as the witness itself lists, by
+/// name; the section names the command, says how many kill series need a Unix
+/// host, and names each kind of value the filter replaces (`kinds`).
+fn glance_witness(guide: &str, source: &str, kinds: &[String]) -> Result<(usize, usize)> {
+    let section = guide
         .split_once("\n## A short witness\n")
         .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
         .unwrap_or("");
-    let names: Vec<&str> = section
-        .lines()
-        .skip_while(|l| !l.starts_with("| Step |"))
-        .skip(2)
+    let mut table = section.lines().skip_while(|l| !l.starts_with("| Step |"));
+    let rule = table
+        .nth(1)
+        .is_some_and(|l| l.starts_with("|-") && l.chars().all(|c| "|-: ".contains(c)));
+    let names: Vec<&str> = table
         .take_while(|l| l.starts_with("| "))
         .map(|l| l[2..].split(" |").next().unwrap_or(""))
         .collect();
@@ -6958,21 +7126,48 @@ fn glance_witness(text: &str) -> Result<usize> {
         .iter()
         .enumerate()
         .all(|(i, n)| !names[..i].contains(n));
-    let said = GLANCE_NUMBER_WORDS
-        .get(names.len())
-        .is_some_and(|w| section.contains(&format!("It runs {w} steps")));
+    let source = source.split_whitespace().collect::<Vec<_>>().join(" ");
+    let listed = source.matches("Step { name: \"").count() == names.len()
+        && names
+            .iter()
+            .all(|n| source.contains(&format!("Step {{ name: \"{n}\",")));
+    let unix = source.matches("skip: unix_only,").count();
+    let words: Vec<String> = section
+        .to_lowercase()
+        .split(|c: char| !c.is_ascii_alphanumeric())
+        .map(str::to_string)
+        .collect();
+    let said = |n: usize, what: &str| {
+        GLANCE_NUMBER_WORDS
+            .get(n)
+            .is_some_and(|w| glance_says(section, &what.replace("{}", w)))
+    };
     if names.is_empty()
+        || !rule
         || !names.iter().all(plain)
         || !distinct
-        || !said
+        || !listed
+        || !said(names.len(), "It runs {} steps")
+        || !said(unix, "The {} kill series need a Unix host")
         || !section.contains("-p xtask -- witness ")
+        || !kinds.iter().all(|k| words.contains(k))
     {
         return Err(format!(
-            "{GLANCE_REPRODUCE}: the short witness does not list the steps it counts"
+            "{GLANCE_REPRODUCE}: the short witness does not list the steps of {GLANCE_WITNESS} or the kinds its filter replaces"
         )
         .into());
     }
-    Ok(names.len())
+    Ok((names.len(), unix))
+}
+/// The platform-only tests the strict comparison of the third recorded
+/// revision found undeclared, as the README of the recorded reports counts them.
+fn glance_ci(text: &str) -> Result<usize> {
+    let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    text.split_once("Its lists hold ")
+        .and_then(|(_, rest)| rest.split_once(" more platform-only tests"))
+        .and_then(|(n, _)| glance_number(n))
+        .filter(|n| *n > 0)
+        .ok_or(format!("{GLANCE_CI}: no count of the undeclared platform-only tests").into())
 }
 impl GlanceFacts {
     fn read() -> Result<GlanceFacts> {
@@ -6989,15 +7184,23 @@ impl GlanceFacts {
             binaries: &glance_file(GLANCE_BINARIES)?,
             memory: &glance_file(&format!("{GLANCE_MEMORY}/MEMORY.txt"))?,
             faults: &faults,
+            properties: &glance_file(GLANCE_PROPERTIES)?,
+            exclusions: &glance_file(GLANCE_EXCLUSIONS)?,
+            ci: &glance_file(GLANCE_CI)?,
+            filter: &glance_file(GLANCE_FILTER)?,
+            witness: &glance_file(GLANCE_WITNESS)?,
             reproduce: &glance_file(GLANCE_REPRODUCE)?,
             readme: NATIVE,
         })
     }
-    /// Refuses unless the README names the earlier version, the roadmap section
-    /// of that version names the programs, the binaries guide lists distinct
-    /// programs, as many as the README says, and the memory record, the fault
-    /// test files and the guide of the short witness give numbers that the
-    /// release notes of `RELEASE` and the README both state.
+    /// Refuses unless the README names the version right before the release;
+    /// the roadmap section of that version names the programs; the binaries
+    /// guide lists distinct programs, as many as the README says; the fault
+    /// tests are those the property map lists, their Unix-only ones those the
+    /// CI evidence collector excludes; and the numbers of the fault tests, the
+    /// memory record, the filter of the witness and the recorded CI reports are
+    /// stated by the release notes of `RELEASE`, the roadmap section of the
+    /// release and the README, each number on its own and not inside another.
     fn from_texts(s: &GlanceTexts) -> Result<GlanceFacts> {
         let parts: Vec<&str> = s
             .release
@@ -7010,9 +7213,6 @@ impl GlanceFacts {
             return Err(format!("unexpected release {}", s.release).into());
         }
         let release = format!("{}.{}", parts[0], parts[1]);
-        // Line breaks and runs of spaces count as one space.
-        let fold = |t: &str| t.split_whitespace().collect::<Vec<_>>().join(" ");
-        let (notes, readme) = (fold(s.notes), fold(s.readme));
         if !s.notes.starts_with(&format!("# GEL RAM {} ", s.release)) {
             return Err(format!("RELEASE-NOTES-{}.md is not the notes of it", s.release).into());
         }
@@ -7021,19 +7221,13 @@ impl GlanceFacts {
             .lines()
             .find_map(|l| l.strip_prefix(&format!("## New in {release}, and in ")))
             .unwrap_or("");
-        let p: Vec<&str> = since.split('.').collect();
-        if p.len() != 2 || !p.iter().all(numeric) || since == release {
-            return Err(format!("the README names no earlier version beside {release}").into());
+        if !glance_follows(since, &release) {
+            return Err(format!("the README names no version right before {release}").into());
         }
         let since = since.to_string();
         // A new release must not relabel the fact of the earlier one: the
         // section of the earlier version states it.
-        let section = s
-            .roadmap
-            .split_once(&format!("\n## v{since}.0\n"))
-            .map(|(_, rest)| rest.split("\n## ").next().unwrap_or(""))
-            .unwrap_or("");
-        if !fold(section).contains(GLANCE_SINCE_FACT) {
+        if !glance_says(glance_section(s.roadmap, &since), GLANCE_SINCE_FACT) {
             return Err(
                 format!("{GLANCE_ROADMAP}: v{since}.0 does not say {GLANCE_SINCE_FACT}").into(),
             );
@@ -7063,71 +7257,124 @@ impl GlanceFacts {
         if tools.is_empty() || !tools.iter().all(valid) || !distinct {
             return Err(format!("{GLANCE_BINARIES}: unexpected program list: {list}").into());
         }
-        // New in the release: the fault tests, the memory record and the steps
-        // of the short witness, each counted in its own file.
-        let mut faults = 0;
+        // New in the release: the fault tests, each in a file, the same that
+        // the property map lists for the faults of saved files, each once.
+        let mut tests: Vec<(String, bool)> = Vec::new();
         for (k, text) in s.faults.iter().enumerate() {
-            let n = glance_tests(text);
-            if n == 0 {
-                let file = GLANCE_FAULTS.get(k).unwrap_or(&"a fault test file");
+            let file = GLANCE_FAULTS.get(k).copied().unwrap_or("a fault test file");
+            let found = glance_tests(text).map_err(|e| format!("{file}: {e}"))?;
+            if found.is_empty() {
                 return Err(format!("{file}: no test").into());
             }
-            faults += n;
+            tests.extend(found);
         }
+        let mut names: Vec<&str> = tests.iter().map(|t| t.0.as_str()).collect();
+        let mut listed = glance_listed(s.properties);
+        names.sort_unstable();
+        listed.sort_unstable();
+        if names.windows(2).any(|w| w[0] == w[1]) || names != listed {
+            return Err(format!(
+                "the fault tests are not those {GLANCE_PROPERTIES} lists for the faults of saved files, each once"
+            )
+            .into());
+        }
+        // A Unix-only test is one the CI evidence collector excludes elsewhere.
+        let exclusions = s
+            .exclusions
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ");
+        if let Some((name, _)) = tests
+            .iter()
+            .find(|(n, unix)| *unix != exclusions.contains(&format!("\"{n}\", \"unix\",")))
+        {
+            return Err(
+                format!("{name}: Unix-only in its file and in {GLANCE_EXCLUSIONS} differ").into(),
+            );
+        }
+        let (faults, unix) = (tests.len(), tests.iter().filter(|t| t.1).count());
+        // The memory record, the filter of the witness and the CI reports.
         let (operations, processes, samples) = glance_memory(s.memory)?;
-        let steps = glance_witness(s.reproduce)?;
+        let kinds = glance_labels(s.filter)?;
+        let (steps, unix_steps) = glance_witness(s.reproduce, s.witness, &kinds)?;
+        let undeclared = glance_ci(s.ci)?;
         let word = |n: usize| {
             GLANCE_NUMBER_WORDS
                 .get(n)
                 .ok_or(format!("{n} is too many to name in words"))
         };
-        let witness = format!(
-            "`xtask witness NEW_DIR` runs the {} short public checks",
-            word(steps)?
-        );
-        let tests = format!("{faults} tests in {} new files", word(s.faults.len())?);
-        let memory = format!(
-            "{} processes of each of {} operations",
-            word(processes)?,
-            word(operations)?
-        );
+        let tests_in = format!("{faults} tests in {} new files", word(s.faults.len())?);
+        let windows = format!("{} of the {faults} tests compile on Windows", faults - unix);
+        let filter = format!("filter replaces {} kinds of value", word(kinds.len())?);
+        let (ops, reps) = (word(operations)?, word(processes)?);
+        let found = format!("found {undeclared} undeclared platform-only tests");
         // A new release must not relabel what came later either: its own notes
-        // name the numbers the card says are new in it.
-        for stated in [
-            witness.clone(),
-            tests.clone(),
-            memory.clone(),
+        // and its own roadmap section state the numbers the card says are new in it.
+        let notes = [
+            tests_in.clone(),
+            windows.clone(),
+            format!("{reps} processes of each of {ops} operations"),
             format!("records={operations} samples={samples}"),
-        ] {
-            if !notes.contains(&stated) {
+            filter.clone(),
+            found.clone(),
+        ];
+        for stated in notes {
+            if !glance_says(s.notes, &stated) {
                 return Err(format!("RELEASE-NOTES-{}.md does not say {stated}", s.release).into());
             }
         }
-        for (stated, what) in [
-            (
-                format!(
-                    "the {} tool programs answer `--version` and `--license`",
-                    word(tools.len())?
-                ),
-                "number of tool programs",
+        let section = glance_section(s.roadmap, &release);
+        let roadmap = [
+            tests_in.clone(),
+            windows,
+            format!("{ops} operations with {reps} processes each, {samples} samples"),
+            "filter replaces host and user names".to_string(),
+            format!("{undeclared} platform-only tests were undeclared"),
+        ];
+        for stated in roadmap {
+            if !glance_says(section, &stated) {
+                return Err(format!("{GLANCE_ROADMAP}: v{release}.0 does not say {stated}").into());
+            }
+        }
+        // The six checks of the witness came before, in their own version.
+        let older = glance_section(s.roadmap, GLANCE_WITNESS_SINCE);
+        if !glance_says(older, "xtask -- witness") {
+            return Err(format!(
+                "{GLANCE_ROADMAP}: v{GLANCE_WITNESS_SINCE}.0 does not name xtask witness"
+            )
+            .into());
+        }
+        let readme = [
+            format!(
+                "the {} tool programs answer `--version` and `--license`",
+                word(tools.len())?
             ),
-            (witness, "number of witness steps"),
-            (tests, "number of fault tests"),
-            (format!("{memory}, {samples} samples"), "memory record"),
-            (format!("({GLANCE_MEMORY}/README.md)"), "memory record"),
-        ] {
-            if !readme.contains(&stated) {
-                return Err(format!("the README states another {what}: {stated}").into());
+            format!(
+                "has run the {} short public checks since {GLANCE_WITNESS_SINCE}",
+                word(steps)?
+            ),
+            format!("the {} kill series only on Unix", word(unix_steps)?),
+            filter,
+            format!("{tests_in} ({} of them Unix-only)", word(unix)?),
+            format!("starts each of {ops} operations, the control among them"),
+            format!("{reps} processes of each of {ops} operations, {samples} samples"),
+            format!("({GLANCE_MEMORY}/README.md)"),
+            found,
+        ];
+        for stated in readme {
+            if !glance_says(s.readme, &stated) {
+                return Err(format!("the README does not say {stated}").into());
             }
         }
         let facts = GlanceFacts {
             release,
             since,
             faults,
+            unix,
             operations,
             processes,
             samples,
-            steps,
+            labels: kinds.len(),
             tools,
         };
         facts.check()?;
@@ -7143,12 +7390,13 @@ impl GlanceFacts {
         };
         if self.tools.is_empty()
             || self.faults == 0
-            || self.steps == 0
+            || self.unix > self.faults
+            || self.labels == 0
             || self.operations == 0
             || self.operations.checked_mul(self.processes) != Some(self.samples)
             || !version(&self.release, 2)
             || !version(&self.since, 2)
-            || self.since == self.release
+            || !glance_follows(&self.since, &self.release)
         {
             return Err("the glance facts are empty or malformed".into());
         }
@@ -7157,18 +7405,11 @@ impl GlanceFacts {
 }
 /// What the glance card says, as its description and as the README alternative text.
 fn glance_text(f: &GlanceFacts) -> String {
-    format!("Versions {} and {} at a glance. New in {}: {} fault tests of saved files, no power-loss test; {} memory samples of {} operations, one machine, process-wide, no time; {} steps of xtask witness on any host, one block. Since {}: {} tool programs answer --version and --license.", f.since, f.release, f.release, f.faults, f.samples, f.operations, f.steps, f.since, f.tools.len())
+    format!("Versions {} and {} at a glance. New in {}: {} fault tests of saved files, {} Unix-only, no power-loss test; {} memory samples of {} operations, one machine, process-wide, untimed; {} kinds of value replaced in witness step lines. Since {}: {} tool programs answer --version and --license.", f.since, f.release, f.release, f.faults, f.unix, f.samples, f.operations, f.labels, f.since, f.tools.len())
 }
 /// One tile of a glance card: the big number, the version tag, the colour of
 /// the tile, the two lines under the number and the colour of the second.
-type GlanceTile = (
-    String,
-    String,
-    &'static str,
-    String,
-    &'static str,
-    &'static str,
-);
+type GlanceTile = (String, String, &'static str, String, String, &'static str);
 /// The four tiles, the same on the wide and on the phone card: what is new in
 /// the release first, then what came in the version before it.
 fn glance_tiles(t: &'static Theme, f: &GlanceFacts) -> [GlanceTile; 4] {
@@ -7182,7 +7423,7 @@ fn glance_tiles(t: &'static Theme, f: &GlanceFacts) -> [GlanceTile; 4] {
             new.clone(),
             t.accent,
             "fault tests of saved files".to_string(),
-            "no power-loss test among them",
+            format!("no power-loss test; {} Unix-only", f.unix),
             t.ink,
         ),
         (
@@ -7190,15 +7431,15 @@ fn glance_tiles(t: &'static Theme, f: &GlanceFacts) -> [GlanceTile; 4] {
             new.clone(),
             t.accent,
             format!("memory samples of {} operations", f.operations),
-            "one machine, process-wide, no time",
+            "one machine, process-wide, untimed".to_string(),
             t.ink,
         ),
         (
-            f.steps.to_string(),
+            f.labels.to_string(),
             new,
             t.good,
-            "steps of xtask witness, any host".to_string(),
-            "one block, no host or user names",
+            "kinds the witness filter replaces".to_string(),
+            "only as far as it recognises them".to_string(),
             t.ink,
         ),
         (
@@ -7206,7 +7447,7 @@ fn glance_tiles(t: &'static Theme, f: &GlanceFacts) -> [GlanceTile; 4] {
             since,
             t.accent,
             "tool programs answer".to_string(),
-            "--version and --license",
+            "--version and --license".to_string(),
             t.muted,
         ),
     ]
@@ -7314,13 +7555,13 @@ impl GlanceRoll {
 }
 /// The headline of the glance card, in two lines.
 const GLANCE_HEADLINE: [&str; 2] = [
-    "Checks on your own host · fault tests of saved files ·",
+    "A filtered witness block · fault tests of saved files ·",
     "a kept memory record · programs that name their license",
 ];
 /// Four tiles in two rows, each tagged with the version that brought it: the
 /// fault tests of saved files, the samples of the kept memory record and the
-/// steps of the short witness (new in the release), then the programs that
-/// name their license (since the version before); numbers roll into place.
+/// kinds of value the witness filter replaces (new in the release), then the
+/// programs that name their license (since the version before); numbers roll into place.
 /// A line that does not fit its tile is refused.
 fn glance_draw(dark: bool, f: &GlanceFacts) -> Result<String> {
     f.check()?;
@@ -11553,16 +11794,17 @@ mod tests {
                 [
                     (new.clone(), vec![f.faults.to_string()]),
                     (new.clone(), vec![f.samples.to_string()]),
-                    (new, vec![f.steps.to_string()]),
+                    (new, vec![f.labels.to_string()]),
                     (old, vec![f.tools.len().to_string()]),
                 ]
             );
             for want in [
                 format!("{} AND {} AT A GLANCE", f.since, f.release),
                 format!(">memory samples of {} operations<", f.operations),
-                ">no power-loss test among them<".to_string(),
-                ">one machine, process-wide, no time<".to_string(),
-                ">one block, no host or user names<".to_string(),
+                format!(">no power-loss test; {} Unix-only<", f.unix),
+                ">one machine, process-wide, untimed<".to_string(),
+                ">kinds the witness filter replaces<".to_string(),
+                ">only as far as it recognises them<".to_string(),
                 ">--version and --license<".to_string(),
                 xml(&glance_alt().unwrap()),
             ] {
@@ -11585,6 +11827,7 @@ mod tests {
         );
         assert!(s.contains("0.8 AND 0.9 AT A GLANCE"));
         assert!(s.contains(">memory samples of 2 operations<"));
+        assert!(s.contains(">no power-loss test; 1 Unix-only<"));
         assert_ne!(s, glance_phone(false).unwrap());
         f.faults = usize::MAX;
         let e = glance_phone_draw(false, &f).unwrap_err();
@@ -15735,13 +15978,18 @@ mod tests {
     fn glance_texts() -> GlanceTexts<'static> {
         GlanceTexts {
             release: "v0.9.2",
-            notes: "# GEL RAM v0.9.2 — x\n\n- `xtask witness NEW_DIR` runs the two short\n  public checks; 3 tests in two new files; two processes of each of two\n  operations: `records=2 samples=4`\n",
-            roadmap: "# Roadmap\n\n## v0.9.0\n\nnew\n\n## v0.8.0\n\n| Every program prints one identity line for\n`--version`, and for `--license` the license name |\n\n## v0.7.0\n\nold\n",
+            notes: "# GEL RAM v0.9.2 — x\n\n- 3 tests in two new files; 2 of the 3 tests compile on Windows; two processes of each of two\n  operations: `records=2 samples=4`. A filter replaces two kinds of value; the comparison found 3 undeclared platform-only tests.\n",
+            roadmap: "# Roadmap\n\n## v0.9.0\n\n| 3 tests in two new files; 2 of the 3 tests compile on Windows | two operations with two processes each, 4 samples | a filter replaces host and user names | 3 platform-only tests were undeclared |\n\n## v0.8.0\n\n| Every program prints one identity line for\n`--version`, and for `--license` the license name |\n\n## v0.7.0\n\n| One command | `cargo run -p xtask -- witness NEW_DIR` |\n",
             binaries: "Every program of the workspace (`a`, `b`\nand `c`) given\n",
-            memory: "GEL_MEMORY_1\nsample op=a rep=1\nsample op=a rep=2\nsample op=b rep=1\nsample op=b rep=2\nrecord op=a reps=2 x=1\nrecord op=b reps=2 x=1\nend records=2 samples=4 redactions=0\n",
+            memory: "GEL_MEMORY_1\nsample op=a rep=1 exit=0\nsample op=a rep=2 exit=0\nsample op=b rep=1 exit=0\nsample op=b rep=2 exit=0\nrecord op=a kind=control reps=2 x=1\nrecord op=b kind=example reps=2 x=1\nend records=2 samples=4 redactions=0\n",
             faults: &GLANCE_FAULT_TEXTS,
-            reproduce: "# R\n\n## A short witness\n\n```text\ncargo run --locked --offline -p xtask -- witness NEW_DIR\n```\n\nIt runs two steps, each as its own process:\n\n| Step | What it runs | Passing line |\n|---|---|---|\n| literal | x | `A=PASS` |\n| same-bits | y | `B=MATCH` |\n\nAfter.\n\n## Report it\n\n| Step | z | w |\n|---|---|---|\n| more | x | y |\n",
-            readme: "## New in 0.9, and in 0.8\n\nthe three tool programs answer `--version` and `--license`; `xtask witness NEW_DIR` runs the two short public checks; 3 tests in two new files; two processes of each of two operations, 4 samples ([record](docs/memory-results/2026-11-08/README.md))\n",
+            properties: "| ID | Property | Evidence | Tests |\n|---|---|---|---|\n| P1 | cut | [f](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `one` `two` |\n| P2 | read | [f](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | `three` |\n| P3 | other | [g](OTHER.md) | `other` |\n",
+            exclusions: "const EXCLUSIONS: &[(&str, &str, &str)] = &[\n    (\n        \"two\",\n        \"unix\",\n        \"a kill\",\n    ),\n    (\n        \"elsewhere\",\n        \"unix\",\n        \"a link\",\n    ),\n];\n",
+            ci: "Reading the row: Its lists hold 3 more platform-only tests, declared later.\n",
+            filter: "const HOST: &str = \"<redacted-host>\";\nconst IP: &str = \"<redacted-ip>\";\n/// The labels.\nconst LABELS: [&str; 2] = [HOST, IP];\n",
+            witness: "    vec![\n        Step {\n            name: \"literal\",\n            skip: None,\n        },\n        Step {\n            name: \"same-bits\",\n            skip: unix_only,\n        },\n    ]\n",
+            reproduce: "# R\n\n## A short witness\n\n```text\ncargo run --locked --offline -p xtask -- witness NEW_DIR\n```\n\nIt runs two steps, each as its own process:\n\n| Step | What it runs | Passing line |\n|---|---|---|\n| literal | x | `A=PASS` |\n| same-bits | y | `B=MATCH` |\n\nThe one kill series need a Unix host. A filter replaces a host name or an IP address.\n\n## Report it\n\n| Step | z | w |\n|---|---|---|\n| more | x | y |\n",
+            readme: "## New in 0.9, and in 0.8\n\nthe three tool programs answer `--version` and `--license`; `xtask witness NEW_DIR` has run the two short public checks since 0.7 (the one kill series only on Unix); a filter replaces two kinds of value; 3 tests in two new files (one of them Unix-only); starts each of two operations, the control among them; two processes of each of two operations, 4 samples ([record](docs/memory-results/2026-11-08/README.md)); found 3 undeclared platform-only tests\n",
         }
     }
     /// The facts of `glance_texts`, made by hand.
@@ -15750,10 +15998,11 @@ mod tests {
             release: "0.9".to_string(),
             since: "0.8".to_string(),
             faults: 3,
+            unix: 1,
             operations: 2,
             processes: 2,
             samples: 4,
-            steps: 2,
+            labels: 2,
             tools: vec!["a".to_string(), "b".to_string(), "c".to_string()],
         }
     }
@@ -15761,30 +16010,46 @@ mod tests {
     fn glance_card_shows_the_numbers_of_the_files() {
         let f = GlanceFacts::read().unwrap();
         // Counted a second way: each `#[test]` of the fault files, less the
-        // ignored child processes.
-        let tests: usize = GLANCE_FAULTS
+        // ignored child processes, and those right under `#[cfg(unix)]`.
+        let texts: Vec<String> = GLANCE_FAULTS
             .iter()
-            .map(|file| {
-                let text = fs::read_to_string(file).unwrap();
-                text.matches("#[test]").count() - text.matches("\n#[ignore]\n").count()
-            })
+            .map(|file| fs::read_to_string(file).unwrap())
+            .collect();
+        let tests: usize = texts
+            .iter()
+            .map(|t| t.matches("#[test]").count() - t.matches("\n#[ignore]\n").count())
             .sum();
         assert_eq!(f.faults, tests);
+        let unix: usize = texts
+            .iter()
+            .map(|t| t.matches("\n#[cfg(unix)]\n#[test]\n").count())
+            .sum();
+        assert_eq!(f.unix, unix);
         // The memory record as its own README says `memory-check` prints it.
         let record = fs::read_to_string(format!("{GLANCE_MEMORY}/README.md")).unwrap();
         assert!(record.contains(&format!(
             "`GEL_MEMORY_CHECK=PASS records={} samples={}`",
             f.operations, f.samples
         )));
+        // The labels as constants of the filter, each `<redacted-…>`.
+        let filter = fs::read_to_string(GLANCE_FILTER).unwrap();
+        let labels = filter
+            .lines()
+            .filter(|l| l.starts_with("const ") && l.contains(": &str = \"<redacted-"))
+            .count();
+        assert_eq!(f.labels, labels);
         // The steps as the witness names them, each a row of the guide's table.
-        let witness = fs::read_to_string("xtask/src/witness.rs").unwrap();
+        let witness = fs::read_to_string(GLANCE_WITNESS).unwrap();
         let names: Vec<&str> = witness
             .split("            name: \"")
             .skip(1)
             .map(|s| s.split_once('"').unwrap().0)
             .collect();
-        assert_eq!(f.steps, names.len());
         let guide = fs::read_to_string(GLANCE_REPRODUCE).unwrap();
+        let kinds = glance_labels(&filter).unwrap();
+        let (steps, unix_steps) = glance_witness(&guide, &witness, &kinds).unwrap();
+        assert_eq!(steps, names.len());
+        assert_eq!(unix_steps, witness.matches("skip: unix_only").count());
         for name in &names {
             assert!(guide.contains(&format!("\n| {name} | ")), "{name}");
         }
@@ -15818,7 +16083,7 @@ mod tests {
                 [
                     f.faults.to_string(),
                     f.samples.to_string(),
-                    f.steps.to_string(),
+                    f.labels.to_string(),
                     f.tools.len().to_string(),
                 ]
             );
@@ -15830,11 +16095,11 @@ mod tests {
             for want in [
                 kicker.as_str(),
                 ">fault tests of saved files<",
-                ">no power-loss test among them<",
+                &format!(">no power-loss test; {} Unix-only<", f.unix),
                 &format!(">memory samples of {} operations<", f.operations),
-                ">one machine, process-wide, no time<",
-                ">steps of xtask witness, any host<",
-                ">one block, no host or user names<",
+                ">one machine, process-wide, untimed<",
+                ">kinds the witness filter replaces<",
+                ">only as far as it recognises them<",
                 ">--version and --license<",
                 GLANCE_HEADLINE[0],
                 GLANCE_HEADLINE[1],
@@ -15851,14 +16116,14 @@ mod tests {
         let alt = glance_alt().unwrap();
         for want in [
             format!(
-                "{} fault tests of saved files, no power-loss test",
-                f.faults
+                "{} fault tests of saved files, {} Unix-only, no power-loss test",
+                f.faults, f.unix
             ),
             format!(
-                "{} memory samples of {} operations, one machine, process-wide, no time",
+                "{} memory samples of {} operations, one machine, process-wide, untimed",
                 f.samples, f.operations
             ),
-            format!("{} steps of xtask witness", f.steps),
+            format!("{} kinds of value replaced in witness step lines", f.labels),
             format!("{} tool programs", f.tools.len()),
             format!("New in {}:", f.release),
             format!("Since {}:", f.since),
@@ -15875,17 +16140,18 @@ mod tests {
         assert!(s.contains("0.8 AND 0.9 AT A GLANCE") && s.contains(">new in 0.9<"));
         assert!(s.contains(">memory samples of 2 operations<"));
         assert!(glance_text(&f).contains("3 tool programs"));
-        assert!(glance_text(&f).contains("2 steps of xtask witness"));
+        assert!(glance_text(&f).contains("3 fault tests of saved files, 1 Unix-only"));
+        assert!(glance_text(&f).contains("2 kinds of value replaced"));
         // Read from texts of their own, the facts follow those texts.
         let g = GlanceFacts::from_texts(&glance_texts()).unwrap();
         assert_eq!(
             (
                 g.release.as_str(),
                 g.since.as_str(),
-                (g.faults, g.operations, g.processes, g.samples, g.steps),
-                g.tools.len()
+                (g.faults, g.unix, g.operations, g.processes, g.samples),
+                (g.labels, g.tools.len())
             ),
-            ("0.9", "0.8", (3, 2, 2, 4, 2), 3)
+            ("0.9", "0.8", (3, 1, 2, 2, 4), (2, 3))
         );
         assert_eq!(
             glance_draw(true, &g).unwrap(),
@@ -15897,94 +16163,154 @@ mod tests {
         fn refused(t: GlanceTexts) -> bool {
             GlanceFacts::from_texts(&t).is_err()
         }
+        /// The text with each change made in turn, each change on its own; the
+        /// text to change must hold what a change replaces.
+        fn changed(text: &str, pairs: &[(&str, &str)]) -> Vec<String> {
+            pairs
+                .iter()
+                .map(|(from, to)| {
+                    assert!(text.contains(from), "{from}");
+                    text.replacen(from, to, 1)
+                })
+                .collect()
+        }
         let base = glance_texts();
         assert!(!refused(glance_texts()));
-        // A release that is not vX.Y.Z.
+        // A release that is not vX.Y.Z, or not the one the README names.
         for release in ["0.9.2", "v0.9", "v1.0.0"] {
             assert!(refused(GlanceTexts { release, ..base }), "{release}");
         }
         // Notes that are not those of the release, or do not state a number the
-        // card says is new in it: a version bump cannot relabel later work.
-        for (from, to) in [
-            ("# GEL RAM v0.9.2 ", "# GEL RAM v0.9.1 "),
-            ("runs the two short", "runs the three short"),
-            ("3 tests in two", "4 tests in two"),
-            ("in two new files", "in three new files"),
-            ("two processes of each", "three processes of each"),
-            ("of two\n  operations", "of three\n  operations"),
-            ("records=2 samples=4", "records=2 samples=5"),
-        ] {
-            let notes = base.notes.replace(from, to);
-            assert_ne!(notes, base.notes, "{from}");
+        // card says is new in it, on its own: a version bump cannot relabel later work.
+        let notes = changed(
+            base.notes,
+            &[
+                ("# GEL RAM v0.9.2 ", "# GEL RAM v0.9.1 "),
+                ("3 tests in two", "4 tests in two"),
+                ("3 tests in two", "13 tests in two"),
+                ("in two new files", "in three new files"),
+                ("2 of the 3 tests compile", "1 of the 3 tests compile"),
+                ("two processes of each", "three processes of each"),
+                ("of two\n  operations", "of three\n  operations"),
+                ("records=2 samples=4", "records=2 samples=40"),
+                ("records=2 samples=4", "records=2 samples=4.5"),
+                ("records=2", "records=12"),
+                ("replaces two kinds", "replaces three kinds"),
+                ("found 3 undeclared", "found 4 undeclared"),
+                ("platform-only tests.", "platform-only tests-x."),
+            ],
+        );
+        for notes in notes {
             assert!(
                 refused(GlanceTexts {
                     notes: &notes,
                     ..base
                 }),
-                "{to}"
+                "{notes}"
             );
         }
-        // The README names no earlier version, or the same one, states another
-        // number, or does not link the memory record the card counts.
-        for (from, to) in [
-            ("## New in 0.9, and in 0.8", "## New in 0.9"),
-            ("## New in 0.9, and in 0.8", "## New in 0.9, and in 0.9"),
-            ("the three tool programs", "the two tool programs"),
-            ("runs the two short", "runs the six short"),
-            ("3 tests in two", "20 tests in two"),
-            ("two processes of each", "nine processes of each"),
-            ("operations, 4 samples", "operations, 72 samples"),
-            ("2026-11-08/README.md", "2026-11-09/README.md"),
-        ] {
-            let readme = base.readme.replace(from, to);
-            assert_ne!(readme, base.readme, "{from}");
-            assert!(
-                refused(GlanceTexts {
-                    readme: &readme,
-                    ..base
-                }),
-                "{to}"
-            );
-        }
-        // The earlier version's section is missing or does not name the
-        // programs; the sentence only in another version's section does not count.
-        for (from, to) in [
-            ("## v0.8.0", "## v0.8.1"),
-            ("for\n`--version`, and", "for\n`--help`, and"),
-        ] {
-            let roadmap = base.roadmap.replace(from, to);
-            assert_ne!(roadmap, base.roadmap, "{from}");
+        // The roadmap: the section of the release does not state a number, or
+        // states it inside another; the section of the earlier version does
+        // not name the programs; the version of the six checks does not name
+        // the witness; a sentence in another version's section does not count.
+        let mut roadmaps = changed(
+            base.roadmap,
+            &[
+                ("## v0.9.0", "## v0.9.1"),
+                ("| 3 tests in two", "| 23 tests in two"),
+                ("2 of the 3 tests compile", "2 of the 4 tests compile"),
+                ("each, 4 samples", "each, 44 samples"),
+                ("replaces host and user names", "replaces host names"),
+                ("3 platform-only tests were", "4 platform-only tests were"),
+                ("## v0.8.0", "## v0.8.1"),
+                ("for\n`--version`, and", "for\n`--help`, and"),
+                ("## v0.7.0", "## v0.6.0"),
+                ("xtask -- witness", "xtask -- witnesses"),
+            ],
+        );
+        roadmaps.push(
+            base.roadmap
+                .replace("| 3 platform-only tests were undeclared |", "")
+                .replace(
+                    "the license name |",
+                    "the license name | 3 platform-only tests were undeclared |",
+                ),
+        );
+        roadmaps.push(
+            base.roadmap
+                .replace("| Every program prints one identity line for\n`--version`, and for `--license` the license name |", "")
+                .replace("| One command |", &format!("| One command | {GLANCE_SINCE_FACT} |")),
+        );
+        for roadmap in roadmaps {
             assert!(
                 refused(GlanceTexts {
                     roadmap: &roadmap,
                     ..base
                 }),
-                "{to}"
+                "{roadmap}"
             );
         }
-        let moved = base
-            .roadmap
-            .replace("| Every program prints one identity line for\n`--version`, and for `--license` the license name |", "")
-            .replace("old", GLANCE_SINCE_FACT);
-        assert!(refused(GlanceTexts {
-            roadmap: &moved,
-            ..base
-        }));
-        // The memory record: another format, no end line, an end line that does
-        // not count its lines, an operation with another number of processes,
-        // or no operation at all.
-        for memory in [
-            base.memory.replace("GEL_MEMORY_1", "GEL_MEMORY_2"),
-            base.memory
-                .replace("end records=2 samples=4 redactions=0\n", ""),
-            base.memory.replace("records=2", "records=3"),
-            base.memory.replace("samples=4", "samples=5"),
-            base.memory.replace("sample op=b rep=2\n", ""),
-            base.memory
-                .replace("record op=b reps=2", "record op=b reps=3"),
-            base.memory.replace("record op=b reps=2", "record op=b"),
-            "GEL_MEMORY_1\nend records=0 samples=0\n".to_string(),
-        ] {
+        // The README names no version, the same one or not the one right
+        // before, states another number or one inside another, or does not
+        // link the memory record the card counts.
+        let readmes = changed(
+            base.readme,
+            &[
+                ("## New in 0.9, and in 0.8", "## New in 0.9"),
+                ("## New in 0.9, and in 0.8", "## New in 0.9, and in 0.9"),
+                ("## New in 0.9, and in 0.8", "## New in 0.9, and in 0.7"),
+                ("the three tool programs", "the two tool programs"),
+                ("run the two short", "run the six short"),
+                ("since 0.7", "since 0.8"),
+                ("the one kill series", "the two kill series"),
+                ("replaces two kinds", "replaces six kinds"),
+                ("files (one of them", "files (two of them"),
+                ("; 3 tests in two", "; 33 tests in two"),
+                (
+                    "starts each of two operations",
+                    "starts each of three operations",
+                ),
+                ("the control among them", "a control among them"),
+                ("operations, 4 samples", "operations, 45 samples"),
+                ("2026-11-08/README.md", "2026-11-09/README.md"),
+                ("found 3 undeclared", "found 2 undeclared"),
+            ],
+        );
+        for readme in readmes {
+            assert!(
+                refused(GlanceTexts {
+                    readme: &readme,
+                    ..base
+                }),
+                "{readme}"
+            );
+        }
+        // The memory record: another format; no end line; an end line that does
+        // not count its operations or samples; a sample of no operation, one
+        // that did not exit 0, or one too many for one operation and too few for
+        // another; an operation twice, without processes or with other
+        // processes; no control or two; no operation at all.
+        let mut memories = changed(
+            base.memory,
+            &[
+                ("GEL_MEMORY_1", "GEL_MEMORY_2"),
+                ("end records=2 samples=4 redactions=0\n", ""),
+                ("records=2", "records=3"),
+                ("samples=4", "samples=5"),
+                ("sample op=b rep=2 exit=0\n", ""),
+                ("sample op=b rep=2", "sample op=c rep=2"),
+                ("op=b rep=2 exit=0", "op=b rep=2 exit=1"),
+                ("sample op=b rep=2", "sample op=a rep=3"),
+                ("record op=b kind=example", "record op=a kind=example"),
+                ("kind=example reps=2", "kind=example reps=0"),
+                ("kind=example reps=2", "kind=example"),
+                ("kind=example reps=2", "kind=example reps=3"),
+                ("kind=control", "kind=example"),
+                ("kind=example", "kind=control"),
+            ],
+        );
+        memories.push("GEL_MEMORY_1\nend records=0 samples=0\n".to_string());
+        for memory in memories {
             assert!(
                 refused(GlanceTexts {
                     memory: &memory,
@@ -15994,15 +16320,25 @@ mod tests {
             );
         }
         // The fault test files: one without a test, with its only test ignored or
-        // cut off from its function, one test more, or a file fewer.
-        let more = format!("{}#[test]\nfn four() {{}}\n", GLANCE_FAULT_TEXTS[1]);
-        for second in [
-            "fn helper() {}\n",
-            "#[test]\n#[ignore]\nfn child() {}\n",
-            "#[test]\n// a comment\nfn two() {}\n",
-            more.as_str(),
-        ] {
-            let faults = [GLANCE_FAULT_TEXTS[0], second];
+        // cut off from its function; a test the map does not list, also one in
+        // a comment; one under another condition, in a module or in a file
+        // under a condition; a name twice; a Unix-only test the exclusions do
+        // not name; a file fewer.
+        let second = GLANCE_FAULT_TEXTS[1];
+        let seconds = [
+            "fn helper() {}\n".to_string(),
+            "#[test]\n#[ignore]\nfn child() {}\n".to_string(),
+            "#[test]\n// a comment\nfn two() {}\n".to_string(),
+            format!("{second}#[test]\nfn four() {{}}\n"),
+            format!("{second}/*\n#[test]\nfn four() {{}}\n*/\n"),
+            second.replace("#[cfg(unix)]\n#[test]", "#[cfg(any())]\n#[test]"),
+            format!("{second}#[cfg(unix)]\nmod inner {{\n    #[test]\n    fn four() {{}}\n}}\n"),
+            format!("#![cfg(unix)]\n{second}"),
+            format!("{second}#[test]\nfn three() {{}}\n"),
+            second.replace("#[cfg(unix)]\n#[test]", "#[test]"),
+        ];
+        for second in &seconds {
+            let faults = [GLANCE_FAULT_TEXTS[0], second.as_str()];
             assert!(
                 refused(GlanceTexts {
                     faults: &faults,
@@ -16015,34 +16351,129 @@ mod tests {
             faults: &GLANCE_FAULT_TEXTS[..1],
             ..base
         }));
-        // The guide of the short witness: no section, another number in words,
-        // no command, a repeated step, a step that is not a plain name, or a
-        // row more than it says.
-        let more = base.reproduce.replace(
-            "| same-bits | y | `B=MATCH` |\n",
-            "| same-bits | y | `B=MATCH` |\n| quad | z | `C=PASS` |\n",
+        let properties = changed(
+            base.properties,
+            &[
+                ("`three`", "`three` `four`"),
+                ("| P2 | read | [f](PUBLICATION", "| P2 | read | [f](OTHER"),
+            ],
         );
-        for (from, to) in [
-            ("## A short witness", "## A long witness"),
-            ("It runs two steps", "It runs three steps"),
-            ("-p xtask -- witness ", "-p xtask -- witnesses "),
-            ("| same-bits |", "| literal |"),
-            ("| same-bits |", "| Same bits |"),
-        ] {
-            let reproduce = base.reproduce.replace(from, to);
-            assert_ne!(reproduce, base.reproduce, "{from}");
+        for properties in properties {
+            assert!(
+                refused(GlanceTexts {
+                    properties: &properties,
+                    ..base
+                }),
+                "{properties}"
+            );
+        }
+        let exclusions = changed(
+            base.exclusions,
+            &[
+                ("\"two\",", "\"twofold\","),
+                ("\"elsewhere\",", "\"three\","),
+            ],
+        );
+        for exclusions in exclusions {
+            assert!(
+                refused(GlanceTexts {
+                    exclusions: &exclusions,
+                    ..base
+                }),
+                "{exclusions}"
+            );
+        }
+        // The filter: another size, a label twice, a label not defined or not
+        // plain, no list, or a kind the guide of the witness does not name.
+        let filters = changed(
+            base.filter,
+            &[
+                ("[&str; 2]", "[&str; 3]"),
+                ("[HOST, IP]", "[HOST, HOST]"),
+                ("[HOST, IP]", "[HOST, MAC]"),
+                ("<redacted-ip>", "<redacted-IP>"),
+                ("const LABELS", "const NAMES"),
+                ("<redacted-ip>", "<redacted-mac>"),
+            ],
+        );
+        for filter in filters {
+            assert!(
+                refused(GlanceTexts {
+                    filter: &filter,
+                    ..base
+                }),
+                "{filter}"
+            );
+        }
+        // The CI reports: no number, another one, or none undeclared.
+        let cis = changed(
+            base.ci,
+            &[
+                ("hold 3 more", "hold three more"),
+                ("hold 3 more", "hold 4 more"),
+                ("hold 3 more", "hold 0 more"),
+            ],
+        );
+        for ci in cis {
+            assert!(refused(GlanceTexts { ci: &ci, ..base }), "{ci}");
+        }
+        // The guide of the short witness: no section, another number in words,
+        // no command, a repeated step, a step that is not a plain name, no rule
+        // under the header, another number of kill series, a kind of value it
+        // does not name, a row more than it says, or a table only after the
+        // section, which does not count.
+        let mut guides = changed(
+            base.reproduce,
+            &[
+                ("## A short witness", "## A long witness"),
+                ("It runs two steps", "It runs three steps"),
+                ("-p xtask -- witness ", "-p xtask -- witnesses "),
+                ("| same-bits |", "| literal |"),
+                ("| same-bits |", "| Same bits |"),
+                ("|---|---|---|\n| literal", "| literal"),
+                ("The one kill series", "The two kill series"),
+                ("a host name or an IP address", "a host name"),
+                (
+                    "| same-bits | y | `B=MATCH` |\n",
+                    "| same-bits | y | `B=MATCH` |\n| quad | z | `C=PASS` |\n",
+                ),
+            ],
+        );
+        guides.push(base.reproduce.replace(
+            "| Step | What it runs | Passing line |\n|---|---|---|\n| literal | x | `A=PASS` |\n| same-bits | y | `B=MATCH` |\n",
+            "",
+        ));
+        for reproduce in guides {
             assert!(
                 refused(GlanceTexts {
                     reproduce: &reproduce,
                     ..base
                 }),
-                "{to}"
+                "{reproduce}"
             );
         }
-        assert!(refused(GlanceTexts {
-            reproduce: &more,
-            ..base
-        }));
+        // The witness itself: a step the guide does not list, no step it skips
+        // off Unix, or a step more.
+        let witnesses = changed(
+            base.witness,
+            &[
+                ("name: \"same-bits\"", "name: \"same\""),
+                ("skip: unix_only", "skip: None"),
+                (
+                    "    ]\n",
+                    "        Step {\n            name: \"quad\",\n            skip: None,\n        },\n    ]\n",
+                ),
+            ],
+        );
+        for witness in witnesses {
+            assert!(
+                refused(GlanceTexts {
+                    witness: &witness,
+                    ..base
+                }),
+                "{witness}"
+            );
+        }
         // The programs: no list, an empty one, a repeated name, the runner, more
         // than words go to, or another number than the README states.
         let many = format!(
@@ -16074,7 +16505,11 @@ mod tests {
                 faults: 0,
                 ..good()
             },
-            GlanceFacts { steps: 0, ..good() },
+            GlanceFacts { unix: 4, ..good() },
+            GlanceFacts {
+                labels: 0,
+                ..good()
+            },
             GlanceFacts {
                 operations: 0,
                 samples: 0,
@@ -16093,6 +16528,10 @@ mod tests {
                 ..good()
             },
             GlanceFacts {
+                since: "0.7".to_string(),
+                ..good()
+            },
+            GlanceFacts {
                 since: "0".to_string(),
                 ..good()
             },
@@ -16104,6 +16543,13 @@ mod tests {
             assert!(glance_draw(false, &bad).is_err());
             assert!(glance_phone_draw(false, &bad).is_err());
         }
+        // A release x.0 follows any minor of the major before it.
+        let after = GlanceFacts {
+            release: "1.0".to_string(),
+            since: "0.12".to_string(),
+            ..good()
+        };
+        assert!(glance_draw(false, &after).is_ok());
         // A number or a line too long for its tile is refused, not drawn over the edge.
         let e = glance_draw(
             false,
@@ -16122,12 +16568,55 @@ mod tests {
         };
         assert!(glance_draw(false, &many).is_err());
         let wide = GlanceFacts {
-            since: "1234567890123456789012345678901234567890.0".to_string(),
+            release: "1000000000000000000.0".to_string(),
+            since: "999999999999999999.9999999999999999999".to_string(),
             ..good()
         };
-        assert!(glance_draw(false, &wide).is_err());
+        let e = glance_draw(false, &wide).unwrap_err();
+        assert!(e.to_string().contains("does not fit"), "{e}");
         assert!(glance_fit("fault tests of saved files", 20.0, 0.0, 494.0).is_ok());
         assert!(glance_fit(&"x".repeat(40), 20.0, 0.0, 494.0).is_err());
+    }
+    #[test]
+    fn glance_says_a_number_only_on_its_own() {
+        assert!(glance_says("so 20 tests\nin all", "20 tests in"));
+        assert!(glance_says("120 tests in, then 20 tests in", "20 tests in"));
+        for text in [
+            "120 tests in",
+            "a-20 tests in",
+            "1.20 tests in",
+            "1,20 tests in",
+            "x20 tests in",
+            "20 tests init",
+        ] {
+            assert!(!glance_says(text, "20 tests in"), "{text}");
+        }
+        assert!(glance_says("`samples=72`.", "samples=72"));
+        assert!(glance_says("samples=72, then", "samples=72"));
+        for text in [
+            "samples=720",
+            "samples=72.5",
+            "samples=72,5",
+            "samples=72_0",
+            "samples=72x",
+        ] {
+            assert!(!glance_says(text, "samples=72"), "{text}");
+        }
+        for (since, release) in [("0.8", "0.9"), ("1.9", "1.10"), ("0.12", "1.0")] {
+            assert!(glance_follows(since, release), "{since} {release}");
+        }
+        for (since, release) in [
+            ("0.7", "0.9"),
+            ("0.9", "0.9"),
+            ("0.9", "0.8"),
+            ("0.8", "2.0"),
+            ("1.0", "1.0"),
+            ("0", "0.1"),
+            ("0.8.0", "0.9"),
+            ("0.18446744073709551615", "0.0"),
+        ] {
+            assert!(!glance_follows(since, release), "{since} {release}");
+        }
     }
     #[test]
     fn the_facts_of_0_7_are_read_from_their_files() {

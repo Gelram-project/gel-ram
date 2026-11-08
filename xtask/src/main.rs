@@ -198,11 +198,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-dark.svg",
-        "529c7c641c4b8933de3799bfff908a97d26e763d307736288a1931357ab15963",
+        "e495245235c06d52b686ade22c83bac2025f989d5a3bbc39d236d1883892f338",
     ),
     (
         "media/presentation/glance-light.svg",
-        "f14ac6ae210f90722e5e601fc1122476ac33201d53db85f7e119beaba10c75b9",
+        "08694c7de9d549e14e11c04855d56683395852d28268447e68e3c36e5ca03305",
     ),
     (
         "media/presentation/pledges-dark.svg",
@@ -462,11 +462,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/phone/glance-dark.svg",
-        "aaf4f3e9741bb68642f8ab5403791979ec09a7ac3b694795996c27178a341a89",
+        "d9ffb22c5a63490bee86d4d48904e07ea93ba6f807b041252b7652d059970f66",
     ),
     (
         "media/presentation/phone/glance-light.svg",
-        "2bb64743accca13a58322d9326ff403bee133c03ceebe2b60bb66bd928cf6d44",
+        "345522702de0883318f60dd431568b9e80b5b193e1c981ad992a8cea7e426ef1",
     ),
     (
         "media/presentation/phone/header-dark.svg",

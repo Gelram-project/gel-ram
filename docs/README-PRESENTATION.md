@@ -23,7 +23,13 @@ values in the text are read from files when the README is built: the
 published commitments in docs/COMMITMENTS.md, the packages in Cargo.lock,
 which the builder refuses to count when one comes from outside the checkout or
 is not one of its crates, and the Unicode version of the normalization tables,
-refused when their header and their version constant disagree. The adjacent README-MULTIMEDIA.html is a script-free local
+refused when their header and their version constant disagree. The numbers
+of the release card and of the words folded under it (the fault tests and the
+Unix-only ones among them, the memory record, the kinds of value the witness
+filter replaces, the steps of the witness and the platform-only tests the CI
+reports found undeclared) are read from their files as well, and the builder
+refuses them when the README, the release notes or the roadmap section of the
+release states another number. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
