@@ -5,18 +5,18 @@ The complete private research direction, unpublished execution mechanisms and
 private performance work are intentionally outside this document.
 
 ## Version boundary
-- `v0.8.0` is the current version line; its tag and release page are made by
+- `v0.9.0` is the current version line; its tag and release page are made by
   the owner's publication from the merge commit of its version cutover, and the
-  Releases page shows whether that has happened. `v0.7.0` is the release before
-  it; tagged releases, including `v0.6.1`, `v0.6.0` and `v0.5.3`, are listed on
-  the Releases page. The tags `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and `v0.3.0`
-  remain without a release page. Changes merged after `v0.8.0` are listed under
-  [after v0.8.0](#after-v080).
-- The workspace version is 0.8.0 ([Cargo.toml](../Cargo.toml)). A
+  Releases page shows whether that has happened. `v0.8.0` is the release before
+  it; tagged releases, including `v0.7.0`, `v0.6.1`, `v0.6.0` and `v0.5.3`, are
+  listed on the Releases page. The tags `v0.5.2`, `v0.5.1`, `v0.5.0`, `v0.4.0` and
+  `v0.3.0` remain without a release page. Changes merged after `v0.9.0` are listed
+  under [after v0.9.0](#after-v090).
+- The workspace version is 0.9.0 ([Cargo.toml](../Cargo.toml)). A
   [test](../xtask/tests/version_line.rs) ties a fixed list of files that name
   the current version to it, the first line of this section and the "After"
   heading among them; a mention outside that list is not checked.
-- The sections [v0.8.0](#v080) back to [v0.5.0](#v050) list each merged change
+- The sections [v0.9.0](#v090) back to [v0.5.0](#v050) list each merged change
   with its commit, the command that checks it and its remaining acceptance.
   Earlier release points are recorded in the [publication status](../CANDIDATE-STATUS.md).
 - This page keeps three kinds of statement apart:
@@ -38,7 +38,7 @@ private performance work are intentionally outside this document.
 
 ## Public main — already delivered
 
-Present on `main` at v0.8.0; each entry names what shows it in this tree.
+Present on `main` at v0.9.0; each entry names what shows it in this tree.
 
 Source readout and integrity:
 
@@ -87,6 +87,13 @@ Records:
   ([record history](RECORD-HISTORY.md), [tests](../crates/gel-history/tests/history.rs)).
 - An independent byte, numeric and ranking audit, run in CI on every platform
   ([data integrity](DATA-INTEGRITY.md)).
+- The saved files of gel-history, gel-store and gel-source cut at every byte,
+  damaged without changing their length, raced by two child processes on one
+  path, stopped or killed during a save and restarted, and read beside a writer
+  ([faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes);
+  tests of [gel-history](../crates/gel-history/tests/faults.rs),
+  [gel-store](../crates/gel-store/tests/faults.rs) and
+  [gel-source](../crates/gel-source/tests/faults.rs)); none is a power-loss test.
 
 Verification and gates:
 
@@ -94,16 +101,50 @@ Verification and gates:
   and doctests, the Rust-only, licensing, workflow-policy, documentation-reference,
   disclosure, source-header and timing-example gates, the claim registry
   ([claims](CLAIMS.md)), the answer re-scoring ([external checks](EXTERNAL-CHECKS.md)),
-  the recount of the review work list below, the crash series on Unix
+  the recount of the review work list below, the check of the recorded CI
+  reports ([recorded reports](evidence-ci/README.md)), the crash series on Unix
   ([crash series](CRASH-SERIES.md)), the format mutation matrices
   ([matrices](MUTATION-MATRIX.md)) and the runtime demos ([gates](GATES.md),
   [disclosure gate](PUBLIC-DISCLOSURE-GATE.md), [recorder safety](RECORDER-SAFETY.md)).
+- The claim registry holds 86 rows, each an executable check, a separate gate,
+  a locally measured row or a deferred one, and `xtask claims` requires each of
+  105 sentences of the README, other pages and three recorded runs that name a
+  row to occur once in its file and each row it names to keep the state it gives
+  ([sentences that name a row](CLAIMS.md#sentences-that-name-a-row),
+  [registry](../xtask/src/claims.rs)).
 - One command for a local report and a short witness (`xtask reproduce`,
-  `xtask witness`, [reproduce](REPRODUCE.md)); a release package built twice and
-  compared (`xtask rebuild-check`, [binaries](BINARIES.md#building-the-same-bytes));
-  a digest that fixes a directory that is not published
-  (`xtask commitment-check`, [commitments](COMMITMENTS.md)); an A/B timing tool
-  with an A/A control (`xtask speed-ab`, [A/B tool](SPEED-AB.md)).
+  `xtask witness`, [reproduce](REPRODUCE.md)); the witness, there since v0.7.0,
+  writes the block `GEL_WITNESS_2` with the facts of the host, replaces in its
+  step lines host and user names, paths, network addresses and serial numbers
+  as far as it recognises them, and refuses the block by a separate check if
+  this host's names or directories remain in it (a system's default name may
+  stand in its own fact lines); the step logs are not filtered ([check on your hardware](CHECK-ON-YOUR-HARDWARE.md),
+  [host facts and filter](../xtask/src/host_report.rs)).
+- A release package built twice and compared (`xtask rebuild-check`,
+  [binaries](BINARIES.md#building-the-same-bytes)); a digest that fixes a
+  directory that is not published (`xtask commitment-check`,
+  [commitments](COMMITMENTS.md)).
+- An A/B timing tool with an A/A control whose every record states its
+  comparison protocol (`xtask speed-ab`, [A/B tool](SPEED-AB.md)); a check that
+  refuses a record missing a protocol field or the A/A control, or whose A and
+  A2 are not clean trees of one commit (`xtask speed-ab-check`); and a runner of
+  re-run plans that ends `COMPLETE`, `INCOMPLETE` or `PARTIAL`
+  (`xtask speed-campaign`, [plans](speed-campaign/),
+  [campaign protocol](EVIDENCE-CAMPAIGN.md#re-running-the-recorded-speed-sets)).
+- Memory accounting of public operations, on Linux: `xtask memory-run` starts
+  each operation as a child process at least five times and records payload,
+  peak mapped and resident memory, page faults, threads and host conditions,
+  with no time; `xtask memory-check` refuses a missing field, a non-zero exit,
+  too few samples and a summary that does not recompute
+  ([memory accounting](MEMORY-ACCOUNTING.md), [test](../xtask/tests/memory_cli.rs)).
+- Sanitized CI reports rebuilt from a job log, refused on a mismatch with the
+  checksums printed in CI (`xtask ci-evidence-import`), and the recorded
+  reports checked in `verify` (`xtask ci-evidence-recorded`,
+  [recorded reports](evidence-ci/README.md)); a unit test of xtask reads the
+  workspace's Rust sources and refuses a test under a platform `cfg` that is
+  not declared
+  ([platform exclusions](CI-EVIDENCE.md#platform-exclusions),
+  [collector](../xtask/src/ci_evidence.rs)).
 - No third-party package in [Cargo.lock](../Cargo.lock)
   ([dependency inventory](DEPENDENCY-INVENTORY.md),
   [test](../xtask/tests/dependency_inventory.rs)); Rust pinned to 1.85.0
@@ -115,6 +156,13 @@ Verification and gates:
   ([binaries workflow](../.github/workflows/binaries.yml)); the generated README
   rechecked ([README workflow](../.github/workflows/readme-presentation.yml),
   [presentation guide](README-PRESENTATION.md)).
+- The README generated as a whole by one Rust program: each section leads with
+  a picture drawn from the files of the checkout, every wide card also comes
+  600 wide for a phone, and a row of badges under the banner shows numbers read
+  from files, each linking to the file it comes from; on an existing
+  presentation the program only validates, and a generated file that differs
+  from the committed one fails the check ([builder](../tools/readme_presentation.rs),
+  [presentation guide](README-PRESENTATION.md#regeneration-and-checks)).
 - A property-to-test map checked on every CI platform ([property map](PROPERTY-TESTS.md))
   and the goal stated once ([goal](GOAL.md), [test](../xtask/tests/goal_statement.rs)).
 
@@ -135,6 +183,16 @@ not re-run by the checks above unless stated.
 - Timing records of the v0.7.0 speed work on one machine
   ([against v0.6.1](speed-results/2026-10-20-against-v0.6.1/README.md),
   [quiet machine](speed-results/2026-10-25-quiet-machine/README.md)).
+- The re-run of the speed sets of 2026-10-20 and 2026-10-25 under four plans on
+  2026-11-04: `xtask speed-campaign` from `main` at 4ffab16, every tree a clean
+  checkout of a public revision, on one machine, not pinned to cores;
+  `xtask speed-ab-check` reads each record without timing again and passes it
+  as measured ([re-runs](speed-results/2026-11-04-reruns/README.md)).
+- The memory record of 2026-11-08: `xtask memory-run --reps 9` at 390136f from a
+  clean checkout, eight operations with nine processes each, on one machine,
+  not pinned to cores, with no time; a test of xtask puts it through the check
+  of `xtask memory-check` without measuring again
+  ([record](memory-results/2026-11-08/README.md)).
 - Recorded answers of private development builds to frozen question sets,
   re-scored on every verify run but not re-run ([external checks](EXTERNAL-CHECKS.md)).
 - Author-reported component measurements of the private implementation
@@ -142,7 +200,7 @@ not re-run by the checks above unless stated.
 
 ## Open review items
 
-Re-checked against the tree at v0.8.0 (`319b4e8`); the state words are those of
+Re-checked against the tree at the v0.9.0 cutover; the state words are those of
 the [review work list](#how-to-read-the-review-work-list).
 
 1. OPEN. Independent, non-author review of the multi-document Evidence Lab:
@@ -170,17 +228,40 @@ the [review work list](#how-to-read-the-review-work-list).
    Never infer robust performance from a single timing.
 4. OPEN. Reproduce numeric Q8 evidence on an independent second host, including
    regressions and complete memory costs (work list A20). `gel-live-lab --witness`
-   gives the same score bits on the three CI platforms (PR #69), and memory per
-   mutation is measured on one host (A09); hosted CI is not a second host. Keep
-   addressed readout and full scan distinct; coordinate views are not
-   independent information.
+   gives the same score bits on the three CI platforms (PR #69); memory per
+   mutation is measured on one host (A09), and memory of eight public
+   operations is recorded on one host
+   ([2026-11-08](memory-results/2026-11-08/README.md)); `xtask witness` writes a
+   block to paste into the reproduction form, and none from a host other than
+   the author's is retained; hosted CI is not a second host. Keep addressed
+   readout and full scan distinct; coordinate views are not independent
+   information.
 5. PARTIAL. Knowledge retrieval: the published question sets were frozen before
    any run and use a published abstention rule ([external checks](EXTERNAL-CHECKS.md)),
    but the measured builds and their bank are private and there is no public
    encoder, so no retrieval result can be re-run from this tree. Phrase
    matching, source integrity and synthetic numerical ranking are not semantic QA.
 
-## After v0.8.0
+## After v0.9.0
+
+Nothing has been merged after v0.9.0 yet.
+
+## v0.9.0
+
+Everything merged after v0.8.0 (PR #98 to PR #111). The roadmap lists each
+delivered capability with what shows it in this tree and re-checks each open
+item, and a test requires every relative link and anchor of it and of the
+status file to resolve; the block of the short witness gains more facts of the
+host and a filter of its step lines, with a separate check that refuses the
+block if this host's names or directories remain in it; every speed record
+states its comparison protocol, and the speed sets were re-run from public
+revisions with an A/A control; the saved files are cut, damaged and raced in
+fault tests; sanitized CI reports of a third revision are kept and checked;
+memory of public operations is recorded, with one record of a public revision
+kept; the claim registry ties more sentences to its rows; one more private
+directory, the Target Q8 Quad quantizer, is fixed by a published commitment;
+and the README leads with pictures drawn from the files, with a phone size of
+each.
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
@@ -197,7 +278,8 @@ the [review work list](#how-to-read-the-review-work-list).
 | Memory accounting of public operations: `xtask memory-run` starts each operation as a child process at least five times and records payload, peak mapped and resident memory, page faults, threads and host conditions with min, median and max; `memory-check` refuses a missing field, a non-zero exit, a malformed number, too few samples, a summary that does not recompute and a peak below a resident payload | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- memory-check FILE` | [Instrument and limits](MEMORY-ACCOUNTING.md) | No run is retained yet; the record of a public revision follows. Linux only; the peak is read from `/proc` during the run, not taken from `wait4`; no time is recorded, so latency is not read beside memory |
 | The claim registry grows from 74 to 85 rows and from 35 to 105 tied sentences: executable rows for the gel-store file refusals, Reader16, exact progressive Top-K and the source-builder limits; separate-gate rows for the selftest, the real-source readout, the recorded CI reports and the faults of saved files; measured rows for the recorded history kill series and the Q8 R2 comparisons; the query-rate limit as not established; recorded numbers tied to their evidence files | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- claims` | [Claims](CLAIMS.md) | Not an exhaustive map of historical statements; the roadmap rows, the release notes, videos and the measurement tables of other pages have no row |
 | Thirteen of the fourteen phone cards drop, from 16,620 to 10,799 px at 600 wide in all, each at most 1,180 tall (the header card is unchanged): repetition and decoration are cut, the phone speed card shows totals and not one row per program, and the phone license card shows five of the seven quotes, with the limit on evaluation | 390136f (PR #108) | `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [Presentation guide](README-PRESENTATION.md) | A local rendering is not a check of the page GitHub shows; the q8 card is not shortened |
-| A memory record of a public revision is retained: `xtask memory-run --reps 9` at 390136f, the merge commit of PR #108, from a clean checkout, eight operations with nine processes each, 72 samples; a test puts it through the check of `memory-check`, requires every row of its table to be the one the record gives and no major fault, and sees it refused with one sample number changed; the claim registry gains the row `memory-accounting-public-operations` | this change | `cargo test --locked --offline -p xtask the_retained_record` | [Memory record of 2026-11-08](memory-results/2026-11-08/README.md), [instrument and limits](MEMORY-ACCOUNTING.md) | One machine on one day, not pinned to cores; process-wide numbers, not the cost of a format; the peak is the `VmHWM` of the last read of `/proc`, and the kernel's final account was not read for this record; no time is recorded |
+| A memory record of a public revision is retained: `xtask memory-run --reps 9` at 390136f, the merge commit of PR #108, from a clean checkout, eight operations with nine processes each, 72 samples; a test puts it through the check of `memory-check`, requires every row of its table to be the one the record gives and no major fault, and sees it refused with one sample number changed; the claim registry gains the row `memory-accounting-public-operations` | 769099a (PR #110) | `cargo test --locked --offline -p xtask the_retained_record` | [Memory record of 2026-11-08](memory-results/2026-11-08/README.md), [instrument and limits](MEMORY-ACCOUNTING.md) | One machine on one day, not pinned to cores; process-wide numbers, not the cost of a format; the peak is the `VmHWM` of the last read of `/proc`, and the kernel's final account was not read for this record; no time is recorded |
+| The version line is 0.9.0: every file that names the current version names it, and the release notes of 0.9.0 replace those of 0.8.0 in the root; the release card of the README shows what is new in 0.9 (the fault tests of saved files, the memory record, the filter of the witness block) beside what came in 0.8 (the tool programs that answer `--version` and `--license`), each number read from its file, and the facts of 0.7 move to their own fold under the speed cards; the delivered capabilities, the historical evidence and the open review items of this page describe v0.9.0 | this change (PR #111) | `cargo test -p xtask --test version_line --test doc_links`, `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [publication status](../CANDIDATE-STATUS.md), [presentation guide](README-PRESENTATION.md) | The tag and the release page exist only after the owner publishes them; an independent reading of this page against the tree; a local rendering is not a check of the page GitHub shows |
 
 ## v0.8.0
 

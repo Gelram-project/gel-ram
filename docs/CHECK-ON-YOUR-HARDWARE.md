@@ -25,8 +25,7 @@ cargo run --locked --offline -p xtask -- witness ../gel-check
 
 `../gel-check` must be a new directory outside the checkout; it receives the
 block (in the file WITNESS.txt) and one log per step. The block described here comes from
-the main branch after v0.8.0 and from the next release on; v0.8.0 prints a
-shorter block, which is also welcome.
+v0.9.0 and later; v0.8.0 prints a shorter block, which is also welcome.
 
 ## How long it takes
 

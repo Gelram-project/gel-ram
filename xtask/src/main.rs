@@ -198,11 +198,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/glance-dark.svg",
-        "6ad690de975cb09f36b0422ecdb0eea5a7e420a5085966aa3127d948f605a1d8",
+        "e495245235c06d52b686ade22c83bac2025f989d5a3bbc39d236d1883892f338",
     ),
     (
         "media/presentation/glance-light.svg",
-        "a20dcf0671cce9675b1f555b090aa9a847f8a0c84ae8cb4a5f7760172bb71837",
+        "08694c7de9d549e14e11c04855d56683395852d28268447e68e3c36e5ca03305",
     ),
     (
         "media/presentation/pledges-dark.svg",
@@ -414,11 +414,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/badges/version-dark.svg",
-        "d856d66cb13676c39e9e79dc79c8cf7c1f9db40bcd2a2741f913e76085020f38",
+        "a40d4924e49ebdfcc3e217b4a21b9f28c6994b524cf98dbc7c85df2d4b75ed28",
     ),
     (
         "media/presentation/badges/version-light.svg",
-        "dee3e2bf1abb4bd2552ec96e09185c25a4746af0927fd885b04292bc52dd419a",
+        "1e74c869bb111ce3bccca8aee6addfa964b140d0c1f17f8b6a418cc1ddcdc578",
     ),
     (
         "media/presentation/badges/views-dark.svg",
@@ -462,11 +462,11 @@ const REVIEWED_ASSETS: &[(&str, &str)] = &[
     ),
     (
         "media/presentation/phone/glance-dark.svg",
-        "b327d5b5bfe34e6ccece4ef2254f89a30edf7668a9b39163688664811b02532a",
+        "d9ffb22c5a63490bee86d4d48904e07ea93ba6f807b041252b7652d059970f66",
     ),
     (
         "media/presentation/phone/glance-light.svg",
-        "9fe8311d56f48035e8bac9356b79fa3a469d155b2998f7931244c11bdd9a7f45",
+        "345522702de0883318f60dd431568b9e80b5b193e1c981ad992a8cea7e426ef1",
     ),
     (
         "media/presentation/phone/header-dark.svg",

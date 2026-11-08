@@ -9,7 +9,7 @@ line; the full wording, with its limits, is folded under the picture in a
 `<details>` block and stays in the file. The pictures added with that layout are
 drawn from files too: what is checked here, private or not established; the
 README's own commands with the line each prints, drawn and not a recording; the
-timing set of 2026-10-20 beside its re-run; versions 0.7 and 0.8 at a glance; the
+timing set of 2026-10-20 beside its re-run; versions 0.8 and 0.9 at a glance; the
 published commitments on a time line; the parts of the memory core; and what one
 Q8 record holds, as docs/Q8-QUAD.md states it: 1,024 one-byte values and a
 128-byte activity mask in one 1,152-byte record that four views read, and what
@@ -18,10 +18,18 @@ files when the README is built, each linking to the file its number comes from;
 none is a CI badge. Every wide card also comes 600 wide, with text of at least 20 px, for
 a phone: the picture sends a screen up to 600 px wide to it. A phone card says
 less than its wide card: the speed card shows the totals, the license card a
-subset of the quotes. Two
-numbers in the text are counted from files when the README is built: the
-published commitments in docs/COMMITMENTS.md and the packages in Cargo.lock,
-which the builder refuses to count when one comes from outside the checkout. The adjacent README-MULTIMEDIA.html is a script-free local
+subset of the quotes. Three
+values in the text are read from files when the README is built: the
+published commitments in docs/COMMITMENTS.md, the packages in Cargo.lock,
+which the builder refuses to count when one comes from outside the checkout or
+is not one of its crates, and the Unicode version of the normalization tables,
+refused when their header and their version constant disagree. The numbers
+of the release card and of the words folded under it (the fault tests and the
+Unix-only ones among them, the memory record, the kinds of value the witness
+filter replaces, the steps of the witness and the platform-only tests the CI
+reports found undeclared) are read from their files as well, and the builder
+refuses them when the README, the release notes or the roadmap section of the
+release states another number. The adjacent README-MULTIMEDIA.html is a script-free local
 document with the full responsive panel layout, theme-aware backgrounds, a
 still-image control, an animated 3D scene of the citation check, a strip of
 checked facts, two 3D graphics of the public checks and links to the files of
