@@ -303,7 +303,7 @@ __GLANCE__
 
 <details><summary>What changed, in words</summary>
 
-- **New in 0.9, a filtered witness block and faults of saved files:** `xtask witness NEW_DIR` has run the six short public checks since 0.7 (the two kill series only on Unix; elsewhere they are SKIPPED). It now writes one block with the facts of the host, a filter replaces six kinds of value in the step lines (host names, user names, absolute paths, IP and MAC addresses, serial numbers), and a separate check refuses the block if this host's names, its user names or its directories remain anywhere in it, except a host or user named like the system itself in the fact lines. The step logs beside the block are not filtered, paths and addresses of other machines are removed only as far as the filter recognises them, and no block is retained yet, from the author's host or any other ([check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md)). 20 tests in three new files (four of them Unix-only) cut the saved files of gel-history, gel-store and gel-source at every byte (a store of version 1 past its header; a collection over 1 MiB at 12 chosen lengths), damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; none is a power-loss test ([faults of saved files](docs/PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)).
+- **New in 0.9, a filtered witness block and faults of saved files:** `xtask witness NEW_DIR` has run the six short public checks since 0.7 (the two kill series only on Unix; elsewhere they are SKIPPED). It now writes one block with the facts of the host, a filter replaces six kinds of value in the step lines (this host's names, the user's names, absolute paths, IP and MAC addresses, serial numbers), and a separate check refuses the block if this host's names, the user's names or the directories of the run remain anywhere in it, except a host or user named like the system itself in the fact lines. The step logs beside the block are not filtered, paths and addresses of other machines are removed only as far as the filter recognises them, and no block is retained yet, from the author's host or any other ([check on your hardware](docs/CHECK-ON-YOUR-HARDWARE.md)). 20 tests in three new files (four of them Unix-only) cut the saved files of gel-history, gel-store and gel-source at every byte (a store of version 1 past its header; a collection over 1 MiB at 12 chosen lengths), damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; none is a power-loss test ([faults of saved files](docs/PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes)).
 - **New in 0.9, memory and CI reports on record:** `xtask memory-run`, on Linux, starts each of eight operations, the control among them, as a child process and records payload, peak mapped and resident memory, page faults and threads; one record of a public revision is kept, nine processes of each of eight operations, 72 samples, on one machine, process-wide, with no time recorded ([memory record](docs/memory-results/2026-11-08/README.md)). Sanitized CI reports of a third revision are kept and checked by `xtask ci-evidence-recorded`; they are hosted CI runs of one revision each, not an independent second host, and their strict comparison found 11 undeclared platform-only tests, declared since ([recorded reports](docs/evidence-ci/README.md), [release notes](RELEASE-NOTES-v0.9.0.md)).
 - **New in 0.8, programs and files name their license:** the eight tool programs answer `--version` and `--license` (the `xtask` runner does not); every GEL RAM-owned Rust source file begins with a two-line license header (the generated Unicode tables are third-party data with their own notice); `gel-license check DIR` reports whether a copy kept the license, the Required Notice (the attribution line in NOTICE), those headers and the Unicode notice, not that every notice was kept. The license guides now follow the words of the LICENSE ([v0.8.0 in the roadmap](docs/ROADMAP.md#v080)).
 
@@ -10636,15 +10636,18 @@ mod tests {
     /// read from that page: a card says that four views read one record and
     /// leaves the rest to the page.
     fn pole_sentence() -> String {
-        fs::read_to_string("docs/Q8-QUAD.md")
-            .unwrap()
+        let page = fs::read_to_string("docs/Q8-QUAD.md").unwrap();
+        let line = page
             .lines()
             .find(|l| l.starts_with("The four poles "))
-            .unwrap()
-            .to_string()
+            .unwrap();
+        // The sentence ends on its own line, so none of its words is left out.
+        assert!(line.ends_with('.'), "{line}");
+        line.to_string()
     }
     /// The words of that sentence with six letters or more, in lower case and
     /// without a final `ed` or `s`, so that another form of a word is found.
+    /// A reworded sentence changes their number and is reviewed here.
     fn pole_words() -> Vec<String> {
         let words: Vec<String> = pole_sentence()
             .split(|c: char| !c.is_ascii_alphabetic())
@@ -10655,36 +10658,62 @@ mod tests {
                 stem.unwrap_or(&w).to_string()
             })
             .collect();
-        assert!(words.len() >= 5, "{words:?}");
+        assert_eq!(words.len(), 7, "{words:?}");
         words
     }
-    /// The first of `words` that begins a word of `text`. Gradient stops carry
-    /// an `offset` attribute and lines a `stroke-dashoffset` property, which
-    /// are markup and not words of the text.
+    /// The first of `words` that begins a word of `text`. A name followed by
+    /// `="` is an attribute of markup, not a word of the text.
     fn pole_word_in(text: &str, words: &[String]) -> Option<String> {
-        let lower = text.to_lowercase().replace(" offset=\"", " =\"");
-        let begins = |at: usize| {
+        let lower = text.to_lowercase();
+        let counts = |at: usize| {
+            let rest = &lower[at..];
+            let end = rest
+                .find(|c: char| !c.is_ascii_alphabetic())
+                .unwrap_or(rest.len());
             !lower[..at]
                 .chars()
                 .next_back()
-                .is_some_and(|c| c.is_ascii_alphabetic() || c == '-')
+                .is_some_and(|c| c.is_ascii_alphabetic())
+                && !rest[end..].starts_with("=\"")
         };
         words
             .iter()
-            .find(|w| lower.match_indices(w.as_str()).any(|(at, _)| begins(at)))
+            .find(|w| lower.match_indices(w.as_str()).any(|(at, _)| counts(at)))
             .cloned()
     }
     #[test]
     fn the_words_of_the_pole_sentence_are_found_in_it_and_markup_is_not() {
         let words = pole_words();
-        assert!(pole_word_in(&pole_sentence(), &words).is_some());
-        let other = pole_sentence().to_uppercase().replace(' ', "\n");
-        assert!(pole_word_in(&other, &words).is_some());
-        for markup in [
-            "<stop offset=\"0.5\" stop-color=\"#fff\"/>",
-            "@keyframes d{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}",
-        ] {
-            assert_eq!(pole_word_in(markup, &words), None);
+        let sentence = pole_sentence().to_lowercase();
+        for word in sentence
+            .split(|c: char| !c.is_ascii_alphabetic())
+            .filter(|w| w.len() >= 6)
+        {
+            assert!(pole_word_in(word, &words).is_some(), "{word}");
+            for cut in ["s", "ed"] {
+                if let Some(base) = word.strip_suffix(cut) {
+                    assert!(pole_word_in(base, &words).is_some(), "{base}");
+                }
+            }
+        }
+        for w in &words {
+            let one = std::slice::from_ref(w);
+            for prose in [
+                format!("{w}s"),
+                w.to_uppercase(),
+                format!("a\n{w}."),
+                format!("8{w}"),
+                format!("x-{w}"),
+                format!("'{w}"),
+            ] {
+                assert_eq!(pole_word_in(&prose, one).as_ref(), Some(w), "{prose}");
+            }
+            for markup in [
+                format!("<stop {w}=\"0.5\"/>"),
+                format!("@keyframes d{{to{{stroke-dash{w}:0}}}}"),
+            ] {
+                assert_eq!(pole_word_in(&markup, one), None, "{markup}");
+            }
         }
     }
     #[test]

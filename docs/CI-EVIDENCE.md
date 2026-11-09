@@ -95,7 +95,8 @@ found when it is added. It reads source text only: it does not see a test made b
 a macro, a platform-only block inside a test that runs everywhere, or a check of
 the platform at run time, and it says nothing about what ran.
 
-The comparison of two platforms runs when a revision is recorded. Compare two
+The comparison of two platforms runs when a revision is recorded, and
+`verify` repeats it over the recorded reports. Compare two
 reports' test lists (for example the TESTS.txt of a Linux and a Windows run
 of the same commit, or the same lines printed in their CI logs):
 

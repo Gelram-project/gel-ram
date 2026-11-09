@@ -1,6 +1,6 @@
 # GEL RAM 0.9.0 — publication and release status
 
-Updated 2026-11-08. Evidence Lab, originally prepared from published commit
+Updated 2026-11-09. Evidence Lab, originally prepared from published commit
 `8b92deb912a159a78ae1e8a5f7e7234b717cbd6a`, was merged into public `main` through
 PR #9 as `71142a25e7ad75e4d75acf4e244d8e4a996c4a92`; the review repairs followed
 through PR #10 as `0c17f6ef2beb8766e734b9c47404eb8c1bbb3086`, and the 0.4.0
@@ -21,9 +21,9 @@ and the v0.8.0 GitHub Release on 2026-11-03 from
 `5131104d911524dc225c1fa19467d0354c2c64c5`, the merge commit of its version
 cutover (PR #97). The version line is now 0.9.0, from
 `259e7e990665f241eef210afa61899feda753d95`, the merge commit of its version
-cutover (PR #111); PR #112 corrects its release notes before the tag. The owner
-publishes the v0.9.0 GitHub Release from the merge commit of PR #112; the
-Releases page shows whether that has happened.
+cutover (PR #111); PR #112 corrects its release notes and some other pages
+before the tag. The owner publishes the v0.9.0 GitHub Release from the merge
+commit of PR #112; the Releases page shows whether that has happened.
 Public pseudonym: **RR — GEL RAM Project**.
 
 ```text

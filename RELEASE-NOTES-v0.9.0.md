@@ -1,6 +1,6 @@
 # GEL RAM v0.9.0 — one block from your hardware, the speed sets re-run, and memory on record
 
-Date: 2026-11-08
+Date: 2026-11-09
 
 v0.9.0 collects everything merged after v0.8.0 (pull requests #98 to #112).
 The short public checks now write a filtered block with the facts of the host,
@@ -9,10 +9,11 @@ states, one memory record of public operations is retained, saved files are
 tested under fault, and the CI reports of a third revision are recorded. No
 library code, data file format, search result, license term or third-party
 dependency changes. The records of `speed-ab` and `witness` move to a second
-format; `speed-campaign` runs a plan and writes a new record, as does
-`memory-run`; `ci-evidence-import` rebuilds recorded CI reports from a job log;
-and the report of `xtask reproduce` passes the same filter and refusal as the
-witness block. The Rust pin stays 1.85.0; the workspace version moves to 0.9.0.
+format; `speed-campaign` runs a plan and writes a new record, and `memory-run`
+writes another; `ci-evidence-import` rebuilds recorded CI reports from a job
+log; and the report of `xtask reproduce` passes the same filter and refusal as
+the witness block. The Rust pin stays 1.85.0; the workspace version moves to
+0.9.0.
 The [roadmap](https://github.com/Gelram-project/gel-ram/blob/v0.9.0/docs/ROADMAP.md#v090)
 lists each change with its commit, the last as "this change"; #104, #107 and
 #109 only name the merge commits of earlier rows and have no row of their own.
@@ -35,14 +36,16 @@ hold synthetic values or literal bytes.
   `GEL_WITNESS_2`. To the facts of the v0.8.0 block (revision and whether the
   tree was clean, system and architecture, available threads, CPU, RAM,
   `rustc`, and each step's outcome and marker) it adds the tool version, the
-  system version, the kernel, the logical cores, and each step's exit status
-  and wall time; the kernel and RAM are read on Linux only, the CPU and logical
-  cores on Linux and Windows, and elsewhere they read `unknown`. A filter
-  replaces six kinds of value in the step lines (host names, user names,
+  system version, the kernel, the logical cores, the count of replacements, and
+  each step's exit status and wall time; the kernel and RAM are read on Linux
+  only, the system version on Linux and macOS, the CPU and logical cores on
+  Linux and Windows, and elsewhere they read `unknown`. A filter replaces six
+  kinds of value in the step lines (this host's names, the user's names,
   absolute paths, IP and MAC addresses, serial numbers), and a separate check
-  refuses the block if this host's names, its user names or its directories
-  remain anywhere in it; a host or user named like the system itself (`ubuntu`,
-  `kali`) is allowed in the fact lines (#102).
+  refuses the block if this host's names, the user's names or the directories
+  of the run (home, checkout, output) remain anywhere in it; a host or user
+  named like the system itself (`ubuntu`, `kali`) is allowed in the fact lines
+  (#102).
 - `docs/CHECK-ON-YOUR-HARDWARE.md` and the reproduction form ask for that block.
   No block is retained yet, from the author's host or any other; paths and
   addresses of other machines are removed only as far as the filter recognises
@@ -62,19 +65,20 @@ hold synthetic values or literal bytes.
   it; among the slower are SHA-256, at 0.26 and 0.35 of its v0.6.1 speed (A/A
   1.00 and 0.99; 0.28 and 0.39 in the set of 2026-10-20), which no longer uses
   the processor's SHA instructions, and several file loads. The two package-3
-  plans use public revisions instead of the recorded trees, so they are not the
-  same comparison, and the gains of 1.07 to 1.18 recorded for
-  `speed_source_load` are not reproduced (0.99 to 1.07). The recorded sets stay
-  as they were measured; a re-run on other hardware remains open (#103).
+  plans use public revisions where the recorded trees were local or not on
+  main, so they are not the same comparison; the five `speed_source_load` cases
+  recorded at 1.07 to 1.18 come out at 0.99 to 1.07. The recorded sets stay as
+  they were measured; a re-run on other hardware remains open (#103).
 - `xtask memory-run`, on Linux, starts each of eight operations, the control
   among them, as a child process at least five times and records payload, peak
   mapped and resident memory, page faults and threads; `memory-check` refuses a
   missing field, a non-zero exit, too few samples or a summary that does not
   recompute (#108). One record is retained: nine processes of each of eight
   operations at 390136f, the merge commit of #108; a test checks it and refuses
-  it with one sample changed (#110). One machine on one day, not pinned to cores; the numbers are
-  process-wide, not the cost of a format; the peak is the `VmHWM` of the last
-  read, and the kernel's final account was not read; no time is recorded.
+  it with one sample changed (#110). One machine on one day, not pinned to
+  cores; the numbers are process-wide, not the cost of a format; the peak is
+  the `VmHWM` of the last read, and the kernel's final account was not read; no
+  time is recorded.
 
 ## Saved files and CI reports
 
@@ -100,9 +104,9 @@ hold synthetic values or literal bytes.
 - The claim registry grows from 49 to 86 rows, among them no third-party
   packages, no network code, the recorded CI reports, the saved-file faults, the
   speed re-run and the memory record, and the query rate as not established;
-  `xtask claims` checks 105 sentences of the README, other pages and three
-  recorded runs against the rows they name.
-  It is not an exhaustive map: the roadmap rows, the release notes, videos and
+  `xtask claims` checks 105 sentences and result lines of the README, other
+  pages and three record files against the rows they name. It is not an
+  exhaustive map: the roadmap rows, the release notes, videos and
   measurement tables have no row (#100, #103, #108, #110).
 - Most README sections lead with a picture drawn from the files and one line,
   the full wording folded under it; among the new cards are the re-run, the
@@ -115,7 +119,8 @@ hold synthetic values or literal bytes.
   historical evidence apart and each open review item re-checked; a test
   requires every relative link and anchor of the roadmap and the status file to
   resolve (#99). Before the tag, these notes and some sentences of the
-  roadmap, the status file and the README were corrected against the tree
+  roadmap, the status file, the README and other pages were corrected against
+  the tree, and two checks of the README cards read the page they follow
   (#112).
 
 ## Private work, fixed in time

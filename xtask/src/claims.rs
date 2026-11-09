@@ -467,7 +467,7 @@ const CLAIMS: &[Claim] = &[
         id: "saved-file-faults",
         dimension: "persistence",
         scope: "GELHIS01, GEL store v1 and v2, GELSET01 and GELSRC01 files through their public save and open paths; one machine, one file system per run",
-        input: "cuts at every byte (12 stated field cuts over 1 MiB), damage that keeps the length, two child processes on one path, a save stopped at every byte, a writer killed along a save, leftover temporary names at the limit, readers beside writers",
+        input: "cuts at every byte (12 stated cuts over 1 MiB), damage that keeps the length, two child processes on one path, a save stopped at every byte, a writer killed along a save, leftover temporary names at the limit, readers beside writers",
         expected: "every damaged file refused, collections and bundles under the pin kept apart from the file; one whole file after two writers and one winner on the no-replace publisher; restart resumes to the uninterrupted bytes; reading changes no byte, time of change, permission or name",
         counterexample: "a mix of two saves accepted, part of a file visible at the path, an acknowledged save lost to a kill of the one writer, a leftover opened, or any of this read as power-loss durability",
         source: "docs/PUBLICATION-FAULT-TESTS.md",
