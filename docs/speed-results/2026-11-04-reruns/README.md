@@ -61,9 +61,9 @@ not the public commit.
 
 The plan for the package-3 loads uses public revisions (`3cf1be5` against
 `331f494`), while the record of 2026-10-25 compared `speed_source_load` and
-`speed_collection_memory` from `37d509d` against a local tree. The gains of
-1.07 to 1.18 recorded there for `speed_source_load` are not reproduced here
-(0.99 to 1.07): the two are not the same comparison.
+`speed_collection_memory` from `37d509d` against a local tree. The five
+`speed_source_load` cases recorded there at 1.07 to 1.18 come out at 0.99 to
+1.07 here: the two are not the same comparison.
 
 These are timings of one machine. A re-run on other hardware is the open part of
 [A20](../../ROADMAP.md#review-work-list-and-next-acceptance).
