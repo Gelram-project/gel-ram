@@ -37,6 +37,7 @@ comparison of Linux and of macOS with Windows, and it recomputes the table.
 | [2b29236](2b29236/) | 36251557201 | 365 / 365 | 358 (7 declared platform-only) | 163 / 163, 158 | 2 | PASS (strict: commit and hosts checked) |
 | [fba6c43](fba6c43/) | 36257696669 | 366 / 366 | 359 (7 declared platform-only) | 163 / 163, 158 | 2 | PASS (strict: commit and hosts checked) |
 | [79f6ac5](79f6ac5/) | 42077523488 | 812 / 809 | 794 (18 declared platform-only) | 381 / 378, 369 | 2 | PASS (strict: commit and hosts checked) |
+| [a9b5c6a](a9b5c6a/) | 42772483068 | 878 / 874 | 855 (23 declared platform-only) | 395 / 392, 381 | 2 | PASS (strict: commit and hosts checked) |
 
 Reading the 79f6ac5 row: the 18 in it is what the reports give, Windows passing
 18 fewer than Linux. A report states the declarations of its own revision, and

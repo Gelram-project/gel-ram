@@ -1,0 +1,82 @@
+FORMAT=GEL_CI_EVIDENCE_2
+COMMIT=a9b5c6a36ca2bf4e0358ddd170e269cd42a93ce8
+SOURCE_MANIFEST_SHA256=209262f17b106f280cf86e1c09e5cafbb56b0e344334bb1ca13aee6dffcdc430
+RUN_ID=42772483068
+RUN_ATTEMPT=1
+OS=windows
+ARCH=x86_64
+SCOPE=workspace tests (debug), core-path tests (release), doctests, saved R1 recheck; not full CI or a fresh benchmark
+RUST_VERSION=1.85.0
+REDACTION=only strict test identifiers and derived counts; raw stdout/stderr excluded
+CASE=workspace-debug accepted=true exit_code=Some(0) named_test_executions=860 summaries=142 passed=855 failed=0 ignored=6 filtered_out=0 unlisted_executions=1 stdout_bytes=76905 stderr_bytes=19969
+CASE=core-release accepted=true exit_code=Some(0) named_test_executions=384 summaries=75 passed=381 failed=0 ignored=3 filtered_out=0 unlisted_executions=0 stdout_bytes=35218 stderr_bytes=9890
+CASE=doctests-debug accepted=true exit_code=Some(0) named_test_executions=0 summaries=10 passed=2 failed=0 ignored=0 filtered_out=0 unlisted_executions=2 stdout_bytes=1278 stderr_bytes=908
+CASE=saved-r1-release accepted=true exit_code=Some(0) named_test_executions=0 summaries=0 passed=0 failed=0 ignored=0 filtered_out=0 unlisted_executions=0 stdout_bytes=24 stderr_bytes=310
+PLATFORM_EXCLUSION test=sigkill_after_save_ack_keeps_a_readable_snapshot condition=unix here=EXCLUDED_NOT_COUNTED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=sigkill_at_observable_publication_never_installs_a_partial_snapshot condition=unix here=EXCLUDED_NOT_COUNTED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=symlink_input_and_output_rejected condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::rust_only_gate_rejects_symlinks_and_executable_files condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink and execute-bit creation
+PLATFORM_EXCLUSION test=source_bundle::tests::symlink_file_and_directory_rejected condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=tests::atomic_write_is_private_by_default_and_preserves_existing_mode condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PLATFORM_EXCLUSION test=kernel_permission_denial_keeps_previous_snapshot_and_leaves_no_file condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PLATFORM_EXCLUSION test=commitment::tests::a_link_is_recorded_by_its_target_and_not_followed condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=license_check::tests::a_unicode_license_link_or_directory_is_not_counted condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=license_check::tests::symlinks_are_skipped_not_followed condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=source_headers::tests::a_linked_source_file_is_refused condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=speed_ab::tests::a_symbolic_link_on_the_way_is_refused_before_anything_is_written condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix symlink creation
+PLATFORM_EXCLUSION test=license_check::tests::a_fifo_is_refused_without_being_opened condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix FIFO creation
+PLATFORM_EXCLUSION test=license_check::tests::an_unreadable_root_is_named_dot_not_an_empty_path condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PLATFORM_EXCLUSION test=source_headers::tests::a_failed_write_changes_no_file_and_leaves_no_temporary_file condition=unix here=EXCLUDED_NOT_COUNTED reason=Unix permission bits
+PLATFORM_EXCLUSION test=bundle::tests::read_regular_reads_past_a_zero_length_hint condition=linux here=EXCLUDED_NOT_COUNTED reason=Linux procfs file reporting length zero
+PLATFORM_EXCLUSION test=literal::tests::a_file_reporting_length_zero_is_bounded_by_its_bytes condition=linux here=EXCLUDED_NOT_COUNTED reason=Linux procfs file reporting length zero
+PLATFORM_EXCLUSION test=literal::tests::a_file_reporting_length_zero_with_more_than_dim_bytes_reads_to_its_end condition=linux here=EXCLUDED_NOT_COUNTED reason=Linux procfs file reporting length zero
+PLATFORM_EXCLUSION test=a_killed_store_writer_keeps_acknowledged_saves_and_a_restart_resumes condition=unix here=EXCLUDED_NOT_COUNTED reason=SIGKILL of a child process
+PLATFORM_EXCLUSION test=two_processes_saving_one_history_leave_one_complete_file condition=unix here=EXCLUDED_NOT_COUNTED reason=rename over a file another process has open
+PLATFORM_EXCLUSION test=two_processes_saving_one_store_leave_one_complete_file condition=unix here=EXCLUDED_NOT_COUNTED reason=rename over a file another process has open
+PLATFORM_EXCLUSION test=reading_during_saves_sees_whole_histories_and_changes_no_byte condition=unix here=EXCLUDED_NOT_COUNTED reason=rename over a file another process has open
+PLATFORM_EXCLUSION test=the_control_shows_its_known_peak_and_a_changed_record_is_refused condition=linux here=EXCLUDED_NOT_COUNTED reason=memory-run reads /proc
+PARTIAL_PLATFORM_BRANCH test=reproduction::tests::report_inventory_rejects_links_and_preserves_complete_hashes condition=unix here=RAN_PASSED branch=inactive detail=report symlink rejection assertion
+PARTIAL_PLATFORM_BRANCH test=persisted_roundtrip_and_no_temporary_files condition=unix here=RAN_PASSED branch=inactive detail=0600 file mode assertion
+PARTIAL_PLATFORM_BRANCH test=recorder_usage_and_closed_display_fail_closed condition=linux here=RAN_PASSED branch=inactive detail=/dev/full display assertion
+PLATFORM_EXCLUSIONS=CHECKED whole_tests=23 partial_branches=3
+PROPERTY id=P01 tests=1 passed=1 excluded_here=0
+PROPERTY id=P02 tests=1 passed=1 excluded_here=0
+PROPERTY id=P03 tests=1 passed=1 excluded_here=0
+PROPERTY id=P04 tests=1 passed=1 excluded_here=0
+PROPERTY id=P05 tests=2 passed=2 excluded_here=0
+PROPERTY id=P06 tests=2 passed=2 excluded_here=0
+PROPERTY id=P07 tests=1 passed=1 excluded_here=0
+PROPERTY id=P08 tests=1 passed=1 excluded_here=0
+PROPERTY id=P09 tests=2 passed=2 excluded_here=0
+PROPERTY id=P10 tests=1 passed=1 excluded_here=0
+PROPERTY id=P11 tests=2 passed=2 excluded_here=0
+PROPERTY id=P12 tests=1 passed=1 excluded_here=0
+PROPERTY id=P13 tests=3 passed=3 excluded_here=0
+PROPERTY id=P14 tests=2 passed=2 excluded_here=0
+PROPERTY id=P15 tests=1 passed=1 excluded_here=0
+PROPERTY id=P16 tests=2 passed=2 excluded_here=0
+PROPERTY id=P17 tests=3 passed=3 excluded_here=0
+PROPERTY id=P18 tests=3 passed=3 excluded_here=0
+PROPERTY id=P19 tests=2 passed=2 excluded_here=0
+PROPERTY id=P20 tests=2 passed=2 excluded_here=0
+PROPERTY id=P21 tests=1 passed=1 excluded_here=0
+PROPERTY id=P22 tests=2 passed=2 excluded_here=0
+PROPERTY id=P23 tests=4 passed=4 excluded_here=0
+PROPERTY id=P24 tests=4 passed=1 excluded_here=3
+PROPERTY id=P25 tests=3 passed=3 excluded_here=0
+PROPERTY id=P26 tests=3 passed=3 excluded_here=0
+PROPERTY id=P27 tests=2 passed=2 excluded_here=0
+PROPERTY id=P28 tests=2 passed=2 excluded_here=0
+PROPERTY id=P29 tests=2 passed=2 excluded_here=0
+PROPERTY id=P30 tests=4 passed=4 excluded_here=0
+PROPERTY id=P31 tests=2 passed=2 excluded_here=0
+PROPERTY id=P32 tests=2 passed=2 excluded_here=0
+PROPERTY id=P33 tests=2 passed=2 excluded_here=0
+PROPERTY id=P34 tests=2 passed=1 excluded_here=1
+PROPERTY id=P35 tests=2 passed=2 excluded_here=0
+PROPERTY id=P36 tests=4 passed=4 excluded_here=0
+PROPERTY id=P37 tests=3 passed=3 excluded_here=0
+PROPERTY id=P38 tests=3 passed=1 excluded_here=2
+PROPERTY id=P39 tests=5 passed=4 excluded_here=1
+PROPERTY id=P40 tests=5 passed=4 excluded_here=1
+PROPERTY_MAP=CHECKED rows=40 tests=91

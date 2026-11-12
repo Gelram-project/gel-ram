@@ -136,7 +136,9 @@ Limits:
   compiled on Unix only: replacing a file another process has open is a rename
   guarantee of that platform. One machine and one file system per run.
 - 16 of the 20 tests compile on Windows and all 20 on macOS. They run there only
-  in CI, and no recorded report holds them yet. No timing property is covered.
+  in CI; the recorded reports of a9b5c6a, the v0.9.0 release, show all 20
+  passing on Linux and macOS and the 16 on Windows
+  ([recorded reports](evidence-ci/README.md)). No timing property is covered.
 
 The old measured publisher remains preserved as
 [bundle.measured.rs.txt](evidence-collection/bundle.measured.rs.txt).

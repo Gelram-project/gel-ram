@@ -451,6 +451,7 @@ const RECORDED: &[(&str, &str)] = &[
     ("2b29236", "36251557201"),
     ("fba6c43", "36257696669"),
     ("79f6ac5", "42077523488"),
+    ("a9b5c6a", "42772483068"),
 ];
 const PLATFORMS: [&str; 3] = ["linux", "macos", "windows"];
 const RECORDED_KINDS: [&str; 3] = ["REPORT", "TESTS", "SHA256SUMS"];
