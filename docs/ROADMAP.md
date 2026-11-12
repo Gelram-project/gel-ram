@@ -176,7 +176,7 @@ not re-run by the checks above unless stated.
 - Ocean Scale R3 1M/10M synthetic full-scan measurements; the research archive
   was withdrawn in 0.4.0 ([results](OCEAN-SCALE.md)).
 - Native CI of the PR #9 head ([platform record](PLATFORM-REVIEW.md)) and the
-  per-platform reports of three later revisions ([recorded reports](evidence-ci/README.md)).
+  per-platform reports of four later revisions ([recorded reports](evidence-ci/README.md)).
 - Collection measurements r1, whose percentiles `collection_recheck` recomputes
   from the raw observations, without timing again, in `verify` and on every CI
   platform ([record](evidence-collection/README.md)).
@@ -202,8 +202,9 @@ not re-run by the checks above unless stated.
 
 ## Open review items
 
-Re-checked against the tree at the v0.9.0 cutover; the state words are those of
-the [review work list](#how-to-read-the-review-work-list).
+Re-checked against the tree at the v0.9.0 cutover, item 2 again after the
+v0.9.0 release (PR #114); the state words are those of the
+[review work list](#how-to-read-the-review-work-list).
 
 1. OPEN. Independent, non-author review of the multi-document Evidence Lab:
    source boundaries, stale citation invalidation, snapshots and independently
@@ -212,11 +213,11 @@ the [review work list](#how-to-read-the-review-work-list).
    Single-document import/read/save/reopen belongs to the earlier published base.
 2. PARTIAL. Per-platform CI evidence for every revision: every CI run prints a
    sanitized report on Linux, macOS and Windows (`xtask ci-evidence`), but runs
-   and logs expire and only three revisions are kept in the tree, the latest
-   79f6ac5 ([recorded reports](evidence-ci/README.md)). `xtask
-   ci-evidence-recorded`, in `verify`, checks what is kept, the comparison of
-   the recorded platforms included; no CI job compares the lists of its own run
-   with another platform. A unit test of xtask reads the workspace's Rust sources, so a
+   and logs expire and only four revisions are kept in the tree, the latest
+   a9b5c6a, the v0.9.0 release ([recorded reports](evidence-ci/README.md)).
+   `xtask ci-evidence-recorded`, in `verify`, checks what is kept, the
+   comparison of the recorded platforms included; no CI job compares the lists
+   of its own run with another platform. A unit test of xtask reads the workspace's Rust sources, so a
    test under a platform `cfg` that is not declared is found when it is added; a
    test made by a macro is found only when a revision is recorded, and a
    platform-only block inside a test or a check of the platform at run time is
@@ -249,7 +250,8 @@ the [review work list](#how-to-read-the-review-work-list).
 
 | Change | Commit | Command | Evidence | Remaining acceptance |
 |---|---|---|---|---|
-| The status file records v0.9.0 as published on 2026-11-10 from a9b5c6a, the merge commit of PR #112, after the version cutover 259e7e9 (PR #111): `V0_9_0_TAGGED_RELEASE=PUBLISHED`, `SNAPSHOT_KIND=PUBLIC_MAIN_AFTER_0_9_0`, the v0.3.0 to v0.9.0 releases made from green public-main commits; the v0.9.0 row of PR #112 names its merge commit and no longer waits for the tag | this change (PR #113) | `cargo test -p xtask --test version_line --test doc_links` | [publication status](../CANDIDATE-STATUS.md), [v0.9.0](#v090) | None |
+| The status file records v0.9.0 as published on 2026-11-10 from a9b5c6a, the merge commit of PR #112, after the version cutover 259e7e9 (PR #111): `V0_9_0_TAGGED_RELEASE=PUBLISHED`, `SNAPSHOT_KIND=PUBLIC_MAIN_AFTER_0_9_0`, the v0.3.0 to v0.9.0 releases made from green public-main commits; the v0.9.0 row of PR #112 names its merge commit and no longer waits for the tag | a887864 (PR #113) | `cargo test -p xtask --test version_line --test doc_links` | [publication status](../CANDIDATE-STATUS.md), [v0.9.0](#v090) | None |
+| Sanitized CI reports of a9b5c6a, the commit of the v0.9.0 release, are recorded from its push run 42772483068: the strict comparison of Linux and of macOS with Windows passes, the 20 fault tests of saved files pass on Linux and macOS and 16 on Windows, where the four Unix-only ones are excluded as declared; four revisions are now kept; the row of PR #113 names its merge commit | this change (PR #114) | `cargo run --locked --offline -p xtask -- ci-evidence-recorded` | [Recorded reports](evidence-ci/README.md) | Hosted CI runs of one revision, not an independent second host |
 
 ## v0.9.0
 
@@ -279,7 +281,7 @@ each.
 | The four re-run plans were run once with `xtask speed-campaign` on the author's machine: each ends `SPEED_CAMPAIGN=COMPLETE` and every one of the 33 records passes `speed-ab-check` as measured; against v0.6.1, 105 cases are faster beyond their A/A band, 24 slower and 4 inside, and 102 of the 103 cases recorded faster on 2026-10-20 have a ratio above 1 again, 100 of them beyond their band; the output digests equal the recorded ones except for one tree of the program that counts the files of its own tree | 15b1efd (PR #103) | `cargo run --locked --offline -p xtask -- speed-ab-check DIR` | [Re-runs](speed-results/2026-11-04-reruns/README.md) | One machine, not pinned to cores; a re-run on other hardware |
 | Each section of the README leads with a picture drawn from the files of the checkout and one line, with the full wording folded under it; six new animated cards (status, what to look for, the re-run, 0.7 and 0.8 at a glance, the commitments, the memory core), light and dark, each standing still under reduced motion; the words in view drop from 1,695 to 537 | 294a50a (PR #105) | `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [Presentation guide](README-PRESENTATION.md) | A local rendering is not a check of the page GitHub shows; on a phone the cards scale down and their small text is hard to read |
 | Every wide card of the README also comes 600 wide, with text of at least 20 px, for a phone, and the picture sends a screen up to 600 px wide to it; a row of badges under the banner, each a number read from a file when the README is built and linking to the file it comes from; a card of what one Q8 record holds, as docs/Q8-QUAD.md states it, with the separate commitment of the target quantizer; the record and citation cards play once and hold instead of going blank every 12 s; a new published commitment, the target Q8 Quad quantizer | 79f6ac5 (PR #106) | `rustc +1.85.0 --edition 2021 --test tools/readme_presentation.rs` | [Presentation guide](README-PRESENTATION.md), [Commitments](COMMITMENTS.md) | The phone card is chosen by the reader's browser from the screen width; a viewer that ignores the picture's media rule shows the wide card. The commitment shows that the quantizer's files do not change, not that it works |
-| Fault and concurrency coverage of saved files: 20 tests in three new files cut the saved files of gel-history, gel-store and gel-source at every byte (a store of version 1 past its header; a collection over 1 MiB at 12 chosen lengths), damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; properties P36 to P40 join the map, now 40 properties and 91 tests | 390136f (PR #108) | `cargo test -p gel-history -p gel-store -p gel-source --test faults` | [Faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | A power-loss test; 16 of the 20 tests compile on Windows and all 20 on macOS, and they run there only from the CI of PR #108 on, with no recorded report yet; no timing property is covered |
+| Fault and concurrency coverage of saved files: 20 tests in three new files cut the saved files of gel-history, gel-store and gel-source at every byte (a store of version 1 past its header; a collection over 1 MiB at 12 chosen lengths), damage them without changing their length, race two child processes on one path, stop or kill a save and restart, and read beside a writer; properties P36 to P40 join the map, now 40 properties and 91 tests | 390136f (PR #108) | `cargo test -p gel-history -p gel-store -p gel-source --test faults` | [Faults of saved files](PUBLICATION-FAULT-TESTS.md#faults-of-saved-files-on-disk-and-between-processes) | A power-loss test; 16 of the 20 tests compile on Windows and all 20 on macOS; they run there only in CI from PR #108 on, and pass in the reports of a9b5c6a recorded by PR #114; no timing property is covered |
 | Sanitized reports of a third revision, 79f6ac5, are recorded. `xtask ci-evidence-import` rebuilds them from a job log and refuses a mismatch with the checksums printed in CI; `xtask ci-evidence-recorded`, in `verify`, refuses an altered report, a missing or extra file, a wrong run or commit, a line outside the report format, a failed strict comparison and a table that differs from the reports. The strict comparison failed on 79f6ac5: 11 platform-only tests were undeclared and one ignored child-process helper was refused, so the declarations now name a Linux condition as well and the helpers are declared | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- ci-evidence-recorded` | [Recorded reports](evidence-ci/README.md), [CI evidence](CI-EVIDENCE.md), [gates](GATES.md) | Reports of hosted CI runs of one revision each, not of every revision; hosted CI is not an independent second host. The comparison runs when a revision is recorded and again in `verify` over the recorded reports, not over the lists of each CI run, and reads the debug workspace lists only |
 | Memory accounting of public operations: `xtask memory-run` starts each operation as a child process at least five times and records payload, peak mapped and resident memory, page faults, threads and host conditions with min, median and max; `memory-check` refuses a missing field, a non-zero exit, a malformed number, too few samples, a summary that does not recompute and a peak below a resident payload | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- memory-check FILE` | [Instrument and limits](MEMORY-ACCOUNTING.md) | A record of a public revision is retained since 769099a (PR #110). Linux only; the peak is read from `/proc` during the run, not taken from `wait4`; no time is recorded, so latency is not read beside memory |
 | The claim registry grows from 74 to 85 rows and from 35 to 105 tied sentences: executable rows for the gel-store file refusals, Reader16, exact progressive Top-K and the source-builder limits; separate-gate rows for the selftest, the real-source readout, the recorded CI reports and the faults of saved files; measured rows for the recorded history kill series and the Q8 R2 comparisons; the query-rate limit as not established; recorded numbers tied to their evidence files | 390136f (PR #108) | `cargo run --locked --offline -p xtask -- claims` | [Claims](CLAIMS.md) | Not an exhaustive map of historical statements; the roadmap rows, the release notes, videos and the measurement tables of other pages have no row |
