@@ -60,7 +60,11 @@ For a packed array of **256 independent Q8 symbols**, the raw payload alone is 2
 - Publish results only with reproducible evidence and clear limitations. Do not publish private implementation, datasets or secrets.
 - **NO-GO** for default adoption until all gates pass and the owner approves disclosure.
 
-## 5. Handoff checklist
+## 5. Licensing, ownership and publication integration
+
+The separate [QuadGrid licensing and joint-release plan](QUADGRID-LICENSING-INTEGRATION.md) is a **required** part of this candidate's acceptance. It defines legal checkpoints L0–L4 alongside technical G0–G4. The existing [NCRL 1.0](../LICENSE) remains unchanged; private/proprietary code is not added to this public branch and no new commercial grant is implied. The intended release decision must examine rights provenance, independently developed versus GEL-derived modules, contributor permissions, third-party material, confidentiality, exact versioned public surface and owner sign-off **together** with the technical evidence.
+
+## 6. Handoff checklist
 
 - [x] Preserve public baseline; no modifications to existing Q8 code.
 - [x] Document proposed 256 B experiments and the information-theoretic boundary.
@@ -68,6 +72,7 @@ For a packed array of **256 independent Q8 symbols**, the raw payload alone is 2
 - [ ] Build private candidate implementation and pinned test fixtures.
 - [ ] Execute fresh compiler/tests/benchmarks and attach reproducible results.
 - [ ] Decide whether any public opt-in API is useful and safe to reveal.
+- [ ] Pass legal gates L0–L4 together with technical G0–G4; complete rights inventory and disclosure review.
 - [ ] Review the patch and decide on a PR; do not merge automatically.
 
 Related public references: [Q8 contract](Q8-QUAD.md), [precision reference](PRECISION-MATRIX.md), [format guide](FORMAT.md), [public quad validation](Q8-QUAD-VALIDATION.md).
