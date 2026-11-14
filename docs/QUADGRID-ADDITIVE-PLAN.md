@@ -4,6 +4,8 @@ Status: **PLAN ONLY**. This document is not evidence that a new codec works and 
 
 Branch: `fix/q8-256-qg4-contract`. The target is research and compatibility validation, **not** an immediate change of the public default.
 
+Status update (2026-11-14): a private prototype and sealed private test fixtures exist outside this repository. Nothing from them (code, data, method or results) is published in this branch. The 256 B candidates in section 2 remain unimplemented. Any public step still needs the gates in sections 4 and 5 and the owner's approval.
+
 ## 1. Frozen public baseline
 
 - Keep `gel-phase-quad::Record` unchanged: `DIM = 1024`, `Carrier = [u8; 1024]`, and `mask = [u64; 16]`, giving **1152 bytes** on the tested ABI.
@@ -29,7 +31,7 @@ For a packed array of **256 independent Q8 symbols**, the raw payload alone is 2
 1. Leave existing public code paths and binary contracts intact.
 2. Prototype experimental encoding and decoding in a **private** workspace or repository first. Do not implement the unpublished method here.
 3. Any later public integration requires an **opt-in, versioned interface** with explicit format IDs and safe legacy fallback. No implicit reinterpretation of existing records.
-4. Keep ORB128 separate. No changes to GEL Ocean, FALA or external runtimes as part of this branch.
+4. Keep ORB128 separate. No changes to GEL Ocean or external runtimes as part of this branch.
 5. Promote only explicitly reviewed, non-sensitive interfaces and reproducible, publishable evidence; do not assume private files can be reconstructed from public commitments.
 
 ## 4. Validation gates
@@ -69,8 +71,9 @@ The separate [QuadGrid licensing and joint-release plan](QUADGRID-LICENSING-INTE
 - [x] Preserve public baseline; no modifications to existing Q8 code.
 - [x] Document proposed 256 B experiments and the information-theoretic boundary.
 - [x] Define gates for measurement, compatibility and disclosure.
-- [ ] Build private candidate implementation and pinned test fixtures.
-- [ ] Execute fresh compiler/tests/benchmarks and attach reproducible results.
+- [x] Private prototype with sealed test fixtures, outside this repository (2026-11-14; not published).
+- [ ] Build the 256 B candidates from section 2 and pin their test fixtures.
+- [ ] Execute fresh compiler/tests/benchmarks and attach reproducible results that are approved for publication.
 - [ ] Decide whether any public opt-in API is useful and safe to reveal.
 - [ ] Pass legal gates L0–L4 together with technical G0–G4; complete rights inventory and disclosure review.
 - [ ] Review the patch and decide on a PR; do not merge automatically.
