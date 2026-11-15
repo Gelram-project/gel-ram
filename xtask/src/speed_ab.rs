@@ -1636,7 +1636,7 @@ mod tests {
         // Same index as `sort -n | sed -n "$(((n+1)/2))p"` for every n.
         for n in 1..=12u128 {
             let values: Vec<u128> = (1..=n).rev().collect();
-            let line = (n + 1) / 2;
+            let line = n.div_ceil(2);
             assert_eq!(median(&values), Some(line));
         }
     }

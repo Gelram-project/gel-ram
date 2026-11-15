@@ -233,7 +233,7 @@ fn is_canonical(
             .collect(),
     };
     let depth = i.checked_sub(1).map_or(0, |p| depths[p] + 1);
-    let literal = i == 0 || depth > 2 || 13 + (10 * changed.len()).div_ceil(8) >= 1 + STATE;
+    let literal = i == 0 || depth > 2 || 13 + (10 * changed.len()).div_ceil(8) > STATE;
     match entry {
         Stored::Literal(_) => literal,
         Stored::Residual {

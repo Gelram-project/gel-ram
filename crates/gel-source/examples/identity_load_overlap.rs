@@ -224,9 +224,7 @@ const PIECE: usize = 256 << 10;
 /// An ASCII text of exactly `len` bytes whose import keeps every byte, so the
 /// text part of its bundle is `len` bytes long.
 fn ascii_text(m: &mut Mix, len: usize) -> Vec<u8> {
-    let mut text: Vec<u8> = (0..len)
-        .map(|_| [b'a', b'b', b' ', b'\n'][m.below(4)])
-        .collect();
+    let mut text: Vec<u8> = (0..len).map(|_| b"ab \n"[m.below(4)]).collect();
     if let Some(last) = text.last_mut() {
         *last = b'z';
     }
@@ -330,9 +328,7 @@ fn envelope(e: &EncodedCorpus) -> Vec<u8> {
 /// The bundle of an imported ASCII text, exactly `total` bytes long (checked
 /// by the caller). Every prefix of ASCII text is a valid import.
 fn bundle_of_size(m: &mut Mix, total: usize) -> Vec<u8> {
-    let base: Vec<u8> = (0..total)
-        .map(|_| [b'a', b'b', b' ', b'\n'][m.below(4)])
-        .collect();
+    let base: Vec<u8> = (0..total).map(|_| b"ab \n"[m.below(4)]).collect();
     let bundle = |len: usize| envelope(&import_text(&base[..len], "Sized").unwrap());
     let mut len = total - 8192;
     for _ in 0..16 {

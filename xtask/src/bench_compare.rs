@@ -94,7 +94,7 @@ fn gel_answer(bank: &Collection, docs: &[Doc], query: &str) -> Result<Answer, St
             skipped += scan.skipped_long_lines;
             // Several CR-separated matches in one LF line stay distinct;
             // grep's different line-count contract is not silently normalized.
-            lines.extend(std::iter::repeat((index, line + 1)).take(scan.matching_lines));
+            lines.extend(std::iter::repeat_n((index, line + 1), scan.matching_lines));
         }
     }
     if lines.len() != found.matching_lines || skipped != found.skipped_long_lines {
