@@ -35,6 +35,9 @@ const PROJECT_FILES: &[&str] = &[
 const TOOLCHAIN_LICENSES: &[&str] = &["COPYRIGHT", "LICENSE-APACHE", "LICENSE-MIT"];
 /// License of the Unicode data compiled into gel-source's normalization tables.
 const UNICODE_LICENSE: &str = "crates/gel-source/LICENSE-UNICODE.txt";
+/// The Unicode Character Database version of those tables, which the build
+/// information names; a test ties it to the header of the tables.
+const UNICODE_DATABASE: &str = "18.0.0";
 
 fn output(cmd: &mut Command) -> Result<String, String> {
     let out = cmd.output().map_err(|e| format!("{cmd:?}: {e}"))?;
@@ -501,7 +504,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
         unicode.join("LICENSE-UNICODE.txt"),
     )
     .map_err(|e| format!("{UNICODE_LICENSE}: {e}"))?;
-    info.push_str("compiled_in=Unicode Character Database 16.0.0 normalization tables, license in licenses/unicode-data\n");
+    let _ = writeln!(info, "compiled_in=Unicode Character Database {UNICODE_DATABASE} normalization tables, license in licenses/unicode-data");
     info.push_str("not_shipped=the target's system C runtime, linked dynamically\n");
     for file in PROJECT_FILES {
         let base = Path::new(file).file_name().ok_or("project file name")?;
@@ -584,6 +587,15 @@ fn checksum_manifest(mut files: Vec<(String, String)>, build_info: &[u8]) -> Str
 mod tests {
     use super::*;
 
+    /// The build information names the Unicode version of the tables it
+    /// compiles in, not the version of an earlier table file.
+    #[test]
+    fn the_build_information_names_the_unicode_version_of_the_tables() {
+        let tables = include_str!("../../crates/gel-source/src/nfc_tables.rs");
+        let header = format!("Character Database {UNICODE_DATABASE}; do not edit.");
+        assert_eq!(tables.matches(&header).count(), 1, "{header}");
+    }
+
     #[test]
     fn the_checksum_manifest_covers_build_info_before_it_is_written() {
         let sums = checksum_manifest(vec![("a".repeat(64), "LICENSE".into())], b"x");
@@ -596,7 +608,9 @@ mod tests {
     }
 
     /// The package ships this exact Unicode License v3 text with the tables
-    /// compiled from Unicode data; replacing or emptying it fails here.
+    /// compiled from Unicode data, the text of unicode.org/license.txt with the
+    /// copyright years 1991-2026 of the 18.0.0 files; replacing or emptying it
+    /// fails here.
     #[test]
     fn the_unicode_license_shipped_with_the_tables_is_the_reviewed_text() {
         let text = fs::read(
@@ -608,7 +622,7 @@ mod tests {
         assert!(text.starts_with(b"UNICODE LICENSE V3\n"));
         assert_eq!(
             gel_source::hex(&gel_source::digest(&text)),
-            "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443"
+            "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96"
         );
     }
 

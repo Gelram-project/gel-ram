@@ -7,7 +7,7 @@ Slow machines, unusual systems and failures are wanted as much as fast passes.
 
 ## What you need
 
-- Git and [rustup](https://rustup.rs); the checkout pins Rust 1.85.0.
+- Git and [rustup](https://rustup.rs); the checkout pins Rust 1.100.0.
 - Linux, macOS or Windows. The two kill series need a Unix host; on Windows
   they are reported as SKIPPED with the reason.
 - A network connection for the clone and `cargo fetch` only. The check itself
@@ -18,7 +18,7 @@ Slow machines, unusual systems and failures are wanted as much as fast passes.
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-rustup toolchain install 1.85.0 --profile minimal
+rustup toolchain install 1.100.0 --profile minimal
 cargo fetch --locked
 cargo run --locked --offline -p xtask -- witness ../gel-check
 ```

@@ -46,7 +46,7 @@ Source readout and integrity:
 - Exact source-bound quotations with SHA-256 provenance, refusing stale or
   corrupt input ([source readout](SOURCE-READOUT.md),
   [tests](../crates/gel-source/tests/source.rs)); SHA-256 and Unicode NFC are
-  computed by gel-source itself, NFC from UCD 16.0.0 tables that a test
+  computed by gel-source itself, NFC from UCD 18.0.0 tables that a test
   regenerates byte for byte (`xtask ucd-tables`,
   [Unicode normalization](DOCUMENT-READOUT.md#unicode-normalization)).
 - Multipart readout with explicit gaps, ambiguity and UNKNOWN
@@ -252,6 +252,7 @@ v0.9.0 release (PR #114); the state words are those of the
 |---|---|---|---|---|
 | The status file records v0.9.0 as published on 2026-11-10 from a9b5c6a, the merge commit of PR #112, after the version cutover 259e7e9 (PR #111): `V0_9_0_TAGGED_RELEASE=PUBLISHED`, `SNAPSHOT_KIND=PUBLIC_MAIN_AFTER_0_9_0`, the v0.3.0 to v0.9.0 releases made from green public-main commits; the v0.9.0 row of PR #112 names its merge commit and no longer waits for the tag | a887864 (PR #113) | `cargo test -p xtask --test version_line --test doc_links` | [publication status](../CANDIDATE-STATUS.md), [v0.9.0](#v090) | None |
 | Sanitized CI reports of a9b5c6a, the commit of the v0.9.0 release, are recorded from its push run 42772483068: the strict comparison of Linux and of macOS with Windows passes, the 20 fault tests of saved files pass on Linux and macOS and 16 on Windows, where the four Unix-only ones are excluded as declared; four revisions are now kept; the row of PR #113 names its merge commit | 631fdac (PR #114) | `cargo run --locked --offline -p xtask -- ci-evidence-recorded` | [Recorded reports](evidence-ci/README.md) | Hosted CI runs of one revision, not an independent second host |
+| Rust 1.100.0 replaces 1.85.0 in rust-toolchain.toml, the workspace `rust-version`, every workflow and the guides for a checkout of main, and a test of xtask ties them to one pin; NFC follows UCD 18.0.0, the Unicode version of the Rust 1.100.0 standard library, so the search path still follows one Unicode version, and a test requires the tables to be of the Unicode version of the standard library they are compiled with; every line of NormalizationTest 16.0.0 and 15.1.0 still passes, and the 18.0.0 tables keep every 16.0.0 property; eleven new clippy findings are fixed with the same behavior; the recorded CI reports keep Rust 1.85.0, and a report may name either pin | this change | `cargo test --locked --offline -p gel-source --lib nfc` | [Unicode normalization](DOCUMENT-READOUT.md#unicode-normalization), [Recorded reports](evidence-ci/README.md) | No CI report of Rust 1.100.0 is recorded yet; the releases up to v0.9.0 keep Rust 1.85.0 |
 
 ## v0.9.0
 

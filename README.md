@@ -43,7 +43,7 @@ No independent run on a second machine has been reported yet: [post yours in iss
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+rustup toolchain install 1.100.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare

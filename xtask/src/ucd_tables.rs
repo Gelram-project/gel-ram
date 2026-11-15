@@ -277,6 +277,10 @@ mod tests {
         include_str!("../../crates/gel-source/tests/data/ucd-16.0.0/UnicodeData.txt");
     const PROPS_16_0: &str =
         include_str!("../../crates/gel-source/tests/data/ucd-16.0.0/DerivedNormalizationProps.txt");
+    const UNICODE_DATA_18_0: &str =
+        include_str!("../../crates/gel-source/tests/data/ucd-18.0.0/UnicodeData.txt");
+    const PROPS_18_0: &str =
+        include_str!("../../crates/gel-source/tests/data/ucd-18.0.0/DerivedNormalizationProps.txt");
 
     #[test]
     fn a_small_database_gives_ranges_decompositions_and_composites() {
@@ -313,11 +317,11 @@ mod tests {
     }
 
     /// The tables in the tree are exactly what this generator makes from the
-    /// UCD 16.0.0 files kept beside them.
+    /// UCD 18.0.0 files kept beside them.
     #[test]
     fn the_tables_in_the_tree_are_regenerated_byte_for_byte() {
-        let (out, counts) = generate(UNICODE_DATA_16_0, PROPS_16_0).unwrap();
-        assert_eq!(counts, [393, 2081, 1120, 961, 122]);
+        let (out, counts) = generate(UNICODE_DATA_18_0, PROPS_18_0).unwrap();
+        assert_eq!(counts, [422, 2081, 1120, 961, 122]);
         assert!(out == include_str!("../../crates/gel-source/src/nfc_tables.rs"));
     }
 
@@ -346,18 +350,18 @@ mod tests {
     }
 
     /// Unicode stability, read from the files: for every code point assigned
-    /// in 15.1.0 the 16.0.0 tables give the same combining class, canonical
-    /// decomposition, Full_Composition_Exclusion and NFC_QC, every 15.1.0
-    /// primary composite is kept, and every entry 16.0.0 adds is about a code
-    /// point assigned after 15.1.0.
-    #[test]
-    fn the_16_0_tables_keep_every_15_1_property() {
-        let old = read(UNICODE_DATA_15_1, PROPS_15_1).unwrap();
-        let new = read(UNICODE_DATA_16_0, PROPS_16_0).unwrap();
-        assert_eq!((old.version, old.year), ((15, 1, 0), 2023));
-        assert_eq!((new.version, new.year), ((16, 0, 0), 2024));
-        assert_eq!(old.counts(), [388, 2061, 1120, 941, 115]);
-        let old_assigned = assigned(UNICODE_DATA_15_1);
+    /// in the older version the newer tables give the same combining class,
+    /// canonical decomposition, Full_Composition_Exclusion and NFC_QC, every
+    /// older primary composite is kept, and every entry the newer version adds
+    /// is about a code point assigned after the older one. Returns the number
+    /// of code points checked and how many classes, decompositions, composites,
+    /// exclusions and NFC_QC entries the newer version adds.
+    fn kept_and_added(
+        old_data: &str,
+        old: Ucd,
+        new: Ucd,
+    ) -> (u32, (usize, usize, usize, usize, usize)) {
+        let old_assigned = assigned(old_data);
         let was_assigned = |c: u32| {
             let at = old_assigned.partition_point(|r| r.1 < c);
             old_assigned.get(at).is_some_and(|r| r.0 <= c)
@@ -395,8 +399,6 @@ mod tests {
                 checked += 1;
             }
         }
-        // Every code point UnicodeData.txt 15.1.0 lists, ranges included.
-        assert_eq!(checked, 289_394);
         let composite = |u: &Ucd| -> BTreeMap<(u32, u32), u32> {
             u.composition
                 .iter()
@@ -407,7 +409,7 @@ mod tests {
         for (pair, cp) in &old_composite {
             assert_eq!(new_composite.get(pair), Some(cp), "composite {cp:04X}");
         }
-        // What 16.0.0 adds, each entry about a code point assigned later.
+        // What the newer version adds, each entry about a code point assigned later.
         let added_classes: Vec<u32> = new
             .ccc
             .iter()
@@ -435,15 +437,44 @@ mod tests {
             .filter(|&c| in_ranges(&old.quick_check, c).is_none())
             .collect();
         assert!(added_quick_check.iter().all(|&c| !was_assigned(c)));
-        assert_eq!(
+        (
+            checked,
             (
                 added_classes.len(),
                 added_decompositions.len(),
                 added_composites.len(),
                 added_exclusions,
-                added_quick_check.len()
+                added_quick_check.len(),
             ),
-            (12, 20, 20, 0, 21)
-        );
+        )
+    }
+
+    #[test]
+    fn the_16_0_tables_keep_every_15_1_property() {
+        let old = read(UNICODE_DATA_15_1, PROPS_15_1).unwrap();
+        let new = read(UNICODE_DATA_16_0, PROPS_16_0).unwrap();
+        assert_eq!((old.version, old.year), ((15, 1, 0), 2023));
+        assert_eq!((new.version, new.year), ((16, 0, 0), 2024));
+        assert_eq!(old.counts(), [388, 2061, 1120, 941, 115]);
+        let (checked, added) = kept_and_added(UNICODE_DATA_15_1, old, new);
+        // Every code point UnicodeData.txt 15.1.0 lists, ranges included.
+        assert_eq!(checked, 289_394);
+        assert_eq!(added, (12, 20, 20, 0, 21));
+    }
+
+    /// Rust 1.100.0 follows Unicode 18.0.0; Unicode 17.0.0 is skipped, and
+    /// what it added is part of what 18.0.0 adds to 16.0.0.
+    #[test]
+    fn the_18_0_tables_keep_every_16_0_property() {
+        let old = read(UNICODE_DATA_16_0, PROPS_16_0).unwrap();
+        let new = read(UNICODE_DATA_18_0, PROPS_18_0).unwrap();
+        assert_eq!((old.version, old.year), ((16, 0, 0), 2024));
+        assert_eq!((new.version, new.year), ((18, 0, 0), 2026));
+        assert_eq!(old.counts(), [393, 2081, 1120, 961, 122]);
+        let (checked, added) = kept_and_added(UNICODE_DATA_16_0, old, new);
+        // Every code point UnicodeData.txt 16.0.0 lists, ranges included.
+        assert_eq!(checked, 294_579);
+        // Only combining classes of marks assigned in 17.0.0 or 18.0.0.
+        assert_eq!(added, (68, 0, 0, 0, 0));
     }
 }

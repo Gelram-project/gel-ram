@@ -419,9 +419,18 @@ mod tests {
             .collect()
     }
 
+    /// One Unicode version on the search path: the standard library lowercases
+    /// and splits words with its own Unicode version, so the NFC tables must be
+    /// of the same one. A toolchain of another Unicode version fails here until
+    /// the tables are regenerated from that version's files.
     #[test]
-    fn the_tables_are_unicode_16_0_with_their_published_counts() {
-        assert_eq!(crate::nfc_tables::UNICODE_VERSION, (16, 0, 0));
+    fn the_tables_are_of_the_unicode_version_of_the_standard_library() {
+        assert_eq!(crate::nfc_tables::UNICODE_VERSION, char::UNICODE_VERSION);
+    }
+
+    #[test]
+    fn the_tables_are_unicode_18_0_with_their_published_counts() {
+        assert_eq!(crate::nfc_tables::UNICODE_VERSION, (18, 0, 0));
         assert_eq!(CANONICAL_DECOMPOSITION.len(), 2081);
         assert_eq!(PRIMARY_COMPOSITE.len(), 961);
         assert!(CANONICAL_DECOMPOSITION.windows(2).all(|w| w[0].0 < w[1].0));
@@ -431,7 +440,7 @@ mod tests {
         assert!(CANONICAL_COMBINING_CLASS
             .windows(2)
             .all(|w| w[0].1 < w[1].0 && w[0].0 <= w[0].1));
-        assert_eq!(CANONICAL_COMBINING_CLASS.len(), 393);
+        assert_eq!(CANONICAL_COMBINING_CLASS.len(), 422);
         assert_eq!(NFC_QUICK_CHECK.len(), 122);
         assert!(NFC_QUICK_CHECK
             .windows(2)
@@ -481,6 +490,8 @@ mod tests {
         assert_eq!(LOOKUPS.with(std::cell::Cell::get), before);
     }
 
+    const NORMALIZATION_TEST_18_0: &str =
+        include_str!("../tests/data/NormalizationTest-18.0.0.txt");
     const NORMALIZATION_TEST_16_0: &str =
         include_str!("../tests/data/NormalizationTest-16.0.0.txt");
     const NORMALIZATION_TEST_15_1: &str =
@@ -534,10 +545,10 @@ mod tests {
 
     #[test]
     fn the_unicode_normalization_test_of_the_same_version_passes() {
-        let (version, lines, distinct, listed) = run_normalization_test(NORMALIZATION_TEST_16_0);
+        let (version, lines, distinct, listed) = run_normalization_test(NORMALIZATION_TEST_18_0);
         let (major, minor, update) = crate::nfc_tables::UNICODE_VERSION;
         assert_eq!(version, format!("{major}.{minor}.{update}"));
-        assert_eq!((lines, distinct.len()), (19_965, 19_952));
+        assert_eq!((lines, distinct.len()), (20_171, 20_158));
         for c in (0..=0x10FFFFu32).filter_map(char::from_u32) {
             if !listed.contains(&c) {
                 assert_eq!(nfc(&c.to_string()), c.to_string(), "{:04X}", c as u32);
@@ -557,6 +568,20 @@ mod tests {
         let (_, _, new, _) = run_normalization_test(NORMALIZATION_TEST_16_0);
         assert_eq!(old.difference(&new).count(), 0);
         assert_eq!(new.difference(&old).count(), 883);
+    }
+
+    /// The results of Unicode 16.0.0, which the 16.0.0 tables gave on every
+    /// line before this crate moved to 18.0.0, are kept: every data line of
+    /// NormalizationTest 16.0.0 passes with the current tables, and each of
+    /// them is also a line of NormalizationTest 18.0.0, unchanged.
+    #[test]
+    fn every_line_of_normalization_test_16_0_gives_the_same_result_with_the_current_tables() {
+        let (version, lines, old, _) = run_normalization_test(NORMALIZATION_TEST_16_0);
+        assert_eq!(version, "16.0.0");
+        assert_eq!((lines, old.len()), (19_965, 19_952));
+        let (_, _, new, _) = run_normalization_test(NORMALIZATION_TEST_18_0);
+        assert_eq!(old.difference(&new).count(), 0);
+        assert_eq!(new.difference(&old).count(), 206);
     }
 
     /// The SHA-256 of NFC of every scalar value, each followed by the byte 0xFF,
@@ -610,7 +635,7 @@ mod tests {
     /// canonical decomposition, the Hangul jamo and three syllables, and a to
     /// z. Code points assigned later are left out so that the pins below,
     /// computed with earlier implementations on this pool, still apply;
-    /// NormalizationTest 16.0.0 and every scalar value cover them.
+    /// NormalizationTest 18.0.0 and every scalar value cover them.
     fn pool() -> Vec<char> {
         let mut pool = std::collections::BTreeSet::new();
         for &(first, last, _) in CANONICAL_COMBINING_CLASS {

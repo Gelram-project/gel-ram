@@ -20,12 +20,21 @@ members = [
 [workspace.package]
 version = "0.9.0"
 edition = "2021"
-rust-version = "1.85"
+rust-version = "1.100"
 publish = false
 license-file = "LICENSE"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
+
+# With rust-version 1.100, clippy suggests three APIs newer than Rust 1.85.0:
+# as_chunks, is_multiple_of and isolate_lowest_one. The measured loops are kept
+# as they are; taking up those APIs is a change of its own, timed with its own
+# A/A runs.
+[workspace.lints.clippy]
+chunks_exact_to_as_chunks = "allow"
+manual_is_multiple_of = "allow"
+manual_isolate_lowest_one = "allow"
 
 [profile.release]
 lto = "thin"

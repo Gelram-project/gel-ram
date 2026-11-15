@@ -127,7 +127,7 @@ a{color:var(--blue);text-underline-offset:3px}a:hover{text-decoration-thickness:
 <header><div class="brand-row"><div><div class="brand">
 __BRAND_LOGO__
 <div class="brand-name">GEL RAM<small>Public tools</small></div></div><p class="strap">Knowledge printed, not trained. Exact bytes, or a refusal.</p></div>
-<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.85</span><span class="chip">No third-party packages</span><span class="chip">Offline</span></div></div></div>
+<div class="header-right"><p>Public tools for local work<br>and independent inspection.</p><div class="chips"><span class="chip">Rust 1.100</span><span class="chip">No third-party packages</span><span class="chip">Offline</span></div></div></div>
 <nav aria-label="Page navigation"><a href="#content">Overview</a><a href="#quick-start">Quick start</a><a href="#workflows">Six workflows</a><a href="#checks">Checks</a><a href="#reproduce">Reproduce</a><a href="#documentation">Documentation</a><a href="#scope">Scope &amp; license</a></nav></header>
 <div class="view-tools"><label for="still-mode">Show still images</label><a href="__DOC__/media/gifs/MANIFEST.txt">Media provenance</a><span>12-second edited replays, not wall time</span></div>
 <main id="content">
@@ -142,7 +142,7 @@ __BRAND_LOGO__
 <div class="columns section"><section id="quick-start"><p class="eyebrow">Try the public tool</p><h2>Start with your own source.</h2><p>In a new checkout, run each line separately. Setup needs a network; after that every command runs offline.</p><pre><code>git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
 git rev-parse HEAD
-rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+rustup toolchain install 1.100.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-live-lab --bin gel-evidence -- --demo</code></pre><p>Expected markers: <code>GEL_LIVE_LAB_LITERAL=PASS</code> and <code>GEL_EVIDENCE_DEMO=PASS</code>. These are results to check, not pre-approved outcomes.</p></section>
@@ -191,7 +191,7 @@ No independent run on a second machine has been reported yet: [post yours in iss
 ```sh
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-rustup toolchain install 1.85.0 --profile minimal --component rustfmt --component clippy
+rustup toolchain install 1.100.0 --profile minimal --component rustfmt --component clippy
 cargo fetch --locked
 cargo run --locked --offline --release -p gel-live-lab -- --literal README.md
 cargo run --locked --offline --release -p gel-phase-quad --example quad_compare
@@ -9910,6 +9910,22 @@ const UNICODE_TABLES: &str = "crates/gel-source/src/nfc_tables.rs";
 /// The release whose roadmap section states what the README folds under the
 /// speed cards: no third-party package, one Unicode version, SHA-256 written here.
 const UNICODE_RELEASE: &str = "v0.7.0";
+/// The Unicode version that came in `UNICODE_RELEASE`, which the README states
+/// for that release; the tables may follow a later version since.
+const UNICODE_OF_RELEASE: &str = "16.0.0";
+/// A Unicode version `major.minor.update` as numbers, so that 9.0.0 comes
+/// before 16.0.0.
+fn unicode_key(version: &str) -> Result<(u32, u32, u32)> {
+    let parts: Vec<u32> = version
+        .split('.')
+        .map(|p| p.parse::<u32>())
+        .collect::<std::result::Result<_, _>>()
+        .map_err(|e| format!("Unicode version {version}: {e}"))?;
+    match parts[..] {
+        [major, minor, update] => Ok((major, minor, update)),
+        _ => Err(format!("Unicode version {version}: not major.minor.update").into()),
+    }
+}
 /// The Unicode version of the normalization tables, the same in their header
 /// and in their version constant.
 fn unicode_of(tables: &str) -> Result<String> {
@@ -9957,10 +9973,18 @@ fn unicode_release_check(roadmap: &str, unicode: &str) -> Result<()> {
     }
     Ok(())
 }
-/// The Unicode version the README states, read from the tables; the README
-/// links the roadmap section of the release that brought it, which says so.
+/// The Unicode version the README states for `UNICODE_RELEASE`: the version
+/// that release brought, which its roadmap section states; the tables must be
+/// of that version or a later one. The README links that roadmap section.
 fn unicode_version() -> Result<String> {
-    let unicode = unicode_of(&fs::read_to_string(UNICODE_TABLES)?)?;
+    let tables = unicode_of(&fs::read_to_string(UNICODE_TABLES)?)?;
+    if unicode_key(&tables)? < unicode_key(UNICODE_OF_RELEASE)? {
+        return Err(format!(
+            "{UNICODE_TABLES}: Unicode {tables} is older than {UNICODE_OF_RELEASE} of {UNICODE_RELEASE}"
+        )
+        .into());
+    }
+    let unicode = UNICODE_OF_RELEASE.to_string();
     unicode_release_check(&fs::read_to_string(GLANCE_ROADMAP)?, &unicode)?;
     let link = format!(
         "([{UNICODE_RELEASE} in the roadmap](docs/ROADMAP.md#{}))",
@@ -16706,16 +16730,20 @@ mod tests {
     }
     #[test]
     fn the_facts_of_0_7_are_read_from_their_files() {
-        // The Unicode version as the name of the normalization test file the fast
-        // identity check includes (an older file is kept for a comparison).
+        // The README gives the Unicode version 0.7 brought; the tables now follow
+        // the version named by the normalization test file the fast identity
+        // check includes, that one or a later one.
         let unicode = unicode_version().unwrap();
+        assert_eq!(unicode, UNICODE_OF_RELEASE);
+        let tables = unicode_of(&fs::read_to_string(UNICODE_TABLES).unwrap()).unwrap();
+        assert!(unicode_key(&tables).unwrap() >= unicode_key(&unicode).unwrap());
         let fast = fs::read_to_string("crates/gel-source/src/nfc_fast_identity.rs").unwrap();
         let named: Vec<&str> = fast
             .split("tests/data/NormalizationTest-")
             .skip(1)
             .filter_map(|s| s.split_once(".txt").map(|v| v.0))
             .collect();
-        assert_eq!(named, [unicode.as_str()]);
+        assert_eq!(named, [tables.as_str()]);
         let readme = native_intro();
         assert!(readme.contains(&format!(
             "normalization follows Unicode {unicode}, the version"
@@ -16739,6 +16767,12 @@ mod tests {
         // The tables: no header, no constant, or two versions.
         let tables = "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\npub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n";
         assert_eq!(unicode_of(tables).unwrap(), "17.0.0");
+        // Versions compare as numbers, not as text.
+        assert!(unicode_key("9.0.0").unwrap() < unicode_key("16.0.0").unwrap());
+        assert!(unicode_key("16.0.0").unwrap() < unicode_key("18.0.0").unwrap());
+        for bad in ["18.0", "18.0.0.0.1", "18.x.0", ""] {
+            assert!(unicode_key(bad).is_err(), "{bad}");
+        }
         for bad in [
             "pub(crate) const UNICODE_VERSION: (u8, u8, u8) = (17, 0, 0);\n",
             "// Character Database 17.0.0; do not edit. Inputs (SHA-256):\n",

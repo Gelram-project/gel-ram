@@ -589,6 +589,11 @@ fn line_field<'a>(line: &'a str, key: &str) -> Option<&'a str> {
         .find_map(|field| field.strip_prefix(key)?.strip_prefix('='))
 }
 
+/// The Rust versions this repository has pinned, oldest first. A recorded
+/// report names one of them, the same on the three platforms of a revision;
+/// the collector requires the last, which a test ties to rust-toolchain.toml.
+const PINNED_RUST: &[&str] = &["1.85.0", "1.100.0"];
+
 /// The header and every line of one recorded REPORT file; returns the passed
 /// counts of the workspace, core and doctest cases.
 fn check_recorded_report(
@@ -619,7 +624,7 @@ fn check_recorded_report(
         return fail("report header is not the collector's");
     }
     if field("FORMAT")? != "GEL_CI_EVIDENCE_2"
-        || field("RUST_VERSION")? != "1.85.0"
+        || !PINNED_RUST.contains(&field("RUST_VERSION")?)
         || field("SCOPE")? != SCOPE
         || field("REDACTION")? != REDACTION
         || !matches!(field("ARCH")?, "x86_64" | "aarch64")
@@ -724,7 +729,7 @@ fn check_recorded_revision(
         file("macos", "REPORT")?,
         file("windows", "REPORT")?,
     );
-    for key in ["SOURCE_MANIFEST_SHA256", "RUN_ATTEMPT"] {
+    for key in ["SOURCE_MANIFEST_SHA256", "RUN_ATTEMPT", "RUST_VERSION"] {
         let value = report_field(linux, key)?;
         if report_field(macos, key)? != value || report_field(windows, key)? != value {
             return Err(format!("{revision}: {key} differs between platforms"));
@@ -939,11 +944,13 @@ pub fn report(args: &[String]) -> Result<(), String> {
         .output()
         .map_err(|_| "rustc unavailable")?;
     // Toolchain pin comes from a strict comparison, never an arbitrary environment dump.
-    if !rust.status.success() || !String::from_utf8_lossy(&rust.stdout).starts_with("rustc 1.85.0 ")
+    let pinned = PINNED_RUST.last().ok_or("no pinned Rust version")?;
+    if !rust.status.success()
+        || !String::from_utf8_lossy(&rust.stdout).starts_with(&format!("rustc {pinned} "))
     {
-        return Err("expected pinned Rust 1.85.0".into());
+        return Err(format!("expected pinned Rust {pinned}"));
     }
-    report.push_str(&format!("RUST_VERSION=1.85.0\nREDACTION={REDACTION}\n"));
+    report.push_str(&format!("RUST_VERSION={pinned}\nREDACTION={REDACTION}\n"));
     let cases: &[(&str, &[&str])] = &[
         (
             "workspace-debug",
@@ -1288,6 +1295,71 @@ mod tests {
                 1 + RECORDED.len() * 9
             )
         );
+    }
+
+    /// The last pinned Rust is the toolchain the checkout pins, the version the
+    /// workspace declares, and the toolchain each workflow and each guide for a
+    /// checkout of main installs; a guide that checks out a release tag keeps
+    /// that release's toolchain and is not listed here.
+    #[test]
+    fn the_last_pinned_rust_is_the_one_the_checkout_and_its_guides_name() {
+        let pinned = *PINNED_RUST.last().unwrap();
+        let channel = format!("channel = \"{pinned}\"");
+        let toolchain = include_str!("../../rust-toolchain.toml");
+        assert_eq!(toolchain.lines().filter(|l| *l == channel).count(), 1);
+        let (major_minor, _) = pinned.rsplit_once('.').unwrap();
+        let declared = format!("rust-version = \"{major_minor}\"\n");
+        assert_eq!(
+            include_str!("../../Cargo.toml").matches(&declared).count(),
+            1
+        );
+        let files = [
+            (
+                ".github/workflows/ci.yml",
+                include_str!("../../.github/workflows/ci.yml"),
+            ),
+            (
+                ".github/workflows/binaries.yml",
+                include_str!("../../.github/workflows/binaries.yml"),
+            ),
+            (
+                ".github/workflows/readme-presentation.yml",
+                include_str!("../../.github/workflows/readme-presentation.yml"),
+            ),
+            ("README.md", include_str!("../../README.md")),
+            (
+                "README-MULTIMEDIA.html",
+                include_str!("../../README-MULTIMEDIA.html"),
+            ),
+            (
+                "docs/CHECK-ON-YOUR-HARDWARE.md",
+                include_str!("../../docs/CHECK-ON-YOUR-HARDWARE.md"),
+            ),
+            (
+                "docs/REPRODUCE-ISOLATED.md",
+                include_str!("../../docs/REPRODUCE-ISOLATED.md"),
+            ),
+        ];
+        let keys = [
+            "rustup toolchain install ",
+            "rustup default ",
+            "rustfmt +",
+            "rustc +",
+            "cargo +",
+        ];
+        for (file, text) in files {
+            let mut named = 0;
+            for line in text.lines() {
+                for key in keys {
+                    if let Some((_, rest)) = line.split_once(key) {
+                        let version = rest.split_whitespace().next().unwrap_or("");
+                        assert_eq!(version, pinned, "{file}: {line}");
+                        named += 1;
+                    }
+                }
+            }
+            assert!(named > 0, "{file} names no toolchain");
+        }
     }
 
     #[test]

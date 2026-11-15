@@ -10,7 +10,7 @@ repository checks that block from inside before anything else runs.
 ```text
 git clone https://github.com/Gelram-project/gel-ram.git
 cd gel-ram
-rustup toolchain install 1.85.0 --profile minimal
+rustup toolchain install 1.100.0 --profile minimal
 cargo fetch --locked
 cargo build --locked --offline -p xtask
 ```
