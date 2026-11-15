@@ -3,7 +3,8 @@
 Run these commands from a 0.9.0 checkout (current main or the v0.9.0 tag), not
 from older tags. Evidence Lab was merged in PR #9 (as 0.4.0-rc.1) and has been
 part of every version line since 0.4.0.
-Rust 1.85.0 and cached locked dependencies are prerequisites. Initial toolchain
+The Rust of the checkout (1.100.0 on current main, 1.85.0 on the v0.9.0 tag)
+and cached locked dependencies are prerequisites. Initial toolchain
 installation and `cargo fetch --locked` need internet; execution below is offline.
 No model, private bank, paid service or remote API is needed.
 

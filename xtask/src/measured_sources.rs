@@ -6,8 +6,8 @@ use std::{fs, path::Path};
 const MANIFEST: &str = "docs/evidence-collection/MEASURED-SOURCES.sha256";
 const PIN: &str = "f01bf31d8074d7d89a2c41ba2d6475dcb38696583d9d2ddabe1909f6eb280a52";
 const LOCK: &str = "docs/evidence-collection/Cargo.lock.measured.txt";
-/// The toolchain file of the measurements, which pinned Rust 1.85.0; the
-/// checkout pins a later Rust since.
+/// The toolchain file of the measurements, for Rust 1.85.0; the checkout has
+/// moved to a later Rust since.
 const TOOLCHAIN: &str = "docs/evidence-collection/rust-toolchain.measured.toml.txt";
 /// Examples whose measured bytes are kept beside the manifest since the source
 /// header was put in front of the current files: (current file, measured copy).

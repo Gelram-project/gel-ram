@@ -31,8 +31,15 @@ const PROJECT_FILES: &[&str] = &[
     INVENTORY,
 ];
 /// License files of the statically linked Rust standard library, as shipped
-/// with the toolchain in `share/doc/rust`.
-const TOOLCHAIN_LICENSES: &[&str] = &["COPYRIGHT", "LICENSE-APACHE", "LICENSE-MIT"];
+/// with the toolchain in `share/doc/rust`: the copyright notices of the
+/// standard library, which hold the full text of every license they name, and
+/// the Apache-2.0 and MIT texts the library is dual-licensed under. Each is
+/// copied under its file name.
+const TOOLCHAIN_LICENSES: &[&str] = &[
+    "COPYRIGHT-library.html",
+    "licenses/Apache-2.0.txt",
+    "licenses/MIT.txt",
+];
 /// License of the Unicode data compiled into gel-source's normalization tables.
 const UNICODE_LICENSE: &str = "crates/gel-source/LICENSE-UNICODE.txt";
 /// The Unicode Character Database version of those tables, which the build
@@ -494,7 +501,10 @@ pub fn run(args: &[String]) -> Result<(), String> {
         let bytes = fs::read(docs.join(file)).map_err(|e| format!("toolchain {file}: {e}"))?;
         let to = pkg.join("licenses").join(format!("rust-{release}"));
         fs::create_dir_all(&to).map_err(|e| e.to_string())?;
-        fs::write(to.join(file), bytes).map_err(|e| e.to_string())?;
+        let name = Path::new(file)
+            .file_name()
+            .ok_or("toolchain license name")?;
+        fs::write(to.join(name), bytes).map_err(|e| e.to_string())?;
     }
     let _ = writeln!(info, "statically_linked=Rust standard library {release}, license files in licenses/rust-{release}");
     let unicode = pkg.join("licenses").join("unicode-data");
@@ -586,6 +596,23 @@ fn checksum_manifest(mut files: Vec<(String, String)>, build_info: &[u8]) -> Str
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Each toolchain license file the package copies is in the sysroot of the
+    /// Rust that runs this test, and no two share a file name, so a toolchain
+    /// that moves them fails here and not only when a package is built.
+    #[test]
+    fn the_toolchain_license_files_are_in_the_sysroot() {
+        let sysroot = output(Command::new("rustc").args(["--print", "sysroot"])).unwrap();
+        let docs = Path::new(sysroot.trim())
+            .join("share")
+            .join("doc")
+            .join("rust");
+        let mut names = std::collections::BTreeSet::new();
+        for file in TOOLCHAIN_LICENSES {
+            assert!(docs.join(file).is_file(), "{}", docs.join(file).display());
+            assert!(names.insert(Path::new(file).file_name().unwrap()), "{file}");
+        }
+    }
 
     /// The build information names the Unicode version of the tables it
     /// compiles in, not the version of an earlier table file.

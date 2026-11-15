@@ -8,7 +8,7 @@ physical memory fault, storage device or operating system.
 
 ## Run
 
-From the repository root with Rust 1.85.0 installed:
+From the repository root with Rust 1.100.0 installed:
 
 ```text
 cargo run --locked --offline -p xtask -- verify

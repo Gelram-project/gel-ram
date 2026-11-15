@@ -446,12 +446,13 @@ const REDACTION: &str =
     "only strict test identifiers and derived counts; raw stdout/stderr excluded";
 
 /// Revisions whose reports are kept in `docs/evidence-ci`, each with the push
-/// run that printed them. Recording one more means adding it here.
-const RECORDED: &[(&str, &str)] = &[
-    ("2b29236", "36251557201"),
-    ("fba6c43", "36257696669"),
-    ("79f6ac5", "42077523488"),
-    ("a9b5c6a", "42772483068"),
+/// run that printed them and the pinned Rust that run used. Recording one more
+/// means adding it here.
+const RECORDED: &[(&str, &str, &str)] = &[
+    ("2b29236", "36251557201", "1.85.0"),
+    ("fba6c43", "36257696669", "1.85.0"),
+    ("79f6ac5", "42077523488", "1.85.0"),
+    ("a9b5c6a", "42772483068", "1.85.0"),
 ];
 const PLATFORMS: [&str; 3] = ["linux", "macos", "windows"];
 const RECORDED_KINDS: [&str; 3] = ["REPORT", "TESTS", "SHA256SUMS"];
@@ -599,7 +600,7 @@ const PINNED_RUST: &[&str] = &["1.85.0", "1.100.0"];
 fn check_recorded_report(
     report: &str,
     tests: &str,
-    (revision, run): (&str, &str),
+    (revision, run, rust): (&str, &str, &str),
     platform: &str,
 ) -> Result<[u64; 3], String> {
     let field = |key: &str| report_field(report, key);
@@ -624,7 +625,8 @@ fn check_recorded_report(
         return fail("report header is not the collector's");
     }
     if field("FORMAT")? != "GEL_CI_EVIDENCE_2"
-        || !PINNED_RUST.contains(&field("RUST_VERSION")?)
+        || field("RUST_VERSION")? != rust
+        || !PINNED_RUST.contains(&rust)
         || field("SCOPE")? != SCOPE
         || field("REDACTION")? != REDACTION
         || !matches!(field("ARCH")?, "x86_64" | "aarch64")
@@ -695,7 +697,7 @@ fn check_recorded_report(
 /// One recorded revision; returns its row of the table in the README.
 fn check_recorded_revision(
     files: &std::collections::BTreeMap<String, String>,
-    (revision, run): (&str, &str),
+    (revision, run, rust): (&str, &str, &str),
 ) -> Result<String, String> {
     let file = |platform: &str, kind: &str| {
         let key = format!("{revision}/{platform}-{kind}.txt");
@@ -720,7 +722,7 @@ fn check_recorded_revision(
         passed.push(check_recorded_report(
             report,
             tests,
-            (revision, run),
+            (revision, run, rust),
             platform,
         )?);
     }
@@ -766,10 +768,10 @@ fn check_recorded_revision(
 /// recomputed from the reports: each row must be the line they give.
 fn check_recorded(
     files: &std::collections::BTreeMap<String, String>,
-    recorded: &[(&str, &str)],
+    recorded: &[(&str, &str, &str)],
 ) -> Result<String, String> {
     let mut expected = std::collections::BTreeSet::from(["README.md".to_owned()]);
-    for (revision, _) in recorded {
+    for (revision, _, _) in recorded {
         for platform in PLATFORMS {
             for kind in RECORDED_KINDS {
                 expected.insert(format!("{revision}/{platform}-{kind}.txt"));
@@ -783,8 +785,8 @@ fn check_recorded(
         return Err(format!("unlisted recorded file {key}"));
     }
     let readme = files.get("README.md").map_or("", String::as_str);
-    for (revision, run) in recorded {
-        let row = check_recorded_revision(files, (revision, run))?;
+    for &(revision, run, rust) in recorded {
+        let row = check_recorded_revision(files, (revision, run, rust))?;
         if !readme.lines().any(|line| line == row) {
             return Err(format!("README has no row: {row}"));
         }
@@ -1297,68 +1299,193 @@ mod tests {
         );
     }
 
-    /// The last pinned Rust is the toolchain the checkout pins, the version the
-    /// workspace declares, and the toolchain each workflow and each guide for a
-    /// checkout of main installs; a guide that checks out a release tag keeps
-    /// that release's toolchain and is not listed here.
+    /// Releases and the Rust they were built with. A file that checks out one
+    /// of these tags, and a section headed `## vX.Y.Z`, which records that
+    /// release, name its Rust. A tag or a release section missing here fails,
+    /// so each release adds its row.
+    const RELEASE_PINS: &[(&str, &str)] = &[
+        ("v0.3.0", "1.85.0"),
+        ("v0.4.0", "1.85.0"),
+        ("v0.5.0", "1.85.0"),
+        ("v0.5.1", "1.85.0"),
+        ("v0.5.2", "1.85.0"),
+        ("v0.5.3", "1.85.0"),
+        ("v0.6.0", "1.85.0"),
+        ("v0.6.1", "1.85.0"),
+        ("v0.7.0", "1.85.0"),
+        ("v0.8.0", "1.85.0"),
+        ("v0.9.0", "1.85.0"),
+    ];
+    /// The Rust of a release `X.Y.Z`; a release missing from `RELEASE_PINS`
+    /// fails, naming the file that refers to it.
+    fn release_pin(file: &str, version: &str) -> &'static str {
+        RELEASE_PINS
+            .iter()
+            .find(|(release, _)| release[1..] == *version)
+            .map(|(_, rust)| *rust)
+            .unwrap_or_else(|| panic!("{file} refers to v{version}, not in RELEASE_PINS"))
+    }
+    /// Records kept with the Rust they ran on, each with the reason.
+    const RECORDS: &[(&str, &str)] = &[
+        (
+            "docs/speed-results/",
+            "timings, each on the toolchain of its run",
+        ),
+        (
+            "docs/memory-results/",
+            "memory records, each on the toolchain of its run",
+        ),
+        (
+            "docs/evidence-",
+            "evidence directories, each of the runs it records",
+        ),
+        (
+            "RELEASE-NOTES-",
+            "the notes of a published release and its toolchain",
+        ),
+        (
+            "tools/readme_before_visual.txt",
+            "the README before the pictures, as it was",
+        ),
+    ];
+    /// What installs or selects a toolchain, tells the reader to, or states
+    /// the pin. A word without its first letter is found at the start of a
+    /// sentence too.
+    const TOOLCHAIN_WORDS: &[&str] = &[
+        "rustup toolchain install ",
+        "rustup default ",
+        "cargo +",
+        "rustc +",
+        "rustfmt +",
+        "nstall Rust ",
+        "ompile with Rust ",
+        "ompile it with Rust ",
+        "uild with Rust ",
+        "pinned Rust ",
+        "pins Rust ",
+        "Rust pinned to ",
+    ];
+
+    /// The version `rest` begins with, if it begins with one.
+    fn version_at(rest: &str) -> Option<&str> {
+        let end = rest
+            .find(|c: char| !(c.is_ascii_digit() || c == '.'))
+            .unwrap_or(rest.len());
+        let version = rest[..end].trim_end_matches('.');
+        (version.starts_with(|c: char| c.is_ascii_digit()) && version.contains('.'))
+            .then_some(version)
+    }
+
+    /// Every toolchain the tree installs, selects or states as pinned, in each
+    /// text file of the source manifest and at each place in a line, is the
+    /// last pinned Rust, or the Rust of the release tag the file checks out;
+    /// records keep theirs. The workspace declares the same version.
     #[test]
-    fn the_last_pinned_rust_is_the_one_the_checkout_and_its_guides_name() {
+    fn every_toolchain_the_tree_names_is_its_pin() {
+        let root = crate::workspace_root().unwrap();
         let pinned = *PINNED_RUST.last().unwrap();
+        let read = |file: &str| fs::read_to_string(root.join(file));
         let channel = format!("channel = \"{pinned}\"");
-        let toolchain = include_str!("../../rust-toolchain.toml");
+        let toolchain = read("rust-toolchain.toml").unwrap();
         assert_eq!(toolchain.lines().filter(|l| *l == channel).count(), 1);
         let (major_minor, _) = pinned.rsplit_once('.').unwrap();
-        let declared = format!("rust-version = \"{major_minor}\"\n");
-        assert_eq!(
-            include_str!("../../Cargo.toml").matches(&declared).count(),
-            1
-        );
-        let files = [
-            (
-                ".github/workflows/ci.yml",
-                include_str!("../../.github/workflows/ci.yml"),
-            ),
-            (
-                ".github/workflows/binaries.yml",
-                include_str!("../../.github/workflows/binaries.yml"),
-            ),
-            (
-                ".github/workflows/readme-presentation.yml",
-                include_str!("../../.github/workflows/readme-presentation.yml"),
-            ),
-            ("README.md", include_str!("../../README.md")),
-            (
-                "README-MULTIMEDIA.html",
-                include_str!("../../README-MULTIMEDIA.html"),
-            ),
-            (
-                "docs/CHECK-ON-YOUR-HARDWARE.md",
-                include_str!("../../docs/CHECK-ON-YOUR-HARDWARE.md"),
-            ),
-            (
-                "docs/REPRODUCE-ISOLATED.md",
-                include_str!("../../docs/REPRODUCE-ISOLATED.md"),
-            ),
-        ];
-        let keys = [
-            "rustup toolchain install ",
-            "rustup default ",
-            "rustfmt +",
-            "rustc +",
-            "cargo +",
-        ];
-        for (file, text) in files {
-            let mut named = 0;
-            for line in text.lines() {
-                for key in keys {
-                    if let Some((_, rest)) = line.split_once(key) {
-                        let version = rest.split_whitespace().next().unwrap_or("");
-                        assert_eq!(version, pinned, "{file}: {line}");
-                        named += 1;
+        let manifest = read("SOURCE-SHA256SUMS.txt").unwrap();
+        let mut named = std::collections::BTreeMap::new();
+        for line in manifest.lines() {
+            let (_, file) = line.split_once("  ").unwrap();
+            let Ok(text) = read(file) else { continue };
+            if file == "Cargo.toml" || file.ends_with("/Cargo.toml") {
+                let wanted = if file == "Cargo.toml" {
+                    format!("rust-version = \"{major_minor}\"")
+                } else {
+                    "rust-version.workspace = true".to_owned()
+                };
+                for declared in text.lines().filter(|l| l.starts_with("rust-version")) {
+                    assert_eq!(declared, wanted, "{file}");
+                }
+            }
+            if RECORDS.iter().any(|(prefix, _)| file.starts_with(prefix)) {
+                continue;
+            }
+            let checkout = "git checkout v";
+            let tag = text
+                .match_indices(checkout)
+                .find_map(|(at, _)| version_at(&text[at + checkout.len()..]));
+            let checked_out = match tag {
+                Some(tag) => release_pin(file, tag),
+                None => pinned,
+            };
+            let mut section = None;
+            for (n, line) in text.lines().enumerate() {
+                if line.starts_with("# ") || line.starts_with("## ") {
+                    section = line
+                        .strip_prefix("## v")
+                        .filter(|rest| version_at(rest) == Some(*rest))
+                        .map(|release| release_pin(file, release));
+                }
+                let expected = section.unwrap_or(checked_out);
+                for word in TOOLCHAIN_WORDS {
+                    for (at, _) in line.match_indices(word) {
+                        let Some(version) = version_at(&line[at + word.len()..]) else {
+                            continue;
+                        };
+                        // A sentence about an earlier release: "the then pinned Rust".
+                        if word.starts_with("pinned") && line[..at].ends_with("then ") {
+                            continue;
+                        }
+                        assert_eq!(version, expected, "{file}:{}: {line}", n + 1);
+                        *named.entry(file).or_insert(0) += 1;
                     }
                 }
             }
-            assert!(named > 0, "{file} names no toolchain");
+        }
+        for file in [
+            ".github/workflows/ci.yml",
+            ".github/workflows/binaries.yml",
+            ".github/workflows/readme-presentation.yml",
+            "README.md",
+            "docs/CHECK-ON-YOUR-HARDWARE.md",
+            "docs/REPRODUCE-ISOLATED.md",
+            "docs/TRY-IT.md",
+        ] {
+            assert!(
+                named.get(file).is_some_and(|n| *n > 0),
+                "{file} names no toolchain"
+            );
+        }
+    }
+
+    /// Each recorded revision names a pinned Rust, and the order of the
+    /// records never goes back to an earlier pin.
+    #[test]
+    fn each_recorded_revision_names_a_pinned_rust_in_order() {
+        let at = |rust: &str| PINNED_RUST.iter().position(|p| *p == rust);
+        let order: Vec<usize> = RECORDED
+            .iter()
+            .map(|(revision, _, rust)| at(rust).unwrap_or_else(|| panic!("{revision}: {rust}")))
+            .collect();
+        assert!(order.windows(2).all(|w| w[0] <= w[1]), "{order:?}");
+    }
+
+    /// The three reports of a revision cannot claim another pinned Rust than
+    /// the one recorded for it, even with checksum lists that fit.
+    #[test]
+    fn a_recorded_revision_cannot_claim_another_pinned_rust() {
+        let (revision, _, rust) = RECORDED[RECORDED.len() - 1];
+        for other in PINNED_RUST.iter().filter(|p| **p != rust) {
+            let mut files = the_records();
+            for platform in PLATFORMS {
+                let key = format!("{revision}/{platform}-REPORT.txt");
+                let changed = files[&key].replace(
+                    &format!("RUST_VERSION={rust}\n"),
+                    &format!("RUST_VERSION={other}\n"),
+                );
+                assert_ne!(changed, files[&key]);
+                files.insert(key.clone(), changed);
+                refit_sums(&mut files, &key);
+            }
+            let error = check_recorded(&files, RECORDED).unwrap_err();
+            assert!(error.contains("header field"), "{other}: {error}");
         }
     }
 
@@ -1478,7 +1605,7 @@ mod tests {
     fn the_readme_table_must_state_what_the_records_state() {
         let files = the_records();
         let readme = &files["README.md"];
-        for (revision, _) in RECORDED {
+        for (revision, _, _) in RECORDED {
             let row = format!("| [{revision}]({revision}/) |");
             let mut changed = files.clone();
             // The row is gone, or it claims another number.

@@ -292,7 +292,7 @@ Each case timed against two copies of the baseline, then once more with no other
 <details><summary>What came in 0.7, in words</summary>
 
 - **No third-party packages:** every one of the __PACKAGES__ packages in `Cargo.lock` is a crate of this checkout. SHA-256 and Unicode normalization are written here; SHA-256 alone runs at 0.28 and 0.39 of the speed of v0.6.1, which used the processor's SHA instructions.
-- **One Unicode version:** normalization follows Unicode __UNICODE__, the version the pinned Rust 1.85.0 standard library uses for lowercasing and word splitting, and passes every line of the Unicode normalization test file.
+- **One Unicode version:** normalization followed Unicode __UNICODE__, the version the then pinned Rust 1.85.0 standard library used for lowercasing and word splitting, and passed every line of the Unicode normalization test file.
 - **The same output bits, faster:** each speed change was timed against two copies of the baseline, and every run printed the same output digest, apart from the whole-tree gates, which count the files of their own tree ([v0.7.0 in the roadmap](docs/ROADMAP.md#v070)).
 
 </details>
@@ -16746,7 +16746,7 @@ mod tests {
         assert_eq!(named, [tables.as_str()]);
         let readme = native_intro();
         assert!(readme.contains(&format!(
-            "normalization follows Unicode {unicode}, the version"
+            "normalization followed Unicode {unicode}, the version"
         )));
         assert!(!readme.contains("__UNICODE__"));
         // The packages: each name line of Cargo.lock, a crate directory here.
