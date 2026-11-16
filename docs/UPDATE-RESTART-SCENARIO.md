@@ -43,7 +43,7 @@ test results are not reinterpreted as having covered this stronger precondition.
 ## Live typing driver for a separate, longer recording
 
 The [Rust driver](../tools/record_evidence.rs) also accepts --update after the
-absolute application binary path. Compile it with Rust 1.85.0, then run it from
+absolute application binary path. Compile it with Rust 1.100.0, then run it from
 a fresh owner-controlled directory containing the authored
 [original](../crates/gel-source/fixtures/evidence-lab/original.txt) and
 [revised](../crates/gel-source/fixtures/evidence-lab/revised.txt) text fixtures.

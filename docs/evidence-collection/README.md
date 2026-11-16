@@ -73,6 +73,9 @@ way, as [collection_campaign.measured.rs.txt](collection_campaign.measured.rs.tx
 [collection_recheck.measured.rs.txt](collection_recheck.measured.rs.txt) and
 [quantization_matrix.measured.rs.txt](quantization_matrix.measured.rs.txt), so
 that the current files can begin with the two-line source header.
+The measured toolchain file, which pinned Rust 1.85.0, is preserved as
+[rust-toolchain.measured.toml.txt](rust-toolchain.measured.toml.txt) since the
+checkout moved to Rust 1.100.0; its manifest entry is checked against that copy.
 The current
 collection implementation uses streaming root hashing rather than allocating
 its complete serialization for each mutation. Historical measurements still

@@ -1,6 +1,6 @@
 # Scoped CI evidence package
 
-After committing the source manifest, with Rust 1.85.0 and dependencies already
+After committing the source manifest, with Rust 1.100.0 and dependencies already
 available, run:
 
 ```sh

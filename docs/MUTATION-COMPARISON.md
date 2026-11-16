@@ -4,7 +4,7 @@
 cargo run --locked --offline --release -p gel-source --example mutation_compare -- ../new-mutation-comparison
 ```
 
-Use the pinned Rust 1.85.0 toolchain after fetching dependencies. The output
+Use the pinned Rust 1.100.0 toolchain after fetching dependencies. The output
 directory must not exist. The example compiles the unchanged historical
 collection and bundle snapshots alongside the current collection. Only add,
 replace and remove are timed, not historical persistence code. Historical bundle

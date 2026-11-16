@@ -38,7 +38,8 @@ For later revisions, inspect the checks of the PR or push run that tested them a
 
 1. Use the exact reviewed ZIP and retain its SHA256 independently. Extract into
    a new directory. Do not mix files from different candidates or build trees.
-2. Install Rust **1.85.0**, rustfmt and clippy; populate the locked Cargo cache
+2. Install the Rust version the reviewed source pins in its rust-toolchain.toml
+   (1.85.0 up to v0.9.0, 1.100.0 after it), rustfmt and clippy; populate the locked Cargo cache
    beforehand. Setup may require Internet; runtime does not. Missing tools are
    a failed prerequisite, not a successful test.
 3. From the extracted source directory run the commands below. Replace the

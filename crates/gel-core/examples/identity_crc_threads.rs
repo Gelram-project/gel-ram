@@ -27,8 +27,8 @@ const MIB: usize = 1 << 20;
 /// Reference tables, built here independently of the library.
 fn reference_tables() -> Vec<[u64; 256]> {
     let mut tables = vec![[0u64; 256]; 8];
-    for b in 0..256usize {
-        tables[0][b] = bitwise(0, &[b as u8]);
+    for (b, entry) in tables[0].iter_mut().enumerate() {
+        *entry = bitwise(0, &[b as u8]);
     }
     for k in 1..8 {
         for b in 0..256 {

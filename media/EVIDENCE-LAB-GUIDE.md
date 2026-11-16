@@ -48,7 +48,7 @@ Execution and capture used a separate network namespace, with local X11 only.
   and [process 2](evidence-lab/process-2.txt) stdout. Commands are echoed by the
   driver, not duplicated in raw child stdout. Both sources are included as
   [fixtures](../crates/gel-source/fixtures/evidence-lab/README.md).
-- [Rust typing driver](../tools/record_evidence.rs): compile with Rust 1.85.0 and
+- [Rust typing driver](../tools/record_evidence.rs): compile with Rust 1.100.0 and
   run in a fresh directory containing those two fixtures, passing the absolute
   gel-evidence binary path. It creates a checkpoint and transcript there.
   Screen capture tools are optional and not required to run the application.

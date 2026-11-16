@@ -39,7 +39,7 @@ the root LICENSE, not this output, holds the terms.
 | `LICENSE`, `NOTICE`, LICENSE-MODE.txt (from `docs/LICENSE-MODE.txt`), `LICENSING.md`, `COMMERCIAL-LICENSE.md` | the project's terms, unchanged; the packages are under the same license as the source |
 | THIRD-PARTY-NOTICES.md, DEPENDENCY-INVENTORY.md | the third-party inventory with the reviewed license-file hashes |
 | `licenses/NAME-VERSION/` | the license files of every third-party crate in the target's dependency graph, copied from the exact locked crate |
-| `licenses/rust-VERSION/` | `COPYRIGHT`, `LICENSE-APACHE` and `LICENSE-MIT` of the Rust toolchain whose standard library is linked in |
+| `licenses/rust-VERSION/` | COPYRIGHT-library.html, the copyright notices of the standard library with the full text of each license they name, and the Apache-2.0.txt and MIT.txt license texts, from the Rust toolchain whose standard library is linked in (Rust 1.85.0 shipped COPYRIGHT, LICENSE-APACHE and LICENSE-MIT instead) |
 
 ## What the package check refuses
 
@@ -128,7 +128,7 @@ runner; on another system the same source gives other bytes.
 - The system C runtime (glibc, libSystem, the Microsoft C runtime) is linked
   dynamically and is not shipped; Windows needs the Microsoft Visual C++ runtime.
 - Crates inside the Rust standard library are covered by the toolchain's
-  COPYRIGHT file and are not inventoried one by one.
+  copyright notices of the standard library and are not inventoried one by one.
 - Byte-for-byte reproducibility is claimed only as measured in
   [building the same bytes](#building-the-same-bytes): the same system builds
   the same bytes; a release binary is not shown to be rebuildable elsewhere.

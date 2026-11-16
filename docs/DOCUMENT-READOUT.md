@@ -18,7 +18,7 @@ standalone CR line breaks. Original quotation byte offsets are preserved.
 
 ## Reproduce
 
-Requires the pinned Rust 1.85.0 toolchain and dependencies already available
+Requires the pinned Rust 1.100.0 toolchain and dependencies already available
 (initial `cargo fetch --locked` needs network on a clean installation).
 
 ```text
@@ -75,35 +75,40 @@ The caller still owns authorization, persistence and secret management.
 
 NFC is implemented in gel-source itself (`crates/gel-source/src/nfc.rs`,
 UAX #15: canonical decomposition, canonical ordering, canonical composition),
-with tables generated from the Unicode Character Database 16.0.0 by
+with tables generated from the Unicode Character Database 18.0.0 by
 `cargo run -p xtask -- ucd-tables`. The two UCD files it reads are kept
-unmodified in `crates/gel-source/tests/data/ucd-16.0.0`, and a test regenerates
-the tables from them and requires the same bytes. Until this change the tables
-followed Unicode 15.1.0; those files stay in
-`crates/gel-source/tests/data/ucd-15.1.0`, with NormalizationTest 15.1.0, for
-the checks below.
+unmodified in `crates/gel-source/tests/data/ucd-18.0.0`, and a test regenerates
+the tables from them and requires the same bytes. The tables followed Unicode
+15.1.0 up to PR #88 and 16.0.0 up to the move to Rust 1.100.0; those files stay
+in `crates/gel-source/tests/data/ucd-15.1.0` and `ucd-16.0.0`, with
+NormalizationTest 15.1.0 and 16.0.0, for the checks below.
 
-**Versions.** Normalization follows Unicode 16.0.0. Lowercasing
+**Versions.** Normalization follows Unicode 18.0.0. Lowercasing
 (`char::to_lowercase`) and the split into words (`char::is_alphanumeric`) come
-from the Rust standard library, which follows Unicode 16.0.0 on the Rust 1.85.0
-toolchain the releases are built with, so the whole search path now follows one
-Unicode version. Search normalizes the query and each line when it runs and
-stores nothing normalized, so a later table version changes only which lines
-match, never stored data.
+from the Rust standard library, which follows Unicode 18.0.0 on the pinned Rust
+1.100.0 toolchain, so the whole search path follows one Unicode version. A test
+requires the version of the tables to be the Unicode version of the standard
+library they are compiled with, so a toolchain of another Unicode version fails
+until the tables are regenerated. Search normalizes the query and each line
+when it runs and stores nothing normalized, so a later table version changes
+only which lines match, never stored data.
 
 **Checks.**
 
-- All 19,965 data lines (19,952 distinct) of NormalizationTest 16.0.0 pass,
+- All 20,171 data lines (20,158 distinct) of NormalizationTest 18.0.0 pass,
   and every scalar value it does not list is unchanged.
-- All 19,074 data lines (19,069 distinct) of NormalizationTest 15.1.0 still
-  pass, and each of them is a line of NormalizationTest 16.0.0, unchanged:
-  the 16.0.0 tables give every result the 15.1.0 tables gave on that file.
-- For every code point assigned in Unicode 15.1.0, the 16.0.0 tables give the
+- All 19,965 data lines (19,952 distinct) of NormalizationTest 16.0.0 and all
+  19,074 (19,069 distinct) of NormalizationTest 15.1.0 still pass; each 15.1.0
+  line is a line of 16.0.0 and each 16.0.0 line a line of 18.0.0, unchanged.
+- For every code point assigned in Unicode 16.0.0, the 18.0.0 tables give the
   same combining class, canonical decomposition, Full_Composition_Exclusion
-  and NFC_Quick_Check as the 15.1.0 tables, and every 15.1.0 primary composite
-  is kept. What 16.0.0 adds (12 combining marks, 20 canonical decompositions
-  and the 20 primary composites they form, 21 NFC_Quick_Check Maybe code
-  points, no new exclusion) concerns only code points assigned later.
+  and NFC_Quick_Check as the 16.0.0 tables, and every 16.0.0 primary composite
+  is kept. What 18.0.0 adds (68 combining marks, and no canonical
+  decomposition, primary composite, exclusion or NFC_Quick_Check entry)
+  concerns only code points assigned in 17.0.0 or 18.0.0. The same holds from
+  15.1.0 to 16.0.0, which added 12 combining marks, 20 canonical
+  decompositions and the 20 primary composites they form, 21 NFC_Quick_Check
+  Maybe code points and no exclusion.
 - NFC of every scalar value, and of 100,000 seeded strings built from the
   characters assigned in Unicode 15.1.0 that take part in normalization, is
   byte-identical to the output of unicode-normalization 0.1.25 (the crate used
@@ -124,8 +129,9 @@ on 162 of 20,034 lines, each of them containing a character assigned after
 Unicode 15.1. With the 16.0.0 tables it differs on 68 lines, each of them
 containing a character assigned after Unicode 16.0, and agrees on every line
 made only of characters assigned in 16.0, as the Unicode stability policy
-requires. Matching therefore differs from v0.6.1 only on text containing
-characters assigned in Unicode 17.0.
+requires. Matching therefore differed from v0.6.1 only on text containing
+characters assigned in Unicode 17.0. This comparison was not rerun with the
+18.0.0 tables; NormalizationTest 17.0.0 is not kept in this tree.
 
 **Cost.** Text that passes the NFC_Quick_Check rule (most text, all Polish text
 among it) is returned without normalization. Otherwise each character's

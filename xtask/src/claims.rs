@@ -614,11 +614,11 @@ const CLAIMS: &[Claim] = &[
         evidence: Evidence::Deferred("SEPARATE_GATE"),
     },
     Claim {
-        id: "unicode-16-normalization",
+        id: "unicode-18-normalization",
         dimension: "text",
-        scope: "Unicode Normalization Form C of gel-source, tables from the Unicode Character Database 16.0.0",
-        input: "workspace tests: every line of NormalizationTest 16.0.0 and of 15.1.0, every scalar value and random and adversarial strings against the earlier and an independent implementation",
-        expected: "every line gives its listed forms; the table version is 16.0.0",
+        scope: "Unicode Normalization Form C of gel-source, tables from the Unicode Character Database 18.0.0",
+        input: "workspace tests: every line of NormalizationTest 18.0.0, 16.0.0 and 15.1.0, every scalar value and random and adversarial strings against the earlier and an independent implementation",
+        expected: "every line gives its listed forms; the table version is 18.0.0, the Unicode version of the standard library the tables are compiled with",
         counterexample: "normalization read as language understanding, or as a result for a later Unicode version",
         source: "crates/gel-source/src/nfc.rs",
         evidence: Evidence::Deferred("SEPARATE_GATE"),
@@ -1009,9 +1009,9 @@ const CITED: &[Citation] = &[
         ],
     },
     Citation {
-        file: "README.md",
-        words: "normalization follows Unicode 16.0.0",
-        rows: &[("unicode-16-normalization", "SEPARATE_GATE")],
+        file: "docs/DOCUMENT-READOUT.md",
+        words: "Normalization follows Unicode 18.0.0",
+        rows: &[("unicode-18-normalization", "SEPARATE_GATE")],
     },
     Citation {
         file: "README.md",

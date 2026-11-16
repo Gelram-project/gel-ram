@@ -99,8 +99,7 @@ mod linux {
         // The last matching entry is the visible mount; earlier ones are shadowed.
         let line = info
             .lines()
-            .filter(|l| l.split(' ').nth(4).map(unescape).as_deref() == Some(target))
-            .last()
+            .rfind(|l| l.split(' ').nth(4).map(unescape).as_deref() == Some(target))
             .ok_or("refusing: the directory is not a mount point")?;
         let fields: Vec<&str> = line.split(' ').collect();
         let (Some(device), Some(root)) = (fields.get(2), fields.get(3)) else {

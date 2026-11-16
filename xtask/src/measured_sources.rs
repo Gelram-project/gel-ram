@@ -6,6 +6,9 @@ use std::{fs, path::Path};
 const MANIFEST: &str = "docs/evidence-collection/MEASURED-SOURCES.sha256";
 const PIN: &str = "f01bf31d8074d7d89a2c41ba2d6475dcb38696583d9d2ddabe1909f6eb280a52";
 const LOCK: &str = "docs/evidence-collection/Cargo.lock.measured.txt";
+/// The toolchain file of the measurements, for Rust 1.85.0; the checkout has
+/// moved to a later Rust since.
+const TOOLCHAIN: &str = "docs/evidence-collection/rust-toolchain.measured.toml.txt";
 /// Examples whose measured bytes are kept beside the manifest since the source
 /// header was put in front of the current files: (current file, measured copy).
 /// The current file must be exactly `gel_core::SOURCE_HEADER` followed by the
@@ -30,6 +33,7 @@ fn measured_path(name: &str) -> &str {
     }
     match name {
         "Cargo.lock" => LOCK,
+        "rust-toolchain.toml" => TOOLCHAIN,
         "crates/gel-source/src/bundle.rs" => "docs/evidence-collection/bundle.measured.rs.txt",
         "crates/gel-source/src/collection.rs" => {
             "docs/evidence-collection/collection.measured.rs.txt"
@@ -111,6 +115,11 @@ mod tests {
         fs::copy(source.join(MANIFEST), root.join(MANIFEST)).unwrap();
         verify(&root).unwrap();
         fs::copy(source.join("Cargo.lock"), root.join(LOCK)).unwrap();
+        assert!(verify(&root).is_err());
+        // The current toolchain file in place of the measured one is refused too.
+        fs::copy(source.join(LOCK), root.join(LOCK)).unwrap();
+        verify(&root).unwrap();
+        fs::copy(source.join("rust-toolchain.toml"), root.join(TOOLCHAIN)).unwrap();
         assert!(verify(&root).is_err());
         fs::remove_dir_all(root).unwrap();
     }

@@ -183,7 +183,7 @@ fn race_saves(path: &Path, seed: u64, signals: &Path, name: &str, other: &str) {
 /// so the save starts right after it.
 fn acknowledge_saves(path: &Path, seed: u64) {
     let mut next = store(KILL_RECORDS, seed, 1);
-    for generation in 1.. {
+    for generation in 1..=u64::MAX {
         next.write_atomic(path).unwrap();
         next = store(KILL_RECORDS, seed, generation + 1);
         println!("\nACK {generation}");

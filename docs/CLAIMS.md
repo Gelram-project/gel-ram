@@ -71,7 +71,7 @@ the registry; editing a prose status cannot manufacture a runtime PASS.
 | tool-version-license | interface | SEPARATE_GATE |
 | source-license-headers | provenance | SEPARATE_GATE |
 | license-self-check | licensing | SEPARATE_GATE |
-| unicode-16-normalization | text | SEPARATE_GATE |
+| unicode-18-normalization | text | SEPARATE_GATE |
 | readme-generated | presentation | SEPARATE_GATE |
 | version-line | interface | SEPARATE_GATE |
 | goal-statement | presentation | SEPARATE_GATE |

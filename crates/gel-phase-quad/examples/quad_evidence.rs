@@ -86,7 +86,10 @@ fn synthetic(count: usize) -> Result<Vec<u8>, String> {
             };
             out.push(code);
         }
-        out.extend(std::iter::repeat(if n % 2 == 0 { 0xff } else { 0x55 }).take(128));
+        out.extend(std::iter::repeat_n(
+            if n % 2 == 0 { 0xff } else { 0x55 },
+            128,
+        ));
     }
     Ok(out)
 }

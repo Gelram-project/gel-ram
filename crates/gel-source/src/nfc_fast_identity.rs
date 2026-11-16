@@ -64,7 +64,8 @@ fn splitmix(mut state: u64) -> impl FnMut() -> u64 {
 /// combining class or a canonical decomposition, the Hangul jamo and three
 /// syllables, and a to z. Unlike the pinned tests, which keep to the code
 /// points assigned in Unicode 15.1.0, it takes every code point of the
-/// current tables, so the code points Unicode 16.0.0 added are compared too.
+/// current tables, so the code points Unicode 16.0.0 and 18.0.0 added are
+/// compared too.
 fn pool() -> Vec<char> {
     let mut pool = std::collections::BTreeSet::new();
     for &(first, last, _) in CANONICAL_COMBINING_CLASS {
@@ -237,9 +238,9 @@ pub(crate) fn run(scale: Scale) -> Vec<Tally> {
     }
     tallies.extend([one, one_quick]);
 
-    let mut unicode = Tally::new("nfc_normalization_test_16_0");
-    let mut unicode_quick = Tally::new("quick_check_normalization_test_16_0");
-    let text = include_str!("../tests/data/NormalizationTest-16.0.0.txt");
+    let mut unicode = Tally::new("nfc_normalization_test_18_0");
+    let mut unicode_quick = Tally::new("quick_check_normalization_test_18_0");
+    let text = include_str!("../tests/data/NormalizationTest-18.0.0.txt");
     for line in text.lines() {
         let data = line.split('#').next().unwrap_or("").trim();
         if data.is_empty() || data.starts_with('@') {
